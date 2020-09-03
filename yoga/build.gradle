@@ -1,0 +1,13 @@
+apply plugin: 'dev.nokee.jni-library'
+
+library {
+	dependencies {
+		api project(':yoga:java')
+		nativeImplementation project(':yoga:jni')
+	}
+
+	variants.configureEach {
+		// TODO something for os and arch.
+		resourcePath = "/"
+	}
+}

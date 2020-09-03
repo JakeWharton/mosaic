@@ -1,0 +1,14 @@
+buildscript {
+	dependencies {
+		classpath "dev.nokee.jni-library:dev.nokee.jni-library.gradle.plugin:0.4.0"
+	}
+	repositories {
+		gradlePluginPortal()
+	}
+}
+
+subprojects {
+	repositories {
+		mavenCentral()
+	}
+}

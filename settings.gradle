@@ -1,0 +1,6 @@
+rootProject.name = 'mosaic'
+
+include ':yoga'
+include ':yoga:core'
+include ':yoga:java'
+include ':yoga:jni'

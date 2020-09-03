@@ -1,0 +1,3 @@
+[submodule "yoga/upstream"]
+	path = yoga/upstream
+	url = https://github.com/facebook/yoga
