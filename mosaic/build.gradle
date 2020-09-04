@@ -1,0 +1,26 @@
+apply plugin: 'org.jetbrains.kotlin.jvm'
+
+configurations {
+	kotlinPlugin
+}
+
+dependencies {
+	implementation project(':compose')
+
+	kotlinPlugin 'androidx.compose:compose-compiler:1.0.0-alpha02'
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+	kotlinOptions {
+		useIR = true
+	}
+
+	def pluginConfiguration = configurations.kotlinPlugin
+	dependsOn(pluginConfiguration)
+	doFirst {
+		if (!pluginConfiguration.isEmpty()) {
+			kotlinOptions.freeCompilerArgs +=
+				"-Xplugin=${pluginConfiguration.files.first()}"
+		}
+	}
+}

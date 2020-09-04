@@ -1,8 +1,10 @@
 buildscript {
 	dependencies {
+		classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.0'
 		classpath "dev.nokee.jni-library:dev.nokee.jni-library.gradle.plugin:0.4.0"
 	}
 	repositories {
+		mavenCentral()
 		gradlePluginPortal()
 	}
 }
@@ -10,5 +12,19 @@ buildscript {
 subprojects {
 	repositories {
 		mavenCentral()
+		google()
+		maven {
+			url 'https://kotlin.bintray.com/kotlinx'
+		}
+	}
+
+	tasks.withType(org.jetbrains.kotlin.gradle.dsl.KotlinCompile).configureEach { task ->
+		task.kotlinOptions {
+			freeCompilerArgs += [
+				'-progressive',
+				'-Xopt-in=kotlin.RequiresOptIn',
+				'-Xopt-in=androidx.compose.runtime.ExperimentalComposeApi',
+			]
+		}
 	}
 }
