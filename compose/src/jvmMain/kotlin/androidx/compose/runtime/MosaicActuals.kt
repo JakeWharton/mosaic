@@ -2,7 +2,7 @@ package androidx.compose.runtime
 
 // TODO The notion of a global EmbeddingContext actual should not exist! It breaks concurrent
 //  usage on multiple threads which target multiple threads. This should always be pulled from the
-//  Recomposer.
+//  Recomposer. https://issuetracker.google.com/issues/168110493
 var yoloGlobalEmbeddingContext: EmbeddingContext? = null
 
 actual fun EmbeddingContext(): EmbeddingContext = yoloGlobalEmbeddingContext!!

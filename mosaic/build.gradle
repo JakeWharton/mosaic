@@ -1,4 +1,7 @@
 apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'application'
+
+mainClassName = 'example.MainKt'
 
 configurations {
 	kotlinPlugin
@@ -6,7 +9,8 @@ configurations {
 
 dependencies {
 	implementation project(':compose')
-
+	implementation project(':yoga')
+	implementation 'com.jakewharton.crossword:crossword:0.1.1'
 	kotlinPlugin 'androidx.compose:compose-compiler:1.0.0-alpha02'
 }
 
