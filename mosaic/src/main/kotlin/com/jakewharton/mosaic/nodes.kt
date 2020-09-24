@@ -21,6 +21,10 @@ internal class TextNode : MosaicNode() {
 	}
 
 	var value: String = ""
+		set(value) {
+			field = value
+			yoga.dirty()
+		}
 }
 
 internal class BoxNode : MosaicNode() {
