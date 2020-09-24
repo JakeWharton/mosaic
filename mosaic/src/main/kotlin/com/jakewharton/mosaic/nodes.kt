@@ -3,6 +3,7 @@ package com.jakewharton.mosaic
 import androidx.compose.runtime.AbstractApplier
 import com.facebook.yoga.YogaNode
 import com.facebook.yoga.YogaNodeFactory
+import com.jakewharton.crossword.visualCodePointCount
 
 internal sealed class MosaicNode {
 	val yoga: YogaNode = YogaNodeFactory.create()
@@ -11,8 +12,9 @@ internal sealed class MosaicNode {
 internal class TextNode : MosaicNode() {
 	var value: String = ""
 		set(value) {
-			yoga.setWidth(value.length.toFloat())
-			yoga.setHeight(value.split('\n').size.toFloat())
+			val lines = value.split('\n')
+			yoga.setWidth(lines.maxOf { it.visualCodePointCount }.toFloat())
+			yoga.setHeight(lines.size.toFloat())
 			field = value
 		}
 }

@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.withMutableSnapshot
 import com.jakewharton.mosaic.Column
+import com.jakewharton.mosaic.Row
 import com.jakewharton.mosaic.Text
 import com.jakewharton.mosaic.launchMosaic
 import example.TestState.Fail
@@ -105,23 +106,25 @@ fun TestRow(test: Test) {
 
 @Composable
 private fun Summary(tests: SnapshotStateList<Test>) {
-	var output = ansi()
+	Row {
+		val failed = tests.count { it.state == Fail }
+		if (failed > 0) {
+			Text(ansi()
+				.fgRed().a(failed).a(" failed").reset()
+				.a(", ")
+				.toString())
+		}
 
-	val failed = tests.count { it.state == Fail }
-	if (failed > 0) {
-		output = output
-			.fgRed().a(failed).a(" failed").reset()
-			.a(", ")
+		val passed = tests.count { it.state == Pass }
+		if (passed > 0) {
+			Text(ansi()
+				.fgGreen().a(passed).a(" passed").reset()
+				.a(", ")
+				.toString())
+		}
+
+		Text("${tests.size} total")
 	}
-
-	val passed = tests.count { it.state == Pass }
-	if (passed > 0) {
-		output = output
-			.fgGreen().a(passed).a(" passed").reset()
-			.a(", ")
-	}
-
-	Text(output.a(tests.size).a(" total").toString())
 }
 
 data class Test(
