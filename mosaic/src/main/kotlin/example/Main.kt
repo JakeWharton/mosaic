@@ -105,16 +105,23 @@ fun TestRow(test: Test) {
 
 @Composable
 private fun Summary(tests: SnapshotStateList<Test>) {
-	val passed = tests.count { it.state == Pass }
+	var output = ansi()
+
 	val failed = tests.count { it.state == Fail }
-	val total = tests.size
-	Text(ansi()
-		.fgRed().a(failed).a(" failed").reset()
-		.a(", ")
-		.fgGreen().a(passed).a(" passed").reset()
-		.a(", ")
-		.a(total).a(" total")
-		.toString())
+	if (failed > 0) {
+		output = output
+			.fgRed().a(failed).a(" failed").reset()
+			.a(", ")
+	}
+
+	val passed = tests.count { it.state == Pass }
+	if (passed > 0) {
+		output = output
+			.fgGreen().a(passed).a(" passed").reset()
+			.a(", ")
+	}
+
+	Text(output.a(tests.size).a(" total").toString())
 }
 
 data class Test(
