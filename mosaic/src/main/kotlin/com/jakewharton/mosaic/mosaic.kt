@@ -22,7 +22,8 @@ fun CoroutineScope.launchMosaic(
 	val mainThread = Thread.currentThread()
 
 	val clock = BroadcastFrameClock()
-	val composeContext = coroutineContext + clock
+	val job = Job(coroutineContext[Job])
+	val composeContext = coroutineContext + clock + job
 
 	val embeddingContext = object : EmbeddingContext {
 		override fun isMainThread(): Boolean {
@@ -49,14 +50,14 @@ fun CoroutineScope.launchMosaic(
 
 	val recomposer = Recomposer(embeddingContext)
 	val composition = compositionFor(Any(), applier, recomposer)
-	composeContext[Job]!!.invokeOnCompletion {
+
+	job.invokeOnCompletion {
 		composition.dispose()
 	}
+
 	composition.setContent(content)
 
-	val job = Job()
-
-	launch(start = UNDISPATCHED, context = composeContext + job) {
+	launch(start = UNDISPATCHED, context = composeContext) {
 		render()
 		while (true) {
 			recomposer.recomposeAndApplyChanges(1L)
@@ -64,7 +65,7 @@ fun CoroutineScope.launchMosaic(
 		}
 	}
 
-	launch(start = UNDISPATCHED, context = composeContext + job) {
+	launch(start = UNDISPATCHED, context = composeContext) {
 		while (true) {
 			clock.sendFrame(System.nanoTime())
 			delay(100)
