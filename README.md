@@ -6,7 +6,7 @@
 ## Usage
 
 Can't do much yet. For now, run `./gradlew installDist` to build a binary and then run
-`./mosaic/build/install/mosaic/bin/mosaic`. Must be run on its own to correctly detect
+`./examples/jest/build/install/jest/bin/jest`. Must be run on its own to correctly detect
 that your terminal supports ANSI control sequences.
 
 

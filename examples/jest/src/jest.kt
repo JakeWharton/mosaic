@@ -1,5 +1,6 @@
-package example
-
+import TestState.Fail
+import TestState.Pass
+import TestState.Running
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -8,9 +9,6 @@ import com.jakewharton.mosaic.Column
 import com.jakewharton.mosaic.Row
 import com.jakewharton.mosaic.Text
 import com.jakewharton.mosaic.launchMosaic
-import example.TestState.Fail
-import example.TestState.Pass
-import example.TestState.Running
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
