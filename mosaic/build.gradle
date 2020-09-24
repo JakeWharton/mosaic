@@ -3,29 +3,10 @@ apply plugin: 'application'
 
 mainClassName = 'example.MainKt'
 
-configurations {
-	kotlinPlugin
-}
-
 dependencies {
 	implementation project(':compose')
 	implementation project(':yoga')
 	implementation 'com.jakewharton.crossword:crossword:0.1.1'
 	implementation 'org.fusesource.jansi:jansi:1.18'
 	kotlinPlugin 'androidx.compose:compose-compiler:1.0.0-alpha03'
-}
-
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-	kotlinOptions {
-		useIR = true
-	}
-
-	def pluginConfiguration = configurations.kotlinPlugin
-	dependsOn(pluginConfiguration)
-	doFirst {
-		if (!pluginConfiguration.isEmpty()) {
-			kotlinOptions.freeCompilerArgs +=
-				"-Xplugin=${pluginConfiguration.files.first()}"
-		}
-	}
 }

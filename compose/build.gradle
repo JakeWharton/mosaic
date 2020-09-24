@@ -22,30 +22,15 @@ kotlin {
 	}
 }
 
-configurations {
-	kotlinPlugin
-}
-
 dependencies {
 	kotlinPlugin 'androidx.compose:compose-compiler:1.0.0-alpha03'
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-	kotlinOptions {
-		useIR = true
-	}
-
-	def pluginConfiguration = configurations.kotlinPlugin
-	dependsOn(pluginConfiguration)
 	doFirst {
 		if (!file('upstream/.git').exists()) {
 			throw new RuntimeException(
 				"Missing 'upstream' git submodule clone. Did you run 'git submodule update --init'?")
-		}
-
-		if (!pluginConfiguration.isEmpty()) {
-			kotlinOptions.freeCompilerArgs +=
-				"-Xplugin=${pluginConfiguration.files.first()}"
 		}
 	}
 }

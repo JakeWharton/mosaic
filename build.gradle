@@ -27,4 +27,27 @@ subprojects {
 			]
 		}
 	}
+
+	def configureKotlinPlugin = {
+		configurations {
+			kotlinPlugin
+		}
+
+		tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+			kotlinOptions {
+				useIR = true
+			}
+
+			def pluginConfiguration = configurations.kotlinPlugin
+			dependsOn(pluginConfiguration)
+			doFirst {
+				if (!pluginConfiguration.isEmpty()) {
+					kotlinOptions.freeCompilerArgs +=
+						"-Xplugin=${pluginConfiguration.files.first()}"
+				}
+			}
+		}
+	}
+	plugins.withId('org.jetbrains.kotlin.jvm', configureKotlinPlugin)
+	plugins.withId('org.jetbrains.kotlin.multiplatform', configureKotlinPlugin)
 }
