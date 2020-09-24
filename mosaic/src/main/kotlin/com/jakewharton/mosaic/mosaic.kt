@@ -14,7 +14,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.fusesource.jansi.Ansi.ansi
 import org.fusesource.jansi.AnsiConsole
+import java.util.concurrent.TimeUnit.NANOSECONDS
 import kotlin.coroutines.CoroutineContext
+
+private const val ansiConsole = true
 
 fun CoroutineScope.launchMosaic(
 	content: @Composable () -> Unit,
@@ -43,25 +46,45 @@ fun CoroutineScope.launchMosaic(
 	val recomposer = Recomposer(embeddingContext)
 	val composition = compositionFor(Any(), applier, recomposer)
 
-	AnsiConsole.systemInstall()
+	if (ansiConsole) {
+		AnsiConsole.systemInstall()
+	}
 	job.invokeOnCompletion {
-		AnsiConsole.systemUninstall()
+		if (ansiConsole) {
+			AnsiConsole.systemUninstall()
+		}
 		composition.dispose()
 	}
 
 	composition.setContent(content)
 
 	var lastHeight = 0
+	var lastRenderNanos = 0L
 	fun render() {
 		val root = rootNode.yoga
 		root.calculateLayout(UNDEFINED, UNDEFINED)
 
-		repeat(lastHeight) {
-			print(ansi().cursorUpLine().eraseLine())
-		}
-		println(rootNode.renderToString())
+		if (ansiConsole) {
+			repeat(lastHeight) {
+				print(ansi().cursorUpLine().eraseLine())
+			}
+			lastHeight = root.layoutHeight.toInt()
+		} else {
+			val renderNanos = System.nanoTime()
 
-		lastHeight = root.layoutHeight.toInt()
+			if (lastRenderNanos != 0L) {
+				println(buildString(60) {
+					repeat(50) { append('~') }
+					append(" +")
+					val nanoDiff = renderNanos - lastRenderNanos
+					append(NANOSECONDS.toMillis(nanoDiff))
+					append("ms")
+				})
+			}
+			lastRenderNanos = renderNanos
+		}
+
+		println(rootNode.renderToString())
 	}
 
 	launch(start = UNDISPATCHED, context = composeContext) {
