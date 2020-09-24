@@ -23,7 +23,7 @@ kotlin {
 }
 
 dependencies {
-	kotlinPlugin 'androidx.compose:compose-compiler:1.0.0-alpha03'
+	kotlinPlugin deps.composeCompiler
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
