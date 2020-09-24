@@ -12,11 +12,11 @@ import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.io.OutputStream
+import org.fusesource.jansi.Ansi.ansi
+import org.fusesource.jansi.AnsiConsole
 import kotlin.coroutines.CoroutineContext
 
 fun CoroutineScope.launchMosaic(
-	output: OutputStream = System.out,
 	content: @Composable () -> Unit,
 ): Job {
 	val mainThread = Thread.currentThread()
@@ -37,25 +37,35 @@ fun CoroutineScope.launchMosaic(
 	yoloGlobalEmbeddingContext = embeddingContext
 
 	val rootNode = BoxNode()
-	val writer = output.writer()
-	fun render() {
-		val root = rootNode.yoga
-		root.calculateLayout(UNDEFINED, UNDEFINED)
-		writer.append(rootNode.renderToString())
-		writer.appendLine()
-		writer.flush()
-	}
 
 	val applier = MosaicNodeApplier(rootNode)
 
 	val recomposer = Recomposer(embeddingContext)
 	val composition = compositionFor(Any(), applier, recomposer)
 
+	AnsiConsole.systemInstall()
 	job.invokeOnCompletion {
+		AnsiConsole.systemUninstall()
 		composition.dispose()
 	}
 
 	composition.setContent(content)
+
+	var lastHeight = 0
+	fun render() {
+		val root = rootNode.yoga
+		root.calculateLayout(UNDEFINED, UNDEFINED)
+
+		val rendered = rootNode.renderToString()
+		if (lastHeight == 0) {
+			// Special case 0 to avoid https://github.com/fusesource/jansi/issues/172.
+			println(rendered)
+		} else {
+			println(ansi().cursorUpLine(lastHeight).a(rendered))
+		}
+
+		lastHeight = root.layoutHeight.toInt()
+	}
 
 	launch(start = UNDISPATCHED, context = composeContext) {
 		render()
