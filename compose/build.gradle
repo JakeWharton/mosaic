@@ -14,11 +14,26 @@ kotlin {
 				api 'org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.3'
 			}
 		}
+		commonTest {
+			kotlin {
+				srcDir 'upstream/compose/runtime/runtime/src/test/kotlin'
+			}
+			dependencies {
+				implementation 'org.jetbrains.kotlin:kotlin-test-multiplatform'
+			}
+		}
 		jvmMain {
 			kotlin {
 				srcDir 'upstream/compose/runtime/runtime/src/jvmMain/kotlin'
 			}
 		}
+	}
+}
+
+tasks.named('jvmTest').configure { Test test ->
+	test.filter {
+		// TODO these rely on the global EmbeddingContext to function.
+		excludeTest 'androidx.compose.runtime.CompositionTests', null
 	}
 }
 
