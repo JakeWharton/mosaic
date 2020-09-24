@@ -56,13 +56,10 @@ fun CoroutineScope.launchMosaic(
 		val root = rootNode.yoga
 		root.calculateLayout(UNDEFINED, UNDEFINED)
 
-		val rendered = rootNode.renderToString()
-		if (lastHeight == 0) {
-			// Special case 0 to avoid https://github.com/fusesource/jansi/issues/172.
-			println(rendered)
-		} else {
-			println(ansi().cursorUpLine(lastHeight).a(rendered))
+		repeat(lastHeight) {
+			print(ansi().cursorUpLine().eraseLine())
 		}
+		println(rootNode.renderToString())
 
 		lastHeight = root.layoutHeight.toInt()
 	}
