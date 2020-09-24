@@ -8,7 +8,6 @@ import androidx.compose.runtime.dispatch.BroadcastFrameClock
 import androidx.compose.runtime.yoloGlobalEmbeddingContext
 import com.facebook.yoga.YogaConstants.UNDEFINED
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -24,7 +23,11 @@ fun CoroutineScope.launchMosaic(
 ): Job {
 	val mainThread = Thread.currentThread()
 
-	val clock = BroadcastFrameClock()
+	var dirty = true
+	val clock = BroadcastFrameClock {
+		dirty = true
+	}
+
 	val job = Job(coroutineContext[Job])
 	val composeContext = coroutineContext + clock + job
 
@@ -87,17 +90,17 @@ fun CoroutineScope.launchMosaic(
 		println(rootNode.renderToString())
 	}
 
-	launch(start = UNDISPATCHED, context = composeContext) {
-		render()
-		while (true) {
-			recomposer.recomposeAndApplyChanges(1L)
-			render()
-		}
+	launch(context = composeContext) {
+		recomposer.runRecomposeAndApplyChanges()
 	}
 
-	launch(start = UNDISPATCHED, context = composeContext) {
+	launch(context = composeContext) {
 		while (true) {
 			clock.sendFrame(System.nanoTime())
+			if (dirty) {
+				render()
+				dirty = false
+			}
 			delay(100)
 		}
 	}
