@@ -1,7 +1,16 @@
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
 
 kotlin {
-	jvm()
+	jvm {
+		testRuns.all {
+			executionTask.configure {
+				filter {
+					// TODO these rely on the global EmbeddingContext to function.
+					excludeTest 'androidx.compose.runtime.CompositionTests', null
+				}
+			}
+		}
+	}
 
 	sourceSets {
 		commonMain {
@@ -27,13 +36,6 @@ kotlin {
 				srcDir 'upstream/compose/runtime/runtime/src/jvmMain/kotlin'
 			}
 		}
-	}
-}
-
-tasks.named('jvmTest').configure { Test test ->
-	test.filter {
-		// TODO these rely on the global EmbeddingContext to function.
-		excludeTest 'androidx.compose.runtime.CompositionTests', null
 	}
 }
 
