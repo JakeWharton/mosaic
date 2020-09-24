@@ -8,6 +8,7 @@ import androidx.compose.runtime.dispatch.BroadcastFrameClock
 import androidx.compose.runtime.yoloGlobalEmbeddingContext
 import com.facebook.yoga.YogaConstants.UNDEFINED
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -59,6 +60,11 @@ fun CoroutineScope.launchMosaic(
 		composition.dispose()
 	}
 
+	// Start undispatched to ensure we can use suspending things inside the content.
+	launch(start = UNDISPATCHED, context = composeContext) {
+		recomposer.runRecomposeAndApplyChanges()
+	}
+
 	composition.setContent(content)
 
 	var lastHeight = 0
@@ -88,10 +94,6 @@ fun CoroutineScope.launchMosaic(
 		}
 
 		println(rootNode.renderToString())
-	}
-
-	launch(context = composeContext) {
-		recomposer.runRecomposeAndApplyChanges()
 	}
 
 	launch(context = composeContext) {
