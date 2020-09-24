@@ -1,6 +1,6 @@
 buildscript {
 	dependencies {
-		classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.0'
+		classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10'
 		classpath "dev.nokee.jni-library:dev.nokee.jni-library.gradle.plugin:0.4.0"
 	}
 	repositories {
