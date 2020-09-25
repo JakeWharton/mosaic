@@ -19,12 +19,14 @@ import java.util.concurrent.TimeUnit.NANOSECONDS
 import kotlin.coroutines.CoroutineContext
 
 interface Mosaic {
+	/** Returns true if there are pending changes that need applied with a call to [applyChanges]. */
+	val hasPendingChanges: Boolean
+
 	/**
-	 * Trigger a frame which will apply any pending changes to the output.
-	 *
-	 * @return True if the string representation should be re-rendered as it has probably changed.
+	 * Send a frame event which will apply any pending changes to the output.
+	 * This will reset [hasPendingChanges] to false.
 	 */
-	fun sendFrame(): Boolean
+	fun applyChanges()
 
 	fun cancel()
 
@@ -35,9 +37,9 @@ interface Mosaic {
 fun CoroutineScope.createMosaic(
 	content: @Composable () -> Unit,
 ): Mosaic {
-	var dirty = true
+	var pendingChanges = true
 	val clock = BroadcastFrameClock {
-		dirty = true
+		pendingChanges = true
 	}
 
 	val job = Job(coroutineContext[Job])
@@ -69,12 +71,11 @@ fun CoroutineScope.createMosaic(
 	composition.setContent(content)
 
 	return object : Mosaic {
-		override fun sendFrame(): Boolean {
-			clock.sendFrame(0L) // Frame time value is not used by Compose runtime.
+		override val hasPendingChanges get() = pendingChanges
 
-			val wasDirty = dirty
-			dirty = false
-			return wasDirty
+		override fun applyChanges() {
+			clock.sendFrame(0L) // Frame time value is not used by Compose runtime.
+			pendingChanges = false
 		}
 
 		override fun cancel() {
@@ -134,7 +135,8 @@ fun Mosaic.renderIn(scope: CoroutineScope): MosaicHandle {
 	var renderSignal: CompletableDeferred<Unit>? = null
 	val job = scope.launch {
 		while (true) {
-			if (sendFrame()) {
+			if (hasPendingChanges) {
+				applyChanges()
 				render(this@renderIn.toString())
 				renderSignal?.complete(Unit)
 			}
@@ -150,9 +152,11 @@ fun Mosaic.renderIn(scope: CoroutineScope): MosaicHandle {
 
 	return object : MosaicHandle {
 		override suspend fun awaitRenderThenCancel() {
-			CompletableDeferred<Unit>().also {
-				renderSignal = it
-				it.await()
+			if (hasPendingChanges) {
+				CompletableDeferred<Unit>().also {
+					renderSignal = it
+					it.await()
+				}
 			}
 			cancel()
 		}
