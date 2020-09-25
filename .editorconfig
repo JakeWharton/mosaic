@@ -10,3 +10,6 @@ insert_final_newline = true
 
 [*.yaml]
 indent_style = space
+
+[*.md]
+indent_style = space

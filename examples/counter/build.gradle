@@ -1,0 +1,9 @@
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'application'
+
+mainClassName = 'example.CounterKt'
+
+dependencies {
+	implementation project(':mosaic')
+	kotlinPlugin deps.composeCompiler
+}

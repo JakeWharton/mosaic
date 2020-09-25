@@ -12,22 +12,20 @@ import androidx.compose.runtime.snapshots.withMutableSnapshot
 import com.jakewharton.mosaic.Column
 import com.jakewharton.mosaic.Row
 import com.jakewharton.mosaic.Text
-import com.jakewharton.mosaic.launchMosaic
+import com.jakewharton.mosaic.runMosaic
 import example.TestState.Fail
 import example.TestState.Pass
 import example.TestState.Running
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.fusesource.jansi.Ansi
 import org.fusesource.jansi.Ansi.ansi
 import kotlin.random.Random
 
-fun main() = runBlocking {
+fun main() = runMosaic {
 	val tests = mutableStateListOf<Test>()
 
-	val handle = launchMosaic {
+	setContent {
 		val (done, running) = tests.partition { it.state != Running }
 		Column {
 			if (done.isNotEmpty()) {
@@ -48,42 +46,36 @@ fun main() = runBlocking {
 		}
 	}
 
-	// This scope is the "test runner" which interacts with the UI solely through 'tests'.
-	coroutineScope {
-		val paths = ArrayDeque(listOf(
-			"tests/login.kt",
-			"tests/signup.kt",
-			"tests/forgot-password.kt",
-			"tests/reset-password.kt",
-			"tests/view-profile.kt",
-			"tests/edit-profile.kt",
-			"tests/delete-profile.kt",
-			"tests/posts.kt",
-			"tests/post.kt",
-			"tests/comments.kt",
-		))
-		repeat(4) { // Number of test workers.
-			launch {
-				while (true) {
-					val path = paths.removeFirstOrNull() ?: break
-					val index = withMutableSnapshot {
-						val nextIndex = tests.size
-						tests += Test(path, Running)
-						nextIndex
-					}
-					delay(Random.nextLong(2_000L, 4_000L))
-					withMutableSnapshot {
-						// Flip a coin biased 60% to pass to produce the final state of the test.
-						val newState = if (Random.nextFloat() < .6f) Pass else Fail
-						tests[index] = tests[index].copy(state = newState)
-					}
+	val paths = ArrayDeque(listOf(
+		"tests/login.kt",
+		"tests/signup.kt",
+		"tests/forgot-password.kt",
+		"tests/reset-password.kt",
+		"tests/view-profile.kt",
+		"tests/edit-profile.kt",
+		"tests/delete-profile.kt",
+		"tests/posts.kt",
+		"tests/post.kt",
+		"tests/comments.kt",
+	))
+	repeat(4) { // Number of test workers.
+		launch {
+			while (true) {
+				val path = paths.removeFirstOrNull() ?: break
+				val index = withMutableSnapshot {
+					val nextIndex = tests.size
+					tests += Test(path, Running)
+					nextIndex
+				}
+				delay(Random.nextLong(2_000L, 4_000L))
+				withMutableSnapshot {
+					// Flip a coin biased 60% to pass to produce the final state of the test.
+					val newState = if (Random.nextFloat() < .6f) Pass else Fail
+					tests[index] = tests[index].copy(state = newState)
 				}
 			}
 		}
 	}
-
-	// Once the test work is complete, wait for the final render and then allow the program to exit.
-	handle.awaitRenderThenCancel()
 }
 
 @Composable

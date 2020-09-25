@@ -5,9 +5,29 @@
 
 ## Usage
 
-Can't do much yet. For now, run `./gradlew installDist` to build a binary and then run
-`./examples/jest/build/install/jest/bin/jest`. Must be run on its own to correctly detect
-that your terminal supports ANSI control sequences.
+```kotlin
+fun main() = runMosaic {
+  setContent {
+    Text("Hello, World!")
+  }
+}
+```
+
+Run work inside the `runMosaic` block after calling `setContent`. The output will automatically
+update as you alter shared state.
+
+
+## Examples
+
+Run `./gradlew installDist` to build the example binaries.
+
+ * Counter: A simple increasing number from 0 until 20.
+
+   `./examples/counter/build/install/counter/bin/counter`
+
+ * Jest: Example output of a test framework (such as JS's 'Jest').
+
+   `./examples/jest/build/install/jest/bin/jest`
 
 
 # License

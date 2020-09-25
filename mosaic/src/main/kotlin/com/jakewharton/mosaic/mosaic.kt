@@ -11,12 +11,36 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.fusesource.jansi.Ansi.ansi
 import org.fusesource.jansi.AnsiConsole
 import java.util.concurrent.TimeUnit.NANOSECONDS
 import kotlin.coroutines.CoroutineContext
+
+interface MosaicScope : CoroutineScope {
+	fun setContent(content: @Composable () -> Unit)
+}
+
+fun runMosaic(body: suspend MosaicScope.() -> Unit) {
+	runBlocking {
+		val mosaic = createMosaic()
+		val handle = mosaic.renderIn(this)
+
+		coroutineScope {
+			val scope = object : MosaicScope, CoroutineScope by this {
+				override fun setContent(content: @Composable () -> Unit) {
+					mosaic.setContent(content)
+				}
+			}
+			scope.body()
+		}
+
+		handle.awaitRenderThenCancel()
+	}
+}
 
 interface Mosaic {
 	/** Returns true if there are pending changes that need applied with a call to [applyChanges]. */
@@ -168,12 +192,4 @@ fun Mosaic.renderIn(scope: CoroutineScope): MosaicHandle {
 			job.cancel()
 		}
 	}
-}
-
-fun CoroutineScope.launchMosaic(
-	content: @Composable () -> Unit,
-): MosaicHandle {
-	val mosaic = createMosaic()
-	mosaic.setContent(content)
-	return mosaic.renderIn(this)
 }
