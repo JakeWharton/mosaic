@@ -143,7 +143,7 @@ fun Mosaic.renderIn(scope: CoroutineScope): MosaicHandle {
 				render(this@renderIn.toString())
 				renderSignal?.complete(Unit)
 			}
-			delay(100)
+			delay(50)
 		}
 	}
 	job.invokeOnCompletion {
