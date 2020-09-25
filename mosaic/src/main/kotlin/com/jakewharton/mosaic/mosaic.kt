@@ -30,14 +30,14 @@ interface Mosaic {
 
 	fun cancel()
 
+	fun setContent(content: @Composable () -> Unit)
+
 	/** Measure, layout, and render the content for display. */
 	override fun toString(): String
 }
 
-fun CoroutineScope.createMosaic(
-	content: @Composable () -> Unit,
-): Mosaic {
-	var pendingChanges = true
+fun CoroutineScope.createMosaic(): Mosaic {
+	var pendingChanges = false
 	val clock = BroadcastFrameClock {
 		pendingChanges = true
 	}
@@ -68,8 +68,6 @@ fun CoroutineScope.createMosaic(
 		recomposer.runRecomposeAndApplyChanges()
 	}
 
-	composition.setContent(content)
-
 	return object : Mosaic {
 		override val hasPendingChanges get() = pendingChanges
 
@@ -81,6 +79,11 @@ fun CoroutineScope.createMosaic(
 		override fun cancel() {
 			job.cancel()
 			composition.dispose()
+		}
+
+		override fun setContent(content: @Composable () -> Unit) {
+			composition.setContent(content)
+			pendingChanges = true
 		}
 
 		override fun toString(): String {
@@ -170,5 +173,7 @@ fun Mosaic.renderIn(scope: CoroutineScope): MosaicHandle {
 fun CoroutineScope.launchMosaic(
 	content: @Composable () -> Unit,
 ): MosaicHandle {
-	return createMosaic(content).renderIn(this)
+	val mosaic = createMosaic()
+	mosaic.setContent(content)
+	return mosaic.renderIn(this)
 }
