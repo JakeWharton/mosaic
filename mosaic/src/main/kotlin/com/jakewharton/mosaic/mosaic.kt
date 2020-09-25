@@ -17,10 +17,9 @@ import org.fusesource.jansi.AnsiConsole
 import java.util.concurrent.TimeUnit.NANOSECONDS
 import kotlin.coroutines.CoroutineContext
 
-private const val ansiConsole = true
-
-fun CoroutineScope.launchMosaic(
+private fun CoroutineScope.launchMosaic(
 	content: @Composable () -> Unit,
+	output: (String) -> Unit,
 ): Job {
 	val mainThread = Thread.currentThread()
 
@@ -50,13 +49,7 @@ fun CoroutineScope.launchMosaic(
 	val recomposer = Recomposer(embeddingContext)
 	val composition = compositionFor(Any(), applier, recomposer)
 
-	if (ansiConsole) {
-		AnsiConsole.systemInstall()
-	}
 	job.invokeOnCompletion {
-		if (ansiConsole) {
-			AnsiConsole.systemUninstall()
-		}
 		composition.dispose()
 	}
 
@@ -67,17 +60,44 @@ fun CoroutineScope.launchMosaic(
 
 	composition.setContent(content)
 
+	launch(context = composeContext) {
+		while (true) {
+			clock.sendFrame(System.nanoTime())
+			if (dirty) {
+				dirty = false
+
+				val root = rootNode.yoga
+				root.calculateLayout(UNDEFINED, UNDEFINED)
+				output(rootNode.renderToString())
+			}
+			delay(100)
+		}
+	}
+
+	return job
+}
+
+/**
+ * True when using ANSI control sequences to overwrite output.
+ * False for a debug-like output that renders each "frame" on its own with a timestamp delta.
+ */
+private const val ansiConsole = true
+
+fun CoroutineScope.launchMosaic(
+	content: @Composable () -> Unit,
+): Job {
+	if (ansiConsole) {
+		AnsiConsole.systemInstall()
+	}
+
 	var lastHeight = 0
 	var lastRenderNanos = 0L
-	fun render() {
-		val root = rootNode.yoga
-		root.calculateLayout(UNDEFINED, UNDEFINED)
-
+	val job = launchMosaic(content) { output ->
 		if (ansiConsole) {
 			repeat(lastHeight) {
 				print(ansi().cursorUpLine().eraseLine())
 			}
-			lastHeight = root.layoutHeight.toInt()
+			lastHeight = 1 + output.count { it == '\n' }
 		} else {
 			val renderNanos = System.nanoTime()
 
@@ -93,17 +113,12 @@ fun CoroutineScope.launchMosaic(
 			lastRenderNanos = renderNanos
 		}
 
-		println(rootNode.renderToString())
+		println(output)
 	}
 
-	launch(context = composeContext) {
-		while (true) {
-			clock.sendFrame(System.nanoTime())
-			if (dirty) {
-				render()
-				dirty = false
-			}
-			delay(100)
+	if (ansiConsole) {
+		job.invokeOnCompletion {
+			AnsiConsole.systemUninstall()
 		}
 	}
 
