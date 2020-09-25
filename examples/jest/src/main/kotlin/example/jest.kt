@@ -27,7 +27,7 @@ import kotlin.random.Random
 fun main() = runBlocking {
 	val tests = mutableStateListOf<Test>()
 
-	val job = launchMosaic {
+	val handle = launchMosaic {
 		val (done, running) = tests.partition { it.state != Running }
 		Column {
 			if (done.isNotEmpty()) {
@@ -82,10 +82,8 @@ fun main() = runBlocking {
 		}
 	}
 
-	// TODO how do we wait for the final frame?
-	delay(200) // HACK!
-
-	job.cancel()
+	// Once the test work is complete, wait for the final render and then allow the program to exit.
+	handle.awaitRenderThenCancel()
 }
 
 @Composable

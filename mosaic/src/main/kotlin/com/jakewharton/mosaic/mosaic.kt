@@ -7,6 +7,7 @@ import androidx.compose.runtime.compositionFor
 import androidx.compose.runtime.dispatch.BroadcastFrameClock
 import androidx.compose.runtime.yoloGlobalEmbeddingContext
 import com.facebook.yoga.YogaConstants.UNDEFINED
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Job
@@ -88,17 +89,18 @@ fun CoroutineScope.createMosaic(
 	}
 }
 
+interface MosaicHandle {
+	suspend fun awaitRenderThenCancel()
+	fun cancel()
+}
+
 /**
  * True when using ANSI control sequences to overwrite output.
  * False for a debug-like output that renders each "frame" on its own with a timestamp delta.
  */
 private const val ansiConsole = true
 
-fun CoroutineScope.launchMosaic(
-	content: @Composable () -> Unit,
-): Job {
-	val mosaic = createMosaic(content)
-
+fun Mosaic.renderIn(scope: CoroutineScope): MosaicHandle {
 	if (ansiConsole) {
 		AnsiConsole.systemInstall()
 	}
@@ -129,20 +131,40 @@ fun CoroutineScope.launchMosaic(
 		println(output)
 	}
 
-	val job = launch {
+	var renderSignal: CompletableDeferred<Unit>? = null
+	val job = scope.launch {
 		while (true) {
-			if (mosaic.sendFrame()) {
-				render(mosaic.toString())
+			if (sendFrame()) {
+				render(toString())
+				renderSignal?.complete(Unit)
 			}
 			delay(100)
 		}
 	}
 	job.invokeOnCompletion {
-		mosaic.cancel()
+		cancel()
 		if (ansiConsole) {
 			AnsiConsole.systemUninstall()
 		}
 	}
 
-	return job
+	return object : MosaicHandle {
+		override suspend fun awaitRenderThenCancel() {
+			CompletableDeferred<Unit>().also {
+				renderSignal = it
+				it.await()
+			}
+			cancel()
+		}
+
+		override fun cancel() {
+			job.cancel()
+		}
+	}
+}
+
+fun CoroutineScope.launchMosaic(
+	content: @Composable () -> Unit,
+): MosaicHandle {
+	return createMosaic(content).renderIn(this)
 }
