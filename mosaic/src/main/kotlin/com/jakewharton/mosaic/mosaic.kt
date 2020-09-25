@@ -135,7 +135,7 @@ fun Mosaic.renderIn(scope: CoroutineScope): MosaicHandle {
 	val job = scope.launch {
 		while (true) {
 			if (sendFrame()) {
-				render(toString())
+				render(this@renderIn.toString())
 				renderSignal?.complete(Unit)
 			}
 			delay(100)
