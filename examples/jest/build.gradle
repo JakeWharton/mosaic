@@ -1,7 +1,7 @@
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'application'
 
-mainClassName = 'JestKt'
+mainClassName = 'example.JestKt'
 
 dependencies {
 	implementation project(':mosaic')
@@ -10,8 +10,4 @@ dependencies {
 	implementation 'org.fusesource.jansi:jansi:1.18'
 
 	kotlinPlugin deps.composeCompiler
-}
-
-sourceSets {
-	main.kotlin.srcDir('src')
 }
