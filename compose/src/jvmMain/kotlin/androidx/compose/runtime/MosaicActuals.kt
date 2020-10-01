@@ -57,9 +57,10 @@ actual fun keySourceInfoOf(key: Any): String? = keyInfo[key]
 actual fun resetSourceInfo(): Unit = keyInfo.clear()
 
 internal actual object Trace {
-	actual fun beginSection(name: String) {
+	actual fun beginSection(name: String): Any? {
+		return null
 	}
-	actual fun endSection() {
+	actual fun endSection(token: Any?) {
 	}
 }
 
