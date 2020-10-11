@@ -3,7 +3,7 @@ apply plugin: 'org.jetbrains.kotlin.jvm'
 dependencies {
 	api project(':compose')
 	implementation project(':yoga')
-	implementation 'com.jakewharton.crossword:crossword:0.1.1'
+	implementation 'com.jakewharton.crossword:crossword:0.1.2'
 	implementation 'org.fusesource.jansi:jansi:1.18'
 
 	testImplementation 'junit:junit:4.13'
