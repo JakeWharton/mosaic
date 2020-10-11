@@ -10,7 +10,7 @@ internal sealed class MosaicNode {
 	val yoga: YogaNode = YogaNodeFactory.create()
 }
 
-internal class TextNode : MosaicNode() {
+internal class TextNode(initialValue: String = "") : MosaicNode() {
 	init {
 		yoga.setMeasureFunction { _, _, _, _, _ ->
 			val lines = value.split('\n')
@@ -20,15 +20,19 @@ internal class TextNode : MosaicNode() {
 		}
 	}
 
-	var value: String = ""
+	var value: String = initialValue
 		set(value) {
 			field = value
 			yoga.dirty()
 		}
+
+	override fun toString() = "Text($value)"
 }
 
 internal class BoxNode : MosaicNode() {
 	val children = mutableListOf<MosaicNode>()
+
+	override fun toString() = children.joinToString(prefix = "Box(", postfix = ")")
 }
 
 internal class MosaicNodeApplier(root: BoxNode) : AbstractApplier<MosaicNode>(root) {
@@ -49,7 +53,20 @@ internal class MosaicNodeApplier(root: BoxNode) : AbstractApplier<MosaicNode>(ro
 	override fun move(from: Int, to: Int, count: Int) {
 		val boxNode = current as BoxNode
 		boxNode.children.move(from, to, count)
-		TODO("Cannot move children in Yoga yet")
+
+		val yoga = boxNode.yoga
+		val newIndex = if (to > from) to - count else to
+		if (count == 1) {
+			val node = yoga.removeChildAt(from)
+			yoga.addChildAt(node, newIndex)
+		} else {
+			val nodes = Array(count) {
+				yoga.removeChildAt(from)
+			}
+			nodes.forEachIndexed { offset, node ->
+				yoga.addChildAt(node, newIndex + offset)
+			}
+		}
 	}
 
 	override fun onClear() {
