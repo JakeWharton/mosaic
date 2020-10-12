@@ -4,10 +4,13 @@ import androidx.compose.runtime.AbstractApplier
 import com.facebook.yoga.YogaMeasureOutput
 import com.facebook.yoga.YogaNode
 import com.facebook.yoga.YogaNodeFactory
+import com.jakewharton.crossword.TextCanvas
 import com.jakewharton.crossword.visualCodePointCount
 
 internal sealed class MosaicNode {
 	val yoga: YogaNode = YogaNodeFactory.create()
+
+	abstract fun render(canvas: TextCanvas)
 }
 
 internal class TextNode(initialValue: String = "") : MosaicNode() {
@@ -26,11 +29,29 @@ internal class TextNode(initialValue: String = "") : MosaicNode() {
 			yoga.dirty()
 		}
 
+	override fun render(canvas: TextCanvas) {
+		value.split('\n').forEachIndexed { index, line ->
+			canvas.write(index, 0, line)
+		}
+	}
+
 	override fun toString() = "Text($value)"
 }
 
 internal class BoxNode : MosaicNode() {
 	val children = mutableListOf<MosaicNode>()
+
+	override fun render(canvas: TextCanvas) {
+		for (child in children) {
+			val childYoga = child.yoga
+			val left = childYoga.layoutX.toInt()
+			val top = childYoga.layoutY.toInt()
+			val right = left + childYoga.layoutWidth.toInt()
+			val bottom = top + childYoga.layoutHeight.toInt()
+			val clipped = canvas.clip(left, top, right, bottom)
+			child.render(clipped)
+		}
+	}
 
 	override fun toString() = children.joinToString(prefix = "Box(", postfix = ")")
 }
