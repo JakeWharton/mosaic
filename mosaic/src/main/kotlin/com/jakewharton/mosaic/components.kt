@@ -9,15 +9,64 @@ import com.facebook.yoga.YogaFlexDirection
 @Composable
 fun Text(
 	value: String,
+	color: Color? = null,
+	background: Color? = null,
 	style: TextStyle? = null,
 ) {
 	emit<TextNode, MosaicNodeApplier>(::TextNode) {
 		set(value) {
 			this.value = value
 		}
+		set(color) {
+			this.color = color
+		}
+		set(background) {
+			this.background = background
+		}
 		set(style) {
 			this.style = style
 		}
+	}
+}
+
+@Immutable
+class Color private constructor(
+	internal val fg: Int,
+	internal val bg: Int,
+) {
+	companion object {
+		@Stable
+		val Black = Color(30, 40)
+		@Stable
+		val Red = Color(31, 41)
+		@Stable
+		val Green = Color(32, 42)
+		@Stable
+		val Yellow = Color(33, 43)
+		@Stable
+		val Blue = Color(34, 44)
+		@Stable
+		val Magenta = Color(35, 45)
+		@Stable
+		val Cyan = Color(36, 46)
+		@Stable
+		val White = Color(37, 47)
+		@Stable
+		val BrightBlack = Color(90, 100)
+		@Stable
+		val BrightRed = Color(91, 101)
+		@Stable
+		val BrightGreen = Color(92, 102)
+		@Stable
+		val BrightYellow = Color(93, 103)
+		@Stable
+		val BrightBlue = Color(94, 104)
+		@Stable
+		val BrightMagenta = Color(95, 105)
+		@Stable
+		val BrightCyan = Color(96, 106)
+		@Stable
+		val BrightWhite = Color(97, 107)
 	}
 }
 

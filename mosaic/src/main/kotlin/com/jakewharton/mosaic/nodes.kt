@@ -35,6 +35,8 @@ internal class TextNode(initialValue: String = "") : MosaicNode() {
 			yoga.dirty()
 		}
 
+	var color: Color? = null
+	var background: Color? = null
 	var style: TextStyle? = null
 
 	override fun render(canvas: TextCanvas) {
@@ -58,9 +60,21 @@ internal class TextNode(initialValue: String = "") : MosaicNode() {
 				if (Strikethrough in style) {
 					append("\u001B[9m")
 				}
+				color?.let { color ->
+					append("\u001B[${color.fg}m")
+				}
+				background?.let { background ->
+					append("\u001B[${background.bg}m")
+				}
 
 				append(line)
 
+				if (color != null) {
+					append("\u001B[39m")
+				}
+				if (background != null) {
+					append("\u001B[49m")
+				}
 				if (Strikethrough in style) {
 					append("\u001B[29m")
 				}

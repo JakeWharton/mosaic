@@ -5,9 +5,5 @@ mainClassName = 'example.JestKt'
 
 dependencies {
 	implementation project(':mosaic')
-
-	// TODO all usages of this should be moved into the Text API exposed by mosaic
-	implementation 'org.fusesource.jansi:jansi:1.18'
-
 	kotlinPlugin deps.composeCompiler
 }

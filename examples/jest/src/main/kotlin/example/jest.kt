@@ -9,17 +9,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.withMutableSnapshot
+import com.jakewharton.mosaic.Color.Companion.Black
+import com.jakewharton.mosaic.Color.Companion.Green
+import com.jakewharton.mosaic.Color.Companion.Red
+import com.jakewharton.mosaic.Color.Companion.Yellow
 import com.jakewharton.mosaic.Column
 import com.jakewharton.mosaic.Row
 import com.jakewharton.mosaic.Text
+import com.jakewharton.mosaic.TextStyle.Companion.Bold
 import com.jakewharton.mosaic.runMosaic
 import example.TestState.Fail
 import example.TestState.Pass
 import example.TestState.Running
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.fusesource.jansi.Ansi
-import org.fusesource.jansi.Ansi.ansi
 import kotlin.random.Random
 
 fun main() = runMosaic {
@@ -80,23 +83,25 @@ fun main() = runMosaic {
 
 @Composable
 fun TestRow(test: Test) {
-	val bg = when (test.state) {
-		Running -> Ansi.Color.YELLOW
-		Pass -> Ansi.Color.GREEN
-		Fail -> Ansi.Color.RED
+	Row {
+		val bg = when (test.state) {
+			Running -> Yellow
+			Pass -> Green
+			Fail -> Red
+		}
+		// TODO use start/end padding of 1 to achieve spacing
+		val state = when (test.state) {
+			Running -> " RUNS "
+			Pass -> " PASS "
+			Fail -> " FAIL "
+		}
+		Text(state, color = Black, background = bg)
+
+		val dir = test.path.substringBeforeLast('/')
+		val name = test.path.substringAfterLast('/')
+		Text(" $dir/")
+		Text(name, style = Bold)
 	}
-	val state = when (test.state) {
-		Running -> "RUNS"
-		Pass -> "PASS"
-		Fail -> "FAIL"
-	}
-	val dir = test.path.substringBeforeLast('/')
-	val name = test.path.substringAfterLast('/')
-	Text(ansi()
-		.bg(bg).fgBlack().a(' ').a(state).a(' ').reset()
-		.a(' ')
-		.a(dir).a('/').fgBrightDefault().bold().a(name).reset()
-		.toString())
 }
 
 @Composable
@@ -106,18 +111,14 @@ private fun Summary(tests: SnapshotStateList<Test>) {
 
 		val failed = tests.count { it.state == Fail }
 		if (failed > 0) {
-			Text(ansi()
-				.fgRed().a(failed).a(" failed").reset()
-				.a(", ")
-				.toString())
+			Text("$failed failed", color = Red)
+			Text(", ")
 		}
 
 		val passed = tests.count { it.state == Pass }
 		if (passed > 0) {
-			Text(ansi()
-				.fgGreen().a(passed).a(" passed").reset()
-				.a(", ")
-				.toString())
+			Text("$passed passed", color = Green)
+			Text(", ")
 		}
 
 		Text("${tests.size} total")
