@@ -136,27 +136,28 @@ fun Mosaic.renderIn(scope: CoroutineScope): MosaicHandle {
 	var lastHeight = 0
 	var lastRenderNanos = 0L
 	fun render(output: String) {
-		if (ansiConsole) {
-			repeat(lastHeight) {
-				print(ansi().cursorUpLine().eraseLine())
-			}
-			lastHeight = 1 + output.count { it == '\n' }
-		} else {
-			val renderNanos = System.nanoTime()
+		print(buildString {
+			if (ansiConsole) {
+				val ansi = ansi(this)
+				repeat(lastHeight) {
+					ansi.cursorUpLine().eraseLine()
+				}
+				lastHeight = 1 + output.count { it == '\n' }
+			} else {
+				val renderNanos = System.nanoTime()
 
-			if (lastRenderNanos != 0L) {
-				println(buildString(60) {
+				if (lastRenderNanos != 0L) {
 					repeat(50) { append('~') }
 					append(" +")
 					val nanoDiff = renderNanos - lastRenderNanos
 					append(NANOSECONDS.toMillis(nanoDiff))
-					append("ms")
-				})
+					appendLine("ms")
+				}
+				lastRenderNanos = renderNanos
 			}
-			lastRenderNanos = renderNanos
-		}
 
-		println(output)
+			appendLine(output)
+		})
 	}
 
 	var renderSignal: CompletableDeferred<Unit>? = null
