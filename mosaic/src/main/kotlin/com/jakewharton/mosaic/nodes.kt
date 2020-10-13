@@ -6,6 +6,12 @@ import com.facebook.yoga.YogaNode
 import com.facebook.yoga.YogaNodeFactory
 import com.jakewharton.crossword.TextCanvas
 import com.jakewharton.crossword.visualCodePointCount
+import com.jakewharton.mosaic.TextStyle.Companion.Bold
+import com.jakewharton.mosaic.TextStyle.Companion.Dim
+import com.jakewharton.mosaic.TextStyle.Companion.Invert
+import com.jakewharton.mosaic.TextStyle.Companion.Italic
+import com.jakewharton.mosaic.TextStyle.Companion.Strikethrough
+import com.jakewharton.mosaic.TextStyle.Companion.Underline
 
 internal sealed class MosaicNode {
 	val yoga: YogaNode = YogaNodeFactory.create()
@@ -29,9 +35,51 @@ internal class TextNode(initialValue: String = "") : MosaicNode() {
 			yoga.dirty()
 		}
 
+	var style: TextStyle? = null
+
 	override fun render(canvas: TextCanvas) {
 		value.split('\n').forEachIndexed { index, line ->
-			canvas.write(index, 0, line)
+			val write = buildString {
+				if (Bold in style) {
+					append("\u001B[1m")
+				}
+				if (Dim in style) {
+					append("\u001B[2m")
+				}
+				if (Italic in style) {
+					append("\u001B[3m")
+				}
+				if (Underline in style) {
+					append("\u001B[4m")
+				}
+				if (Invert in style) {
+					append("\u001B[7m")
+				}
+				if (Strikethrough in style) {
+					append("\u001B[9m")
+				}
+
+				append(line)
+
+				if (Strikethrough in style) {
+					append("\u001B[29m")
+				}
+				if (Invert in style) {
+					append("\u001B[27m")
+				}
+				if (Underline in style) {
+					append("\u001B[24m")
+				}
+				if (Italic in style) {
+					append("\u001B[23m")
+				}
+				if (Bold in style || Dim in style) {
+					// 22 clears both 1 (bold) and 2 (dim).
+					append("\u001B[22m")
+				}
+			}
+
+			canvas.write(index, 0, write)
 		}
 	}
 
