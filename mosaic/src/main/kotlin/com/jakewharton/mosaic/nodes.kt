@@ -42,54 +42,62 @@ internal class TextNode(initialValue: String = "") : MosaicNode() {
 	override fun render(canvas: TextCanvas) {
 		value.split('\n').forEachIndexed { index, line ->
 			val write = buildString {
+				val attributes = mutableListOf<Int>()
 				if (Bold in style) {
-					append("\u001B[1m")
+					attributes += 1
 				}
 				if (Dim in style) {
-					append("\u001B[2m")
+					attributes += 2
 				}
 				if (Italic in style) {
-					append("\u001B[3m")
+					attributes += 3
 				}
 				if (Underline in style) {
-					append("\u001B[4m")
+					attributes += 4
 				}
 				if (Invert in style) {
-					append("\u001B[7m")
+					attributes += 7
 				}
 				if (Strikethrough in style) {
-					append("\u001B[9m")
+					attributes += 9
 				}
 				color?.let { color ->
-					append("\u001B[${color.fg}m")
+					attributes += color.fg
 				}
 				background?.let { background ->
-					append("\u001B[${background.bg}m")
+					attributes += background.bg
+				}
+				if (attributes.isNotEmpty()) {
+					attributes.joinTo(this, separator = ";", prefix = "\u001B[", postfix = "m")
+					attributes.clear()
 				}
 
 				append(line)
 
 				if (color != null) {
-					append("\u001B[39m")
+					attributes += 39
 				}
 				if (background != null) {
-					append("\u001B[49m")
+					attributes += 49
 				}
 				if (Strikethrough in style) {
-					append("\u001B[29m")
+					attributes += 29
 				}
 				if (Invert in style) {
-					append("\u001B[27m")
+					attributes += 27
 				}
 				if (Underline in style) {
-					append("\u001B[24m")
+					attributes += 24
 				}
 				if (Italic in style) {
-					append("\u001B[23m")
+					attributes += 23
 				}
 				if (Bold in style || Dim in style) {
 					// 22 clears both 1 (bold) and 2 (dim).
-					append("\u001B[22m")
+					attributes += 22
+				}
+				if (attributes.isNotEmpty()) {
+					attributes.joinTo(this, separator = ";", prefix = "\u001B[", postfix = "m")
 				}
 			}
 
