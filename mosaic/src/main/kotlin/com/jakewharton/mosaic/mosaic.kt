@@ -7,6 +7,7 @@ import androidx.compose.runtime.compositionFor
 import androidx.compose.runtime.dispatch.BroadcastFrameClock
 import androidx.compose.runtime.yoloGlobalEmbeddingContext
 import com.facebook.yoga.YogaConstants.UNDEFINED
+import com.jakewharton.crossword.TextCanvas
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
@@ -111,8 +112,12 @@ fun CoroutineScope.createMosaic(): Mosaic {
 		}
 
 		override fun toString(): String {
-			rootNode.yoga.calculateLayout(UNDEFINED, UNDEFINED)
-			return rootNode.renderToString()
+			val canvas = with(rootNode.yoga) {
+				calculateLayout(UNDEFINED, UNDEFINED)
+				TextCanvas(layoutWidth.toInt(), layoutHeight.toInt())
+			}
+			rootNode.render(canvas)
+			return canvas.toString()
 		}
 	}
 }
