@@ -16,7 +16,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.fusesource.jansi.Ansi.ansi
 import org.fusesource.jansi.AnsiConsole
 import java.util.concurrent.TimeUnit.NANOSECONDS
 import kotlin.coroutines.CoroutineContext
@@ -143,9 +142,9 @@ fun Mosaic.renderIn(scope: CoroutineScope): MosaicHandle {
 	fun render(output: String) {
 		print(buildString {
 			if (ansiConsole) {
-				val ansi = ansi(this)
 				repeat(lastHeight) {
-					ansi.cursorUpLine().eraseLine()
+					append("\u001B[F") // Cursor up line.
+					append("\u001B[K") // Clear line.
 				}
 				lastHeight = 1 + output.count { it == '\n' }
 			} else {
