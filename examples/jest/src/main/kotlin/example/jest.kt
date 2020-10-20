@@ -1,8 +1,8 @@
 package example
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedTask
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.launchInComposition
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -125,7 +125,7 @@ private fun Summary(tests: SnapshotStateList<Test>) {
 	}
 
 	var elapsed by remember { mutableStateOf(0) }
-	launchInComposition {
+	LaunchedTask {
 		while (true) {
 			delay(1_000)
 			elapsed++
