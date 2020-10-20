@@ -2,6 +2,8 @@
 
 [Jetpack Compose](https://developer.android.com/jetpack/compose) for console UI. Inspired by [Ink](https://github.com/vadimdemedes/ink).
 
+<img src="examples/jest/demo.svg">
+
 
 ## Usage
 
