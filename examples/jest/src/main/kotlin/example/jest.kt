@@ -70,10 +70,10 @@ fun main() = runMosaic {
 					tests += Test(path, Running)
 					nextIndex
 				}
-				delay(Random.nextLong(2_000L, 4_000L))
+				delay(random.nextLong(2_500L, 4_000L))
 				withMutableSnapshot {
 					// Flip a coin biased 60% to pass to produce the final state of the test.
-					val newState = if (Random.nextFloat() < .6f) Pass else Fail
+					val newState = if (random.nextFloat() < .6f) Pass else Fail
 					tests[index] = tests[index].copy(state = newState)
 				}
 			}
@@ -144,3 +144,6 @@ enum class TestState {
 	Pass,
 	Fail,
 }
+
+// Use a random with a fixed seed for deterministic output.
+private val random = Random(1234)
