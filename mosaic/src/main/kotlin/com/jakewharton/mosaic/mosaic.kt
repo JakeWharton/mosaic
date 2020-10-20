@@ -142,11 +142,25 @@ fun Mosaic.renderIn(scope: CoroutineScope): MosaicHandle {
 	fun render(output: String) {
 		print(buildString {
 			if (ansiConsole) {
+				val lines = output.split("\n")
+
 				repeat(lastHeight) {
 					append("\u001B[F") // Cursor up line.
-					append("\u001B[K") // Clear line.
 				}
-				lastHeight = 1 + output.count { it == '\n' }
+
+				for (line in lines) {
+					append(line)
+					append("\u001B[K") // Clear rest of line.
+					append('\n')
+				}
+
+				// If the new output contains fewer lines than the last output, clear those old lines.
+				for (unused in 0 until lastHeight - lines.size) {
+					append("\u001B[K") // Clear line.
+					append('\n')
+				}
+
+				lastHeight = lines.size
 			} else {
 				val renderNanos = System.nanoTime()
 
@@ -158,9 +172,9 @@ fun Mosaic.renderIn(scope: CoroutineScope): MosaicHandle {
 					appendLine("ms")
 				}
 				lastRenderNanos = renderNanos
-			}
 
-			appendLine(output)
+				appendLine(output)
+			}
 		})
 	}
 
