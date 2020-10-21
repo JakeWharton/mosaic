@@ -155,9 +155,11 @@ fun Mosaic.renderIn(scope: CoroutineScope): MosaicHandle {
 				}
 
 				// If the new output contains fewer lines than the last output, clear those old lines.
-				for (unused in 0 until lastHeight - lines.size) {
+				for (i in 0 until lastHeight - lines.size) {
+					if (i > 0) {
+						append('\n')
+					}
 					append("\u001B[K") // Clear line.
-					append('\n')
 				}
 
 				lastHeight = lines.size
