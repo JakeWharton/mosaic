@@ -7,6 +7,8 @@ kotlin {
 				filter {
 					// TODO these rely on the global EmbeddingContext to function.
 					excludeTest 'androidx.compose.runtime.CompositionTests', null
+					// TODO flaky test https://issuetracker.google.com/issues/169406779
+					excludeTest 'androidx.compose.runtime.snapshots.DerivedSnapshotStateTests', 'multipleSnapshotsAreIsolatedAndCanBeApplied'
 				}
 			}
 		}
