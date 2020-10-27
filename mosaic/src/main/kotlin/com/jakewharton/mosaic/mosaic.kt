@@ -17,6 +17,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.fusesource.jansi.AnsiConsole
+import java.nio.charset.StandardCharsets.UTF_8
 import java.util.concurrent.TimeUnit.NANOSECONDS
 import kotlin.coroutines.CoroutineContext
 
@@ -140,7 +141,7 @@ fun Mosaic.renderIn(scope: CoroutineScope): MosaicHandle {
 	var lastHeight = 0
 	var lastRenderNanos = 0L
 	fun render(output: String) {
-		print(buildString {
+		val rendered = buildString {
 			if (ansiConsole) {
 				val lines = output.split("\n")
 
@@ -177,7 +178,13 @@ fun Mosaic.renderIn(scope: CoroutineScope): MosaicHandle {
 
 				appendLine(output)
 			}
-		})
+		}
+
+		// Write a single byte array to stdout to create an atomic visual change. If you instead write
+		// the string, it will be UTF-8 encoded using an intermediate buffer that appears to be
+		// periodically flushed to the underlying byte stream. This will cause fraction-of-a-second
+		// flickers of broken content.
+		System.out.write(rendered.toByteArray(UTF_8))
 	}
 
 	var renderSignal: CompletableDeferred<Unit>? = null
