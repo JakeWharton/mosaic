@@ -125,7 +125,7 @@ class NodeApplierTest {
 		assertChildren()
 	}
 
-	@Ignore // TODO http://r.android.com/1448375
+	@Ignore // TODO http://r.android.com/1478703
 	@Test fun moveSingleLower() {
 		val one = TextNode("one")
 		applier.insert(0, one)
@@ -138,7 +138,7 @@ class NodeApplierTest {
 		assertChildren(three, one, two)
 	}
 
-	@Ignore // TODO http://r.android.com/1448375
+	@Ignore // TODO http://r.android.com/1478703
 	@Test fun moveSingleHigher() {
 		val one = TextNode("one")
 		applier.insert(0, one)

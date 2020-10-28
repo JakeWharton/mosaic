@@ -1,6 +1,6 @@
 buildscript {
 	ext.deps = [
-		'composeCompiler': 'androidx.compose.compiler:compiler:1.0.0-alpha05'
+		'composeCompiler': 'androidx.compose.compiler:compiler:1.0.0-alpha06'
 	]
 
 	dependencies {
