@@ -3,7 +3,6 @@ package example
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshots.withMutableSnapshot
 import com.jakewharton.mosaic.Text
 import com.jakewharton.mosaic.runMosaic
 import kotlinx.coroutines.delay
@@ -18,9 +17,6 @@ fun main() = runMosaic {
 
 	for (i in 1..20) {
 		delay(250)
-		withMutableSnapshot {
-			countValue.value = i
-		}
+		countValue.value = i
 	}
-	// TODO this doesn't display 20 but should!
 }

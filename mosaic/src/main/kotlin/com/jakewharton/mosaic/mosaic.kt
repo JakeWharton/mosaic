@@ -16,6 +16,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.yield
 import org.fusesource.jansi.AnsiConsole
 import java.nio.charset.StandardCharsets.UTF_8
 import java.util.concurrent.TimeUnit.NANOSECONDS
@@ -38,6 +39,14 @@ fun runMosaic(body: suspend MosaicScope.() -> Unit) {
 			}
 			scope.body()
 		}
+
+		// Ensure the final state modification is discovered. We need to ensure that the coroutine
+		// which is running the recomposition loop wakes up, notices the changes, and waits for the
+		// next frame. If you are using snapshots this only requires a single yield. If you are not
+		// then it requires two yields. This is not great! But at least it's implementation detail...
+		// TODO https://issuetracker.google.com/issues/169425431
+		yield()
+		yield()
 
 		handle.awaitRenderThenCancel()
 	}

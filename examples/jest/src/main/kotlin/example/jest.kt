@@ -71,11 +71,10 @@ fun main() = runMosaic {
 					nextIndex
 				}
 				delay(random.nextLong(2_500L, 4_000L))
-				withMutableSnapshot {
-					// Flip a coin biased 60% to pass to produce the final state of the test.
-					val newState = if (random.nextFloat() < .6f) Pass else Fail
-					tests[index] = tests[index].copy(state = newState)
-				}
+
+				// Flip a coin biased 60% to pass to produce the final state of the test.
+				val newState = if (random.nextFloat() < .6f) Pass else Fail
+				tests[index] = tests[index].copy(state = newState)
 			}
 		}
 	}
