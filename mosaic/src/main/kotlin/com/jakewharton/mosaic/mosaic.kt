@@ -194,6 +194,10 @@ fun Mosaic.renderIn(scope: CoroutineScope): MosaicHandle {
 		// periodically flushed to the underlying byte stream. This will cause fraction-of-a-second
 		// flickers of broken content.
 		System.out.write(rendered.toByteArray(UTF_8))
+
+		// Explicitly flush to ensure the trailing line clear is sent. Empirically, this appears to be
+		// buffered and not processed until the next frame, or not at all on the final frame.
+		System.out.flush()
 	}
 
 	var renderSignal: CompletableDeferred<Unit>? = null
