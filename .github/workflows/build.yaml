@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - '*'
-    tags:
+    tags-ignore:
       - '*'
 
 jobs:
@@ -25,3 +25,9 @@ jobs:
           java-version: 11
 
       - run: ./gradlew build
+
+      - run: ./gradlew publish
+        if: ${{ github.ref == 'refs/heads/trunk' && github.repository == 'JakeWharton/mosaic' }}
+        env:
+          ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
+          ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
