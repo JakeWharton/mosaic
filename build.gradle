@@ -32,7 +32,7 @@ subprojects {
 		}
 	}
 
-	def configureKotlinPlugin = {
+	plugins.withId('org.jetbrains.kotlin.jvm') {
 		configurations {
 			kotlinPlugin
 		}
@@ -46,12 +46,12 @@ subprojects {
 			dependsOn(pluginConfiguration)
 			doFirst {
 				if (!pluginConfiguration.isEmpty()) {
-					kotlinOptions.freeCompilerArgs +=
-						"-Xplugin=${pluginConfiguration.files.first()}"
+					kotlinOptions.freeCompilerArgs += [
+						"-Xplugin=${pluginConfiguration.files.first()}",
+						"-Xmulti-platform",
+					]
 				}
 			}
 		}
 	}
-	plugins.withId('org.jetbrains.kotlin.jvm', configureKotlinPlugin)
-	plugins.withId('org.jetbrains.kotlin.multiplatform', configureKotlinPlugin)
 }

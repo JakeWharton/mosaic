@@ -1,48 +1,34 @@
-apply plugin: 'org.jetbrains.kotlin.multiplatform'
+apply plugin: 'org.jetbrains.kotlin.jvm'
 
-kotlin {
-	jvm {
-		testRuns.all {
-			executionTask.configure {
-				filter {
-					// TODO these rely on the global EmbeddingContext to function.
-					excludeTest 'androidx.compose.runtime.CompositionTests', null
-					// TODO flaky test https://issuetracker.google.com/issues/169406779
-					excludeTest 'androidx.compose.runtime.snapshots.DerivedSnapshotStateTests', 'multipleSnapshotsAreIsolatedAndCanBeApplied'
-				}
-			}
+sourceSets {
+	main {
+		kotlin {
+			srcDir 'upstream/compose/runtime/runtime/src/commonMain/kotlin'
+			srcDir 'upstream/compose/runtime/runtime-dispatch/src/commonMain/kotlin'
+			srcDir 'upstream/compose/runtime/runtime/src/jvmMain/kotlin'
 		}
 	}
-
-	sourceSets {
-		commonMain {
-			kotlin {
-				srcDir 'upstream/compose/runtime/runtime/src/commonMain/kotlin'
-				srcDir 'upstream/compose/runtime/runtime-dispatch/src/commonMain/kotlin'
-			}
-			dependencies {
-				api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9'
-				api 'org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.3'
-			}
-		}
-		commonTest {
-			kotlin {
-				srcDir 'upstream/compose/runtime/runtime/src/test/kotlin'
-			}
-			dependencies {
-				implementation 'org.jetbrains.kotlin:kotlin-test-multiplatform'
-			}
-		}
-		jvmMain {
-			kotlin {
-				srcDir 'upstream/compose/runtime/runtime/src/jvmMain/kotlin'
-			}
+	test {
+		kotlin {
+			srcDir 'upstream/compose/runtime/runtime/src/test/kotlin'
 		}
 	}
 }
 
 dependencies {
+	api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9'
+	api 'org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.3'
+
 	kotlinPlugin deps.composeCompiler
+
+	testImplementation 'org.jetbrains.kotlin:kotlin-test-multiplatform'
+}
+
+test.filter {
+	// TODO these rely on the global EmbeddingContext to function.
+	excludeTest 'androidx.compose.runtime.CompositionTests', null
+	// TODO flaky test https://issuetracker.google.com/issues/169406779
+	excludeTest 'androidx.compose.runtime.snapshots.DerivedSnapshotStateTests', 'multipleSnapshotsAreIsolatedAndCanBeApplied'
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
