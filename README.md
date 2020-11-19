@@ -23,11 +23,11 @@ update as you alter shared state.
 
 Run `./gradlew installDist` to build the example binaries.
 
- * Counter: A simple increasing number from 0 until 20.
+ * [Counter](examples/counter): A simple increasing number from 0 until 20.
 
    `./examples/counter/build/install/counter/bin/counter`
 
- * Jest: Example output of a test framework (such as JS's 'Jest').
+ * [Jest](examples/jest): Example output of a test framework (such as JS's 'Jest').
 
    `./examples/jest/build/install/jest/bin/jest`
 
