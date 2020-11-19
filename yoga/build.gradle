@@ -1,13 +1,50 @@
 apply plugin: 'dev.nokee.jni-library'
+apply plugin: 'java' // jni-library is incompatible with the java-library plugin
 
 library {
 	dependencies {
-		api project(':yoga:java')
 		nativeImplementation project(':yoga:jni')
 	}
 
 	variants.configureEach {
 		// TODO something for os and arch.
 		resourcePath = "/"
+	}
+}
+
+sourceSets {
+	main.java {
+		srcDir file('upstream/java')
+		srcDir file('upstream/java/proguard-annotations/src/main/java')
+		include 'com/**/*.java'
+	}
+
+	test.java {
+		srcDir file('upstream/java/tests')
+		exclude '**/YogaNodeTest.java'
+	}
+}
+
+test.filter {
+	// TODO causes SIGSEGV
+	excludeTest 'com.facebook.yoga.YogaNodeStylePropertiesTest', 'testPositionTypeDefault[JNI]'
+
+	// TODO causes SIGSEGV
+	excludeTest 'com.facebook.yoga.YogaLoggerTest', null
+}
+
+dependencies {
+	api 'com.google.code.findbugs:jsr305:3.0.2'
+
+	testImplementation project(':yoga')
+	testImplementation 'junit:junit:4.13'
+}
+
+compileJava {
+	doFirst {
+		if (!file('upstream/.git').exists()) {
+			throw new RuntimeException(
+				"Missing 'upstream' git submodule clone. Did you run 'git submodule update --init'?")
+		}
 	}
 }
