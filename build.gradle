@@ -1,11 +1,19 @@
 buildscript {
+	ext.versions = [
+		'compose': '1.0.0-alpha06',
+	]
 	ext.deps = [
-		'composeCompiler': 'androidx.compose.compiler:compiler:1.0.0-alpha06'
+		'composeCompiler': "androidx.compose.compiler:compiler:${versions.compose}",
+		'kotlinGradlePlugin': 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10',
+		'junit': 'junit:junit:4.13.1',
+		'truth': 'com.google.truth:truth:1.1',
 	]
 
 	dependencies {
-		classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10'
-		classpath "dev.nokee.jni-library:dev.nokee.jni-library.gradle.plugin:0.4.0"
+		classpath deps.kotlinGradlePlugin
+		classpath 'dev.nokee.jni-library:dev.nokee.jni-library.gradle.plugin:0.4.0'
+		classpath 'com.vanniktech:gradle-maven-publish-plugin:0.13.0'
+		classpath 'org.jetbrains.dokka:dokka-gradle-plugin:0.10.1'
 	}
 	repositories {
 		mavenCentral()
@@ -14,12 +22,27 @@ buildscript {
 }
 
 subprojects {
+	group = GROUP
+	version = VERSION_NAME
+
 	repositories {
 		mavenCentral()
 		google()
 		maven {
 			url 'https://kotlin.bintray.com/kotlinx'
 		}
+		jcenter()
+	}
+
+	tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+		kotlinOptions {
+			jvmTarget = '1.8'
+		}
+	}
+
+	tasks.withType(JavaCompile).configureEach {
+		sourceCompatibility = JavaVersion.VERSION_1_8
+		targetCompatibility = JavaVersion.VERSION_1_8
 	}
 
 	tasks.withType(org.jetbrains.kotlin.gradle.dsl.KotlinCompile).configureEach { task ->
@@ -48,8 +71,19 @@ subprojects {
 				if (!pluginConfiguration.isEmpty()) {
 					kotlinOptions.freeCompilerArgs += [
 						"-Xplugin=${pluginConfiguration.files.first()}",
-						"-Xmulti-platform",
 					]
+				}
+			}
+		}
+	}
+
+	plugins.withId('com.vanniktech.maven.publish') {
+		mavenPublish {
+			targets {
+				installArchives {
+					def url = file("${rootProject.buildDir}/localMaven").toURI().toString()
+					releaseRepositoryUrl = url
+					snapshotRepositoryUrl = url
 				}
 			}
 		}

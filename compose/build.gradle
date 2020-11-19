@@ -1,4 +1,5 @@
 apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'com.vanniktech.maven.publish'
 
 sourceSets {
 	main {
@@ -32,6 +33,10 @@ test.filter {
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+	kotlinOptions.freeCompilerArgs += [
+		"-Xmulti-platform",
+	]
+
 	doFirst {
 		if (!file('upstream/.git').exists()) {
 			throw new RuntimeException(

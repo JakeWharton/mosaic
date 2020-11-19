@@ -1,0 +1,34 @@
+buildscript {
+	dependencies {
+		classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10'
+		classpath "com.jakewharton.mosaic:gradle:${mosaicVersion}"
+	}
+	repositories {
+		maven {
+			url "file://${projectDir.absolutePath}/../../../../../build/localMaven"
+		}
+		mavenCentral()
+	}
+}
+
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'com.jakewharton.mosaic'
+
+dependencies {
+	testImplementation 'junit:junit:4.13.1'
+}
+
+repositories {
+	maven {
+		url "file://${projectDir.absolutePath}/../../../../../build/localMaven"
+	}
+	mavenCentral()
+	google()
+	jcenter()
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+	kotlinOptions {
+		jvmTarget = '1.8'
+	}
+}

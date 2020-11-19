@@ -1,5 +1,6 @@
 apply plugin: 'dev.nokee.jni-library'
 apply plugin: 'java' // jni-library is incompatible with the java-library plugin
+apply plugin: 'com.vanniktech.maven.publish'
 
 library {
 	dependencies {
