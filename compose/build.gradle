@@ -36,11 +36,9 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
 	kotlinOptions.freeCompilerArgs += [
 		"-Xmulti-platform",
 	]
+}
 
-	doFirst {
-		if (!file('upstream/.git').exists()) {
-			throw new RuntimeException(
-				"Missing 'upstream' git submodule clone. Did you run 'git submodule update --init'?")
-		}
-	}
+if (!file('upstream/.git').exists()) {
+	throw new RuntimeException(
+		"Missing 'upstream' git submodule clone. Did you run 'git submodule update --init'?")
 }
