@@ -42,3 +42,9 @@ if (!file('upstream/.git').exists()) {
 	throw new RuntimeException(
 		"Missing 'upstream' git submodule clone. Did you run 'git submodule update --init'?")
 }
+
+def upstreamVersions = file('upstream/buildSrc/src/main/kotlin/androidx/build/LibraryVersions.kt').text
+if (!upstreamVersions.contains("val COMPOSE = Version(\"${versions.compose}\")")) {
+	throw new RuntimeException(
+		"Upstream git repository Compose version does not match dependency version ${versions.compose}")
+}

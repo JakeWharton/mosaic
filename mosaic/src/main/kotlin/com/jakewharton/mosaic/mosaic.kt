@@ -94,7 +94,7 @@ fun CoroutineScope.createMosaic(): Mosaic {
 	val rootNode = BoxNode()
 	val applier = MosaicNodeApplier(rootNode)
 
-	val recomposer = Recomposer(embeddingContext)
+	val recomposer = Recomposer(composeContext, embeddingContext)
 	val composition = compositionFor(Any(), applier, recomposer)
 
 	// Start undispatched to ensure we can use suspending things inside the content.
