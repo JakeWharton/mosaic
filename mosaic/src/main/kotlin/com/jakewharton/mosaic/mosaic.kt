@@ -143,9 +143,11 @@ interface MosaicHandle {
 private const val ansiConsole = true
 
 fun Mosaic.renderIn(scope: CoroutineScope): MosaicHandle {
-	if (ansiConsole) {
-		AnsiConsole.systemInstall()
-	}
+	val out = if (ansiConsole) {
+		AnsiConsole.out()
+	} else {
+		System.out
+	}!!
 
 	var lastHeight = 0
 	var lastRenderNanos = 0L
@@ -192,12 +194,13 @@ fun Mosaic.renderIn(scope: CoroutineScope): MosaicHandle {
 		// Write a single byte array to stdout to create an atomic visual change. If you instead write
 		// the string, it will be UTF-8 encoded using an intermediate buffer that appears to be
 		// periodically flushed to the underlying byte stream. This will cause fraction-of-a-second
-		// flickers of broken content.
-		System.out.write(rendered.toByteArray(UTF_8))
+		// flickers of broken content. Note that this only occurs with the AnsiConsole stream, but
+		// there's no harm in doing it unconditionally.
+		out.write(rendered.toByteArray(UTF_8))
 
 		// Explicitly flush to ensure the trailing line clear is sent. Empirically, this appears to be
 		// buffered and not processed until the next frame, or not at all on the final frame.
-		System.out.flush()
+		out.flush()
 	}
 
 	var renderSignal: CompletableDeferred<Unit>? = null
@@ -213,9 +216,6 @@ fun Mosaic.renderIn(scope: CoroutineScope): MosaicHandle {
 	}
 	job.invokeOnCompletion {
 		cancel()
-		if (ansiConsole) {
-			AnsiConsole.systemUninstall()
-		}
 	}
 
 	return object : MosaicHandle {
