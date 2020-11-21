@@ -26,6 +26,7 @@ import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 fun main() = runMosaic {
+	// TODO https://github.com/JakeWharton/mosaic/issues/3
 	val tests = mutableStateListOf<Test>()
 
 	setContent {

@@ -8,6 +8,7 @@ import com.jakewharton.mosaic.runMosaic
 import kotlinx.coroutines.delay
 
 fun main() = runMosaic {
+	// TODO https://github.com/JakeWharton/mosaic/issues/3
 	val countValue = mutableStateOf(0)
 
 	setContent {

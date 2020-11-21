@@ -1,0 +1,11 @@
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'application'
+
+mainClassName = 'example.RobotKt'
+
+dependencies {
+	implementation project(':mosaic')
+	implementation 'org.jline:jline:3.17.1'
+
+	kotlinPlugin deps.composeCompiler
+}

@@ -15,7 +15,13 @@ REPO_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 for example in $REPO_DIR/examples/*/; do
 	example_name=$(basename "$example")
 	echo "Capturing $example_name..."
-	svg-term --command="'$example/build/install/$example_name/bin/$example_name' && sleep 2 && echo" --out="$example/demo.svg" --from=50 --window --width=50 --height=16 --no-cursor
+
+	command="'$example/build/install/$example_name/bin/$example_name' 2>/dev/null && sleep 2 && echo"
+	if [ -f "$example/input.sh" ]; then
+		command="'$example/input.sh' | $command"
+	fi
+
+	svg-term "--command=$command" "--out=$example/demo.svg" --from=50 --window --width=60 --height=16 --no-cursor
 	cat > "$example/README.md" <<EOL
 # Example: $example_name
 

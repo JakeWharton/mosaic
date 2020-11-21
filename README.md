@@ -31,6 +31,10 @@ Run `./gradlew installDist` to build the example binaries.
 
    `./examples/jest/build/install/jest/bin/jest`
 
+ * [Robot](examples/robot): An interactive, game-like program with keyboard control.
+
+   `./examples/robot/build/install/robot/bin/robot`
+
 
 # License
 
