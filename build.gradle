@@ -1,10 +1,13 @@
 buildscript {
 	ext.versions = [
-		'compose': '1.0.0-alpha07',
+		'compose': '1.0.0-alpha08',
+		'kotlin': '1.4.20',
+		'kotlinxCoroutines': '1.4.1',
 	]
 	ext.deps = [
 		'composeCompiler': "androidx.compose.compiler:compiler:${versions.compose}",
-		'kotlinGradlePlugin': 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10',
+		'kotlinGradlePlugin': "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
+		'kotlinxCoroutinesCore': "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinxCoroutines}",
 		'junit': 'junit:junit:4.13.1',
 		'truth': 'com.google.truth:truth:1.1',
 	]
