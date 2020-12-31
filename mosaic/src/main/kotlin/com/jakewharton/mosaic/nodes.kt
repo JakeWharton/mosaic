@@ -1,6 +1,7 @@
 package com.jakewharton.mosaic
 
 import androidx.compose.runtime.AbstractApplier
+import com.facebook.yoga.YogaConstants.UNDEFINED
 import com.facebook.yoga.YogaMeasureOutput
 import com.facebook.yoga.YogaNode
 import com.facebook.yoga.YogaNodeFactory
@@ -16,7 +17,16 @@ import com.jakewharton.mosaic.TextStyle.Companion.Underline
 internal sealed class MosaicNode {
 	val yoga: YogaNode = YogaNodeFactory.create()
 
-	abstract fun render(canvas: TextCanvas)
+	abstract fun renderTo(canvas: TextCanvas)
+
+	fun render(): String {
+		val canvas = with(yoga) {
+			calculateLayout(UNDEFINED, UNDEFINED)
+			TextCanvas(layoutWidth.toInt(), layoutHeight.toInt())
+		}
+		renderTo(canvas)
+		return canvas.toString()
+	}
 }
 
 internal class TextNode(initialValue: String = "") : MosaicNode() {
@@ -39,7 +49,7 @@ internal class TextNode(initialValue: String = "") : MosaicNode() {
 	var background: Color? = null
 	var style: TextStyle? = null
 
-	override fun render(canvas: TextCanvas) {
+	override fun renderTo(canvas: TextCanvas) {
 		value.split('\n').forEachIndexed { index, line ->
 			val write = buildString {
 				val attributes = mutableListOf<Int>()
@@ -111,7 +121,7 @@ internal class TextNode(initialValue: String = "") : MosaicNode() {
 internal class BoxNode : MosaicNode() {
 	val children = mutableListOf<MosaicNode>()
 
-	override fun render(canvas: TextCanvas) {
+	override fun renderTo(canvas: TextCanvas) {
 		for (child in children) {
 			val childYoga = child.yoga
 			val left = childYoga.layoutX.toInt()
@@ -119,7 +129,7 @@ internal class BoxNode : MosaicNode() {
 			val right = left + childYoga.layoutWidth.toInt()
 			val bottom = top + childYoga.layoutHeight.toInt()
 			val clipped = canvas.clip(left, top, right, bottom)
-			child.render(clipped)
+			child.renderTo(clipped)
 		}
 	}
 
