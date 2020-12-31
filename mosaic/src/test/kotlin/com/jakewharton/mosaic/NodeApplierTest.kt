@@ -1,13 +1,17 @@
 package com.jakewharton.mosaic
 
+import androidx.compose.runtime.Applier
 import com.facebook.yoga.YogaNode
 import com.google.common.truth.Truth.assertThat
-import org.junit.Ignore
 import org.junit.Test
 
 class NodeApplierTest {
 	private val root = BoxNode()
 	private val applier = MosaicNodeApplier(root)
+
+	private fun <T> Applier<T>.insert(index: Int, instance: T) {
+		insertBottomUp(index, instance)
+	}
 
 	@Test fun insertAtEnd() {
 		val one = TextNode("one")
@@ -125,7 +129,6 @@ class NodeApplierTest {
 		assertChildren()
 	}
 
-	@Ignore // TODO http://r.android.com/1478703
 	@Test fun moveSingleLower() {
 		val one = TextNode("one")
 		applier.insert(0, one)
@@ -138,7 +141,6 @@ class NodeApplierTest {
 		assertChildren(three, one, two)
 	}
 
-	@Ignore // TODO http://r.android.com/1478703
 	@Test fun moveSingleHigher() {
 		val one = TextNode("one")
 		applier.insert(0, one)

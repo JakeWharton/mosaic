@@ -5,6 +5,7 @@ import androidx.compose.runtime.EmbeddingContext
 import androidx.compose.runtime.Recomposer
 import androidx.compose.runtime.compositionFor
 import androidx.compose.runtime.dispatch.BroadcastFrameClock
+import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.runtime.yoloGlobalEmbeddingContext
 import com.facebook.yoga.YogaConstants.UNDEFINED
 import com.jakewharton.crossword.TextCanvas
@@ -37,14 +38,30 @@ fun runMosaic(body: suspend MosaicScope.() -> Unit) {
 					mosaic.setContent(content)
 				}
 			}
+
+			var snapshotNotificationsPending = false
+			val observer: (state: Any) -> Unit = {
+				if (!snapshotNotificationsPending) {
+					snapshotNotificationsPending = true
+					launch {
+						snapshotNotificationsPending = false
+						Snapshot.sendApplyNotifications()
+					}
+				}
+			}
+			Snapshot.registerGlobalWriteObserver(observer)
+
 			scope.body()
 		}
 
 		// Ensure the final state modification is discovered. We need to ensure that the coroutine
 		// which is running the recomposition loop wakes up, notices the changes, and waits for the
 		// next frame. If you are using snapshots this only requires a single yield. If you are not
-		// then it requires two yields. This is not great! But at least it's implementation detail...
+		// then it requires two yields. THIS IS NOT GREAT! But at least it's implementation detail...
 		// TODO https://issuetracker.google.com/issues/169425431
+		yield()
+		yield()
+		Snapshot.sendApplyNotifications()
 		yield()
 		yield()
 

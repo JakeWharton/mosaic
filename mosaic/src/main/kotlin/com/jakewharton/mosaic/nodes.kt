@@ -127,7 +127,11 @@ internal class BoxNode : MosaicNode() {
 }
 
 internal class MosaicNodeApplier(root: BoxNode) : AbstractApplier<MosaicNode>(root) {
-	override fun insert(index: Int, instance: MosaicNode) {
+	override fun insertTopDown(index: Int, instance: MosaicNode) {
+		// Ignored, we insert bottom-up.
+	}
+
+	override fun insertBottomUp(index: Int, instance: MosaicNode) {
 		val boxNode = current as BoxNode
 		boxNode.children.add(index, instance)
 		boxNode.yoga.addChildAt(instance.yoga, index)

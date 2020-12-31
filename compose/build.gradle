@@ -25,6 +25,7 @@ dependencies {
 	kotlinPlugin deps.composeCompiler
 
 	testImplementation 'org.jetbrains.kotlin:kotlin-test-multiplatform'
+	testImplementation deps.kotlinxCoroutinesTest
 }
 
 test.filter {
