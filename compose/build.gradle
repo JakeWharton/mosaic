@@ -1,6 +1,8 @@
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'com.vanniktech.maven.publish'
 
+archivesBaseName = 'mosaic-compose'
+
 sourceSets {
 	main {
 		kotlin {
