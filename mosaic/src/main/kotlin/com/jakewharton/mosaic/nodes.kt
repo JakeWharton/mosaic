@@ -5,14 +5,6 @@ import com.facebook.yoga.YogaConstants.UNDEFINED
 import com.facebook.yoga.YogaMeasureOutput
 import com.facebook.yoga.YogaNode
 import com.facebook.yoga.YogaNodeFactory
-import com.jakewharton.crossword.TextCanvas
-import com.jakewharton.crossword.visualCodePointCount
-import com.jakewharton.mosaic.TextStyle.Companion.Bold
-import com.jakewharton.mosaic.TextStyle.Companion.Dim
-import com.jakewharton.mosaic.TextStyle.Companion.Invert
-import com.jakewharton.mosaic.TextStyle.Companion.Italic
-import com.jakewharton.mosaic.TextStyle.Companion.Strikethrough
-import com.jakewharton.mosaic.TextStyle.Companion.Underline
 
 internal sealed class MosaicNode {
 	val yoga: YogaNode = YogaNodeFactory.create()
@@ -22,7 +14,7 @@ internal sealed class MosaicNode {
 	fun render(): String {
 		val canvas = with(yoga) {
 			calculateLayout(UNDEFINED, UNDEFINED)
-			TextCanvas(layoutWidth.toInt(), layoutHeight.toInt())
+			TextSurface(layoutWidth.toInt(), layoutHeight.toInt())
 		}
 		renderTo(canvas)
 		return canvas.toString()
@@ -33,7 +25,7 @@ internal class TextNode(initialValue: String = "") : MosaicNode() {
 	init {
 		yoga.setMeasureFunction { _, _, _, _, _ ->
 			val lines = value.split('\n')
-			val measuredWidth = lines.maxOf { it.visualCodePointCount }
+			val measuredWidth = lines.maxOf { it.codePointCount(0, it.length) }
 			val measuredHeight = lines.size
 			YogaMeasureOutput.make(measuredWidth, measuredHeight)
 		}
@@ -45,73 +37,13 @@ internal class TextNode(initialValue: String = "") : MosaicNode() {
 			yoga.dirty()
 		}
 
-	var color: Color? = null
+	var foreground: Color? = null
 	var background: Color? = null
 	var style: TextStyle? = null
 
 	override fun renderTo(canvas: TextCanvas) {
 		value.split('\n').forEachIndexed { index, line ->
-			val write = buildString {
-				val attributes = mutableListOf<Int>()
-				if (Bold in style) {
-					attributes += 1
-				}
-				if (Dim in style) {
-					attributes += 2
-				}
-				if (Italic in style) {
-					attributes += 3
-				}
-				if (Underline in style) {
-					attributes += 4
-				}
-				if (Invert in style) {
-					attributes += 7
-				}
-				if (Strikethrough in style) {
-					attributes += 9
-				}
-				color?.let { color ->
-					attributes += color.fg
-				}
-				background?.let { background ->
-					attributes += background.bg
-				}
-				if (attributes.isNotEmpty()) {
-					attributes.joinTo(this, separator = ";", prefix = "\u001B[", postfix = "m")
-					attributes.clear()
-				}
-
-				append(line)
-
-				if (color != null) {
-					attributes += 39
-				}
-				if (background != null) {
-					attributes += 49
-				}
-				if (Strikethrough in style) {
-					attributes += 29
-				}
-				if (Invert in style) {
-					attributes += 27
-				}
-				if (Underline in style) {
-					attributes += 24
-				}
-				if (Italic in style) {
-					attributes += 23
-				}
-				if (Bold in style || Dim in style) {
-					// 22 clears both 1 (bold) and 2 (dim).
-					attributes += 22
-				}
-				if (attributes.isNotEmpty()) {
-					attributes.joinTo(this, separator = ";", prefix = "\u001B[", postfix = "m")
-				}
-			}
-
-			canvas.write(index, 0, write)
+			canvas.write(index, 0, line, foreground, background, style)
 		}
 	}
 
@@ -126,10 +58,9 @@ internal class BoxNode : MosaicNode() {
 			val childYoga = child.yoga
 			val left = childYoga.layoutX.toInt()
 			val top = childYoga.layoutY.toInt()
-			val right = left + childYoga.layoutWidth.toInt()
-			val bottom = top + childYoga.layoutHeight.toInt()
-			val clipped = canvas.clip(left, top, right, bottom)
-			child.renderTo(clipped)
+			val right = left + childYoga.layoutWidth.toInt() - 1
+			val bottom = top + childYoga.layoutHeight.toInt() - 1
+			child.renderTo(canvas[top..bottom, left..right])
 		}
 	}
 

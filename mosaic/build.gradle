@@ -4,7 +4,6 @@ apply plugin: 'com.vanniktech.maven.publish'
 dependencies {
 	api project(':compose')
 	implementation project(':yoga')
-	implementation 'com.jakewharton.crossword:crossword:0.1.2'
 	implementation 'org.fusesource.jansi:jansi:2.0.1'
 
 	testImplementation 'junit:junit:4.13'

@@ -18,7 +18,7 @@ fun Text(
 			this.value = value
 		}
 		set(color) {
-			this.color = color
+			this.foreground = color
 		}
 		set(background) {
 			this.background = background
@@ -75,6 +75,7 @@ class TextStyle private constructor(
 	internal val bits: Int,
 ) {
 	operator fun plus(other: TextStyle) = TextStyle(bits or other.bits)
+	operator fun contains(style: TextStyle) = (style.bits and bits) != 0
 
 	companion object {
 		@Stable
@@ -93,8 +94,6 @@ class TextStyle private constructor(
 		val Invert = TextStyle(32)
 	}
 }
-
-operator fun TextStyle?.contains(style: TextStyle) = this != null && (style.bits and bits) != 0
 
 @Composable
 fun Row(children: @Composable () -> Unit) {
