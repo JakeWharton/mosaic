@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.plugin.KotlinPluginKt
+
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'com.vanniktech.maven.publish'
 
@@ -22,7 +24,7 @@ dependencies {
 	api deps.kotlinxCoroutinesCore
 	api 'org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.3'
 
-	kotlinPlugin deps.composeCompiler
+	add(KotlinPluginKt.PLUGIN_CLASSPATH_CONFIGURATION_NAME, deps.composeCompiler)
 
 	testImplementation 'org.jetbrains.kotlin:kotlin-test-multiplatform'
 	testImplementation deps.kotlinxCoroutinesTest

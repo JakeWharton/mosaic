@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.plugin.KotlinPluginKt
+
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'com.vanniktech.maven.publish'
 
@@ -9,5 +11,5 @@ dependencies {
 	testImplementation 'junit:junit:4.13'
 	testImplementation 'com.google.truth:truth:1.0.1'
 
-	kotlinPlugin deps.composeCompiler
+	add(KotlinPluginKt.PLUGIN_CLASSPATH_CONFIGURATION_NAME, deps.composeCompiler)
 }

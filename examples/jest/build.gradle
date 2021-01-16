@@ -1,9 +1,13 @@
+import org.jetbrains.kotlin.gradle.plugin.KotlinPluginKt
+
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'application'
 
 mainClassName = 'example.JestKt'
 
 dependencies {
+	// Normally you would apply the Mosaic Gradle plugin and not need these two lines. However, we
+	// build the examples against the in-development version which is why these are here.
 	implementation project(':mosaic')
-	kotlinPlugin deps.composeCompiler
+	add(KotlinPluginKt.PLUGIN_CLASSPATH_CONFIGURATION_NAME, deps.composeCompiler)
 }
