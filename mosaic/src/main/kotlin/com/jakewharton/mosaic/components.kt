@@ -108,7 +108,7 @@ fun Column(children: @Composable () -> Unit) {
 @Composable
 private fun Box(flexDirection: YogaFlexDirection, children: @Composable () -> Unit) {
 	emit<BoxNode, MosaicNodeApplier>(
-		ctor = ::BoxNode,
+		factory = ::BoxNode,
 		update = {
 			set(flexDirection) {
 				yoga.flexDirection = flexDirection
