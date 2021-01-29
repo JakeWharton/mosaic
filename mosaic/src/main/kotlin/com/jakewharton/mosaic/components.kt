@@ -1,9 +1,9 @@
 package com.jakewharton.mosaic
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ComposeNode
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.emit
 import com.facebook.yoga.YogaFlexDirection
 
 @Composable
@@ -13,7 +13,7 @@ fun Text(
 	background: Color? = null,
 	style: TextStyle? = null,
 ) {
-	emit<TextNode, MosaicNodeApplier>(::TextNode) {
+	ComposeNode<TextNode, MosaicNodeApplier>(::TextNode) {
 		set(value) {
 			this.value = value
 		}
@@ -107,7 +107,7 @@ fun Column(children: @Composable () -> Unit) {
 
 @Composable
 private fun Box(flexDirection: YogaFlexDirection, children: @Composable () -> Unit) {
-	emit<BoxNode, MosaicNodeApplier>(
+	ComposeNode<BoxNode, MosaicNodeApplier>(
 		factory = ::BoxNode,
 		update = {
 			set(flexDirection) {

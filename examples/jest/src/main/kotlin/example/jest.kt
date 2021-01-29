@@ -1,7 +1,7 @@
 package example
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedTask
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -125,7 +125,7 @@ private fun Summary(tests: SnapshotStateList<Test>) {
 	}
 
 	var elapsed by remember { mutableStateOf(0) }
-	LaunchedTask {
+	LaunchedEffect(Unit) {
 		while (true) {
 			delay(1_000)
 			elapsed++
