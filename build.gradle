@@ -1,11 +1,10 @@
 buildscript {
 	ext.versions = [
-		'compose': '1.0.0-alpha11',
 		'kotlin': '1.4.21-2',
 		'kotlinxCoroutines': '1.4.1',
 	]
 	ext.deps = [
-		'composeCompiler': "androidx.compose.compiler:compiler:${versions.compose}",
+		'kotlinCompiler': "org.jetbrains.kotlin:kotlin-compiler:${versions.kotlin}",
 		'kotlinGradlePlugin': "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
 		'kotlinxCoroutinesCore': "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinxCoroutines}",
 		'kotlinxCoroutinesTest': "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.kotlinxCoroutines}",
@@ -21,6 +20,7 @@ buildscript {
 		classpath 'dev.nokee.jni-library:dev.nokee.jni-library.gradle.plugin:0.4.0'
 		classpath 'com.vanniktech:gradle-maven-publish-plugin:0.13.0'
 		classpath 'org.jetbrains.dokka:dokka-gradle-plugin:0.10.1'
+		classpath 'com.github.jengelman.gradle.plugins:shadow:6.1.0'
 	}
 	repositories {
 		mavenCentral()

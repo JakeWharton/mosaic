@@ -1,57 +1,6 @@
-import org.jetbrains.kotlin.gradle.plugin.KotlinPluginKt
-
-apply plugin: 'org.jetbrains.kotlin.jvm'
-apply plugin: 'com.vanniktech.maven.publish'
-
-archivesBaseName = 'mosaic-compose'
-
-sourceSets {
-	main {
-		kotlin {
-			srcDir 'upstream/compose/runtime/runtime/src/commonMain/kotlin'
-			srcDir 'upstream/compose/runtime/runtime-dispatch/src/commonMain/kotlin'
-			srcDir 'upstream/compose/runtime/runtime/src/jvmMain/kotlin'
-		}
-	}
-	test {
-		kotlin {
-			srcDir 'upstream/compose/runtime/runtime/src/test/kotlin'
-		}
-	}
-}
-
-dependencies {
-	api deps.kotlinxCoroutinesCore
-	api 'org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.3'
-
-	add(KotlinPluginKt.PLUGIN_CLASSPATH_CONFIGURATION_NAME, deps.composeCompiler)
-
-	testImplementation 'org.jetbrains.kotlin:kotlin-test-multiplatform'
-	testImplementation deps.kotlinxCoroutinesTest
-}
-
-test.filter {
-	// TODO these rely on the global EmbeddingContext to function.
-	excludeTest 'androidx.compose.runtime.CompositionTests', null
-	// TODO flaky test https://issuetracker.google.com/issues/169406779
-	excludeTest 'androidx.compose.runtime.snapshots.DerivedSnapshotStateTests', 'multipleSnapshotsAreIsolatedAndCanBeApplied'
-}
-
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-	kotlinOptions.freeCompilerArgs += [
-		"-Xmulti-platform",
-	]
-}
-
 if (!file('upstream/.git').exists()) {
 	throw new RuntimeException(
 		"Missing 'upstream' git submodule clone. Did you run 'git submodule update --init'?")
-}
-
-def upstreamLibraryVersions = file('upstream/buildSrc/src/main/kotlin/androidx/build/LibraryVersions.kt').text
-if (!upstreamLibraryVersions.contains("val COMPOSE = Version(System.getenv(\"COMPOSE_CUSTOM_VERSION\") ?: \"${versions.compose}\")")) {
-	throw new RuntimeException(
-		"Upstream git repository Compose version does not match project dependency version ${versions.compose}")
 }
 
 def upstreamDependencyVersions = file('upstream/buildSrc/build_dependencies.gradle').text

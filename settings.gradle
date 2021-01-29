@@ -1,6 +1,8 @@
 rootProject.name = 'mosaic'
 
-include ':compose'
+include ':compose:compiler'
+include ':compose:compiler-hosted'
+include ':compose:runtime'
 include ':examples:counter'
 include ':examples:jest'
 include ':examples:robot'
