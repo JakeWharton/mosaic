@@ -9,7 +9,6 @@ sourceSets {
 	main {
 		kotlin {
 			srcDir '../upstream/compose/runtime/runtime/src/commonMain/kotlin'
-			srcDir '../upstream/compose/runtime/runtime-dispatch/src/commonMain/kotlin'
 			srcDir '../upstream/compose/runtime/runtime/src/jvmMain/kotlin'
 		}
 	}
@@ -28,13 +27,6 @@ dependencies {
 
 	testImplementation 'org.jetbrains.kotlin:kotlin-test-multiplatform'
 	testImplementation deps.kotlinxCoroutinesTest
-}
-
-test.filter {
-	// TODO these rely on the global EmbeddingContext to function.
-	excludeTest 'androidx.compose.runtime.CompositionTests', null
-	// TODO flaky test https://issuetracker.google.com/issues/169406779
-	excludeTest 'androidx.compose.runtime.snapshots.DerivedSnapshotStateTests', 'multipleSnapshotsAreIsolatedAndCanBeApplied'
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {

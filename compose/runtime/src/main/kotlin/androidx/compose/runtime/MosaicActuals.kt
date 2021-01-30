@@ -1,11 +1,9 @@
 package androidx.compose.runtime
 
-// TODO The notion of a global EmbeddingContext actual should not exist! It breaks concurrent
-//  usage on multiple threads which target multiple threads. This should always be pulled from the
-//  Recomposer. https://issuetracker.google.com/issues/168110493
-var yoloGlobalEmbeddingContext: EmbeddingContext? = null
-
-actual fun EmbeddingContext(): EmbeddingContext = yoloGlobalEmbeddingContext!!
+actual val DefaultMonotonicFrameClock: MonotonicFrameClock get() {
+	throw UnsupportedOperationException(
+		"No default MonotonicFrameClock! You must include one in your CoroutineContext.")
+}
 
 private val keyInfo = mutableMapOf<Int, String>()
 

@@ -1,12 +1,10 @@
 package com.jakewharton.mosaic
 
+import androidx.compose.runtime.BroadcastFrameClock
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.EmbeddingContext
+import androidx.compose.runtime.Composition
 import androidx.compose.runtime.Recomposer
-import androidx.compose.runtime.compositionFor
-import androidx.compose.runtime.dispatch.BroadcastFrameClock
 import androidx.compose.runtime.snapshots.Snapshot
-import androidx.compose.runtime.yoloGlobalEmbeddingContext
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
@@ -37,15 +35,10 @@ fun runMosaic(body: suspend MosaicScope.() -> Unit) = runBlocking {
 
 	val job = Job(coroutineContext[Job])
 	val composeContext = coroutineContext + clock + job
-	val mainThread = Thread.currentThread()
-	yoloGlobalEmbeddingContext = object : EmbeddingContext {
-		override fun isMainThread() = Thread.currentThread() === mainThread
-		override fun mainThreadCompositionContext() = composeContext
-	}
 
 	val rootNode = BoxNode()
 	val recomposer = Recomposer(composeContext)
-	val composition = compositionFor(Any(), MosaicNodeApplier(rootNode), recomposer)
+	val composition = Composition(MosaicNodeApplier(rootNode), recomposer)
 
 	// Start undispatched to ensure we can use suspending things inside the content.
 	launch(start = UNDISPATCHED, context = composeContext) {
