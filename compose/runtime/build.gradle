@@ -10,6 +10,7 @@ sourceSets {
 		kotlin {
 			srcDir '../upstream/compose/runtime/runtime/src/commonMain/kotlin'
 			srcDir '../upstream/compose/runtime/runtime/src/jvmMain/kotlin'
+			srcDir '../upstream/compose/runtime/runtime/src/desktopMain/kotlin'
 		}
 	}
 	test {
