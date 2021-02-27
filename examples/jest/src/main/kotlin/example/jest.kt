@@ -7,8 +7,8 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.runtime.snapshots.withMutableSnapshot
 import com.jakewharton.mosaic.Color.Companion.Black
 import com.jakewharton.mosaic.Color.Companion.Green
 import com.jakewharton.mosaic.Color.Companion.Red
@@ -66,7 +66,7 @@ fun main() = runMosaic {
 		launch {
 			while (true) {
 				val path = paths.removeFirstOrNull() ?: break
-				val index = withMutableSnapshot {
+				val index = Snapshot.withMutableSnapshot {
 					val nextIndex = tests.size
 					tests += Test(path, Running)
 					nextIndex
