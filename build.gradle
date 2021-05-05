@@ -44,7 +44,6 @@ subprojects {
 				'-progressive',
 				'-Xjvm-default=all',
 				'-Xopt-in=kotlin.RequiresOptIn',
-				'-Xopt-in=androidx.compose.runtime.ExperimentalComposeApi',
 			]
 		}
 	}
