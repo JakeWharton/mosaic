@@ -1,22 +1,91 @@
 # Mosaic
 
-[Jetpack Compose](https://developer.android.com/jetpack/compose) for console UI. Inspired by [Ink](https://github.com/vadimdemedes/ink).
+An experimental tool for building console UI in Kotlin using the Jetpack Compose compiler/runtime.
+Inspired by [Ink](https://github.com/vadimdemedes/ink).
 
 <img src="examples/jest/demo.svg">
 
+(Heads up: this SVG has a slight [rendering bug](https://github.com/JakeWharton/mosaic/issues/6))
 
-## Usage
+Jump to:
+[Introduction](#Introduction) |
+[Documentation](#Documentation) |
+[Examples](#Examples) |
+[FAQ](#FAQ) |
+[License](#License)
+
+
+## Introduction
+
+The entrypoint to Mosaic is the `runMosaic` function.
+The lambda passed to this function is responsible for both output and performing work.
+
+Output (for now) happens through the `setContent` function.
+You can call `setContent` multiple times, but as you'll see you probably won't need to.
 
 ```kotlin
 fun main() = runMosaic {
   setContent {
-    Text("Hello, World!")
+    Text("The count is: 0")
   }
 }
 ```
 
-Run work inside the `runMosaic` block after calling `setContent`. The output will automatically
-update as you alter shared state.
+To change the output dynamically we can use local properties to hold state.
+Let's update our counter to actually count to 20.
+
+```kotlin
+fun main() = runMosaic {
+  var count = 0
+
+  setContent {
+    Text("The count is: $count")
+  }
+
+  for (i in 1..20) {
+    delay(250)
+    count = i
+  }
+}
+```
+
+**This will not work!** Our count stays are 0 for 5 seconds instead of incrementing until 20.
+Instead, we have to use Compose's `State` objects to hold state.
+
+```diff
+-var count = 0
++var count by mutableStateOf(0)
+```
+
+Now, when the `count` value is updated, Compose will know that it needs to re-render the string.
+
+```kotlin
+fun main() = runMosaic {
+  var count by mutableStateOf(0)
+
+  setContent {
+    Text("The count is: $count")
+  }
+
+  for (i in 1..20) {
+    delay(250)
+    count = i
+  }
+}
+```
+
+(Note: You may need to add imports for `androidx.compose.runtime.getValue` and `import androidx.compose.runtime.setValue` manually.)
+
+<img src="examples/counter/demo.svg">
+
+
+## Documentation
+
+Hey! I've been sitting on this project for ~6 months and decided to just flip the public bit in
+response to a [Reddit comment](https://www.reddit.com/r/Kotlin/comments/n4mn6j/technology_preview_jetpack_compose_for_web/gwyx1x2/)
+(and also because I was waiting for a bug fix inside Compose).
+
+Instructions for using Mosaic in your own project will be coming soon. Stay tuned!
 
 
 ## Examples
@@ -34,6 +103,42 @@ Run `./gradlew installDist` to build the example binaries.
  * [Robot](examples/robot): An interactive, game-like program with keyboard control.
 
    `./examples/robot/build/install/robot/bin/robot`
+
+
+## FAQ
+
+### I thought Jetpack Compose was a UI toolkit for Android?
+
+Compose is, at its core, a general-purpose runtime and compiler for tree and property manipulation
+which is trapped inside the AndroidX monorepo and under the Jetpack marketing department. This
+core can be used for _any_ tree on _any_ platform supported by Kotlin. It's an amazing piece of
+technology.
+
+Compose UI is the new UI toolkit for Android (and maybe [Desktop](https://www.jetbrains.com/lp/compose/)?).
+The lack of differentiation between these two technologies has unfortunately caused Compose UI to
+overshadow the core under the single "Compose" moniker in an unforced marketing error.
+
+If you want another example of a non-Compose UI-based Compose project checkout JetBrains' [Compose for Web](https://blog.jetbrains.com/kotlin/2021/05/technology-preview-jetpack-compose-for-web/) project.
+
+### Why doesn't work take place in a `LaunchedEffect`?
+
+This is the goal. It is currently blocked by [issuetracker.google.com/178904648](https://issuetracker.google.com/178904648).
+
+When that change lands, and Mosaic is updated, the counter example will look like this:
+```kotlin
+fun main() = runMosaic {
+  var count by remember { mutableStateOf(0) }
+
+  Text("The count is: $count")
+
+  LaunchedEffect(Unit) {
+    for (i in 1..20) {
+      delay(250)
+      count = i
+    }
+  }
+}
+```
 
 
 # License
