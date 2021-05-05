@@ -24,7 +24,6 @@ subprojects {
 
 	repositories {
 		mavenCentral()
-		google()
 	}
 
 	tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
