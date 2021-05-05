@@ -77,9 +77,12 @@ fun runMosaic(body: suspend MosaicScope.() -> Unit) = runBlocking {
 				}
 			}
 		}
-		Snapshot.registerGlobalWriteObserver(observer)
-
-		scope.body()
+		val snapshotObserverHandle = Snapshot.registerGlobalWriteObserver(observer)
+		try {
+			scope.body()
+		} finally {
+			snapshotObserverHandle.dispose()
+		}
 	}
 
 	// Ensure the final state modification is discovered. We need to ensure that the coroutine
