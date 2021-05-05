@@ -3,12 +3,18 @@ if (!file('upstream/.git').exists()) {
 		"Missing 'upstream' git submodule clone. Did you run 'git submodule update --init'?")
 }
 
-def upstreamDependencyVersions = file('upstream/gradle/libs.versions.toml').text
-if (!upstreamDependencyVersions.contains("kotlin = \"${versions.kotlin}\"")) {
+def upstreamToml = file('upstream/gradle/libs.versions.toml').text
+if (!upstreamToml.contains("kotlin = \"${versions.kotlin}\"")) {
 	throw new RuntimeException(
 		"Upstream git repository Kotlin version does not match project dependency version ${versions.kotlin}")
 }
-if (!upstreamDependencyVersions.contains("kotlinCoroutines = \"${versions.kotlinxCoroutines}\"")) {
+if (!upstreamToml.contains("kotlinCoroutines = \"${versions.kotlinxCoroutines}\"")) {
 	throw new RuntimeException(
 		"Upstream git repository Kotlin coroutines version does not match project dependency version ${versions.kotlinxCoroutines}")
+}
+
+def upstreamBuildGradle = file('upstream/compose/runtime/runtime/build.gradle').text
+if (!upstreamBuildGradle.contains(deps.kotlinxCollectionsImmutable)) {
+	throw new RuntimeException(
+		"Upstream git repository kotlinx-collections-immutable version does not match project version ${deps.kotlinxCollectionsImmutable}")
 }
