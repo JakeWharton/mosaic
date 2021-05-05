@@ -8,22 +8,39 @@ buildscript {
 		classpath 'com.android.tools.build:gradle:4.2.0'
 		classpath 'dev.nokee.jni-library:dev.nokee.jni-library.gradle.plugin:0.4.0'
 		classpath 'com.vanniktech:gradle-maven-publish-plugin:0.13.0'
-		classpath 'org.jetbrains.dokka:dokka-gradle-plugin:0.10.1'
+		classpath 'org.jetbrains.dokka:dokka-gradle-plugin:1.4.30'
 		classpath 'com.github.jengelman.gradle.plugins:shadow:6.1.0'
 	}
 	repositories {
 		mavenCentral()
 		google()
 		gradlePluginPortal()
+		jcenter() // Dokka
 	}
 }
 
-subprojects {
+apply plugin: 'org.jetbrains.dokka'
+dokkaHtmlMultiModule {
+	removeChildTasks([
+		// Do not include Compose in our documentation site.
+		project(":compose:compiler"),
+		project(":compose:runtime"),
+		// Yoga is an implementation detail deployed separately for build simplicity.
+		project(":yoga"),
+	])
+}
+
+allprojects {
 	group = GROUP
 	version = VERSION_NAME
 
 	repositories {
 		mavenCentral()
+		jcenter {
+			mavenContent {
+				includeModule("org.jetbrains.kotlinx", "kotlinx-html-jvm")
+			}
+		}
 	}
 
 	tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
