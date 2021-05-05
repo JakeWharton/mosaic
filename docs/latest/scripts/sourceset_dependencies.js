@@ -1,0 +1,1 @@
+sourceset_dependencies = '{":mosaic:dokkaHtmlPartial/main":[],":mosaic-gradle:dokkaHtmlPartial/main":[]}'
