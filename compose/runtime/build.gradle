@@ -22,7 +22,7 @@ sourceSets {
 
 dependencies {
 	api deps.kotlinxCoroutinesCore
-	api 'org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.4'
+	implementation deps.kotlinxCollectionsImmutable
 
 	add(KotlinPluginKt.PLUGIN_CLASSPATH_CONFIGURATION_NAME, project(':compose:compiler'))
 
