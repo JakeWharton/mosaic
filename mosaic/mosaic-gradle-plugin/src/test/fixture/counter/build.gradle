@@ -1,9 +1,9 @@
 buildscript {
-	apply from: "../../../../../dependencies.gradle"
+	apply from: "../../../../../../dependencies.gradle"
 
 	dependencies {
 		classpath deps.kotlinGradlePlugin
-		classpath "com.jakewharton.mosaic:gradle:${mosaicVersion}"
+		classpath "com.jakewharton.mosaic:mosaic-gradle-plugin:${mosaicVersion}"
 	}
 	repositories {
 		maven {

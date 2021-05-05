@@ -1,13 +1,13 @@
-rootProject.name = 'mosaic'
+rootProject.name = 'mosaic-root'
 
-include ':compose:compiler'
-include ':compose:compiler-hosted'
-include ':compose:runtime'
-include ':examples:counter'
-include ':examples:jest'
-include ':examples:robot'
-include ':mosaic'
-include ':mosaic-gradle'
-include ':yoga'
-include ':yoga:core'
-include ':yoga:jni'
+include ':samples:counter'
+include ':samples:jest'
+include ':samples:robot'
+
+includeBuild('mosaic') {
+	dependencySubstitution {
+		substitute module('com.jakewharton.mosaic:mosaic-gradle-plugin') with project(':mosaic-gradle-plugin')
+		substitute module('com.jakewharton.mosaic:mosaic-runtime') with project(':mosaic-runtime')
+		substitute module('com.jakewharton.mosaic:compose-compiler') with project(':compose:compiler')
+	}
+}
