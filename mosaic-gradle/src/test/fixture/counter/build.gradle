@@ -23,8 +23,6 @@ repositories {
 		url "file://${projectDir.absolutePath}/../../../../../build/localMaven"
 	}
 	mavenCentral()
-	google()
-	jcenter()
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
