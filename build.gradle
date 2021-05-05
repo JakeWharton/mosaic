@@ -16,7 +16,7 @@ buildscript {
 		classpath deps.kotlinGradlePlugin
 		// We don't use this dependency directly. However, we reference a type from the Kotlin Gradle
 		// plugin whose classloading causes com.android.build.gradle.api.BaseVariant to also be loaded.
-		classpath 'com.android.tools.build:gradle:4.0.2'
+		classpath 'com.android.tools.build:gradle:4.2.0'
 		classpath 'dev.nokee.jni-library:dev.nokee.jni-library.gradle.plugin:0.4.0'
 		classpath 'com.vanniktech:gradle-maven-publish-plugin:0.13.0'
 		classpath 'org.jetbrains.dokka:dokka-gradle-plugin:0.10.1'
@@ -36,10 +36,6 @@ subprojects {
 	repositories {
 		mavenCentral()
 		google()
-		maven {
-			url 'https://kotlin.bintray.com/kotlinx'
-		}
-		jcenter()
 	}
 
 	tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
