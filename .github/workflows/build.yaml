@@ -24,9 +24,10 @@ jobs:
         with:
           java-version: 11
 
-      - run: ./gradlew build dokkaHtmlMultiModule
+      - run: ./gradlew -p mosaic build dokkaHtmlMultiModule
+      - run: ./gradlew build
 
-      - run: ./gradlew publish
+      - run: ./gradlew -p mosaic publish
         if: ${{ github.ref == 'refs/heads/trunk' && github.repository == 'JakeWharton/mosaic' }}
         env:
           ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
@@ -38,6 +39,6 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: site
-          FOLDER: build/dokka/htmlMultiModule
+          FOLDER: mosaic/build/dokka/htmlMultiModule
           TARGET_FOLDER: docs/latest/
           CLEAN: true

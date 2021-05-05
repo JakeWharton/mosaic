@@ -25,9 +25,9 @@ gradlePlugin {
 test {
 	dependsOn(':compose:runtime:installArchives')
 	dependsOn(':compose:compiler:installArchives')
+	dependsOn(':mosaic-gradle-plugin:installArchives')
+	dependsOn(':mosaic-runtime:installArchives')
 	dependsOn(':yoga:installArchives')
-	dependsOn(':mosaic:installArchives')
-	dependsOn(':mosaic-gradle:installArchives')
 }
 
 def versionDirectory = "$buildDir/generated/version/"

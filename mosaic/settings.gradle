@@ -1,0 +1,12 @@
+rootProject.name = 'mosaic'
+
+include ':mosaic-gradle-plugin'
+include ':mosaic-runtime'
+
+include ':compose:compiler'
+include ':compose:compiler-hosted'
+include ':compose:runtime'
+
+include ':yoga'
+include ':yoga:core'
+include ':yoga:jni'

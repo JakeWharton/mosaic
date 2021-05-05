@@ -1,7 +1,6 @@
-[submodule "yoga/upstream"]
-	path = yoga/upstream
+[submodule "mosaic/yoga/upstream"]
+	path = mosaic/yoga/upstream
 	url = https://github.com/facebook/yoga
-[submodule "compose/upstream"]
-	path = compose/upstream
+[submodule "mosaic/compose/upstream"]
+	path = mosaic/compose/upstream
 	url = https://android.googlesource.com/platform/frameworks/support
-	branch = androidx-master-dev

@@ -25,7 +25,7 @@ class MosaicPlugin : KotlinCompilerPluginSupportPlugin {
 		}
 
 		kotlinCompilation.dependencies {
-			implementation("com.jakewharton.mosaic:mosaic:$mosaicVersion")
+			implementation("com.jakewharton.mosaic:mosaic-runtime:$mosaicVersion")
 		}
 		(kotlinCompilation.kotlinOptions as KotlinJvmOptions).useIR = true
 

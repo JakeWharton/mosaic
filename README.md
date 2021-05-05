@@ -3,14 +3,14 @@
 An experimental tool for building console UI in Kotlin using the Jetpack Compose compiler/runtime.
 Inspired by [Ink](https://github.com/vadimdemedes/ink).
 
-<img src="examples/jest/demo.svg">
+<img src="samples/jest/demo.svg">
 
 (Heads up: this SVG has a slight [rendering bug](https://github.com/JakeWharton/mosaic/issues/6))
 
 Jump to:
 [Introduction](#Introduction) |
 [Documentation](#Documentation) |
-[Examples](#Examples) |
+[Samples](#Samples) |
 [FAQ](#FAQ) |
 [License](#License)
 
@@ -76,7 +76,7 @@ fun main() = runMosaic {
 
 (Note: You may need to add imports for `androidx.compose.runtime.getValue` and `import androidx.compose.runtime.setValue` manually.)
 
-<img src="examples/counter/demo.svg">
+<img src="samples/counter/demo.svg">
 
 
 ## Documentation
@@ -88,21 +88,21 @@ response to a [Reddit comment](https://www.reddit.com/r/Kotlin/comments/n4mn6j/t
 Instructions for using Mosaic in your own project will be coming soon. Stay tuned!
 
 
-## Examples
+## Samples
 
-Run `./gradlew installDist` to build the example binaries.
+Run `./gradlew installDist` to build the sample binaries.
 
- * [Counter](examples/counter): A simple increasing number from 0 until 20.
+ * [Counter](samples/counter): A simple increasing number from 0 until 20.
 
-   `./examples/counter/build/install/counter/bin/counter`
+   `./samples/counter/build/install/counter/bin/counter`
 
- * [Jest](examples/jest): Example output of a test framework (such as JS's 'Jest').
+ * [Jest](samples/jest): Example output of a test framework (such as JS's 'Jest').
 
-   `./examples/jest/build/install/jest/bin/jest`
+   `./samples/jest/build/install/jest/bin/jest`
 
- * [Robot](examples/robot): An interactive, game-like program with keyboard control.
+ * [Robot](samples/robot): An interactive, game-like program with keyboard control.
 
-   `./examples/robot/build/install/robot/bin/robot`
+   `./samples/robot/build/install/robot/bin/robot`
 
 
 ## FAQ
@@ -124,7 +124,7 @@ If you want another example of a non-Compose UI-based Compose project checkout J
 
 This is the goal. It is currently blocked by [issuetracker.google.com/178904648](https://issuetracker.google.com/178904648).
 
-When that change lands, and Mosaic is updated, the counter example will look like this:
+When that change lands, and Mosaic is updated, the counter sample will look like this:
 ```kotlin
 fun main() = runMosaic {
   var count by remember { mutableStateOf(0) }
