@@ -6,6 +6,11 @@ apply plugin: 'com.vanniktech.maven.publish'
 archivesBaseName = 'mosaic-compose'
 
 sourceSets {
+	common {
+		kotlin {
+			srcDir '../upstream/compose/runtime/runtime/src/commonMain/kotlin'
+		}
+	}
 	main {
 		kotlin {
 			srcDir '../upstream/compose/runtime/runtime/src/commonMain/kotlin'
@@ -22,16 +27,16 @@ sourceSets {
 
 dependencies {
 	api deps.kotlinxCoroutinesCore
-	implementation deps.kotlinxCollectionsImmutable
 
 	add(KotlinPluginKt.PLUGIN_CLASSPATH_CONFIGURATION_NAME, project(':compose:compiler'))
 
-	testImplementation 'org.jetbrains.kotlin:kotlin-test-multiplatform'
+	testImplementation 'org.jetbrains.kotlin:kotlin-test'
 	testImplementation deps.kotlinxCoroutinesTest
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
 	kotlinOptions.freeCompilerArgs += [
-		"-Xmulti-platform",
+		'-Xmulti-platform',
+		'-Xcommon-sources=' + sourceSets.common.kotlin.files.join(","),
 	]
 }

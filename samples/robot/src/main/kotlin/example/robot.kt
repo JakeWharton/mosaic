@@ -43,7 +43,7 @@ fun main() = runMosaic {
 		while (true) {
 			// TODO https://github.com/JakeWharton/mosaic/issues/10
 			when (reader.read()) {
-				'q'.toInt() -> break
+				'q'.code -> break
 				27 -> {
 					when (reader.read()) {
 						91 -> {

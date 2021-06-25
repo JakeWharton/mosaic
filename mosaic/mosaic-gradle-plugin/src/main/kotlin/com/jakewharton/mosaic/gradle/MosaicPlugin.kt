@@ -1,7 +1,6 @@
 package com.jakewharton.mosaic.gradle
 
 import org.gradle.api.provider.Provider
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilerPluginSupportPlugin
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType.jvm
@@ -27,7 +26,6 @@ class MosaicPlugin : KotlinCompilerPluginSupportPlugin {
 		kotlinCompilation.dependencies {
 			implementation("com.jakewharton.mosaic:mosaic-runtime:$mosaicVersion")
 		}
-		(kotlinCompilation.kotlinOptions as KotlinJvmOptions).useIR = true
 
 		return kotlinCompilation.target.project.provider { emptyList() }
 	}

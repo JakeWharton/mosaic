@@ -12,9 +12,3 @@ if (!upstreamToml.contains("kotlinCoroutines = \"${versions.kotlinxCoroutines}\"
 	throw new RuntimeException(
 		"Upstream git repository Kotlin coroutines version does not match project dependency version ${versions.kotlinxCoroutines}")
 }
-
-def upstreamBuildGradle = file('upstream/compose/runtime/runtime/build.gradle').text
-if (!upstreamBuildGradle.contains(deps.kotlinxCollectionsImmutable)) {
-	throw new RuntimeException(
-		"Upstream git repository kotlinx-collections-immutable version does not match project version ${deps.kotlinxCollectionsImmutable}")
-}

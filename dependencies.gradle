@@ -1,14 +1,13 @@
 buildscript {
 	ext.versions = [
-		'kotlin': '1.4.32',
-		'kotlinxCoroutines': '1.4.3',
+		'kotlin': '1.5.10',
+		'kotlinxCoroutines': '1.5.0',
 	]
 	ext.deps = [
 		'kotlinCompiler': "org.jetbrains.kotlin:kotlin-compiler:${versions.kotlin}",
 		'kotlinGradlePlugin': "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
 		'kotlinxCoroutinesCore': "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinxCoroutines}",
 		'kotlinxCoroutinesTest': "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.kotlinxCoroutines}",
-		'kotlinxCollectionsImmutable': 'org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.4',
 		'junit': 'junit:junit:4.13.2',
 		'truth': 'com.google.truth:truth:1.1.2',
 		'jansi': 'org.fusesource.jansi:jansi:2.0.1',
