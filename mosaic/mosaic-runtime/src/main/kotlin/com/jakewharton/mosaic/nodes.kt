@@ -1,45 +1,57 @@
 package com.jakewharton.mosaic
 
 import androidx.compose.runtime.AbstractApplier
-import com.facebook.yoga.YogaConstants.UNDEFINED
-import com.facebook.yoga.YogaMeasureOutput
-import com.facebook.yoga.YogaNode
-import com.facebook.yoga.YogaNodeFactory
 
 internal sealed class MosaicNode {
-	val yoga: YogaNode = YogaNodeFactory.create()
+	// These two values are set by a call to `measure`.
+	var width = 0
+	var height = 0
 
+	// These two values are set by a call to `layout` on the parent node.
+	/** Pixels right relative to parent at which this node will render. */
+	var x = 0
+	/** Pixels down relative to parent at which this node will render. */
+	var y = 0
+
+	/** Measure this node (and any children) and update [width] and [height]. */
+	abstract fun measure()
+	/** Layout any children nodes and update their [x] and [y] relative to this node. */
+	abstract fun layout()
 	abstract fun renderTo(canvas: TextCanvas)
 
 	fun render(): String {
-		val canvas = with(yoga) {
-			calculateLayout(UNDEFINED, UNDEFINED)
-			TextSurface(layoutWidth.toInt(), layoutHeight.toInt())
-		}
+		measure()
+		layout()
+		val canvas = TextSurface(width, height)
 		renderTo(canvas)
 		return canvas.toString()
 	}
 }
 
 internal class TextNode(initialValue: String = "") : MosaicNode() {
-	init {
-		yoga.setMeasureFunction { _, _, _, _, _ ->
-			val lines = value.split('\n')
-			val measuredWidth = lines.maxOf { it.codePointCount(0, it.length) }
-			val measuredHeight = lines.size
-			YogaMeasureOutput.make(measuredWidth, measuredHeight)
-		}
-	}
-
+	private var sizeInvalidated = true
 	var value: String = initialValue
 		set(value) {
 			field = value
-			yoga.dirty()
+			sizeInvalidated = true
 		}
 
 	var foreground: Color? = null
 	var background: Color? = null
 	var style: TextStyle? = null
+
+	override fun measure() {
+		if (sizeInvalidated) {
+			val lines = value.split('\n')
+			width = lines.maxOf { it.codePointCount(0, it.length) }
+			height = lines.size
+			sizeInvalidated = false
+		}
+	}
+
+	override fun layout() {
+		// No children.
+	}
 
 	override fun renderTo(canvas: TextCanvas) {
 		value.split('\n').forEachIndexed { index, line ->
@@ -47,19 +59,80 @@ internal class TextNode(initialValue: String = "") : MosaicNode() {
 		}
 	}
 
-	override fun toString() = "Text($value)"
+	override fun toString() = "Text(\"$value\", x=$x, y=$y, width=$width, height=$height)"
 }
 
 internal class BoxNode : MosaicNode() {
 	val children = mutableListOf<MosaicNode>()
+	/** If row, otherwise column. */
+	var isRow = true
+
+	override fun measure() {
+		if (isRow) {
+			measureRow()
+		} else {
+			measureColumn()
+		}
+	}
+
+	private fun measureRow() {
+		var width = 0
+		var height = 0
+		for (child in children) {
+			child.measure()
+			width += child.width
+			height = maxOf(height, child.height)
+		}
+		this.width = width
+		this.height = height
+	}
+
+	private fun measureColumn() {
+		var width = 0
+		var height = 0
+		for (child in children) {
+			child.measure()
+			width = maxOf(width, child.width)
+			height += child.height
+		}
+		this.width = width
+		this.height = height
+	}
+
+	override fun layout() {
+		if (isRow) {
+			layoutRow()
+		} else {
+			layoutColumn()
+		}
+	}
+
+	private fun layoutRow() {
+		var childX = 0
+		for (child in children) {
+			child.x = childX
+			child.y = 0
+			child.layout()
+			childX += child.width
+		}
+	}
+
+	private fun layoutColumn() {
+		var childY = 0
+		for (child in children) {
+			child.x = 0
+			child.y = childY
+			child.layout()
+			childY += child.height
+		}
+	}
 
 	override fun renderTo(canvas: TextCanvas) {
 		for (child in children) {
-			val childYoga = child.yoga
-			val left = childYoga.layoutX.toInt()
-			val top = childYoga.layoutY.toInt()
-			val right = left + childYoga.layoutWidth.toInt() - 1
-			val bottom = top + childYoga.layoutHeight.toInt() - 1
+			val left = child.x
+			val top = child.y
+			val right = left + child.width - 1
+			val bottom = top + child.height - 1
 			child.renderTo(canvas[top..bottom, left..right])
 		}
 	}
@@ -75,41 +148,20 @@ internal class MosaicNodeApplier(root: BoxNode) : AbstractApplier<MosaicNode>(ro
 	override fun insertBottomUp(index: Int, instance: MosaicNode) {
 		val boxNode = current as BoxNode
 		boxNode.children.add(index, instance)
-		boxNode.yoga.addChildAt(instance.yoga, index)
 	}
 
 	override fun remove(index: Int, count: Int) {
 		val boxNode = current as BoxNode
 		boxNode.children.remove(index, count)
-		repeat(count) {
-			boxNode.yoga.removeChildAt(index)
-		}
 	}
 
 	override fun move(from: Int, to: Int, count: Int) {
 		val boxNode = current as BoxNode
 		boxNode.children.move(from, to, count)
-
-		val yoga = boxNode.yoga
-		val newIndex = if (to > from) to - count else to
-		if (count == 1) {
-			val node = yoga.removeChildAt(from)
-			yoga.addChildAt(node, newIndex)
-		} else {
-			val nodes = Array(count) {
-				yoga.removeChildAt(from)
-			}
-			nodes.forEachIndexed { offset, node ->
-				yoga.addChildAt(node, newIndex + offset)
-			}
-		}
 	}
 
 	override fun onClear() {
 		val boxNode = root as BoxNode
-		// Remove in reverse to avoid internal list copies.
-		for (i in boxNode.yoga.childCount - 1 downTo 0) {
-			boxNode.yoga.removeChildAt(i)
-		}
+		boxNode.children.clear()
 	}
 }

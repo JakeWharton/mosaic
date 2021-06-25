@@ -27,7 +27,6 @@ test {
 	dependsOn(':compose:compiler:installArchives')
 	dependsOn(':mosaic-gradle-plugin:installArchives')
 	dependsOn(':mosaic-runtime:installArchives')
-	dependsOn(':yoga:installArchives')
 }
 
 def versionDirectory = "$buildDir/generated/version/"

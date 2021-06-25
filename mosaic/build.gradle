@@ -6,7 +6,6 @@ buildscript {
 		// We don't use this dependency directly. However, we reference a type from the Kotlin Gradle
 		// plugin whose classloading causes com.android.build.gradle.api.BaseVariant to also be loaded.
 		classpath 'com.android.tools.build:gradle:4.2.0'
-		classpath 'dev.nokee.jni-library:dev.nokee.jni-library.gradle.plugin:0.4.0'
 		classpath 'com.vanniktech:gradle-maven-publish-plugin:0.13.0'
 		classpath 'org.jetbrains.dokka:dokka-gradle-plugin:1.4.30'
 		classpath 'com.github.jengelman.gradle.plugins:shadow:6.1.0'
@@ -25,8 +24,6 @@ dokkaHtmlMultiModule {
 		// Do not include Compose in our documentation site.
 		project(":compose:compiler"),
 		project(":compose:runtime"),
-		// Yoga is an implementation detail deployed separately for build simplicity.
-		project(":yoga"),
 	])
 }
 

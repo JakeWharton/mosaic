@@ -1,6 +1,3 @@
-[submodule "mosaic/yoga/upstream"]
-	path = mosaic/yoga/upstream
-	url = https://github.com/facebook/yoga
 [submodule "mosaic/compose/upstream"]
 	path = mosaic/compose/upstream
 	url = https://android.googlesource.com/platform/frameworks/support
