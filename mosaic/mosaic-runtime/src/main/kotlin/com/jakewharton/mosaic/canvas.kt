@@ -193,5 +193,5 @@ internal class TextCodepoint(var value: Int) {
 	var foreground: Color? = null
 	var style = TextStyle.None
 
-	constructor(char: Char) : this(char.toInt())
+	constructor(char: Char) : this(char.code)
 }
