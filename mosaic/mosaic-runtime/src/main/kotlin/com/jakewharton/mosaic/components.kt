@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import com.facebook.yoga.YogaFlexDirection
 
 @Composable
 fun Text(
@@ -97,21 +96,21 @@ class TextStyle private constructor(
 
 @Composable
 fun Row(children: @Composable () -> Unit) {
-	Box(YogaFlexDirection.ROW, children)
+	Box(true, children)
 }
 
 @Composable
 fun Column(children: @Composable () -> Unit) {
-	Box(YogaFlexDirection.COLUMN, children)
+	Box(false, children)
 }
 
 @Composable
-private fun Box(flexDirection: YogaFlexDirection, children: @Composable () -> Unit) {
+private fun Box(isRow: Boolean, children: @Composable () -> Unit) {
 	ComposeNode<BoxNode, MosaicNodeApplier>(
 		factory = ::BoxNode,
 		update = {
-			set(flexDirection) {
-				yoga.flexDirection = flexDirection
+			set(isRow) {
+				this.isRow = isRow
 			}
 		},
 		content = children,

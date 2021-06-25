@@ -1,7 +1,6 @@
 package com.jakewharton.mosaic
 
 import androidx.compose.runtime.Applier
-import com.facebook.yoga.YogaNode
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
@@ -183,8 +182,5 @@ class NodeApplierTest {
 
 	private fun assertChildren(vararg nodes: MosaicNode) {
 		assertThat(root.children).containsExactlyElementsIn(nodes).inOrder()
-		assertThat(root.yoga.children).containsExactlyElementsIn(nodes.map { it.yoga }).inOrder()
 	}
-
-	private val YogaNode.children get() = Array(childCount, ::getChildAt).toList()
 }
