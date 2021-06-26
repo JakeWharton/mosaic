@@ -9,7 +9,7 @@ Inspired by [Ink](https://github.com/vadimdemedes/ink).
 
 Jump to:
 [Introduction](#Introduction) |
-[Documentation](#Documentation) |
+[Usage](#Usage) |
 [Samples](#Samples) |
 [FAQ](#FAQ) |
 [License](#License)
@@ -79,13 +79,72 @@ fun main() = runMosaic {
 <img src="samples/counter/demo.svg">
 
 
-## Documentation
+## Usage
 
-Hey! I've been sitting on this project for ~6 months and decided to just flip the public bit in
-response to a [Reddit comment](https://www.reddit.com/r/Kotlin/comments/n4mn6j/technology_preview_jetpack_compose_for_web/gwyx1x2/)
-(and also because I was waiting for a bug fix inside Compose).
+In order to use Mosaic you must write your code in Kotlin and must apply the Compose Kotlin
+compiler plugin.
 
-Instructions for using Mosaic in your own project will be coming soon. Stay tuned!
+For Gradle users, the Mosaic Gradle plugin will take care of applying the compiler plugin.
+
+```groovy
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10'
+    classpath 'com.jakewharton.mosaic:mosaic-gradle-plugin:0.1.0'
+  }
+}
+
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'org.jakewharton.mosaic'
+```
+
+The runtime APIs will be made available automatically by applying the plugin.
+Documentation is available at [jakewharton.github.io/mosaic/docs/0.x/](https://jakewharton.github.io/mosaic/docs/0.x/).
+
+**Note**: Any module which contains a `@Composable`-annotated function or lambda must apply the
+Mosaic plugin. While the runtime dependency will be available to downstream modules as a
+transitive dependency, the compiler plugin is not inherited and must be applied to every module.
+
+Since Kotlin compiler plugins are an unstable API, certain versions of Mosaic only work with
+certain versions of Kotlin.
+
+| Kotlin | Mosaic             |
+|--------|--------------------|
+| 1.5.10 | 0.1.0              |
+| 1.5.20 | Blocked on Compose |
+
+Versions of Kotlin older than 1.5.10 are not supported.
+Versions newer than those listed may be supported but are untested.
+
+<details>
+<summary>Snapshots of the development version are available in Sonatype's snapshots repository.</summary>
+<p>
+
+```groovy
+buildscript {
+  repository {
+    mavenCental()
+    maven {
+      url 'https://oss.sonatype.org/content/repositories/snapshots/'
+    }
+  }
+  dependencies {
+    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10'
+    classpath 'com.jakewharton.mosaic:mosaic-gradle-plugin:0.2.0-SNAPSHOT'
+  }
+}
+
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'org.jakewharton.mosaic'
+```
+
+Snapshot documentation is available at [jakewharton.github.io/mosaic/docs/latest/](https://jakewharton.github.io/mosaic/docs/latest/).
+
+</p>
+</details>
 
 
 ## Samples
