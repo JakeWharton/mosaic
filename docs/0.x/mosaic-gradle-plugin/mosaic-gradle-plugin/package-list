@@ -1,0 +1,11 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+$dokka.location:com.jakewharton.mosaic.gradle////PointingToDeclaration/mosaic-gradle-plugin/com.jakewharton.mosaic.gradle/index.html
+$dokka.location:com.jakewharton.mosaic.gradle/MosaicPlugin///PointingToDeclaration/mosaic-gradle-plugin/com.jakewharton.mosaic.gradle/-mosaic-plugin/index.html
+$dokka.location:com.jakewharton.mosaic.gradle/MosaicPlugin/MosaicPlugin/#/PointingToDeclaration/mosaic-gradle-plugin/com.jakewharton.mosaic.gradle/-mosaic-plugin/-mosaic-plugin.html
+$dokka.location:com.jakewharton.mosaic.gradle/MosaicPlugin/applyToCompilation/#org.jetbrains.kotlin.gradle.plugin.KotlinCompilation[*]/PointingToDeclaration/mosaic-gradle-plugin/com.jakewharton.mosaic.gradle/-mosaic-plugin/apply-to-compilation.html
+$dokka.location:com.jakewharton.mosaic.gradle/MosaicPlugin/getCompilerPluginId/#/PointingToDeclaration/mosaic-gradle-plugin/com.jakewharton.mosaic.gradle/-mosaic-plugin/get-compiler-plugin-id.html
+$dokka.location:com.jakewharton.mosaic.gradle/MosaicPlugin/getPluginArtifact/#/PointingToDeclaration/mosaic-gradle-plugin/com.jakewharton.mosaic.gradle/-mosaic-plugin/get-plugin-artifact.html
+$dokka.location:com.jakewharton.mosaic.gradle/MosaicPlugin/isApplicable/#org.jetbrains.kotlin.gradle.plugin.KotlinCompilation[*]/PointingToDeclaration/mosaic-gradle-plugin/com.jakewharton.mosaic.gradle/-mosaic-plugin/is-applicable.html
+com.jakewharton.mosaic.gradle
+
