@@ -138,7 +138,7 @@ buildscript {
 }
 
 apply plugin: 'org.jetbrains.kotlin.jvm'
-apply plugin: 'org.jakewharton.mosaic'
+apply plugin: 'com.jakewharton.mosaic'
 ```
 
 Snapshot documentation is available at [jakewharton.github.io/mosaic/docs/latest/](https://jakewharton.github.io/mosaic/docs/latest/).
