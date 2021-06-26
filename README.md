@@ -98,7 +98,7 @@ buildscript {
 }
 
 apply plugin: 'org.jetbrains.kotlin.jvm'
-apply plugin: 'org.jakewharton.mosaic'
+apply plugin: 'com.jakewharton.mosaic'
 ```
 
 The runtime APIs will be made available automatically by applying the plugin.
