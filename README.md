@@ -126,7 +126,7 @@ Versions newer than those listed may be supported but are untested.
 ```groovy
 buildscript {
   repository {
-    mavenCental()
+    mavenCentral()
     maven {
       url 'https://oss.sonatype.org/content/repositories/snapshots/'
     }
