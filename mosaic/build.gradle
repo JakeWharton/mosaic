@@ -54,7 +54,6 @@ allprojects {
 	tasks.withType(org.jetbrains.kotlin.gradle.dsl.KotlinCompile).configureEach { task ->
 		task.kotlinOptions {
 			freeCompilerArgs += [
-				'-progressive',
 				'-Xjvm-default=all',
 				'-Xopt-in=kotlin.RequiresOptIn',
 			]
