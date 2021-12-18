@@ -49,7 +49,7 @@ fun main() = runMosaic {
 }
 ```
 
-**This will not work!** Our count stays are 0 for 5 seconds instead of incrementing until 20.
+**This will not work!** Our count stays at 0 for 5 seconds instead of incrementing until 20.
 Instead, we have to use Compose's `State` objects to hold state.
 
 ```diff
