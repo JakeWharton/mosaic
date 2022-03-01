@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v3
 
       # Validate before checking out submodules which have their own wrappers.
       - uses: gradle/wrapper-validation-action@v1
