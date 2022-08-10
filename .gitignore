@@ -9,3 +9,6 @@ build
 
 # Gradle (nested build)
 /mosaic/.gradle
+
+# Local configuration file
+local.properties
