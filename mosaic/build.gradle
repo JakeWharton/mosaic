@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
 buildscript {
 	apply from: '../dependencies.gradle'
 
@@ -40,7 +43,7 @@ allprojects {
 		}
 	}
 
-	tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+	tasks.withType(KotlinCompile).configureEach {
 		kotlinOptions {
 			jvmTarget = '1.8'
 		}
@@ -51,7 +54,7 @@ allprojects {
 		targetCompatibility = JavaVersion.VERSION_1_8
 	}
 
-	tasks.withType(org.jetbrains.kotlin.gradle.dsl.KotlinCompile).configureEach { task ->
+	tasks.withType(KotlinCompile).configureEach { task ->
 		task.kotlinOptions {
 			freeCompilerArgs += [
 				'-Xjvm-default=all',
@@ -60,10 +63,9 @@ allprojects {
 		}
 	}
 
-	tasks.withType(org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile).configureEach { task ->
+	tasks.withType(KotlinJvmCompile).configureEach { task ->
 		task.kotlinOptions {
 			jvmTarget = "1.8"
-			useIR = true
 		}
 	}
 
