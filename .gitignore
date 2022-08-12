@@ -8,7 +8,7 @@ build
 /reports
 
 # Gradle (nested build)
-/mosaic/.gradle
+/samples/.gradle
 
 # Local configuration file
 local.properties

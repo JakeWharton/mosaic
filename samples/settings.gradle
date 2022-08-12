@@ -1,0 +1,10 @@
+include ':counter'
+include ':jest'
+include ':robot'
+
+includeBuild('..') {
+	dependencySubstitution {
+		substitute module('com.jakewharton.mosaic:mosaic-gradle-plugin') using project(':mosaic-gradle-plugin')
+		substitute module('com.jakewharton.mosaic:mosaic-runtime') using project(':mosaic-runtime')
+	}
+}

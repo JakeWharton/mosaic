@@ -149,7 +149,7 @@ Snapshot documentation is available at [jakewharton.github.io/mosaic/docs/latest
 
 ## Samples
 
-Run `./gradlew installDist` to build the sample binaries.
+Run `./gradlew -p samples installDist` to build the sample binaries.
 
  * [Counter](samples/counter): A simple increasing number from 0 until 20.
 

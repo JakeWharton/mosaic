@@ -23,10 +23,10 @@ jobs:
           distribution: 'zulu'
           java-version: 11
 
-      - run: ./gradlew -p mosaic build dokkaHtmlMultiModule
-      - run: ./gradlew build
+      - run: ./gradlew build dokkaHtmlMultiModule
+      - run: ./gradlew -p samples build
 
-      - run: ./gradlew -p mosaic publish
+      - run: ./gradlew publish
         if: ${{ github.ref == 'refs/heads/trunk' && github.repository == 'JakeWharton/mosaic' }}
         env:
           ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
