@@ -128,7 +128,9 @@ private fun Summary(tests: SnapshotStateList<Test>) {
 	LaunchedEffect(Unit) {
 		while (true) {
 			delay(1_000)
-			elapsed++
+			Snapshot.withMutableSnapshot {
+				elapsed++
+			}
 		}
 	}
 	Text("Time:  ${elapsed}s")
