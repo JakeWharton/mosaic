@@ -23,8 +23,6 @@ gradlePlugin {
 }
 
 test {
-	dependsOn(':compose:runtime:installArchives')
-	dependsOn(':compose:compiler:installArchives')
 	dependsOn(':mosaic-gradle-plugin:installArchives')
 	dependsOn(':mosaic-runtime:installArchives')
 }
@@ -39,6 +37,7 @@ task pluginVersion {
 	def outputDir = file(versionDirectory)
 
 	inputs.property 'mosaicVersion', project.version
+	inputs.property 'composeCompiler', versions.composeCompiler
 	outputs.dir outputDir
 
 	doLast {
@@ -47,6 +46,7 @@ task pluginVersion {
 		versionFile.text = """// Generated file. Do not edit!
 package com.jakewharton.mosaic.gradle
 internal const val mosaicVersion = "${project.version}"
+internal const val composeCompilerVersion = "${versions.composeCompiler}"
 """
 	}
 }
