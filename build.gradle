@@ -8,7 +8,7 @@ buildscript {
 		classpath deps.kotlinGradlePlugin
 		// We don't use this dependency directly. However, we reference a type from the Kotlin Gradle
 		// plugin whose classloading causes com.android.build.gradle.api.BaseVariant to also be loaded.
-		classpath 'com.android.tools.build:gradle:4.2.0'
+		classpath 'com.android.tools.build:gradle:7.2.2'
 		classpath 'com.vanniktech:gradle-maven-publish-plugin:0.13.0'
 		classpath 'org.jetbrains.dokka:dokka-gradle-plugin:1.7.10'
 	}
