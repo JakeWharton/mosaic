@@ -1,12 +1,4 @@
-rootProject.name = 'mosaic-root'
+rootProject.name = 'mosaic'
 
-include ':samples:counter'
-include ':samples:jest'
-include ':samples:robot'
-
-includeBuild('mosaic') {
-	dependencySubstitution {
-		substitute module('com.jakewharton.mosaic:mosaic-gradle-plugin') using project(':mosaic-gradle-plugin')
-		substitute module('com.jakewharton.mosaic:mosaic-runtime') using project(':mosaic-runtime')
-	}
-}
+include ':mosaic-gradle-plugin'
+include ':mosaic-runtime'

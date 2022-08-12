@@ -21,7 +21,7 @@ jobs:
           java-version: 11
 
 # TODO!
-#      - run: ./gradlew -p mosaic publish
+#      - run: ./gradlew publish
 #        env:
 #          ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
 #          ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
@@ -38,7 +38,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: ./gradlew -p mosaic dokkaHtmlMultiModule
+      - run: ./gradlew dokkaHtmlMultiModule
 
       - name: Deploy docs to website
         uses: JamesIves/github-pages-deploy-action@releases/v3
