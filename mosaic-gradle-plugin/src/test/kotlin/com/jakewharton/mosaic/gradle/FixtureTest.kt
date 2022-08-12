@@ -30,6 +30,7 @@ class FixtureTest(
 		GradleRunner.create()
 			.withProjectDir(fixtureDir)
 			.withArguments("clean", "build", "--stacktrace", versionProperty())
+			.withDebug(true) // Run in-process for speed.
 			.build()
 	}
 }
