@@ -10,13 +10,11 @@ buildscript {
 		// plugin whose classloading causes com.android.build.gradle.api.BaseVariant to also be loaded.
 		classpath 'com.android.tools.build:gradle:4.2.0'
 		classpath 'com.vanniktech:gradle-maven-publish-plugin:0.13.0'
-		classpath 'org.jetbrains.dokka:dokka-gradle-plugin:1.4.30'
+		classpath 'org.jetbrains.dokka:dokka-gradle-plugin:1.7.10'
 	}
 	repositories {
 		mavenCentral()
 		google()
-		gradlePluginPortal()
-		jcenter() // Dokka
 	}
 }
 
@@ -31,17 +29,6 @@ allprojects {
 	repositories {
 		mavenCentral()
 		google()
-		jcenter {
-			mavenContent {
-				includeModule("org.jetbrains.kotlinx", "kotlinx-html-jvm")
-			}
-		}
-	}
-
-	tasks.withType(KotlinCompile).configureEach {
-		kotlinOptions {
-			jvmTarget = '1.8'
-		}
 	}
 
 	tasks.withType(JavaCompile).configureEach {
@@ -53,14 +40,8 @@ allprojects {
 		task.kotlinOptions {
 			freeCompilerArgs += [
 				'-Xjvm-default=all',
-				'-Xopt-in=kotlin.RequiresOptIn',
+				'-opt-in=kotlin.RequiresOptIn',
 			]
-		}
-	}
-
-	tasks.withType(KotlinJvmCompile).configureEach { task ->
-		task.kotlinOptions {
-			jvmTarget = "1.8"
 		}
 	}
 
