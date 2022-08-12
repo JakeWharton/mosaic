@@ -11,7 +11,6 @@ buildscript {
 		classpath 'com.android.tools.build:gradle:4.2.0'
 		classpath 'com.vanniktech:gradle-maven-publish-plugin:0.13.0'
 		classpath 'org.jetbrains.dokka:dokka-gradle-plugin:1.4.30'
-		classpath 'com.github.jengelman.gradle.plugins:shadow:6.1.0'
 	}
 	repositories {
 		mavenCentral()
@@ -23,11 +22,6 @@ buildscript {
 
 apply plugin: 'org.jetbrains.dokka'
 dokkaHtmlMultiModule {
-	removeChildTasks([
-		// Do not include Compose in our documentation site.
-		project(":compose:compiler"),
-		project(":compose:runtime"),
-	])
 }
 
 allprojects {
@@ -36,6 +30,7 @@ allprojects {
 
 	repositories {
 		mavenCentral()
+		google()
 		jcenter {
 			mavenContent {
 				includeModule("org.jetbrains.kotlinx", "kotlinx-html-jvm")

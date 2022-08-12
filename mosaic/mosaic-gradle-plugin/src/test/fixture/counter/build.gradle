@@ -24,6 +24,7 @@ repositories {
 	maven {
 		url "file://${projectDir.absolutePath}/../../../../../build/localMaven"
 	}
+	google()
 	mavenCentral()
 }
 

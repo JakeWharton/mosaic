@@ -15,8 +15,6 @@ jobs:
       # Validate before checking out submodules which have their own wrappers.
       - uses: gradle/wrapper-validation-action@v1
 
-      - run: git submodule update --init
-
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'

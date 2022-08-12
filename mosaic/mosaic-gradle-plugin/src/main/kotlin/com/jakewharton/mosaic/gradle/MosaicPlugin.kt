@@ -13,9 +13,9 @@ class MosaicPlugin : KotlinCompilerPluginSupportPlugin {
 	override fun getCompilerPluginId() = "com.jakewharton.mosaic"
 
 	override fun getPluginArtifact() = SubpluginArtifact(
-		"com.jakewharton.mosaic",
-		"compose-compiler",
-		mosaicVersion,
+		"androidx.compose.compiler",
+		"compiler",
+		composeCompilerVersion,
 	)
 
 	override fun applyToCompilation(kotlinCompilation: KotlinCompilation<*>): Provider<List<SubpluginOption>> {
