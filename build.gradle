@@ -18,8 +18,6 @@ buildscript {
 }
 
 apply plugin: 'org.jetbrains.dokka'
-dokkaHtmlMultiModule {
-}
 
 allprojects {
 	group = GROUP
