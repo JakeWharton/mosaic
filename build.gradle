@@ -10,10 +10,12 @@ buildscript {
 		classpath 'com.android.tools.build:gradle:7.2.2'
 		classpath 'com.vanniktech:gradle-maven-publish-plugin:0.13.0'
 		classpath 'org.jetbrains.dokka:dokka-gradle-plugin:1.7.10'
+		classpath 'com.github.gmazzo:gradle-buildconfig-plugin:3.1.0'
 	}
 	repositories {
 		mavenCentral()
 		google()
+		gradlePluginPortal()
 	}
 }
 

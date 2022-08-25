@@ -1,6 +1,7 @@
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'java-gradle-plugin'
 apply plugin: 'com.vanniktech.maven.publish'
+apply plugin: 'com.github.gmazzo.buildconfig'
 
 dependencies {
 	compileOnly gradleApi()
@@ -27,28 +28,13 @@ test {
 	dependsOn(':mosaic-runtime:installArchives')
 }
 
-def versionDirectory = "$buildDir/generated/version/"
-
-sourceSets {
-	main.java.srcDir versionDirectory
-}
-
-task pluginVersion {
-	def outputDir = file(versionDirectory)
-
-	inputs.property 'mosaicVersion', project.version
-	inputs.property 'composeCompiler', versions.composeCompiler
-	outputs.dir outputDir
-
-	doLast {
-		def versionFile = file("$outputDir/com/jakewharton/mosaic/gradle/version.kt")
-		versionFile.parentFile.mkdirs()
-		versionFile.text = """// Generated file. Do not edit!
-package com.jakewharton.mosaic.gradle
-internal const val mosaicVersion = "${project.version}"
-internal const val composeCompilerVersion = "${versions.composeCompiler}"
-"""
+buildConfig {
+	useKotlinOutput {
+		internalVisibility = true
+		topLevelConstants = true
 	}
-}
 
-tasks.getByName('compileKotlin').dependsOn('pluginVersion')
+	packageName('com.jakewharton.mosaic.gradle')
+	buildConfigField("String", "composeCompilerVersion", "\"${versions.composeCompiler}\"")
+	buildConfigField("String", "mosaicVersion", "\"${project.version}\"")
+}
