@@ -37,7 +37,6 @@ allprojects {
 		task.kotlinOptions {
 			freeCompilerArgs += [
 				'-Xjvm-default=all',
-				'-opt-in=kotlin.RequiresOptIn',
 			]
 		}
 	}
