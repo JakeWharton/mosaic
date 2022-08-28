@@ -25,7 +25,7 @@ class FixtureTest(
 	@Test fun todo() {
 		val fixtureDir = File(fixturesDir, fixtureName)
 		val gradleRoot = File(fixtureDir, "gradle").also { it.mkdir() }
-		File("../gradle/wrapper").copyRecursively(File(gradleRoot, "wrapper"), true)
+		File("../gradle").copyRecursively(File(gradleRoot.path), true)
 
 		GradleRunner.create()
 			.withProjectDir(fixtureDir)
