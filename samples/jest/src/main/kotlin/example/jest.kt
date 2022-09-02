@@ -32,12 +32,12 @@ fun main() = runMosaic {
 	setContent {
 		val (done, running) = tests.partition { it.state != Running }
 		Column {
-			if (done.isNotEmpty()) {
-				for (test in done) {
-					TestRow(test)
-				}
-				Text("") // Blank line
-			}
+//			if (done.isNotEmpty()) {
+//				for (test in done) {
+//					TestRow(test)
+//				}
+//				Text("") // Blank line
+//			}
 
 			if (running.isNotEmpty()) {
 				for (test in running) {
