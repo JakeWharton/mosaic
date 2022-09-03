@@ -55,7 +55,7 @@ internal object AnsiOutput : Output {
 				append("\u001B[K") // Clear line.
 			}
 
-			// Move cursor back up to end of the new output
+			// Move cursor back up to end of the new output.
 			repeat(extraLines - 1) {
 				append("\u001B[F") // Cursor up line.
 			}
