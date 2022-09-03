@@ -47,11 +47,17 @@ internal object AnsiOutput : Output {
 			}
 
 			// If the new output contains fewer lines than the last output, clear those old lines.
-			for (i in 0 until lastHeight - lines.size) {
+			val extraLines = lastHeight - lines.size
+			for (i in 0 until extraLines) {
 				if (i > 0) {
 					append('\n')
 				}
 				append("\u001B[K") // Clear line.
+			}
+
+			// Move cursor back up to end of the new output.
+			repeat(extraLines - 1) {
+				append("\u001B[F") // Cursor up line.
 			}
 
 			lastHeight = lines.size

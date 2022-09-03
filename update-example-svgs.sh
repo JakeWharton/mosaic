@@ -9,24 +9,29 @@ set -e
 
 REPO_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-# Ensure example binaries are available
-"$REPO_DIR/gradlew" -p samples -q --console plain -p "$REPO_DIR" installDist
+# Ensure sample binaries are available
+"$REPO_DIR/gradlew" -q --console plain -p "$REPO_DIR/samples" installDist
 
-for example in $REPO_DIR/examples/*/; do
-	example_name=$(basename "$example")
-	echo "Capturing $example_name..."
+for sample in $REPO_DIR/samples/*; do
+	sample_name=$(basename "$sample")
+	sample_bin="$sample/build/install/$sample_name/bin/$sample_name"
 
-	command="'$example/build/install/$example_name/bin/$example_name' 2>/dev/null && sleep 2 && echo"
-	if [ -f "$example/input.sh" ]; then
-		command="'$example/input.sh' | $command"
-	fi
+	if test -f "$sample_bin"; then
+		echo "Capturing $sample_name..."
 
-	svg-term "--command=$command" "--out=$example/demo.svg" --from=50 --window --width=60 --height=16 --no-cursor
-	cat > "$example/README.md" <<EOL
-# Example: $example_name
+		command="'$sample_bin' 2>/dev/null && sleep 2 && echo"
+		if [ -f "$sample/input.sh" ]; then
+			command="'$sample/input.sh' | $command"
+		fi
+
+		echo "Running $command..."
+		svg-term "--command=$command" "--out=$sample/demo.svg" --from=50 --window --width=60 --height=16 --no-cursor
+		cat > "$sample/README.md" <<EOL
+# Example: $sample_name
 
 <img src="demo.svg">
 EOL
+	fi
 done
 
 echo "Done"
