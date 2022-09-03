@@ -129,11 +129,13 @@ internal class BoxNode : MosaicNode() {
 
 	override fun renderTo(canvas: TextCanvas) {
 		for (child in children) {
-			val left = child.x
-			val top = child.y
-			val right = left + child.width - 1
-			val bottom = top + child.height - 1
-			child.renderTo(canvas[top..bottom, left..right])
+			if (child.width != 0 && child.height != 0) {
+				val left = child.x
+				val top = child.y
+				val right = left + child.width - 1
+				val bottom = top + child.height - 1
+				child.renderTo(canvas[top..bottom, left..right])
+			}
 		}
 	}
 
