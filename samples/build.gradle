@@ -1,8 +1,6 @@
 buildscript {
-	apply from: '../dependencies.gradle'
-
 	dependencies {
-		classpath deps.kotlinGradlePlugin
+		classpath libs.kotlin.gradlePlugin
 
 		// Normally you would declare a version here, but we use dependency substitution in
 		// settings.gradle to use the version built from inside the repo.

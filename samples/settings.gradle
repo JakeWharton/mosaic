@@ -8,3 +8,11 @@ includeBuild('..') {
 		substitute module('com.jakewharton.mosaic:mosaic-runtime') using project(':mosaic-runtime')
 	}
 }
+
+dependencyResolutionManagement {
+	versionCatalogs {
+		libs {
+			from(files("../gradle/libs.versions.toml"))
+		}
+	}
+}

@@ -4,11 +4,11 @@ apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'com.vanniktech.maven.publish'
 
 dependencies {
-	api deps.jetbrainsComposeRuntime
-	implementation deps.jansi
+	api libs.jetbrains.compose.runtime
+	implementation libs.jansi
 
-	testImplementation deps.junit
-	testImplementation deps.truth
+	testImplementation libs.junit4
+	testImplementation libs.truth
 
-	add(KotlinPluginKt.PLUGIN_CLASSPATH_CONFIGURATION_NAME, deps.androidxComposeCompiler)
+	add(KotlinPluginKt.PLUGIN_CLASSPATH_CONFIGURATION_NAME, libs.androidx.compose.compiler)
 }

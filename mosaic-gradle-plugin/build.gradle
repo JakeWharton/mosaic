@@ -5,10 +5,10 @@ apply plugin: 'com.github.gmazzo.buildconfig'
 
 dependencies {
 	compileOnly gradleApi()
-	compileOnly deps.kotlinGradlePlugin
+	compileOnly libs.kotlin.gradlePlugin
 
-	testImplementation deps.junit
-	testImplementation deps.truth
+	testImplementation libs.junit4
+	testImplementation libs.truth
 	testImplementation gradleTestKit()
 }
 
@@ -35,6 +35,6 @@ buildConfig {
 	}
 
 	packageName('com.jakewharton.mosaic.gradle')
-	buildConfigField("String", "composeCompilerVersion", "\"${versions.composeCompiler}\"")
+	buildConfigField("String", "composeCompilerVersion", "\"${libs.versions.composeCompiler.get()}\"")
 	buildConfigField("String", "mosaicVersion", "\"${project.version}\"")
 }

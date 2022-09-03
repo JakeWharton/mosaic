@@ -1,16 +1,14 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
-	apply from: 'dependencies.gradle'
-
 	dependencies {
-		classpath deps.kotlinGradlePlugin
+		classpath libs.kotlin.gradlePlugin
 		// We don't use this dependency directly. However, we reference a type from the Kotlin Gradle
 		// plugin whose classloading causes com.android.build.gradle.api.BaseVariant to also be loaded.
-		classpath 'com.android.tools.build:gradle:7.2.2'
-		classpath 'com.vanniktech:gradle-maven-publish-plugin:0.13.0'
-		classpath 'org.jetbrains.dokka:dokka-gradle-plugin:1.7.10'
-		classpath 'com.github.gmazzo:gradle-buildconfig-plugin:3.1.0'
+		classpath libs.android.gradlePlugin
+		classpath libs.maven.publish.gradlePlugin
+		classpath libs.dokka.gradlePlugin
+		classpath libs.buildconfig.gradlePlugin
 	}
 	repositories {
 		mavenCentral()
