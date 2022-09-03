@@ -1,5 +1,4 @@
 buildscript {
-
 	dependencies {
 		classpath libs.kotlin.gradlePlugin
 		classpath "com.jakewharton.mosaic:mosaic-gradle-plugin:${mosaicVersion}"
