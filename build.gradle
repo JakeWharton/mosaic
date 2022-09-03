@@ -1,7 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
-
 	dependencies {
 		classpath libs.kotlin.gradlePlugin
 		// We don't use this dependency directly. However, we reference a type from the Kotlin Gradle
