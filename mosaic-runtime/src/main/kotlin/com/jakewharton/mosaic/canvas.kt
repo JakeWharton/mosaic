@@ -12,6 +12,9 @@ internal interface TextCanvas {
 	val width: Int
 	val height: Int
 
+	/** Separate canvases for [static][StaticNode] content. */
+	val static: MutableList<TextCanvas>
+
 	operator fun get(row: Int, column: Int): TextCodepoint
 
 	operator fun get(row: Int, columns: IntRange) = get(row..row, columns)
@@ -28,6 +31,10 @@ internal interface TextCanvas {
 		require(right < width) { "Column end value out of range [0,$width): $right"}
 
 		return ClippedTextCanvas(this, left, top, right, bottom)
+	}
+
+	fun empty(): TextCanvas {
+		return ClippedTextCanvas(this, 0, 0, -1, -1)
 	}
 
 	fun write(
@@ -87,6 +94,9 @@ internal class ClippedTextCanvas(
 	override val width = right - left + 1
 	override val height = bottom - top + 1
 
+	override val static: MutableList<TextCanvas>
+		get() = delegate.static
+
 	override fun get(row: Int, column: Int): TextCodepoint {
 		require(row in 0 until height) { "Row value out of range [0,$height): $row"}
 		require(column in 0 until width) { "Column value out of range [0,$width): $column"}
@@ -112,6 +122,8 @@ internal class TextSurface(
 	override val height: Int,
 ) : TextCanvas {
 	private val rows = Array(height) { Array(width) { TextCodepoint(' ') } }
+
+	override val static = mutableListOf<TextCanvas>()
 
 	override operator fun get(row: Int, column: Int) = rows[row][column]
 

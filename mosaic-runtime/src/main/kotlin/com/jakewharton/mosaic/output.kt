@@ -5,13 +5,13 @@ import java.nio.charset.StandardCharsets.UTF_8
 import java.util.concurrent.TimeUnit.NANOSECONDS
 
 internal interface Output {
-	fun display(output: String)
+	fun display(canvas: TextCanvas)
 }
 
 internal object DebugOutput : Output {
 	private var lastRenderNanos = 0L
 
-	override fun display(output: String) {
+	override fun display(canvas: TextCanvas) {
 		println(buildString {
 			val renderNanos = System.nanoTime()
 
@@ -24,7 +24,11 @@ internal object DebugOutput : Output {
 			}
 			lastRenderNanos = renderNanos
 
-			appendLine(output)
+			for (static in canvas.static) {
+				appendLine(static.render())
+			}
+
+			appendLine(canvas.render())
 		})
 	}
 }
@@ -32,22 +36,22 @@ internal object DebugOutput : Output {
 internal object AnsiOutput : Output {
 	private var lastHeight = 0
 
-	override fun display(output: String) {
+	override fun display(canvas: TextCanvas) {
 		val rendered = buildString {
-			val lines = output.split("\n")
-
 			repeat(lastHeight) {
 				append("\u001B[F") // Cursor up line.
 			}
 
-			for (line in lines) {
+			val staticLines = canvas.static.flatMap { it.render().split("\n") }
+			val lines = canvas.render().split("\n")
+			for (line in staticLines + lines) {
 				append(line)
 				append("\u001B[K") // Clear rest of line.
 				append('\n')
 			}
 
 			// If the new output contains fewer lines than the last output, clear those old lines.
-			val extraLines = lastHeight - lines.size
+			val extraLines = lastHeight - (lines.size + staticLines.size)
 			for (i in 0 until extraLines) {
 				if (i > 0) {
 					append('\n')
