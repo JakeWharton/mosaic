@@ -17,8 +17,6 @@ buildscript {
 	}
 }
 
-apply plugin: 'org.jetbrains.dokka'
-
 allprojects {
 	group = GROUP
 	version = VERSION_NAME
