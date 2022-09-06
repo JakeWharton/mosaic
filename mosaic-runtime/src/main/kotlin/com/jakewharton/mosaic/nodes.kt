@@ -19,12 +19,12 @@ internal sealed class MosaicNode {
 	abstract fun layout()
 	abstract fun renderTo(canvas: TextCanvas)
 
-	fun render(): String {
+	fun render(): TextCanvas {
 		measure()
 		layout()
 		val canvas = TextSurface(width, height)
 		renderTo(canvas)
-		return canvas.toString()
+		return canvas
 	}
 }
 
@@ -62,8 +62,13 @@ internal class TextNode(initialValue: String = "") : MosaicNode() {
 	override fun toString() = "Text(\"$value\", x=$x, y=$y, width=$width, height=$height)"
 }
 
-internal class BoxNode : MosaicNode() {
-	val children = mutableListOf<MosaicNode>()
+internal sealed class ContainerNode : MosaicNode() {
+	abstract val children: MutableList<MosaicNode>
+}
+
+internal class BoxNode : ContainerNode() {
+	override val children = mutableListOf<MosaicNode>()
+
 	/** If row, otherwise column. */
 	var isRow = true
 
@@ -135,6 +140,8 @@ internal class BoxNode : MosaicNode() {
 				val right = left + child.width - 1
 				val bottom = top + child.height - 1
 				child.renderTo(canvas[top..bottom, left..right])
+			} else {
+				child.renderTo(canvas.empty())
 			}
 		}
 	}
@@ -148,22 +155,22 @@ internal class MosaicNodeApplier(root: BoxNode) : AbstractApplier<MosaicNode>(ro
 	}
 
 	override fun insertBottomUp(index: Int, instance: MosaicNode) {
-		val boxNode = current as BoxNode
+		val boxNode = current as ContainerNode
 		boxNode.children.add(index, instance)
 	}
 
 	override fun remove(index: Int, count: Int) {
-		val boxNode = current as BoxNode
+		val boxNode = current as ContainerNode
 		boxNode.children.remove(index, count)
 	}
 
 	override fun move(from: Int, to: Int, count: Int) {
-		val boxNode = current as BoxNode
+		val boxNode = current as ContainerNode
 		boxNode.children.move(from, to, count)
 	}
 
 	override fun onClear() {
-		val boxNode = root as BoxNode
+		val boxNode = root as ContainerNode
 		boxNode.children.clear()
 	}
 }
