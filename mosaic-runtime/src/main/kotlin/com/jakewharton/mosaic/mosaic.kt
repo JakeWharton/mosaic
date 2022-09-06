@@ -3,8 +3,12 @@ package com.jakewharton.mosaic
 import androidx.compose.runtime.BroadcastFrameClock
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Composition
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Recomposer
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.Snapshot
+import com.jakewharton.mosaic.TerminalInfo.Size
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
@@ -14,6 +18,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.yield
+import org.jline.terminal.Terminal
+import org.jline.terminal.Terminal.Signal.WINCH
+import org.jline.terminal.TerminalBuilder
 
 /**
  * True when using ANSI control sequences to overwrite output.
@@ -59,16 +66,48 @@ fun runMosaic(body: suspend MosaicScope.() -> Unit) = runBlocking {
 		}
 	}
 
+	lateinit var terminal: Terminal
+	lateinit var terminalInfo: MutableState<TerminalInfo>
+	terminal = TerminalBuilder.builder()
+		.nativeSignals(true)
+		.signalHandler {
+			when (it) {
+				WINCH -> {
+					terminalInfo.value = TerminalInfo(
+						Size(
+							width = terminal.width,
+							height = terminal.height,
+						)
+					)
+				}
+				else -> {}
+			}
+		}
+		.build()
+
+	terminalInfo = mutableStateOf(
+		TerminalInfo(
+			Size(
+				width = terminal.width,
+				height = terminal.height,
+			)
+		)
+	)
+
 	coroutineScope {
 		val scope = object : MosaicScope, CoroutineScope by this {
 			override fun setContent(content: @Composable () -> Unit) {
-				composition.setContent(content)
+				composition.setContent {
+					CompositionLocalProvider(Terminal provides terminalInfo.value) {
+						content()
+					}
+				}
 				hasFrameWaiters = true
 			}
 		}
 
 		var snapshotNotificationsPending = false
-		val observer: (state: Any) -> Unit = {
+		val snapshotObserverHandle = Snapshot.registerGlobalWriteObserver {
 			if (!snapshotNotificationsPending) {
 				snapshotNotificationsPending = true
 				launch {
@@ -77,7 +116,6 @@ fun runMosaic(body: suspend MosaicScope.() -> Unit) = runBlocking {
 				}
 			}
 		}
-		val snapshotObserverHandle = Snapshot.registerGlobalWriteObserver(observer)
 		try {
 			scope.body()
 		} finally {

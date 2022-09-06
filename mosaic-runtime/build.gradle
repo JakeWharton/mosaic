@@ -6,6 +6,7 @@ apply plugin: 'com.vanniktech.maven.publish'
 dependencies {
 	api libs.jetbrains.compose.runtime
 	implementation libs.jansi
+	implementation libs.jline
 
 	testImplementation libs.junit4
 	testImplementation libs.truth
