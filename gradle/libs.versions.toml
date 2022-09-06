@@ -1,27 +1,26 @@
 [versions]
 kotlin = "1.7.10"
-androidGradlePlugin = "7.2.2"
-mavenPublishPlugin = "0.13.0"
-buildConfigPlugin = "3.1.0"
-kotlinxCoroutines = "1.6.1"
-composeCompiler = "1.3.0"
-composeRuntime = "1.1.1"
-junit4 = "4.13.2"
-truth = "1.1.3"
-jansi = "2.4.0"
+kotlinx-coroutines = "1.6.1"
+androidx-compose-compiler = "1.3.0"
 
 [libraries]
-kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
-android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
-maven-publish-gradlePlugin = { group = "com.vanniktech", name = "gradle-maven-publish-plugin", version.ref = "mavenPublishPlugin" }
-dokka-gradlePlugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "kotlin" }
-buildconfig-gradlePlugin = { group = "com.github.gmazzo", name = "gradle-buildconfig-plugin", version.ref = "buildConfigPlugin" }
-androidx-compose-compiler = { group = "androidx.compose.compiler", name = "compiler", version.ref = "composeCompiler" }
-kotlin-compiler = { group = "org.jetbrains.kotlin", name = "kotlin-compiler", version.ref = "kotlin" }
-kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
-kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
-jetbrains-compose-runtime = { group = "org.jetbrains.compose.runtime", name = "runtime", version.ref = "composeRuntime" }
-junit4 = { group = "junit", name = "junit", version.ref = "junit4" }
-truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
-jansi = { group = "org.fusesource.jansi", name = "jansi", version.ref = "jansi" }
+kotlin-compiler = { module = "org.jetbrains.kotlin:kotlin-compiler", version.ref = "kotlin" }
+kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+
+android-gradlePlugin = "com.android.tools.build:gradle:7.2.2"
+
+androidx-compose-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "androidx-compose-compiler" }
+
+jetbrains-compose-runtime = "org.jetbrains.compose.runtime:runtime:1.1.1"
+
+maven-publish-gradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.13.0"
+dokka-gradlePlugin = "org.jetbrains.dokka:dokka-gradle-plugin:1.7.10"
+buildconfig-gradlePlugin = "com.github.gmazzo:gradle-buildconfig-plugin:3.1.0"
+
+jansi = "org.fusesource.jansi:jansi:2.4.0"
+
+junit4 = "junit:junit:4.13.2"
+truth = "com.google.truth:truth:1.1.3"

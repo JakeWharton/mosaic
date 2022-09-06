@@ -35,6 +35,6 @@ buildConfig {
 	}
 
 	packageName('com.jakewharton.mosaic.gradle')
-	buildConfigField("String", "composeCompilerVersion", "\"${libs.versions.composeCompiler.get()}\"")
+	buildConfigField("String", "composeCompilerVersion", "\"${libs.versions.androidx.compose.compiler.get()}\"")
 	buildConfigField("String", "mosaicVersion", "\"${project.version}\"")
 }
