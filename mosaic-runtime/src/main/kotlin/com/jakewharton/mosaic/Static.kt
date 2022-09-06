@@ -56,7 +56,7 @@ fun <T> Static(
  */
 @Composable
 internal fun Static(
-	postRender: @DisallowComposableCalls () -> Unit = {},
+	postRender: () -> Unit = {},
 	content: @Composable () -> Unit,
 ) {
 	ComposeNode<StaticNode, MosaicNodeApplier>(
