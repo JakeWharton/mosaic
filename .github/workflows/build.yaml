@@ -23,7 +23,7 @@ jobs:
           distribution: 'zulu'
           java-version: 11
 
-      - run: ./gradlew build dokkaHtmlMultiModule
+      - run: ./gradlew build :mosaic-runtime:dokkaHtml
       - run: ./gradlew -p samples build
 
       - run: ./gradlew publish
@@ -38,6 +38,6 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: site
-          FOLDER: mosaic/build/dokka/htmlMultiModule
+          FOLDER: mosaic-runtime/build/dokka/html/
           TARGET_FOLDER: docs/latest/
           CLEAN: true
