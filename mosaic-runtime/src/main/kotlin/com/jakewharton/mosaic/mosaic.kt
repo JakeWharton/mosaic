@@ -12,9 +12,11 @@ import com.jakewharton.mosaic.TerminalInfo.Size
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.yield
@@ -94,11 +96,45 @@ fun runMosaic(body: suspend MosaicScope.() -> Unit) = runBlocking {
 		)
 	)
 
+	terminal.enterRawMode()
+	val terminalReader = terminal.reader()
+	val keyHandlers = mutableListOf<(KeyEvent) -> Unit>()
+	launch(context = composeContext + Dispatchers.IO) {
+		while (isActive) {
+			val keyEvent = when (terminalReader.read()) {
+				'q'.code -> KeyEvent.Q
+				27 -> {
+					when (terminalReader.read()) {
+						91 -> {
+							when (terminalReader.read()) {
+								65 -> KeyEvent.UP
+								66 -> KeyEvent.DOWN
+								67 -> KeyEvent.RIGHT
+								68 -> KeyEvent.LEFT
+								else -> null
+							}
+						}
+						else -> null
+					}
+				}
+				else -> null
+			}
+			if (keyEvent != null) {
+				for (keyHandler in keyHandlers) {
+					keyHandler(keyEvent)
+				}
+			}
+		}
+	}
+
 	coroutineScope {
 		val scope = object : MosaicScope, CoroutineScope by this {
 			override fun setContent(content: @Composable () -> Unit) {
 				composition.setContent {
-					CompositionLocalProvider(Terminal provides terminalInfo.value) {
+					CompositionLocalProvider(
+						Terminal provides terminalInfo.value,
+						KeyHandlers provides keyHandlers,
+					) {
 						content()
 					}
 				}

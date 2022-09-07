@@ -3,7 +3,3 @@ apply plugin: 'com.jakewharton.mosaic'
 apply plugin: 'application'
 
 mainClassName = 'example.RobotKt'
-
-dependencies {
-	implementation libs.jline
-}
