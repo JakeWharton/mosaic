@@ -1,29 +1,29 @@
 package com.jakewharton.mosaic
 
 import java.nio.CharBuffer
-import org.fusesource.jansi.AnsiConsole
 import java.nio.charset.StandardCharsets.UTF_8
-import java.util.concurrent.TimeUnit.NANOSECONDS
+import kotlin.time.ExperimentalTime
+import kotlin.time.TimeMark
+import kotlin.time.TimeSource
+import org.fusesource.jansi.AnsiConsole
 
 internal interface Output {
 	fun display(canvas: TextCanvas)
 }
 
+@OptIn(ExperimentalTime::class) // Not used in production.
 internal object DebugOutput : Output {
-	private var lastRenderNanos = 0L
+	private val systemClock = TimeSource.Monotonic
+	private var lastRender: TimeMark? = null
 
 	override fun display(canvas: TextCanvas) {
 		println(buildString {
-			val renderNanos = System.nanoTime()
-
-			if (lastRenderNanos != 0L) {
+			lastRender?.let { lastRender ->
 				repeat(50) { append('~') }
 				append(" +")
-				val nanoDiff = renderNanos - lastRenderNanos
-				append(NANOSECONDS.toMillis(nanoDiff))
-				appendLine("ms")
+				appendLine(lastRender.elapsedNow())
 			}
-			lastRenderNanos = renderNanos
+			lastRender = systemClock.markNow()
 
 			for (static in canvas.static) {
 				appendLine(static.render())
