@@ -1,7 +1,0 @@
-$dokka.format:html-v1
-$dokka.linkExtension:html
-
-module:mosaic-gradle-plugin
-com.jakewharton.mosaic.gradle
-module:mosaic-runtime
-com.jakewharton.mosaic
