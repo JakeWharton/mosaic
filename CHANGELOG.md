@@ -6,6 +6,8 @@
 ## [0.3.0] - 2023-01-17
 
  - Support Kotlin 1.8.0 via Compose compiler 1.4.0.
+ - New: `Static` composable for rendering permanent output.
+ - Fix: Correct line calculation to prevent output from drifting downward over time when its height changes.
 
 
 ## [0.2.0] - 2022-08-12
