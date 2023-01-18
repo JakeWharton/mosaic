@@ -1,3 +1,3 @@
 # Example: jest
 
-<img src="demo.svg">
+<img src="demo.gif">

@@ -1,3 +1,3 @@
 # Example: counter
 
-<img src="demo.svg">
+<img src="demo.gif">
