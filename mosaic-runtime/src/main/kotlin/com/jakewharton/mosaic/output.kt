@@ -1,5 +1,6 @@
 package com.jakewharton.mosaic
 
+import java.nio.CharBuffer
 import org.fusesource.jansi.AnsiConsole
 import java.nio.charset.StandardCharsets.UTF_8
 import java.util.concurrent.TimeUnit.NANOSECONDS
@@ -35,10 +36,14 @@ internal object DebugOutput : Output {
 
 internal object AnsiOutput : Output {
 	private val out = AnsiConsole.out()!!
+	private val encoder = UTF_8.newEncoder()!!
+	private val stringBuilder = StringBuilder(100)
 	private var lastHeight = 0
 
 	override fun display(canvas: TextCanvas) {
-		val rendered = buildString {
+		stringBuilder.apply {
+			clear()
+
 			repeat(lastHeight) {
 				append("\u001B[F") // Cursor up line.
 			}
@@ -73,7 +78,8 @@ internal object AnsiOutput : Output {
 		// periodically flushed to the underlying byte stream. This will cause fraction-of-a-second
 		// flickers of broken content. Note that this only occurs with the AnsiConsole stream, but
 		// there's no harm in doing it unconditionally.
-		out.write(rendered.toByteArray(UTF_8))
+		val bytes = encoder.encode(CharBuffer.wrap(stringBuilder))
+		out.write(bytes.array(), 0, bytes.limit())
 
 		// Explicitly flush to ensure the trailing line clear is sent. Empirically, this appears to be
 		// buffered and not processed until the next frame, or not at all on the final frame.
