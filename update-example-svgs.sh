@@ -14,7 +14,7 @@ set -e
 REPO_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # Ensure sample binaries are available
-"$REPO_DIR/gradlew" -q --console plain -p "$REPO_DIR/samples" installDist
+"$REPO_DIR/gradlew" -q --console plain -p "$REPO_DIR" installDist
 
 for sample in $REPO_DIR/samples/*; do
 	sample_name=$(basename "$sample")

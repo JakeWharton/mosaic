@@ -1,0 +1,23 @@
+buildscript {
+	dependencies {
+		classpath libs.kotlin.gradlePlugin
+		classpath libs.buildconfig.gradlePlugin
+	}
+	repositories {
+		mavenCentral()
+		google()
+		gradlePluginPortal()
+	}
+}
+
+allprojects {
+	repositories {
+		mavenCentral()
+		google()
+	}
+
+	tasks.withType(JavaCompile).configureEach {
+		sourceCompatibility = JavaVersion.VERSION_1_8
+		targetCompatibility = JavaVersion.VERSION_1_8
+	}
+}

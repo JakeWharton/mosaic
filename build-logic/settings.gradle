@@ -1,0 +1,12 @@
+rootProject.name = 'build-logic'
+
+include(':mosaic-gradle-plugin')
+project(':mosaic-gradle-plugin').projectDir = new File('../mosaic-gradle-plugin')
+
+dependencyResolutionManagement {
+	versionCatalogs {
+		libs {
+			from(files('../gradle/libs.versions.toml'))
+		}
+	}
+}

@@ -14,17 +14,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
-      # Validate before checking out submodules which have their own wrappers.
-      - uses: gradle/wrapper-validation-action@v1
-
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: 11
 
       - run: ./gradlew build :mosaic-runtime:dokkaHtml
-      - run: ./gradlew -p samples build
 
       - run: ./gradlew publish
         if: ${{ github.ref == 'refs/heads/trunk' && github.repository == 'JakeWharton/mosaic' }}
