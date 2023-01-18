@@ -2,3 +2,13 @@ rootProject.name = 'mosaic'
 
 include ':mosaic-gradle-plugin'
 include ':mosaic-runtime'
+
+include ':samples:counter'
+include ':samples:jest'
+include ':samples:robot'
+
+includeBuild('build-logic') {
+	dependencySubstitution {
+		substitute module('com.jakewharton.mosaic:mosaic-gradle-plugin') using project(':mosaic-gradle-plugin')
+	}
+}

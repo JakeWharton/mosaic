@@ -1,14 +1,10 @@
 # IntelliJ IDEA
 /.idea
-*.iml
 
 # Gradle
-/.gradle
+.gradle
 build
 /reports
 
-# Gradle (nested build)
-/samples/.gradle
-
-# Local configuration file
+# Android
 local.properties

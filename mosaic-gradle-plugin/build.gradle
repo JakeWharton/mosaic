@@ -1,7 +1,15 @@
 apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'java-gradle-plugin'
-apply plugin: 'com.vanniktech.maven.publish'
 apply plugin: 'com.github.gmazzo.buildconfig'
+
+// This module is included in two projects:
+// - In the root project where it's released as one of our artifacts
+// - In build-logic project where we can use it for the samples.
+//
+// We only want to publish when it's being built in the root project.
+if (rootProject.name == 'mosaic') {
+	apply plugin: 'com.vanniktech.maven.publish'
+}
 
 dependencies {
 	compileOnly gradleApi()

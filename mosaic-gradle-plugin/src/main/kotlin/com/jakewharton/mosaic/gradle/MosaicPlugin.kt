@@ -1,5 +1,6 @@
 package com.jakewharton.mosaic.gradle
 
+import org.gradle.api.Project
 import org.gradle.api.provider.Provider
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilerPluginSupportPlugin
@@ -24,9 +25,18 @@ class MosaicPlugin : KotlinCompilerPluginSupportPlugin {
 		}
 
 		kotlinCompilation.dependencies {
-			implementation("com.jakewharton.mosaic:mosaic-runtime:$mosaicVersion")
+			val dependency: Any = if (kotlinCompilation.target.project.isInternal()) {
+				project(":mosaic-runtime")
+			} else {
+				"com.jakewharton.mosaic:mosaic-runtime:$mosaicVersion"
+			}
+			implementation(dependency)
 		}
 
 		return kotlinCompilation.target.project.provider { emptyList() }
+	}
+
+	private fun Project.isInternal(): Boolean {
+		return properties["com.jakewharton.mosaic.internal"].toString() == "true"
 	}
 }
