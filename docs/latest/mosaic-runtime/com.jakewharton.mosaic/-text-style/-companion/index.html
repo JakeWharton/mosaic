@@ -6,10 +6,18 @@
     <link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">
     <script>var pathToRoot = "../../../../";</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
-const savedDarkMode = storage ? JSON.parse(storage) : false
-if(savedDarkMode === true){
-    document.getElementsByTagName("html")[0].classList.add("theme-dark")
-}</script>
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
 <script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async="async"></script>
 <link href="../../../../styles/style.css" rel="Stylesheet">
 <link href="../../../../styles/jetbrains-mono.css" rel="Stylesheet">
@@ -21,6 +29,7 @@ if(savedDarkMode === true){
 <script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async="async"></script>
 <script type="text/javascript" src="../../../../scripts/main.js" defer="defer"></script>
 <script type="text/javascript" src="../../../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
 </head>
 <body>
 <div class="navigation-wrapper" id="navigation-wrapper">
@@ -43,10 +52,10 @@ if(savedDarkMode === true){
     </div>
     <div id="main">
 <div class="main-content" id="content" pageIds="mosaic-runtime::com.jakewharton.mosaic/TextStyle.Companion///PointingToDeclaration//1195737916">
-  <div class="breadcrumbs"><a href="../../../../index.html">mosaic-runtime</a><span class="delimiter">/</span><a href="../../index.html">com.jakewharton.mosaic</a><span class="delimiter">/</span><a href="../index.html">TextStyle</a><span class="delimiter">/</span><a href="index.html">Companion</a></div>
+  <div class="breadcrumbs"><a href="../../../../index.html">mosaic-runtime</a><span class="delimiter">/</span><a href="../../index.html">com.jakewharton.mosaic</a><span class="delimiter">/</span><a href="../index.html">TextStyle</a><span class="delimiter">/</span><span class="current">Companion</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Companion</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">object </span><a href="index.html">Companion</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/main"><div class="symbol monospace"><span class="token keyword">object </span><a href="index.html">Companion</a></div></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Properties">Properties</button></div>
@@ -62,7 +71,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/main"><a data-name="-334696415%2FProperties%2F1195737916" anchor-label="Bold" id="-334696415%2FProperties%2F1195737916" data-filterable-set=":mosaic-runtime:dokkaHtml/main"></a><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">val </span><a href="-bold.html">Bold</a><span class="token operator">: </span><a href="../index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/main"><a data-name="-334696415%2FProperties%2F1195737916" anchor-label="Bold" id="-334696415%2FProperties%2F1195737916" data-filterable-set=":mosaic-runtime:dokkaHtml/main"></a><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">val </span><a href="-bold.html">Bold</a><span class="token operator">: </span><a href="../index.html">TextStyle</a></div></div></div>
               </div>
             </div>
           </div>
@@ -77,7 +86,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/main"><a data-name="1879843788%2FProperties%2F1195737916" anchor-label="Dim" id="1879843788%2FProperties%2F1195737916" data-filterable-set=":mosaic-runtime:dokkaHtml/main"></a><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">val </span><a href="-dim.html">Dim</a><span class="token operator">: </span><a href="../index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/main"><a data-name="1879843788%2FProperties%2F1195737916" anchor-label="Dim" id="1879843788%2FProperties%2F1195737916" data-filterable-set=":mosaic-runtime:dokkaHtml/main"></a><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">val </span><a href="-dim.html">Dim</a><span class="token operator">: </span><a href="../index.html">TextStyle</a></div></div></div>
               </div>
             </div>
           </div>
@@ -92,7 +101,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/main"><a data-name="-1340126800%2FProperties%2F1195737916" anchor-label="Invert" id="-1340126800%2FProperties%2F1195737916" data-filterable-set=":mosaic-runtime:dokkaHtml/main"></a><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">val </span><a href="-invert.html">Invert</a><span class="token operator">: </span><a href="../index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/main"><a data-name="-1340126800%2FProperties%2F1195737916" anchor-label="Invert" id="-1340126800%2FProperties%2F1195737916" data-filterable-set=":mosaic-runtime:dokkaHtml/main"></a><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">val </span><a href="-invert.html">Invert</a><span class="token operator">: </span><a href="../index.html">TextStyle</a></div></div></div>
               </div>
             </div>
           </div>
@@ -107,7 +116,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/main"><a data-name="-1022580586%2FProperties%2F1195737916" anchor-label="Italic" id="-1022580586%2FProperties%2F1195737916" data-filterable-set=":mosaic-runtime:dokkaHtml/main"></a><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">val </span><a href="-italic.html">Italic</a><span class="token operator">: </span><a href="../index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/main"><a data-name="-1022580586%2FProperties%2F1195737916" anchor-label="Italic" id="-1022580586%2FProperties%2F1195737916" data-filterable-set=":mosaic-runtime:dokkaHtml/main"></a><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">val </span><a href="-italic.html">Italic</a><span class="token operator">: </span><a href="../index.html">TextStyle</a></div></div></div>
               </div>
             </div>
           </div>
@@ -122,7 +131,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/main"><a data-name="1346837198%2FProperties%2F1195737916" anchor-label="None" id="1346837198%2FProperties%2F1195737916" data-filterable-set=":mosaic-runtime:dokkaHtml/main"></a><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">val </span><a href="-none.html">None</a><span class="token operator">: </span><a href="../index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/main"><a data-name="1346837198%2FProperties%2F1195737916" anchor-label="None" id="1346837198%2FProperties%2F1195737916" data-filterable-set=":mosaic-runtime:dokkaHtml/main"></a><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">val </span><a href="-none.html">None</a><span class="token operator">: </span><a href="../index.html">TextStyle</a></div></div></div>
               </div>
             </div>
           </div>
@@ -137,7 +146,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/main"><a data-name="-825396447%2FProperties%2F1195737916" anchor-label="Strikethrough" id="-825396447%2FProperties%2F1195737916" data-filterable-set=":mosaic-runtime:dokkaHtml/main"></a><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">val </span><a href="-strikethrough.html">Strikethrough</a><span class="token operator">: </span><a href="../index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/main"><a data-name="-825396447%2FProperties%2F1195737916" anchor-label="Strikethrough" id="-825396447%2FProperties%2F1195737916" data-filterable-set=":mosaic-runtime:dokkaHtml/main"></a><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">val </span><a href="-strikethrough.html">Strikethrough</a><span class="token operator">: </span><a href="../index.html">TextStyle</a></div></div></div>
               </div>
             </div>
           </div>
@@ -152,7 +161,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/main"><a data-name="109635784%2FProperties%2F1195737916" anchor-label="Underline" id="109635784%2FProperties%2F1195737916" data-filterable-set=":mosaic-runtime:dokkaHtml/main"></a><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">val </span><a href="-underline.html">Underline</a><span class="token operator">: </span><a href="../index.html">TextStyle</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/main"><a data-name="109635784%2FProperties%2F1195737916" anchor-label="Underline" id="109635784%2FProperties%2F1195737916" data-filterable-set=":mosaic-runtime:dokkaHtml/main"></a><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">val </span><a href="-underline.html">Underline</a><span class="token operator">: </span><a href="../index.html">TextStyle</a></div></div></div>
               </div>
             </div>
           </div>
