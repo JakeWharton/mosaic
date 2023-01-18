@@ -23,7 +23,7 @@ for sample in $REPO_DIR/samples/*; do
 	if test -f "$sample_bin"; then
 		echo "Capturing $sample_name..."
 
-		command="'$sample_bin' 2>/dev/null && sleep 2 && echo"
+		command="'$sample_bin' 2>/dev/null && sleep 2 && printf ' \e[D'"
 		if [ -f "$sample/input.sh" ]; then
 			command="'$sample/input.sh' | $command"
 		fi
