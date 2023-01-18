@@ -34,6 +34,7 @@ internal object DebugOutput : Output {
 }
 
 internal object AnsiOutput : Output {
+	private val out = AnsiConsole.out()!!
 	private var lastHeight = 0
 
 	override fun display(canvas: TextCanvas) {
@@ -67,17 +68,15 @@ internal object AnsiOutput : Output {
 			lastHeight = lines.size
 		}
 
-		with(AnsiConsole.out()) {
-			// Write a single byte array to stdout to create an atomic visual change. If you instead write
-			// the string, it will be UTF-8 encoded using an intermediate buffer that appears to be
-			// periodically flushed to the underlying byte stream. This will cause fraction-of-a-second
-			// flickers of broken content. Note that this only occurs with the AnsiConsole stream, but
-			// there's no harm in doing it unconditionally.
-			write(rendered.toByteArray(UTF_8))
+		// Write a single byte array to stdout to create an atomic visual change. If you instead write
+		// the string, it will be UTF-8 encoded using an intermediate buffer that appears to be
+		// periodically flushed to the underlying byte stream. This will cause fraction-of-a-second
+		// flickers of broken content. Note that this only occurs with the AnsiConsole stream, but
+		// there's no harm in doing it unconditionally.
+		out.write(rendered.toByteArray(UTF_8))
 
-			// Explicitly flush to ensure the trailing line clear is sent. Empirically, this appears to be
-			// buffered and not processed until the next frame, or not at all on the final frame.
-			flush()
-		}
+		// Explicitly flush to ensure the trailing line clear is sent. Empirically, this appears to be
+		// buffered and not processed until the next frame, or not at all on the final frame.
+		out.flush()
 	}
 }
