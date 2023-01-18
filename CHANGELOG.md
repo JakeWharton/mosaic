@@ -3,6 +3,11 @@
 ## [Unreleased]
 
 
+## [0.3.0] - 2023-01-17
+
+ - Support Kotlin 1.8.0 via Compose compiler 1.4.0.
+
+
 ## [0.2.0] - 2022-08-12
 
  - Support Kotlin 1.7.10 via Compose compiler 1.3.0.
@@ -14,6 +19,7 @@
 Initial release!
 
 
-[Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.2.0...HEAD
+[Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.3.0...HEAD
+[0.3.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.3.0
 [0.2.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.2.0
 [0.1.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.1.0
