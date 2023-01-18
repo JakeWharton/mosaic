@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
-if ! command -v svg-term &> /dev/null; then
-    echo "Command 'svg-term' not found. Please install with 'npm install -g svg-term-cli'."
+if ! command -v asciinema &> /dev/null; then
+    echo "Command 'asciinema' not found. Please install and put on path."
+    exit
+fi
+if ! command -v agg &> /dev/null; then
+    echo "Command 'agg' not found. Please install and put on path."
     exit
 fi
 
@@ -25,11 +29,14 @@ for sample in $REPO_DIR/samples/*; do
 		fi
 
 		echo "Running $command..."
-		svg-term "--command=$command" "--out=$sample/demo.svg" --from=50 --window --width=60 --height=16 --no-cursor
+		rm -f $sample/demo.cast
+		asciinema rec -c "$command" $sample/demo.cast
+		agg --cols 60 --rows 18 $sample/demo.cast $sample/demo.gif
+		rm $sample/demo.cast
 		cat > "$sample/README.md" <<EOL
 # Example: $sample_name
 
-<img src="demo.svg">
+<img src="demo.gif">
 EOL
 	fi
 done

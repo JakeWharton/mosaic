@@ -1,3 +1,3 @@
 # Example: robot
 
-<img src="demo.svg">
+<img src="demo.gif">
