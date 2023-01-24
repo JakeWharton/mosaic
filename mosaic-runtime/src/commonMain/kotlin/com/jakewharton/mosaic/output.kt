@@ -1,11 +1,8 @@
 package com.jakewharton.mosaic
 
-import java.nio.CharBuffer
-import java.nio.charset.StandardCharsets.UTF_8
 import kotlin.time.ExperimentalTime
 import kotlin.time.TimeMark
 import kotlin.time.TimeSource
-import org.fusesource.jansi.AnsiConsole
 
 internal interface Output {
 	fun display(canvas: TextCanvas)
@@ -35,8 +32,6 @@ internal object DebugOutput : Output {
 }
 
 internal object AnsiOutput : Output {
-	private val out = AnsiConsole.out()!!
-	private val encoder = UTF_8.newEncoder()!!
 	private val stringBuilder = StringBuilder(100)
 	private var lastHeight = 0
 
@@ -73,16 +68,6 @@ internal object AnsiOutput : Output {
 			lastHeight = lines.size
 		}
 
-		// Write a single byte array to stdout to create an atomic visual change. If you instead write
-		// the string, it will be UTF-8 encoded using an intermediate buffer that appears to be
-		// periodically flushed to the underlying byte stream. This will cause fraction-of-a-second
-		// flickers of broken content. Note that this only occurs with the AnsiConsole stream, but
-		// there's no harm in doing it unconditionally.
-		val bytes = encoder.encode(CharBuffer.wrap(stringBuilder))
-		out.write(bytes.array(), 0, bytes.limit())
-
-		// Explicitly flush to ensure the trailing line clear is sent. Empirically, this appears to be
-		// buffered and not processed until the next frame, or not at all on the final frame.
-		out.flush()
+		platformRender(stringBuilder)
 	}
 }

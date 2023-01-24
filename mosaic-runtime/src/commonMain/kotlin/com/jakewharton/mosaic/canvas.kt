@@ -7,6 +7,8 @@ import com.jakewharton.mosaic.TextStyle.Companion.Italic
 import com.jakewharton.mosaic.TextStyle.Companion.None
 import com.jakewharton.mosaic.TextStyle.Companion.Strikethrough
 import com.jakewharton.mosaic.TextStyle.Companion.Underline
+import de.cketti.codepoints.CodePoints
+import de.cketti.codepoints.codePointAt
 
 internal interface TextCanvas {
 	val width: Int
@@ -52,7 +54,7 @@ internal interface TextCanvas {
 
 			val value = string.codePointAt(codePointIndex)
 			character.value = value
-			codePointIndex += Character.charCount(value)
+			codePointIndex += CodePoints.charCount(value)
 
 			if (background != null) {
 				character.background = background

@@ -1,14 +1,39 @@
-import org.jetbrains.kotlin.gradle.plugin.KotlinPluginKt
+import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 
-apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+apply from: "$rootDir/addAllTargets.gradle"
 apply plugin: 'com.vanniktech.maven.publish'
+apply plugin: 'org.jetbrains.dokka'
+apply plugin: 'com.jakewharton.mosaic'
 
-dependencies {
-	api libs.jetbrains.compose.runtime
-	implementation libs.jansi
+kotlin {
+	sourceSets {
+		commonMain {
+			dependencies {
+				api libs.jetbrains.compose.runtime
+				api libs.kotlinx.coroutines.core
+				implementation libs.codepoints
+			}
+		}
+		commonTest {
+			dependencies {
+				implementation libs.kotlin.test
+			}
+		}
 
-	testImplementation libs.junit4
-	testImplementation libs.truth
+		jvmMain {
+			dependencies {
+				implementation libs.jansi
+			}
+		}
+		nonJvmMain {
+			dependsOn(commonMain)
+		}
+	}
 
-	add(KotlinPluginKt.PLUGIN_CLASSPATH_CONFIGURATION_NAME, libs.androidx.compose.compiler)
+	targets.each { target ->
+		if (target.platformType != KotlinPlatformType.jvm) {
+			target.compilations.main.source(sourceSets.nonJvmMain)
+		}
+	}
 }

@@ -2,12 +2,10 @@ package com.jakewharton.mosaic
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
-import androidx.compose.runtime.DisallowComposableCalls
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 
 /**
  * Will render each value emitted by [items] as permanent output above the
@@ -32,7 +30,7 @@ fun <T> Static(
 	Static(
 		postRender = {
 			// Remove any items which have been rendered.
-			pending.removeIf { it.rendered }
+			pending.removeAll { it.rendered }
 		}
 	) {
 		for (item in pending) {

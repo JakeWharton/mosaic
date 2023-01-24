@@ -6,6 +6,7 @@ androidx-compose-compiler = "1.4.0"
 [libraries]
 kotlin-compiler = { module = "org.jetbrains.kotlin:kotlin-compiler", version.ref = "kotlin" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
@@ -16,11 +17,12 @@ androidx-compose-compiler = { module = "androidx.compose.compiler:compiler", ver
 
 jetbrains-compose-runtime = "org.jetbrains.compose.runtime:runtime:1.2.2"
 
-maven-publish-gradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.13.0"
+maven-publish-gradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.14.0"
 dokka-gradlePlugin = "org.jetbrains.dokka:dokka-gradle-plugin:1.7.20"
 buildconfig-gradlePlugin = "com.github.gmazzo:gradle-buildconfig-plugin:3.1.0"
 
 jansi = "org.fusesource.jansi:jansi:2.4.0"
+codepoints = "de.cketti.unicode:kotlin-codepoints:0.2.0"
 
 junit4 = "junit:junit:4.13.2"
 truth = "com.google.truth:truth:1.1.3"

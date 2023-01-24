@@ -1,8 +1,8 @@
 package com.jakewharton.mosaic
 
 import androidx.compose.runtime.Applier
-import com.google.common.truth.Truth.assertThat
-import org.junit.Test
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class NodeApplierTest {
 	private val root = BoxNode()
@@ -181,6 +181,6 @@ class NodeApplierTest {
 	}
 
 	private fun assertChildren(vararg nodes: MosaicNode) {
-		assertThat(root.children).containsExactlyElementsIn(nodes).inOrder()
+		assertEquals(nodes.toList(), root.children)
 	}
 }
