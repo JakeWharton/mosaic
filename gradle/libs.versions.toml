@@ -22,7 +22,7 @@ dokka-gradlePlugin = "org.jetbrains.dokka:dokka-gradle-plugin:1.7.20"
 buildconfig-gradlePlugin = "com.github.gmazzo:gradle-buildconfig-plugin:3.1.0"
 
 jansi = "org.fusesource.jansi:jansi:2.4.0"
-codepoints = "de.cketti.unicode:kotlin-codepoints:0.2.0"
+codepoints = "de.cketti.unicode:kotlin-codepoints:0.3.0"
 
 junit4 = "junit:junit:4.13.2"
 truth = "com.google.truth:truth:1.1.3"
