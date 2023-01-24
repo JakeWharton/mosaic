@@ -1,5 +1,18 @@
-apply plugin: 'org.jetbrains.kotlin.jvm'
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+apply from: "$rootDir/addAllTargets.gradle"
 apply plugin: 'com.jakewharton.mosaic'
 apply plugin: 'application'
 
-mainClassName = 'example.CounterKt'
+application {
+	mainClass = 'example.CounterKt'
+}
+
+kotlin {
+	targets.withType(KotlinNativeTarget).configureEach { target ->
+		target.binaries.executable {
+			entryPoint = 'example.main'
+		}
+	}
+}

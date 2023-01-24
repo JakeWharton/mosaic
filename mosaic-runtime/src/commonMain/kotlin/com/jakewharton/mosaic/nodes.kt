@@ -1,6 +1,7 @@
 package com.jakewharton.mosaic
 
 import androidx.compose.runtime.AbstractApplier
+import de.cketti.codepoints.codePointCount
 
 internal sealed class MosaicNode {
 	// These two values are set by a call to `measure`.
