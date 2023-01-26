@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMetadataTarget
 
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
 apply from: "$rootDir/addAllTargets.gradle"
@@ -37,11 +38,12 @@ kotlin {
 	}
 
 	targets.each { target ->
+		if (target instanceof KotlinMetadataTarget) return
 		if (target.platformType != KotlinPlatformType.jvm) {
-			target.compilations.main.source(sourceSets.nonJvmMain)
+			target.compilations.main.defaultSourceSet.dependsOn(sourceSets.nonJvmMain)
 		}
 		if (target.platformType == KotlinPlatformType.native) {
-			target.compilations.main.source(sourceSets.concurrentMain)
+			target.compilations.main.defaultSourceSet.dependsOn(sourceSets.concurrentMain)
 		}
 	}
 }
