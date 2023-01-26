@@ -6,6 +6,7 @@ $dokka.location:com.jakewharton.mosaic//Row/#kotlin.Function0[kotlin.Unit]/Point
 $dokka.location:com.jakewharton.mosaic//Static/#kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlin.Function1[TypeParam(bounds=[kotlin.Any?]),kotlin.Unit]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/-static.html
 $dokka.location:com.jakewharton.mosaic//Text/#kotlin.String#com.jakewharton.mosaic.Color?#com.jakewharton.mosaic.Color?#com.jakewharton.mosaic.TextStyle?/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/-text.html
 $dokka.location:com.jakewharton.mosaic//runMosaic/#kotlin.coroutines.SuspendFunction1[com.jakewharton.mosaic.MosaicScope,kotlin.Unit]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/run-mosaic.html
+$dokka.location:com.jakewharton.mosaic//runMosaicBlocking/#kotlin.coroutines.SuspendFunction1[com.jakewharton.mosaic.MosaicScope,kotlin.Unit]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/run-mosaic-blocking.html
 $dokka.location:com.jakewharton.mosaic/Color.Companion///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/-color/-companion/index.html
 $dokka.location:com.jakewharton.mosaic/Color.Companion/Black/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/-color/-companion/-black.html
 $dokka.location:com.jakewharton.mosaic/Color.Companion/Blue/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/-color/-companion/-blue.html
