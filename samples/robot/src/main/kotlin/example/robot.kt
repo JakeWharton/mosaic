@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.jakewharton.mosaic.Column
 import com.jakewharton.mosaic.Text
-import com.jakewharton.mosaic.runMosaic
+import com.jakewharton.mosaic.runMosaicBlocking
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import org.jline.terminal.TerminalBuilder
@@ -13,7 +13,7 @@ import org.jline.terminal.TerminalBuilder
 private const val width = 20
 private const val height = 10
 
-fun main() = runMosaic {
+fun main() = runMosaicBlocking {
 	// TODO https://github.com/JakeWharton/mosaic/issues/3
 	var x by mutableStateOf(0)
 	var y by mutableStateOf(0)

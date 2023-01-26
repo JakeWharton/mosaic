@@ -20,7 +20,7 @@ import com.jakewharton.mosaic.Row
 import com.jakewharton.mosaic.Static
 import com.jakewharton.mosaic.Text
 import com.jakewharton.mosaic.TextStyle.Companion.Bold
-import com.jakewharton.mosaic.runMosaic
+import com.jakewharton.mosaic.runMosaicBlocking
 import example.TestState.Fail
 import example.TestState.Pass
 import example.TestState.Running
@@ -30,7 +30,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
-fun main() = runMosaic {
+fun main() = runMosaicBlocking {
 	val paths = ArrayDeque(
 		listOf(
 			"tests/login.kt",

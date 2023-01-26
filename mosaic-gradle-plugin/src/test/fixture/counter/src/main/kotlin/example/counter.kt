@@ -4,10 +4,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import com.jakewharton.mosaic.Text
-import com.jakewharton.mosaic.runMosaic
+import com.jakewharton.mosaic.runMosaicBlocking
 import kotlinx.coroutines.delay
 
-fun main() = runMosaic {
+fun main() = runMosaicBlocking {
 	val countValue = mutableStateOf(0)
 
 	setContent {

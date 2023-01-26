@@ -1,8 +1,15 @@
 package com.jakewharton.mosaic
 
+import kotlinx.coroutines.runBlocking
 import org.fusesource.jansi.AnsiConsole
 import java.nio.CharBuffer
 import java.nio.charset.StandardCharsets.UTF_8
+
+fun runMosaicBlocking(body: suspend MosaicScope.() -> Unit) {
+	runBlocking {
+		runMosaic(body)
+	}
+}
 
 private val out = AnsiConsole.out()!!
 private val encoder = UTF_8.newEncoder()!!

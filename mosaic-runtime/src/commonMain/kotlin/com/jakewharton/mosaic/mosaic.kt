@@ -12,7 +12,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.yield
 
 /**
@@ -25,7 +24,7 @@ interface MosaicScope : CoroutineScope {
 	fun setContent(content: @Composable () -> Unit)
 }
 
-fun runMosaic(body: suspend MosaicScope.() -> Unit) = runBlocking {
+suspend fun runMosaic(body: suspend MosaicScope.() -> Unit) = coroutineScope {
 	val output = if (ansiConsole) AnsiOutput else DebugOutput
 
 	var hasFrameWaiters = false
