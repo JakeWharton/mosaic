@@ -35,7 +35,7 @@ suspend fun runMosaic(body: suspend MosaicScope.() -> Unit) = coroutineScope {
 	val job = Job(coroutineContext[Job])
 	val composeContext = coroutineContext + clock + job
 
-	val rootNode = BoxNode()
+	val rootNode = LinearNode()
 	val recomposer = Recomposer(composeContext)
 	val composition = Composition(MosaicNodeApplier(rootNode), recomposer)
 

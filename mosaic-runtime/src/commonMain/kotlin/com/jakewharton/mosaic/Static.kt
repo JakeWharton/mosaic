@@ -70,9 +70,7 @@ internal fun Static(
 
 internal class StaticNode : ContainerNode() {
 	// Delegate container column for static content.
-	private val box = BoxNode().also {
-		it.isRow = false
-	}
+	private val box = LinearNode(isRow = false)
 
 	override val children: MutableList<MosaicNode>
 		get() = box.children
