@@ -51,7 +51,10 @@ suspend fun runMosaic(body: suspend MosaicScope.() -> Unit) = coroutineScope {
 				hasFrameWaiters = false
 				clock.sendFrame(0L) // Frame time value is not used by Compose runtime.
 
-				output.display(rootNode.render())
+				val canvas = rootNode.render()
+				val statics = rootNode.renderStatics()
+				output.display(canvas, statics)
+
 				displaySignal?.complete(Unit)
 			}
 			delay(50)

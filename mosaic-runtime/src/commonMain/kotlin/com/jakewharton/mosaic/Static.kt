@@ -86,18 +86,26 @@ internal class StaticNode : ContainerNode() {
 	}
 
 	override fun renderTo(canvas: TextCanvas) {
+		// No content.
+	}
+
+	override fun renderStatics(): List<TextCanvas> {
+		val statics = mutableListOf<TextCanvas>()
+
 		// Render contents of static node to a separate display.
-		val other = box.render()
+		val static = box.render()
 
 		// Add display canvas to static canvases if it is not empty.
-		if (other.width > 0 && other.height > 0) {
-			canvas.static.add(other)
+		if (static.width > 0 && static.height > 0) {
+			statics.add(static)
 		}
 
 		// Propagate any static content of the display.
-		canvas.static.addAll(other.static)
+		statics.addAll(box.renderStatics())
 
 		postRender()
+
+		return statics
 	}
 
 	override fun toString() = box.children.joinToString(prefix = "Static(", postfix = ")")
