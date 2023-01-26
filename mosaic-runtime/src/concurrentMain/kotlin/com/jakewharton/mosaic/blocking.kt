@@ -1,3 +1,9 @@
 package com.jakewharton.mosaic
 
-expect fun runMosaicBlocking(body: suspend MosaicScope.() -> Unit)
+import kotlinx.coroutines.runBlocking
+
+fun runMosaicBlocking(body: suspend MosaicScope.() -> Unit) {
+	runBlocking {
+		runMosaic(body)
+	}
+}
