@@ -1,10 +1,7 @@
 package example
 
-import com.jakewharton.mosaic.runMosaic
-import kotlinx.coroutines.runBlocking
+import com.jakewharton.mosaic.runMosaicBlocking
 
-fun main() = runBlocking {
-	runMosaic {
-		Counter()
-	}
+fun main() = runMosaicBlocking {
+	Counter()
 }

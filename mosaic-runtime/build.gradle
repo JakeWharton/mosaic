@@ -21,7 +21,12 @@ kotlin {
 			}
 		}
 
+		concurrentMain {
+			dependsOn(commonMain)
+		}
+
 		jvmMain {
+			dependsOn(concurrentMain)
 			dependencies {
 				implementation libs.jansi
 			}
@@ -34,6 +39,9 @@ kotlin {
 	targets.each { target ->
 		if (target.platformType != KotlinPlatformType.jvm) {
 			target.compilations.main.source(sourceSets.nonJvmMain)
+		}
+		if (target.platformType == KotlinPlatformType.native) {
+			target.compilations.main.source(sourceSets.concurrentMain)
 		}
 	}
 }
