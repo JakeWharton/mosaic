@@ -7,6 +7,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilerPluginSupportPlugin
+import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet.Companion.COMMON_MAIN_SOURCE_SET_NAME
 import org.jetbrains.kotlin.gradle.plugin.SubpluginArtifact
 import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
@@ -23,6 +24,15 @@ class MosaicPlugin : KotlinCompilerPluginSupportPlugin {
 	)
 
 	override fun applyToCompilation(kotlinCompilation: KotlinCompilation<*>): Provider<List<SubpluginOption>> {
+		if (kotlinCompilation.target.platformType == KotlinPlatformType.js) {
+			// This enables a workaround for Compose lambda generation to function correctly in JS.
+			// Note: We cannot use SubpluginOption to do this because it targets the Compose plugin.
+			kotlinCompilation.compilerOptions.options.freeCompilerArgs.addAll(
+				"-P",
+				"plugin:androidx.compose.compiler.plugins.kotlin:generateDecoys=true",
+			)
+		}
+
 		return kotlinCompilation.target.project.provider { emptyList() }
 	}
 

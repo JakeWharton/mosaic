@@ -1,12 +1,9 @@
 plugins.withId('org.jetbrains.kotlin.multiplatform') {
 	kotlin {
-		// TODO Switch entrypoint to be suspend function.
-		//  js().nodejs()
+		js().nodejs()
 
 		jvm()
 
-		// TODO https://github.com/JetBrains/androidx/pull/382
-		//  linuxArm64()
 		linuxX64()
 
 		macosArm64()
