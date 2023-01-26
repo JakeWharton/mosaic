@@ -5,7 +5,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class NodeApplierTest {
-	private val root = BoxNode()
+	private val root = LinearNode()
 	private val applier = MosaicNodeApplier(root)
 
 	private fun <T> Applier<T>.insert(index: Int, instance: T) {

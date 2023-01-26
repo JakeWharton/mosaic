@@ -96,18 +96,18 @@ class TextStyle private constructor(
 
 @Composable
 fun Row(children: @Composable () -> Unit) {
-	Box(true, children)
+	Linear(true, children)
 }
 
 @Composable
 fun Column(children: @Composable () -> Unit) {
-	Box(false, children)
+	Linear(false, children)
 }
 
 @Composable
-private fun Box(isRow: Boolean, children: @Composable () -> Unit) {
-	ComposeNode<BoxNode, MosaicNodeApplier>(
-		factory = ::BoxNode,
+private fun Linear(isRow: Boolean, children: @Composable () -> Unit) {
+	ComposeNode<LinearNode, MosaicNodeApplier>(
+		factory = ::LinearNode,
 		update = {
 			set(isRow) {
 				this.isRow = isRow
