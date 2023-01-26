@@ -5,7 +5,7 @@ import kotlin.time.TimeMark
 import kotlin.time.TimeSource
 
 internal interface Output {
-	fun display(canvas: TextCanvas)
+	fun display(canvas: TextCanvas, statics: List<TextCanvas>)
 }
 
 @OptIn(ExperimentalTime::class) // Not used in production.
@@ -13,7 +13,7 @@ internal object DebugOutput : Output {
 	private val systemClock = TimeSource.Monotonic
 	private var lastRender: TimeMark? = null
 
-	override fun display(canvas: TextCanvas) {
+	override fun display(canvas: TextCanvas, statics: List<TextCanvas>) {
 		println(buildString {
 			lastRender?.let { lastRender ->
 				repeat(50) { append('~') }
@@ -22,7 +22,7 @@ internal object DebugOutput : Output {
 			}
 			lastRender = systemClock.markNow()
 
-			for (static in canvas.static) {
+			for (static in statics) {
 				appendLine(static.render())
 			}
 
@@ -35,7 +35,7 @@ internal object AnsiOutput : Output {
 	private val stringBuilder = StringBuilder(100)
 	private var lastHeight = 0
 
-	override fun display(canvas: TextCanvas) {
+	override fun display(canvas: TextCanvas, statics: List<TextCanvas>) {
 		stringBuilder.apply {
 			clear()
 
@@ -43,7 +43,7 @@ internal object AnsiOutput : Output {
 				append("\u001B[F") // Cursor up line.
 			}
 
-			val staticLines = canvas.static.flatMap { it.render().split("\n") }
+			val staticLines = statics.flatMap { it.render().split("\n") }
 			val lines = canvas.render().split("\n")
 			for (line in staticLines + lines) {
 				append(line)

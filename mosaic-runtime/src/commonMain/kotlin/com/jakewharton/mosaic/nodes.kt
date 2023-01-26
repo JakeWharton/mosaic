@@ -27,6 +27,8 @@ internal sealed class MosaicNode {
 		renderTo(canvas)
 		return canvas
 	}
+
+	abstract fun renderStatics(): List<TextCanvas>
 }
 
 internal class TextNode(initialValue: String = "") : MosaicNode() {
@@ -59,6 +61,8 @@ internal class TextNode(initialValue: String = "") : MosaicNode() {
 			canvas.write(index, 0, line, foreground, background, style)
 		}
 	}
+
+	override fun renderStatics() = emptyList<TextCanvas>()
 
 	override fun toString() = "Text(\"$value\", x=$x, y=$y, width=$width, height=$height)"
 }
@@ -142,6 +146,10 @@ internal class LinearNode(var isRow: Boolean = true) : ContainerNode() {
 				child.renderTo(canvas.empty())
 			}
 		}
+	}
+
+	override fun renderStatics(): List<TextCanvas> {
+		return children.flatMap(MosaicNode::renderStatics)
 	}
 
 	override fun toString() = children.joinToString(prefix = "Box(", postfix = ")")
