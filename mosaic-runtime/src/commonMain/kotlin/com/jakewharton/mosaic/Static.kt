@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
  * regular display.
  */
 @Composable
-fun <T> Static(
+public fun <T> Static(
 	items: Flow<T>,
 	content: @Composable (T) -> Unit,
 ) {

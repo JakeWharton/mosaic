@@ -6,7 +6,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 
 @Composable
-fun Text(
+public fun Text(
 	value: String,
 	color: Color? = null,
 	background: Color? = null,
@@ -29,78 +29,78 @@ fun Text(
 }
 
 @Immutable
-class Color private constructor(
+public class Color private constructor(
 	internal val fg: Int,
 	internal val bg: Int,
 ) {
-	companion object {
+	public companion object {
 		@Stable
-		val Black = Color(30, 40)
+		public val Black: Color = Color(30, 40)
 		@Stable
-		val Red = Color(31, 41)
+		public val Red: Color = Color(31, 41)
 		@Stable
-		val Green = Color(32, 42)
+		public val Green: Color = Color(32, 42)
 		@Stable
-		val Yellow = Color(33, 43)
+		public val Yellow: Color = Color(33, 43)
 		@Stable
-		val Blue = Color(34, 44)
+		public val Blue: Color = Color(34, 44)
 		@Stable
-		val Magenta = Color(35, 45)
+		public val Magenta: Color = Color(35, 45)
 		@Stable
-		val Cyan = Color(36, 46)
+		public val Cyan: Color = Color(36, 46)
 		@Stable
-		val White = Color(37, 47)
+		public val White: Color = Color(37, 47)
 		@Stable
-		val BrightBlack = Color(90, 100)
+		public val BrightBlack: Color = Color(90, 100)
 		@Stable
-		val BrightRed = Color(91, 101)
+		public val BrightRed: Color = Color(91, 101)
 		@Stable
-		val BrightGreen = Color(92, 102)
+		public val BrightGreen: Color = Color(92, 102)
 		@Stable
-		val BrightYellow = Color(93, 103)
+		public val BrightYellow: Color = Color(93, 103)
 		@Stable
-		val BrightBlue = Color(94, 104)
+		public val BrightBlue: Color = Color(94, 104)
 		@Stable
-		val BrightMagenta = Color(95, 105)
+		public val BrightMagenta: Color = Color(95, 105)
 		@Stable
-		val BrightCyan = Color(96, 106)
+		public val BrightCyan: Color = Color(96, 106)
 		@Stable
-		val BrightWhite = Color(97, 107)
+		public val BrightWhite: Color = Color(97, 107)
 	}
 }
 
 @Immutable
-class TextStyle private constructor(
-	internal val bits: Int,
+public class TextStyle private constructor(
+	private val bits: Int,
 ) {
-	operator fun plus(other: TextStyle) = TextStyle(bits or other.bits)
-	operator fun contains(style: TextStyle) = (style.bits and bits) != 0
+	public operator fun plus(other: TextStyle): TextStyle = TextStyle(bits or other.bits)
+	public operator fun contains(style: TextStyle): Boolean = (style.bits and bits) != 0
 
-	companion object {
+	public companion object {
 		@Stable
-		val None = TextStyle(0)
+		public val None: TextStyle = TextStyle(0)
 		@Stable
-		val Underline = TextStyle(1)
+		public val Underline: TextStyle = TextStyle(1)
 		@Stable
-		val Strikethrough = TextStyle(2)
+		public val Strikethrough: TextStyle = TextStyle(2)
 		@Stable
-		val Bold = TextStyle(4)
+		public val Bold: TextStyle = TextStyle(4)
 		@Stable
-		val Dim = TextStyle(8)
+		public val Dim: TextStyle = TextStyle(8)
 		@Stable
-		val Italic = TextStyle(16)
+		public val Italic: TextStyle = TextStyle(16)
 		@Stable
-		val Invert = TextStyle(32)
+		public val Invert: TextStyle = TextStyle(32)
 	}
 }
 
 @Composable
-fun Row(children: @Composable () -> Unit) {
+public fun Row(children: @Composable () -> Unit) {
 	Linear(true, children)
 }
 
 @Composable
-fun Column(children: @Composable () -> Unit) {
+public fun Column(children: @Composable () -> Unit) {
 	Linear(false, children)
 }
 

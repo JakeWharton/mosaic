@@ -8,6 +8,8 @@ apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'com.jakewharton.mosaic'
 
 kotlin {
+	explicitApi()
+
 	sourceSets {
 		commonMain {
 			dependencies {

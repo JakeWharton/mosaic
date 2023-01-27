@@ -20,11 +20,11 @@ import kotlinx.coroutines.yield
  */
 private const val ansiConsole = true
 
-interface MosaicScope : CoroutineScope {
-	fun setContent(content: @Composable () -> Unit)
+public interface MosaicScope : CoroutineScope {
+	public fun setContent(content: @Composable () -> Unit)
 }
 
-suspend fun runMosaic(body: suspend MosaicScope.() -> Unit) = coroutineScope {
+public suspend fun runMosaic(body: suspend MosaicScope.() -> Unit): Unit = coroutineScope {
 	val output = if (ansiConsole) AnsiOutput else DebugOutput
 
 	var hasFrameWaiters = false
