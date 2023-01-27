@@ -27,55 +27,33 @@ public fun <T> Static(
 		}
 	}
 
-	Static(
-		postRender = {
-			// Remove any items which have been rendered.
-			pending.removeAll { it.rendered }
-		}
-	) {
-		for (item in pending) {
-			Row {
-				// Render item and mark it as having been included in render.
-				content(item.value)
-				item.rendered = true
-			}
-		}
-	}
-}
-
-/**
- * Renders [content] permanently above the normal canvas. When content has
- * actually been written to a [TextCanvas], the [postRender] callback will be
- * invoked to allow clearing of content.
- *
- * @param postRender Callback after rendering to a [TextCanvas] is complete.
- * @param content Content which should be rendered permanently above normal
- * canvas.
- */
-@Composable
-internal fun Static(
-	postRender: () -> Unit = {},
-	content: @Composable () -> Unit,
-) {
 	ComposeNode<StaticNode, MosaicNodeApplier>(
-		factory = ::StaticNode,
-		update = {
-			set(postRender) {
-				this.postRender = postRender
+		factory = {
+			StaticNode {
+				pending.removeAll { it.rendered }
 			}
 		},
-		content = content,
+		update = {},
+		content = {
+			for (item in pending) {
+				Row {
+					// Render item and mark it as having been included in render.
+					content(item.value)
+					item.rendered = true
+				}
+			}
+		},
 	)
 }
 
-internal class StaticNode : ContainerNode() {
+internal class StaticNode(
+	private val postRender: () -> Unit,
+) : ContainerNode() {
 	// Delegate container column for static content.
 	private val box = LinearNode(isRow = false)
 
 	override val children: MutableList<MosaicNode>
 		get() = box.children
-
-	var postRender: () -> Unit = {}
 
 	override fun measure() {
 		// Not visible.
