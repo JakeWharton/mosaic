@@ -7,15 +7,12 @@ import com.jakewharton.mosaic.TextStyle.Companion.Italic
 import com.jakewharton.mosaic.TextStyle.Companion.None
 import com.jakewharton.mosaic.TextStyle.Companion.Strikethrough
 import com.jakewharton.mosaic.TextStyle.Companion.Underline
-import de.cketti.codepoints.CodePoints
-import de.cketti.codepoints.appendCodePoint
-import de.cketti.codepoints.codePointAt
 
 internal interface TextCanvas {
 	val width: Int
 	val height: Int
 
-	operator fun get(row: Int, column: Int): TextCodepoint
+	operator fun get(row: Int, column: Int): TextPixel
 
 	operator fun get(row: Int, columns: IntRange) = get(row..row, columns)
 	operator fun get(rows: IntRange, column: Int) = get(rows, column..column)
@@ -45,14 +42,18 @@ internal interface TextCanvas {
 		background: Color? = null,
 		style: TextStyle? = null,
 	) {
-		var codePointIndex = 0
+		var pixelIndex = 0
 		var characterColumn = column
-		while (codePointIndex < string.length) {
+		while (pixelIndex < string.length) {
 			val character = this[row, characterColumn++]
 
-			val value = string.codePointAt(codePointIndex)
-			character.value = value
-			codePointIndex += CodePoints.charCount(value)
+			val pixelEnd = if (string[pixelIndex].isHighSurrogate()) {
+				pixelIndex + 2
+			} else {
+				pixelIndex + 1
+			}
+			character.value = string.substring(pixelIndex, pixelEnd)
+			pixelIndex = pixelEnd
 
 			if (background != null) {
 				character.background = background
@@ -66,7 +67,7 @@ internal interface TextCanvas {
 		}
 	}
 
-	fun fill(body: TextCodepoint.() -> Unit) {
+	fun fill(body: TextPixel.() -> Unit) {
 		for (row in 0 until height) {
 			for (column in 0 until width) {
 				this[row, column].body()
@@ -94,7 +95,7 @@ internal class ClippedTextCanvas(
 	override val width = right - left + 1
 	override val height = bottom - top + 1
 
-	override fun get(row: Int, column: Int): TextCodepoint {
+	override fun get(row: Int, column: Int): TextPixel {
 		require(row in 0 until height) { "Row value out of range [0,$height): $row"}
 		require(column in 0 until width) { "Column value out of range [0,$width): $column"}
 		return delegate[top + row, left + column]
@@ -112,13 +113,13 @@ internal class ClippedTextCanvas(
 	override fun toString() = render()
 }
 
-private val emptyCodepoint = TextCodepoint(' ')
+private val blankPixel = TextPixel(' ')
 
 internal class TextSurface(
 	override val width: Int,
 	override val height: Int,
 ) : TextCanvas {
-	private val rows = Array(height) { Array(width) { TextCodepoint(' ') } }
+	private val rows = Array(height) { Array(width) { TextPixel(' ') } }
 
 	override operator fun get(row: Int, column: Int) = rows[row][column]
 
@@ -137,38 +138,38 @@ internal class TextSurface(
 			// Reused heap allocation for building ANSI attributes inside the loop.
 			val attributes = mutableListOf<Int>()
 
-			var lastCodepoint = emptyCodepoint
+			var lastPixel = blankPixel
 			for (rowIndex in top..bottom) {
 				val row = rows[rowIndex]
 				if (rowIndex > top) {
-					if (lastCodepoint.background != null ||
-						lastCodepoint.foreground != null ||
-						lastCodepoint.style != None) {
+					if (lastPixel.background != null ||
+						lastPixel.foreground != null ||
+						lastPixel.style != None) {
 						append("\u001B[0m")
 					}
 					append('\n')
-					lastCodepoint = emptyCodepoint
+					lastPixel = blankPixel
 				}
 
 				for (columnIndex in left..right) {
-					val codepoint = row[columnIndex]
-					if (codepoint.foreground != lastCodepoint.foreground) {
-						attributes += codepoint.foreground?.fg ?: 39
+					val pixel = row[columnIndex]
+					if (pixel.foreground != lastPixel.foreground) {
+						attributes += pixel.foreground?.fg ?: 39
 					}
-					if (codepoint.background != lastCodepoint.background) {
-						attributes += codepoint.background?.bg ?: 49
+					if (pixel.background != lastPixel.background) {
+						attributes += pixel.background?.bg ?: 49
 					}
 
 					fun maybeToggleStyle(style: TextStyle, on: Int, off: Int) {
-						if (style in codepoint.style) {
-							if (style !in lastCodepoint.style) {
+						if (style in pixel.style) {
+							if (style !in lastPixel.style) {
 								attributes += on
 							}
-						} else if (style in lastCodepoint.style) {
+						} else if (style in lastPixel.style) {
 							attributes += off
 						}
 					}
-					if (codepoint.style != lastCodepoint.style) {
+					if (pixel.style != lastPixel.style) {
 						maybeToggleStyle(Bold, 1, 22)
 						maybeToggleStyle(Dim, 2, 22)
 						maybeToggleStyle(Italic, 3, 23)
@@ -181,24 +182,24 @@ internal class TextSurface(
 						attributes.clear() // This list is reused!
 					}
 
-					appendCodePoint(codepoint.value)
-					lastCodepoint = codepoint
+					append(pixel.value)
+					lastPixel = pixel
 				}
 			}
 
-			if (lastCodepoint.background != null ||
-					lastCodepoint.foreground != null ||
-					lastCodepoint.style != None) {
+			if (lastPixel.background != null ||
+					lastPixel.foreground != null ||
+					lastPixel.style != None) {
 				append("\u001B[0m")
 			}
 		}
 	}
 }
 
-internal class TextCodepoint(var value: Int) {
+internal class TextPixel(var value: String) {
 	var background: Color? = null
 	var foreground: Color? = null
-	var style = TextStyle.None
+	var style = None
 
-	constructor(char: Char) : this(char.code)
+	constructor(char: Char) : this(char.toString())
 }
