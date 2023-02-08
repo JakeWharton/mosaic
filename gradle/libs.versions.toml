@@ -1,7 +1,7 @@
 [versions]
-kotlin = "1.8.0"
+kotlin = "1.8.10"
 kotlinx-coroutines = "1.6.4"
-androidx-compose-compiler = "1.4.0"
+androidx-compose-compiler = "1.4.2"
 
 [libraries]
 kotlin-compiler = { module = "org.jetbrains.kotlin:kotlin-compiler", version.ref = "kotlin" }
