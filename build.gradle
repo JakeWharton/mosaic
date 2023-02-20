@@ -42,13 +42,12 @@ allprojects {
 		compilerOptions.freeCompilerArgs.add('-Xjvm-default=all')
 	}
 
-	plugins.withId('com.vanniktech.maven.publish') {
-		mavenPublish {
-			targets {
-				installArchives {
-					def url = file("${rootProject.buildDir}/localMaven").toURI().toString()
-					releaseRepositoryUrl = url
-					snapshotRepositoryUrl = url
+	plugins.withId('maven-publish') {
+		publishing {
+			repositories {
+				maven {
+					name = "TestMaven"
+					url = file("${rootProject.buildDir}/testMaven").toURI().toString()
 				}
 			}
 		}
