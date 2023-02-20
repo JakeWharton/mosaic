@@ -91,7 +91,7 @@ buildscript {
   }
   dependencies {
     classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0'
-    classpath 'com.jakewharton.mosaic:mosaic-gradle-plugin:0.3.0'
+    classpath 'com.jakewharton.mosaic:mosaic-gradle-plugin:0.4.0'
   }
 }
 
@@ -109,11 +109,11 @@ transitive dependency, the compiler plugin is not inherited and must be applied 
 Since Kotlin compiler plugins are an unstable API, certain versions of Mosaic only work with
 certain versions of Kotlin.
 
-| Kotlin | Mosaic             |
-|--------|--------------------|
-| 1.8.0  | 0.3.0              |
-| 1.7.10 | 0.2.0              |
-| 1.5.10 | 0.1.0              |
+| Kotlin | Mosaic        |
+|--------|---------------|
+| 1.8.0  | 0.3.0 - 0.4.0 |
+| 1.7.10 | 0.2.0         |
+| 1.5.10 | 0.1.0         |
 
 Versions newer than those listed may be supported but are untested.
 
@@ -131,7 +131,7 @@ buildscript {
   }
   dependencies {
     classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0'
-    classpath 'com.jakewharton.mosaic:mosaic-gradle-plugin:0.4.0-SNAPSHOT'
+    classpath 'com.jakewharton.mosaic:mosaic-gradle-plugin:0.5.0-SNAPSHOT'
   }
 }
 
