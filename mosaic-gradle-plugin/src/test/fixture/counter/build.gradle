@@ -8,7 +8,7 @@ buildscript {
 	}
 	repositories {
 		maven {
-			url "file://${projectDir.absolutePath}/../../../../../build/localMaven"
+			url "file://${projectDir.absolutePath}/../../../../../build/testMaven"
 		}
 		mavenCentral()
 	}
@@ -23,7 +23,7 @@ dependencies {
 
 repositories {
 	maven {
-		url "file://${projectDir.absolutePath}/../../../../../build/localMaven"
+		url "file://${projectDir.absolutePath}/../../../../../build/testMaven"
 	}
 	google()
 	mavenCentral()

@@ -32,8 +32,8 @@ gradlePlugin {
 }
 
 test {
-	dependsOn(':mosaic-gradle-plugin:installArchives')
-	dependsOn(':mosaic-runtime:installArchives')
+	dependsOn(':mosaic-gradle-plugin:publishAllPublicationsToTestMavenRepository')
+	dependsOn(':mosaic-runtime:publishAllPublicationsToTestMavenRepository')
 }
 
 buildConfig {
