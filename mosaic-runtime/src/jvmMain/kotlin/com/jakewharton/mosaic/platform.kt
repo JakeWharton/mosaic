@@ -1,13 +1,13 @@
 package com.jakewharton.mosaic
 
-import org.fusesource.jansi.AnsiConsole
 import java.nio.CharBuffer
 import java.nio.charset.StandardCharsets.UTF_8
+import org.fusesource.jansi.AnsiConsole
 
 private val out = AnsiConsole.out()!!
 private val encoder = UTF_8.newEncoder()!!
 
-internal actual fun platformRender(chars: CharSequence) {
+internal actual fun platformDisplay(chars: CharSequence) {
 	// Write a single byte array to stdout to create an atomic visual change. If you instead write
 	// the string, it will be UTF-8 encoded using an intermediate buffer that appears to be
 	// periodically flushed to the underlying byte stream. This will cause fraction-of-a-second

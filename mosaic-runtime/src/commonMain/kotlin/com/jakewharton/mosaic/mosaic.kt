@@ -15,17 +15,17 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 
 /**
- * True when using ANSI control sequences to overwrite output.
- * False for a debug-like output that renders each "frame" on its own with a timestamp delta.
+ * True for a debug-like output that renders each "frame" on its own with a timestamp delta.
+ * False when using ANSI control sequences to overwrite output.
  */
-private const val ansiConsole = true
+private const val debugOutput = false
 
 public interface MosaicScope : CoroutineScope {
 	public fun setContent(content: @Composable () -> Unit)
 }
 
 public suspend fun runMosaic(body: suspend MosaicScope.() -> Unit): Unit = coroutineScope {
-	val output = if (ansiConsole) AnsiOutput else DebugOutput
+	val rendering = if (debugOutput) DebugRendering else AnsiRendering
 
 	var hasFrameWaiters = false
 	val clock = BroadcastFrameClock {
@@ -53,7 +53,8 @@ public suspend fun runMosaic(body: suspend MosaicScope.() -> Unit): Unit = corou
 
 				val canvas = rootNode.draw()
 				val statics = rootNode.drawStatics()
-				output.display(canvas, statics)
+				val render = rendering.render(canvas, statics)
+				platformDisplay(render)
 
 				displaySignal?.complete(Unit)
 			}

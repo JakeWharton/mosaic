@@ -1,5 +1,5 @@
 package com.jakewharton.mosaic
 
-internal actual fun platformRender(chars: CharSequence) {
+internal actual fun platformDisplay(chars: CharSequence) {
 	print(chars.toString())
 }
