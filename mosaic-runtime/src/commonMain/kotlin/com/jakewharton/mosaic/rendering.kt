@@ -46,7 +46,8 @@ internal class AnsiRendering : Rendering {
 		return stringBuilder.apply {
 			clear()
 
-			repeat(lastHeight) {
+			var staleLines = lastHeight
+			repeat(staleLines) {
 				append(cursorUp)
 			}
 
@@ -54,13 +55,15 @@ internal class AnsiRendering : Rendering {
 			val lines = canvas.render().split("\n")
 			for (line in staticLines + lines) {
 				append(line)
-				append(clearLine)
+				if (staleLines-- > 0) {
+					// We have previously drawn on this line. Clear the rest to be safe.
+					append(clearLine)
+				}
 				append('\n')
 			}
 
 			// If the new output contains fewer lines than the last output, clear those old lines.
-			val extraLines = lastHeight - (lines.size + staticLines.size)
-			for (i in 0 until extraLines) {
+			for (i in 0 until staleLines) {
 				if (i > 0) {
 					append('\n')
 				}
@@ -68,7 +71,7 @@ internal class AnsiRendering : Rendering {
 			}
 
 			// Move cursor back up to end of the new output.
-			repeat(extraLines - 1) {
+			repeat(staleLines - 1) {
 				append(cursorUp)
 			}
 
