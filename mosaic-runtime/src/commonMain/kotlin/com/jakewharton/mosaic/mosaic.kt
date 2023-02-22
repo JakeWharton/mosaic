@@ -34,7 +34,7 @@ public fun renderMosaic(content: @Composable () -> Unit): String {
 
 	val canvas = rootNode.draw()
 	val statics = rootNode.drawStatics()
-	val render = AnsiRendering.render(canvas, statics)
+	val render = AnsiRendering().render(canvas, statics)
 
 	job.cancel()
 	composition.dispose()
@@ -51,7 +51,7 @@ public suspend fun runMosaic(body: suspend MosaicScope.() -> Unit): Unit = corou
 		@OptIn(ExperimentalTime::class) // Not used in production.
 		DebugRendering()
 	} else {
-		AnsiRendering
+		AnsiRendering()
 	}
 
 	var hasFrameWaiters = false

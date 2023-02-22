@@ -11,7 +11,7 @@ internal interface Rendering {
 	 * Note: The returned [CharSequence] is only valid until the next call to this function,
 	 * as implementations are free to reuse buffers across invocations.
 	 */
-	fun render(canvas: TextCanvas, statics: List<TextCanvas>): CharSequence
+	fun render(canvas: TextCanvas, statics: List<TextCanvas> = emptyList()): CharSequence
 }
 
 @ExperimentalTime
@@ -38,7 +38,7 @@ internal class DebugRendering(
 	}
 }
 
-internal object AnsiRendering : Rendering {
+internal class AnsiRendering : Rendering {
 	private val stringBuilder = StringBuilder(100)
 	private var lastHeight = 0
 
