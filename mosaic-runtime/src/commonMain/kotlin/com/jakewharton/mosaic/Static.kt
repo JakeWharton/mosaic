@@ -16,30 +16,30 @@ public fun <T> Static(
 	items: Flow<T>,
 	content: @Composable (T) -> Unit,
 ) {
-	class Item(val value: T, var rendered: Boolean)
+	class Item(val value: T, var drawn: Boolean)
 
-	// Keep list of items which have not yet been rendered.
+	// Keep list of items which have not yet been drawn.
 	val pending = remember { mutableStateListOf<Item>() }
 
 	LaunchedEffect(items) {
 		items.collect {
-			pending.add(Item(it, rendered = false))
+			pending.add(Item(it, drawn = false))
 		}
 	}
 
 	ComposeNode<StaticNode, MosaicNodeApplier>(
 		factory = {
 			StaticNode {
-				pending.removeAll { it.rendered }
+				pending.removeAll { it.drawn }
 			}
 		},
 		update = {},
 		content = {
 			for (item in pending) {
 				Row {
-					// Render item and mark it as having been included in render.
+					// Draw item and mark it as such.
 					content(item.value)
-					item.rendered = true
+					item.drawn = true
 				}
 			}
 		},
@@ -47,7 +47,7 @@ public fun <T> Static(
 }
 
 internal class StaticNode(
-	private val postRender: () -> Unit,
+	private val onPostDraw: () -> Unit,
 ) : ContainerNode() {
 	// Delegate container column for static content.
 	private val box = LinearNode(isRow = false)
@@ -63,25 +63,25 @@ internal class StaticNode(
 		// Not visible.
 	}
 
-	override fun renderTo(canvas: TextCanvas) {
+	override fun drawTo(canvas: TextCanvas) {
 		// No content.
 	}
 
-	override fun renderStatics(): List<TextCanvas> {
+	override fun drawStatics(): List<TextCanvas> {
 		val statics = mutableListOf<TextCanvas>()
 
-		// Render contents of static node to a separate display.
-		val static = box.render()
+		// Draw contents of static node to a separate node hierarchy.
+		val static = box.draw()
 
 		// Add display canvas to static canvases if it is not empty.
 		if (static.width > 0 && static.height > 0) {
 			statics.add(static)
 		}
 
-		// Propagate any static content of the display.
-		statics.addAll(box.renderStatics())
+		// Propagate any static content of this static node.
+		statics.addAll(box.drawStatics())
 
-		postRender()
+		onPostDraw()
 
 		return statics
 	}
