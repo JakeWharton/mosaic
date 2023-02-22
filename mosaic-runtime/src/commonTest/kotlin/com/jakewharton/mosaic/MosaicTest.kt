@@ -4,8 +4,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class MosaicTest {
-	private val esc = "\u001B"
-
 	@Test fun render() {
 		val actual = renderMosaic {
 			Column {
