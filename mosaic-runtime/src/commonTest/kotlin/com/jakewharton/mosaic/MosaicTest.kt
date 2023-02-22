@@ -13,9 +13,9 @@ class MosaicTest {
 			}
 		}
 		assertEquals("""
-			|One  $esc[K
-			|Two  $esc[K
-			|Three$esc[K
+			|One  $clearLine
+			|Two  $clearLine
+			|Three$clearLine
 			|""".trimMargin(), actual)
 	}
 }

@@ -16,8 +16,8 @@ class AnsiRenderingTest {
 		// TODO We should not draw trailing whitespace.
 		assertEquals(
 			"""
-			|Hello $esc[K
-			|World!$esc[K
+			|Hello $clearLine
+			|World!$clearLine
 			|""".trimMargin(),
 			rendering.render(helloCanvas).toString(),
 		)
