@@ -12,12 +12,11 @@ class AnsiRenderingTest {
 			write(1, 0, "World!")
 		}
 
-		// TODO We should not clear lines that we have never drawn before.
 		// TODO We should not draw trailing whitespace.
 		assertEquals(
 			"""
-			|Hello $clearLine
-			|World!$clearLine
+			|Hello$s
+			|World!
 			|""".trimMargin(),
 			rendering.render(helloCanvas).toString(),
 		)
@@ -31,8 +30,8 @@ class AnsiRenderingTest {
 
 		assertEquals(
 			"""
-			|Hello $clearLine
-			|World!$clearLine
+			|Hello$s
+			|World!
 			|""".trimMargin(),
 			rendering.render(firstCanvas).toString(),
 		)
@@ -48,8 +47,8 @@ class AnsiRenderingTest {
 			"""
 			|$cursorUp${cursorUp}Hel$clearLine
 			|lo $clearLine
-			|Wor$clearLine
-			|ld!$clearLine
+			|Wor
+			|ld!
 			|""".trimMargin(),
 			rendering.render(secondCanvas).toString(),
 		)
@@ -65,10 +64,10 @@ class AnsiRenderingTest {
 
 		assertEquals(
 			"""
-			|Hel$clearLine
-			|lo $clearLine
-			|Wor$clearLine
-			|ld!$clearLine
+			|Hel
+			|lo$s
+			|Wor
+			|ld!
 			|""".trimMargin(),
 			rendering.render(firstCanvas).toString(),
 		)

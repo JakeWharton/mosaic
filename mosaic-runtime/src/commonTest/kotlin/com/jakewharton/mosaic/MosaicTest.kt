@@ -13,9 +13,9 @@ class MosaicTest {
 			}
 		}
 		assertEquals("""
-			|One  $clearLine
-			|Two  $clearLine
-			|Three$clearLine
+			|One $s
+			|Two $s
+			|Three
 			|""".trimMargin(), actual)
 	}
 }
