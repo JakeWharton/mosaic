@@ -51,8 +51,8 @@ public suspend fun runMosaic(body: suspend MosaicScope.() -> Unit): Unit = corou
 				hasFrameWaiters = false
 				clock.sendFrame(0L) // Frame time value is not used by Compose runtime.
 
-				val canvas = rootNode.render()
-				val statics = rootNode.renderStatics()
+				val canvas = rootNode.draw()
+				val statics = rootNode.drawStatics()
 				output.display(canvas, statics)
 
 				displaySignal?.complete(Unit)

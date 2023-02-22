@@ -9,26 +9,26 @@ internal sealed class MosaicNode {
 	var height = 0
 
 	// These two values are set by a call to `layout` on the parent node.
-	/** Pixels right relative to parent at which this node will render. */
+	/** Pixels right relative to parent at which this node will draw. */
 	var x = 0
-	/** Pixels down relative to parent at which this node will render. */
+	/** Pixels down relative to parent at which this node will draw. */
 	var y = 0
 
 	/** Measure this node (and any children) and update [width] and [height]. */
 	abstract fun measure()
 	/** Layout any children nodes and update their [x] and [y] relative to this node. */
 	abstract fun layout()
-	abstract fun renderTo(canvas: TextCanvas)
+	abstract fun drawTo(canvas: TextCanvas)
 
-	fun render(): TextCanvas {
+	fun draw(): TextCanvas {
 		measure()
 		layout()
 		val canvas = TextSurface(width, height)
-		renderTo(canvas)
+		drawTo(canvas)
 		return canvas
 	}
 
-	abstract fun renderStatics(): List<TextCanvas>
+	abstract fun drawStatics(): List<TextCanvas>
 }
 
 internal class TextNode(initialValue: String = "") : MosaicNode() {
@@ -56,13 +56,13 @@ internal class TextNode(initialValue: String = "") : MosaicNode() {
 		// No children.
 	}
 
-	override fun renderTo(canvas: TextCanvas) {
+	override fun drawTo(canvas: TextCanvas) {
 		value.split('\n').forEachIndexed { index, line ->
 			canvas.write(index, 0, line, foreground, background, style)
 		}
 	}
 
-	override fun renderStatics() = emptyList<TextCanvas>()
+	override fun drawStatics() = emptyList<TextCanvas>()
 
 	override fun toString() = "Text(\"$value\", x=$x, y=$y, width=$width, height=$height)"
 }
@@ -134,22 +134,22 @@ internal class LinearNode(var isRow: Boolean = true) : ContainerNode() {
 		}
 	}
 
-	override fun renderTo(canvas: TextCanvas) {
+	override fun drawTo(canvas: TextCanvas) {
 		for (child in children) {
 			if (child.width != 0 && child.height != 0) {
 				val left = child.x
 				val top = child.y
 				val right = left + child.width - 1
 				val bottom = top + child.height - 1
-				child.renderTo(canvas[top..bottom, left..right])
+				child.drawTo(canvas[top..bottom, left..right])
 			} else {
-				child.renderTo(canvas.empty())
+				child.drawTo(canvas.empty())
 			}
 		}
 	}
 
-	override fun renderStatics(): List<TextCanvas> {
-		return children.flatMap(MosaicNode::renderStatics)
+	override fun drawStatics(): List<TextCanvas> {
+		return children.flatMap(MosaicNode::drawStatics)
 	}
 
 	override fun toString() = children.joinToString(prefix = "Box(", postfix = ")")
