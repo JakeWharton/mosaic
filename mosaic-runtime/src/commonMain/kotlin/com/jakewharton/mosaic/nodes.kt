@@ -71,6 +71,44 @@ internal sealed class ContainerNode : MosaicNode() {
 	abstract val children: MutableList<MosaicNode>
 }
 
+internal class BoxNode : ContainerNode() {
+	override val children = mutableListOf<MosaicNode>()
+
+	override fun measure() {
+		var width = 0
+		var height = 0
+		for (child in children) {
+			child.measure()
+			width = maxOf(width, child.width)
+			height = maxOf(height, child.height)
+		}
+		this.width = width
+		this.height = height
+	}
+
+	override fun layout() {
+		for (child in children) {
+			child.layout()
+		}
+	}
+
+	override fun drawTo(canvas: TextCanvas) {
+		for (child in children) {
+			if (child.width != 0 && child.height != 0) {
+				child.drawTo(canvas[0 until child.height, 0 until child.width])
+			} else {
+				child.drawTo(canvas.empty())
+			}
+		}
+	}
+
+	override fun drawStatics(): List<TextCanvas> {
+		return children.flatMap(MosaicNode::drawStatics)
+	}
+
+	override fun toString() = children.joinToString(prefix = "Box(", postfix = ")")
+}
+
 internal class LinearNode(var isRow: Boolean = true) : ContainerNode() {
 	override val children = mutableListOf<MosaicNode>()
 
@@ -152,10 +190,13 @@ internal class LinearNode(var isRow: Boolean = true) : ContainerNode() {
 		return children.flatMap(MosaicNode::drawStatics)
 	}
 
-	override fun toString() = children.joinToString(prefix = "Box(", postfix = ")")
+	override fun toString() = buildString {
+		append(if (isRow) "Row" else "Column")
+		children.joinTo(this, prefix = "(", postfix = ")")
+	}
 }
 
-internal class MosaicNodeApplier(root: LinearNode) : AbstractApplier<MosaicNode>(root) {
+internal class MosaicNodeApplier(root: MosaicNode) : AbstractApplier<MosaicNode>(root) {
 	override fun insertTopDown(index: Int, instance: MosaicNode) {
 		// Ignored, we insert bottom-up.
 	}
