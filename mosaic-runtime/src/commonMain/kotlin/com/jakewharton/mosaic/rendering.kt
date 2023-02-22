@@ -14,9 +14,10 @@ internal interface Rendering {
 	fun render(canvas: TextCanvas, statics: List<TextCanvas>): CharSequence
 }
 
-@OptIn(ExperimentalTime::class) // Not used in production.
-internal object DebugRendering : Rendering {
-	private val systemClock = TimeSource.Monotonic
+@ExperimentalTime
+internal class DebugRendering(
+	private val systemClock: TimeSource = TimeSource.Monotonic,
+) : Rendering {
 	private var lastRender: TimeMark? = null
 
 	override fun render(canvas: TextCanvas, statics: List<TextCanvas>): CharSequence {

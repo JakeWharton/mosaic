@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Composition
 import androidx.compose.runtime.Recomposer
 import androidx.compose.runtime.snapshots.Snapshot
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
@@ -25,7 +26,12 @@ public interface MosaicScope : CoroutineScope {
 }
 
 public suspend fun runMosaic(body: suspend MosaicScope.() -> Unit): Unit = coroutineScope {
-	val rendering = if (debugOutput) DebugRendering else AnsiRendering
+	val rendering = if (debugOutput) {
+		@OptIn(ExperimentalTime::class) // Not used in production.
+		DebugRendering()
+	} else {
+		AnsiRendering
+	}
 
 	var hasFrameWaiters = false
 	val clock = BroadcastFrameClock {
