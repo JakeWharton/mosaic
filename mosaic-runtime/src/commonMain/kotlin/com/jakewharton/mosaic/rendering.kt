@@ -47,14 +47,14 @@ internal class AnsiRendering : Rendering {
 			clear()
 
 			repeat(lastHeight) {
-				append("\u001B[F") // Cursor up line.
+				append(cursorUp)
 			}
 
 			val staticLines = statics.flatMap { it.render().split("\n") }
 			val lines = canvas.render().split("\n")
 			for (line in staticLines + lines) {
 				append(line)
-				append("\u001B[K") // Clear rest of line.
+				append(clearLine)
 				append('\n')
 			}
 
@@ -64,12 +64,12 @@ internal class AnsiRendering : Rendering {
 				if (i > 0) {
 					append('\n')
 				}
-				append("\u001B[K") // Clear line.
+				append(clearLine)
 			}
 
 			// Move cursor back up to end of the new output.
 			repeat(extraLines - 1) {
-				append("\u001B[F") // Cursor up line.
+				append(cursorUp)
 			}
 
 			lastHeight = lines.size
