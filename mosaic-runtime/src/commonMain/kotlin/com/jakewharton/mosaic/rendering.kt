@@ -4,17 +4,23 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.TimeMark
 import kotlin.time.TimeSource
 
-internal interface Output {
-	fun display(canvas: TextCanvas, statics: List<TextCanvas>)
+internal interface Rendering {
+	/**
+	 * Render [canvas] and [statics] to a single string for display.
+	 *
+	 * Note: The returned [CharSequence] is only valid until the next call to this function,
+	 * as implementations are free to reuse buffers across invocations.
+	 */
+	fun render(canvas: TextCanvas, statics: List<TextCanvas>): CharSequence
 }
 
 @OptIn(ExperimentalTime::class) // Not used in production.
-internal object DebugOutput : Output {
+internal object DebugRendering : Rendering {
 	private val systemClock = TimeSource.Monotonic
 	private var lastRender: TimeMark? = null
 
-	override fun display(canvas: TextCanvas, statics: List<TextCanvas>) {
-		println(buildString {
+	override fun render(canvas: TextCanvas, statics: List<TextCanvas>): CharSequence {
+		return buildString {
 			lastRender?.let { lastRender ->
 				repeat(50) { append('~') }
 				append(" +")
@@ -27,16 +33,16 @@ internal object DebugOutput : Output {
 			}
 
 			appendLine(canvas.render())
-		})
+		}
 	}
 }
 
-internal object AnsiOutput : Output {
+internal object AnsiRendering : Rendering {
 	private val stringBuilder = StringBuilder(100)
 	private var lastHeight = 0
 
-	override fun display(canvas: TextCanvas, statics: List<TextCanvas>) {
-		stringBuilder.apply {
+	override fun render(canvas: TextCanvas, statics: List<TextCanvas>): CharSequence {
+		return stringBuilder.apply {
 			clear()
 
 			repeat(lastHeight) {
@@ -67,7 +73,5 @@ internal object AnsiOutput : Output {
 
 			lastHeight = lines.size
 		}
-
-		platformRender(stringBuilder)
 	}
 }

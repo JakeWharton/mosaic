@@ -1,3 +1,3 @@
 package com.jakewharton.mosaic
 
-internal expect fun platformRender(chars: CharSequence)
+internal expect fun platformDisplay(chars: CharSequence)
