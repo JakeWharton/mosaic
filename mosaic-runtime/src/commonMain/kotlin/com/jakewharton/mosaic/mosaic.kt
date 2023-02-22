@@ -21,6 +21,27 @@ import kotlinx.coroutines.yield
  */
 private const val debugOutput = false
 
+public fun renderMosaic(content: @Composable () -> Unit): String {
+	val clock = BroadcastFrameClock()
+	val job = Job()
+	val composeContext = clock + job
+
+	val rootNode = LinearNode()
+	val recomposer = Recomposer(composeContext)
+	val composition = Composition(MosaicNodeApplier(rootNode), recomposer)
+
+	composition.setContent(content)
+
+	val canvas = rootNode.draw()
+	val statics = rootNode.drawStatics()
+	val render = AnsiRendering.render(canvas, statics)
+
+	job.cancel()
+	composition.dispose()
+
+	return render.toString()
+}
+
 public interface MosaicScope : CoroutineScope {
 	public fun setContent(content: @Composable () -> Unit)
 }
