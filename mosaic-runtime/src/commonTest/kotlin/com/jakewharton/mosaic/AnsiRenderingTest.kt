@@ -7,9 +7,11 @@ class AnsiRenderingTest {
 	private val rendering = AnsiRendering()
 
 	@Test fun firstRender() {
-		val helloCanvas = TextSurface(6, 2).apply {
-			write(0, 0, "Hello")
-			write(1, 0, "World!")
+		val hello = mosaicNodes {
+			Column {
+				Text("Hello")
+				Text("World!")
+			}
 		}
 
 		// TODO We should not draw trailing whitespace.
@@ -18,14 +20,16 @@ class AnsiRenderingTest {
 			|Hello$s
 			|World!
 			|""".trimMargin(),
-			rendering.render(helloCanvas).toString(),
+			rendering.render(hello).toString(),
 		)
 	}
 
 	@Test fun subsequentLongerRenderClearsRenderedLines() {
-		val firstCanvas = TextSurface(6, 2).apply {
-			write(0, 0, "Hello")
-			write(1, 0, "World!")
+		val first = mosaicNodes {
+			Column {
+				Text("Hello")
+				Text("World!")
+			}
 		}
 
 		assertEquals(
@@ -33,14 +37,16 @@ class AnsiRenderingTest {
 			|Hello$s
 			|World!
 			|""".trimMargin(),
-			rendering.render(firstCanvas).toString(),
+			rendering.render(first).toString(),
 		)
 
-		val secondCanvas = TextSurface(3, 4).apply {
-			write(0, 0, "Hel")
-			write(1, 0, "lo")
-			write(2, 0, "Wor")
-			write(3, 0, "ld!")
+		val second = mosaicNodes {
+			Column {
+				Text("Hel")
+				Text("lo")
+				Text("Wor")
+				Text("ld!")
+			}
 		}
 
 		assertEquals(
@@ -50,16 +56,18 @@ class AnsiRenderingTest {
 			|Wor
 			|ld!
 			|""".trimMargin(),
-			rendering.render(secondCanvas).toString(),
+			rendering.render(second).toString(),
 		)
 	}
 
 	@Test fun subsequentShorterRenderClearsRenderedLines() {
-		val firstCanvas = TextSurface(3, 4).apply {
-			write(0, 0, "Hel")
-			write(1, 0, "lo")
-			write(2, 0, "Wor")
-			write(3, 0, "ld!")
+		val first = mosaicNodes {
+			Column {
+				Text("Hel")
+				Text("lo")
+				Text("Wor")
+				Text("ld!")
+			}
 		}
 
 		assertEquals(
@@ -69,12 +77,14 @@ class AnsiRenderingTest {
 			|Wor
 			|ld!
 			|""".trimMargin(),
-			rendering.render(firstCanvas).toString(),
+			rendering.render(first).toString(),
 		)
 
-		val secondCanvas = TextSurface(6, 2).apply {
-			write(0, 0, "Hello")
-			write(1, 0, "World!")
+		val second = mosaicNodes {
+			Column {
+				Text("Hello")
+				Text("World!")
+			}
 		}
 
 		assertEquals(
@@ -84,7 +94,7 @@ class AnsiRenderingTest {
 			|$clearLine
 			|$clearLine$cursorUp
 			""".trimMargin(),
-			rendering.render(secondCanvas).toString(),
+			rendering.render(second).toString(),
 		)
 	}
 }

@@ -21,7 +21,7 @@ import kotlinx.coroutines.yield
  */
 private const val debugOutput = false
 
-public fun renderMosaic(content: @Composable () -> Unit): String {
+internal fun mosaicNodes(content: @Composable () -> Unit): MosaicNode {
 	val clock = BroadcastFrameClock()
 	val job = Job()
 	val composeContext = clock + job
@@ -35,10 +35,12 @@ public fun renderMosaic(content: @Composable () -> Unit): String {
 	job.cancel()
 	composition.dispose()
 
-	val canvas = rootNode.draw()
-	val statics = rootNode.drawStatics()
-	val render = AnsiRendering().render(canvas, statics)
+	return rootNode
+}
 
+public fun renderMosaic(content: @Composable () -> Unit): String {
+	val rootNode = mosaicNodes(content)
+	val render = AnsiRendering().render(rootNode)
 	return render.toString()
 }
 
@@ -78,9 +80,7 @@ public suspend fun runMosaic(body: suspend MosaicScope.() -> Unit): Unit = corou
 				hasFrameWaiters = false
 				clock.sendFrame(0L) // Frame time value is not used by Compose runtime.
 
-				val canvas = rootNode.draw()
-				val statics = rootNode.drawStatics()
-				val render = rendering.render(canvas, statics)
+				val render = rendering.render(rootNode)
 				platformDisplay(render)
 
 				displaySignal?.complete(Unit)
