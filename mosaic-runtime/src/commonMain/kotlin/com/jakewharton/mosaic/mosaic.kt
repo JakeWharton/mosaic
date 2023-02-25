@@ -26,7 +26,7 @@ public fun renderMosaic(content: @Composable () -> Unit): String {
 	val job = Job()
 	val composeContext = clock + job
 
-	val rootNode = BoxNode()
+	val rootNode = RootNode()
 	val recomposer = Recomposer(composeContext)
 	val composition = Composition(MosaicNodeApplier(rootNode), recomposer)
 
@@ -62,7 +62,7 @@ public suspend fun runMosaic(body: suspend MosaicScope.() -> Unit): Unit = corou
 	val job = Job(coroutineContext[Job])
 	val composeContext = coroutineContext + clock + job
 
-	val rootNode = BoxNode()
+	val rootNode = RootNode()
 	val recomposer = Recomposer(composeContext)
 	val composition = Composition(MosaicNodeApplier(rootNode), recomposer)
 
