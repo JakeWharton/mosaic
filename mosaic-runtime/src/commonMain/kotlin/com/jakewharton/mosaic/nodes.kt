@@ -196,6 +196,49 @@ internal class LinearNode(var isRow: Boolean = true) : ContainerNode() {
 	}
 }
 
+internal class StaticNode(
+	private val onPostDraw: () -> Unit,
+) : ContainerNode() {
+	// Delegate container column for static content.
+	private val box = LinearNode(isRow = false)
+
+	override val children: MutableList<MosaicNode>
+		get() = box.children
+
+	override fun measure() {
+		// Not visible.
+	}
+
+	override fun layout() {
+		// Not visible.
+	}
+
+	override fun drawTo(canvas: TextCanvas) {
+		// No content.
+	}
+
+	override fun drawStatics(): List<TextCanvas> {
+		val statics = mutableListOf<TextCanvas>()
+
+		// Draw contents of static node to a separate node hierarchy.
+		val static = box.draw()
+
+		// Add display canvas to static canvases if it is not empty.
+		if (static.width > 0 && static.height > 0) {
+			statics.add(static)
+		}
+
+		// Propagate any static content of this static node.
+		statics.addAll(box.drawStatics())
+
+		onPostDraw()
+
+		return statics
+	}
+
+	override fun toString() = box.children.joinToString(prefix = "Static(", postfix = ")")
+}
+
 internal class MosaicNodeApplier(root: MosaicNode) : AbstractApplier<MosaicNode>(root) {
 	override fun insertTopDown(index: Int, instance: MosaicNode) {
 		// Ignored, we insert bottom-up.
