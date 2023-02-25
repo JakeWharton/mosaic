@@ -32,12 +32,12 @@ public fun renderMosaic(content: @Composable () -> Unit): String {
 
 	composition.setContent(content)
 
+	job.cancel()
+	composition.dispose()
+
 	val canvas = rootNode.draw()
 	val statics = rootNode.drawStatics()
 	val render = AnsiRendering().render(canvas, statics)
-
-	job.cancel()
-	composition.dispose()
 
 	return render.toString()
 }
