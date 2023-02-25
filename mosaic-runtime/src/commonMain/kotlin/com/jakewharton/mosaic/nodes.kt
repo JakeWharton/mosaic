@@ -259,8 +259,5 @@ internal class MosaicNodeApplier(root: MosaicNode) : AbstractApplier<MosaicNode>
 		boxNode.children.move(from, to, count)
 	}
 
-	override fun onClear() {
-		val boxNode = root as ContainerNode
-		boxNode.children.clear()
-	}
+	override fun onClear() {}
 }
