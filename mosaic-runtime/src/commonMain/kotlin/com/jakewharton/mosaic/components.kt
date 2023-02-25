@@ -3,7 +3,11 @@ package com.jakewharton.mosaic
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 public fun Text(
@@ -114,5 +118,43 @@ private fun Linear(isRow: Boolean, children: @Composable () -> Unit) {
 			}
 		},
 		content = children,
+	)
+}
+
+/**
+ * Will render each value emitted by [items] as permanent output above the
+ * regular display.
+ */
+@Composable
+public fun <T> Static(
+	items: Flow<T>,
+	content: @Composable (T) -> Unit,
+) {
+	class Item(val value: T, var drawn: Boolean)
+
+	// Keep list of items which have not yet been drawn.
+	val pending = remember { mutableStateListOf<Item>() }
+
+	LaunchedEffect(items) {
+		items.collect {
+			pending.add(Item(it, drawn = false))
+		}
+	}
+
+	ComposeNode<StaticNode, MosaicNodeApplier>(
+		factory = {
+			StaticNode {
+				pending.removeAll { it.drawn }
+			}
+		},
+		update = {},
+		content = {
+			for (item in pending) {
+				Row {
+					content(item.value)
+					item.drawn = true
+				}
+			}
+		},
 	)
 }
