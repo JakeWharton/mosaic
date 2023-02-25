@@ -150,10 +150,8 @@ public fun <T> Static(
 		update = {},
 		content = {
 			for (item in pending) {
-				Row {
-					content(item.value)
-					item.drawn = true
-				}
+				content(item.value)
+				item.drawn = true
 			}
 		},
 	)
