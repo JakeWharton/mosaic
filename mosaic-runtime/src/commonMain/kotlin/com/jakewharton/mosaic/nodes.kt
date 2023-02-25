@@ -71,7 +71,7 @@ internal sealed class ContainerNode : MosaicNode() {
 	abstract val children: MutableList<MosaicNode>
 }
 
-internal class BoxNode : ContainerNode() {
+internal class RootNode : ContainerNode() {
 	override val children = mutableListOf<MosaicNode>()
 
 	override fun measure() {
@@ -239,7 +239,7 @@ internal class StaticNode(
 	override fun toString() = box.children.joinToString(prefix = "Static(", postfix = ")")
 }
 
-internal class MosaicNodeApplier(root: MosaicNode) : AbstractApplier<MosaicNode>(root) {
+internal class MosaicNodeApplier(root: RootNode) : AbstractApplier<MosaicNode>(root) {
 	override fun insertTopDown(index: Int, instance: MosaicNode) {
 		// Ignored, we insert bottom-up.
 	}
