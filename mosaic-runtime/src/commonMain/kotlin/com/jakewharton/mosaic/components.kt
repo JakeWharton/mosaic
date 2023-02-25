@@ -3,11 +3,17 @@ package com.jakewharton.mosaic
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 
 @Composable
 public fun Text(
@@ -135,9 +141,19 @@ public fun <T> Static(
 	// Keep list of items which have not yet been drawn.
 	val pending = remember { mutableStateListOf<Item>() }
 
-	LaunchedEffect(items) {
-		items.collect {
-			pending.add(Item(it, drawn = false))
+	// We use all this manual scope/job/launch stuff instead of a LaunchedEffect so that
+	// the items collection occurs within the same recomposition as it is created.
+	val scope = rememberCoroutineScope()
+	var job by remember { mutableStateOf<Job?>(null) }
+	var seenItems by remember { mutableStateOf<Flow<T>?>(null) }
+	if (seenItems !== items) {
+		job?.cancel()
+
+		seenItems = items
+		job = scope.launch(start = UNDISPATCHED) {
+			items.collect {
+				pending.add(Item(it, drawn = false))
+			}
 		}
 	}
 

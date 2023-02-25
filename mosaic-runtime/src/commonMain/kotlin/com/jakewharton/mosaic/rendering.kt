@@ -6,12 +6,12 @@ import kotlin.time.TimeSource
 
 internal interface Rendering {
 	/**
-	 * Render [canvas] and [statics] to a single string for display.
+	 * Render [node] to a single string for display.
 	 *
 	 * Note: The returned [CharSequence] is only valid until the next call to this function,
 	 * as implementations are free to reuse buffers across invocations.
 	 */
-	fun render(canvas: TextCanvas, statics: List<TextCanvas> = emptyList()): CharSequence
+	fun render(node: MosaicNode): CharSequence
 }
 
 @ExperimentalTime
@@ -20,7 +20,7 @@ internal class DebugRendering(
 ) : Rendering {
 	private var lastRender: TimeMark? = null
 
-	override fun render(canvas: TextCanvas, statics: List<TextCanvas>): CharSequence {
+	override fun render(node: MosaicNode): CharSequence {
 		return buildString {
 			lastRender?.let { lastRender ->
 				repeat(50) { append('~') }
@@ -29,11 +29,21 @@ internal class DebugRendering(
 			}
 			lastRender = systemClock.markNow()
 
-			for (static in statics) {
-				appendLine(static.render())
-			}
+			val canvas = node.draw()
+			val statics = node.drawStatics()
 
-			appendLine(canvas.render())
+			appendLine("NODES:")
+			appendLine(node)
+			appendLine()
+			if (statics.isNotEmpty()) {
+				appendLine("STATIC:")
+				for (static in statics) {
+					appendLine(static)
+				}
+				appendLine()
+			}
+			appendLine("OUTPUT:")
+			appendLine(canvas)
 		}
 	}
 }
@@ -42,7 +52,10 @@ internal class AnsiRendering : Rendering {
 	private val stringBuilder = StringBuilder(100)
 	private var lastHeight = 0
 
-	override fun render(canvas: TextCanvas, statics: List<TextCanvas>): CharSequence {
+	override fun render(node: MosaicNode): CharSequence {
+		val canvas = node.draw()
+		val statics = node.drawStatics()
+
 		return stringBuilder.apply {
 			clear()
 

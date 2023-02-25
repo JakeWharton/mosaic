@@ -106,7 +106,7 @@ internal class RootNode : ContainerNode() {
 		return children.flatMap(MosaicNode::drawStatics)
 	}
 
-	override fun toString() = children.joinToString(prefix = "Box(", postfix = ")")
+	override fun toString() = children.joinToString(separator = "\n")
 }
 
 internal class LinearNode(var isRow: Boolean = true) : ContainerNode() {
@@ -192,7 +192,7 @@ internal class LinearNode(var isRow: Boolean = true) : ContainerNode() {
 
 	override fun toString() = buildString {
 		append(if (isRow) "Row" else "Column")
-		children.joinTo(this, prefix = "(", postfix = ")")
+		children.joinTo(this, prefix = "()") { "\n" + it.toString().prependIndent("  ") }
 	}
 }
 
@@ -236,7 +236,7 @@ internal class StaticNode(
 		return statics
 	}
 
-	override fun toString() = box.children.joinToString(prefix = "Static(", postfix = ")")
+	override fun toString() = box.children.joinToString(prefix = "Static()") { "\n" + it.toString().prependIndent("  ") }
 }
 
 internal class MosaicNodeApplier(root: RootNode) : AbstractApplier<MosaicNode>(root) {

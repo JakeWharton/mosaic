@@ -5,6 +5,7 @@ import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.ExperimentalTime
 import kotlin.time.TestTimeSource
+import kotlinx.coroutines.flow.flowOf
 
 @OptIn(ExperimentalTime::class)
 class DebugRenderingTest {
@@ -12,38 +13,57 @@ class DebugRenderingTest {
 	private val rendering = DebugRendering(timeSource)
 
 	@Test fun framesIncludeStatics() {
-		val helloCanvas = TextSurface(5, 1)
-		helloCanvas.write(0, 0, "Hello")
-		val staticCanvas = TextSurface(6, 1)
-		staticCanvas.write(0, 0, "Static")
+		val nodes = mosaicNodes {
+			Text("Hello")
+			Static(flowOf("Static")) {
+				Text(it)
+			}
+		}
 
 		assertEquals(
 			"""
+			|NODES:
+			|Text("Hello", x=0, y=0, width=5, height=1)
+			|Static()
+			|  Text("Static", x=0, y=0, width=6, height=1)
+			|
+			|STATIC:
 			|Static
+			|
+			|OUTPUT:
 			|Hello
 			|""".trimMargin(),
-			rendering.render(helloCanvas, listOf(staticCanvas)),
+			rendering.render(nodes),
 		)
 	}
 
 	@Test fun framesAfterFirstHaveTimeHeader() {
-		val helloCanvas = TextSurface(5, 1)
-		helloCanvas.write(0, 0, "Hello")
+		val hello = mosaicNodes {
+			Text("Hello")
+		}
 
 		assertEquals(
 			"""
+			|NODES:
+			|Text("Hello", x=0, y=0, width=5, height=1)
+			|
+			|OUTPUT:
 			|Hello
 			|""".trimMargin(),
-			rendering.render(helloCanvas),
+			rendering.render(hello),
 		)
 
 		timeSource += 100.milliseconds
 		assertEquals(
 			"""
 			|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ +100ms
+			|NODES:
+			|Text("Hello", x=0, y=0, width=5, height=1)
+			|
+			|OUTPUT:
 			|Hello
 			|""".trimMargin(),
-			rendering.render(helloCanvas),
+			rendering.render(hello),
 		)
 	}
 }
