@@ -1,7 +1,6 @@
 package com.jakewharton.mosaic
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ComposeNode
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -10,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import de.cketti.codepoints.codePointCount
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
@@ -22,20 +22,23 @@ public fun Text(
 	background: Color? = null,
 	style: TextStyle? = null,
 ) {
-	ComposeNode<TextNode, MosaicNodeApplier>(::TextNode) {
-		set(value) {
-			this.value = value
+	Node(
+		measurePolicy = {
+			val lines = value.split('\n')
+			width = lines.maxOf { it.codePointCount(0, it.length) }
+			height = lines.size
+		},
+		layoutPolicy = { },
+		drawPolicy = { canvas ->
+			value.split('\n').forEachIndexed { index, line ->
+				canvas.write(index, 0, line, color, background, style)
+			}
+		},
+		staticDrawPolicy = { emptyList() },
+		debugPolicy = {
+			"""Text("$value", x=$x, y=$y, width=$width, height=$height)"""
 		}
-		set(color) {
-			this.foreground = color
-		}
-		set(background) {
-			this.background = background
-		}
-		set(style) {
-			this.style = style
-		}
-	}
+	)
 }
 
 @Immutable
@@ -105,25 +108,66 @@ public class TextStyle private constructor(
 }
 
 @Composable
-public fun Row(children: @Composable () -> Unit) {
-	Linear(true, children)
-}
-
-@Composable
-public fun Column(children: @Composable () -> Unit) {
-	Linear(false, children)
-}
-
-@Composable
-private fun Linear(isRow: Boolean, children: @Composable () -> Unit) {
-	ComposeNode<LinearNode, MosaicNodeApplier>(
-		factory = ::LinearNode,
-		update = {
-			set(isRow) {
-				this.isRow = isRow
+public fun Row(content: @Composable () -> Unit) {
+	Node(
+		content = content,
+		measurePolicy = {
+			var width = 0
+			var height = 0
+			for (child in children) {
+				child.measure()
+				width += child.width
+				height = maxOf(height, child.height)
+			}
+			this.width = width
+			this.height = height
+		},
+		layoutPolicy = {
+			var childX = 0
+			for (child in children) {
+				child.x = childX
+				child.y = 0
+				child.layout()
+				childX += child.width
 			}
 		},
-		content = children,
+		drawPolicy = DrawPolicy.Children,
+		staticDrawPolicy = StaticDrawPolicy.Children,
+		debugPolicy = {
+			children.joinToString(prefix = "Row()") { "\n" + it.toString().prependIndent("  ") }
+		},
+	)
+}
+
+@Composable
+public fun Column(content: @Composable () -> Unit) {
+	Node(
+		content = content,
+		measurePolicy = {
+			var width = 0
+			var height = 0
+			for (child in children) {
+				child.measure()
+				width = maxOf(width, child.width)
+				height += child.height
+			}
+			this.width = width
+			this.height = height
+		},
+		layoutPolicy = {
+			var childY = 0
+			for (child in children) {
+				child.x = 0
+				child.y = childY
+				child.layout()
+				childY += child.height
+			}
+		},
+		drawPolicy = DrawPolicy.Children,
+		staticDrawPolicy = StaticDrawPolicy.Children,
+		debugPolicy = {
+			children.joinToString(prefix = "Column()") { "\n" + it.toString().prependIndent("  ") }
+		},
 	)
 }
 
@@ -157,18 +201,37 @@ public fun <T> Static(
 		}
 	}
 
-	ComposeNode<StaticNode, MosaicNodeApplier>(
-		factory = {
-			StaticNode {
-				pending.removeAll { it.drawn }
-			}
-		},
-		update = {},
+	Node(
 		content = {
 			for (item in pending) {
 				content(item.value)
 				item.drawn = true
 			}
+		},
+		measurePolicy = {
+			for (child in children) {
+				child.measure()
+			}
+		},
+		layoutPolicy = {},
+		drawPolicy = {},
+		staticDrawPolicy = {
+			val statics = if (children.isNotEmpty()) {
+				buildList {
+					for (child in children) {
+						add(child.draw())
+						addAll(child.drawStatics())
+					}
+					pending.removeAll { it.drawn }
+				}
+			} else {
+				emptyList()
+			}
+
+			statics
+		},
+		debugPolicy = {
+			children.joinToString(prefix = "Static()") { "\n" + it.toString().prependIndent("  ") }
 		},
 	)
 }

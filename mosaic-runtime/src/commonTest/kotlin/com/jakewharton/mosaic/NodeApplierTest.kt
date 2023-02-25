@@ -5,7 +5,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class NodeApplierTest {
-	private val root = RootNode()
+	private val root = MosaicNode.root()
 	private val applier = MosaicNodeApplier(root)
 
 	private fun <T> Applier<T>.insert(index: Int, instance: T) {
@@ -182,5 +182,15 @@ class NodeApplierTest {
 
 	private fun assertChildren(vararg nodes: MosaicNode) {
 		assertEquals(nodes.toList(), root.children)
+	}
+
+	private fun TextNode(name: String): MosaicNode {
+		return MosaicNode(
+			measurePolicy = { throw AssertionError() },
+			layoutPolicy = { throw AssertionError() },
+			drawPolicy = { throw AssertionError() },
+			staticDrawPolicy = { throw AssertionError() },
+			debugPolicy = { name },
+		)
 	}
 }
