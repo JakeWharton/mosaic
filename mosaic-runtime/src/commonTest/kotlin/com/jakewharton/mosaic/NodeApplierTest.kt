@@ -185,11 +185,8 @@ class NodeApplierTest {
 	}
 
 	private fun TextNode(name: String): MosaicNode {
-		return MosaicNode(
-			measurePolicy = { throw AssertionError() },
-			drawPolicy = { throw AssertionError() },
-			staticDrawPolicy = { throw AssertionError() },
-			debugPolicy = { name },
-		)
+		return MosaicNode.Factory().apply {
+			debugPolicy = DebugPolicy { name }
+		}
 	}
 }
