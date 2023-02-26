@@ -111,60 +111,44 @@ public class TextStyle private constructor(
 
 @Composable
 public fun Row(content: @Composable () -> Unit) {
-	Node(
-		content = content,
-		measurePolicy = { measurables ->
-			var width = 0
-			var height = 0
-			val placeables = measurables.map { measurable ->
-				measurable.measure().also { placeable ->
-					width += placeable.width
-					height = maxOf(height, placeable.height)
-				}
+	Layout(content, { "Row()" }) { measurables ->
+		var width = 0
+		var height = 0
+		val placeables = measurables.map { measurable ->
+			measurable.measure().also { placeable ->
+				width += placeable.width
+				height = maxOf(height, placeable.height)
 			}
-			layout(width, height) {
-				var x = 0
-				for (placeable in placeables) {
-					placeable.place(x, 0)
-					x += placeable.width
-				}
+		}
+		layout(width, height) {
+			var x = 0
+			for (placeable in placeables) {
+				placeable.place(x, 0)
+				x += placeable.width
 			}
-		},
-		drawPolicy = DrawPolicy.Children,
-		staticDrawPolicy = StaticDrawPolicy.Children,
-		debugPolicy = {
-			children.joinToString(prefix = "Row()") { "\n" + it.toString().prependIndent("  ") }
-		},
-	)
+		}
+	}
 }
 
 @Composable
 public fun Column(content: @Composable () -> Unit) {
-	Node(
-		content = content,
-		measurePolicy = { measurables ->
-			var width = 0
-			var height = 0
-			val placeables = measurables.map { measurable ->
-				measurable.measure().also { placeable ->
-					width = maxOf(width, placeable.width)
-					height += placeable.height
-				}
+	Layout(content, { "Column()" }) { measurables ->
+		var width = 0
+		var height = 0
+		val placeables = measurables.map { measurable ->
+			measurable.measure().also { placeable ->
+				width = maxOf(width, placeable.width)
+				height += placeable.height
 			}
-			layout(width, height) {
-				var y = 0
-				for (placeable in placeables) {
-					placeable.place(0, y)
-					y += placeable.height
-				}
+		}
+		layout(width, height) {
+			var y = 0
+			for (placeable in placeables) {
+				placeable.place(0, y)
+				y += placeable.height
 			}
-		},
-		drawPolicy = DrawPolicy.Children,
-		staticDrawPolicy = StaticDrawPolicy.Children,
-		debugPolicy = {
-			children.joinToString(prefix = "Column()") { "\n" + it.toString().prependIndent("  ") }
-		},
-	)
+		}
+	}
 }
 
 /**

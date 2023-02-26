@@ -5,46 +5,6 @@ import androidx.compose.runtime.Applier
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReusableComposeNode
 import com.jakewharton.mosaic.Measurable.MeasureScope
-import com.jakewharton.mosaic.Placeable.PlacementScope
-
-internal abstract class Placeable {
-	abstract val width: Int
-	abstract val height: Int
-
-	protected abstract fun placeAt(x: Int, y: Int)
-
-	internal sealed class PlacementScope {
-		fun Placeable.place(x: Int, y: Int) {
-			placeAt(x, y)
-		}
-
-		internal companion object : PlacementScope()
-	}
-}
-
-internal interface MeasureResult {
-	val width: Int
-	val height: Int
-	fun placeChildren()
-}
-
-internal interface Measurable {
-	fun measure(): Placeable
-
-	sealed class MeasureScope {
-		fun layout(width: Int, height: Int, placementBlock: PlacementScope.() -> Unit) = object : MeasureResult {
-			override val width: Int get() = width
-			override val height: Int get() = height
-			override fun placeChildren() = placementBlock(PlacementScope)
-		}
-
-		internal companion object : MeasureScope()
-	}
-}
-
-internal fun interface MeasurePolicy {
-	fun MeasureScope.measure(measurables: List<Measurable>): MeasureResult
-}
 
 internal fun interface DrawPolicy {
 	fun MosaicNode.performDraw(canvas: TextCanvas)
@@ -58,8 +18,6 @@ internal fun interface DrawPolicy {
 					val right = left + child.width - 1
 					val bottom = top + child.height - 1
 					child.drawTo(canvas[top..bottom, left..right])
-				} else {
-					child.drawTo(canvas.empty())
 				}
 			}
 		}
