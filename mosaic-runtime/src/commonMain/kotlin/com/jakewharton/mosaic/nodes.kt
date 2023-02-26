@@ -4,13 +4,46 @@ import androidx.compose.runtime.AbstractApplier
 import androidx.compose.runtime.Applier
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReusableComposeNode
+import com.jakewharton.mosaic.Measurable.MeasureScope
+import com.jakewharton.mosaic.Placeable.PlacementScope
 
-internal fun interface MeasurePolicy {
-	fun MosaicNode.performMeasure()
+internal abstract class Placeable {
+	abstract val width: Int
+	abstract val height: Int
+
+	protected abstract fun placeAt(x: Int, y: Int)
+
+	internal sealed class PlacementScope {
+		fun Placeable.place(x: Int, y: Int) {
+			placeAt(x, y)
+		}
+
+		internal companion object : PlacementScope()
+	}
 }
 
-internal fun interface LayoutPolicy {
-	fun MosaicNode.performLayout()
+internal interface MeasureResult {
+	val width: Int
+	val height: Int
+	fun placeChildren()
+}
+
+internal interface Measurable {
+	fun measure(): Placeable
+
+	sealed class MeasureScope {
+		fun layout(width: Int, height: Int, placementBlock: PlacementScope.() -> Unit) = object : MeasureResult {
+			override val width: Int get() = width
+			override val height: Int get() = height
+			override fun placeChildren() = placementBlock(PlacementScope)
+		}
+
+		internal companion object : MeasureScope()
+	}
+}
+
+internal fun interface MeasurePolicy {
+	fun MeasureScope.measure(measurables: List<Measurable>): MeasureResult
 }
 
 internal fun interface DrawPolicy {
@@ -59,33 +92,43 @@ internal fun interface DebugPolicy {
 
 internal class MosaicNode(
 	var measurePolicy: MeasurePolicy,
-	var layoutPolicy: LayoutPolicy,
 	var drawPolicy: DrawPolicy,
 	var staticDrawPolicy: StaticDrawPolicy,
 	var debugPolicy: DebugPolicy,
-) {
+) : Placeable(), Measurable {
 	val children: MutableList<MosaicNode> = mutableListOf()
 
-	// These two values are set by a call to `measurePolicy`.
-	var width = 0
-	var height = 0
-
-	// These two values are set by a call to `layoutPolicy` on the parent node.
-	/** Pixels right relative to parent at which this node will draw. */
-	var x = 0
-	/** Pixels down relative to parent at which this node will draw. */
-	var y = 0
+	// These two values are set by a call to `measure`.
+	override var width = 0
+		private set
+	override var height = 0
+		private set
 
 	/** Measure this node (and any children) and update [width] and [height]. */
-	fun measure() = measurePolicy.run { performMeasure() }
-	/** Layout any children nodes and update their [x] and [y] relative to this node. */
-	fun layout() = layoutPolicy.run { performLayout() }
+	override fun measure(): Placeable = apply {
+		val result = measurePolicy.run { MeasureScope.run { measure(children) } }
+		width = result.width
+		height = result.height
+		result.placeChildren()
+	}
+
+	// These two values are set by a call to `placeAt`.
+	/** Pixels right relative to parent at which this node will draw. */
+	var x = 0
+		private set
+	/** Pixels down relative to parent at which this node will draw. */
+	var y = 0
+		private set
+
+	override fun placeAt(x: Int, y: Int) {
+		this.x = x
+		this.y = y
+	}
 
 	fun drawTo(canvas: TextCanvas) = drawPolicy.run { performDraw(canvas) }
 
 	fun draw(): TextCanvas {
 		measure()
-		layout()
 		val surface = TextSurface(width, height)
 		drawTo(surface)
 		return surface
@@ -99,7 +142,6 @@ internal class MosaicNode(
 		val Factory: () -> MosaicNode = {
 			MosaicNode(
 				measurePolicy = ThrowingPolicy,
-				layoutPolicy = ThrowingPolicy,
 				drawPolicy = ThrowingPolicy,
 				staticDrawPolicy = ThrowingPolicy,
 				debugPolicy = ThrowingPolicy,
@@ -108,20 +150,17 @@ internal class MosaicNode(
 
 		fun root(): MosaicNode {
 			return MosaicNode(
-				measurePolicy = {
+				measurePolicy = { measurables ->
 					var width = 0
 					var height = 0
-					for (child in children) {
-						child.measure()
-						width = maxOf(width, child.width)
-						height = maxOf(height, child.height)
+					for (measurable in measurables) {
+						measurable.measure().also {
+							width = maxOf(width, it.width)
+							height = maxOf(height, it.height)
+						}
 					}
-					this.width = width
-					this.height = height
-				},
-				layoutPolicy = {
-					for (child in children) {
-						child.layout()
+					layout(width, height) {
+						// Nothing to do. Everything renders at (0,0).
 					}
 				},
 				drawPolicy = DrawPolicy.Children,
@@ -132,9 +171,8 @@ internal class MosaicNode(
 			)
 		}
 
-		private val ThrowingPolicy = object : MeasurePolicy, LayoutPolicy, DrawPolicy, StaticDrawPolicy, DebugPolicy {
-			override fun MosaicNode.performMeasure() = throw AssertionError()
-			override fun MosaicNode.performLayout() = throw AssertionError()
+		private val ThrowingPolicy = object : MeasurePolicy, DrawPolicy, StaticDrawPolicy, DebugPolicy {
+			override fun MeasureScope.measure(measurables: List<Measurable>) = throw AssertionError()
 			override fun MosaicNode.performDraw(canvas: TextCanvas) = throw AssertionError()
 			override fun MosaicNode.performDrawStatics() = throw AssertionError()
 			override fun MosaicNode.renderDebug() = throw AssertionError()
@@ -146,7 +184,6 @@ internal class MosaicNode(
 internal inline fun Node(
 	content: @Composable () -> Unit = {},
 	measurePolicy: MeasurePolicy,
-	layoutPolicy: LayoutPolicy,
 	drawPolicy: DrawPolicy,
 	staticDrawPolicy: StaticDrawPolicy,
 	debugPolicy: DebugPolicy,
@@ -155,7 +192,6 @@ internal inline fun Node(
 		factory = MosaicNode.Factory,
 		update = {
 			set(measurePolicy) { this.measurePolicy = measurePolicy }
-			set(layoutPolicy) { this.layoutPolicy = layoutPolicy }
 			set(drawPolicy) { this.drawPolicy = drawPolicy }
 			set(staticDrawPolicy) { this.staticDrawPolicy = staticDrawPolicy }
 			set(debugPolicy) { this.debugPolicy = debugPolicy }
