@@ -187,7 +187,6 @@ class NodeApplierTest {
 	private fun TextNode(name: String): MosaicNode {
 		return MosaicNode(
 			measurePolicy = { throw AssertionError() },
-			layoutPolicy = { throw AssertionError() },
 			drawPolicy = { throw AssertionError() },
 			staticDrawPolicy = { throw AssertionError() },
 			debugPolicy = { name },

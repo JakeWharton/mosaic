@@ -25,10 +25,12 @@ public fun Text(
 	Node(
 		measurePolicy = {
 			val lines = value.split('\n')
-			width = lines.maxOf { it.codePointCount(0, it.length) }
-			height = lines.size
+			val width = lines.maxOf { it.codePointCount(0, it.length) }
+			val height = lines.size
+			layout(width, height) {
+				// Nothing to do. No children.
+			}
 		},
-		layoutPolicy = { },
 		drawPolicy = { canvas ->
 			value.split('\n').forEachIndexed { index, line ->
 				canvas.write(index, 0, line, color, background, style)
@@ -111,24 +113,21 @@ public class TextStyle private constructor(
 public fun Row(content: @Composable () -> Unit) {
 	Node(
 		content = content,
-		measurePolicy = {
+		measurePolicy = { measurables ->
 			var width = 0
 			var height = 0
-			for (child in children) {
-				child.measure()
-				width += child.width
-				height = maxOf(height, child.height)
+			val placeables = measurables.map { measurable ->
+				measurable.measure().also { placeable ->
+					width += placeable.width
+					height = maxOf(height, placeable.height)
+				}
 			}
-			this.width = width
-			this.height = height
-		},
-		layoutPolicy = {
-			var childX = 0
-			for (child in children) {
-				child.x = childX
-				child.y = 0
-				child.layout()
-				childX += child.width
+			layout(width, height) {
+				var x = 0
+				for (placeable in placeables) {
+					placeable.place(x, 0)
+					x += placeable.width
+				}
 			}
 		},
 		drawPolicy = DrawPolicy.Children,
@@ -143,24 +142,21 @@ public fun Row(content: @Composable () -> Unit) {
 public fun Column(content: @Composable () -> Unit) {
 	Node(
 		content = content,
-		measurePolicy = {
+		measurePolicy = { measurables ->
 			var width = 0
 			var height = 0
-			for (child in children) {
-				child.measure()
-				width = maxOf(width, child.width)
-				height += child.height
+			val placeables = measurables.map { measurable ->
+				measurable.measure().also { placeable ->
+					width = maxOf(width, placeable.width)
+					height += placeable.height
+				}
 			}
-			this.width = width
-			this.height = height
-		},
-		layoutPolicy = {
-			var childY = 0
-			for (child in children) {
-				child.x = 0
-				child.y = childY
-				child.layout()
-				childY += child.height
+			layout(width, height) {
+				var y = 0
+				for (placeable in placeables) {
+					placeable.place(0, y)
+					y += placeable.height
+				}
 			}
 		},
 		drawPolicy = DrawPolicy.Children,
@@ -209,11 +205,10 @@ public fun <T> Static(
 			}
 		},
 		measurePolicy = {
-			for (child in children) {
-				child.measure()
+			layout(0, 0) {
+				// Nothing to do. Children rendered separately.
 			}
 		},
-		layoutPolicy = {},
 		drawPolicy = {},
 		staticDrawPolicy = {
 			val statics = if (children.isNotEmpty()) {
