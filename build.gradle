@@ -5,9 +5,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 buildscript {
 	dependencies {
 		classpath libs.kotlin.gradlePlugin
-		// We don't use this dependency directly. However, we reference a type from the Kotlin Gradle
-		// plugin whose classloading causes com.android.build.gradle.api.BaseVariant to also be loaded.
-		classpath libs.android.gradlePlugin
 		classpath libs.maven.publish.gradlePlugin
 		classpath libs.dokka.gradlePlugin
 		classpath libs.buildconfig.gradlePlugin
