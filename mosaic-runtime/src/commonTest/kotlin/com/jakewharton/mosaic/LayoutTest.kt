@@ -1,6 +1,8 @@
 package com.jakewharton.mosaic
 
 import com.jakewharton.mosaic.layout.Measurable
+import com.jakewharton.mosaic.layout.drawBehind
+import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.ui.Column
 import com.jakewharton.mosaic.ui.Layout
 import com.jakewharton.mosaic.ui.Row
@@ -24,8 +26,8 @@ class LayoutTest {
 		}
 		val expected = """
 			|Custom() x=0 y=0 w=0 h=0
-			|  Text("Hi!") x=0 y=0 w=0 h=0
-			|  Text("Hey!") x=0 y=0 w=0 h=0
+			|  Text("Hi!") x=0 y=0 w=0 h=0 DrawBehind
+			|  Text("Hey!") x=0 y=0 w=0 h=0 DrawBehind
 			""".trimMargin()
 		assertEquals(expected, node.toString())
 	}
@@ -99,9 +101,9 @@ class LayoutTest {
 				}
 				Row {
 					Text("..")
-					Layout(drawPolicy = {
+					Layout(modifiers = Modifier.drawBehind {
 						repeat(4) { row ->
-							it.write(row, 0, "XXXX")
+							write(row, 0, "XXXX")
 						}
 					}) {
 						layout(2, 2)

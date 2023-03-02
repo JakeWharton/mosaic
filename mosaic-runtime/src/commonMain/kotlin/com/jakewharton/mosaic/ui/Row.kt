@@ -7,7 +7,7 @@ import kotlin.jvm.JvmName
 
 @Composable
 public fun Row(content: @Composable () -> Unit) {
-	Layout(content, { "Row()" }) { measurables ->
+	Layout(content, debugInfo = { "Row()" }) { measurables ->
 		var width = 0
 		var height = 0
 		val placeables = measurables.map { measurable ->

@@ -3,10 +3,7 @@ package com.jakewharton.mosaic.layout
 import com.jakewharton.mosaic.TextCanvas
 import com.jakewharton.mosaic.TextSurface
 import com.jakewharton.mosaic.layout.Placeable.PlacementScope
-
-internal fun interface DrawPolicy {
-	fun performDraw(canvas: TextCanvas)
-}
+import com.jakewharton.mosaic.modifier.Modifier
 
 internal fun interface StaticPaintPolicy {
 	fun MosaicNode.performPaintStatics(statics: MutableList<TextSurface>)
@@ -24,25 +21,33 @@ internal fun interface DebugPolicy {
 	fun MosaicNode.renderDebug(): String
 }
 
-internal abstract class MosaicNodeLayer : Placeable(), PlacementScope, MeasureScope {
-	abstract fun measure(): MeasureResult
+internal abstract class MosaicNodeLayer : Measurable, Placeable(), PlacementScope, MeasureScope {
 	abstract fun drawTo(canvas: TextCanvas)
 }
 
 internal abstract class AbstractMosaicNodeLayer(
 	private val next: MosaicNodeLayer?,
+	private val isStatic: Boolean,
 ) : MosaicNodeLayer() {
 	private var measureResult: MeasureResult = NotMeasured
 
 	final override val width get() = measureResult.width
 	final override val height get() = measureResult.height
 
-	final override fun measure(): MeasureResult {
-		return doMeasure().also { measureResult = it }
+	override fun measure() = apply {
+		measureResult = doMeasure()
 	}
 
-	open fun doMeasure(): MeasureResult {
-		return checkNotNull(next).measure()
+	protected open fun doMeasure(): MeasureResult {
+		val placeable = next!!.measure()
+		return object : MeasureResult {
+			override val width: Int get() = placeable.width
+			override val height: Int get() = placeable.height
+
+			override fun placeChildren() {
+				placeable.place(0, 0)
+			}
+		}
 	}
 
 	final override var x = 0
@@ -51,17 +56,19 @@ internal abstract class AbstractMosaicNodeLayer(
 		private set
 
 	final override fun placeAt(x: Int, y: Int) {
-		this.x = x
-		this.y = y
+		// If this layer belongs to a static node, ignore the placement coordinates from the parent.
+		// We reset the coordinate system to draw at 0,0 since static drawing will be on a canvas
+		// sized to this node's width and height.
+		if (!isStatic) {
+			this.x = x
+			this.y = y
+		}
 		measureResult.placeChildren()
 	}
 
-	final override fun drawTo(canvas: TextCanvas) {
-		drawLayer(canvas)
+	override fun drawTo(canvas: TextCanvas) {
 		next?.drawTo(canvas)
 	}
-
-	open fun drawLayer(canvas: TextCanvas) {}
 }
 
 internal object NotMeasured : MeasureResult {
@@ -73,17 +80,17 @@ internal object NotMeasured : MeasureResult {
 internal class MosaicNode(
 	var measurePolicy: MeasurePolicy,
 	var staticPaintPolicy: StaticPaintPolicy?,
-	drawPolicy: DrawPolicy?,
 	var debugPolicy: DebugPolicy,
+	val isStatic: Boolean,
 ) : Measurable {
 	val children = mutableListOf<MosaicNode>()
 
-	private val bottomLayer: MosaicNodeLayer = object : AbstractMosaicNodeLayer(null) {
+	private val bottomLayer: MosaicNodeLayer = object : AbstractMosaicNodeLayer(null, isStatic) {
 		override fun doMeasure(): MeasureResult {
 			return measurePolicy.run { measure(children) }
 		}
 
-		override fun drawLayer(canvas: TextCanvas) {
+		override fun drawTo(canvas: TextCanvas) {
 			for (child in children) {
 				if (child.width != 0 && child.height != 0) {
 					child.topLayer.drawTo(canvas)
@@ -94,19 +101,36 @@ internal class MosaicNode(
 
 	private var topLayer = bottomLayer
 
-	var drawPolicy: DrawPolicy? = drawPolicy
+	var modifiers: Modifier = Modifier
 		set(value) {
-			topLayer = if (value == null) {
-				bottomLayer
-			} else {
-				object : AbstractMosaicNodeLayer(bottomLayer) {
-					override fun drawLayer(canvas: TextCanvas) {
-						canvas.translationX += x
-						canvas.translationY += y
-						value.performDraw(canvas)
-						canvas.translationX -= x
-						canvas.translationY -= y
+			topLayer = value.foldOut(bottomLayer) { element, lowerLayer ->
+				when (element) {
+					is LayoutModifier -> {
+						object : AbstractMosaicNodeLayer(lowerLayer, false) {
+							override fun doMeasure(): MeasureResult {
+								return element.run { measure(lowerLayer) }
+							}
+						}
 					}
+
+					is DrawModifier -> {
+						object : AbstractMosaicNodeLayer(lowerLayer, false) {
+							override fun drawTo(canvas: TextCanvas) {
+								canvas.translationX += x
+								canvas.translationY += y
+								val scope = object : TextCanvasDrawScope(canvas), ContentDrawScope {
+									override fun drawContent() {
+										lowerLayer.drawTo(canvas)
+									}
+								}
+								element.run { scope.draw() }
+								canvas.translationX -= x
+								canvas.translationY -= y
+							}
+						}
+					}
+
+					else -> lowerLayer
 				}
 			}
 			field = value

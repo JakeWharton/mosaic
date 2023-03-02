@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import com.jakewharton.mosaic.modifier.Modifier
 import kotlin.jvm.JvmName
 
 /**
@@ -43,9 +44,7 @@ public fun <T> Static(
 				}
 			}
 		},
-		drawPolicy = {
-			// Nothing to do. Children rendered separately.
-		},
+		modifiers = Modifier,
 		staticPaintPolicy = { statics ->
 			if (children.isNotEmpty()) {
 				for (child in children) {
@@ -58,5 +57,6 @@ public fun <T> Static(
 		debugPolicy = {
 			children.joinToString(prefix = "Static()") { "\n" + it.toString().prependIndent("  ") }
 		},
+		factory = StaticNodeFactory,
 	)
 }
