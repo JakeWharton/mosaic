@@ -71,3 +71,9 @@ private class LayoutResult(
 ) : MeasureResult {
 	override fun placeChildren() = PlacementScope.placementBlock()
 }
+
+internal object NotMeasured : MeasureResult {
+	override val width get() = 0
+	override val height get() = 0
+	override fun placeChildren() = throw UnsupportedOperationException("Not measured")
+}

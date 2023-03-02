@@ -5,6 +5,7 @@ import androidx.compose.runtime.Applier
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReusableComposeNode
 import com.jakewharton.mosaic.Measurable.MeasureScope
+import com.jakewharton.mosaic.Placeable.PlacementScope.Companion.place
 
 internal fun interface DrawPolicy {
 	fun MosaicNode.performDraw(canvas: TextCanvas)
@@ -56,18 +57,14 @@ internal class MosaicNode(
 ) : Placeable(), Measurable {
 	val children: MutableList<MosaicNode> = mutableListOf()
 
-	// These two values are set by a call to `measure`.
-	override var width = 0
-		private set
-	override var height = 0
-		private set
+	private var measureResult: MeasureResult = NotMeasured
+
+	override val width get() = measureResult.width
+	override val height get() = measureResult.height
 
 	/** Measure this node (and any children) and update [width] and [height]. */
 	override fun measure(): Placeable = apply {
-		val result = measurePolicy.run { MeasureScope.run { measure(children) } }
-		width = result.width
-		height = result.height
-		result.placeChildren()
+		measureResult = measurePolicy.run { MeasureScope.run { measure(children) } }
 	}
 
 	// These two values are set by a call to `placeAt`.
@@ -81,13 +78,15 @@ internal class MosaicNode(
 	override fun placeAt(x: Int, y: Int) {
 		this.x = x
 		this.y = y
+		measureResult.placeChildren()
 	}
 
 	fun drawTo(canvas: TextCanvas) = drawPolicy.run { performDraw(canvas) }
 
 	fun draw(): TextCanvas {
-		measure()
-		val surface = TextSurface(width, height)
+		val placeable = measure()
+		placeable.place(0, 0)
+		val surface = TextSurface(placeable.width, placeable.height)
 		drawTo(surface)
 		return surface
 	}
@@ -111,14 +110,16 @@ internal class MosaicNode(
 				measurePolicy = { measurables ->
 					var width = 0
 					var height = 0
-					for (measurable in measurables) {
+					val placeables = measurables.map { measurable ->
 						measurable.measure().also {
 							width = maxOf(width, it.width)
 							height = maxOf(height, it.height)
 						}
 					}
 					layout(width, height) {
-						// Nothing to do. Everything renders at (0,0).
+						for (placeable in placeables) {
+							placeable.place(0, 0)
+						}
 					}
 				},
 				drawPolicy = DrawPolicy.Children,
