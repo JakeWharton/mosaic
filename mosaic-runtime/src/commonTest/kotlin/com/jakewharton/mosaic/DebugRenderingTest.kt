@@ -23,9 +23,9 @@ class DebugRenderingTest {
 		assertEquals(
 			"""
 			|NODES:
-			|Text("Hello", x=0, y=0, width=5, height=1)
+			|Text("Hello") x=0 y=0 w=5 h=1
 			|Static()
-			|  Text("Static", x=0, y=0, width=6, height=1)
+			|  Text("Static") x=0 y=0 w=6 h=1
 			|
 			|STATIC:
 			|Static
@@ -45,7 +45,7 @@ class DebugRenderingTest {
 		assertEquals(
 			"""
 			|NODES:
-			|Text("Hello", x=0, y=0, width=5, height=1)
+			|Text("Hello") x=0 y=0 w=5 h=1
 			|
 			|OUTPUT:
 			|Hello
@@ -58,7 +58,7 @@ class DebugRenderingTest {
 			"""
 			|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ +100ms
 			|NODES:
-			|Text("Hello", x=0, y=0, width=5, height=1)
+			|Text("Hello") x=0 y=0 w=5 h=1
 			|
 			|OUTPUT:
 			|Hello
