@@ -5,6 +5,20 @@ import com.jakewharton.mosaic.Measurable.MeasureScope
 import com.jakewharton.mosaic.Placeable.PlacementScope
 
 @Composable
+internal fun Layout(
+	debugInfo: () -> String = { "Layout()" },
+	measurePolicy: MeasurePolicy,
+	drawPolicy: DrawPolicy,
+) {
+	Node(
+		measurePolicy = measurePolicy,
+		drawPolicy = drawPolicy,
+		staticDrawPolicy = StaticDrawPolicy.None,
+		debugPolicy = { debugInfo() + " x=$x y=$y w=$width h=$height" },
+	)
+}
+
+@Composable
 public fun Layout(
 	content: @Composable () -> Unit,
 	debugInfo: () -> String = { "Layout()" },
@@ -13,11 +27,15 @@ public fun Layout(
 	Node(
 		content = content,
 		measurePolicy = measurePolicy,
-		drawPolicy = DrawPolicy.Children,
+		drawPolicy = null,
 		staticDrawPolicy = StaticDrawPolicy.Children,
 		debugPolicy = {
-			children.joinToString(prefix = debugInfo(), separator = "") {
-				"\n" + it.toString().prependIndent("  ")
+			buildString {
+				append(debugInfo())
+				append(" x=$x y=$y w=$width h=$height")
+				children.joinTo(this, separator = "") {
+					"\n" + it.toString().prependIndent("  ")
+				}
 			}
 		},
 	)

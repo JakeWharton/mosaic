@@ -6,18 +6,21 @@ import kotlin.test.assertEquals
 class LayoutTest {
 	@Test fun layoutDebugInfo() {
 		val node = mosaicNodes {
-			Layout({
-				Text("Hi!")
-				Text("Hey!")
-			}, { "Custom()" }) {
+			Layout(
+				content = {
+					Text("Hi!")
+					Text("Hey!")
+				},
+				debugInfo = { "Custom()" },
+			) {
 				layout(0, 0) {
 				}
 			}
 		}
 		val expected = """
-			|Custom()
-			|  Text("Hi!", x=0, y=0, width=0, height=0)
-			|  Text("Hey!", x=0, y=0, width=0, height=0)
+			|Custom() x=0 y=0 w=0 h=0
+			|  Text("Hi!") x=0 y=0 w=0 h=0
+			|  Text("Hey!") x=0 y=0 w=0 h=0
 			""".trimMargin()
 		assertEquals(expected, node.toString())
 	}

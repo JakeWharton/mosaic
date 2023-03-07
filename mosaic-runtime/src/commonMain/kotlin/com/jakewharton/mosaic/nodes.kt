@@ -8,27 +8,14 @@ import com.jakewharton.mosaic.Measurable.MeasureScope
 import com.jakewharton.mosaic.Placeable.PlacementScope.Companion.place
 
 internal fun interface DrawPolicy {
-	fun MosaicNode.performDraw(canvas: TextCanvas)
-
-	companion object {
-		val Children = DrawPolicy { canvas ->
-			for (child in children) {
-				if (child.width != 0 && child.height != 0) {
-					val left = child.x
-					val top = child.y
-					val right = left + child.width - 1
-					val bottom = top + child.height - 1
-					child.drawTo(canvas[top..bottom, left..right])
-				}
-			}
-		}
-	}
+	fun performDraw(canvas: TextCanvas)
 }
 
 internal fun interface StaticDrawPolicy {
 	fun MosaicNode.performDrawStatics(): List<TextCanvas>
 
 	companion object {
+		val None = StaticDrawPolicy { emptyList() }
 		val Children = StaticDrawPolicy {
 			var statics: MutableList<TextCanvas>? = null
 			for (child in children) {
@@ -51,12 +38,11 @@ internal fun interface DebugPolicy {
 
 internal class MosaicNode(
 	var measurePolicy: MeasurePolicy,
-	var drawPolicy: DrawPolicy,
+	var drawPolicy: DrawPolicy?,
 	var staticDrawPolicy: StaticDrawPolicy,
 	var debugPolicy: DebugPolicy,
 ) : Placeable(), Measurable {
-	val children: MutableList<MosaicNode> = mutableListOf()
-
+	val children = mutableListOf<MosaicNode>()
 	private var measureResult: MeasureResult = NotMeasured
 
 	override val width get() = measureResult.width
@@ -81,7 +67,22 @@ internal class MosaicNode(
 		measureResult.placeChildren()
 	}
 
-	fun drawTo(canvas: TextCanvas) = drawPolicy.run { performDraw(canvas) }
+	private fun drawTo(canvas: TextCanvas) {
+		val drawPolicy = drawPolicy
+		if (drawPolicy != null) {
+			drawPolicy.performDraw(canvas)
+		} else {
+			for (child in children) {
+				if (child.width != 0 && child.height != 0) {
+					val left = child.x
+					val top = child.y
+					val right = left + child.width - 1
+					val bottom = top + child.height - 1
+					child.drawTo(canvas[top..bottom, left..right])
+				}
+			}
+		}
+	}
 
 	fun draw(): TextCanvas {
 		val placeable = measure()
@@ -122,7 +123,7 @@ internal class MosaicNode(
 						}
 					}
 				},
-				drawPolicy = DrawPolicy.Children,
+				drawPolicy = null,
 				staticDrawPolicy = StaticDrawPolicy.Children,
 				debugPolicy = {
 					children.joinToString(separator = "\n")
@@ -132,7 +133,7 @@ internal class MosaicNode(
 
 		private val ThrowingPolicy = object : MeasurePolicy, DrawPolicy, StaticDrawPolicy, DebugPolicy {
 			override fun MeasureScope.measure(measurables: List<Measurable>) = throw AssertionError()
-			override fun MosaicNode.performDraw(canvas: TextCanvas) = throw AssertionError()
+			override fun performDraw(canvas: TextCanvas) = throw AssertionError()
 			override fun MosaicNode.performDrawStatics() = throw AssertionError()
 			override fun MosaicNode.renderDebug() = throw AssertionError()
 		}
@@ -143,7 +144,7 @@ internal class MosaicNode(
 internal inline fun Node(
 	content: @Composable () -> Unit = {},
 	measurePolicy: MeasurePolicy,
-	drawPolicy: DrawPolicy,
+	drawPolicy: DrawPolicy?,
 	staticDrawPolicy: StaticDrawPolicy,
 	debugPolicy: DebugPolicy,
 ) {

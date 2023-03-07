@@ -22,7 +22,10 @@ public fun Text(
 	background: Color? = null,
 	style: TextStyle? = null,
 ) {
-	Node(
+	Layout(
+		debugInfo = {
+			"""Text("$value")"""
+		},
 		measurePolicy = {
 			val lines = value.split('\n')
 			val width = lines.maxOf { it.codePointCount(0, it.length) }
@@ -36,10 +39,6 @@ public fun Text(
 				canvas.write(index, 0, line, color, background, style)
 			}
 		},
-		staticDrawPolicy = { emptyList() },
-		debugPolicy = {
-			"""Text("$value", x=$x, y=$y, width=$width, height=$height)"""
-		}
 	)
 }
 
@@ -193,7 +192,9 @@ public fun <T> Static(
 				// Nothing to do. Children rendered separately.
 			}
 		},
-		drawPolicy = {},
+		drawPolicy = {
+			// Nothing to do. Children rendered separately.
+		},
 		staticDrawPolicy = {
 			val statics = if (children.isNotEmpty()) {
 				buildList {
