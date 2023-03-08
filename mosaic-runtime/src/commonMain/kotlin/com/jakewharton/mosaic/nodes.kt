@@ -36,59 +36,71 @@ internal fun interface DebugPolicy {
 	fun MosaicNode.renderDebug(): String
 }
 
+internal abstract class MosaicNodeLayer : Placeable(), Measurable {
+	abstract val x: Int
+	abstract val y: Int
+	abstract fun drawTo(canvas: TextCanvas)
+}
+
 internal class MosaicNode(
 	var measurePolicy: MeasurePolicy,
 	var drawPolicy: DrawPolicy?,
 	var staticDrawPolicy: StaticDrawPolicy,
 	var debugPolicy: DebugPolicy,
-) : Placeable(), Measurable {
+) : Measurable {
 	val children = mutableListOf<MosaicNode>()
-	private var measureResult: MeasureResult = NotMeasured
 
-	override val width get() = measureResult.width
-	override val height get() = measureResult.height
+	private val layer: MosaicNodeLayer = object : MosaicNodeLayer() {
+		private var measureResult: MeasureResult = NotMeasured
 
-	/** Measure this node (and any children) and update [width] and [height]. */
-	override fun measure(): Placeable = apply {
-		measureResult = measurePolicy.run { MeasureScope.run { measure(children) } }
-	}
+		override val width get() = measureResult.width
+		override val height get() = measureResult.height
 
-	// These two values are set by a call to `placeAt`.
-	/** Pixels right relative to parent at which this node will draw. */
-	var x = 0
-		private set
-	/** Pixels down relative to parent at which this node will draw. */
-	var y = 0
-		private set
+		override fun measure() = apply {
+			measureResult = measurePolicy.run { MeasureScope.run { measure(children) } }
+		}
 
-	override fun placeAt(x: Int, y: Int) {
-		this.x = x
-		this.y = y
-		measureResult.placeChildren()
-	}
+		override var x = 0
+			private set
+		override var y = 0
+			private set
 
-	private fun drawTo(canvas: TextCanvas) {
-		val drawPolicy = drawPolicy
-		if (drawPolicy != null) {
-			drawPolicy.performDraw(canvas)
-		} else {
-			for (child in children) {
-				if (child.width != 0 && child.height != 0) {
-					val left = child.x
-					val top = child.y
-					val right = left + child.width - 1
-					val bottom = top + child.height - 1
-					child.drawTo(canvas[top..bottom, left..right])
+		override fun placeAt(x: Int, y: Int) {
+			this.x = x
+			this.y = y
+			measureResult.placeChildren()
+		}
+
+		override fun drawTo(canvas: TextCanvas) {
+			val drawPolicy = drawPolicy
+			if (drawPolicy != null) {
+				drawPolicy.performDraw(canvas)
+			} else {
+				for (child in children) {
+					if (child.width != 0 && child.height != 0) {
+						val left = child.x
+						val top = child.y
+						val right = left + child.width - 1
+						val bottom = top + child.height - 1
+						child.layer.drawTo(canvas[top..bottom, left..right])
+					}
 				}
 			}
 		}
 	}
 
+	override fun measure(): Placeable = layer.measure()
+
+	val width: Int get() = layer.width
+	val height: Int get() = layer.height
+	val x: Int get() = layer.x
+	val y: Int get() = layer.y
+
 	fun draw(): TextCanvas {
 		val placeable = measure()
 		placeable.place(0, 0)
 		val surface = TextSurface(placeable.width, placeable.height)
-		drawTo(surface)
+		layer.drawTo(surface)
 		return surface
 	}
 
