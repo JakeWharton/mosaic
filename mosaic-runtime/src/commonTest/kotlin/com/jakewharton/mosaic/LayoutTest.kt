@@ -1,5 +1,8 @@
 package com.jakewharton.mosaic
 
+import com.jakewharton.mosaic.layout.Layout
+import com.jakewharton.mosaic.layout.Measurable
+import com.jakewharton.mosaic.ui.Text
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

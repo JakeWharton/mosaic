@@ -4,7 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.jakewharton.mosaic.MosaicScope
-import com.jakewharton.mosaic.Text
+import com.jakewharton.mosaic.ui.Text
 import kotlinx.coroutines.delay
 
 suspend fun MosaicScope.Counter() {
