@@ -3,9 +3,9 @@ package example
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.jakewharton.mosaic.Column
-import com.jakewharton.mosaic.Text
 import com.jakewharton.mosaic.runMosaicBlocking
+import com.jakewharton.mosaic.ui.Column
+import com.jakewharton.mosaic.ui.Text
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import org.jline.terminal.TerminalBuilder

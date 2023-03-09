@@ -4,8 +4,12 @@ import androidx.compose.runtime.AbstractApplier
 import androidx.compose.runtime.Applier
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReusableComposeNode
-import com.jakewharton.mosaic.Measurable.MeasureScope
-import com.jakewharton.mosaic.Placeable.PlacementScope.Companion.place
+import com.jakewharton.mosaic.layout.Measurable
+import com.jakewharton.mosaic.layout.Measurable.MeasureScope
+import com.jakewharton.mosaic.layout.MeasurePolicy
+import com.jakewharton.mosaic.layout.MeasureResult
+import com.jakewharton.mosaic.layout.Placeable
+import com.jakewharton.mosaic.layout.Placeable.PlacementScope.Companion.place
 
 internal fun interface DrawPolicy {
 	fun performDraw(canvas: TextCanvas)
@@ -40,6 +44,12 @@ internal abstract class MosaicNodeLayer : Placeable(), Measurable {
 	abstract val x: Int
 	abstract val y: Int
 	abstract fun drawTo(canvas: TextCanvas)
+}
+
+internal object NotMeasured : MeasureResult {
+	override val width get() = 0
+	override val height get() = 0
+	override fun placeChildren() = throw UnsupportedOperationException("Not measured")
 }
 
 internal class MosaicNode(

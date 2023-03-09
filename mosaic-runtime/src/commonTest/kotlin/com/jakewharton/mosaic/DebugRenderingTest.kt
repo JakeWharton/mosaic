@@ -1,6 +1,8 @@
 package com.jakewharton.mosaic
 
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import com.jakewharton.mosaic.ui.Static
+import com.jakewharton.mosaic.ui.Text
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.milliseconds

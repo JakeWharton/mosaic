@@ -3,8 +3,8 @@ package example
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import com.jakewharton.mosaic.Text
 import com.jakewharton.mosaic.runMosaicBlocking
+import com.jakewharton.mosaic.ui.Text
 import kotlinx.coroutines.delay
 
 fun main() = runMosaicBlocking {

@@ -1,12 +1,14 @@
 package com.jakewharton.mosaic
 
-import com.jakewharton.mosaic.TextStyle.Companion.Bold
-import com.jakewharton.mosaic.TextStyle.Companion.Dim
-import com.jakewharton.mosaic.TextStyle.Companion.Invert
-import com.jakewharton.mosaic.TextStyle.Companion.Italic
-import com.jakewharton.mosaic.TextStyle.Companion.None
-import com.jakewharton.mosaic.TextStyle.Companion.Strikethrough
-import com.jakewharton.mosaic.TextStyle.Companion.Underline
+import com.jakewharton.mosaic.ui.Color
+import com.jakewharton.mosaic.ui.TextStyle
+import com.jakewharton.mosaic.ui.TextStyle.Companion.Bold
+import com.jakewharton.mosaic.ui.TextStyle.Companion.Dim
+import com.jakewharton.mosaic.ui.TextStyle.Companion.Invert
+import com.jakewharton.mosaic.ui.TextStyle.Companion.Italic
+import com.jakewharton.mosaic.ui.TextStyle.Companion.None
+import com.jakewharton.mosaic.ui.TextStyle.Companion.Strikethrough
+import com.jakewharton.mosaic.ui.TextStyle.Companion.Underline
 
 internal interface TextCanvas {
 	val width: Int

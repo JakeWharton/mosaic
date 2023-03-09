@@ -1,5 +1,7 @@
 package com.jakewharton.mosaic
 
+import com.jakewharton.mosaic.ui.Column
+import com.jakewharton.mosaic.ui.Text
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
