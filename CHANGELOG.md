@@ -3,6 +3,16 @@
 ## [Unreleased]
 
 
+## [0.5.0] - 2023-03-09
+
+ - Support Kotlin 1.8.10 via JetBrains Compose compiler 1.4.2.
+ - New: `renderMosaic` function returns a single string of the composition for tools that require only static output.
+ - New: Expose a custom `Layout` composable similar to Compose UI. This is just the beginning of a larger change to expose more powerful primitives.
+ - Implicit root node is no longer a `Row`. Multiple children at the root will now draw on top of each other. Choose a `Row` or `Column` as the root composable yourself.
+ - Each `Static` content is no longer wrapped in a `Row`. Multiple children in a single `Static` composable will draw on top of each other. Choose a `Row` or `Column` if you have multiple items. Multiple `Static` composables will still render in `Column`-like behavior
+
+
+
 ## [0.4.0] - 2023-02-19
 
  - Mosaic is now multiplatform!
@@ -38,7 +48,8 @@
 Initial release!
 
 
-[Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.4.0...HEAD
+[Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.5.0...HEAD
+[0.5.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.5.0
 [0.4.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.4.0
 [0.3.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.3.0
 [0.2.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.2.0

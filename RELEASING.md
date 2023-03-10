@@ -9,8 +9,9 @@
 
 3. Update the `README.md`:
    1. Change the "Download" section to reflect the new release version.
-   2. Change the snapshot section to reflect the next "SNAPSHOT" version, if it is changing.
-   3. Update the Kotlin version compatibility table
+   2. Update the compatibility chart with our new version and if it supports a new Kotlin version.
+   3. Change the snapshot section to reflect the next "SNAPSHOT" version, if it is changing.
+   4. Update the Kotlin version compatibility table
 
 4. Commit
 
