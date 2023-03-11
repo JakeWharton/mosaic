@@ -11,15 +11,24 @@ import kotlin.jvm.JvmName
 @Composable
 internal fun Layout(
 	debugInfo: () -> String = { "Layout()" },
-	measurePolicy: MeasurePolicy,
+	measurePolicy: NoContentMeasurePolicy,
 	drawPolicy: DrawPolicy,
 ) {
 	Node(
-		measurePolicy = measurePolicy,
+		measurePolicy = NoContentMeasurePolicyMeasurePolicy(measurePolicy),
 		drawPolicy = drawPolicy,
 		staticDrawPolicy = StaticDrawPolicy.None,
 		debugPolicy = { debugInfo() + " x=$x y=$y w=$width h=$height" },
 	)
+}
+
+private class NoContentMeasurePolicyMeasurePolicy(
+	private val noContentMeasurePolicy: NoContentMeasurePolicy,
+) : MeasurePolicy {
+	override fun MeasureScope.measure(measurables: List<Measurable>): MeasureResult {
+		check(measurables.isEmpty())
+		return noContentMeasurePolicy.run { NoContentMeasureScope.measure() }
+	}
 }
 
 @Composable

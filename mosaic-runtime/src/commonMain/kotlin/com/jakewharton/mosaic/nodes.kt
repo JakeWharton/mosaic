@@ -5,9 +5,9 @@ import androidx.compose.runtime.Applier
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReusableComposeNode
 import com.jakewharton.mosaic.layout.Measurable
-import com.jakewharton.mosaic.layout.Measurable.MeasureScope
 import com.jakewharton.mosaic.layout.MeasurePolicy
 import com.jakewharton.mosaic.layout.MeasureResult
+import com.jakewharton.mosaic.layout.MeasureScope
 import com.jakewharton.mosaic.layout.Placeable
 import com.jakewharton.mosaic.layout.Placeable.PlacementScope.Companion.place
 
@@ -46,6 +46,30 @@ internal abstract class MosaicNodeLayer : Placeable(), Measurable {
 	abstract fun drawTo(canvas: TextCanvas)
 }
 
+internal abstract class AbstractMosaicNodeLayer : MosaicNodeLayer() {
+	private var measureResult: MeasureResult = NotMeasured
+
+	final override val width get() = measureResult.width
+	final override val height get() = measureResult.height
+
+	final override fun measure() = apply {
+		measureResult = doMeasure()
+	}
+
+	abstract fun doMeasure(): MeasureResult
+
+	final override var x = 0
+		private set
+	final override var y = 0
+		private set
+
+	final override fun placeAt(x: Int, y: Int) {
+		this.x = x
+		this.y = y
+		measureResult.placeChildren()
+	}
+}
+
 internal object NotMeasured : MeasureResult {
 	override val width get() = 0
 	override val height get() = 0
@@ -54,31 +78,15 @@ internal object NotMeasured : MeasureResult {
 
 internal class MosaicNode(
 	var measurePolicy: MeasurePolicy,
-	var drawPolicy: DrawPolicy?,
 	var staticDrawPolicy: StaticDrawPolicy,
+	var drawPolicy: DrawPolicy?,
 	var debugPolicy: DebugPolicy,
 ) : Measurable {
 	val children = mutableListOf<MosaicNode>()
 
-	private val layer: MosaicNodeLayer = object : MosaicNodeLayer() {
-		private var measureResult: MeasureResult = NotMeasured
-
-		override val width get() = measureResult.width
-		override val height get() = measureResult.height
-
-		override fun measure() = apply {
-			measureResult = measurePolicy.run { MeasureScope.run { measure(children) } }
-		}
-
-		override var x = 0
-			private set
-		override var y = 0
-			private set
-
-		override fun placeAt(x: Int, y: Int) {
-			this.x = x
-			this.y = y
-			measureResult.placeChildren()
+	private val layer: MosaicNodeLayer = object : AbstractMosaicNodeLayer() {
+		override fun doMeasure(): MeasureResult {
+			return measurePolicy.run { MeasureScope.measure(children) }
 		}
 
 		override fun drawTo(canvas: TextCanvas) {
