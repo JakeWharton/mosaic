@@ -22,9 +22,7 @@ public fun Text(
 			val lines = value.split('\n')
 			val width = lines.maxOf { it.codePointCount(0, it.length) }
 			val height = lines.size
-			layout(width, height) {
-				// Nothing to do. No children.
-			}
+			layout(width, height)
 		},
 		drawPolicy = { canvas ->
 			value.split('\n').forEachIndexed { index, line ->
