@@ -40,23 +40,28 @@ internal fun interface DebugPolicy {
 	fun MosaicNode.renderDebug(): String
 }
 
-internal abstract class MosaicNodeLayer : Placeable(), Measurable {
+internal abstract class MosaicNodeLayer : Placeable() {
+	abstract fun measure(): MeasureResult
 	abstract val x: Int
 	abstract val y: Int
 	abstract fun drawTo(canvas: TextCanvas)
 }
 
-internal abstract class AbstractMosaicNodeLayer : MosaicNodeLayer() {
+internal abstract class AbstractMosaicNodeLayer(
+	private val next: MosaicNodeLayer?,
+) : MosaicNodeLayer() {
 	private var measureResult: MeasureResult = NotMeasured
 
 	final override val width get() = measureResult.width
 	final override val height get() = measureResult.height
 
-	final override fun measure() = apply {
-		measureResult = doMeasure()
+	final override fun measure(): MeasureResult {
+		return doMeasure().also { measureResult = it }
 	}
 
-	abstract fun doMeasure(): MeasureResult
+	open fun doMeasure(): MeasureResult {
+		return checkNotNull(next).measure()
+	}
 
 	final override var x = 0
 		private set
@@ -68,6 +73,13 @@ internal abstract class AbstractMosaicNodeLayer : MosaicNodeLayer() {
 		this.y = y
 		measureResult.placeChildren()
 	}
+
+	final override fun drawTo(canvas: TextCanvas) {
+		drawLayer(canvas)
+		next?.drawTo(canvas)
+	}
+
+	open fun drawLayer(canvas: TextCanvas) {}
 }
 
 internal object NotMeasured : MeasureResult {
@@ -79,46 +91,57 @@ internal object NotMeasured : MeasureResult {
 internal class MosaicNode(
 	var measurePolicy: MeasurePolicy,
 	var staticDrawPolicy: StaticDrawPolicy,
-	var drawPolicy: DrawPolicy?,
+	drawPolicy: DrawPolicy?,
 	var debugPolicy: DebugPolicy,
 ) : Measurable {
 	val children = mutableListOf<MosaicNode>()
 
-	private val layer: MosaicNodeLayer = object : AbstractMosaicNodeLayer() {
+	private val bottomLayer: MosaicNodeLayer = object : AbstractMosaicNodeLayer(null) {
 		override fun doMeasure(): MeasureResult {
 			return measurePolicy.run { MeasureScope.measure(children) }
 		}
 
-		override fun drawTo(canvas: TextCanvas) {
-			val drawPolicy = drawPolicy
-			if (drawPolicy != null) {
-				drawPolicy.performDraw(canvas)
-			} else {
-				for (child in children) {
-					if (child.width != 0 && child.height != 0) {
-						val left = child.x
-						val top = child.y
-						val right = left + child.width - 1
-						val bottom = top + child.height - 1
-						child.layer.drawTo(canvas[top..bottom, left..right])
-					}
+		override fun drawLayer(canvas: TextCanvas) {
+			for (child in children) {
+				if (child.width != 0 && child.height != 0) {
+					val left = child.x
+					val top = child.y
+					val right = left + child.width - 1
+					val bottom = top + child.height - 1
+					child.topLayer.drawTo(canvas[top..bottom, left..right])
 				}
 			}
 		}
 	}
 
-	override fun measure(): Placeable = layer.measure()
+	private var topLayer = bottomLayer
 
-	val width: Int get() = layer.width
-	val height: Int get() = layer.height
-	val x: Int get() = layer.x
-	val y: Int get() = layer.y
+	var drawPolicy: DrawPolicy? = drawPolicy
+		set(value) {
+			topLayer = if (value == null) {
+				bottomLayer
+			} else {
+				object : AbstractMosaicNodeLayer(bottomLayer) {
+					override fun drawLayer(canvas: TextCanvas) {
+						value.performDraw(canvas)
+					}
+				}
+			}
+			field = value
+		}
+
+	override fun measure(): Placeable = topLayer.apply { measure() }
+
+	val width: Int get() = topLayer.width
+	val height: Int get() = topLayer.height
+	val x: Int get() = topLayer.x
+	val y: Int get() = topLayer.y
 
 	fun draw(): TextCanvas {
 		val placeable = measure()
 		placeable.place(0, 0)
 		val surface = TextSurface(placeable.width, placeable.height)
-		layer.drawTo(surface)
+		topLayer.drawTo(surface)
 		return surface
 	}
 
