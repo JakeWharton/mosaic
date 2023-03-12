@@ -2,7 +2,6 @@ package example
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -10,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.Snapshot
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.jakewharton.mosaic.Color.Companion.Black
 import com.jakewharton.mosaic.Color.Companion.BrightBlack
 import com.jakewharton.mosaic.Color.Companion.Green
@@ -24,11 +24,9 @@ import com.jakewharton.mosaic.runMosaicBlocking
 import example.TestState.Fail
 import example.TestState.Pass
 import example.TestState.Running
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
 import kotlin.random.Random
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 fun main() = runMosaicBlocking {
 	val paths = ArrayDeque(
@@ -47,7 +45,7 @@ fun main() = runMosaicBlocking {
 	)
 	val totalTests = paths.size
 
-	val complete = MutableSharedFlow<Test>()
+	val complete = mutableStateListOf<Test>()
 	val tests = mutableStateListOf<Test>()
 
 	setContent {
@@ -83,7 +81,7 @@ fun main() = runMosaicBlocking {
 						test.copy(state = Fail, failures = failures)
 					}
 				}
-				complete.emit(tests[index])
+				complete += tests[index]
 			}
 		}
 	}
@@ -114,9 +112,7 @@ fun TestRow(test: Test) {
 
 // Should be placed as first composable in display.
 @Composable
-fun Log(complete: Flow<Test>) {
-	val latest by complete.collectAsState(null)
-
+fun Log(complete: SnapshotStateList<Test>) {
 	Static(complete) { test ->
 		Column {
 			TestRow(test)
@@ -130,7 +126,7 @@ fun Log(complete: Flow<Test>) {
 	}
 
 	// Separate logs from rest of display by a single line if latest test result is success.
-	if (latest?.state == Pass) {
+	if (complete.lastOrNull()?.state == Pass) {
 		Text("") // Blank line
 	}
 }
