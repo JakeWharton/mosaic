@@ -23,7 +23,7 @@ jobs:
         with:
           gradle-home-cache-cleanup: true
 
-      - run: ./gradlew build :mosaic-runtime:dokkaHtml
+      - run: ./gradlew build :samples:jest:run :mosaic-runtime:dokkaHtml
 
       - run: ./gradlew publish
         if: ${{ github.ref == 'refs/heads/trunk' && github.repository == 'JakeWharton/mosaic' }}
