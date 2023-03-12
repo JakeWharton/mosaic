@@ -4,7 +4,7 @@ $dokka.location:com.jakewharton.mosaic////PointingToDeclaration/mosaic-runtime/
 $dokka.location:com.jakewharton.mosaic//Column/#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/-column.html
 $dokka.location:com.jakewharton.mosaic//Layout/#kotlin.Function0[kotlin.Unit]#kotlin.Function0[kotlin.String]#com.jakewharton.mosaic.MeasurePolicy/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/-layout.html
 $dokka.location:com.jakewharton.mosaic//Row/#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/-row.html
-$dokka.location:com.jakewharton.mosaic//Static/#kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlin.Function1[TypeParam(bounds=[kotlin.Any?]),kotlin.Unit]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/-static.html
+$dokka.location:com.jakewharton.mosaic//Static/#androidx.compose.runtime.snapshots.SnapshotStateList[TypeParam(bounds=[kotlin.Any?])]#kotlin.Function1[TypeParam(bounds=[kotlin.Any?]),kotlin.Unit]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/-static.html
 $dokka.location:com.jakewharton.mosaic//Text/#kotlin.String#com.jakewharton.mosaic.Color?#com.jakewharton.mosaic.Color?#com.jakewharton.mosaic.TextStyle?/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/-text.html
 $dokka.location:com.jakewharton.mosaic//renderMosaic/#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/render-mosaic.html
 $dokka.location:com.jakewharton.mosaic//runMosaic/#kotlin.coroutines.SuspendFunction1[com.jakewharton.mosaic.MosaicScope,kotlin.Unit]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/run-mosaic.html
