@@ -4,16 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import de.cketti.codepoints.codePointCount
-import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 
 @Composable
 public fun Text(
@@ -156,36 +151,19 @@ public fun Column(content: @Composable () -> Unit) {
  */
 @Composable
 public fun <T> Static(
-	items: Flow<T>,
+	items: SnapshotStateList<T>,
 	content: @Composable (T) -> Unit,
 ) {
-	class Item(val value: T, var drawn: Boolean)
-
-	// Keep list of items which have not yet been drawn.
-	val pending = remember { mutableStateListOf<Item>() }
-
-	// We use all this manual scope/job/launch stuff instead of a LaunchedEffect so that
-	// the items collection occurs within the same recomposition as it is created.
-	val scope = rememberCoroutineScope()
-	var job by remember { mutableStateOf<Job?>(null) }
-	var seenItems by remember { mutableStateOf<Flow<T>?>(null) }
-	if (seenItems !== items) {
-		job?.cancel()
-
-		seenItems = items
-		job = scope.launch(start = UNDISPATCHED) {
-			items.collect {
-				pending.add(Item(it, drawn = false))
-			}
-		}
-	}
+	var lastDrawn by remember { mutableStateOf(0) }
+	var lastRendered by remember { mutableStateOf(0) }
 
 	Node(
 		content = {
-			for (item in pending) {
-				content(item.value)
-				item.drawn = true
+			for (i in lastDrawn until items.size) {
+				val item = items[i]
+				content(item)
 			}
+			lastRendered = items.size
 		},
 		measurePolicy = {
 			layout(0, 0) {
@@ -202,7 +180,7 @@ public fun <T> Static(
 						add(child.draw())
 						addAll(child.drawStatics())
 					}
-					pending.removeAll { it.drawn }
+					lastDrawn = lastRendered
 				}
 			} else {
 				emptyList()

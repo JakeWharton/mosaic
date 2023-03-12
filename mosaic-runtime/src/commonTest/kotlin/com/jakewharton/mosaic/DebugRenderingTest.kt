@@ -1,11 +1,11 @@
 package com.jakewharton.mosaic
 
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.ExperimentalTime
 import kotlin.time.TestTimeSource
-import kotlinx.coroutines.flow.flowOf
 
 @OptIn(ExperimentalTime::class)
 class DebugRenderingTest {
@@ -15,7 +15,7 @@ class DebugRenderingTest {
 	@Test fun framesIncludeStatics() {
 		val nodes = mosaicNodes {
 			Text("Hello")
-			Static(flowOf("Static")) {
+			Static(SnapshotStateList<String>().apply { add("Static") }) {
 				Text(it)
 			}
 		}
