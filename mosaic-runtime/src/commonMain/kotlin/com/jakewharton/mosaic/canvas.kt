@@ -77,13 +77,6 @@ internal interface TextCanvas {
 		}
 	}
 
-	fun render(
-		top: Int = 0,
-		left: Int = 0,
-		bottom: Int = height - 1,
-		right: Int = width - 1,
-	): String
-
 	override fun toString(): String
 }
 
@@ -103,16 +96,7 @@ internal class ClippedTextCanvas(
 		return delegate[top + row, left + column]
 	}
 
-	override fun render(top: Int, left: Int, bottom: Int, right: Int): String {
-		return delegate.render(
-			this.top + top,
-			this.left + left,
-			this.top + bottom,
-			this.left + right,
-		)
-	}
-
-	override fun toString() = render()
+	override fun toString() = "ClippedTextCanvas(left=$left, top=$top, width=$width, height=$height)"
 }
 
 private val blankPixel = TextPixel(' ')
@@ -125,75 +109,62 @@ internal class TextSurface(
 
 	override operator fun get(row: Int, column: Int) = rows[row][column]
 
-	override fun toString() = render()
+	override fun toString() = "TextSurface(width=$width, height=$height)"
 
-	override fun render(
-		top: Int,
-		left: Int,
-		bottom: Int,
-		right: Int,
-	): String {
-		val renderWidth = right - left + 1
-		val renderHeight = bottom - top + 1
-		val sizeEstimate = (renderWidth * renderHeight + renderHeight /* newlines */) * 2 /* ANSI factor */
-		return buildString(sizeEstimate) {
-			// Reused heap allocation for building ANSI attributes inside the loop.
-			val attributes = mutableListOf<Int>()
+	fun appendRowTo(appendable: Appendable, row: Int) {
+		// Reused heap allocation for building ANSI attributes inside the loop.
+		val attributes = mutableListOf<Int>()
 
-			var lastPixel = blankPixel
-			for (rowIndex in top..bottom) {
-				val row = rows[rowIndex]
-				if (rowIndex > top) {
-					if (lastPixel.background != null ||
-						lastPixel.foreground != null ||
-						lastPixel.style != None) {
-						append("\u001B[0m")
-					}
-					append('\n')
-					lastPixel = blankPixel
-				}
-
-				for (columnIndex in left..right) {
-					val pixel = row[columnIndex]
-					if (pixel.foreground != lastPixel.foreground) {
-						attributes += pixel.foreground?.fg ?: 39
-					}
-					if (pixel.background != lastPixel.background) {
-						attributes += pixel.background?.bg ?: 49
-					}
-
-					fun maybeToggleStyle(style: TextStyle, on: Int, off: Int) {
-						if (style in pixel.style) {
-							if (style !in lastPixel.style) {
-								attributes += on
-							}
-						} else if (style in lastPixel.style) {
-							attributes += off
-						}
-					}
-					if (pixel.style != lastPixel.style) {
-						maybeToggleStyle(Bold, 1, 22)
-						maybeToggleStyle(Dim, 2, 22)
-						maybeToggleStyle(Italic, 3, 23)
-						maybeToggleStyle(Underline, 4, 24)
-						maybeToggleStyle(Invert, 7, 27)
-						maybeToggleStyle(Strikethrough, 9, 29)
-					}
-					if (attributes.isNotEmpty()) {
-						attributes.joinTo(this, separator = ";", prefix = "\u001B[", postfix = "m")
-						attributes.clear() // This list is reused!
-					}
-
-					append(pixel.value)
-					lastPixel = pixel
-				}
+		val rowPixels = rows[row]
+		var lastPixel = blankPixel
+		for (columnIndex in 0 until width) {
+			val pixel = rowPixels[columnIndex]
+			if (pixel.foreground != lastPixel.foreground) {
+				attributes += pixel.foreground?.fg ?: 39
+			}
+			if (pixel.background != lastPixel.background) {
+				attributes += pixel.background?.bg ?: 49
 			}
 
-			if (lastPixel.background != null ||
-					lastPixel.foreground != null ||
-					lastPixel.style != None) {
-				append("\u001B[0m")
+			fun maybeToggleStyle(style: TextStyle, on: Int, off: Int) {
+				if (style in pixel.style) {
+					if (style !in lastPixel.style) {
+						attributes += on
+					}
+				} else if (style in lastPixel.style) {
+					attributes += off
+				}
 			}
+			if (pixel.style != lastPixel.style) {
+				maybeToggleStyle(Bold, 1, 22)
+				maybeToggleStyle(Dim, 2, 22)
+				maybeToggleStyle(Italic, 3, 23)
+				maybeToggleStyle(Underline, 4, 24)
+				maybeToggleStyle(Invert, 7, 27)
+				maybeToggleStyle(Strikethrough, 9, 29)
+			}
+			if (attributes.isNotEmpty()) {
+				attributes.joinTo(appendable, separator = ";", prefix = "\u001B[", postfix = "m")
+				attributes.clear() // This list is reused!
+			}
+
+			appendable.append(pixel.value)
+			lastPixel = pixel
+		}
+
+		if (lastPixel.background != null ||
+			lastPixel.foreground != null ||
+			lastPixel.style != None) {
+			appendable.append("\u001B[0m")
+		}
+	}
+
+	fun render(): String = buildString {
+		for (rowIndex in 0 until height) {
+			if (rowIndex > 0) {
+				append('\n')
+			}
+			appendRowTo(this, rowIndex)
 		}
 	}
 }

@@ -29,21 +29,21 @@ internal class DebugRendering(
 			}
 			lastRender = systemClock.markNow()
 
-			val canvas = node.draw()
-			val statics = node.drawStatics()
+			val surface = node.draw()
+			val staticSurfaces = node.drawStatics()
 
 			appendLine("NODES:")
 			appendLine(node)
 			appendLine()
-			if (statics.isNotEmpty()) {
+			if (staticSurfaces.isNotEmpty()) {
 				appendLine("STATIC:")
-				for (static in statics) {
-					appendLine(static)
+				for (staticSurface in staticSurfaces) {
+					appendLine(staticSurface.render())
 				}
 				appendLine()
 			}
 			appendLine("OUTPUT:")
-			appendLine(canvas)
+			appendLine(surface.render())
 		}
 	}
 }
@@ -53,9 +53,6 @@ internal class AnsiRendering : Rendering {
 	private var lastHeight = 0
 
 	override fun render(node: MosaicNode): CharSequence {
-		val canvas = node.draw()
-		val statics = node.drawStatics()
-
 		return stringBuilder.apply {
 			clear()
 
@@ -64,16 +61,24 @@ internal class AnsiRendering : Rendering {
 				append(cursorUp)
 			}
 
-			val staticLines = statics.flatMap { it.render().split("\n") }
-			val lines = canvas.render().split("\n")
-			for (line in staticLines + lines) {
-				append(line)
-				if (staleLines-- > 0) {
-					// We have previously drawn on this line. Clear the rest to be safe.
-					append(clearLine)
+			fun appendSurface(canvas: TextSurface) {
+				for (row in 0 until canvas.height) {
+					canvas.appendRowTo(this, row)
+					if (staleLines-- > 0) {
+						// We have previously drawn on this line. Clear the rest to be safe.
+						append(clearLine)
+					}
+					append('\n')
 				}
-				append('\n')
 			}
+
+			val staticSurfaces = node.drawStatics()
+			for (staticSurface in staticSurfaces) {
+				appendSurface(staticSurface)
+			}
+
+			val surface = node.draw()
+			appendSurface(surface)
 
 			// If the new output contains fewer lines than the last output, clear those old lines.
 			for (i in 0 until staleLines) {
@@ -88,7 +93,7 @@ internal class AnsiRendering : Rendering {
 				append(cursorUp)
 			}
 
-			lastHeight = lines.size
+			lastHeight = surface.height
 		}
 	}
 }
