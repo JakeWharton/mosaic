@@ -16,12 +16,12 @@ internal fun interface DrawPolicy {
 }
 
 internal fun interface StaticDrawPolicy {
-	fun MosaicNode.performDrawStatics(): List<TextCanvas>
+	fun MosaicNode.performDrawStatics(): List<TextSurface>
 
 	companion object {
 		val None = StaticDrawPolicy { emptyList() }
 		val Children = StaticDrawPolicy {
-			var statics: MutableList<TextCanvas>? = null
+			var statics: MutableList<TextSurface>? = null
 			for (child in children) {
 				val childStatics = child.drawStatics()
 				if (childStatics.isNotEmpty()) {
@@ -137,7 +137,7 @@ internal class MosaicNode(
 	val x: Int get() = topLayer.x
 	val y: Int get() = topLayer.y
 
-	fun draw(): TextCanvas {
+	fun draw(): TextSurface {
 		val placeable = measure()
 		placeable.place(0, 0)
 		val surface = TextSurface(placeable.width, placeable.height)
