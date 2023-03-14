@@ -5,19 +5,19 @@ package com.jakewharton.mosaic.layout
 import androidx.compose.runtime.Composable
 import com.jakewharton.mosaic.DrawPolicy
 import com.jakewharton.mosaic.Node
-import com.jakewharton.mosaic.StaticDrawPolicy
+import com.jakewharton.mosaic.StaticPaintPolicy
 import kotlin.jvm.JvmName
 
 @Composable
 internal fun Layout(
 	debugInfo: () -> String = { "Layout()" },
-	measurePolicy: NoContentMeasurePolicy,
 	drawPolicy: DrawPolicy,
+	measurePolicy: NoContentMeasurePolicy,
 ) {
 	Node(
 		measurePolicy = NoContentMeasurePolicyMeasurePolicy(measurePolicy),
 		drawPolicy = drawPolicy,
-		staticDrawPolicy = StaticDrawPolicy.None,
+		staticPaintPolicy = StaticPaintPolicy.None,
 		debugPolicy = { debugInfo() + " x=$x y=$y w=$width h=$height" },
 	)
 }
@@ -41,7 +41,7 @@ public fun Layout(
 		content = content,
 		measurePolicy = measurePolicy,
 		drawPolicy = null,
-		staticDrawPolicy = StaticDrawPolicy.Children,
+		staticPaintPolicy = StaticPaintPolicy.Children,
 		debugPolicy = {
 			buildString {
 				append(debugInfo())
