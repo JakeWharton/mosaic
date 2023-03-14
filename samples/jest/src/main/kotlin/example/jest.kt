@@ -25,6 +25,7 @@ import example.TestState.Fail
 import example.TestState.Pass
 import example.TestState.Running
 import kotlin.random.Random
+import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -48,17 +49,9 @@ fun main() = runMosaicBlocking {
 	val complete = mutableStateListOf<Test>()
 	val tests = mutableStateListOf<Test>()
 
-	setContent {
-		Column {
-			Log(complete)
-			Status(tests)
-			Summary(totalTests, tests)
-		}
-	}
-
 	// TODO https://github.com/JakeWharton/mosaic/issues/3
 	repeat(4) { // Number of test workers.
-		launch {
+		launch(start = UNDISPATCHED) {
 			while (true) {
 				val path = paths.removeFirstOrNull() ?: break
 				val index = Snapshot.withMutableSnapshot {
@@ -83,6 +76,14 @@ fun main() = runMosaicBlocking {
 				}
 				complete += tests[index]
 			}
+		}
+	}
+
+	setContent {
+		Column {
+			Log(complete)
+			Status(tests)
+			Summary(totalTests, tests)
 		}
 	}
 }
