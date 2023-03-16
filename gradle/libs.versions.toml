@@ -19,3 +19,4 @@ codepoints = "de.cketti.unicode:kotlin-codepoints:0.6.1"
 
 junit4 = "junit:junit:4.13.2"
 truth = "com.google.truth:truth:1.1.3"
+truthish = "com.varabyte.truthish:truthish:0.6.5"

@@ -21,7 +21,8 @@ internal class DebugRendering(
 	private var lastRender: TimeMark? = null
 
 	override fun render(node: MosaicNode): CharSequence {
-		return buildString {
+		var failed = false
+		val output = buildString {
 			lastRender?.let { lastRender ->
 				repeat(50) { append('~') }
 				append(" +")
@@ -29,22 +30,38 @@ internal class DebugRendering(
 			}
 			lastRender = systemClock.markNow()
 
-			val surface = node.draw()
-			val staticSurfaces = node.drawStatics()
-
+			node.measureAndPlace()
 			appendLine("NODES:")
 			appendLine(node)
 			appendLine()
-			if (staticSurfaces.isNotEmpty()) {
-				appendLine("STATIC:")
-				for (staticSurface in staticSurfaces) {
-					appendLine(staticSurface.render())
+
+			try {
+				val statics = node.paintStatics().map { it.render() }
+				if (statics.isNotEmpty()) {
+					appendLine("STATIC:")
+					for (static in statics) {
+						appendLine(static)
+					}
+					appendLine()
 				}
-				appendLine()
+			} catch (t: Throwable) {
+				failed = true
+				appendLine("STATIC:")
+				appendLine(t.stackTraceToString())
 			}
+
 			appendLine("OUTPUT:")
-			appendLine(surface.render())
+			try {
+				appendLine(node.paint().render())
+			} catch (t: Throwable) {
+				failed = true
+				append(t.stackTraceToString())
+			}
 		}
+		if (failed) {
+			throw RuntimeException("Failed\n\n$output")
+		}
+		return output
 	}
 }
 
@@ -72,7 +89,7 @@ internal class AnsiRendering : Rendering {
 				}
 			}
 
-			val staticSurfaces = node.drawStatics()
+			val staticSurfaces = node.paintStatics()
 			for (staticSurface in staticSurfaces) {
 				appendSurface(staticSurface)
 			}

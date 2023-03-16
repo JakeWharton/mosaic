@@ -1,10 +1,14 @@
 package com.jakewharton.mosaic
 
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import com.jakewharton.mosaic.layout.Layout
+import com.jakewharton.mosaic.ui.Row
 import com.jakewharton.mosaic.ui.Static
 import com.jakewharton.mosaic.ui.Text
+import com.varabyte.truthish.assertThat
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.ExperimentalTime
 import kotlin.time.TestTimeSource
@@ -13,6 +17,34 @@ import kotlin.time.TestTimeSource
 class DebugRenderingTest {
 	private val timeSource = TestTimeSource()
 	private val rendering = DebugRendering(timeSource)
+
+	@Test fun drawFailureStillRendersMeasuredAndPlacedNodes() {
+		val nodes = mosaicNodes {
+			Row {
+				Text("Hello ")
+				Layout(drawPolicy = { throw UnsupportedOperationException() }) {
+					layout(5, 1)
+				}
+			}
+		}
+
+		val t = assertFailsWith<RuntimeException> {
+			rendering.render(nodes)
+		}
+		assertThat(t.message!!)
+			.containsMatch(
+				"""
+				|Failed
+				|
+				|NODES:
+				|Row\(\) x=0 y=0 w=11 h=1
+				|  Text\("Hello "\) x=0 y=0 w=6 h=1
+				|  Layout\(\) x=6 y=0 w=5 h=1
+				|
+				|OUTPUT:
+				|(kotlin\.|java\.lang\.)?UnsupportedOperationException:?
+				""".trimMargin())
+	}
 
 	@Test fun framesIncludeStatics() {
 		val nodes = mosaicNodes {

@@ -31,20 +31,28 @@ public fun <T> Static(
 			}
 			lastRendered = items.size
 		},
-		measurePolicy = {
+		measurePolicy = { measurables ->
+			val placeables = measurables.map { measurable ->
+				measurable.measure()
+			}
+
 			layout(0, 0) {
-				// Nothing to do. Children rendered separately.
+				// Despite reporting no size to our parent, we still place each child at
+				// 0,0 since they will be individually rendered.
+				placeables.forEach { placeable ->
+					placeable.place(0, 0)
+				}
 			}
 		},
 		drawPolicy = {
 			// Nothing to do. Children rendered separately.
 		},
-		staticDrawPolicy = {
+		staticPaintPolicy = {
 			val statics = if (children.isNotEmpty()) {
 				buildList {
 					for (child in children) {
-						add(child.draw())
-						addAll(child.drawStatics())
+						add(child.paint())
+						addAll(child.paintStatics())
 					}
 					lastDrawn = lastRendered
 				}

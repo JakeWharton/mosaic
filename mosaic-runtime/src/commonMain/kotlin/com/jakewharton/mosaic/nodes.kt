@@ -15,15 +15,15 @@ internal fun interface DrawPolicy {
 	fun performDraw(canvas: TextCanvas)
 }
 
-internal fun interface StaticDrawPolicy {
-	fun MosaicNode.performDrawStatics(): List<TextSurface>
+internal fun interface StaticPaintPolicy {
+	fun MosaicNode.performPaintStatics(): List<TextSurface>
 
 	companion object {
-		val None = StaticDrawPolicy { emptyList() }
-		val Children = StaticDrawPolicy {
+		val None = StaticPaintPolicy { emptyList() }
+		val Children = StaticPaintPolicy {
 			var statics: MutableList<TextSurface>? = null
 			for (child in children) {
-				val childStatics = child.drawStatics()
+				val childStatics = child.paintStatics()
 				if (childStatics.isNotEmpty()) {
 					if (statics == null) {
 						statics = mutableListOf()
@@ -90,7 +90,7 @@ internal object NotMeasured : MeasureResult {
 
 internal class MosaicNode(
 	var measurePolicy: MeasurePolicy,
-	var staticDrawPolicy: StaticDrawPolicy,
+	var staticPaintPolicy: StaticPaintPolicy,
 	drawPolicy: DrawPolicy?,
 	var debugPolicy: DebugPolicy,
 ) : Measurable {
@@ -137,15 +137,23 @@ internal class MosaicNode(
 	val x: Int get() = topLayer.x
 	val y: Int get() = topLayer.y
 
-	fun draw(): TextSurface {
+	fun measureAndPlace() {
 		val placeable = measure()
 		placeable.place(0, 0)
-		val surface = TextSurface(placeable.width, placeable.height)
+	}
+
+	fun paint(): TextSurface {
+		val surface = TextSurface(width, height)
 		topLayer.drawTo(surface)
 		return surface
 	}
 
-	fun drawStatics() = staticDrawPolicy.run { performDrawStatics() }
+	fun paintStatics() = staticPaintPolicy.run { performPaintStatics() }
+
+	fun draw(): TextSurface {
+		measureAndPlace()
+		return paint()
+	}
 
 	override fun toString() = debugPolicy.run { renderDebug() }
 
@@ -154,7 +162,7 @@ internal class MosaicNode(
 			MosaicNode(
 				measurePolicy = ThrowingPolicy,
 				drawPolicy = ThrowingPolicy,
-				staticDrawPolicy = ThrowingPolicy,
+				staticPaintPolicy = ThrowingPolicy,
 				debugPolicy = ThrowingPolicy,
 			)
 		}
@@ -177,17 +185,17 @@ internal class MosaicNode(
 					}
 				},
 				drawPolicy = null,
-				staticDrawPolicy = StaticDrawPolicy.Children,
+				staticPaintPolicy = StaticPaintPolicy.Children,
 				debugPolicy = {
 					children.joinToString(separator = "\n")
 				}
 			)
 		}
 
-		private val ThrowingPolicy = object : MeasurePolicy, DrawPolicy, StaticDrawPolicy, DebugPolicy {
+		private val ThrowingPolicy = object : MeasurePolicy, DrawPolicy, StaticPaintPolicy, DebugPolicy {
 			override fun MeasureScope.measure(measurables: List<Measurable>) = throw AssertionError()
 			override fun performDraw(canvas: TextCanvas) = throw AssertionError()
-			override fun MosaicNode.performDrawStatics() = throw AssertionError()
+			override fun MosaicNode.performPaintStatics() = throw AssertionError()
 			override fun MosaicNode.renderDebug() = throw AssertionError()
 		}
 	}
@@ -198,7 +206,7 @@ internal inline fun Node(
 	content: @Composable () -> Unit = {},
 	measurePolicy: MeasurePolicy,
 	drawPolicy: DrawPolicy?,
-	staticDrawPolicy: StaticDrawPolicy,
+	staticPaintPolicy: StaticPaintPolicy,
 	debugPolicy: DebugPolicy,
 ) {
 	ReusableComposeNode<MosaicNode, Applier<Any>>(
@@ -206,7 +214,7 @@ internal inline fun Node(
 		update = {
 			set(measurePolicy) { this.measurePolicy = measurePolicy }
 			set(drawPolicy) { this.drawPolicy = drawPolicy }
-			set(staticDrawPolicy) { this.staticDrawPolicy = staticDrawPolicy }
+			set(staticPaintPolicy) { this.staticPaintPolicy = staticPaintPolicy }
 			set(debugPolicy) { this.debugPolicy = debugPolicy }
 		},
 		content = content,
