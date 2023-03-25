@@ -16,22 +16,13 @@ internal fun interface DrawPolicy {
 }
 
 internal fun interface StaticPaintPolicy {
-	fun MosaicNode.performPaintStatics(): List<TextSurface>
+	fun MosaicNode.performPaintStatics(statics: MutableList<TextSurface>)
 
 	companion object {
-		val None = StaticPaintPolicy { emptyList() }
-		val Children = StaticPaintPolicy {
-			var statics: MutableList<TextSurface>? = null
+		val Children = StaticPaintPolicy { statics ->
 			for (child in children) {
-				val childStatics = child.paintStatics()
-				if (childStatics.isNotEmpty()) {
-					if (statics == null) {
-						statics = mutableListOf()
-					}
-					statics += childStatics
-				}
+				child.paintStatics(statics)
 			}
-			statics ?: emptyList()
 		}
 	}
 }
@@ -90,7 +81,7 @@ internal object NotMeasured : MeasureResult {
 
 internal class MosaicNode(
 	var measurePolicy: MeasurePolicy,
-	var staticPaintPolicy: StaticPaintPolicy,
+	var staticPaintPolicy: StaticPaintPolicy?,
 	drawPolicy: DrawPolicy?,
 	var debugPolicy: DebugPolicy,
 ) : Measurable {
@@ -142,18 +133,21 @@ internal class MosaicNode(
 		placeable.place(0, 0)
 	}
 
+	/**
+	 * Draw this node to a [TextSurface].
+	 * A call to [measureAndPlace] must precede calls to this function.
+	 */
 	fun paint(): TextSurface {
 		val surface = TextSurface(width, height)
 		topLayer.drawTo(surface)
 		return surface
 	}
 
-	fun paintStatics() = staticPaintPolicy.run { performPaintStatics() }
-
-	fun draw(): TextSurface {
-		measureAndPlace()
-		return paint()
-	}
+	/**
+	 * Append any static [TextSurfaces][TextSurface] to [statics].
+	 * A call to [measureAndPlace] must precede calls to this function.
+	 */
+	fun paintStatics(statics: MutableList<TextSurface>) = staticPaintPolicy?.run { performPaintStatics(statics) }
 
 	override fun toString() = debugPolicy.run { renderDebug() }
 
@@ -195,7 +189,7 @@ internal class MosaicNode(
 		private val ThrowingPolicy = object : MeasurePolicy, DrawPolicy, StaticPaintPolicy, DebugPolicy {
 			override fun MeasureScope.measure(measurables: List<Measurable>) = throw AssertionError()
 			override fun performDraw(canvas: TextCanvas) = throw AssertionError()
-			override fun MosaicNode.performPaintStatics() = throw AssertionError()
+			override fun MosaicNode.performPaintStatics(statics: MutableList<TextSurface>) = throw AssertionError()
 			override fun MosaicNode.renderDebug() = throw AssertionError()
 		}
 	}
@@ -206,7 +200,7 @@ internal inline fun Node(
 	content: @Composable () -> Unit = {},
 	measurePolicy: MeasurePolicy,
 	drawPolicy: DrawPolicy?,
-	staticPaintPolicy: StaticPaintPolicy,
+	staticPaintPolicy: StaticPaintPolicy?,
 	debugPolicy: DebugPolicy,
 ) {
 	ReusableComposeNode<MosaicNode, Applier<Any>>(

@@ -47,20 +47,14 @@ public fun <T> Static(
 		drawPolicy = {
 			// Nothing to do. Children rendered separately.
 		},
-		staticPaintPolicy = {
-			val statics = if (children.isNotEmpty()) {
-				buildList {
-					for (child in children) {
-						add(child.paint())
-						addAll(child.paintStatics())
-					}
-					lastDrawn = lastRendered
+		staticPaintPolicy = { statics ->
+			if (children.isNotEmpty()) {
+				for (child in children) {
+					statics += child.paint()
+					child.paintStatics(statics)
 				}
-			} else {
-				emptyList()
+				lastDrawn = lastRendered
 			}
-
-			statics
 		},
 		debugPolicy = {
 			children.joinToString(prefix = "Static()") { "\n" + it.toString().prependIndent("  ") }

@@ -36,7 +36,9 @@ internal class DebugRendering(
 			appendLine()
 
 			try {
-				val statics = node.paintStatics().map { it.render() }
+				val statics = ArrayList<TextSurface>()
+					.also { node.paintStatics(it) }
+					.map { it.render() }
 				if (statics.isNotEmpty()) {
 					appendLine("STATIC:")
 					for (static in statics) {
@@ -67,6 +69,7 @@ internal class DebugRendering(
 
 internal class AnsiRendering : Rendering {
 	private val stringBuilder = StringBuilder(100)
+	private val staticSurfaces = ArrayList<TextSurface>()
 	private var lastHeight = 0
 
 	override fun render(node: MosaicNode): CharSequence {
@@ -89,12 +92,15 @@ internal class AnsiRendering : Rendering {
 				}
 			}
 
-			val staticSurfaces = node.paintStatics()
+			node.measureAndPlace()
+
+			node.paintStatics(staticSurfaces)
 			for (staticSurface in staticSurfaces) {
 				appendSurface(staticSurface)
 			}
+			staticSurfaces.clear()
 
-			val surface = node.draw()
+			val surface = node.paint()
 			appendSurface(surface)
 
 			// If the new output contains fewer lines than the last output, clear those old lines.
