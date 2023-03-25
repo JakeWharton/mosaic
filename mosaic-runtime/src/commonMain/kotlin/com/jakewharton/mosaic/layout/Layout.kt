@@ -17,7 +17,7 @@ internal fun Layout(
 	Node(
 		measurePolicy = NoContentMeasurePolicyMeasurePolicy(measurePolicy),
 		drawPolicy = drawPolicy,
-		staticPaintPolicy = StaticPaintPolicy.None,
+		staticPaintPolicy = null,
 		debugPolicy = { debugInfo() + " x=$x y=$y w=$width h=$height" },
 	)
 }
