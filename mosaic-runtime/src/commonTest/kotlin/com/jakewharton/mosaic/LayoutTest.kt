@@ -2,6 +2,8 @@ package com.jakewharton.mosaic
 
 import com.jakewharton.mosaic.layout.Layout
 import com.jakewharton.mosaic.layout.Measurable
+import com.jakewharton.mosaic.ui.Column
+import com.jakewharton.mosaic.ui.Row
 import com.jakewharton.mosaic.ui.Text
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -84,6 +86,42 @@ class LayoutTest {
 			|     CCC
 			|  BB   $s
 			|A      $s
+			|""".trimMargin()
+		assertEquals(expected, actual)
+	}
+
+	@Test fun canvasIsNotClipped() {
+		val actual = renderMosaic {
+			Column {
+				Row {
+					// Force the width of the canvas to be 6.
+					Text("123456")
+				}
+				Row {
+					Text("..")
+					Layout(drawPolicy = {
+						repeat(4) { row ->
+							it.write(row, 0, "XXXX")
+						}
+					}) {
+						layout(2, 2)
+					}
+					Text(".")
+				}
+				Row {
+					Text("...")
+				}
+				Row {
+					Text(".....")
+				}
+			}
+		}
+		val expected = """
+			|123456
+			|..XX.X
+			|  XXXX
+			|...XXX
+			|.....X
 			|""".trimMargin()
 		assertEquals(expected, actual)
 	}

@@ -9,7 +9,7 @@ import com.jakewharton.mosaic.layout.MeasurePolicy
 import com.jakewharton.mosaic.layout.MeasureResult
 import com.jakewharton.mosaic.layout.MeasureScope
 import com.jakewharton.mosaic.layout.Placeable
-import com.jakewharton.mosaic.layout.Placeable.PlacementScope.Companion.place
+import com.jakewharton.mosaic.layout.Placeable.PlacementScope
 
 internal fun interface DrawPolicy {
 	fun performDraw(canvas: TextCanvas)
@@ -31,10 +31,8 @@ internal fun interface DebugPolicy {
 	fun MosaicNode.renderDebug(): String
 }
 
-internal abstract class MosaicNodeLayer : Placeable() {
+internal abstract class MosaicNodeLayer : Placeable(), PlacementScope, MeasureScope {
 	abstract fun measure(): MeasureResult
-	abstract val x: Int
-	abstract val y: Int
 	abstract fun drawTo(canvas: TextCanvas)
 }
 
@@ -89,17 +87,13 @@ internal class MosaicNode(
 
 	private val bottomLayer: MosaicNodeLayer = object : AbstractMosaicNodeLayer(null) {
 		override fun doMeasure(): MeasureResult {
-			return measurePolicy.run { MeasureScope.measure(children) }
+			return measurePolicy.run { measure(children) }
 		}
 
 		override fun drawLayer(canvas: TextCanvas) {
 			for (child in children) {
 				if (child.width != 0 && child.height != 0) {
-					val left = child.x
-					val top = child.y
-					val right = left + child.width - 1
-					val bottom = top + child.height - 1
-					child.topLayer.drawTo(canvas[top..bottom, left..right])
+					child.topLayer.drawTo(canvas)
 				}
 			}
 		}
@@ -114,7 +108,11 @@ internal class MosaicNode(
 			} else {
 				object : AbstractMosaicNodeLayer(bottomLayer) {
 					override fun drawLayer(canvas: TextCanvas) {
+						canvas.translationX += x
+						canvas.translationY += y
 						value.performDraw(canvas)
+						canvas.translationX -= x
+						canvas.translationY -= y
 					}
 				}
 			}
@@ -130,7 +128,7 @@ internal class MosaicNode(
 
 	fun measureAndPlace() {
 		val placeable = measure()
-		placeable.place(0, 0)
+		topLayer.run { placeable.place(0, 0) }
 	}
 
 	/**

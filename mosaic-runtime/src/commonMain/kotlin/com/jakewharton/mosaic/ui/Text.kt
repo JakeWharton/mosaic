@@ -25,8 +25,8 @@ public fun Text(
 			layout(width, height)
 		},
 		drawPolicy = { canvas ->
-			value.split('\n').forEachIndexed { index, line ->
-				canvas.write(index, 0, line, color, background, style)
+			value.split('\n').forEachIndexed { row, line ->
+				canvas.write(row, 0, line, color, background, style)
 			}
 		},
 	)
