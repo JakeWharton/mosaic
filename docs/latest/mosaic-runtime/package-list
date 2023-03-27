@@ -18,6 +18,8 @@ $dokka.location:com.jakewharton.mosaic.layout/NoContentMeasureScope///PointingTo
 $dokka.location:com.jakewharton.mosaic.layout/NoContentMeasureScope/layout/#kotlin.Int#kotlin.Int/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-no-content-measure-scope/layout.html
 $dokka.location:com.jakewharton.mosaic.layout/Placeable.PlacementScope///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-placeable/-placement-scope/index.html
 $dokka.location:com.jakewharton.mosaic.layout/Placeable.PlacementScope/place/com.jakewharton.mosaic.layout.Placeable#kotlin.Int#kotlin.Int/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-placeable/-placement-scope/place.html
+$dokka.location:com.jakewharton.mosaic.layout/Placeable.PlacementScope/x/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-placeable/-placement-scope/x.html
+$dokka.location:com.jakewharton.mosaic.layout/Placeable.PlacementScope/y/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-placeable/-placement-scope/y.html
 $dokka.location:com.jakewharton.mosaic.layout/Placeable///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-placeable/index.html
 $dokka.location:com.jakewharton.mosaic.layout/Placeable/Placeable/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-placeable/-placeable.html
 $dokka.location:com.jakewharton.mosaic.layout/Placeable/height/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-placeable/height.html
