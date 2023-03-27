@@ -1,6 +1,5 @@
 package com.jakewharton.mosaic
 
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.jakewharton.mosaic.layout.Layout
 import com.jakewharton.mosaic.ui.Row
 import com.jakewharton.mosaic.ui.Static
@@ -49,7 +48,7 @@ class DebugRenderingTest {
 	@Test fun framesIncludeStatics() {
 		val nodes = mosaicNodes {
 			Text("Hello")
-			Static(SnapshotStateList<String>().apply { add("Static") }) {
+			Static(snapshotStateListOf("Static")) {
 				Text(it)
 			}
 		}
