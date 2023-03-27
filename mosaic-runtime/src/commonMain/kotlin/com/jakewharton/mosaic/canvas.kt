@@ -13,28 +13,10 @@ import com.jakewharton.mosaic.ui.TextStyle.Companion.Underline
 internal interface TextCanvas {
 	val width: Int
 	val height: Int
+	var translationX: Int
+	var translationY: Int
 
 	operator fun get(row: Int, column: Int): TextPixel
-
-	operator fun get(row: Int, columns: IntRange) = get(row..row, columns)
-	operator fun get(rows: IntRange, column: Int) = get(rows, column..column)
-
-	operator fun get(rows: IntRange, columns: IntRange): TextCanvas {
-		val top = rows.first
-		require(top in 0 until height) { "Row start value out of range [0,$height): $top"}
-		val bottom = rows.last
-		require(bottom < height) { "Row end value out of range [0,$height): $bottom"}
-		val left = columns.first
-		require(left in 0 until width) { "Column start value out of range [0,$width): $left"}
-		val right = columns.last
-		require(right < width) { "Column end value out of range [0,$width): $right"}
-
-		return ClippedTextCanvas(this, left, top, right, bottom)
-	}
-
-	fun empty(): TextCanvas {
-		return ClippedTextCanvas(this, 0, 0, -1, -1)
-	}
 
 	fun write(
 		row: Int,
@@ -68,35 +50,6 @@ internal interface TextCanvas {
 			}
 		}
 	}
-
-	fun fill(body: TextPixel.() -> Unit) {
-		for (row in 0 until height) {
-			for (column in 0 until width) {
-				this[row, column].body()
-			}
-		}
-	}
-
-	override fun toString(): String
-}
-
-internal class ClippedTextCanvas(
-	private val delegate: TextCanvas,
-	private val left: Int,
-	private val top: Int,
-	right: Int,
-	bottom: Int,
-) : TextCanvas {
-	override val width = right - left + 1
-	override val height = bottom - top + 1
-
-	override fun get(row: Int, column: Int): TextPixel {
-		require(row in 0 until height) { "Row value out of range [0,$height): $row"}
-		require(column in 0 until width) { "Column value out of range [0,$width): $column"}
-		return delegate[top + row, left + column]
-	}
-
-	override fun toString() = "ClippedTextCanvas(left=$left, top=$top, width=$width, height=$height)"
 }
 
 private val blankPixel = TextPixel(' ')
@@ -105,11 +58,12 @@ internal class TextSurface(
 	override val width: Int,
 	override val height: Int,
 ) : TextCanvas {
+	override var translationX = 0
+	override var translationY = 0
+
 	private val rows = Array(height) { Array(width) { TextPixel(' ') } }
 
-	override operator fun get(row: Int, column: Int) = rows[row][column]
-
-	override fun toString() = "TextSurface(width=$width, height=$height)"
+	override operator fun get(row: Int, column: Int) = rows[translationY + row][translationX + column]
 
 	fun appendRowTo(appendable: Appendable, row: Int) {
 		// Reused heap allocation for building ANSI attributes inside the loop.
