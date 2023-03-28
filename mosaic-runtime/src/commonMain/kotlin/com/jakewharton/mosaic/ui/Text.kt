@@ -4,7 +4,6 @@ package com.jakewharton.mosaic.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import com.jakewharton.mosaic.layout.Layout
 import com.jakewharton.mosaic.text.TextLayout
 import kotlin.jvm.JvmName
 

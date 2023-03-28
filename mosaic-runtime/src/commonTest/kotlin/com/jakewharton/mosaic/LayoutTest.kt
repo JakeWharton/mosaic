@@ -1,8 +1,8 @@
 package com.jakewharton.mosaic
 
-import com.jakewharton.mosaic.layout.Layout
 import com.jakewharton.mosaic.layout.Measurable
 import com.jakewharton.mosaic.ui.Column
+import com.jakewharton.mosaic.ui.Layout
 import com.jakewharton.mosaic.ui.Row
 import com.jakewharton.mosaic.ui.Text
 import kotlin.test.Test

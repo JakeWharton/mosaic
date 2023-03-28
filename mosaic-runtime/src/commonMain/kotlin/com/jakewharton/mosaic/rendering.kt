@@ -1,5 +1,6 @@
 package com.jakewharton.mosaic
 
+import com.jakewharton.mosaic.layout.MosaicNode
 import kotlin.time.ExperimentalTime
 import kotlin.time.TimeMark
 import kotlin.time.TimeSource

@@ -1,14 +1,7 @@
-package com.jakewharton.mosaic
+package com.jakewharton.mosaic.layout
 
-import androidx.compose.runtime.AbstractApplier
-import androidx.compose.runtime.Applier
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ReusableComposeNode
-import com.jakewharton.mosaic.layout.Measurable
-import com.jakewharton.mosaic.layout.MeasurePolicy
-import com.jakewharton.mosaic.layout.MeasureResult
-import com.jakewharton.mosaic.layout.MeasureScope
-import com.jakewharton.mosaic.layout.Placeable
+import com.jakewharton.mosaic.TextCanvas
+import com.jakewharton.mosaic.TextSurface
 import com.jakewharton.mosaic.layout.Placeable.PlacementScope
 
 internal fun interface DrawPolicy {
@@ -148,87 +141,4 @@ internal class MosaicNode(
 	fun paintStatics(statics: MutableList<TextSurface>) = staticPaintPolicy?.run { performPaintStatics(statics) }
 
 	override fun toString() = debugPolicy.run { renderDebug() }
-
-	companion object {
-		val Factory: () -> MosaicNode = {
-			MosaicNode(
-				measurePolicy = ThrowingPolicy,
-				drawPolicy = ThrowingPolicy,
-				staticPaintPolicy = ThrowingPolicy,
-				debugPolicy = ThrowingPolicy,
-			)
-		}
-
-		fun root(): MosaicNode {
-			return MosaicNode(
-				measurePolicy = { measurables ->
-					var width = 0
-					var height = 0
-					val placeables = measurables.map { measurable ->
-						measurable.measure().also {
-							width = maxOf(width, it.width)
-							height = maxOf(height, it.height)
-						}
-					}
-					layout(width, height) {
-						for (placeable in placeables) {
-							placeable.place(0, 0)
-						}
-					}
-				},
-				drawPolicy = null,
-				staticPaintPolicy = StaticPaintPolicy.Children,
-				debugPolicy = {
-					children.joinToString(separator = "\n")
-				}
-			)
-		}
-
-		private val ThrowingPolicy = object : MeasurePolicy, DrawPolicy, StaticPaintPolicy, DebugPolicy {
-			override fun MeasureScope.measure(measurables: List<Measurable>) = throw AssertionError()
-			override fun performDraw(canvas: TextCanvas) = throw AssertionError()
-			override fun MosaicNode.performPaintStatics(statics: MutableList<TextSurface>) = throw AssertionError()
-			override fun MosaicNode.renderDebug() = throw AssertionError()
-		}
-	}
-}
-
-@Composable
-internal inline fun Node(
-	content: @Composable () -> Unit = {},
-	measurePolicy: MeasurePolicy,
-	drawPolicy: DrawPolicy?,
-	staticPaintPolicy: StaticPaintPolicy?,
-	debugPolicy: DebugPolicy,
-) {
-	ReusableComposeNode<MosaicNode, Applier<Any>>(
-		factory = MosaicNode.Factory,
-		update = {
-			set(measurePolicy) { this.measurePolicy = measurePolicy }
-			set(drawPolicy) { this.drawPolicy = drawPolicy }
-			set(staticPaintPolicy) { this.staticPaintPolicy = staticPaintPolicy }
-			set(debugPolicy) { this.debugPolicy = debugPolicy }
-		},
-		content = content,
-	)
-}
-
-internal class MosaicNodeApplier(root: MosaicNode) : AbstractApplier<MosaicNode>(root) {
-	override fun insertTopDown(index: Int, instance: MosaicNode) {
-		// Ignored, we insert bottom-up.
-	}
-
-	override fun insertBottomUp(index: Int, instance: MosaicNode) {
-		current.children.add(index, instance)
-	}
-
-	override fun remove(index: Int, count: Int) {
-		current.children.remove(index, count)
-	}
-
-	override fun move(from: Int, to: Int, count: Int) {
-		current.children.move(from, to, count)
-	}
-
-	override fun onClear() {}
 }

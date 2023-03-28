@@ -1,10 +1,13 @@
 package com.jakewharton.mosaic
 
+import androidx.compose.runtime.AbstractApplier
 import androidx.compose.runtime.BroadcastFrameClock
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Composition
 import androidx.compose.runtime.Recomposer
 import androidx.compose.runtime.snapshots.Snapshot
+import com.jakewharton.mosaic.layout.MosaicNode
+import com.jakewharton.mosaic.layout.StaticPaintPolicy
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
@@ -26,7 +29,7 @@ internal fun mosaicNodes(content: @Composable () -> Unit): MosaicNode {
 	val job = Job()
 	val composeContext = clock + job
 
-	val rootNode = MosaicNode.root()
+	val rootNode = createRootNode()
 	val recomposer = Recomposer(composeContext)
 	val composition = Composition(MosaicNodeApplier(rootNode), recomposer)
 
@@ -64,7 +67,7 @@ public suspend fun runMosaic(body: suspend MosaicScope.() -> Unit): Unit = corou
 	val job = Job(coroutineContext[Job])
 	val composeContext = coroutineContext + clock + job
 
-	val rootNode = MosaicNode.root()
+	val rootNode = createRootNode()
 	val recomposer = Recomposer(composeContext)
 	val composition = Composition(MosaicNodeApplier(rootNode), recomposer)
 
@@ -135,4 +138,49 @@ public suspend fun runMosaic(body: suspend MosaicScope.() -> Unit): Unit = corou
 
 	job.cancel()
 	composition.dispose()
+}
+
+internal fun createRootNode(): MosaicNode {
+	return MosaicNode(
+		measurePolicy = { measurables ->
+			var width = 0
+			var height = 0
+			val placeables = measurables.map { measurable ->
+				measurable.measure().also {
+					width = maxOf(width, it.width)
+					height = maxOf(height, it.height)
+				}
+			}
+			layout(width, height) {
+				for (placeable in placeables) {
+					placeable.place(0, 0)
+				}
+			}
+		},
+		drawPolicy = null,
+		staticPaintPolicy = StaticPaintPolicy.Children,
+		debugPolicy = {
+			children.joinToString(separator = "\n")
+		}
+	)
+}
+
+internal class MosaicNodeApplier(root: MosaicNode) : AbstractApplier<MosaicNode>(root) {
+	override fun insertTopDown(index: Int, instance: MosaicNode) {
+		// Ignored, we insert bottom-up.
+	}
+
+	override fun insertBottomUp(index: Int, instance: MosaicNode) {
+		current.children.add(index, instance)
+	}
+
+	override fun remove(index: Int, count: Int) {
+		current.children.remove(index, count)
+	}
+
+	override fun move(from: Int, to: Int, count: Int) {
+		current.children.move(from, to, count)
+	}
+
+	override fun onClear() {}
 }
