@@ -3,8 +3,9 @@
 package com.jakewharton.mosaic.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import com.jakewharton.mosaic.layout.Layout
-import de.cketti.codepoints.codePointCount
+import com.jakewharton.mosaic.text.TextLayout
 import kotlin.jvm.JvmName
 
 @Composable
@@ -14,18 +15,19 @@ public fun Text(
 	background: Color? = null,
 	style: TextStyle? = null,
 ) {
+	val layout = remember { TextLayout() }
+	layout.value = value
+
 	Layout(
 		debugInfo = {
 			"""Text("$value")"""
 		},
 		measurePolicy = {
-			val lines = value.split('\n')
-			val width = lines.maxOf { it.codePointCount(0, it.length) }
-			val height = lines.size
-			layout(width, height)
+			layout.measure()
+			layout(layout.width, layout.height)
 		},
 		drawPolicy = { canvas ->
-			value.split('\n').forEachIndexed { row, line ->
+			layout.lines.forEachIndexed { row, line ->
 				canvas.write(row, 0, line, color, background, style)
 			}
 		},
