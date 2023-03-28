@@ -1,7 +1,6 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
 $dokka.location:com.jakewharton.mosaic.layout////PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/index.html
-$dokka.location:com.jakewharton.mosaic.layout//Layout/#kotlin.Function0[kotlin.Unit]#kotlin.Function0[kotlin.String]#com.jakewharton.mosaic.layout.MeasurePolicy/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-layout.html
 $dokka.location:com.jakewharton.mosaic.layout/Measurable///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-measurable/index.html
 $dokka.location:com.jakewharton.mosaic.layout/Measurable/measure/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-measurable/measure.html
 $dokka.location:com.jakewharton.mosaic.layout/MeasurePolicy///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-measure-policy/index.html
@@ -12,10 +11,6 @@ $dokka.location:com.jakewharton.mosaic.layout/MeasureResult/placeChildren/#/Poin
 $dokka.location:com.jakewharton.mosaic.layout/MeasureResult/width/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-measure-result/width.html
 $dokka.location:com.jakewharton.mosaic.layout/MeasureScope///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-measure-scope/index.html
 $dokka.location:com.jakewharton.mosaic.layout/MeasureScope/layout/#kotlin.Int#kotlin.Int#kotlin.Function1[com.jakewharton.mosaic.layout.Placeable.PlacementScope,kotlin.Unit]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-measure-scope/layout.html
-$dokka.location:com.jakewharton.mosaic.layout/NoContentMeasurePolicy///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-no-content-measure-policy/index.html
-$dokka.location:com.jakewharton.mosaic.layout/NoContentMeasurePolicy/measure/com.jakewharton.mosaic.layout.NoContentMeasureScope#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-no-content-measure-policy/measure.html
-$dokka.location:com.jakewharton.mosaic.layout/NoContentMeasureScope///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-no-content-measure-scope/index.html
-$dokka.location:com.jakewharton.mosaic.layout/NoContentMeasureScope/layout/#kotlin.Int#kotlin.Int/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-no-content-measure-scope/layout.html
 $dokka.location:com.jakewharton.mosaic.layout/Placeable.PlacementScope///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-placeable/-placement-scope/index.html
 $dokka.location:com.jakewharton.mosaic.layout/Placeable.PlacementScope/place/com.jakewharton.mosaic.layout.Placeable#kotlin.Int#kotlin.Int/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-placeable/-placement-scope/place.html
 $dokka.location:com.jakewharton.mosaic.layout/Placeable.PlacementScope/x/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-placeable/-placement-scope/x.html
@@ -26,6 +21,7 @@ $dokka.location:com.jakewharton.mosaic.layout/Placeable/height/#/PointingToDecla
 $dokka.location:com.jakewharton.mosaic.layout/Placeable/width/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-placeable/width.html
 $dokka.location:com.jakewharton.mosaic.ui////PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/index.html
 $dokka.location:com.jakewharton.mosaic.ui//Column/#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-column.html
+$dokka.location:com.jakewharton.mosaic.ui//Layout/#kotlin.Function0[kotlin.Unit]#kotlin.Function0[kotlin.String]#com.jakewharton.mosaic.layout.MeasurePolicy/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-layout.html
 $dokka.location:com.jakewharton.mosaic.ui//Row/#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-row.html
 $dokka.location:com.jakewharton.mosaic.ui//Static/#androidx.compose.runtime.snapshots.SnapshotStateList[TypeParam(bounds=[kotlin.Any?])]#kotlin.Function1[TypeParam(bounds=[kotlin.Any?]),kotlin.Unit]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-static.html
 $dokka.location:com.jakewharton.mosaic.ui//Text/#kotlin.String#com.jakewharton.mosaic.ui.Color?#com.jakewharton.mosaic.ui.Color?#com.jakewharton.mosaic.ui.TextStyle?/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-text.html
