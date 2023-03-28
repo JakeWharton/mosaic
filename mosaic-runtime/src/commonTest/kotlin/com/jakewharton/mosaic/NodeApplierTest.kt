@@ -1,11 +1,14 @@
 package com.jakewharton.mosaic
 
 import androidx.compose.runtime.Applier
+import com.jakewharton.mosaic.layout.DebugPolicy
+import com.jakewharton.mosaic.layout.MosaicNode
+import com.jakewharton.mosaic.ui.NodeFactory
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class NodeApplierTest {
-	private val root = MosaicNode.root()
+	private val root = createRootNode()
 	private val applier = MosaicNodeApplier(root)
 
 	private fun <T> Applier<T>.insert(index: Int, instance: T) {
@@ -185,7 +188,7 @@ class NodeApplierTest {
 	}
 
 	private fun TextNode(name: String): MosaicNode {
-		return MosaicNode.Factory().apply {
+		return NodeFactory().apply {
 			debugPolicy = DebugPolicy { name }
 		}
 	}

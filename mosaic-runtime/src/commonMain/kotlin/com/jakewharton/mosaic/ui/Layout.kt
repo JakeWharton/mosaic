@@ -1,12 +1,37 @@
 @file:JvmName("Layout")
 
-package com.jakewharton.mosaic.layout
+package com.jakewharton.mosaic.ui
 
 import androidx.compose.runtime.Composable
-import com.jakewharton.mosaic.DrawPolicy
-import com.jakewharton.mosaic.Node
-import com.jakewharton.mosaic.StaticPaintPolicy
+import com.jakewharton.mosaic.layout.DrawPolicy
+import com.jakewharton.mosaic.layout.Measurable
+import com.jakewharton.mosaic.layout.MeasurePolicy
+import com.jakewharton.mosaic.layout.MeasureResult
+import com.jakewharton.mosaic.layout.MeasureScope
+import com.jakewharton.mosaic.layout.StaticPaintPolicy
 import kotlin.jvm.JvmName
+
+internal fun interface NoContentMeasurePolicy {
+	fun NoContentMeasureScope.measure(): MeasureResult
+}
+
+internal sealed class NoContentMeasureScope {
+	fun layout(
+		width: Int,
+		height: Int,
+	): MeasureResult {
+		return LayoutResult(width, height)
+	}
+
+	private class LayoutResult(
+		override val width: Int,
+		override val height: Int,
+	) : MeasureResult {
+		override fun placeChildren() {}
+	}
+
+	internal companion object : NoContentMeasureScope()
+}
 
 @Composable
 internal fun Layout(

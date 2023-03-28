@@ -3,7 +3,6 @@
 package com.jakewharton.mosaic.ui
 
 import androidx.compose.runtime.Composable
-import com.jakewharton.mosaic.layout.Layout
 import kotlin.jvm.JvmName
 
 @Composable
