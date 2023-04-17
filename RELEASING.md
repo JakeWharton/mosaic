@@ -11,7 +11,6 @@
    1. Change the "Download" section to reflect the new release version.
    2. Update the compatibility chart with our new version and if it supports a new Kotlin version.
    3. Change the snapshot section to reflect the next "SNAPSHOT" version, if it is changing.
-   4. Update the Kotlin version compatibility table
 
 4. Commit
 
@@ -19,29 +18,24 @@
    $ git commit -am "Prepare version X.Y.X"
    ```
 
-5. Manually release and upload artifacts
-   1. Run `./gradlew clean publish`
-   2. Visit [Sonatype Nexus](https://oss.sonatype.org/) and promote the artifact.
-   3. If either fails, drop the Sonatype repo, fix the problem, commit, and restart this section.
-
-6. Tag
+5. Tag
 
    ```
    $ git tag -am "Version X.Y.Z" X.Y.Z
    ```
 
-7. Update the `VERSION_NAME` in `gradle.properties` to the next "SNAPSHOT" version.
+6. Update the `VERSION_NAME` in `gradle.properties` to the next "SNAPSHOT" version.
 
-8. Commit
+7. Commit
 
    ```
    $ git commit -am "Prepare next development version"
    ```
 
-9. Push!
+8. Push!
 
    ```
    $ git push && git push --tags
    ```
 
-   This will trigger a GitHub Action workflow which will create a GitHub release.
+   This will trigger a GitHub Action workflow which will create a GitHub release and push to Maven Central.
