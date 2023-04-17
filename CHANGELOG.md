@@ -3,6 +3,23 @@
 ## [Unreleased]
 
 
+## [0.6.0] - 2023-04-17
+
+New:
+- Support Kotlin 1.8.20 via JetBrains Compose compiler 1.4.5.
+
+Changed:
+- Upgrade JetBrains Compose runtime to 1.4.0.
+- Reduce string copies and string allocation required to perform a single frame render.
+- Only split text strings on newline when its value changes by caching layout information across recomposition.
+- Canvas is no longer clipped for each node. If you notice any overlapping drawing, please report a bug.
+
+Breaking:
+- Composables were moved into `ui` subpackage.
+- `Layout` and related interfaces were moved into `layout` subpackage.
+- `Static` content is now based on `SnapshotStateList` instead of `Flow`.
+
+
 ## [0.5.0] - 2023-03-09
 
  - Support Kotlin 1.8.10 via JetBrains Compose compiler 1.4.2.
@@ -10,7 +27,6 @@
  - New: Expose a custom `Layout` composable similar to Compose UI. This is just the beginning of a larger change to expose more powerful primitives.
  - Implicit root node is no longer a `Row`. Multiple children at the root will now draw on top of each other. Choose a `Row` or `Column` as the root composable yourself.
  - Each `Static` content is no longer wrapped in a `Row`. Multiple children in a single `Static` composable will draw on top of each other. Choose a `Row` or `Column` if you have multiple items. Multiple `Static` composables will still render in `Column`-like behavior
-
 
 
 ## [0.4.0] - 2023-02-19
