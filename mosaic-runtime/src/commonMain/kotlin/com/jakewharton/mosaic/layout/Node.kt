@@ -5,18 +5,6 @@ import com.jakewharton.mosaic.TextSurface
 import com.jakewharton.mosaic.layout.Placeable.PlacementScope
 import com.jakewharton.mosaic.modifier.Modifier
 
-internal fun interface StaticPaintPolicy {
-	fun MosaicNode.performPaintStatics(statics: MutableList<TextSurface>)
-
-	companion object {
-		val Children = StaticPaintPolicy { statics ->
-			for (child in children) {
-				child.paintStatics(statics)
-			}
-		}
-	}
-}
-
 internal fun interface DebugPolicy {
 	fun MosaicNode.renderDebug(): String
 }
@@ -79,10 +67,10 @@ internal object NotMeasured : MeasureResult {
 
 internal class MosaicNode(
 	var measurePolicy: MeasurePolicy,
-	var staticPaintPolicy: StaticPaintPolicy?,
 	var debugPolicy: DebugPolicy,
-	val isStatic: Boolean,
+	val onStaticDraw: (() -> Unit)?,
 ) : Measurable {
+	private val isStatic = onStaticDraw != null
 	val children = mutableListOf<MosaicNode>()
 
 	private val bottomLayer: MosaicNodeLayer = object : AbstractMosaicNodeLayer(null, isStatic) {
@@ -162,7 +150,15 @@ internal class MosaicNode(
 	 * Append any static [TextSurfaces][TextSurface] to [statics].
 	 * A call to [measureAndPlace] must precede calls to this function.
 	 */
-	fun paintStatics(statics: MutableList<TextSurface>) = staticPaintPolicy?.run { performPaintStatics(statics) }
+	fun paintStatics(statics: MutableList<TextSurface>) {
+		for (child in children) {
+			if (isStatic) {
+				statics += child.paint()
+			}
+			child.paintStatics(statics)
+		}
+		onStaticDraw?.invoke()
+	}
 
 	override fun toString() = debugPolicy.run { renderDebug() }
 }

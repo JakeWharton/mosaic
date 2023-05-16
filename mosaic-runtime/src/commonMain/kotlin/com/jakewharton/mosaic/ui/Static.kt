@@ -45,18 +45,11 @@ public fun <T> Static(
 			}
 		},
 		modifiers = Modifier,
-		staticPaintPolicy = { statics ->
-			if (children.isNotEmpty()) {
-				for (child in children) {
-					statics += child.paint()
-					child.paintStatics(statics)
-				}
-				lastDrawn = lastRendered
-			}
-		},
 		debugPolicy = {
 			children.joinToString(prefix = "Static()") { "\n" + it.toString().prependIndent("  ") }
 		},
-		factory = StaticNodeFactory,
+		factory = StaticNodeFactory {
+			lastDrawn = lastRendered
+		},
 	)
 }
