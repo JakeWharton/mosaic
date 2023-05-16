@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composition
 import androidx.compose.runtime.Recomposer
 import androidx.compose.runtime.snapshots.Snapshot
 import com.jakewharton.mosaic.layout.MosaicNode
-import com.jakewharton.mosaic.layout.StaticPaintPolicy
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
@@ -157,11 +156,10 @@ internal fun createRootNode(): MosaicNode {
 				}
 			}
 		},
-		staticPaintPolicy = StaticPaintPolicy.Children,
 		debugPolicy = {
 			children.joinToString(separator = "\n")
 		},
-		isStatic = false,
+		onStaticDraw = null,
 	)
 }
 

@@ -7,7 +7,6 @@ import com.jakewharton.mosaic.layout.Measurable
 import com.jakewharton.mosaic.layout.MeasurePolicy
 import com.jakewharton.mosaic.layout.MeasureResult
 import com.jakewharton.mosaic.layout.MeasureScope
-import com.jakewharton.mosaic.layout.StaticPaintPolicy
 import com.jakewharton.mosaic.modifier.Modifier
 import kotlin.jvm.JvmName
 
@@ -42,7 +41,6 @@ internal fun Layout(
 	Node(
 		measurePolicy = NoContentMeasurePolicyMeasurePolicy(measurePolicy),
 		modifiers = modifiers,
-		staticPaintPolicy = null,
 		debugPolicy = { debugInfo() + " x=$x y=$y w=$width h=$height${modifiers.toDebugString()}" },
 		factory = NodeFactory,
 	)
@@ -68,7 +66,6 @@ public fun Layout(
 		content = content,
 		measurePolicy = measurePolicy,
 		modifiers = modifiers,
-		staticPaintPolicy = StaticPaintPolicy.Children,
 		debugPolicy = {
 			buildString {
 				append(debugInfo())
