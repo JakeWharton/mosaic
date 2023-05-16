@@ -4,6 +4,8 @@ package com.jakewharton.mosaic.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import com.jakewharton.mosaic.layout.drawBehind
+import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.text.TextLayout
 import kotlin.jvm.JvmName
 
@@ -25,9 +27,9 @@ public fun Text(
 			layout.measure()
 			layout(layout.width, layout.height)
 		},
-		drawPolicy = { canvas ->
+		modifiers = Modifier.drawBehind {
 			layout.lines.forEachIndexed { row, line ->
-				canvas.write(row, 0, line, color, background, style)
+				write(row, 0, line, color, background, style)
 			}
 		},
 	)

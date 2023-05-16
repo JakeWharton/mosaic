@@ -157,11 +157,11 @@ internal fun createRootNode(): MosaicNode {
 				}
 			}
 		},
-		drawPolicy = null,
 		staticPaintPolicy = StaticPaintPolicy.Children,
 		debugPolicy = {
 			children.joinToString(separator = "\n")
-		}
+		},
+		isStatic = false,
 	)
 }
 

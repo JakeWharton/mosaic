@@ -17,39 +17,6 @@ internal interface TextCanvas {
 	var translationY: Int
 
 	operator fun get(row: Int, column: Int): TextPixel
-
-	fun write(
-		row: Int,
-		column: Int,
-		string: String,
-		foreground: Color? = null,
-		background: Color? = null,
-		style: TextStyle? = null,
-	) {
-		var pixelIndex = 0
-		var characterColumn = column
-		while (pixelIndex < string.length) {
-			val character = this[row, characterColumn++]
-
-			val pixelEnd = if (string[pixelIndex].isHighSurrogate()) {
-				pixelIndex + 2
-			} else {
-				pixelIndex + 1
-			}
-			character.value = string.substring(pixelIndex, pixelEnd)
-			pixelIndex = pixelEnd
-
-			if (background != null) {
-				character.background = background
-			}
-			if (foreground != null) {
-				character.foreground = foreground
-			}
-			if (style != null) {
-				character.style = style
-			}
-		}
-	}
 }
 
 private val blankPixel = TextPixel(' ')

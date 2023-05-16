@@ -3,12 +3,12 @@
 package com.jakewharton.mosaic.ui
 
 import androidx.compose.runtime.Composable
-import com.jakewharton.mosaic.layout.DrawPolicy
 import com.jakewharton.mosaic.layout.Measurable
 import com.jakewharton.mosaic.layout.MeasurePolicy
 import com.jakewharton.mosaic.layout.MeasureResult
 import com.jakewharton.mosaic.layout.MeasureScope
 import com.jakewharton.mosaic.layout.StaticPaintPolicy
+import com.jakewharton.mosaic.modifier.Modifier
 import kotlin.jvm.JvmName
 
 internal fun interface NoContentMeasurePolicy {
@@ -35,15 +35,16 @@ internal sealed class NoContentMeasureScope {
 
 @Composable
 internal fun Layout(
+	modifiers: Modifier = Modifier,
 	debugInfo: () -> String = { "Layout()" },
-	drawPolicy: DrawPolicy,
 	measurePolicy: NoContentMeasurePolicy,
 ) {
 	Node(
 		measurePolicy = NoContentMeasurePolicyMeasurePolicy(measurePolicy),
-		drawPolicy = drawPolicy,
+		modifiers = modifiers,
 		staticPaintPolicy = null,
-		debugPolicy = { debugInfo() + " x=$x y=$y w=$width h=$height" },
+		debugPolicy = { debugInfo() + " x=$x y=$y w=$width h=$height${modifiers.toDebugString()}" },
+		factory = NodeFactory,
 	)
 }
 
@@ -59,22 +60,32 @@ private class NoContentMeasurePolicyMeasurePolicy(
 @Composable
 public fun Layout(
 	content: @Composable () -> Unit,
+	modifiers: Modifier = Modifier,
 	debugInfo: () -> String = { "Layout()" },
 	measurePolicy: MeasurePolicy,
 ) {
 	Node(
 		content = content,
 		measurePolicy = measurePolicy,
-		drawPolicy = null,
+		modifiers = modifiers,
 		staticPaintPolicy = StaticPaintPolicy.Children,
 		debugPolicy = {
 			buildString {
 				append(debugInfo())
-				append(" x=$x y=$y w=$width h=$height")
+				append(" x=$x y=$y w=$width h=$height${modifiers.toDebugString()}")
 				children.joinTo(this, separator = "") {
 					"\n" + it.toString().prependIndent("  ")
 				}
 			}
 		},
+		factory = NodeFactory,
 	)
+}
+
+private fun Modifier.toDebugString(): String {
+	return if (this == Modifier) {
+		""
+	} else {
+		" " + toString()
+	}
 }
