@@ -1,4 +1,4 @@
-@file:JvmName("Row")
+@file:JvmName("Box")
 
 package com.jakewharton.mosaic.ui
 
@@ -11,28 +11,26 @@ import com.jakewharton.mosaic.modifier.Modifier
 import kotlin.jvm.JvmName
 
 @Composable
-public fun Row(
+public fun Box(
 	modifier: Modifier = Modifier,
 	content: @Composable () -> Unit,
 ) {
-	Layout(content, modifier, { "Row()" }, RowMeasurePolicy())
+	Layout(content, modifier, { "Box()" }, BoxMeasurePolicy())
 }
 
-private class RowMeasurePolicy : MeasurePolicy {
+internal class BoxMeasurePolicy : MeasurePolicy {
 	override fun MeasureScope.measure(measurables: List<Measurable>): MeasureResult {
 		var width = 0
 		var height = 0
 		val placeables = measurables.map { measurable ->
-			measurable.measure().also { placeable ->
-				width += placeable.width
-				height = maxOf(height, placeable.height)
+			measurable.measure().also {
+				width = maxOf(width, it.width)
+				height = maxOf(height, it.height)
 			}
 		}
 		return layout(width, height) {
-			var x = 0
 			for (placeable in placeables) {
-				placeable.place(x, 0)
-				x += placeable.width
+				placeable.place(0, 0)
 			}
 		}
 	}
