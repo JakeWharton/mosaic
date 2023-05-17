@@ -96,4 +96,20 @@ internal class TextPixel(var value: String) {
 	var style = None
 
 	constructor(char: Char) : this(char.toString())
+
+	override fun toString() = buildString {
+		append("TextPixel(\"")
+		append(value)
+		append("\"")
+		if (background != null) {
+			append(" bg=")
+			append(background)
+		}
+		if (foreground != null) {
+			append(" fg=")
+			append(foreground)
+		}
+		// TODO style
+		append(')')
+	}
 }

@@ -10,6 +10,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import com.jakewharton.mosaic.layout.background
+import com.jakewharton.mosaic.layout.padding
+import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.runMosaicBlocking
 import com.jakewharton.mosaic.ui.Color.Companion.Black
 import com.jakewharton.mosaic.ui.Color.Companion.BrightBlack
@@ -96,13 +99,18 @@ fun TestRow(test: Test) {
 			Pass -> Green
 			Fail -> Red
 		}
-		// TODO use start/end padding of 1 to achieve spacing
 		val state = when (test.state) {
-			Running -> " RUNS "
-			Pass -> " PASS "
-			Fail -> " FAIL "
+			Running -> "RUNS"
+			Pass -> "PASS"
+			Fail -> "FAIL"
 		}
-		Text(state, color = Black, background = bg)
+		Text(
+			state,
+			modifier = Modifier
+				.background(bg)
+				.padding(horizontal = 1),
+			color = Black
+		)
 
 		val dir = test.path.substringBeforeLast('/')
 		val name = test.path.substringAfterLast('/')

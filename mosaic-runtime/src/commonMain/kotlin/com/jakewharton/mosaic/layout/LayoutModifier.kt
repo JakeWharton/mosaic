@@ -46,6 +46,9 @@ public interface LayoutModifier : Modifier.Element {
 	public fun MeasureScope.measure(
 		measurable: Measurable,
 	): MeasureResult
+
+	// Force subclasses to add a debugging implementation.
+	override fun toString(): String
 }
 
 /**
