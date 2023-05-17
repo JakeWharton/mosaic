@@ -20,6 +20,8 @@ import com.jakewharton.mosaic.modifier.Modifier
 
 public interface DrawModifier : Modifier.Element {
 	public fun ContentDrawScope.draw()
+	// Force subclasses to add a debugging implementation.
+	override fun toString(): String
 }
 
 public fun Modifier.drawBehind(

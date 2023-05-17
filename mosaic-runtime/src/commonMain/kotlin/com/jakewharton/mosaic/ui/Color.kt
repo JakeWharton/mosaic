@@ -8,6 +8,8 @@ public class Color private constructor(
 	internal val fg: Int,
 	internal val bg: Int,
 ) {
+	override fun toString(): String = "Color($fg)"
+
 	public companion object {
 		@Stable
 		public val Black: Color = Color(30, 40)

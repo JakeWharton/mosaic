@@ -12,6 +12,7 @@ import kotlin.jvm.JvmName
 @Composable
 public fun Text(
 	value: String,
+	modifier: Modifier = Modifier,
 	color: Color? = null,
 	background: Color? = null,
 	style: TextStyle? = null,
@@ -27,9 +28,9 @@ public fun Text(
 			layout.measure()
 			layout(layout.width, layout.height)
 		},
-		modifiers = Modifier.drawBehind {
+		modifiers = modifier.drawBehind {
 			layout.lines.forEachIndexed { row, line ->
-				write(row, 0, line, color, background, style)
+				drawText(row, 0, line, color, background, style)
 			}
 		},
 	)

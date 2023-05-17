@@ -21,7 +21,18 @@ import com.jakewharton.mosaic.ui.Color
 import com.jakewharton.mosaic.ui.TextStyle
 
 public interface DrawScope {
-	public fun write(
+	public val width: Int
+	public val height: Int
+
+	public fun drawRect(
+		color: Color,
+		row: Int = 0,
+		column: Int = 0,
+		width: Int = this.width,
+		height: Int = this.height,
+	)
+
+	public fun drawText(
 		row: Int,
 		column: Int,
 		string: String,
@@ -33,8 +44,24 @@ public interface DrawScope {
 
 internal open class TextCanvasDrawScope(
 	private val canvas: TextCanvas,
+	override val width: Int,
+	override val height: Int,
 ): DrawScope {
-	override fun write(
+	override fun drawRect(
+		color: Color,
+		row: Int,
+		column: Int,
+		width: Int,
+		height: Int,
+	) {
+		for (y in row until row + height) {
+			for (x in column until column + width) {
+				canvas[y, x].background = color
+			}
+		}
+	}
+
+	override fun drawText(
 		row: Int,
 		column: Int,
 		string: String,

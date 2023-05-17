@@ -103,7 +103,7 @@ class LayoutTest {
 					Text("..")
 					Layout(modifiers = Modifier.drawBehind {
 						repeat(4) { row ->
-							write(row, 0, "XXXX")
+							drawText(row, 0, "XXXX")
 						}
 					}) {
 						layout(2, 2)
