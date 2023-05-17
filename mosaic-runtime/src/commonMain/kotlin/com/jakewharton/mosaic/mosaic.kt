@@ -67,26 +67,26 @@ public suspend fun runMosaic(body: suspend MosaicScope.() -> Unit): Unit = corou
 	val composeContext = coroutineContext + clock + job
 
 	val rootNode = createRootNode()
+	var displaySignal: CompletableDeferred<Unit>? = null
+	val applier = MosaicNodeApplier(rootNode) {
+		val render = rendering.render(rootNode)
+		platformDisplay(render)
+
+		displaySignal?.complete(Unit)
+		hasFrameWaiters = false
+	}
+
 	val recomposer = Recomposer(composeContext)
-	val composition = Composition(MosaicNodeApplier(rootNode), recomposer)
+	val composition = Composition(applier, recomposer)
 
 	// Start undispatched to ensure we can use suspending things inside the content.
 	launch(start = UNDISPATCHED, context = composeContext) {
 		recomposer.runRecomposeAndApplyChanges()
 	}
 
-	var displaySignal: CompletableDeferred<Unit>? = null
 	launch(context = composeContext) {
 		while (true) {
-			if (hasFrameWaiters) {
-				hasFrameWaiters = false
-				clock.sendFrame(0L) // Frame time value is not used by Compose runtime.
-
-				val render = rendering.render(rootNode)
-				platformDisplay(render)
-
-				displaySignal?.complete(Unit)
-			}
+			clock.sendFrame(0L) // Frame time value is not used by Compose runtime.
 			delay(50)
 		}
 	}
@@ -95,7 +95,6 @@ public suspend fun runMosaic(body: suspend MosaicScope.() -> Unit): Unit = corou
 		val scope = object : MosaicScope, CoroutineScope by this {
 			override fun setContent(content: @Composable () -> Unit) {
 				composition.setContent(content)
-				hasFrameWaiters = true
 			}
 		}
 
@@ -163,7 +162,14 @@ internal fun createRootNode(): MosaicNode {
 	)
 }
 
-internal class MosaicNodeApplier(root: MosaicNode) : AbstractApplier<MosaicNode>(root) {
+internal class MosaicNodeApplier(
+	root: MosaicNode,
+	private val onEndChanges: () -> Unit = {},
+) : AbstractApplier<MosaicNode>(root) {
+	override fun onEndChanges() {
+		onEndChanges.invoke()
+	}
+
 	override fun insertTopDown(index: Int, instance: MosaicNode) {
 		// Ignored, we insert bottom-up.
 	}
