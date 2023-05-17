@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composition
 import androidx.compose.runtime.Recomposer
 import androidx.compose.runtime.snapshots.Snapshot
 import com.jakewharton.mosaic.layout.MosaicNode
+import com.jakewharton.mosaic.ui.BoxMeasurePolicy
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
@@ -140,24 +141,8 @@ public suspend fun runMosaic(body: suspend MosaicScope.() -> Unit): Unit = corou
 
 internal fun createRootNode(): MosaicNode {
 	return MosaicNode(
-		measurePolicy = { measurables ->
-			var width = 0
-			var height = 0
-			val placeables = measurables.map { measurable ->
-				measurable.measure().also {
-					width = maxOf(width, it.width)
-					height = maxOf(height, it.height)
-				}
-			}
-			layout(width, height) {
-				for (placeable in placeables) {
-					placeable.place(0, 0)
-				}
-			}
-		},
-		debugPolicy = {
-			children.joinToString(separator = "\n")
-		},
+		measurePolicy = BoxMeasurePolicy(),
+		debugPolicy = { children.joinToString(separator = "\n") },
 		onStaticDraw = null,
 	)
 }
