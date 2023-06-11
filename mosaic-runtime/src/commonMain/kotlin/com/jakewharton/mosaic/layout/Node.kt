@@ -75,6 +75,7 @@ internal class MosaicNode(
 
 	private val bottomLayer: MosaicNodeLayer = BottomLayer(this)
 	var topLayer: MosaicNodeLayer = bottomLayer
+		private set
 
 	var modifiers: Modifier = Modifier
 		set(value) {
