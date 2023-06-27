@@ -3,6 +3,19 @@
 ## [Unreleased]
 
 
+## [0.7.0] - 2023-06-26
+
+New:
+- Support Kotlin 1.8.21 via JetBrains Compose compiler 1.4.7.
+- Add support for modifiers on layouts and built-in components.
+  There are two types which are built-in: `DrawModifier` and `LayoutModifier`.
+  The built-in functions are `drawBehind`, `background`, `layout`, and `padding`.
+- Add Box component.
+
+Changed:
+- Frames are now emitted slightly differently relying on Compose for signaling when a change has happened. Please report any problems.
+
+
 ## [0.6.0] - 2023-04-17
 
 New:
