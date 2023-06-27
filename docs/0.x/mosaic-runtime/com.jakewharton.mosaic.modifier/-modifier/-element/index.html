@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>Element</title>
+    <link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../../";</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/jetbrains-mono.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
+</head>
+<body>
+<div class="navigation-wrapper" id="navigation-wrapper">
+    <div id="leftToggler"><span class="icon-toggler"></span></div>
+    <div class="library-name">
+            <a href="../../../../index.html">
+                    <span>mosaic-runtime</span>
+            </a>
+    </div>
+    <div>
+0.7.0    </div>
+    <div class="pull-right d-flex">
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":mosaic-runtime:dokkaHtml/commonMain">common</button>
+        </div>
+        <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
+        <div id="searchBar"></div>
+    </div>
+</div>
+<div id="container">
+    <div id="leftColumn">
+        <div id="sideMenu"></div>
+    </div>
+    <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageIds="mosaic-runtime::com.jakewharton.mosaic.modifier/Modifier.Element///PointingToDeclaration//1053859847">
+  <div class="breadcrumbs"><a href="../../../../index.html">mosaic-runtime</a><span class="delimiter">/</span><a href="../../index.html">com.jakewharton.mosaic.modifier</a><span class="delimiter">/</span><a href="../index.html">Modifier</a><span class="delimiter">/</span><span class="current">Element</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Element</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">Element</a> : <a href="../index.html">Modifier</a></div><p class="paragraph">A single element contained within a <a href="../index.html">Modifier</a> chain.</p><h4 class="">Inheritors</h4><div class="table"><div class="table-row" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../../../com.jakewharton.mosaic.layout/-draw-modifier/index.html">DrawModifier</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../../../com.jakewharton.mosaic.layout/-layout-modifier/index.html">LayoutModifier</a></div></span></div><div></div></div></div></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button><button class="section-tab" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION,EXTENSION_PROPERTY,EXTENSION_FUNCTION">Members &amp; Extensions</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="802489139%2FFunctions%2F1053859847" anchor-label="all" id="802489139%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="all.html"><span><span>all</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="802489139%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="all.html"><span class="token function">all</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">predicate<span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span><a href="index.html">Modifier.Element</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Returns <code class="lang-kotlin">true</code> if <a href="all.html">predicate</a> returns true for all <a href="index.html">Element</a>s in this <a href="../index.html">Modifier</a> or if this <a href="../index.html">Modifier</a> contains no <a href="index.html">Element</a>s.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-60383810%2FFunctions%2F1053859847" anchor-label="any" id="-60383810%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="any.html"><span><span>any</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-60383810%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="any.html"><span class="token function">any</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">predicate<span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span><a href="index.html">Modifier.Element</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Returns <code class="lang-kotlin">true</code> if <a href="any.html">predicate</a> returns true for any <a href="index.html">Element</a> in this <a href="../index.html">Modifier</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1304181679%2FFunctions%2F1053859847" anchor-label="background" id="1304181679%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../../com.jakewharton.mosaic.layout/background.html"><span><span>background</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1304181679%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="../index.html">Modifier</a><span class="token punctuation">.</span><a href="../../../com.jakewharton.mosaic.layout/background.html"><span class="token function">background</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">color<span class="token operator">: </span><a href="../../../com.jakewharton.mosaic.ui/-color/index.html">Color</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../index.html">Modifier</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1735754049%2FFunctions%2F1053859847" anchor-label="drawBehind" id="-1735754049%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../../com.jakewharton.mosaic.layout/draw-behind.html"><span>draw</span><wbr></wbr><span><span>Behind</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1735754049%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../index.html">Modifier</a><span class="token punctuation">.</span><a href="../../../com.jakewharton.mosaic.layout/draw-behind.html"><span class="token function">drawBehind</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">onDraw<span class="token operator">: </span><span class="token keyword"></span><a href="../../../com.jakewharton.mosaic.layout/-draw-scope/index.html">DrawScope</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../index.html">Modifier</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1175166271%2FFunctions%2F1053859847" anchor-label="foldIn" id="-1175166271%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="fold-in.html"><span>fold</span><wbr></wbr><span><span>In</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1175166271%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="fold-in.html">R</a><span class="token operator">&gt; </span><a href="fold-in.html"><span class="token function">foldIn</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">initial<span class="token operator">: </span><a href="fold-in.html">R</a><span class="token punctuation">, </span></span><span class="parameter ">operation<span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span><a href="fold-in.html">R</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="index.html">Modifier.Element</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="fold-in.html">R</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="fold-in.html">R</a></div><div class="brief "><p class="paragraph">Accumulates a value starting with <a href="fold-in.html">initial</a> and applying <a href="fold-in.html">operation</a> to the current value and each element from outside in.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2028439200%2FFunctions%2F1053859847" anchor-label="foldOut" id="2028439200%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="fold-out.html"><span>fold</span><wbr></wbr><span><span>Out</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2028439200%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="fold-out.html">R</a><span class="token operator">&gt; </span><a href="fold-out.html"><span class="token function">foldOut</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">initial<span class="token operator">: </span><a href="fold-out.html">R</a><span class="token punctuation">, </span></span><span class="parameter ">operation<span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span><a href="index.html">Modifier.Element</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="fold-out.html">R</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="fold-out.html">R</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="fold-out.html">R</a></div><div class="brief "><p class="paragraph">Accumulates a value starting with <a href="fold-out.html">initial</a> and applying <a href="fold-out.html">operation</a> to the current value and each element from inside out.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-180528835%2FFunctions%2F1053859847" anchor-label="layout" id="-180528835%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../../com.jakewharton.mosaic.layout/layout.html"><span><span>layout</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-180528835%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../index.html">Modifier</a><span class="token punctuation">.</span><a href="../../../com.jakewharton.mosaic.layout/layout.html"><span class="token function">layout</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">measure<span class="token operator">: </span><span class="token keyword"></span><a href="../../../com.jakewharton.mosaic.layout/-measure-scope/index.html">MeasureScope</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token keyword"></span><a href="../../../com.jakewharton.mosaic.layout/-measurable/index.html">Measurable</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="../../../com.jakewharton.mosaic.layout/-measure-result/index.html">MeasureResult</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../index.html">Modifier</a></div><div class="brief "><p class="paragraph">Creates a <a href="../../../com.jakewharton.mosaic.layout/-layout-modifier/index.html">LayoutModifier</a> that allows changing how the wrapped element is measured and laid out.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1407456380%2FFunctions%2F1053859847" anchor-label="padding" id="-1407456380%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../../com.jakewharton.mosaic.layout/padding.html"><span><span>padding</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1407456380%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="../index.html">Modifier</a><span class="token punctuation">.</span><a href="../../../com.jakewharton.mosaic.layout/padding.html"><span class="token function">padding</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">all<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../index.html">Modifier</a></div><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="../index.html">Modifier</a><span class="token punctuation">.</span><a href="../../../com.jakewharton.mosaic.layout/padding.html"><span class="token function">padding</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">horizontal<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span><span class="token punctuation">, </span></span><span class="parameter ">vertical<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../index.html">Modifier</a></div><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="../index.html">Modifier</a><span class="token punctuation">.</span><a href="../../../com.jakewharton.mosaic.layout/padding.html"><span class="token function">padding</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">left<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span><span class="token punctuation">, </span></span><span class="parameter ">top<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span><span class="token punctuation">, </span></span><span class="parameter ">right<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span><span class="token punctuation">, </span></span><span class="parameter ">bottom<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../index.html">Modifier</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-335893678%2FFunctions%2F1053859847" anchor-label="then" id="-335893678%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../then.html"><span><span>then</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-335893678%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">infix </span><span class="token keyword">fun </span><a href="../then.html"><span class="token function">then</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">other<span class="token operator">: </span><a href="../index.html">Modifier</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../index.html">Modifier</a></div><div class="brief "><p class="paragraph">Concatenates this modifier with another.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+    </div>
+</div>
+</body>
+</html>

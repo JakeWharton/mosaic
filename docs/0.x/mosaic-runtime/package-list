@@ -1,6 +1,25 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
 $dokka.location:com.jakewharton.mosaic.layout////PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/index.html
+$dokka.location:com.jakewharton.mosaic.layout//background/com.jakewharton.mosaic.modifier.Modifier#com.jakewharton.mosaic.ui.Color/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/background.html
+$dokka.location:com.jakewharton.mosaic.layout//drawBehind/com.jakewharton.mosaic.modifier.Modifier#kotlin.Function1[com.jakewharton.mosaic.layout.DrawScope,kotlin.Unit]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/draw-behind.html
+$dokka.location:com.jakewharton.mosaic.layout//layout/com.jakewharton.mosaic.modifier.Modifier#kotlin.Function2[com.jakewharton.mosaic.layout.MeasureScope,com.jakewharton.mosaic.layout.Measurable,com.jakewharton.mosaic.layout.MeasureResult]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/layout.html
+$dokka.location:com.jakewharton.mosaic.layout//padding/com.jakewharton.mosaic.modifier.Modifier#kotlin.Int#kotlin.Int#kotlin.Int#kotlin.Int/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/padding.html
+$dokka.location:com.jakewharton.mosaic.layout//padding/com.jakewharton.mosaic.modifier.Modifier#kotlin.Int#kotlin.Int/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/padding.html
+$dokka.location:com.jakewharton.mosaic.layout//padding/com.jakewharton.mosaic.modifier.Modifier#kotlin.Int/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/padding.html
+$dokka.location:com.jakewharton.mosaic.layout/ContentDrawScope///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-content-draw-scope/index.html
+$dokka.location:com.jakewharton.mosaic.layout/ContentDrawScope/drawContent/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-content-draw-scope/draw-content.html
+$dokka.location:com.jakewharton.mosaic.layout/DrawModifier///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-draw-modifier/index.html
+$dokka.location:com.jakewharton.mosaic.layout/DrawModifier/draw/com.jakewharton.mosaic.layout.ContentDrawScope#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-draw-modifier/draw.html
+$dokka.location:com.jakewharton.mosaic.layout/DrawModifier/toString/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-draw-modifier/to-string.html
+$dokka.location:com.jakewharton.mosaic.layout/DrawScope///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-draw-scope/index.html
+$dokka.location:com.jakewharton.mosaic.layout/DrawScope/drawRect/#com.jakewharton.mosaic.ui.Color#kotlin.Int#kotlin.Int#kotlin.Int#kotlin.Int/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-draw-scope/draw-rect.html
+$dokka.location:com.jakewharton.mosaic.layout/DrawScope/drawText/#kotlin.Int#kotlin.Int#kotlin.String#com.jakewharton.mosaic.ui.Color?#com.jakewharton.mosaic.ui.Color?#com.jakewharton.mosaic.ui.TextStyle?/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-draw-scope/draw-text.html
+$dokka.location:com.jakewharton.mosaic.layout/DrawScope/height/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-draw-scope/height.html
+$dokka.location:com.jakewharton.mosaic.layout/DrawScope/width/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-draw-scope/width.html
+$dokka.location:com.jakewharton.mosaic.layout/LayoutModifier///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-layout-modifier/index.html
+$dokka.location:com.jakewharton.mosaic.layout/LayoutModifier/measure/com.jakewharton.mosaic.layout.MeasureScope#com.jakewharton.mosaic.layout.Measurable/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-layout-modifier/measure.html
+$dokka.location:com.jakewharton.mosaic.layout/LayoutModifier/toString/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-layout-modifier/to-string.html
 $dokka.location:com.jakewharton.mosaic.layout/Measurable///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-measurable/index.html
 $dokka.location:com.jakewharton.mosaic.layout/Measurable/measure/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-measurable/measure.html
 $dokka.location:com.jakewharton.mosaic.layout/MeasurePolicy///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-measure-policy/index.html
@@ -19,12 +38,41 @@ $dokka.location:com.jakewharton.mosaic.layout/Placeable///PointingToDeclaration/
 $dokka.location:com.jakewharton.mosaic.layout/Placeable/Placeable/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-placeable/-placeable.html
 $dokka.location:com.jakewharton.mosaic.layout/Placeable/height/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-placeable/height.html
 $dokka.location:com.jakewharton.mosaic.layout/Placeable/width/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-placeable/width.html
+$dokka.location:com.jakewharton.mosaic.modifier////PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/index.html
+$dokka.location:com.jakewharton.mosaic.modifier/CombinedModifier///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-combined-modifier/index.html
+$dokka.location:com.jakewharton.mosaic.modifier/CombinedModifier/CombinedModifier/#com.jakewharton.mosaic.modifier.Modifier#com.jakewharton.mosaic.modifier.Modifier/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-combined-modifier/-combined-modifier.html
+$dokka.location:com.jakewharton.mosaic.modifier/CombinedModifier/all/#kotlin.Function1[com.jakewharton.mosaic.modifier.Modifier.Element,kotlin.Boolean]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-combined-modifier/all.html
+$dokka.location:com.jakewharton.mosaic.modifier/CombinedModifier/any/#kotlin.Function1[com.jakewharton.mosaic.modifier.Modifier.Element,kotlin.Boolean]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-combined-modifier/any.html
+$dokka.location:com.jakewharton.mosaic.modifier/CombinedModifier/equals/#kotlin.Any?/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-combined-modifier/equals.html
+$dokka.location:com.jakewharton.mosaic.modifier/CombinedModifier/foldIn/#TypeParam(bounds=[kotlin.Any?])#kotlin.Function2[TypeParam(bounds=[kotlin.Any?]),com.jakewharton.mosaic.modifier.Modifier.Element,TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-combined-modifier/fold-in.html
+$dokka.location:com.jakewharton.mosaic.modifier/CombinedModifier/foldOut/#TypeParam(bounds=[kotlin.Any?])#kotlin.Function2[com.jakewharton.mosaic.modifier.Modifier.Element,TypeParam(bounds=[kotlin.Any?]),TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-combined-modifier/fold-out.html
+$dokka.location:com.jakewharton.mosaic.modifier/CombinedModifier/hashCode/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-combined-modifier/hash-code.html
+$dokka.location:com.jakewharton.mosaic.modifier/CombinedModifier/toString/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-combined-modifier/to-string.html
+$dokka.location:com.jakewharton.mosaic.modifier/Modifier.Companion///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-modifier/-companion/index.html
+$dokka.location:com.jakewharton.mosaic.modifier/Modifier.Companion/all/#kotlin.Function1[com.jakewharton.mosaic.modifier.Modifier.Element,kotlin.Boolean]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-modifier/-companion/all.html
+$dokka.location:com.jakewharton.mosaic.modifier/Modifier.Companion/any/#kotlin.Function1[com.jakewharton.mosaic.modifier.Modifier.Element,kotlin.Boolean]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-modifier/-companion/any.html
+$dokka.location:com.jakewharton.mosaic.modifier/Modifier.Companion/foldIn/#TypeParam(bounds=[kotlin.Any?])#kotlin.Function2[TypeParam(bounds=[kotlin.Any?]),com.jakewharton.mosaic.modifier.Modifier.Element,TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-modifier/-companion/fold-in.html
+$dokka.location:com.jakewharton.mosaic.modifier/Modifier.Companion/foldOut/#TypeParam(bounds=[kotlin.Any?])#kotlin.Function2[com.jakewharton.mosaic.modifier.Modifier.Element,TypeParam(bounds=[kotlin.Any?]),TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-modifier/-companion/fold-out.html
+$dokka.location:com.jakewharton.mosaic.modifier/Modifier.Companion/then/#com.jakewharton.mosaic.modifier.Modifier/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-modifier/-companion/then.html
+$dokka.location:com.jakewharton.mosaic.modifier/Modifier.Companion/toString/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-modifier/-companion/to-string.html
+$dokka.location:com.jakewharton.mosaic.modifier/Modifier.Element///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-modifier/-element/index.html
+$dokka.location:com.jakewharton.mosaic.modifier/Modifier.Element/all/#kotlin.Function1[com.jakewharton.mosaic.modifier.Modifier.Element,kotlin.Boolean]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-modifier/-element/all.html
+$dokka.location:com.jakewharton.mosaic.modifier/Modifier.Element/any/#kotlin.Function1[com.jakewharton.mosaic.modifier.Modifier.Element,kotlin.Boolean]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-modifier/-element/any.html
+$dokka.location:com.jakewharton.mosaic.modifier/Modifier.Element/foldIn/#TypeParam(bounds=[kotlin.Any?])#kotlin.Function2[TypeParam(bounds=[kotlin.Any?]),com.jakewharton.mosaic.modifier.Modifier.Element,TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-modifier/-element/fold-in.html
+$dokka.location:com.jakewharton.mosaic.modifier/Modifier.Element/foldOut/#TypeParam(bounds=[kotlin.Any?])#kotlin.Function2[com.jakewharton.mosaic.modifier.Modifier.Element,TypeParam(bounds=[kotlin.Any?]),TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-modifier/-element/fold-out.html
+$dokka.location:com.jakewharton.mosaic.modifier/Modifier///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-modifier/index.html
+$dokka.location:com.jakewharton.mosaic.modifier/Modifier/all/#kotlin.Function1[com.jakewharton.mosaic.modifier.Modifier.Element,kotlin.Boolean]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-modifier/all.html
+$dokka.location:com.jakewharton.mosaic.modifier/Modifier/any/#kotlin.Function1[com.jakewharton.mosaic.modifier.Modifier.Element,kotlin.Boolean]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-modifier/any.html
+$dokka.location:com.jakewharton.mosaic.modifier/Modifier/foldIn/#TypeParam(bounds=[kotlin.Any?])#kotlin.Function2[TypeParam(bounds=[kotlin.Any?]),com.jakewharton.mosaic.modifier.Modifier.Element,TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-modifier/fold-in.html
+$dokka.location:com.jakewharton.mosaic.modifier/Modifier/foldOut/#TypeParam(bounds=[kotlin.Any?])#kotlin.Function2[com.jakewharton.mosaic.modifier.Modifier.Element,TypeParam(bounds=[kotlin.Any?]),TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-modifier/fold-out.html
+$dokka.location:com.jakewharton.mosaic.modifier/Modifier/then/#com.jakewharton.mosaic.modifier.Modifier/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-modifier/then.html
 $dokka.location:com.jakewharton.mosaic.ui////PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/index.html
-$dokka.location:com.jakewharton.mosaic.ui//Column/#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-column.html
-$dokka.location:com.jakewharton.mosaic.ui//Layout/#kotlin.Function0[kotlin.Unit]#kotlin.Function0[kotlin.String]#com.jakewharton.mosaic.layout.MeasurePolicy/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-layout.html
-$dokka.location:com.jakewharton.mosaic.ui//Row/#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-row.html
+$dokka.location:com.jakewharton.mosaic.ui//Box/#com.jakewharton.mosaic.modifier.Modifier#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-box.html
+$dokka.location:com.jakewharton.mosaic.ui//Column/#com.jakewharton.mosaic.modifier.Modifier#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-column.html
+$dokka.location:com.jakewharton.mosaic.ui//Layout/#kotlin.Function0[kotlin.Unit]#com.jakewharton.mosaic.modifier.Modifier#kotlin.Function0[kotlin.String]#com.jakewharton.mosaic.layout.MeasurePolicy/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-layout.html
+$dokka.location:com.jakewharton.mosaic.ui//Row/#com.jakewharton.mosaic.modifier.Modifier#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-row.html
 $dokka.location:com.jakewharton.mosaic.ui//Static/#androidx.compose.runtime.snapshots.SnapshotStateList[TypeParam(bounds=[kotlin.Any?])]#kotlin.Function1[TypeParam(bounds=[kotlin.Any?]),kotlin.Unit]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-static.html
-$dokka.location:com.jakewharton.mosaic.ui//Text/#kotlin.String#com.jakewharton.mosaic.ui.Color?#com.jakewharton.mosaic.ui.Color?#com.jakewharton.mosaic.ui.TextStyle?/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-text.html
+$dokka.location:com.jakewharton.mosaic.ui//Text/#kotlin.String#com.jakewharton.mosaic.modifier.Modifier#com.jakewharton.mosaic.ui.Color?#com.jakewharton.mosaic.ui.Color?#com.jakewharton.mosaic.ui.TextStyle?/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-text.html
 $dokka.location:com.jakewharton.mosaic.ui/Color.Companion///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-color/-companion/index.html
 $dokka.location:com.jakewharton.mosaic.ui/Color.Companion/Black/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-color/-companion/-black.html
 $dokka.location:com.jakewharton.mosaic.ui/Color.Companion/Blue/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-color/-companion/-blue.html
@@ -43,6 +91,7 @@ $dokka.location:com.jakewharton.mosaic.ui/Color.Companion/Red/#/PointingToDeclar
 $dokka.location:com.jakewharton.mosaic.ui/Color.Companion/White/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-color/-companion/-white.html
 $dokka.location:com.jakewharton.mosaic.ui/Color.Companion/Yellow/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-color/-companion/-yellow.html
 $dokka.location:com.jakewharton.mosaic.ui/Color///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-color/index.html
+$dokka.location:com.jakewharton.mosaic.ui/Color/toString/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-color/to-string.html
 $dokka.location:com.jakewharton.mosaic.ui/TextStyle.Companion///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-text-style/-companion/index.html
 $dokka.location:com.jakewharton.mosaic.ui/TextStyle.Companion/Bold/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-text-style/-companion/-bold.html
 $dokka.location:com.jakewharton.mosaic.ui/TextStyle.Companion/Dim/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-text-style/-companion/-dim.html
@@ -62,5 +111,6 @@ $dokka.location:com.jakewharton.mosaic/MosaicScope///PointingToDeclaration/mosa
 $dokka.location:com.jakewharton.mosaic/MosaicScope/setContent/#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/-mosaic-scope/set-content.html
 com.jakewharton.mosaic
 com.jakewharton.mosaic.layout
+com.jakewharton.mosaic.modifier
 com.jakewharton.mosaic.ui
 
