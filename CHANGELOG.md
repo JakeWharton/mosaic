@@ -6,7 +6,7 @@
 ## [0.7.1] - 2023-06-30
 
 New:
-- Support Kotlin 1.8.22 viaC JetBrains Compose compiler 1.4.8.
+- Support Kotlin 1.8.22 via JetBrains Compose compiler 1.4.8.
 
 
 ## [0.7.0] - 2023-06-26
