@@ -10,7 +10,7 @@ kotlinx-coroutines-core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.2"
 compose-compiler = "org.jetbrains.compose.compiler:compiler:1.4.8"
 compose-runtime = "org.jetbrains.compose.runtime:runtime:1.4.1"
 
-maven-publish-gradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.25.2"
+maven-publish-gradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.25.3"
 dokka-gradlePlugin = "org.jetbrains.dokka:dokka-gradle-plugin:1.8.20"
 buildconfig-gradlePlugin = "com.github.gmazzo:gradle-buildconfig-plugin:3.1.0"
 
