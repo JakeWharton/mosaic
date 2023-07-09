@@ -6,6 +6,7 @@ import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.junit.runners.Parameterized.Parameters
 import java.io.File
+import java.nio.charset.StandardCharsets
 
 @RunWith(Parameterized::class)
 class FixtureTest(

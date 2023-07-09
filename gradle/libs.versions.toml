@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.8.22"
+kotlin = "1.9.0-RC"
 
 [libraries]
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -7,7 +7,7 @@ kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotl
 
 kotlinx-coroutines-core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.2"
 
-compose-compiler = "org.jetbrains.compose.compiler:compiler:1.4.8"
+compose-compiler = "org.jetbrains.compose.compiler:compiler:1.4.8-beta"
 compose-runtime = "org.jetbrains.compose.runtime:runtime:1.4.1"
 
 maven-publish-gradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.25.3"
