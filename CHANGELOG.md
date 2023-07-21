@@ -3,6 +3,12 @@
 ## [Unreleased]
 
 
+## [0.8.0] - 2023-07-20
+
+New:
+- Support Kotlin 1.9.0 via JetBrains Compose compiler 1.5.0.
+
+
 ## [0.7.1] - 2023-06-30
 
 New:
@@ -83,7 +89,8 @@ Breaking:
 Initial release!
 
 
-[Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.7.1...HEAD
+[Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.8.0...HEAD
+[0.8.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.8.0
 [0.7.1]: https://github.com/JakeWharton/mosaic/releases/tag/0.7.1
 [0.7.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.7.0
 [0.6.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.6.0
