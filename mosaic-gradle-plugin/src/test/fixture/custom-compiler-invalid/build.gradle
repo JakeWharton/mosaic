@@ -1,0 +1,29 @@
+buildscript {
+	dependencies {
+		classpath "com.jakewharton.mosaic:mosaic-gradle-plugin:$mosaicVersion"
+		classpath libs.kotlin.gradlePlugin
+	}
+
+	repositories {
+		maven {
+			url "file://${projectDir.absolutePath}/../../../../../build/testMaven"
+		}
+		mavenCentral()
+		google()
+	}
+}
+
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'com.jakewharton.mosaic'
+
+mosaic {
+	kotlinCompilerPlugin = 'wrong:format'
+}
+
+repositories {
+	maven {
+		url "file://${projectDir.absolutePath}/../../../../../build/testMaven"
+	}
+	mavenCentral()
+	google()
+}

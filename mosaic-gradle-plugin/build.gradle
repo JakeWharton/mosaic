@@ -43,8 +43,6 @@ buildConfig {
 	}
 
 	packageName('com.jakewharton.mosaic.gradle')
-	buildConfigField("String", "composeCompilerGroupId", "\"${libs.compose.compiler.get().module.group}\"")
-	buildConfigField("String", "composeCompilerArtifactId", "\"${libs.compose.compiler.get().module.name}\"")
 	buildConfigField("String", "composeCompilerVersion", "\"${libs.compose.compiler.get().version}\"")
 	buildConfigField("String", "mosaicVersion", "\"${project.version}\"")
 }
