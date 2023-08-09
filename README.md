@@ -204,7 +204,7 @@ fun main() = runMosaic {
 
 ### Custom Compose Compiler
 
-Each version of Molecule ships with a specific JetBrains Compose compiler version which works with
+Each version of Mosaic ships with a specific JetBrains Compose compiler version which works with
 a single version of Kotlin (see [version table](#usage) above). Newer versions of the Compose
 compiler or alternate Compose compilers can be specified using the Gradle extension.
 
