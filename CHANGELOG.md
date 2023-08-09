@@ -3,6 +3,15 @@
 ## [Unreleased]
 
 
+## [0.9.0] - 2023-08-09
+
+New:
+- Support for specifying custom Compose compiler versions. This will allow you to use the latest
+  version of Molecule with newer versions of Kotlin than it explicitly supports.
+
+  See [the README](https://github.com/JakeWharton/mosaic/#custom-compose-compiler) for more information.
+
+
 ## [0.8.0] - 2023-07-20
 
 New:
@@ -89,7 +98,8 @@ Breaking:
 Initial release!
 
 
-[Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.8.0...HEAD
+[Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.9.0...HEAD
+[0.9.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.9.0
 [0.8.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.8.0
 [0.7.1]: https://github.com/JakeWharton/mosaic/releases/tag/0.7.1
 [0.7.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.7.0

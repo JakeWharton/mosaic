@@ -91,7 +91,7 @@ buildscript {
   }
   dependencies {
     classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0'
-    classpath 'com.jakewharton.mosaic:mosaic-gradle-plugin:0.8.0'
+    classpath 'com.jakewharton.mosaic:mosaic-gradle-plugin:0.9.0'
   }
 }
 
@@ -111,7 +111,7 @@ certain versions of Kotlin.
 
 | Kotlin | Mosaic        |
 |--------|---------------|
-| 1.9.0  | 0.8.0         |
+| 1.9.0  | 0.8.0 - 0.9.0 |
 | 1.8.22 | 0.7.1         |
 | 1.8.21 | 0.7.0         |
 | 1.8.20 | 0.6.0         |
@@ -136,7 +136,7 @@ buildscript {
   }
   dependencies {
     classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0'
-    classpath 'com.jakewharton.mosaic:mosaic-gradle-plugin:0.9.0-SNAPSHOT'
+    classpath 'com.jakewharton.mosaic:mosaic-gradle-plugin:0.10.0-SNAPSHOT'
   }
 }
 
@@ -199,6 +199,26 @@ fun main() = runMosaic {
       count = i
     }
   }
+}
+```
+
+### Custom Compose Compiler
+
+Each version of Molecule ships with a specific JetBrains Compose compiler version which works with
+a single version of Kotlin (see [version table](#Usage) above). Newer versions of the Compose
+compiler or alternate Compose compilers can be specified using the Gradle extension.
+
+To use a new version of the JetBrains Compose compiler version:
+```kotlin
+molecule {
+  kotlinCompilerPlugin.set("1.4.8")
+}
+```
+
+To use an alternate Compose compiler dependency:
+```kotlin
+molecule {
+  kotlinCompilerPlugin.set("com.example:custom-compose-compiler:1.0.0")
 }
 ```
 
