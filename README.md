@@ -210,14 +210,14 @@ compiler or alternate Compose compilers can be specified using the Gradle extens
 
 To use a new version of the JetBrains Compose compiler version:
 ```kotlin
-molecule {
+mosaic {
   kotlinCompilerPlugin.set("1.4.8")
 }
 ```
 
 To use an alternate Compose compiler dependency:
 ```kotlin
-molecule {
+mosaic {
   kotlinCompilerPlugin.set("com.example:custom-compose-compiler:1.0.0")
 }
 ```
