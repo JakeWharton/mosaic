@@ -3,6 +3,8 @@ package example
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.jakewharton.mosaic.layout.padding
+import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.runMosaicBlocking
 import com.jakewharton.mosaic.ui.Column
 import com.jakewharton.mosaic.ui.Text
@@ -24,14 +26,7 @@ fun main() = runMosaicBlocking {
 			Text("Position: $x, $y   World: $width, $height")
 			Text("")
 			// TODO https://github.com/JakeWharton/mosaic/issues/11
-			Text(buildString {
-				// TODO https://github.com/JakeWharton/mosaic/issues/7
-				repeat(y) { append('\n') }
-				repeat(x) { append(' ') }
-				append("^_^")
-
-				repeat(height - y) { append('\n') }
-			})
+			Text("^_^", modifier = Modifier.padding(x, y, width - x, height - y))
 		}
 	}
 
