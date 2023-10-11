@@ -17,6 +17,9 @@
 package com.jakewharton.mosaic.layout
 
 import com.jakewharton.mosaic.TextCanvas
+import com.jakewharton.mosaic.text.AnnotatedString
+import com.jakewharton.mosaic.text.SpanStyle
+import com.jakewharton.mosaic.text.getLocalRawSpanStyles
 import com.jakewharton.mosaic.ui.Color
 import com.jakewharton.mosaic.ui.TextStyle
 
@@ -40,13 +43,22 @@ public interface DrawScope {
 		background: Color? = null,
 		style: TextStyle? = null,
 	)
+
+	public fun drawText(
+		row: Int,
+		column: Int,
+		string: AnnotatedString,
+		foreground: Color? = null,
+		background: Color? = null,
+		style: TextStyle? = null,
+	)
 }
 
 internal open class TextCanvasDrawScope(
 	private val canvas: TextCanvas,
 	override val width: Int,
 	override val height: Int,
-): DrawScope {
+) : DrawScope {
 	override fun drawRect(
 		color: Color,
 		row: Int,
@@ -67,29 +79,63 @@ internal open class TextCanvasDrawScope(
 		string: String,
 		foreground: Color?,
 		background: Color?,
+		style: TextStyle?
+	) {
+		drawText(row, column, string, foreground, background, style, null)
+	}
+
+	override fun drawText(
+		row: Int,
+		column: Int,
+		string: AnnotatedString,
+		foreground: Color?,
+		background: Color?,
 		style: TextStyle?,
+	) {
+		drawText(row, column, string.text, foreground, background, style) { start, end ->
+			string.getLocalRawSpanStyles(start, end)
+		}
+	}
+
+	private fun drawText(
+		row: Int,
+		column: Int,
+		text: String,
+		foreground: Color?,
+		background: Color?,
+		style: TextStyle?,
+		spanStylesProvider: ((start: Int, end: Int) -> List<SpanStyle>)?
 	) {
 		var pixelIndex = 0
 		var characterColumn = column
-		while (pixelIndex < string.length) {
+		while (pixelIndex < text.length) {
 			val character = canvas[row, characterColumn++]
 
-			val pixelEnd = if (string[pixelIndex].isHighSurrogate()) {
+			val pixelEnd = if (text[pixelIndex].isHighSurrogate()) {
 				pixelIndex + 2
 			} else {
 				pixelIndex + 1
 			}
-			character.value = string.substring(pixelIndex, pixelEnd)
+
+			character.value = text.substring(pixelIndex, pixelEnd)
+			val spanStyles = spanStylesProvider?.invoke(pixelIndex, pixelEnd)
 			pixelIndex = pixelEnd
 
-			if (background != null) {
-				character.background = background
+			fun maybeUpdateCharacter(background: Color?, foreground: Color?, style: TextStyle?) {
+				if (background != null) {
+					character.background = background
+				}
+				if (foreground != null) {
+					character.foreground = foreground
+				}
+				if (style != null) {
+					character.style = style
+				}
 			}
-			if (foreground != null) {
-				character.foreground = foreground
-			}
-			if (style != null) {
-				character.style = style
+
+			maybeUpdateCharacter(background, foreground, style)
+			spanStyles?.forEach {
+				maybeUpdateCharacter(it.background, it.color, it.textStyle)
 			}
 		}
 	}
