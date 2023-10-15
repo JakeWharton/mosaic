@@ -92,6 +92,7 @@ $dokka.location:com.jakewharton.mosaic.ui/Color.Companion/White/#/PointingToDecl
 $dokka.location:com.jakewharton.mosaic.ui/Color.Companion/Yellow/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-color/-companion/-yellow.html
 $dokka.location:com.jakewharton.mosaic.ui/Color///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-color/index.html
 $dokka.location:com.jakewharton.mosaic.ui/Color/toString/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-color/to-string.html
+$dokka.location:com.jakewharton.mosaic.ui/MosaicComposable///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-mosaic-composable/index.html
 $dokka.location:com.jakewharton.mosaic.ui/TextStyle.Companion///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-text-style/-companion/index.html
 $dokka.location:com.jakewharton.mosaic.ui/TextStyle.Companion/Bold/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-text-style/-companion/-bold.html
 $dokka.location:com.jakewharton.mosaic.ui/TextStyle.Companion/Dim/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-text-style/-companion/-dim.html
