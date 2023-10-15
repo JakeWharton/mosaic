@@ -33,6 +33,7 @@ internal sealed class NoContentMeasureScope {
 }
 
 @Composable
+@MosaicComposable
 internal fun Layout(
 	modifiers: Modifier = Modifier,
 	debugInfo: () -> String = { "Layout()" },

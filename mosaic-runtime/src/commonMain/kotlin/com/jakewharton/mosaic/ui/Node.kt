@@ -11,8 +11,9 @@ import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.modifier.Modifier
 
 @Composable
+@MosaicComposable
 internal inline fun Node(
-	content: @Composable () -> Unit = {},
+	content: @Composable @MosaicComposable () -> Unit = {},
 	modifiers: Modifier,
 	measurePolicy: MeasurePolicy,
 	debugPolicy: DebugPolicy,
