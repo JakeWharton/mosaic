@@ -40,6 +40,7 @@ public fun Text(
 }
 
 @Composable
+@MosaicComposable
 public fun Text(
 	value: AnnotatedString,
 	modifier: Modifier = Modifier,
