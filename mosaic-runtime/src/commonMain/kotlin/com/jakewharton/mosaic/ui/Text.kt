@@ -10,6 +10,7 @@ import com.jakewharton.mosaic.text.TextLayout
 import kotlin.jvm.JvmName
 
 @Composable
+@MosaicComposable
 public fun Text(
 	value: String,
 	modifier: Modifier = Modifier,
