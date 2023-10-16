@@ -13,7 +13,7 @@ compose-compiler = "org.jetbrains.compose.compiler:compiler:1.5.2"
 compose-runtime = "org.jetbrains.compose.runtime:runtime:1.5.3"
 
 maven-publish-gradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.25.3"
-dokka-gradlePlugin = "org.jetbrains.dokka:dokka-gradle-plugin:1.9.0"
+dokka-gradlePlugin = "org.jetbrains.dokka:dokka-gradle-plugin:1.9.10"
 buildconfig-gradlePlugin = "com.github.gmazzo:gradle-buildconfig-plugin:3.1.0"
 
 jansi = "org.fusesource.jansi:jansi:2.4.1"
