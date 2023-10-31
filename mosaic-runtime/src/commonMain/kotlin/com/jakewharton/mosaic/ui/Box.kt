@@ -24,12 +24,12 @@ public fun Box(
 		content = { BoxScopeInstance.content() },
 		modifiers = modifier,
 		debugInfo = { "Box()" },
-		measurePolicy = BoxMeasurePolicy(contentAlignment)
+		measurePolicy = BoxMeasurePolicy(contentAlignment),
 	)
 }
 
 internal class BoxMeasurePolicy(
-	private val contentAlignment: Alignment = Alignment.TopStart
+	private val contentAlignment: Alignment = Alignment.TopStart,
 ) : MeasurePolicy {
 
 	override fun MeasureScope.measure(measurables: List<Measurable>): MeasureResult {
@@ -75,7 +75,7 @@ private object BoxScopeInstance : BoxScope {
 }
 
 private class AlignModifier(
-	private val alignment: Alignment
+	private val alignment: Alignment,
 ) : ParentDataModifier {
 
 	override fun modifyParentData(parentData: Any?): Any {
@@ -88,7 +88,7 @@ private class AlignModifier(
 }
 
 private data class BoxParentData(
-	var alignment: Alignment = Alignment.TopStart
+	var alignment: Alignment = Alignment.TopStart,
 )
 
 private val Measurable.boxParentData: BoxParentData?

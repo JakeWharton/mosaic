@@ -17,18 +17,18 @@ import kotlin.jvm.JvmName
 public fun Column(
 	modifier: Modifier = Modifier,
 	horizontalAlignment: Alignment.Horizontal = Alignment.Start,
-	content: @Composable ColumnScope.() -> Unit
+	content: @Composable ColumnScope.() -> Unit,
 ) {
 	Layout(
 		content = { ColumnScopeInstance.content() },
 		modifiers = modifier,
 		debugInfo = { "Column()" },
-		measurePolicy = ColumnMeasurePolicy(horizontalAlignment)
+		measurePolicy = ColumnMeasurePolicy(horizontalAlignment),
 	)
 }
 
 private class ColumnMeasurePolicy(
-	private val horizontalAlignment: Alignment.Horizontal
+	private val horizontalAlignment: Alignment.Horizontal,
 ) : MeasurePolicy {
 
 	override fun MeasureScope.measure(measurables: List<Measurable>): MeasureResult {
@@ -76,7 +76,7 @@ private object ColumnScopeInstance : ColumnScope {
 }
 
 private class HorizontalAlignModifier(
-	private val horizontal: Alignment.Horizontal
+	private val horizontal: Alignment.Horizontal,
 ) : ParentDataModifier {
 
 	override fun modifyParentData(parentData: Any?): Any {
@@ -89,7 +89,7 @@ private class HorizontalAlignModifier(
 }
 
 private data class ColumnParentData(
-	var alignment: Alignment.Horizontal = Alignment.Start
+	var alignment: Alignment.Horizontal = Alignment.Start,
 )
 
 private val Measurable.columnParentData: ColumnParentData?

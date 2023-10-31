@@ -23,7 +23,7 @@ public fun Row(
 		content = { RowScopeInstance.content() },
 		modifiers = modifier,
 		debugInfo = { "Row()" },
-		measurePolicy = RowMeasurePolicy(verticalAlignment)
+		measurePolicy = RowMeasurePolicy(verticalAlignment),
 	)
 }
 
@@ -76,7 +76,7 @@ private object RowScopeInstance : RowScope {
 }
 
 private class VerticalAlignModifier(
-	private val vertical: Alignment.Vertical
+	private val vertical: Alignment.Vertical,
 ) : ParentDataModifier {
 
 	override fun modifyParentData(parentData: Any?): Any {
@@ -89,7 +89,7 @@ private class VerticalAlignModifier(
 }
 
 private data class RowParentData(
-	var alignment: Alignment.Vertical = Alignment.Top
+	var alignment: Alignment.Vertical = Alignment.Top,
 )
 
 private val Measurable.rowParentData: RowParentData?

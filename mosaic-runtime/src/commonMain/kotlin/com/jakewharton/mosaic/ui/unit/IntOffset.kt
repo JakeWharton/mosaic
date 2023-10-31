@@ -77,7 +77,7 @@ public value class IntOffset internal constructor(@PublishedApi internal val pac
 	@Stable
 	public operator fun times(operand: Float): IntOffset = IntOffset(
 		(x * operand).roundToInt(),
-		(y * operand).roundToInt()
+		(y * operand).roundToInt(),
 	)
 
 	/**
@@ -90,7 +90,7 @@ public value class IntOffset internal constructor(@PublishedApi internal val pac
 	@Stable
 	public operator fun div(operand: Float): IntOffset = IntOffset(
 		(x / operand).roundToInt(),
-		(y / operand).roundToInt()
+		(y / operand).roundToInt(),
 	)
 
 	/**

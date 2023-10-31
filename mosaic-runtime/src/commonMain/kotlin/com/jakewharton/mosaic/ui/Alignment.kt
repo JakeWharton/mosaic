@@ -146,7 +146,7 @@ public data class BiasAlignment(
 	public data class Horizontal(private val bias: Float) : Alignment.Horizontal {
 		override fun align(size: Int, space: Int): Int {
 			// Convert to cells first and only round at the end, to avoid rounding twice while
-			// calculating the new positions
+			// calculating the new positions.
 			val center = (space - size).toFloat() / 2f
 			return (center * (1 + bias)).roundToInt()
 		}
@@ -165,7 +165,7 @@ public data class BiasAlignment(
 	public data class Vertical(private val bias: Float) : Alignment.Vertical {
 		override fun align(size: Int, space: Int): Int {
 			// Convert to cells first and only round at the end, to avoid rounding twice while
-			// calculating the new positions
+			// calculating the new positions.
 			val center = (space - size).toFloat() / 2f
 			return (center * (1 + bias)).roundToInt()
 		}
