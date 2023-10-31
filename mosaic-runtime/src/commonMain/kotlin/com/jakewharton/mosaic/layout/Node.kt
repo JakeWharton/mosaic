@@ -19,6 +19,8 @@ internal abstract class AbstractMosaicNodeLayer(
 ) : MosaicNodeLayer() {
 	private var measureResult: MeasureResult = NotMeasured
 
+	final override var parentData: Any? = null
+
 	final override val width get() = measureResult.width
 	final override val height get() = measureResult.height
 
@@ -77,12 +79,19 @@ internal class MosaicNode(
 	var topLayer: MosaicNodeLayer = bottomLayer
 		private set
 
+	override var parentData: Any? = null
+		private set
+
 	var modifiers: Modifier = Modifier
 		set(value) {
 			topLayer = value.foldOut(bottomLayer) { element, lowerLayer ->
 				when (element) {
 					is LayoutModifier -> LayoutLayer(element, lowerLayer)
 					is DrawModifier -> DrawLayer(element, lowerLayer)
+					is ParentDataModifier -> {
+						parentData = element.modifyParentData(parentData)
+						lowerLayer
+					}
 					else -> lowerLayer
 				}
 			}
