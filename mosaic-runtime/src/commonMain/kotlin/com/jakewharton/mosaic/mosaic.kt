@@ -104,11 +104,12 @@ public suspend fun runMosaic(body: suspend MosaicScope.() -> Unit): Unit = corou
 
 	launch(context = composeContext) {
 		while (true) {
+      val currentTerminalInfo = terminalInfo.value
 			if (terminal.info.updateTerminalSize()
-				&& (terminalInfo.value.size.width != terminal.info.width
-					|| terminalInfo.value.size.height != terminal.info.height)
+				&& (currentTerminalInfo.size.width != terminal.info.width
+					|| currentTerminalInfo.size.height != terminal.info.height)
 			) {
-				terminalInfo.value = terminalInfo.value.copy(
+				terminalInfo.value = currentTerminalInfo.copy(
 					size = TerminalInfo.Size(terminal.info.width, terminal.info.height)
 				)
 			}
