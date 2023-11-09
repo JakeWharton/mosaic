@@ -2,9 +2,9 @@ package com.jakewharton.mosaic.text
 
 import de.cketti.codepoints.codePointCount
 
-public abstract class TextLayout<T : CharSequence>(initialValue: T) {
+internal abstract class TextLayout<T : CharSequence>(initialValue: T) {
 
-	public var value: T = initialValue
+	var value: T = initialValue
 		set(value) {
 			if (value != field) {
 				dirty = true
@@ -12,21 +12,21 @@ public abstract class TextLayout<T : CharSequence>(initialValue: T) {
 			}
 		}
 
-	public var width: Int = -1
+	var width: Int = -1
 		private set
 		get() {
 			check(!dirty) { "Missing call to measure()" }
 			return field
 		}
 
-	public var height: Int = -1
+	var height: Int = -1
 		private set
 		get() {
 			check(!dirty) { "Missing call to measure()" }
 			return field
 		}
 
-	public var lines: List<T> = emptyList()
+	var lines: List<T> = emptyList()
 		private set
 		get() {
 			check(!dirty) { "Missing call to measure()" }
@@ -35,7 +35,7 @@ public abstract class TextLayout<T : CharSequence>(initialValue: T) {
 
 	private var dirty = true
 
-	public fun measure() {
+	fun measure() {
 		if (!dirty) return
 
 		val lines = value.splitByLines()
@@ -48,14 +48,14 @@ public abstract class TextLayout<T : CharSequence>(initialValue: T) {
 	protected abstract fun T.splitByLines(): List<T>
 }
 
-public class StringTextLayout : TextLayout<String>(initialValue = "") {
+internal class StringTextLayout : TextLayout<String>(initialValue = "") {
 
 	override fun String.splitByLines(): List<String> {
 		return this.split("\n")
 	}
 }
 
-public class AnnotatedStringTextLayout : TextLayout<AnnotatedString>(
+internal class AnnotatedStringTextLayout : TextLayout<AnnotatedString>(
 	initialValue = emptyAnnotatedString()
 ) {
 
