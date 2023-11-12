@@ -187,6 +187,7 @@ private object BoxScopeInstance : BoxScope {
 		)
 	)
 
+	@Stable
 	override fun Modifier.matchParentSize(): Modifier = this.then(
 		AlignModifier(
 			alignment = Alignment.Center,
