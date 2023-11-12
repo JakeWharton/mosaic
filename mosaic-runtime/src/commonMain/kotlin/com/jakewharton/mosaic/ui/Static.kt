@@ -31,9 +31,9 @@ public fun <T> Static(
 			}
 			lastRendered = items.size
 		},
-		measurePolicy = { measurables ->
+		measurePolicy = { measurables, constraints ->
 			val placeables = measurables.map { measurable ->
-				measurable.measure()
+				measurable.measure(constraints)
 			}
 
 			layout(0, 0) {

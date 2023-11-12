@@ -6,9 +6,11 @@ import androidx.compose.runtime.ComposeNode
 import com.jakewharton.mosaic.layout.DebugPolicy
 import com.jakewharton.mosaic.layout.Measurable
 import com.jakewharton.mosaic.layout.MeasurePolicy
+import com.jakewharton.mosaic.layout.MeasureResult
 import com.jakewharton.mosaic.layout.MeasureScope
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.modifier.Modifier
+import com.jakewharton.mosaic.ui.unit.Constraints
 
 @Composable
 @MosaicComposable
@@ -47,6 +49,10 @@ internal fun StaticNodeFactory(onDraw: () -> Unit): () -> MosaicNode = {
 }
 
 private val ThrowingPolicy = object : MeasurePolicy, DebugPolicy {
-	override fun MeasureScope.measure(measurables: List<Measurable>) = throw AssertionError()
+	override fun MeasureScope.measure(
+		measurables: List<Measurable>,
+		constraints: Constraints,
+	): MeasureResult = throw AssertionError()
+
 	override fun MosaicNode.renderDebug() = throw AssertionError()
 }

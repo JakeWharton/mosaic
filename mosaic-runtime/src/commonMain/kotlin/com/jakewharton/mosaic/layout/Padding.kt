@@ -18,6 +18,10 @@ package com.jakewharton.mosaic.layout
 
 import androidx.compose.runtime.Stable
 import com.jakewharton.mosaic.modifier.Modifier
+import com.jakewharton.mosaic.ui.unit.Constraints
+import com.jakewharton.mosaic.ui.unit.constrainHeight
+import com.jakewharton.mosaic.ui.unit.constrainWidth
+import com.jakewharton.mosaic.ui.unit.offset
 
 @Stable
 public fun Modifier.padding(
@@ -70,14 +74,17 @@ private class PaddingModifier(
 		}
 	}
 
-	override fun MeasureScope.measure(measurable: Measurable): MeasureResult {
+	override fun MeasureScope.measure(
+		measurable: Measurable,
+		constraints: Constraints
+	): MeasureResult {
 		val horizontal = left + right
 		val vertical = top + bottom
 
-		val placeable = measurable.measure()
+		val placeable = measurable.measure(constraints.offset(-horizontal, -vertical))
 
-		val width = placeable.width + horizontal
-		val height = placeable.height + vertical
+		val width = constraints.constrainWidth(placeable.width + horizontal)
+		val height = constraints.constrainHeight(placeable.height + vertical)
 		return layout(width, height) {
 			placeable.place(left, top)
 		}
