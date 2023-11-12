@@ -19,7 +19,7 @@ class LayoutTest {
 					Text("Hey!")
 				},
 				debugInfo = { "Custom()" },
-			) {
+			) { _, _ ->
 				layout(0, 0) {
 				}
 			}
@@ -38,7 +38,7 @@ class LayoutTest {
 				Text("CCC")
 				Text("BB")
 				Text("A")
-			}) {
+			}) { _, _ ->
 				layout(3, 1) {
 				}
 			}
@@ -55,9 +55,9 @@ class LayoutTest {
 				Text("CCC")
 				Text("BB")
 				Text("A")
-			}) { measurables ->
+			}) {  measurables, constraints ->
 				for (measurable in measurables) {
-					measurable.measure()
+					measurable.measure(constraints)
 				}
 				layout(3, 1) {
 				}
@@ -75,8 +75,8 @@ class LayoutTest {
 				Text("CCC")
 				Text("BB")
 				Text("A")
-			}) { measurables ->
-				val (c, b, a) = measurables.map(Measurable::measure)
+			}) { measurables, constraints ->
+				val (c, b, a) = measurables.map{ it.measure(constraints) }
 				layout(8, 3) {
 					a.place(0, 2)
 					b.place(2, 1)
