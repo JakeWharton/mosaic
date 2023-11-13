@@ -1,5 +1,7 @@
 package com.jakewharton.mosaic
 
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.layout.drawBehind
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.ui.Column
@@ -7,7 +9,6 @@ import com.jakewharton.mosaic.ui.Layout
 import com.jakewharton.mosaic.ui.Row
 import com.jakewharton.mosaic.ui.Text
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class LayoutTest {
 	@Test fun layoutDebugInfo() {
@@ -28,7 +29,7 @@ class LayoutTest {
 			|  Text("Hi!") x=0 y=0 w=0 h=0 DrawBehind
 			|  Text("Hey!") x=0 y=0 w=0 h=0 DrawBehind
 		""".trimMargin()
-		assertEquals(expected, node.toString())
+		assertThat(node.toString()).isEqualTo(expected)
 	}
 
 	@Test fun noMeasureNoDraw() {
@@ -46,7 +47,7 @@ class LayoutTest {
 			|  $s
 			|
 		""".trimMargin()
-		assertEquals(expected, actual)
+		assertThat(actual).isEqualTo(expected)
 	}
 
 	@Test fun noPlacementOverlaps() {
@@ -67,7 +68,7 @@ class LayoutTest {
 			|ABC
 			|
 		""".trimMargin()
-		assertEquals(expected, actual)
+		assertThat(actual).isEqualTo(expected)
 	}
 
 	@Test fun placementWorks() {
@@ -91,7 +92,7 @@ class LayoutTest {
 			|A      $s
 			|
 		""".trimMargin()
-		assertEquals(expected, actual)
+		assertThat(actual).isEqualTo(expected)
 	}
 
 	@Test fun canvasIsNotClipped() {
@@ -130,6 +131,6 @@ class LayoutTest {
 			|.....X
 			|
 		""".trimMargin()
-		assertEquals(expected, actual)
+		assertThat(actual).isEqualTo(expected)
 	}
 }

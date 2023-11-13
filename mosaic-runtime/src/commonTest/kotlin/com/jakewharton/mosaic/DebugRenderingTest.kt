@@ -1,15 +1,19 @@
 package com.jakewharton.mosaic
 
+import assertk.assertFailure
+import assertk.assertThat
+import assertk.assertions.containsMatch
+import assertk.assertions.isEqualTo
+import assertk.assertions.isInstanceOf
+import assertk.assertions.isNotNull
+import assertk.assertions.message
 import com.jakewharton.mosaic.layout.drawBehind
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.ui.Layout
 import com.jakewharton.mosaic.ui.Row
 import com.jakewharton.mosaic.ui.Static
 import com.jakewharton.mosaic.ui.Text
-import com.varabyte.truthish.assertThat
 import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.ExperimentalTime
 import kotlin.time.TestTimeSource
@@ -29,10 +33,11 @@ class DebugRenderingTest {
 			}
 		}
 
-		val t = assertFailsWith<RuntimeException> {
+		assertFailure {
 			rendering.render(nodes)
-		}
-		assertThat(t.message!!)
+		}.isInstanceOf<RuntimeException>()
+			.message()
+			.isNotNull()
 			.containsMatch(
 				"""
 				|Failed
@@ -44,7 +49,7 @@ class DebugRenderingTest {
 				|
 				|OUTPUT:
 				|(kotlin\.|java\.lang\.)?UnsupportedOperationException:?
-				""".trimMargin(),
+				""".trimMargin().toRegex(),
 			)
 	}
 
@@ -56,7 +61,7 @@ class DebugRenderingTest {
 			}
 		}
 
-		assertEquals(
+		assertThat(rendering.render(nodes)).isEqualTo(
 			"""
 			|NODES:
 			|Text("Hello") x=0 y=0 w=5 h=1 DrawBehind
@@ -70,7 +75,6 @@ class DebugRenderingTest {
 			|Hello
 			|
 			""".trimMargin(),
-			rendering.render(nodes),
 		)
 	}
 
@@ -79,7 +83,7 @@ class DebugRenderingTest {
 			Text("Hello")
 		}
 
-		assertEquals(
+		assertThat(rendering.render(hello)).isEqualTo(
 			"""
 			|NODES:
 			|Text("Hello") x=0 y=0 w=5 h=1 DrawBehind
@@ -88,11 +92,10 @@ class DebugRenderingTest {
 			|Hello
 			|
 			""".trimMargin(),
-			rendering.render(hello),
 		)
 
 		timeSource += 100.milliseconds
-		assertEquals(
+		assertThat(rendering.render(hello)).isEqualTo(
 			"""
 			|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ +100ms
 			|NODES:
@@ -102,7 +105,6 @@ class DebugRenderingTest {
 			|Hello
 			|
 			""".trimMargin(),
-			rendering.render(hello),
 		)
 	}
 }

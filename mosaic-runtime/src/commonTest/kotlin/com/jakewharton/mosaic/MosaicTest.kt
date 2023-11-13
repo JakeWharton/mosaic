@@ -1,9 +1,10 @@
 package com.jakewharton.mosaic
 
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.ui.Column
 import com.jakewharton.mosaic.ui.Text
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class MosaicTest {
 	@Test fun render() {
@@ -14,14 +15,13 @@ class MosaicTest {
 				Text("Three")
 			}
 		}
-		assertEquals(
+		assertThat(actual).isEqualTo(
 			"""
 			|One $s
 			|Two $s
 			|Three
 			|
 			""".trimMargin(),
-			actual,
 		)
 	}
 }

@@ -20,7 +20,7 @@ dependencies {
 	compileOnly libs.kotlin.gradlePlugin
 
 	testImplementation libs.junit4
-	testImplementation libs.truth
+	testImplementation libs.assertk
 	testImplementation gradleTestKit()
 }
 

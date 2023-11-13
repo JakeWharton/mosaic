@@ -1,11 +1,12 @@
 package com.jakewharton.mosaic
 
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.ui.Column
 import com.jakewharton.mosaic.ui.Row
 import com.jakewharton.mosaic.ui.Static
 import com.jakewharton.mosaic.ui.Text
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class AnsiRenderingTest {
 	private val rendering = AnsiRendering()
@@ -19,13 +20,12 @@ class AnsiRenderingTest {
 		}
 
 		// TODO We should not draw trailing whitespace.
-		assertEquals(
+		assertThat(rendering.render(hello).toString()).isEqualTo(
 			"""
 			|Hello$s
 			|World!
 			|
 			""".trimMargin(),
-			rendering.render(hello).toString(),
 		)
 	}
 
@@ -37,13 +37,12 @@ class AnsiRenderingTest {
 			}
 		}
 
-		assertEquals(
+		assertThat(rendering.render(first).toString()).isEqualTo(
 			"""
 			|Hello$s
 			|World!
 			|
 			""".trimMargin(),
-			rendering.render(first).toString(),
 		)
 
 		val second = mosaicNodes {
@@ -55,7 +54,7 @@ class AnsiRenderingTest {
 			}
 		}
 
-		assertEquals(
+		assertThat(rendering.render(second).toString()).isEqualTo(
 			"""
 			|$cursorUp${cursorUp}Hel$clearLine
 			|lo $clearLine
@@ -63,7 +62,6 @@ class AnsiRenderingTest {
 			|ld!
 			|
 			""".trimMargin(),
-			rendering.render(second).toString(),
 		)
 	}
 
@@ -77,7 +75,7 @@ class AnsiRenderingTest {
 			}
 		}
 
-		assertEquals(
+		assertThat(rendering.render(first).toString()).isEqualTo(
 			"""
 			|Hel
 			|lo$s
@@ -85,7 +83,6 @@ class AnsiRenderingTest {
 			|ld!
 			|
 			""".trimMargin(),
-			rendering.render(first).toString(),
 		)
 
 		val second = mosaicNodes {
@@ -95,14 +92,13 @@ class AnsiRenderingTest {
 			}
 		}
 
-		assertEquals(
+		assertThat(rendering.render(second).toString()).isEqualTo(
 			"""
 			|$cursorUp$cursorUp$cursorUp${cursorUp}Hello $clearLine
 			|World!$clearLine
 			|$clearLine
 			|$clearLine$cursorUp
 			""".trimMargin(),
-			rendering.render(second).toString(),
 		)
 	}
 
@@ -114,13 +110,12 @@ class AnsiRenderingTest {
 			}
 		}
 
-		assertEquals(
+		assertThat(rendering.render(hello).toString()).isEqualTo(
 			"""
 			|World!
 			|Hello
 			|
 			""".trimMargin(),
-			rendering.render(hello).toString(),
 		)
 	}
 
@@ -132,13 +127,12 @@ class AnsiRenderingTest {
 			Text("Two")
 		}
 
-		assertEquals(
+		assertThat(rendering.render(first).toString()).isEqualTo(
 			"""
 			|One
 			|Two
 			|
 			""".trimMargin(),
-			rendering.render(first).toString(),
 		)
 
 		val second = mosaicNodes {
@@ -148,13 +142,12 @@ class AnsiRenderingTest {
 			Text("Four")
 		}
 
-		assertEquals(
+		assertThat(rendering.render(second).toString()).isEqualTo(
 			"""
 			|${cursorUp}Three$clearLine
 			|Four
 			|
 			""".trimMargin(),
-			rendering.render(second).toString(),
 		)
 	}
 
@@ -182,7 +175,7 @@ class AnsiRenderingTest {
 			}
 		}
 
-		assertEquals(
+		assertThat(rendering.render(hello).toString()).isEqualTo(
 			"""
 			|One
 			|Two
@@ -192,7 +185,6 @@ class AnsiRenderingTest {
 			|Sup
 			|
 			""".trimMargin(),
-			rendering.render(hello).toString(),
 		)
 	}
 
@@ -209,14 +201,13 @@ class AnsiRenderingTest {
 			}
 		}
 
-		assertEquals(
+		assertThat(rendering.render(hello).toString()).isEqualTo(
 			"""
 			|Static
 			|TopTopTop
 			|LeftLeft$s
 			|
 			""".trimMargin(),
-			rendering.render(hello).toString(),
 		)
 	}
 }

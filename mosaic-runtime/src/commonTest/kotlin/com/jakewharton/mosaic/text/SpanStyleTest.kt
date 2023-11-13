@@ -1,8 +1,10 @@
 package com.jakewharton.mosaic.text
 
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import assertk.assertions.isNull
 import com.jakewharton.mosaic.ui.Color
 import com.jakewharton.mosaic.ui.TextStyle
-import com.varabyte.truthish.assertThat
 import kotlin.test.Test
 
 class SpanStyleTest {

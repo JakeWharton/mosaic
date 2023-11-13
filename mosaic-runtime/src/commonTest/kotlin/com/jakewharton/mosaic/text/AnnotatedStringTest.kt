@@ -1,11 +1,13 @@
 package com.jakewharton.mosaic.text
 
+import assertk.assertFailure
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import assertk.assertions.isInstanceOf
+import assertk.assertions.isSameAs
 import com.jakewharton.mosaic.text.AnnotatedString.Range
 import com.jakewharton.mosaic.ui.Color
-import com.varabyte.truthish.assertThat
 import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 
 class AnnotatedStringTest {
 
@@ -200,15 +202,15 @@ class AnnotatedStringTest {
 	}
 
 	@Test fun subSequence_throws_exception_for_start_greater_than_end() {
-		assertFailsWith<IllegalArgumentException> {
+		assertFailure {
 			AnnotatedString("ab").subSequence(1, 0)
-		}
+		}.isInstanceOf<IllegalArgumentException>()
 	}
 
 	@Test fun creating_item_with_start_greater_than_end_throws_exception() {
-		assertFailsWith<IllegalArgumentException> {
+		assertFailure {
 			Range(SpanStyle(color = Color.Red), 1, 0)
-		}
+		}.isInstanceOf<IllegalArgumentException>()
 	}
 
 	@Test fun creating_item_with_start_equal_to_end_does_not_throw_exception() {
@@ -227,7 +229,6 @@ class AnnotatedStringTest {
 	}
 
 	@Test fun toString_returns_the_plain_string() {
-		val text = "abc"
-		assertEquals(text, AnnotatedString(text).toString())
+		assertThat(AnnotatedString("abc").toString()).isEqualTo("abc")
 	}
 }
