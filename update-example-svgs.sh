@@ -33,11 +33,6 @@ for sample in $REPO_DIR/samples/*; do
 		asciinema rec -c "$command" $sample/demo.cast
 		agg --cols 60 --rows 18 $sample/demo.cast $sample/demo.gif
 		rm $sample/demo.cast
-		cat > "$sample/README.md" <<EOL
-# Example: $sample_name
-
-<img src="demo.gif">
-EOL
 	fi
 done
 

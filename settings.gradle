@@ -4,6 +4,7 @@ include ':mosaic-gradle-plugin'
 include ':mosaic-runtime'
 
 include ':samples:counter'
+include ':samples:demo'
 include ':samples:jest'
 include ':samples:robot'
 
