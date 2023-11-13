@@ -9,6 +9,7 @@ apply plugin: 'com.jakewharton.mosaic'
 apply plugin: 'dev.drewhamilton.poko'
 
 kotlin {
+	applyDefaultHierarchyTemplate()
 	explicitApi()
 
 	sourceSets {
