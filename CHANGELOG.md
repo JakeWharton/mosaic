@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Add `AnnotatedString` with `SpanStyle` for string customization.
+
 ## [0.9.1] - 2023-09-14
 
 New:

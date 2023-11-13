@@ -14,6 +14,9 @@ import com.jakewharton.mosaic.layout.background
 import com.jakewharton.mosaic.layout.padding
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.runMosaicBlocking
+import com.jakewharton.mosaic.text.SpanStyle
+import com.jakewharton.mosaic.text.buildAnnotatedString
+import com.jakewharton.mosaic.text.withStyle
 import com.jakewharton.mosaic.ui.Color.Companion.Black
 import com.jakewharton.mosaic.ui.Color.Companion.BrightBlack
 import com.jakewharton.mosaic.ui.Color.Companion.Green
@@ -27,10 +30,10 @@ import com.jakewharton.mosaic.ui.TextStyle.Companion.Bold
 import example.TestState.Fail
 import example.TestState.Pass
 import example.TestState.Running
-import kotlin.random.Random
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 fun main() = runMosaicBlocking {
 	val paths = ArrayDeque(
@@ -114,8 +117,14 @@ fun TestRow(test: Test) {
 
 		val dir = test.path.substringBeforeLast('/')
 		val name = test.path.substringAfterLast('/')
-		Text(" $dir/")
-		Text(name, style = Bold)
+		Text(
+			buildAnnotatedString {
+				append(" $dir/")
+				withStyle(SpanStyle(textStyle = Bold)) {
+					append(name)
+				}
+			}
+		)
 	}
 }
 
@@ -170,26 +179,34 @@ private fun Summary(totalTests: Int, tests: List<Test>) {
 		}
 	}
 
-	Row {
-		Text("Tests: ")
+	Text(
+		buildAnnotatedString {
+			append("Tests: ")
 
-		if (failed > 0) {
-			Text("$failed failed", color = Red)
-			Text(", ")
+			if (failed > 0) {
+				withStyle(SpanStyle(color = Red)) {
+					append("$failed failed")
+				}
+				append(", ")
+			}
+
+			if (passed > 0) {
+				withStyle(SpanStyle(color = Green)) {
+					append("$passed passed")
+				}
+				append(", ")
+			}
+
+			if (running > 0) {
+				withStyle(SpanStyle(color = Yellow)) {
+					append("$running running")
+				}
+				append(", ")
+			}
+
+			append("$totalTests total")
 		}
-
-		if (passed > 0) {
-			Text("$passed passed", color = Green)
-			Text(", ")
-		}
-
-		if (running > 0) {
-			Text("$running running", color = Yellow)
-			Text(", ")
-		}
-
-		Text("$totalTests total")
-	}
+	)
 
 	Text("Time:  ${elapsed}s")
 
@@ -215,12 +232,22 @@ fun TestProgress(totalTests: Int, passed: Int, failed: Int, running: Int) {
 	val passedWidth = (passed.toDouble() * totalWidth / totalTests).toInt()
 	val runningWidth = if (showRunning) (running.toDouble() * totalWidth / totalTests).toInt() else 0
 
-	Row {
-		Text(" ".repeat(failedWidth), background = Red)
-		Text(" ".repeat(passedWidth), background = Green)
-		Text(" ".repeat(runningWidth), background = Yellow)
-		Text(" ".repeat(totalWidth - failedWidth - passedWidth - runningWidth), background = BrightBlack)
-	}
+	Text(
+		buildAnnotatedString {
+			withStyle(SpanStyle(background = Red)) {
+				append(" ".repeat(failedWidth))
+			}
+			withStyle(SpanStyle(background = Green)) {
+				append(" ".repeat(passedWidth))
+			}
+			withStyle(SpanStyle(background = Yellow)) {
+				append(" ".repeat(runningWidth))
+			}
+			withStyle(SpanStyle(background = BrightBlack)) {
+				append(" ".repeat(totalWidth - failedWidth - passedWidth - runningWidth))
+			}
+		}
+	)
 }
 
 data class Test(

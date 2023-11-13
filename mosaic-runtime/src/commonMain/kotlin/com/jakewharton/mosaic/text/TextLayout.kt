@@ -2,8 +2,9 @@ package com.jakewharton.mosaic.text
 
 import de.cketti.codepoints.codePointCount
 
-internal class TextLayout {
-	var value: String = ""
+internal abstract class TextLayout<T : CharSequence>(initialValue: T) {
+
+	var value: T = initialValue
 		set(value) {
 			if (value != field) {
 				dirty = true
@@ -25,7 +26,7 @@ internal class TextLayout {
 			return field
 		}
 
-	var lines: List<String> = emptyList()
+	var lines: List<T> = emptyList()
 		private set
 		get() {
 			check(!dirty) { "Missing call to measure()" }
@@ -37,10 +38,28 @@ internal class TextLayout {
 	fun measure() {
 		if (!dirty) return
 
-		val lines = value.split('\n')
+		val lines = value.splitByLines()
 		width = lines.maxOf { it.codePointCount(0, it.length) }
 		height = lines.size
 		this.lines = lines
 		dirty = false
+	}
+
+	protected abstract fun T.splitByLines(): List<T>
+}
+
+internal class StringTextLayout : TextLayout<String>(initialValue = "") {
+
+	override fun String.splitByLines(): List<String> {
+		return this.split("\n")
+	}
+}
+
+internal class AnnotatedStringTextLayout : TextLayout<AnnotatedString>(
+	initialValue = emptyAnnotatedString()
+) {
+
+	override fun AnnotatedString.splitByLines(): List<AnnotatedString> {
+		return this.split("\n")
 	}
 }
