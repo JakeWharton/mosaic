@@ -2,7 +2,57 @@
 
 ## [Unreleased]
 
-- Add `AnnotatedString` with `SpanStyle` for string customization.
+
+## [0.10.0] - 2023-11-13
+
+New:
+- Support Kotlin 1.9.20 via JetBrains Compose compiler 1.5.3.
+
+- `@MosaicComposable` annotation restricts composable function usage to those meant for Mosaic
+  (e.g., our `Text`) or general-purpose (e.g., Compose's `remember`). In most cases the Compose
+  compiler can infer this automatically, but it's available for explicit use if needed.
+
+- `LocalTerminal` composition local provides the size of the terminal if it can be detected.
+  If the size changes, your function will automatically be recomposed with the new values.
+
+    ```kotlin
+    val size = LocalTerminal.current.size
+    Text("Terminal(w=${size.width}, h=${size.height})")
+    ```
+
+- `Row`, `Column`, and `Box` now support horizontal and vertical alignment of their children.
+
+    ```kotlin
+    Column {
+      Text("This is very long")
+      Text(
+        "On the right",
+        modifier = Modifier.align(End),
+      )
+    }
+    ```
+
+- Add `AnnotatedString` with `SpanStyle` for string customization. Instead of writing a series of
+  `Text` functions in a `Row`, emit a single `Text` with formatting changes within the string.
+
+    ```kotlin
+    Text(buildAnnotatedString {
+      append("Plain! ")
+      withStyle(SpanStyle(color = BrightGreen)) {
+        append("Green! ")
+      }
+      withStyle(SpanStyle(color = BrightBlue)) {
+        append("Blue!")
+      }
+    })
+    ```
+
+- `Spacer` node for occupying space within layouts.
+
+- Constraints and intrinsics are now available in the layout system.
+
+This version works with Kotlin 1.9.20 by default.
+
 
 ## [0.9.1] - 2023-09-14
 
@@ -107,7 +157,8 @@ Breaking:
 Initial release!
 
 
-[Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.9.1...HEAD
+[Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.10.0...HEAD
+[0.10.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.10.0
 [0.9.1]: https://github.com/JakeWharton/mosaic/releases/tag/0.9.1
 [0.9.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.9.0
 [0.8.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.8.0

@@ -90,8 +90,8 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10'
-    classpath 'com.jakewharton.mosaic:mosaic-gradle-plugin:0.9.1'
+    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.20'
+    classpath 'com.jakewharton.mosaic:mosaic-gradle-plugin:0.10.0'
   }
 }
 
@@ -111,6 +111,7 @@ certain versions of Kotlin.
 
 | Kotlin | Mosaic        |
 |--------|---------------|
+| 1.9.20 | 0.10.0        |
 | 1.9.10 | 0.9.1         |
 | 1.9.0  | 0.8.0 - 0.9.0 |
 | 1.8.22 | 0.7.1         |
@@ -136,8 +137,8 @@ buildscript {
     }
   }
   dependencies {
-    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0'
-    classpath 'com.jakewharton.mosaic:mosaic-gradle-plugin:0.10.0-SNAPSHOT'
+    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.20'
+    classpath 'com.jakewharton.mosaic:mosaic-gradle-plugin:0.11.0-SNAPSHOT'
   }
 }
 
@@ -158,6 +159,10 @@ Run `./gradlew installDist` to build the sample binaries.
  * [Counter](samples/counter): A simple increasing number from 0 until 20.
 
    `./samples/counter/build/install/counter/bin/counter`
+
+ * [Demo](samples/demo): A playground for demonstrating many features of Mosaic.
+
+   `./samples/demo/build/install/demo/bin/demo`
 
  * [Jest](samples/jest): Example output of a test framework (such as JS's 'Jest').
 
