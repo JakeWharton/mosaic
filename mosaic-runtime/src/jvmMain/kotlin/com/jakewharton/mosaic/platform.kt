@@ -4,7 +4,7 @@ import java.nio.CharBuffer
 import java.nio.charset.StandardCharsets.UTF_8
 import org.fusesource.jansi.AnsiConsole
 
-private val out = AnsiConsole.out()!!
+private val out = AnsiConsole.out()!!.also { AnsiConsole.systemInstall() }
 private val encoder = UTF_8.newEncoder()!!
 
 internal actual fun platformDisplay(chars: CharSequence) {
