@@ -37,7 +37,7 @@ import kotlin.jvm.JvmInline
 @Immutable
 @JvmInline
 public value class Constraints(
-	@PublishedApi internal val value: Long
+	@PublishedApi internal val value: Long,
 ) {
 	/**
 	 * Indicates how the bits are assigned. One of:
@@ -144,7 +144,7 @@ public value class Constraints(
 		minWidth: Int = this.minWidth,
 		maxWidth: Int = this.maxWidth,
 		minHeight: Int = this.minHeight,
-		maxHeight: Int = this.maxHeight
+		maxHeight: Int = this.maxHeight,
 	): Constraints {
 		require(minHeight >= 0 && minWidth >= 0) {
 			"minHeight($minHeight) and minWidth($minWidth) must be >= 0"
@@ -259,30 +259,42 @@ public value class Constraints(
 		 * Width offsets are always either 2 (min) or 33 (max)
 		 */
 		private val MinHeightOffsets = intArrayOf(
-			18, // MinFocusWidth: 2 + 16
-			20, // MaxFocusWidth: 2 + 18
-			17, // MinFocusHeight: 2 + 15
-			15 // MaxFocusHeight: 2 + 13
+			// MinFocusWidth: 2 + 16
+			18,
+			// MaxFocusWidth: 2 + 18
+			20,
+			// MinFocusHeight: 2 + 15
+			17,
+			// MaxFocusHeight: 2 + 13
+			15,
 		)
 
 		/**
 		 * The mask to use for both minimum and maximum width.
 		 */
 		private val WidthMask = intArrayOf(
-			MinFocusMask, // MinFocusWidth (16 bits)
-			MaxFocusMask, // MaxFocusWidth (18 bits)
-			MinNonFocusMask, // MinFocusHeight (15 bits)
-			MaxNonFocusMask // MaxFocusHeight (13 bits)
+			// MinFocusWidth (16 bits)
+			MinFocusMask,
+			// MaxFocusWidth (18 bits)
+			MaxFocusMask,
+			// MinFocusHeight (15 bits)
+			MinNonFocusMask,
+			// MaxFocusHeight (13 bits)
+			MaxNonFocusMask,
 		)
 
 		/**
 		 * The mask to use for both minimum and maximum height.
 		 */
 		private val HeightMask = intArrayOf(
-			MinNonFocusMask, // MinFocusWidth (15 bits)
-			MaxNonFocusMask, // MaxFocusWidth (13 bits)
-			MinFocusMask, // MinFocusHeight (16 bits)
-			MaxFocusMask // MaxFocusHeight (18 bits)
+			// MinFocusWidth (15 bits)
+			MinNonFocusMask,
+			// MaxFocusWidth (13 bits)
+			MaxNonFocusMask,
+			// MinFocusHeight (16 bits)
+			MinFocusMask,
+			// MaxFocusHeight (18 bits)
+			MaxFocusMask,
 		)
 
 		/**
@@ -291,7 +303,7 @@ public value class Constraints(
 		@Stable
 		public fun fixed(
 			width: Int,
-			height: Int
+			height: Int,
 		): Constraints {
 			require(width >= 0 && height >= 0) {
 				"width($width) and height($height) must be >= 0"
@@ -304,7 +316,7 @@ public value class Constraints(
 		 */
 		@Stable
 		public fun fixedWidth(
-			width: Int
+			width: Int,
 		): Constraints {
 			require(width >= 0) {
 				"width($width) must be >= 0"
@@ -313,7 +325,7 @@ public value class Constraints(
 				minWidth = width,
 				maxWidth = width,
 				minHeight = 0,
-				maxHeight = Infinity
+				maxHeight = Infinity,
 			)
 		}
 
@@ -322,7 +334,7 @@ public value class Constraints(
 		 */
 		@Stable
 		public fun fixedHeight(
-			height: Int
+			height: Int,
 		): Constraints {
 			require(height >= 0) {
 				"height($height) must be >= 0"
@@ -331,7 +343,7 @@ public value class Constraints(
 				minWidth = 0,
 				maxWidth = Infinity,
 				minHeight = height,
-				maxHeight = height
+				maxHeight = height,
 			)
 		}
 
@@ -342,7 +354,7 @@ public value class Constraints(
 			minWidth: Int,
 			maxWidth: Int,
 			minHeight: Int,
-			maxHeight: Int
+			maxHeight: Int,
 		): Constraints {
 			val heightVal = if (maxHeight == Infinity) minHeight else maxHeight
 			val heightBits = bitsNeedForSize(heightVal)
@@ -353,7 +365,7 @@ public value class Constraints(
 			if (widthBits + heightBits > 31) {
 				throw IllegalArgumentException(
 					"Can't represent a width of $widthVal and height " +
-						"of $heightVal in Constraints"
+						"of $heightVal in Constraints",
 				)
 			}
 
@@ -387,7 +399,7 @@ public value class Constraints(
 				size < MaxFocusMask -> MaxFocusBits
 				else -> throw IllegalArgumentException(
 					"Can't represent a size of $size in " +
-						"Constraints"
+						"Constraints",
 				)
 			}
 		}
@@ -404,7 +416,7 @@ public fun Constraints(
 	minWidth: Int = 0,
 	maxWidth: Int = Constraints.Infinity,
 	minHeight: Int = 0,
-	maxHeight: Int = Constraints.Infinity
+	maxHeight: Int = Constraints.Infinity,
 ): Constraints {
 	require(maxWidth >= minWidth) {
 		"maxWidth($maxWidth) must be >= than minWidth($minWidth)"
@@ -432,7 +444,7 @@ public fun Constraints.constrain(otherConstraints: Constraints): Constraints = C
 	minWidth = otherConstraints.minWidth.coerceIn(minWidth, maxWidth),
 	maxWidth = otherConstraints.maxWidth.coerceIn(minWidth, maxWidth),
 	minHeight = otherConstraints.minHeight.coerceIn(minHeight, maxHeight),
-	maxHeight = otherConstraints.maxHeight.coerceIn(minHeight, maxHeight)
+	maxHeight = otherConstraints.maxHeight.coerceIn(minHeight, maxHeight),
 )
 
 /**
@@ -441,7 +453,7 @@ public fun Constraints.constrain(otherConstraints: Constraints): Constraints = C
 @Stable
 public fun Constraints.constrain(size: IntSize): IntSize = IntSize(
 	width = size.width.coerceIn(minWidth, maxWidth),
-	height = size.height.coerceIn(minHeight, maxHeight)
+	height = size.height.coerceIn(minHeight, maxHeight),
 )
 
 /**
@@ -472,7 +484,7 @@ public fun Constraints.offset(horizontal: Int = 0, vertical: Int = 0): Constrain
 	(minWidth + horizontal).coerceAtLeast(0),
 	addMaxWithMinimum(maxWidth, horizontal),
 	(minHeight + vertical).coerceAtLeast(0),
-	addMaxWithMinimum(maxHeight, vertical)
+	addMaxWithMinimum(maxHeight, vertical),
 )
 
 private fun addMaxWithMinimum(max: Int, value: Int): Int {

@@ -22,7 +22,7 @@ public fun Modifier.width(width: Int): Modifier = this.then(
 		minWidth = width,
 		maxWidth = width,
 		enforceIncoming = true,
-	)
+	),
 )
 
 /**
@@ -39,7 +39,7 @@ public fun Modifier.height(height: Int): Modifier = this.then(
 		minHeight = height,
 		maxHeight = height,
 		enforceIncoming = true,
-	)
+	),
 )
 
 /**
@@ -58,7 +58,7 @@ public fun Modifier.size(size: Int): Modifier = this.then(
 		minHeight = size,
 		maxHeight = size,
 		enforceIncoming = true,
-	)
+	),
 )
 
 /**
@@ -78,7 +78,7 @@ public fun Modifier.size(width: Int, height: Int): Modifier = this.then(
 		minHeight = height,
 		maxHeight = height,
 		enforceIncoming = true,
-	)
+	),
 )
 
 /**
@@ -102,13 +102,13 @@ public fun Modifier.size(size: IntSize): Modifier = size(size.width, size.height
 @Stable
 public fun Modifier.widthIn(
 	min: Int = Unspecified,
-	max: Int = Unspecified
+	max: Int = Unspecified,
 ): Modifier = this.then(
 	SizeModifier(
 		minWidth = min,
 		maxWidth = max,
 		enforceIncoming = true,
-	)
+	),
 )
 
 /**
@@ -120,13 +120,13 @@ public fun Modifier.widthIn(
 @Stable
 public fun Modifier.heightIn(
 	min: Int = Unspecified,
-	max: Int = Unspecified
+	max: Int = Unspecified,
 ): Modifier = this.then(
 	SizeModifier(
 		minHeight = min,
 		maxHeight = max,
 		enforceIncoming = true,
-	)
+	),
 )
 
 /**
@@ -140,7 +140,7 @@ public fun Modifier.sizeIn(
 	minWidth: Int = Unspecified,
 	minHeight: Int = Unspecified,
 	maxWidth: Int = Unspecified,
-	maxHeight: Int = Unspecified
+	maxHeight: Int = Unspecified,
 ): Modifier = this.then(
 	SizeModifier(
 		minWidth = minWidth,
@@ -148,7 +148,7 @@ public fun Modifier.sizeIn(
 		maxWidth = maxWidth,
 		maxHeight = maxHeight,
 		enforceIncoming = true,
-	)
+	),
 )
 
 /**
@@ -169,7 +169,7 @@ public fun Modifier.requiredWidth(width: Int): Modifier = this.then(
 		minWidth = width,
 		maxWidth = width,
 		enforceIncoming = false,
-	)
+	),
 )
 
 /**
@@ -190,7 +190,7 @@ public fun Modifier.requiredHeight(height: Int): Modifier = this.then(
 		minHeight = height,
 		maxHeight = height,
 		enforceIncoming = false,
-	)
+	),
 )
 
 /**
@@ -213,7 +213,7 @@ public fun Modifier.requiredSize(size: Int): Modifier = this.then(
 		minHeight = size,
 		maxHeight = size,
 		enforceIncoming = false,
-	)
+	),
 )
 
 /**
@@ -236,7 +236,7 @@ public fun Modifier.requiredSize(width: Int, height: Int): Modifier = this.then(
 		minHeight = height,
 		maxHeight = height,
 		enforceIncoming = false,
-	)
+	),
 )
 
 /**
@@ -264,13 +264,13 @@ public fun Modifier.requiredSize(size: IntSize): Modifier = requiredSize(size.wi
 @Stable
 public fun Modifier.requiredWidthIn(
 	min: Int = Unspecified,
-	max: Int = Unspecified
+	max: Int = Unspecified,
 ): Modifier = this.then(
 	SizeModifier(
 		minWidth = min,
 		maxWidth = max,
 		enforceIncoming = false,
-	)
+	),
 )
 
 /**
@@ -283,13 +283,13 @@ public fun Modifier.requiredWidthIn(
 @Stable
 public fun Modifier.requiredHeightIn(
 	min: Int = Unspecified,
-	max: Int = Unspecified
+	max: Int = Unspecified,
 ): Modifier = this.then(
 	SizeModifier(
 		minHeight = min,
 		maxHeight = max,
 		enforceIncoming = false,
-	)
+	),
 )
 
 /**
@@ -305,7 +305,7 @@ public fun Modifier.requiredSizeIn(
 	minWidth: Int = Unspecified,
 	minHeight: Int = Unspecified,
 	maxWidth: Int = Unspecified,
-	maxHeight: Int = Unspecified
+	maxHeight: Int = Unspecified,
 ): Modifier = this.then(
 	SizeModifier(
 		minWidth = minWidth,
@@ -313,7 +313,7 @@ public fun Modifier.requiredSizeIn(
 		maxWidth = maxWidth,
 		maxHeight = maxHeight,
 		enforceIncoming = false,
-	)
+	),
 )
 
 private class SizeModifier(
@@ -353,13 +353,13 @@ private class SizeModifier(
 				minWidth = minWidth,
 				minHeight = minHeight,
 				maxWidth = maxWidth,
-				maxHeight = maxHeight
+				maxHeight = maxHeight,
 			)
 		}
 
 	override fun MeasureScope.measure(
 		measurable: Measurable,
-		constraints: Constraints
+		constraints: Constraints,
 	): MeasureResult {
 		val wrappedConstraints = targetConstraints.let { targetConstraints ->
 			if (enforceIncoming) {
@@ -389,7 +389,7 @@ private class SizeModifier(
 					resolvedMinWidth,
 					resolvedMaxWidth,
 					resolvedMinHeight,
-					resolvedMaxHeight
+					resolvedMaxHeight,
 				)
 			}
 		}
@@ -401,7 +401,7 @@ private class SizeModifier(
 
 	override fun minIntrinsicWidth(
 		measurable: IntrinsicMeasurable,
-		height: Int
+		height: Int,
 	): Int {
 		val constraints = targetConstraints
 		return if (constraints.hasFixedWidth) {
@@ -413,7 +413,7 @@ private class SizeModifier(
 
 	override fun minIntrinsicHeight(
 		measurable: IntrinsicMeasurable,
-		width: Int
+		width: Int,
 	): Int {
 		val constraints = targetConstraints
 		return if (constraints.hasFixedHeight) {
@@ -425,7 +425,7 @@ private class SizeModifier(
 
 	override fun maxIntrinsicWidth(
 		measurable: IntrinsicMeasurable,
-		height: Int
+		height: Int,
 	): Int {
 		val constraints = targetConstraints
 		return if (constraints.hasFixedWidth) {
@@ -437,7 +437,7 @@ private class SizeModifier(
 
 	override fun maxIntrinsicHeight(
 		measurable: IntrinsicMeasurable,
-		width: Int
+		width: Int,
 	): Int {
 		val constraints = targetConstraints
 		return if (constraints.hasFixedHeight) {

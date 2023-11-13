@@ -44,7 +44,8 @@ class DebugRenderingTest {
 				|
 				|OUTPUT:
 				|(kotlin\.|java\.lang\.)?UnsupportedOperationException:?
-				""".trimMargin())
+				""".trimMargin(),
+			)
 	}
 
 	@Test fun framesIncludeStatics() {
@@ -67,7 +68,8 @@ class DebugRenderingTest {
 			|
 			|OUTPUT:
 			|Hello
-			|""".trimMargin(),
+			|
+			""".trimMargin(),
 			rendering.render(nodes),
 		)
 	}
@@ -84,7 +86,8 @@ class DebugRenderingTest {
 			|
 			|OUTPUT:
 			|Hello
-			|""".trimMargin(),
+			|
+			""".trimMargin(),
 			rendering.render(hello),
 		)
 
@@ -97,7 +100,8 @@ class DebugRenderingTest {
 			|
 			|OUTPUT:
 			|Hello
-			|""".trimMargin(),
+			|
+			""".trimMargin(),
 			rendering.render(hello),
 		)
 	}

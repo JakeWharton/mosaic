@@ -102,7 +102,7 @@ public class AnnotatedString internal constructor(
 		private data class MutableRange<T>(
 			val item: T,
 			val start: Int,
-			var end: Int = Int.MIN_VALUE
+			var end: Int = Int.MIN_VALUE,
 		) {
 			/**
 			 * Create an immutable [Range] object.
@@ -301,7 +301,7 @@ public class AnnotatedString internal constructor(
  */
 private fun AnnotatedString.getLocalSpanStyles(
 	start: Int,
-	end: Int
+	end: Int,
 ): List<AnnotatedString.Range<SpanStyle>>? {
 	if (start == end) return null
 	val spanStyles = spanStylesOrNull ?: return null
@@ -314,7 +314,7 @@ private fun AnnotatedString.getLocalSpanStyles(
 			AnnotatedString.Range(
 				it.item,
 				it.start.coerceIn(start, end) - start,
-				it.end.coerceIn(start, end) - start
+				it.end.coerceIn(start, end) - start,
 			)
 		}
 }
@@ -330,7 +330,7 @@ private fun AnnotatedString.getLocalSpanStyles(
 private fun <T> filterRanges(
 	ranges: List<AnnotatedString.Range<out T>>?,
 	start: Int,
-	end: Int
+	end: Int,
 ): List<AnnotatedString.Range<T>>? {
 	require(start <= end) { "start ($start) should be less than or equal to end ($end)" }
 	val nonNullRange = ranges ?: return null
@@ -353,7 +353,7 @@ private fun <T> filterRanges(
  */
 internal fun AnnotatedString.getLocalRawSpanStyles(
 	start: Int,
-	end: Int
+	end: Int,
 ): List<SpanStyle> {
 	require(start <= end) { "start ($start) should be less than or equal to end ($end)" }
 	val nonNullRange = spanStylesOrNull ?: return emptyList()
@@ -374,7 +374,7 @@ internal fun AnnotatedString.getLocalRawSpanStyles(
 internal fun AnnotatedString.split(
 	delimiter: String,
 	ignoreCase: Boolean = false,
-	limit: Int = 0
+	limit: Int = 0,
 ): List<AnnotatedString> {
 	require(limit >= 0) { "Limit must be non-negative, but was $limit" }
 
@@ -411,7 +411,7 @@ internal fun AnnotatedString.split(
  */
 public inline fun <R : Any> Builder.withStyle(
 	style: SpanStyle,
-	block: Builder.() -> R
+	block: Builder.() -> R,
 ): R {
 	val index = pushStyle(style)
 	return try {

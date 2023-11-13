@@ -79,7 +79,7 @@ internal open class TextCanvasDrawScope(
 		string: String,
 		foreground: Color?,
 		background: Color?,
-		style: TextStyle?
+		style: TextStyle?,
 	) {
 		drawText(row, column, string, foreground, background, style, null)
 	}
@@ -104,7 +104,7 @@ internal open class TextCanvasDrawScope(
 		foreground: Color?,
 		background: Color?,
 		style: TextStyle?,
-		spanStylesProvider: ((start: Int, end: Int) -> List<SpanStyle>)?
+		spanStylesProvider: ((start: Int, end: Int) -> List<SpanStyle>)?,
 	) {
 		var pixelIndex = 0
 		var characterColumn = column

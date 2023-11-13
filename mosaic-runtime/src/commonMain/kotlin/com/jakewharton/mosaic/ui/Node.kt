@@ -15,7 +15,9 @@ import com.jakewharton.mosaic.ui.unit.Constraints
 @Composable
 @MosaicComposable
 internal inline fun Node(
-	content: @Composable @MosaicComposable () -> Unit = {},
+	content:
+	@Composable @MosaicComposable
+	() -> Unit = {},
 	modifiers: Modifier,
 	measurePolicy: MeasurePolicy,
 	debugPolicy: DebugPolicy,
@@ -40,7 +42,7 @@ internal val NodeFactory: () -> MosaicNode = {
 	)
 }
 
-internal fun StaticNodeFactory(onDraw: () -> Unit): () -> MosaicNode = {
+internal fun staticNodeFactory(onDraw: () -> Unit): () -> MosaicNode = {
 	MosaicNode(
 		measurePolicy = ThrowingPolicy,
 		debugPolicy = ThrowingPolicy,

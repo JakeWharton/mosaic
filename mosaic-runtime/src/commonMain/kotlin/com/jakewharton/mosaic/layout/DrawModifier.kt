@@ -20,17 +20,18 @@ import com.jakewharton.mosaic.modifier.Modifier
 
 public interface DrawModifier : Modifier.Element {
 	public fun ContentDrawScope.draw()
+
 	// Force subclasses to add a debugging implementation.
 	override fun toString(): String
 }
 
 public fun Modifier.drawBehind(
-	onDraw: DrawScope.() -> Unit
+	onDraw: DrawScope.() -> Unit,
 ): Modifier = this then DrawBehindElement(onDraw)
 
 private class DrawBehindElement(
-	val onDraw: DrawScope.() -> Unit
-): DrawModifier {
+	val onDraw: DrawScope.() -> Unit,
+) : DrawModifier {
 	override fun ContentDrawScope.draw() {
 		onDraw()
 		drawContent()

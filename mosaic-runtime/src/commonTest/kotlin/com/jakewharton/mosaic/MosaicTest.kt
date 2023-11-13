@@ -14,10 +14,14 @@ class MosaicTest {
 				Text("Three")
 			}
 		}
-		assertEquals("""
+		assertEquals(
+			"""
 			|One $s
 			|Two $s
 			|Three
-			|""".trimMargin(), actual)
+			|
+			""".trimMargin(),
+			actual,
+		)
 	}
 }

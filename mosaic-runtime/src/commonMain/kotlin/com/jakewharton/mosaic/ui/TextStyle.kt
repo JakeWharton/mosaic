@@ -13,16 +13,22 @@ public class TextStyle private constructor(
 	public companion object {
 		@Stable
 		public val None: TextStyle = TextStyle(0)
+
 		@Stable
 		public val Underline: TextStyle = TextStyle(1)
+
 		@Stable
 		public val Strikethrough: TextStyle = TextStyle(2)
+
 		@Stable
 		public val Bold: TextStyle = TextStyle(4)
+
 		@Stable
 		public val Dim: TextStyle = TextStyle(8)
+
 		@Stable
 		public val Italic: TextStyle = TextStyle(16)
+
 		@Stable
 		public val Invert: TextStyle = TextStyle(32)
 	}

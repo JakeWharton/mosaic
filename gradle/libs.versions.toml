@@ -17,6 +17,9 @@ dokka-gradlePlugin = "org.jetbrains.dokka:dokka-gradle-plugin:1.9.10"
 buildconfig-gradlePlugin = "com.github.gmazzo:gradle-buildconfig-plugin:3.1.0"
 poko-gradlePlugin = "dev.drewhamilton.poko:poko-gradle-plugin:0.15.0"
 
+spotless-gradlePlugin = "com.diffplug.spotless:spotless-plugin-gradle:6.22.0"
+ktlint = "com.pinterest.ktlint:ktlint-cli:1.0.1"
+
 jansi = "org.fusesource.jansi:jansi:2.4.1"
 mordant = "com.github.ajalt.mordant:mordant:2.2.0"
 codepoints = "de.cketti.unicode:kotlin-codepoints:0.6.1"

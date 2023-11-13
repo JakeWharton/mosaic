@@ -10,7 +10,7 @@ public fun Modifier.background(
 ): Modifier = this.then(
 	BackgroundModifier(
 		color = color,
-	)
+	),
 )
 
 private class BackgroundModifier(

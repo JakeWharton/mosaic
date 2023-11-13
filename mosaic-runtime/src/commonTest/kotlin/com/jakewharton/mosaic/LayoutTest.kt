@@ -1,6 +1,5 @@
 package com.jakewharton.mosaic
 
-import com.jakewharton.mosaic.layout.Measurable
 import com.jakewharton.mosaic.layout.drawBehind
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.ui.Column
@@ -28,7 +27,7 @@ class LayoutTest {
 			|Custom() x=0 y=0 w=0 h=0
 			|  Text("Hi!") x=0 y=0 w=0 h=0 DrawBehind
 			|  Text("Hey!") x=0 y=0 w=0 h=0 DrawBehind
-			""".trimMargin()
+		""".trimMargin()
 		assertEquals(expected, node.toString())
 	}
 
@@ -45,7 +44,8 @@ class LayoutTest {
 		}
 		val expected = """
 			|  $s
-			|""".trimMargin()
+			|
+		""".trimMargin()
 		assertEquals(expected, actual)
 	}
 
@@ -55,7 +55,7 @@ class LayoutTest {
 				Text("CCC")
 				Text("BB")
 				Text("A")
-			}) {  measurables, constraints ->
+			}) { measurables, constraints ->
 				for (measurable in measurables) {
 					measurable.measure(constraints)
 				}
@@ -65,7 +65,8 @@ class LayoutTest {
 		}
 		val expected = """
 			|ABC
-			|""".trimMargin()
+			|
+		""".trimMargin()
 		assertEquals(expected, actual)
 	}
 
@@ -76,7 +77,7 @@ class LayoutTest {
 				Text("BB")
 				Text("A")
 			}) { measurables, constraints ->
-				val (c, b, a) = measurables.map{ it.measure(constraints) }
+				val (c, b, a) = measurables.map { it.measure(constraints) }
 				layout(8, 3) {
 					a.place(0, 2)
 					b.place(2, 1)
@@ -88,7 +89,8 @@ class LayoutTest {
 			|     CCC
 			|  BB   $s
 			|A      $s
-			|""".trimMargin()
+			|
+		""".trimMargin()
 		assertEquals(expected, actual)
 	}
 
@@ -101,11 +103,13 @@ class LayoutTest {
 				}
 				Row {
 					Text("..")
-					Layout(modifiers = Modifier.drawBehind {
-						repeat(4) { row ->
-							drawText(row, 0, "XXXX")
-						}
-					}) {
+					Layout(
+						modifiers = Modifier.drawBehind {
+							repeat(4) { row ->
+								drawText(row, 0, "XXXX")
+							}
+						},
+					) {
 						layout(2, 2)
 					}
 					Text(".")
@@ -124,7 +128,8 @@ class LayoutTest {
 			|  XXXX
 			|...XXX
 			|.....X
-			|""".trimMargin()
+			|
+		""".trimMargin()
 		assertEquals(expected, actual)
 	}
 }

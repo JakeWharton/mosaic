@@ -75,7 +75,8 @@ internal class TextSurface(
 
 		if (lastPixel.background != null ||
 			lastPixel.foreground != null ||
-			lastPixel.style != None) {
+			lastPixel.style != None
+		) {
 			appendable.append("\u001B[0m")
 		}
 	}

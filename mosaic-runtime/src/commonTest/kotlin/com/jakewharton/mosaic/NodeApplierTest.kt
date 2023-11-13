@@ -16,41 +16,41 @@ class NodeApplierTest {
 	}
 
 	@Test fun insertAtEnd() {
-		val one = TextNode("one")
+		val one = textNode("one")
 		applier.insert(0, one)
-		val two = TextNode("two")
+		val two = textNode("two")
 		applier.insert(1, two)
-		val three = TextNode("three")
+		val three = textNode("three")
 		applier.insert(2, three)
 		assertChildren(one, two, three)
 	}
 
 	@Test fun insertAtStart() {
-		val one = TextNode("one")
+		val one = textNode("one")
 		applier.insert(0, one)
-		val two = TextNode("two")
+		val two = textNode("two")
 		applier.insert(0, two)
-		val three = TextNode("three")
+		val three = textNode("three")
 		applier.insert(0, three)
 		assertChildren(three, two, one)
 	}
 
 	@Test fun insertAtMiddle() {
-		val one = TextNode("one")
+		val one = textNode("one")
 		applier.insert(0, one)
-		val two = TextNode("two")
+		val two = textNode("two")
 		applier.insert(1, two)
-		val three = TextNode("three")
+		val three = textNode("three")
 		applier.insert(1, three)
 		assertChildren(one, three, two)
 	}
 
 	@Test fun removeSingleAtEnd() {
-		val one = TextNode("one")
+		val one = textNode("one")
 		applier.insert(0, one)
-		val two = TextNode("two")
+		val two = textNode("two")
 		applier.insert(1, two)
-		val three = TextNode("three")
+		val three = textNode("three")
 		applier.insert(2, three)
 
 		applier.remove(2, 1)
@@ -58,11 +58,11 @@ class NodeApplierTest {
 	}
 
 	@Test fun removeSingleAtStart() {
-		val one = TextNode("one")
+		val one = textNode("one")
 		applier.insert(0, one)
-		val two = TextNode("two")
+		val two = textNode("two")
 		applier.insert(1, two)
-		val three = TextNode("three")
+		val three = textNode("three")
 		applier.insert(2, three)
 
 		applier.remove(0, 1)
@@ -70,11 +70,11 @@ class NodeApplierTest {
 	}
 
 	@Test fun removeSingleInMiddle() {
-		val one = TextNode("one")
+		val one = textNode("one")
 		applier.insert(0, one)
-		val two = TextNode("two")
+		val two = textNode("two")
 		applier.insert(1, two)
-		val three = TextNode("three")
+		val three = textNode("three")
 		applier.insert(2, three)
 
 		applier.remove(1, 1)
@@ -82,11 +82,11 @@ class NodeApplierTest {
 	}
 
 	@Test fun removeMultipleAtEnd() {
-		val one = TextNode("one")
+		val one = textNode("one")
 		applier.insert(0, one)
-		val two = TextNode("two")
+		val two = textNode("two")
 		applier.insert(1, two)
-		val three = TextNode("three")
+		val three = textNode("three")
 		applier.insert(2, three)
 
 		applier.remove(1, 2)
@@ -94,11 +94,11 @@ class NodeApplierTest {
 	}
 
 	@Test fun removeMultipleAtStart() {
-		val one = TextNode("one")
+		val one = textNode("one")
 		applier.insert(0, one)
-		val two = TextNode("two")
+		val two = textNode("two")
 		applier.insert(1, two)
-		val three = TextNode("three")
+		val three = textNode("three")
 		applier.insert(2, three)
 
 		applier.remove(0, 2)
@@ -106,13 +106,13 @@ class NodeApplierTest {
 	}
 
 	@Test fun removeMultipleInMiddle() {
-		val one = TextNode("one")
+		val one = textNode("one")
 		applier.insert(0, one)
-		val two = TextNode("two")
+		val two = textNode("two")
 		applier.insert(1, two)
-		val three = TextNode("three")
+		val three = textNode("three")
 		applier.insert(2, three)
-		val four = TextNode("four")
+		val four = textNode("four")
 		applier.insert(3, four)
 
 		applier.remove(1, 2)
@@ -120,11 +120,11 @@ class NodeApplierTest {
 	}
 
 	@Test fun removeAll() {
-		val one = TextNode("one")
+		val one = textNode("one")
 		applier.insert(0, one)
-		val two = TextNode("two")
+		val two = textNode("two")
 		applier.insert(1, two)
-		val three = TextNode("three")
+		val three = textNode("three")
 		applier.insert(2, three)
 
 		applier.remove(0, 3)
@@ -132,11 +132,11 @@ class NodeApplierTest {
 	}
 
 	@Test fun moveSingleLower() {
-		val one = TextNode("one")
+		val one = textNode("one")
 		applier.insert(0, one)
-		val two = TextNode("two")
+		val two = textNode("two")
 		applier.insert(1, two)
-		val three = TextNode("three")
+		val three = textNode("three")
 		applier.insert(2, three)
 
 		applier.move(2, 0, 1)
@@ -144,11 +144,11 @@ class NodeApplierTest {
 	}
 
 	@Test fun moveSingleHigher() {
-		val one = TextNode("one")
+		val one = textNode("one")
 		applier.insert(0, one)
-		val two = TextNode("two")
+		val two = textNode("two")
 		applier.insert(1, two)
-		val three = TextNode("three")
+		val three = textNode("three")
 		applier.insert(2, three)
 
 		applier.move(0, 2, 1)
@@ -156,13 +156,13 @@ class NodeApplierTest {
 	}
 
 	@Test fun moveMultipleLower() {
-		val one = TextNode("one")
+		val one = textNode("one")
 		applier.insert(0, one)
-		val two = TextNode("two")
+		val two = textNode("two")
 		applier.insert(1, two)
-		val three = TextNode("three")
+		val three = textNode("three")
 		applier.insert(2, three)
-		val four = TextNode("four")
+		val four = textNode("four")
 		applier.insert(3, four)
 
 		applier.move(2, 0, 2)
@@ -170,13 +170,13 @@ class NodeApplierTest {
 	}
 
 	@Test fun moveMultipleHigher() {
-		val one = TextNode("one")
+		val one = textNode("one")
 		applier.insert(0, one)
-		val two = TextNode("two")
+		val two = textNode("two")
 		applier.insert(1, two)
-		val three = TextNode("three")
+		val three = textNode("three")
 		applier.insert(2, three)
-		val four = TextNode("four")
+		val four = textNode("four")
 		applier.insert(3, four)
 
 		applier.move(0, 4, 2)
@@ -187,7 +187,7 @@ class NodeApplierTest {
 		assertEquals(nodes.toList(), root.children)
 	}
 
-	private fun TextNode(name: String): MosaicNode {
+	private fun textNode(name: String): MosaicNode {
 		return NodeFactory().apply {
 			debugPolicy = DebugPolicy { name }
 		}

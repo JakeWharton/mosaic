@@ -23,7 +23,8 @@ class AnsiRenderingTest {
 			"""
 			|Hello$s
 			|World!
-			|""".trimMargin(),
+			|
+			""".trimMargin(),
 			rendering.render(hello).toString(),
 		)
 	}
@@ -40,7 +41,8 @@ class AnsiRenderingTest {
 			"""
 			|Hello$s
 			|World!
-			|""".trimMargin(),
+			|
+			""".trimMargin(),
 			rendering.render(first).toString(),
 		)
 
@@ -59,7 +61,8 @@ class AnsiRenderingTest {
 			|lo $clearLine
 			|Wor
 			|ld!
-			|""".trimMargin(),
+			|
+			""".trimMargin(),
 			rendering.render(second).toString(),
 		)
 	}
@@ -80,7 +83,8 @@ class AnsiRenderingTest {
 			|lo$s
 			|Wor
 			|ld!
-			|""".trimMargin(),
+			|
+			""".trimMargin(),
 			rendering.render(first).toString(),
 		)
 
@@ -114,7 +118,8 @@ class AnsiRenderingTest {
 			"""
 			|World!
 			|Hello
-			|""".trimMargin(),
+			|
+			""".trimMargin(),
 			rendering.render(hello).toString(),
 		)
 	}
@@ -131,7 +136,8 @@ class AnsiRenderingTest {
 			"""
 			|One
 			|Two
-			|""".trimMargin(),
+			|
+			""".trimMargin(),
 			rendering.render(first).toString(),
 		)
 
@@ -146,7 +152,8 @@ class AnsiRenderingTest {
 			"""
 			|${cursorUp}Three$clearLine
 			|Four
-			|""".trimMargin(),
+			|
+			""".trimMargin(),
 			rendering.render(second).toString(),
 		)
 	}
@@ -183,7 +190,8 @@ class AnsiRenderingTest {
 			|Four
 			|Five
 			|Sup
-			|""".trimMargin(),
+			|
+			""".trimMargin(),
 			rendering.render(hello).toString(),
 		)
 	}
@@ -206,7 +214,8 @@ class AnsiRenderingTest {
 			|Static
 			|TopTopTop
 			|LeftLeft$s
-			|""".trimMargin(),
+			|
+			""".trimMargin(),
 			rendering.render(hello).toString(),
 		)
 	}

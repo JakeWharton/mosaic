@@ -29,12 +29,12 @@ public fun Row(
 }
 
 private class RowMeasurePolicy(
-	private val verticalAlignment: Alignment.Vertical
+	private val verticalAlignment: Alignment.Vertical,
 ) : MeasurePolicy {
 
 	override fun MeasureScope.measure(
 		measurables: List<Measurable>,
-		constraints: Constraints
+		constraints: Constraints,
 	): MeasureResult {
 		var width = 0
 		var height = 0
@@ -75,7 +75,7 @@ private object RowScopeInstance : RowScope {
 
 	@Stable
 	override fun Modifier.align(alignment: Alignment.Vertical) = this.then(
-		VerticalAlignModifier(vertical = alignment)
+		VerticalAlignModifier(vertical = alignment),
 	)
 }
 

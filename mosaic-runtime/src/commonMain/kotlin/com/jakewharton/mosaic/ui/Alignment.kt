@@ -120,7 +120,7 @@ public fun interface Alignment {
 @[Immutable Poko]
 public class BiasAlignment(
 	public val horizontalBias: Float,
-	public val verticalBias: Float
+	public val verticalBias: Float,
 ) : Alignment {
 
 	override fun align(size: IntSize, space: IntSize): IntOffset {

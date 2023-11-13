@@ -42,7 +42,7 @@ class AnnotatedStringBuilderTest {
 		}
 
 		val expectedSpanStyles = listOf(
-			Range(style, start, end)
+			Range(style, start, end),
 		)
 
 		assertThat(annotatedString.spanStyles).isEqualTo(expectedSpanStyles)
@@ -97,13 +97,13 @@ class AnnotatedStringBuilderTest {
 			Range(
 				item = SpanStyle(color),
 				start = 0,
-				end = text.length
+				end = text.length,
 			),
 			Range(
 				item = SpanStyle(appendedColor),
 				start = text.length,
-				end = expectedString.length
-			)
+				end = expectedString.length,
+			),
 		)
 
 		assertThat(buildResult.text).isEqualTo(expectedString)
@@ -115,7 +115,7 @@ class AnnotatedStringBuilderTest {
 		val annotatedString = AnnotatedString(
 			text = text,
 			spanStylesOrNull = listOf(
-				text.inclusiveRangeOf('a', 'a', item = SpanStyle(color = Color.Red))
+				text.inclusiveRangeOf('a', 'a', item = SpanStyle(color = Color.Red)),
 			),
 		)
 
@@ -140,7 +140,7 @@ class AnnotatedStringBuilderTest {
 			append(
 				appendedAnnotatedString,
 				start = appendedText.indexOf('c'),
-				end = appendedText.indexOf('e') + 1
+				end = appendedText.indexOf('e') + 1,
 			)
 			toAnnotatedString()
 		}
@@ -170,7 +170,7 @@ class AnnotatedStringBuilderTest {
 		val appendedText = "b"
 		val appendedAnnotatedString = createAnnotatedString(
 			text = appendedText,
-			color = appendedColor
+			color = appendedColor,
 		)
 
 		val buildResult = with(AnnotatedString.Builder(annotatedString)) {
@@ -185,13 +185,13 @@ class AnnotatedStringBuilderTest {
 			Range(
 				item = SpanStyle(color),
 				start = 0,
-				end = text.length
+				end = text.length,
 			),
 			Range(
 				item = SpanStyle(appendedColor),
 				start = text.length,
-				end = expectedString.length
-			)
+				end = expectedString.length,
+			),
 		)
 
 		assertThat(buildResult.text).isEqualTo(expectedString)
@@ -488,7 +488,7 @@ class AnnotatedStringBuilderTest {
 		}
 
 		assertThat(buildResult.spanStyles).isEqualTo(
-			listOf(Range(style, 0, buildResult.length))
+			listOf(Range(style, 0, buildResult.length)),
 		)
 	}
 
@@ -525,7 +525,7 @@ class AnnotatedStringBuilderTest {
 		val expectedSpanStyles = listOf(
 			Range(spanStyle1, 0, text1.length),
 			Range(spanStyle2, 0, text1.length),
-			Range(spanStyle3, text1.length + 1, expectedString.length)
+			Range(spanStyle3, text1.length + 1, expectedString.length),
 		)
 
 		assertThat(buildResult.text).isEqualTo(expectedString)
@@ -576,11 +576,11 @@ class AnnotatedStringBuilderTest {
 
 	private fun createAnnotatedString(
 		text: String,
-		color: Color = Color.Red
+		color: Color = Color.Red,
 	): AnnotatedString {
 		return AnnotatedString(
 			text = text,
-			spanStyle = SpanStyle(color)
+			spanStyle = SpanStyle(color),
 		)
 	}
 
@@ -594,6 +594,6 @@ class AnnotatedStringBuilderTest {
 	) = Range(
 		item = item,
 		start = indexOf(start),
-		end = indexOf(end) + 1
+		end = indexOf(end) + 1,
 	)
 }

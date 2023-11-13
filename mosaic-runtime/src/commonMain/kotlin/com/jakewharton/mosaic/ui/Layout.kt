@@ -98,14 +98,16 @@ private fun Modifier.toDebugString(): String {
  * Identifies an [IntrinsicMeasurable] as a min or max intrinsic measurement.
  */
 internal enum class IntrinsicMinMax {
-	Min, Max
+	Min,
+	Max,
 }
 
 /**
  * Identifies an [IntrinsicMeasurable] as a width or height intrinsic measurement.
  */
 internal enum class IntrinsicWidthHeight {
-	Width, Height
+	Width,
+	Height,
 }
 
 /**
@@ -127,7 +129,7 @@ private class FixedSizeIntrinsicsPlaceable(
 internal class DefaultIntrinsicMeasurable(
 	val measurable: IntrinsicMeasurable,
 	private val minMax: IntrinsicMinMax,
-	private val widthHeight: IntrinsicWidthHeight
+	private val widthHeight: IntrinsicWidthHeight,
 ) : Measurable {
 	override val parentData: Any?
 		get() = measurable.parentData
@@ -175,7 +177,7 @@ internal object IntrinsicsMeasureScope : MeasureScope {
 	override fun layout(
 		width: Int,
 		height: Int,
-		placementBlock: Placeable.PlacementScope.() -> Unit
+		placementBlock: Placeable.PlacementScope.() -> Unit,
 	): MeasureResult {
 		return object : MeasureResult {
 			override val width: Int
