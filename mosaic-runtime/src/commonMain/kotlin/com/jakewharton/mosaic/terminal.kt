@@ -1,19 +1,19 @@
 package com.jakewharton.mosaic
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.ProvidableCompositionLocal
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.compositionLocalOf
 import dev.drewhamilton.poko.Poko
 
-public val Terminal: ProvidableCompositionLocal<TerminalInfo> = compositionLocalOf {
-	error("No terminal info")
+public val LocalTerminal: ProvidableCompositionLocal<Terminal> = compositionLocalOf {
+	error("No terminal info provided")
 }
 
-@[Stable Poko]
-public class TerminalInfo(
+@[Immutable Poko]
+public class Terminal(
 	public val size: Size,
 ) {
-	@[Stable Poko]
+	@[Immutable Poko]
 	public class Size(
 		public val width: Int,
 		public val height: Int,

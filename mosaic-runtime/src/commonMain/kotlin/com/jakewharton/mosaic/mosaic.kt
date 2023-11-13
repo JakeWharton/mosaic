@@ -8,7 +8,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Recomposer
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.Snapshot
-import com.github.ajalt.mordant.terminal.Terminal
+import com.github.ajalt.mordant.terminal.Terminal as MordantTerminal
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.ui.BoxMeasurePolicy
 import kotlin.time.ExperimentalTime
@@ -95,10 +95,10 @@ public suspend fun runMosaic(body: suspend MosaicScope.() -> Unit): Unit = corou
 		}
 	}
 
-	val terminal = Terminal()
+	val terminal = MordantTerminal()
 	val terminalInfo = mutableStateOf(
-		TerminalInfo(
-			size = TerminalInfo.Size(terminal.info.width, terminal.info.height),
+		Terminal(
+			size = Terminal.Size(terminal.info.width, terminal.info.height),
 		),
 	)
 
@@ -111,8 +111,8 @@ public suspend fun runMosaic(body: suspend MosaicScope.() -> Unit): Unit = corou
 						currentTerminalInfo.size.height != terminal.info.height
 					)
 			) {
-				terminalInfo.value = TerminalInfo(
-					size = TerminalInfo.Size(terminal.info.width, terminal.info.height),
+				terminalInfo.value = Terminal(
+					size = Terminal.Size(terminal.info.width, terminal.info.height),
 				)
 			}
 			delay(50)
@@ -123,7 +123,7 @@ public suspend fun runMosaic(body: suspend MosaicScope.() -> Unit): Unit = corou
 		val scope = object : MosaicScope, CoroutineScope by this {
 			override fun setContent(content: @Composable () -> Unit) {
 				composition.setContent {
-					CompositionLocalProvider(Terminal provides terminalInfo.value) {
+					CompositionLocalProvider(LocalTerminal provides terminalInfo.value) {
 						content()
 					}
 				}
