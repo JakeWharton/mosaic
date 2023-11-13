@@ -41,7 +41,7 @@ fun main() = runMosaicBlocking {
 				'q'.code -> break
 				27 -> {
 					when (reader.read()) {
-						91 -> {
+						91, 79 -> {
 							when (reader.read()) {
 								65 -> y = (y - 1).coerceAtLeast(0)
 								66 -> y = (y + 1).coerceAtMost(height)
