@@ -2,7 +2,9 @@ apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'com.jakewharton.mosaic'
 apply plugin: 'application'
 
-mainClassName = 'example.RobotKt'
+application {
+	mainClass = 'example.RobotKt'
+}
 
 dependencies {
 	implementation 'org.jline:jline:3.24.1'
