@@ -1,11 +1,12 @@
 package com.jakewharton.mosaic
 
 import androidx.compose.runtime.Applier
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.layout.DebugPolicy
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.ui.NodeFactory
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class NodeApplierTest {
 	private val root = createRootNode()
@@ -184,7 +185,7 @@ class NodeApplierTest {
 	}
 
 	private fun assertChildren(vararg nodes: MosaicNode) {
-		assertEquals(nodes.toList(), root.children)
+		assertThat(root.children).isEqualTo(nodes.toList())
 	}
 
 	private fun textNode(name: String): MosaicNode {

@@ -1,11 +1,15 @@
 package com.jakewharton.mosaic.text
 
+import assertk.assertFailure
+import assertk.assertThat
+import assertk.assertions.hasSize
+import assertk.assertions.isEmpty
+import assertk.assertions.isEqualTo
+import assertk.assertions.isInstanceOf
 import com.jakewharton.mosaic.text.AnnotatedString.Range
 import com.jakewharton.mosaic.ui.Color
 import com.jakewharton.mosaic.ui.TextStyle
-import com.varabyte.truthish.assertThat
 import kotlin.test.Test
-import kotlin.test.assertFailsWith
 
 class AnnotatedStringBuilderTest {
 
@@ -385,9 +389,9 @@ class AnnotatedStringBuilderTest {
 	}
 
 	@Test fun pop_when_empty_does_not_throw_exception() {
-		assertFailsWith<IllegalStateException> {
+		assertFailure {
 			AnnotatedString.Builder().pop()
-		}
+		}.isInstanceOf<IllegalStateException>()
 	}
 
 	@Test fun pop_in_the_middle() {
@@ -455,10 +459,10 @@ class AnnotatedStringBuilderTest {
 		with(AnnotatedString.Builder()) {
 			val styleIndex = pushStyle(style)
 
-			assertFailsWith<IllegalStateException> {
+			assertFailure {
 				// should throw exception
 				pop(styleIndex + 1)
-			}
+			}.isInstanceOf<IllegalStateException>()
 		}
 	}
 
