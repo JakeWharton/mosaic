@@ -2,4 +2,6 @@ apply plugin: 'org.jetbrains.kotlin.jvm'
 apply plugin: 'com.jakewharton.mosaic'
 apply plugin: 'application'
 
-mainClassName = 'example.JestKt'
+application {
+	mainClass = 'example.JestKt'
+}
