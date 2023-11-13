@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>ParentDataModifier</title>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
+</head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+                    <a class="library-name--link" href="../../../index.html">
+                            mosaic-runtime
+                    </a>
+            </div>
+            <div class="library-version">
+0.10.0            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":mosaic-runtime:dokkaHtml/commonMain">common</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageIds="mosaic-runtime::com.jakewharton.mosaic.layout/ParentDataModifier///PointingToDeclaration//1053859847">
+  <div class="breadcrumbs"><a href="../../../index.html">mosaic-runtime</a><span class="delimiter">/</span><a href="../index.html">com.jakewharton.mosaic.layout</a><span class="delimiter">/</span><span class="current">ParentDataModifier</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Parent</span><wbr></wbr><span>Data</span><wbr></wbr><span><span>Modifier</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">ParentDataModifier</a> : <a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/index.html">Modifier.Element</a></div><p class="paragraph">A <a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a> that provides data to the parent Layout. This can be read from within the the Layout during measurement and positioning, via <a href="../-intrinsic-measurable/parent-data.html">IntrinsicMeasurable.parentData</a>. The parent data is commonly used to inform the parent how the child Layout should be measured and positioned.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button><button class="section-tab" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION,EXTENSION_PROPERTY,EXTENSION_FUNCTION">Members &amp; Extensions</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="802489139%2FFunctions%2F1053859847" anchor-label="all" id="802489139%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/all.html"><span><span>all</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="802489139%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/all.html"><span class="token function">all</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">predicate<span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span><a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/index.html">Modifier.Element</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Returns <code class="lang-kotlin">true</code> if <a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/all.html">predicate</a> returns true for all <a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/index.html">Element</a>s in this <a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a> or if this <a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a> contains no <a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/index.html">Element</a>s.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-60383810%2FFunctions%2F1053859847" anchor-label="any" id="-60383810%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/any.html"><span><span>any</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-60383810%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/any.html"><span class="token function">any</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">predicate<span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span><a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/index.html">Modifier.Element</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Returns <code class="lang-kotlin">true</code> if <a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/any.html">predicate</a> returns true for any <a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/index.html">Element</a> in this <a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1304181679%2FFunctions%2F1053859847" anchor-label="background" id="1304181679%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../background.html"><span><span>background</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1304181679%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a><span class="token punctuation">.</span><a href="../background.html"><span class="token function">background</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">color<span class="token operator">: </span><a href="../../com.jakewharton.mosaic.ui/-color/index.html">Color</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1735754049%2FFunctions%2F1053859847" anchor-label="drawBehind" id="-1735754049%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../draw-behind.html"><span>draw</span><wbr></wbr><span><span>Behind</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1735754049%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a><span class="token punctuation">.</span><a href="../draw-behind.html"><span class="token function">drawBehind</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">onDraw<span class="token operator">: </span><span class="token keyword"></span><a href="../-draw-scope/index.html">DrawScope</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1175166271%2FFunctions%2F1053859847" anchor-label="foldIn" id="-1175166271%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/fold-in.html"><span>fold</span><wbr></wbr><span><span>In</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1175166271%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/fold-in.html">R</a><span class="token operator">&gt; </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/fold-in.html"><span class="token function">foldIn</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">initial<span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/fold-in.html">R</a><span class="token punctuation">, </span></span><span class="parameter ">operation<span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span><a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/fold-in.html">R</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/index.html">Modifier.Element</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/fold-in.html">R</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/fold-in.html">R</a></div><div class="brief "><p class="paragraph">Accumulates a value starting with <a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/fold-in.html">initial</a> and applying <a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/fold-in.html">operation</a> to the current value and each element from outside in.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2028439200%2FFunctions%2F1053859847" anchor-label="foldOut" id="2028439200%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/fold-out.html"><span>fold</span><wbr></wbr><span><span>Out</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2028439200%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/fold-out.html">R</a><span class="token operator">&gt; </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/fold-out.html"><span class="token function">foldOut</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">initial<span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/fold-out.html">R</a><span class="token punctuation">, </span></span><span class="parameter ">operation<span class="token operator">: </span><span class="token punctuation">(</span><span class="token keyword"></span><a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/index.html">Modifier.Element</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/fold-out.html">R</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/fold-out.html">R</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/fold-out.html">R</a></div><div class="brief "><p class="paragraph">Accumulates a value starting with <a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/fold-out.html">initial</a> and applying <a href="../../com.jakewharton.mosaic.modifier/-modifier/-element/fold-out.html">operation</a> to the current value and each element from inside out.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1513874086%2FFunctions%2F1053859847" anchor-label="height" id="1513874086%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../height.html"><span><span>height</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1513874086%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a><span class="token punctuation">.</span><a href="../height.html"><span class="token function">height</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">height<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a></div><div class="brief "><p class="paragraph">Declare the preferred height of the content to be exactly <a href="../height.html">height</a>. The incoming measurement <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a> may override this value, forcing the content to be either smaller or larger.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="452147196%2FFunctions%2F1053859847" anchor-label="heightIn" id="452147196%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../height-in.html"><span>height</span><wbr></wbr><span><span>In</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="452147196%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a><span class="token punctuation">.</span><a href="../height-in.html"><span class="token function">heightIn</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">min<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>Unspecified<span class="token punctuation">, </span></span><span class="parameter ">max<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>Unspecified</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a></div><div class="brief "><p class="paragraph">Constrain the height of the content to be between <a href="../height-in.html">min</a> and <a href="../height-in.html">max</a> as permitted by the incoming measurement <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a>. If the incoming constraints are more restrictive the requested size will obey the incoming constraints and attempt to be as close as possible to the preferred size.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="797843835%2FFunctions%2F1053859847" anchor-label="layout" id="797843835%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../layout.html"><span><span>layout</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="797843835%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a><span class="token punctuation">.</span><a href="../layout.html"><span class="token function">layout</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">measure<span class="token operator">: </span><span class="token keyword"></span><a href="../-measure-scope/index.html">MeasureScope</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token keyword"></span><a href="../-measurable/index.html">Measurable</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><span class="token keyword"></span><a href="../-measure-result/index.html">MeasureResult</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a></div><div class="brief "><p class="paragraph">Creates a <a href="../-layout-modifier/index.html">LayoutModifier</a> that allows changing how the wrapped element is measured and laid out.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1709301061%2FFunctions%2F1053859847" anchor-label="modifyParentData" id="-1709301061%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="modify-parent-data.html"><span>modify</span><wbr></wbr><span>Parent</span><wbr></wbr><span><span>Data</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1709301061%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="modify-parent-data.html"><span class="token function">modifyParentData</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">parentData<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Provides a parentData, given the <a href="modify-parent-data.html">parentData</a> already provided through the modifier's chain.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1407456380%2FFunctions%2F1053859847" anchor-label="padding" id="-1407456380%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../padding.html"><span><span>padding</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1407456380%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a><span class="token punctuation">.</span><a href="../padding.html"><span class="token function">padding</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">all<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a></div><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a><span class="token punctuation">.</span><a href="../padding.html"><span class="token function">padding</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">horizontal<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span><span class="token punctuation">, </span></span><span class="parameter ">vertical<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a></div><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a><span class="token punctuation">.</span><a href="../padding.html"><span class="token function">padding</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">left<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span><span class="token punctuation">, </span></span><span class="parameter ">top<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span><span class="token punctuation">, </span></span><span class="parameter ">right<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span><span class="token punctuation">, </span></span><span class="parameter ">bottom<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1453556679%2FFunctions%2F1053859847" anchor-label="requiredHeight" id="1453556679%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../required-height.html"><span>required</span><wbr></wbr><span><span>Height</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1453556679%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a><span class="token punctuation">.</span><a href="../required-height.html"><span class="token function">requiredHeight</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">height<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a></div><div class="brief "><p class="paragraph">Declare the height of the content to be exactly <a href="../required-height.html">height</a>. The incoming measurement <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a> will not override this value. If the content chooses a size that does not satisfy the incoming <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a>, the parent layout will be reported a size coerced in the <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a>, and the position of the content will be automatically offset to be centered on the space assigned to the child by the parent layout under the assumption that <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a> were respected.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1464874107%2FFunctions%2F1053859847" anchor-label="requiredHeightIn" id="1464874107%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../required-height-in.html"><span>required</span><wbr></wbr><span>Height</span><wbr></wbr><span><span>In</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1464874107%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a><span class="token punctuation">.</span><a href="../required-height-in.html"><span class="token function">requiredHeightIn</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">min<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>Unspecified<span class="token punctuation">, </span></span><span class="parameter ">max<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>Unspecified</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a></div><div class="brief "><p class="paragraph">Constrain the height of the content to be between <a href="../required-height-in.html">min</a> and <a href="../required-height-in.html">max</a>. If the content chooses a size that does not satisfy the incoming <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a>, the parent layout will be reported a size coerced in the <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a>, and the position of the content will be automatically offset to be centered on the space assigned to the child by the parent layout under the assumption that <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a> were respected.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1647726491%2FFunctions%2F1053859847" anchor-label="requiredSize" id="-1647726491%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../required-size.html"><span>required</span><wbr></wbr><span><span>Size</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1647726491%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a><span class="token punctuation">.</span><a href="../required-size.html"><span class="token function">requiredSize</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">size<span class="token operator">: </span><a href="../../com.jakewharton.mosaic.ui.unit/-int-size/index.html">IntSize</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a></div><div class="brief "><p class="paragraph">Declare the size of the content to be exactly <a href="../required-size.html">size</a>. The incoming measurement <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a> will not override this value. If the content chooses a size that does not satisfy the incoming <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a>, the parent layout will be reported a size coerced in the <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a>, and the position of the content will be automatically offset to be centered on the space assigned to the child by the parent layout under the assumption that <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a> were respected.</p></div><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a><span class="token punctuation">.</span><a href="../required-size.html"><span class="token function">requiredSize</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">size<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a></div><div class="brief "><p class="paragraph">Declare the size of the content to be exactly <a href="../required-size.html">size</a> width and height. The incoming measurement <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a> will not override this value. If the content chooses a size that does not satisfy the incoming <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a>, the parent layout will be reported a size coerced in the <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a>, and the position of the content will be automatically offset to be centered on the space assigned to the child by the parent layout under the assumption that <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a> were respected.</p></div><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a><span class="token punctuation">.</span><a href="../required-size.html"><span class="token function">requiredSize</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">width<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">height<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a></div><div class="brief "><p class="paragraph">Declare the size of the content to be exactly <a href="../required-size.html">width</a> and <a href="../required-size.html">height</a>. The incoming measurement <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a> will not override this value. If the content chooses a size that does not satisfy the incoming <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a>, the parent layout will be reported a size coerced in the <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a>, and the position of the content will be automatically offset to be centered on the space assigned to the child by the parent layout under the assumption that <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a> were respected.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="55877621%2FFunctions%2F1053859847" anchor-label="requiredSizeIn" id="55877621%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../required-size-in.html"><span>required</span><wbr></wbr><span>Size</span><wbr></wbr><span><span>In</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="55877621%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a><span class="token punctuation">.</span><a href="../required-size-in.html"><span class="token function">requiredSizeIn</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">minWidth<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>Unspecified<span class="token punctuation">, </span></span><span class="parameter ">minHeight<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>Unspecified<span class="token punctuation">, </span></span><span class="parameter ">maxWidth<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>Unspecified<span class="token punctuation">, </span></span><span class="parameter ">maxHeight<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>Unspecified</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a></div><div class="brief "><p class="paragraph">Constrain the width of the content to be between <a href="../required-size-in.html">minWidth</a> and <a href="../required-size-in.html">maxWidth</a>, and the height of the content to be between <a href="../required-size-in.html">minHeight</a> and <a href="../required-size-in.html">maxHeight</a>. If the content chooses a size that does not satisfy the incoming <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a>, the parent layout will be reported a size coerced in the <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a>, and the position of the content will be automatically offset to be centered on the space assigned to the child by the parent layout under the assumption that <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a> were respected.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-10968852%2FFunctions%2F1053859847" anchor-label="requiredWidth" id="-10968852%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../required-width.html"><span>required</span><wbr></wbr><span><span>Width</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-10968852%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a><span class="token punctuation">.</span><a href="../required-width.html"><span class="token function">requiredWidth</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">width<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a></div><div class="brief "><p class="paragraph">Declare the width of the content to be exactly <a href="../required-width.html">width</a>. The incoming measurement <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a> will not override this value. If the content chooses a size that does not satisfy the incoming <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a>, the parent layout will be reported a size coerced in the <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a>, and the position of the content will be automatically offset to be centered on the space assigned to the child by the parent layout under the assumption that <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a> were respected.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="27286390%2FFunctions%2F1053859847" anchor-label="requiredWidthIn" id="27286390%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../required-width-in.html"><span>required</span><wbr></wbr><span>Width</span><wbr></wbr><span><span>In</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="27286390%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a><span class="token punctuation">.</span><a href="../required-width-in.html"><span class="token function">requiredWidthIn</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">min<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>Unspecified<span class="token punctuation">, </span></span><span class="parameter ">max<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>Unspecified</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a></div><div class="brief "><p class="paragraph">Constrain the width of the content to be between <a href="../required-width-in.html">min</a> and <a href="../required-width-in.html">max</a>. If the content chooses a size that does not satisfy the incoming <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a>, the parent layout will be reported a size coerced in the <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a>, and the position of the content will be automatically offset to be centered on the space assigned to the child by the parent layout under the assumption that <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a> were respected.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1348393350%2FFunctions%2F1053859847" anchor-label="size" id="1348393350%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../size.html"><span><span>size</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1348393350%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a><span class="token punctuation">.</span><a href="../size.html"><span class="token function">size</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">size<span class="token operator">: </span><a href="../../com.jakewharton.mosaic.ui.unit/-int-size/index.html">IntSize</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a></div><div class="brief "><p class="paragraph">Declare the preferred size of the content to be exactly <a href="../size.html">size</a>. The incoming measurement <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a> may override this value, forcing the content to be either smaller or larger.</p></div><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a><span class="token punctuation">.</span><a href="../size.html"><span class="token function">size</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">size<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a></div><div class="brief "><p class="paragraph">Declare the preferred size of the content to be exactly <a href="../size.html">size</a> square. The incoming measurement <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a> may override this value, forcing the content to be either smaller or larger.</p></div><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a><span class="token punctuation">.</span><a href="../size.html"><span class="token function">size</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">width<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">height<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a></div><div class="brief "><p class="paragraph">Declare the preferred size of the content to be exactly <a href="../size.html">width</a> by <a href="../size.html">height</a>. The incoming measurement <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a> may override this value, forcing the content to be either smaller or larger.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1150560010%2FFunctions%2F1053859847" anchor-label="sizeIn" id="-1150560010%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../size-in.html"><span>size</span><wbr></wbr><span><span>In</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1150560010%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a><span class="token punctuation">.</span><a href="../size-in.html"><span class="token function">sizeIn</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">minWidth<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>Unspecified<span class="token punctuation">, </span></span><span class="parameter ">minHeight<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>Unspecified<span class="token punctuation">, </span></span><span class="parameter ">maxWidth<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>Unspecified<span class="token punctuation">, </span></span><span class="parameter ">maxHeight<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>Unspecified</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a></div><div class="brief "><p class="paragraph">Constrain the width of the content to be between <a href="../size-in.html">minWidth</a> and <a href="../size-in.html">maxWidth</a> and the height of the content to be between <a href="../size-in.html">minHeight</a> and <a href="../size-in.html">maxHeight</a> as permitted by the incoming measurement <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a>. If the incoming constraints are more restrictive the requested size will obey the incoming constraints and attempt to be as close as possible to the preferred size.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-335893678%2FFunctions%2F1053859847" anchor-label="then" id="-335893678%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.jakewharton.mosaic.modifier/-modifier/then.html"><span><span>then</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-335893678%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">infix </span><span class="token keyword">fun </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/then.html"><span class="token function">then</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">other<span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a></div><div class="brief "><p class="paragraph">Concatenates this modifier with another.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1948685779%2FFunctions%2F1053859847" anchor-label="width" id="-1948685779%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../width.html"><span><span>width</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1948685779%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a><span class="token punctuation">.</span><a href="../width.html"><span class="token function">width</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">width<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a></div><div class="brief "><p class="paragraph">Declare the preferred width of the content to be exactly <a href="../width.html">width</a>. The incoming measurement <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a> may override this value, forcing the content to be either smaller or larger.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1102996437%2FFunctions%2F1053859847" anchor-label="widthIn" id="1102996437%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../width-in.html"><span>width</span><wbr></wbr><span><span>In</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1102996437%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a><span class="token punctuation">.</span><a href="../width-in.html"><span class="token function">widthIn</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">min<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>Unspecified<span class="token punctuation">, </span></span><span class="parameter ">max<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>Unspecified</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.jakewharton.mosaic.modifier/-modifier/index.html">Modifier</a></div><div class="brief "><p class="paragraph">Constrain the width of the content to be between <a href="../width-in.html">min</a> and <a href="../width-in.html">max</a> as permitted by the incoming measurement <a href="../../com.jakewharton.mosaic.ui.unit/-constraints/index.html">Constraints</a>. If the incoming constraints are more restrictive the requested size will obey the incoming constraints and attempt to be as close as possible to the preferred size.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2023 Copyright</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
