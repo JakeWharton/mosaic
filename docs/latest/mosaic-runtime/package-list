@@ -130,9 +130,11 @@ $dokka.location:com.jakewharton.mosaic.ui/Alignment/align/#com.jakewharton.mosai
 $dokka.location:com.jakewharton.mosaic.ui/BiasAlignment.Horizontal///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-bias-alignment/-horizontal/index.html
 $dokka.location:com.jakewharton.mosaic.ui/BiasAlignment.Horizontal/Horizontal/#kotlin.Float/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-bias-alignment/-horizontal/-horizontal.html
 $dokka.location:com.jakewharton.mosaic.ui/BiasAlignment.Horizontal/align/#kotlin.Int#kotlin.Int/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-bias-alignment/-horizontal/align.html
+$dokka.location:com.jakewharton.mosaic.ui/BiasAlignment.Horizontal/bias/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-bias-alignment/-horizontal/bias.html
 $dokka.location:com.jakewharton.mosaic.ui/BiasAlignment.Vertical///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-bias-alignment/-vertical/index.html
 $dokka.location:com.jakewharton.mosaic.ui/BiasAlignment.Vertical/Vertical/#kotlin.Float/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-bias-alignment/-vertical/-vertical.html
 $dokka.location:com.jakewharton.mosaic.ui/BiasAlignment.Vertical/align/#kotlin.Int#kotlin.Int/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-bias-alignment/-vertical/align.html
+$dokka.location:com.jakewharton.mosaic.ui/BiasAlignment.Vertical/bias/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-bias-alignment/-vertical/bias.html
 $dokka.location:com.jakewharton.mosaic.ui/BiasAlignment///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-bias-alignment/index.html
 $dokka.location:com.jakewharton.mosaic.ui/BiasAlignment/BiasAlignment/#kotlin.Float#kotlin.Float/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-bias-alignment/-bias-alignment.html
 $dokka.location:com.jakewharton.mosaic.ui/BiasAlignment/align/#com.jakewharton.mosaic.ui.unit.IntSize#com.jakewharton.mosaic.ui.unit.IntSize/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.ui/-bias-alignment/align.html
