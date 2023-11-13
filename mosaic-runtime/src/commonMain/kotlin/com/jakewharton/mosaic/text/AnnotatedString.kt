@@ -3,6 +3,7 @@ package com.jakewharton.mosaic.text
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import com.jakewharton.mosaic.text.AnnotatedString.Builder
+import dev.drewhamilton.poko.Poko
 
 /**
  * The basic data structure of text with multiple styles. To construct an [AnnotatedString] you
@@ -79,8 +80,8 @@ public class AnnotatedString internal constructor(
 	 * @param start The start of the range where [item] takes effect. It's inclusive
 	 * @param end The end of the range where [item] takes effect. It's exclusive
 	 */
-	@Immutable
-	public data class Range<T>(val item: T, val start: Int, val end: Int) {
+	@[Immutable Poko]
+	public class Range<T>(public val item: T, public val start: Int, public val end: Int) {
 
 		init {
 			require(start <= end) { "Reversed range is not supported" }
