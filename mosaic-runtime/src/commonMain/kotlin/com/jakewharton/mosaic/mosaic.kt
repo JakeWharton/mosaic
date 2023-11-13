@@ -4,11 +4,13 @@ import androidx.compose.runtime.AbstractApplier
 import androidx.compose.runtime.BroadcastFrameClock
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Composition
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Recomposer
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.Snapshot
+import com.github.ajalt.mordant.terminal.Terminal
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.ui.BoxMeasurePolicy
-import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
@@ -17,6 +19,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
+import kotlin.time.ExperimentalTime
 
 /**
  * True for a debug-like output that renders each "frame" on its own with a timestamp delta.
@@ -92,10 +95,36 @@ public suspend fun runMosaic(body: suspend MosaicScope.() -> Unit): Unit = corou
 		}
 	}
 
+	val terminal = Terminal()
+	val terminalInfo = mutableStateOf(
+		TerminalInfo(
+			size = TerminalInfo.Size(terminal.info.width, terminal.info.height)
+		)
+	)
+
+	launch(context = composeContext) {
+		while (true) {
+      val currentTerminalInfo = terminalInfo.value
+			if (terminal.info.updateTerminalSize()
+				&& (currentTerminalInfo.size.width != terminal.info.width
+					|| currentTerminalInfo.size.height != terminal.info.height)
+			) {
+				terminalInfo.value = currentTerminalInfo.copy(
+					size = TerminalInfo.Size(terminal.info.width, terminal.info.height)
+				)
+			}
+			delay(50)
+		}
+	}
+
 	coroutineScope {
 		val scope = object : MosaicScope, CoroutineScope by this {
 			override fun setContent(content: @Composable () -> Unit) {
-				composition.setContent(content)
+				composition.setContent {
+					CompositionLocalProvider(Terminal provides terminalInfo.value) {
+						content()
+					}
+				}
 			}
 		}
 
