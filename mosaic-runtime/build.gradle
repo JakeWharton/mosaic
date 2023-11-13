@@ -6,6 +6,7 @@ apply from: "$rootDir/addAllTargets.gradle"
 apply plugin: 'com.vanniktech.maven.publish'
 apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'com.jakewharton.mosaic'
+apply plugin: 'dev.drewhamilton.poko'
 
 kotlin {
 	explicitApi()

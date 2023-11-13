@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import com.jakewharton.mosaic.ui.unit.IntOffset
 import com.jakewharton.mosaic.ui.unit.IntSize
+import dev.drewhamilton.poko.Poko
 import kotlin.math.roundToInt
 
 /**
@@ -116,10 +117,10 @@ public fun interface Alignment {
  *
  * @see Alignment
  */
-@Immutable
-public data class BiasAlignment(
-	val horizontalBias: Float,
-	val verticalBias: Float
+@[Immutable Poko]
+public class BiasAlignment(
+	public val horizontalBias: Float,
+	public val verticalBias: Float
 ) : Alignment {
 
 	override fun align(size: IntSize, space: IntSize): IntOffset {
@@ -142,8 +143,8 @@ public data class BiasAlignment(
 	 *
 	 * @see Vertical
 	 */
-	@Immutable
-	public data class Horizontal(private val bias: Float) : Alignment.Horizontal {
+	@[Immutable Poko]
+	public class Horizontal(public val bias: Float) : Alignment.Horizontal {
 		override fun align(size: Int, space: Int): Int {
 			// Convert to cells first and only round at the end, to avoid rounding twice while
 			// calculating the new positions.
@@ -161,8 +162,8 @@ public data class BiasAlignment(
 	 *
 	 * @see Horizontal
 	 */
-	@Immutable
-	public data class Vertical(private val bias: Float) : Alignment.Vertical {
+	@[Immutable Poko]
+	public class Vertical(public val bias: Float) : Alignment.Vertical {
 		override fun align(size: Int, space: Int): Int {
 			// Convert to cells first and only round at the end, to avoid rounding twice while
 			// calculating the new positions.

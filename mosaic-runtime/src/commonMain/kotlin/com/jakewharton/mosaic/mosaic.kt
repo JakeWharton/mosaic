@@ -109,7 +109,7 @@ public suspend fun runMosaic(body: suspend MosaicScope.() -> Unit): Unit = corou
 				&& (currentTerminalInfo.size.width != terminal.info.width
 					|| currentTerminalInfo.size.height != terminal.info.height)
 			) {
-				terminalInfo.value = currentTerminalInfo.copy(
+				terminalInfo.value = TerminalInfo(
 					size = TerminalInfo.Size(terminal.info.width, terminal.info.height)
 				)
 			}
