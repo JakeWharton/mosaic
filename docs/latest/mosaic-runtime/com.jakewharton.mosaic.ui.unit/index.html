@@ -71,7 +71,22 @@
     <div class="tabs-section-body">
       <div data-togglable="TYPE">
         <h2 class="">Types</h2>
-        <div class="table"><a data-name="-90633879%2FClasslikes%2F1053859847" anchor-label="IntOffset" id="-90633879%2FClasslikes%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+        <div class="table"><a data-name="-1446214507%2FClasslikes%2F1053859847" anchor-label="Constraints" id="-1446214507%2FClasslikes%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-constraints/index.html"><span><span>Constraints</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1446214507%2FClasslikes%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Immutable///PointingToDeclaration/"><span class="token annotation builtin">Immutable</span></span></div><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-inline/index.html"><span class="token annotation builtin">JvmInline</span></a></div></div><span class="token keyword">value </span><span class="token keyword">class </span><a href="-constraints/index.html">Constraints</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Immutable constraints for measuring layouts, used by <span data-unresolved-link="com.jakewharton.mosaic.ui//Layout/#com.jakewharton.mosaic.modifier.Modifier#kotlin.Function0[kotlin.String]#com.jakewharton.mosaic.ui.NoContentMeasurePolicy/PointingToDeclaration/">layouts</span> or <a href="../com.jakewharton.mosaic.layout/-layout-modifier/index.html">layout modifiers</a> to measure their layout children. The parent chooses the <a href="-constraints/index.html">Constraints</a> defining a range, in pixels, within which the measured layout should choose a size:</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-90633879%2FClasslikes%2F1053859847" anchor-label="IntOffset" id="-90633879%2FClasslikes%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
           <div class="table-row" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
@@ -105,7 +120,67 @@
       </div>
       <div data-togglable="FUNCTION">
         <h2 class="">Functions</h2>
-        <div class="table"><a data-name="598408399%2FFunctions%2F1053859847" anchor-label="IntOffset" id="598408399%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+        <div class="table"><a data-name="1661491024%2FFunctions%2F1053859847" anchor-label="constrain" id="1661491024%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="constrain.html"><span><span>constrain</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1661491024%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="-constraints/index.html">Constraints</a><span class="token punctuation">.</span><a href="constrain.html"><span class="token function">constrain</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">otherConstraints<span class="token operator">: </span><a href="-constraints/index.html">Constraints</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-constraints/index.html">Constraints</a></div><div class="brief "><p class="paragraph">Takes <a href="constrain.html">otherConstraints</a> and returns the result of coercing them in the current constraints. Note this means that any size satisfying the resulting constraints will satisfy the current constraints, but they might not satisfy the <a href="constrain.html">otherConstraints</a> when the two set of constraints are disjoint. Examples (showing only width, height works the same): (minWidth=2, maxWidth=10).constrain(minWidth=7, maxWidth=12) -> (minWidth = 7, maxWidth = 10) (minWidth=2, maxWidth=10).constrain(minWidth=11, maxWidth=12) -> (minWidth=10, maxWidth=10) (minWidth=2, maxWidth=10).constrain(minWidth=5, maxWidth=7) -> (minWidth=5, maxWidth=7)</p></div><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="-constraints/index.html">Constraints</a><span class="token punctuation">.</span><a href="constrain.html"><span class="token function">constrain</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">size<span class="token operator">: </span><a href="-int-size/index.html">IntSize</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-int-size/index.html">IntSize</a></div><div class="brief "><p class="paragraph">Takes a size and returns the closest size to it that satisfies the constraints.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-546337969%2FFunctions%2F1053859847" anchor-label="constrainHeight" id="-546337969%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="constrain-height.html"><span>constrain</span><wbr></wbr><span><span>Height</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-546337969%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="-constraints/index.html">Constraints</a><span class="token punctuation">.</span><a href="constrain-height.html"><span class="token function">constrainHeight</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">height<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Takes a height and returns the closest size to it that satisfies the constraints.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-892160125%2FFunctions%2F1053859847" anchor-label="Constraints" id="-892160125%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-constraints.html"><span><span>Constraints</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-892160125%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="-constraints.html"><span class="token function">Constraints</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">minWidth<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span><span class="token punctuation">, </span></span><span class="parameter ">maxWidth<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>Constraints.Infinity<span class="token punctuation">, </span></span><span class="parameter ">minHeight<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span><span class="token punctuation">, </span></span><span class="parameter ">maxHeight<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>Constraints.Infinity</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-constraints/index.html">Constraints</a></div><div class="brief "><p class="paragraph">Create a <a href="-constraints/index.html">Constraints</a>. <a href="-constraints.html">minWidth</a> and <a href="-constraints.html">minHeight</a> must be positive and <a href="-constraints.html">maxWidth</a> and <a href="-constraints.html">maxHeight</a> must be greater than or equal to <a href="-constraints.html">minWidth</a> and <a href="-constraints.html">minHeight</a>, respectively, or <a href="-constraints/-companion/-infinity.html">Infinity</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="883647700%2FFunctions%2F1053859847" anchor-label="constrainWidth" id="883647700%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="constrain-width.html"><span>constrain</span><wbr></wbr><span><span>Width</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="883647700%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="-constraints/index.html">Constraints</a><span class="token punctuation">.</span><a href="constrain-width.html"><span class="token function">constrainWidth</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">width<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Takes a width and returns the closest size to it that satisfies the constraints.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="598408399%2FFunctions%2F1053859847" anchor-label="IntOffset" id="598408399%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
           <div class="table-row" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
@@ -131,6 +206,36 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="-int-size.html"><span class="token function">IntSize</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">width<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">height<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-int-size/index.html">IntSize</a></div><div class="brief "><p class="paragraph">Constructs an <a href="-int-size/index.html">IntSize</a> from width and height <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a> values.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1179424071%2FFunctions%2F1053859847" anchor-label="isSatisfiedBy" id="-1179424071%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-satisfied-by.html"><span>is</span><wbr></wbr><span>Satisfied</span><wbr></wbr><span><span>By</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1179424071%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="-constraints/index.html">Constraints</a><span class="token punctuation">.</span><a href="is-satisfied-by.html"><span class="token function">isSatisfiedBy</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">size<span class="token operator">: </span><a href="-int-size/index.html">IntSize</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Takes a size and returns whether it satisfies the current constraints.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1022718733%2FFunctions%2F1053859847" anchor-label="offset" id="1022718733%2FFunctions%2F1053859847" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-runtime:dokkaHtml/commonMain" data-filterable-set=":mosaic-runtime:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="offset.html"><span><span>offset</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1022718733%2FFunctions%2F1053859847"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtml/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="-constraints/index.html">Constraints</a><span class="token punctuation">.</span><a href="offset.html"><span class="token function">offset</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">horizontal<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span><span class="token punctuation">, </span></span><span class="parameter ">vertical<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-constraints/index.html">Constraints</a></div><div class="brief "><p class="paragraph">Returns the Constraints obtained by offsetting the current instance with the given values.</p></div></div></div>
                 </div>
               </div>
             </div>
