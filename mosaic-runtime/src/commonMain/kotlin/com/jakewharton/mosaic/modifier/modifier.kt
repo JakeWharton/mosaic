@@ -127,7 +127,7 @@ public interface Modifier {
  */
 public class CombinedModifier(
 	internal val outer: Modifier,
-	internal val inner: Modifier
+	internal val inner: Modifier,
 ) : Modifier {
 	override fun <R> foldIn(initial: R, operation: (R, Modifier.Element) -> R): R =
 		inner.foldIn(outer.foldIn(initial, operation), operation)

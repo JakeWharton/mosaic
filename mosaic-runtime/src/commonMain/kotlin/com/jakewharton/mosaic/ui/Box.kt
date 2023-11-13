@@ -37,7 +37,7 @@ public fun Box(
 @Composable
 internal fun rememberBoxMeasurePolicy(
 	alignment: Alignment,
-	propagateMinConstraints: Boolean
+	propagateMinConstraints: Boolean,
 ): MeasurePolicy = if (alignment == Alignment.TopStart && !propagateMinConstraints) {
 	DefaultBoxMeasurePolicy
 } else {
@@ -59,7 +59,7 @@ internal class BoxMeasurePolicy(
 		if (measurables.isEmpty()) {
 			return layout(
 				constraints.minWidth,
-				constraints.minHeight
+				constraints.minHeight,
 			) {}
 		}
 
@@ -82,7 +82,7 @@ internal class BoxMeasurePolicy(
 				boxWidth = constraints.minWidth
 				boxHeight = constraints.minHeight
 				placeable = measurable.measure(
-					Constraints.fixed(constraints.minWidth, constraints.minHeight)
+					Constraints.fixed(constraints.minWidth, constraints.minHeight),
 				)
 			}
 			return layout(boxWidth, boxHeight) {
@@ -113,7 +113,7 @@ internal class BoxMeasurePolicy(
 				minWidth = if (boxWidth != Constraints.Infinity) boxWidth else 0,
 				minHeight = if (boxHeight != Constraints.Infinity) boxHeight else 0,
 				maxWidth = boxWidth,
-				maxHeight = boxHeight
+				maxHeight = boxHeight,
 			)
 			measurables.forEachIndexed { index, measurable ->
 				if (measurable.matchesParentSize) {
@@ -138,12 +138,12 @@ private fun Placeable.PlacementScope.placeInBox(
 	measurable: Measurable,
 	boxWidth: Int,
 	boxHeight: Int,
-	alignment: Alignment
+	alignment: Alignment,
 ) {
 	val childAlignment = measurable.boxParentData?.alignment ?: alignment
 	val position = childAlignment.align(
 		IntSize(placeable.width, placeable.height),
-		IntSize(boxWidth, boxHeight)
+		IntSize(boxWidth, boxHeight),
 	)
 	placeable.place(position)
 }
@@ -184,7 +184,7 @@ private object BoxScopeInstance : BoxScope {
 		AlignModifier(
 			alignment = alignment,
 			matchParentSize = false,
-		)
+		),
 	)
 
 	@Stable
@@ -192,7 +192,7 @@ private object BoxScopeInstance : BoxScope {
 		AlignModifier(
 			alignment = Alignment.Center,
 			matchParentSize = true,
-		)
+		),
 	)
 }
 

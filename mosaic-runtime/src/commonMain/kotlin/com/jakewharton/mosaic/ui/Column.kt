@@ -74,7 +74,7 @@ private object ColumnScopeInstance : ColumnScope {
 
 	@Stable
 	override fun Modifier.align(alignment: Alignment.Horizontal) = this.then(
-		HorizontalAlignModifier(horizontal = alignment)
+		HorizontalAlignModifier(horizontal = alignment),
 	)
 }
 

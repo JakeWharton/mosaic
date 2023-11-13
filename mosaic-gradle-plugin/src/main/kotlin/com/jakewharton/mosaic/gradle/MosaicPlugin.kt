@@ -79,10 +79,10 @@ class MosaicPlugin : KotlinCompilerPluginSupportPlugin {
 			3 -> SubpluginArtifact(parts[0], parts[1], parts[2])
 			else -> error(
 				"""
-        |Illegal format of '$extensionName.${MosaicExtension::kotlinCompilerPlugin.name}' property.
-        |Expected format: either '<VERSION>' or '<GROUP_ID>:<ARTIFACT_ID>:<VERSION>'
-        |Actual value: '$plugin'
-        """.trimMargin(),
+				|Illegal format of '$extensionName.${MosaicExtension::kotlinCompilerPlugin.name}' property.
+				|Expected format: either '<VERSION>' or '<GROUP_ID>:<ARTIFACT_ID>:<VERSION>'
+				|Actual value: '$plugin'
+				""".trimMargin(),
 			)
 		}
 	}

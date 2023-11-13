@@ -55,7 +55,7 @@ public interface LayoutModifier : Modifier.Element {
 	 */
 	public fun minIntrinsicWidth(
 		measurable: IntrinsicMeasurable,
-		height: Int
+		height: Int,
 	): Int = MeasuringIntrinsics.minWidth(this, measurable, height)
 
 	/**
@@ -63,7 +63,7 @@ public interface LayoutModifier : Modifier.Element {
 	 */
 	public fun minIntrinsicHeight(
 		measurable: IntrinsicMeasurable,
-		width: Int
+		width: Int,
 	): Int = MeasuringIntrinsics.minHeight(this, measurable, width)
 
 	/**
@@ -71,7 +71,7 @@ public interface LayoutModifier : Modifier.Element {
 	 */
 	public fun maxIntrinsicWidth(
 		measurable: IntrinsicMeasurable,
-		height: Int
+		height: Int,
 	): Int = MeasuringIntrinsics.maxWidth(this, measurable, height)
 
 	/**
@@ -79,7 +79,7 @@ public interface LayoutModifier : Modifier.Element {
 	 */
 	public fun maxIntrinsicHeight(
 		measurable: IntrinsicMeasurable,
-		width: Int
+		width: Int,
 	): Int = MeasuringIntrinsics.maxHeight(this, measurable, width)
 
 	// Force subclasses to add a debugging implementation.
@@ -90,12 +90,12 @@ private object MeasuringIntrinsics {
 	fun minWidth(
 		modifier: LayoutModifier,
 		intrinsicMeasurable: IntrinsicMeasurable,
-		h: Int
+		h: Int,
 	): Int {
 		val measurable = DefaultIntrinsicMeasurable(
 			intrinsicMeasurable,
 			IntrinsicMinMax.Min,
-			IntrinsicWidthHeight.Width
+			IntrinsicWidthHeight.Width,
 		)
 		val constraints = Constraints(maxHeight = h)
 		val layoutResult = with(modifier) {
@@ -107,12 +107,12 @@ private object MeasuringIntrinsics {
 	fun minHeight(
 		modifier: LayoutModifier,
 		intrinsicMeasurable: IntrinsicMeasurable,
-		w: Int
+		w: Int,
 	): Int {
 		val measurable = DefaultIntrinsicMeasurable(
 			intrinsicMeasurable,
 			IntrinsicMinMax.Min,
-			IntrinsicWidthHeight.Height
+			IntrinsicWidthHeight.Height,
 		)
 		val constraints = Constraints(maxWidth = w)
 		val layoutResult = with(modifier) {
@@ -124,12 +124,12 @@ private object MeasuringIntrinsics {
 	fun maxWidth(
 		modifier: LayoutModifier,
 		intrinsicMeasurable: IntrinsicMeasurable,
-		h: Int
+		h: Int,
 	): Int {
 		val measurable = DefaultIntrinsicMeasurable(
 			intrinsicMeasurable,
 			IntrinsicMinMax.Max,
-			IntrinsicWidthHeight.Width
+			IntrinsicWidthHeight.Width,
 		)
 		val constraints = Constraints(maxHeight = h)
 		val layoutResult = with(modifier) {
@@ -141,12 +141,12 @@ private object MeasuringIntrinsics {
 	fun maxHeight(
 		modifier: LayoutModifier,
 		intrinsicMeasurable: IntrinsicMeasurable,
-		w: Int
+		w: Int,
 	): Int {
 		val measurable = DefaultIntrinsicMeasurable(
 			intrinsicMeasurable,
 			IntrinsicMinMax.Max,
-			IntrinsicWidthHeight.Height
+			IntrinsicWidthHeight.Height,
 		)
 		val constraints = Constraints(maxWidth = w)
 		val layoutResult = with(modifier) {
@@ -158,7 +158,7 @@ private object MeasuringIntrinsics {
 	private class DefaultIntrinsicMeasurable(
 		val measurable: IntrinsicMeasurable,
 		val minMax: IntrinsicMinMax,
-		val widthHeight: IntrinsicWidthHeight
+		val widthHeight: IntrinsicWidthHeight,
 	) : Measurable {
 		override val parentData: Any?
 			get() = measurable.parentData
@@ -219,15 +219,15 @@ private object MeasuringIntrinsics {
  * @see com.jakewharton.mosaic.ui.Layout
  */
 public fun Modifier.layout(
-	measure: MeasureScope.(Measurable, Constraints) -> MeasureResult
+	measure: MeasureScope.(Measurable, Constraints) -> MeasureResult,
 ): Modifier = this then LayoutModifierElement(measure)
 
 private class LayoutModifierElement(
-	var measureBlock: MeasureScope.(Measurable, Constraints) -> MeasureResult
+	var measureBlock: MeasureScope.(Measurable, Constraints) -> MeasureResult,
 ) : LayoutModifier {
 	override fun MeasureScope.measure(
 		measurable: Measurable,
-		constraints: Constraints
+		constraints: Constraints,
 	): MeasureResult = measureBlock(measurable, constraints)
 
 	override fun toString(): String {

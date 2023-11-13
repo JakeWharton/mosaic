@@ -7,7 +7,7 @@ import com.jakewharton.mosaic.MosaicScope
 import com.jakewharton.mosaic.ui.Text
 import kotlinx.coroutines.delay
 
-suspend fun MosaicScope.Counter() {
+suspend fun MosaicScope.runCounter() {
 	// TODO https://github.com/JakeWharton/mosaic/issues/3
 	var count by mutableStateOf(0)
 

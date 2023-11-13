@@ -35,7 +35,7 @@ public fun Modifier.padding(
 		top = top,
 		right = right,
 		bottom = bottom,
-	)
+	),
 )
 
 @Stable
@@ -48,7 +48,7 @@ public fun Modifier.padding(
 		top = vertical,
 		right = horizontal,
 		bottom = vertical,
-	)
+	),
 )
 
 @Stable
@@ -59,7 +59,7 @@ public fun Modifier.padding(all: Int): Modifier =
 			top = all,
 			right = all,
 			bottom = all,
-		)
+		),
 	)
 
 private class PaddingModifier(
@@ -76,7 +76,7 @@ private class PaddingModifier(
 
 	override fun MeasureScope.measure(
 		measurable: Measurable,
-		constraints: Constraints
+		constraints: Constraints,
 	): MeasureResult {
 		val horizontal = left + right
 		val vertical = top + bottom

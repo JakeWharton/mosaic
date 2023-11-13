@@ -101,18 +101,21 @@ class SpanStyleTest {
 	@Test fun plusOperatorMerges() {
 		val style = SpanStyle(
 			color = Color.Red,
-			textStyle = TextStyle.Strikethrough
+			textStyle = TextStyle.Strikethrough,
 		) + SpanStyle(
 			color = Color.Green,
-			background = Color.Blue
+			background = Color.Blue,
 		)
 
 		assertThat(style).isEqualTo(
 			SpanStyle(
-				color = Color.Green, // overridden by RHS
-				textStyle = TextStyle.Strikethrough, // from LHS,
-				background = Color.Blue // from RHS
-			)
+				// Overridden by RHS
+				color = Color.Green,
+				// From LHS
+				textStyle = TextStyle.Strikethrough,
+				// From RHS
+				background = Color.Blue,
+			),
 		)
 	}
 }

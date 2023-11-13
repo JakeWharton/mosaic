@@ -13,3 +13,6 @@ indent_style = space
 
 [*.md]
 indent_style = space
+
+[*.{kt,kts}]
+ij_kotlin_imports_layout=*

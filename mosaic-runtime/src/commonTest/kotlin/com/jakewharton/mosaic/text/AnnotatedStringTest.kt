@@ -19,7 +19,7 @@ class AnnotatedStringTest {
 		val text1 = "Hello"
 		val spanStyles1 = listOf(
 			Range(SpanStyle(color = Color.Red), 0, 3),
-			Range(SpanStyle(color = Color.Blue), 2, 4)
+			Range(SpanStyle(color = Color.Blue), 2, 4),
 		)
 		val annotatedString1 = AnnotatedString(
 			text = text1,
@@ -37,9 +37,9 @@ class AnnotatedStringTest {
 			AnnotatedString(
 				"$text1$text2",
 				spanStyles1 + listOf(
-					Range(spanStyle, text1.length, text1.length + text2.length)
+					Range(spanStyle, text1.length, text1.length + text2.length),
 				),
-			)
+			),
 		)
 	}
 
@@ -62,7 +62,7 @@ class AnnotatedStringTest {
 		}.subSequence(1, 1)
 
 		assertThat(annotatedString).isEqualTo(
-			AnnotatedString("", listOf(Range(SpanStyle(color = Color.Red), 0, 0)))
+			AnnotatedString("", listOf(Range(SpanStyle(color = Color.Red), 0, 0))),
 		)
 	}
 
@@ -92,7 +92,7 @@ class AnnotatedStringTest {
 		}
 
 		assertThat(annotatedString.subSequence("ab".length, annotatedString.length)).isEqualTo(
-			AnnotatedString("c")
+			AnnotatedString("c"),
 		)
 	}
 
@@ -107,7 +107,7 @@ class AnnotatedStringTest {
 		}
 
 		assertThat(annotatedString.subSequence(0, "a".length)).isEqualTo(
-			AnnotatedString("a")
+			AnnotatedString("a"),
 		)
 	}
 
@@ -121,7 +121,7 @@ class AnnotatedStringTest {
 		}
 
 		assertThat(annotatedString.subSequence(1, 2)).isEqualTo(
-			AnnotatedString("b", listOf(Range(style, 0, 0)))
+			AnnotatedString("b", listOf(Range(style, 0, 0))),
 		)
 	}
 
@@ -139,7 +139,7 @@ class AnnotatedStringTest {
 
 		// subsequence with 1,1 will remove text, but include the style
 		assertThat(annotatedString.subSequence(1, 1)).isEqualTo(
-			AnnotatedString("", listOf(Range(style, 0, 0)))
+			AnnotatedString("", listOf(Range(style, 0, 0))),
 		)
 	}
 
@@ -153,7 +153,7 @@ class AnnotatedStringTest {
 		}
 
 		assertThat(annotatedString.subSequence(1, 1)).isEqualTo(
-			AnnotatedString("", listOf(Range(style, 0, 0)))
+			AnnotatedString("", listOf(Range(style, 0, 0))),
 		)
 	}
 
@@ -167,7 +167,7 @@ class AnnotatedStringTest {
 		}
 
 		assertThat(annotatedString.subSequence(1, 1)).isEqualTo(
-			AnnotatedString("", listOf(Range(style, 0, 0)))
+			AnnotatedString("", listOf(Range(style, 0, 0))),
 		)
 	}
 
@@ -220,9 +220,9 @@ class AnnotatedStringTest {
 		val spanStyle = SpanStyle(color = Color.Red)
 
 		assertThat(
-			AnnotatedString(text, spanStyle)
+			AnnotatedString(text, spanStyle),
 		).isEqualTo(
-			AnnotatedString(text, listOf(Range(spanStyle, 0, text.length)))
+			AnnotatedString(text, listOf(Range(spanStyle, 0, text.length))),
 		)
 	}
 

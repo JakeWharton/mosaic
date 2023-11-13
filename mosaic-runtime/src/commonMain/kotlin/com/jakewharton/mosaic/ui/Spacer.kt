@@ -22,7 +22,7 @@ public fun Spacer(modifier: Modifier) {
 		content = EmptySpacerContent,
 		measurePolicy = SpacerMeasurePolicy,
 		modifiers = modifier,
-		debugInfo = { "Spacer()" }
+		debugInfo = { "Spacer()" },
 	)
 }
 

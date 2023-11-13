@@ -30,10 +30,10 @@ import com.jakewharton.mosaic.ui.TextStyle.Companion.Bold
 import example.TestState.Fail
 import example.TestState.Pass
 import example.TestState.Running
+import kotlin.random.Random
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 fun main() = runMosaicBlocking {
 	val paths = ArrayDeque(
@@ -48,7 +48,7 @@ fun main() = runMosaicBlocking {
 			"tests/posts.kt",
 			"tests/post.kt",
 			"tests/comments.kt",
-		)
+		),
 	)
 	val totalTests = paths.size
 
@@ -112,7 +112,7 @@ fun TestRow(test: Test) {
 			modifier = Modifier
 				.background(bg)
 				.padding(horizontal = 1),
-			color = Black
+			color = Black,
 		)
 
 		val dir = test.path.substringBeforeLast('/')
@@ -123,7 +123,7 @@ fun TestRow(test: Test) {
 				withStyle(SpanStyle(textStyle = Bold)) {
 					append(name)
 				}
-			}
+			},
 		)
 	}
 }
@@ -205,7 +205,7 @@ private fun Summary(totalTests: Int, tests: List<Test>) {
 			}
 
 			append("$totalTests total")
-		}
+		},
 	)
 
 	Text("Time:  ${elapsed}s")
@@ -246,7 +246,7 @@ fun TestProgress(totalTests: Int, passed: Int, failed: Int, running: Int) {
 			withStyle(SpanStyle(background = BrightBlack)) {
 				append(" ".repeat(totalWidth - failedWidth - passedWidth - runningWidth))
 			}
-		}
+		},
 	)
 }
 

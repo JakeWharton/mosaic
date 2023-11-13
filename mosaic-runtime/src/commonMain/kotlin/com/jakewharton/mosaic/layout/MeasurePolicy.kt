@@ -10,7 +10,7 @@ public fun interface MeasurePolicy {
 
 	public fun MeasureScope.measure(
 		measurables: List<Measurable>,
-		constraints: Constraints
+		constraints: Constraints,
 	): MeasureResult
 
 	/**
@@ -20,7 +20,7 @@ public fun interface MeasurePolicy {
 	 */
 	public fun minIntrinsicWidth(
 		measurables: List<IntrinsicMeasurable>,
-		height: Int
+		height: Int,
 	): Int {
 		val mapped = measurables.map {
 			DefaultIntrinsicMeasurable(it, IntrinsicMinMax.Min, IntrinsicWidthHeight.Width)
@@ -38,7 +38,7 @@ public fun interface MeasurePolicy {
 	 */
 	public fun minIntrinsicHeight(
 		measurables: List<IntrinsicMeasurable>,
-		width: Int
+		width: Int,
 	): Int {
 		val mapped = measurables.map {
 			DefaultIntrinsicMeasurable(it, IntrinsicMinMax.Min, IntrinsicWidthHeight.Height)
@@ -55,7 +55,7 @@ public fun interface MeasurePolicy {
 	 */
 	public fun maxIntrinsicWidth(
 		measurables: List<IntrinsicMeasurable>,
-		height: Int
+		height: Int,
 	): Int {
 		val mapped = measurables.map {
 			DefaultIntrinsicMeasurable(it, IntrinsicMinMax.Max, IntrinsicWidthHeight.Width)
@@ -72,7 +72,7 @@ public fun interface MeasurePolicy {
 	 */
 	public fun maxIntrinsicHeight(
 		measurables: List<IntrinsicMeasurable>,
-		width: Int
+		width: Int,
 	): Int {
 		val mapped = measurables.map {
 			DefaultIntrinsicMeasurable(it, IntrinsicMinMax.Max, IntrinsicWidthHeight.Height)

@@ -48,7 +48,7 @@ public fun <T> Static(
 		debugPolicy = {
 			children.joinToString(prefix = "Static()") { "\n" + it.toString().prependIndent("  ") }
 		},
-		factory = StaticNodeFactory {
+		factory = staticNodeFactory {
 			lastDrawn = lastRendered
 		},
 	)
