@@ -4,6 +4,7 @@ import com.jakewharton.mosaic.TextCanvas
 import com.jakewharton.mosaic.TextSurface
 import com.jakewharton.mosaic.layout.Placeable.PlacementScope
 import com.jakewharton.mosaic.modifier.Modifier
+import com.jakewharton.mosaic.ui.unit.Constraints
 
 internal fun interface DebugPolicy {
 	fun MosaicNode.renderDebug(): String
@@ -24,12 +25,12 @@ internal abstract class AbstractMosaicNodeLayer(
 	final override val width get() = measureResult.width
 	final override val height get() = measureResult.height
 
-	override fun measure() = apply {
-		measureResult = doMeasure()
+	override fun measure(constraints: Constraints): Placeable = apply {
+		measureResult = doMeasure(constraints)
 	}
 
-	protected open fun doMeasure(): MeasureResult {
-		val placeable = next!!.measure()
+	protected open fun doMeasure(constraints: Constraints): MeasureResult {
+		val placeable = next!!.measure(constraints)
 		return object : MeasureResult {
 			override val width: Int get() = placeable.width
 			override val height: Int get() = placeable.height
@@ -58,6 +59,22 @@ internal abstract class AbstractMosaicNodeLayer(
 
 	override fun drawTo(canvas: TextCanvas) {
 		next?.drawTo(canvas)
+	}
+
+	override fun minIntrinsicWidth(height: Int): Int {
+		return next?.minIntrinsicWidth(height) ?: 0
+	}
+
+	override fun maxIntrinsicWidth(height: Int): Int {
+		return next?.maxIntrinsicWidth(height) ?: 0
+	}
+
+	override fun minIntrinsicHeight(width: Int): Int {
+		return next?.minIntrinsicHeight(width) ?: 0
+	}
+
+	override fun maxIntrinsicHeight(width: Int): Int {
+		return next?.maxIntrinsicHeight(width) ?: 0
 	}
 }
 
@@ -98,7 +115,8 @@ internal class MosaicNode(
 			field = value
 		}
 
-	override fun measure(): Placeable = topLayer.apply { measure() }
+	override fun measure(constraints: Constraints): Placeable =
+		topLayer.apply { measure(constraints) }
 
 	val width: Int get() = topLayer.width
 	val height: Int get() = topLayer.height
@@ -106,7 +124,7 @@ internal class MosaicNode(
 	val y: Int get() = topLayer.y
 
 	fun measureAndPlace() {
-		val placeable = measure()
+		val placeable = measure(Constraints())
 		topLayer.run { placeable.place(0, 0) }
 	}
 
@@ -134,14 +152,30 @@ internal class MosaicNode(
 		onStaticDraw?.invoke()
 	}
 
+	override fun minIntrinsicWidth(height: Int): Int {
+		return topLayer.minIntrinsicWidth(height)
+	}
+
+	override fun maxIntrinsicWidth(height: Int): Int {
+		return topLayer.maxIntrinsicWidth(height)
+	}
+
+	override fun minIntrinsicHeight(width: Int): Int {
+		return topLayer.minIntrinsicHeight(height)
+	}
+
+	override fun maxIntrinsicHeight(width: Int): Int {
+		return topLayer.maxIntrinsicHeight(height)
+	}
+
 	override fun toString() = debugPolicy.run { renderDebug() }
 }
 
 private class BottomLayer(
 	private val node: MosaicNode,
 ) : AbstractMosaicNodeLayer(null, node.isStatic) {
-	override fun doMeasure(): MeasureResult {
-		return node.measurePolicy.run { measure(node.children) }
+	override fun doMeasure(constraints: Constraints): MeasureResult {
+		return node.measurePolicy.run { measure(node.children, constraints) }
 	}
 
 	override fun drawTo(canvas: TextCanvas) {
@@ -157,8 +191,8 @@ private class LayoutLayer(
 	private val element: LayoutModifier,
 	private val lowerLayer: MosaicNodeLayer,
 ) : AbstractMosaicNodeLayer(lowerLayer, false) {
-	override fun doMeasure(): MeasureResult {
-		return element.run { measure(lowerLayer) }
+	override fun doMeasure(constraints: Constraints): MeasureResult {
+		return element.run { measure(lowerLayer, constraints) }
 	}
 }
 

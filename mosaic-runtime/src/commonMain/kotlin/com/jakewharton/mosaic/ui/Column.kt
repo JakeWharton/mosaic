@@ -11,6 +11,7 @@ import com.jakewharton.mosaic.layout.MeasureResult
 import com.jakewharton.mosaic.layout.MeasureScope
 import com.jakewharton.mosaic.layout.ParentDataModifier
 import com.jakewharton.mosaic.modifier.Modifier
+import com.jakewharton.mosaic.ui.unit.Constraints
 import kotlin.jvm.JvmName
 
 @Composable
@@ -22,7 +23,7 @@ public fun Column(
 	Layout(
 		content = { ColumnScopeInstance.content() },
 		modifiers = modifier,
-		debugInfo = { "Column()" },
+		debugInfo = { "Column(alignment=$horizontalAlignment)" },
 		measurePolicy = ColumnMeasurePolicy(horizontalAlignment),
 	)
 }
@@ -30,12 +31,14 @@ public fun Column(
 private class ColumnMeasurePolicy(
 	private val horizontalAlignment: Alignment.Horizontal,
 ) : MeasurePolicy {
-
-	override fun MeasureScope.measure(measurables: List<Measurable>): MeasureResult {
+	override fun MeasureScope.measure(
+		measurables: List<Measurable>,
+		constraints: Constraints,
+	): MeasureResult {
 		var width = 0
 		var height = 0
 		val placeables = measurables.map { measurable ->
-			measurable.measure().also { placeable ->
+			measurable.measure(constraints).also { placeable ->
 				width = maxOf(width, placeable.width)
 				height += placeable.height
 			}

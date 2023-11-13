@@ -38,7 +38,7 @@ class DebugRenderingTest {
 				|Failed
 				|
 				|NODES:
-				|Row\(\) x=0 y=0 w=11 h=1
+				|Row\(alignment=Vertical\(bias=-1\)\) x=0 y=0 w=11 h=1
 				|  Text\("Hello "\) x=0 y=0 w=6 h=1 DrawBehind
 				|  Layout\(\) x=6 y=0 w=5 h=1 DrawBehind
 				|

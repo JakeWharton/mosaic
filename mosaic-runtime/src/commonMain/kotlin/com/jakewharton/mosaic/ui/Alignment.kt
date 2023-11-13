@@ -134,6 +134,10 @@ public class BiasAlignment(
 		return IntOffset(x.roundToInt(), y.roundToInt())
 	}
 
+	override fun toString(): String {
+		return "Alignment(horizontalBias=${horizontalBias.toInt()}, verticalBias=${verticalBias.toInt()})"
+	}
+
 	/**
 	 * An [Alignment.Horizontal] specified by bias: for example, a bias of -1 represents alignment
 	 * to the start, a bias of 0 will represent centering, and a bias of 1 will represent end.
@@ -150,6 +154,10 @@ public class BiasAlignment(
 			// calculating the new positions.
 			val center = (space - size).toFloat() / 2f
 			return (center * (1 + bias)).roundToInt()
+		}
+
+		override fun toString(): String {
+			return "Horizontal(bias=${bias.toInt()})"
 		}
 	}
 
@@ -169,6 +177,10 @@ public class BiasAlignment(
 			// calculating the new positions.
 			val center = (space - size).toFloat() / 2f
 			return (center * (1 + bias)).roundToInt()
+		}
+
+		override fun toString(): String {
+			return "Vertical(bias=${bias.toInt()})"
 		}
 	}
 }
