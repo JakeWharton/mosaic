@@ -5,56 +5,55 @@ package com.jakewharton.mosaic.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import com.jakewharton.mosaic.layout.Measurable
+import androidx.compose.runtime.remember
 import com.jakewharton.mosaic.layout.MeasurePolicy
-import com.jakewharton.mosaic.layout.MeasureResult
-import com.jakewharton.mosaic.layout.MeasureScope
-import com.jakewharton.mosaic.layout.ParentDataModifier
 import com.jakewharton.mosaic.modifier.Modifier
-import com.jakewharton.mosaic.ui.unit.Constraints
 import kotlin.jvm.JvmName
 
 @Composable
 public fun Row(
 	modifier: Modifier = Modifier,
+	horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
 	verticalAlignment: Alignment.Vertical = Alignment.Top,
 	content: @Composable RowScope.() -> Unit,
 ) {
+	val measurePolicy = rowMeasurePolicy(horizontalArrangement, verticalAlignment)
 	Layout(
 		content = { RowScopeInstance.content() },
 		modifiers = modifier,
-		debugInfo = { "Row(alignment=$verticalAlignment)" },
-		measurePolicy = RowMeasurePolicy(verticalAlignment),
+		debugInfo = { "Row(arrangement=$horizontalArrangement, alignment=$verticalAlignment)" },
+		measurePolicy = measurePolicy,
 	)
 }
 
-private class RowMeasurePolicy(
-	private val verticalAlignment: Alignment.Vertical,
-) : MeasurePolicy {
+internal val DefaultRowMeasurePolicy: MeasurePolicy = RowColumnMeasurePolicy(
+	orientation = LayoutOrientation.Horizontal,
+	horizontalArrangement = Arrangement.Start,
+	verticalArrangement = null,
+	arrangementSpacing = Arrangement.Start.spacing,
+	crossAxisAlignment = CrossAxisAlignment.vertical(Alignment.Top),
+	crossAxisSize = SizeMode.Wrap,
+)
 
-	override fun MeasureScope.measure(
-		measurables: List<Measurable>,
-		constraints: Constraints,
-	): MeasureResult {
-		var width = 0
-		var height = 0
-		val placeables = measurables.map { measurable ->
-			measurable.measure(constraints).also { placeable ->
-				width += placeable.width
-				height = maxOf(height, placeable.height)
-			}
-		}
-		return layout(width, height) {
-			var x = 0
-			placeables.forEachIndexed { index, placeable ->
-				val alignment = measurables[index].rowParentData?.alignment ?: verticalAlignment
-				val y = alignment.align(placeable.height, height)
-				placeable.place(x, y)
-				x += placeable.width
-			}
+@Composable
+internal fun rowMeasurePolicy(
+	horizontalArrangement: Arrangement.Horizontal,
+	verticalAlignment: Alignment.Vertical,
+): MeasurePolicy =
+	if (horizontalArrangement == Arrangement.Start && verticalAlignment == Alignment.Top) {
+		DefaultRowMeasurePolicy
+	} else {
+		remember(horizontalArrangement, verticalAlignment) {
+			RowColumnMeasurePolicy(
+				orientation = LayoutOrientation.Horizontal,
+				horizontalArrangement = horizontalArrangement,
+				verticalArrangement = null,
+				arrangementSpacing = horizontalArrangement.spacing,
+				crossAxisAlignment = CrossAxisAlignment.vertical(verticalAlignment),
+				crossAxisSize = SizeMode.Wrap,
+			)
 		}
 	}
-}
 
 /**
  * Scope for the children of [Row].
@@ -62,6 +61,24 @@ private class RowMeasurePolicy(
 @LayoutScopeMarker
 @Immutable
 public interface RowScope {
+
+	/**
+	 * Size the element's width proportional to its [weight] relative to other weighted sibling
+	 * elements in the [Row]. The parent will divide the horizontal space remaining after measuring
+	 * unweighted child elements and distribute it according to this weight.
+	 * When [fill] is true, the element will be forced to occupy the whole width allocated to it.
+	 * Otherwise, the element is allowed to be smaller - this will result in [Row] being smaller,
+	 * as the unused allocated width will not be redistributed to other siblings.
+	 *
+	 * @param weight The proportional width to give to this element, as related to the total of
+	 * all weighted siblings. Must be positive.
+	 * @param fill When `true`, the element will occupy the whole width allocated.
+	 */
+	@Stable
+	public fun Modifier.weight(
+		weight: Float,
+		fill: Boolean = true,
+	): Modifier
 
 	/**
 	 * Align the element vertically within the [Row]. This alignment will have priority over
@@ -74,27 +91,19 @@ public interface RowScope {
 private object RowScopeInstance : RowScope {
 
 	@Stable
+	override fun Modifier.weight(weight: Float, fill: Boolean): Modifier {
+		require(weight > 0.0) { "invalid weight $weight; must be greater than zero" }
+		return this.then(
+			LayoutWeightModifier(
+				// Coerce Float.POSITIVE_INFINITY to Float.MAX_VALUE to avoid errors
+				weight = weight.coerceAtMost(Float.MAX_VALUE),
+				fill = fill,
+			),
+		)
+	}
+
+	@Stable
 	override fun Modifier.align(alignment: Alignment.Vertical) = this.then(
 		VerticalAlignModifier(vertical = alignment),
 	)
 }
-
-private class VerticalAlignModifier(
-	private val vertical: Alignment.Vertical,
-) : ParentDataModifier {
-
-	override fun modifyParentData(parentData: Any?): Any {
-		return ((parentData as? RowParentData) ?: RowParentData()).also {
-			it.alignment = vertical
-		}
-	}
-
-	override fun toString(): String = "VerticalAlign($vertical)"
-}
-
-private data class RowParentData(
-	var alignment: Alignment.Vertical = Alignment.Top,
-)
-
-private val Measurable.rowParentData: RowParentData?
-	get() = this.parentData as? RowParentData
