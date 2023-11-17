@@ -1,6 +1,7 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
 $dokka.location:com.jakewharton.mosaic.layout////PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/index.html
+$dokka.location:com.jakewharton.mosaic.layout//aspectRatio/com.jakewharton.mosaic.modifier.Modifier#kotlin.Float#kotlin.Boolean/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/aspect-ratio.html
 $dokka.location:com.jakewharton.mosaic.layout//background/com.jakewharton.mosaic.modifier.Modifier#com.jakewharton.mosaic.ui.Color/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/background.html
 $dokka.location:com.jakewharton.mosaic.layout//drawBehind/com.jakewharton.mosaic.modifier.Modifier#kotlin.Function1[com.jakewharton.mosaic.layout.DrawScope,kotlin.Unit]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/draw-behind.html
 $dokka.location:com.jakewharton.mosaic.layout//height/com.jakewharton.mosaic.modifier.Modifier#kotlin.Int/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/height.html
