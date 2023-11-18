@@ -36,7 +36,7 @@ private class OffsetModifier(
 ) : LayoutModifier {
 	override fun MeasureScope.measure(
 		measurable: Measurable,
-		constraints: Constraints
+		constraints: Constraints,
 	): MeasureResult {
 		val placeable = measurable.measure(constraints)
 		return layout(placeable.width, placeable.height) {
@@ -52,7 +52,7 @@ private class ChangeableOffsetModifier(
 ) : LayoutModifier {
 	override fun MeasureScope.measure(
 		measurable: Measurable,
-		constraints: Constraints
+		constraints: Constraints,
 	): MeasureResult {
 		val placeable = measurable.measure(constraints)
 		return layout(placeable.width, placeable.height) {
