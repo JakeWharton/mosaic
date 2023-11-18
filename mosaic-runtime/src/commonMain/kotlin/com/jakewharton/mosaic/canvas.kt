@@ -19,25 +19,58 @@ internal interface TextCanvas {
 	operator fun get(row: Int, column: Int): TextPixel
 }
 
-private val blankPixel = TextPixel(' ')
-
 internal class TextSurface(
-	override val width: Int,
-	override val height: Int,
+	initialWidth: Int,
+	initialHeight: Int,
 ) : TextCanvas {
+	private var realWidth: Int = initialWidth
+	private var realHeight: Int = initialHeight
+
+	override val width: Int get() = realWidth
+	override val height: Int get() = realHeight
+
 	override var translationX = 0
 	override var translationY = 0
 
-	private val rows = Array(height) { Array(width) { TextPixel(' ') } }
+	private val rows = MutableList(height) { createBlankRow(width) }
 
-	override operator fun get(row: Int, column: Int) = rows[translationY + row][translationX + column]
+	override operator fun get(row: Int, column: Int): TextPixel {
+		val x = translationX + column
+		val y = translationY + row
+		if (x < 0 || y < 0) {
+			return reusableDirtyPixel
+		}
+		val widthDiff = x - width + 1
+		if (widthDiff > 0) {
+			if (widthDiff == 1) {
+				rows.forEach { it.add(newBlankPixel) }
+			} else {
+				rows.forEach { it.addAll(createBlankRow(widthDiff)) }
+			}
+			realWidth += widthDiff
+		}
+		val heightDiff = y - height + 1
+		if (heightDiff > 0) {
+			if (heightDiff == 1) {
+				rows.add(createBlankRow(width))
+			} else {
+				rows.addAll(MutableList(heightDiff) { createBlankRow(width) })
+			}
+			realHeight += heightDiff
+		}
+		return rows[y][x]
+	}
+
+	private inline fun createBlankRow(size: Int): MutableList<TextPixel> {
+		return MutableList(size) { newBlankPixel }
+	}
 
 	fun appendRowTo(appendable: Appendable, row: Int) {
 		// Reused heap allocation for building ANSI attributes inside the loop.
 		val attributes = mutableListOf<Int>()
 
 		val rowPixels = rows[row]
-		var lastPixel = blankPixel
+		var lastPixel = reusableBlankPixel
 		for (columnIndex in 0 until width) {
 			val pixel = rowPixels[columnIndex]
 			if (pixel.foreground != lastPixel.foreground) {
@@ -90,6 +123,23 @@ internal class TextSurface(
 		}
 	}
 }
+
+/**
+ * Returns always a new blank [TextPixel].
+ */
+private val newBlankPixel: TextPixel get() = TextPixel(' ')
+
+/**
+ * It is used in places where it is important that the [TextPixel]
+ * has its original state and **will not change**.
+ */
+private val reusableBlankPixel: TextPixel = newBlankPixel
+
+/**
+ * It is used in places where the [TextPixel] state is not important
+ * and it can change.
+ */
+private val reusableDirtyPixel: TextPixel = newBlankPixel
 
 internal class TextPixel(var value: String) {
 	var background: Color? = null
