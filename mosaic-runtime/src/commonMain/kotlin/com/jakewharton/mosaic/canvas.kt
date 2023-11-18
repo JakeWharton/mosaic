@@ -25,8 +25,6 @@ internal interface TextCanvas {
 	operator fun get(row: Int, column: Int): TextPixel
 }
 
-private val blankPixel = TextPixel(' ')
-
 internal class TextSurface(
 	override val width: Int,
 	override val height: Int,
@@ -37,11 +35,24 @@ internal class TextSurface(
 
 	private val cells = Array(width * height) { TextPixel(' ') }
 
+	/**
+	 * It is used in places where the [TextPixel] state is not important
+	 * and it can change.
+	 */
+	private val reusableDirtyPixel: TextPixel = newBlankPixel
+
+	/**
+	 * It is used in places where it is important that the [TextPixel]
+	 * has its original state and **will not change**.
+	 */
+	private val reusableBlankPixel: TextPixel = newBlankPixel
+
 	override operator fun get(row: Int, column: Int): TextPixel {
 		val x = translationX + column
 		val y = row + translationY
-		check(x in 0 until width)
-		check(y in 0 until height)
+		if (x >= width || y >= height || x < 0 || y < 0) {
+			return reusableDirtyPixel
+		}
 		return cells[y * width + x]
 	}
 
@@ -49,7 +60,7 @@ internal class TextSurface(
 		// Reused heap allocation for building ANSI attributes inside the loop.
 		val attributes = mutableIntListOf()
 
-		var lastPixel = blankPixel
+		var lastPixel = reusableBlankPixel
 
 		val rowStart = row * width
 		val rowStop = rowStart + width
@@ -164,6 +175,11 @@ internal class TextSurface(
 		}
 	}
 }
+
+/**
+ * Returns always a new blank [TextPixel].
+ */
+private inline val newBlankPixel: TextPixel get() = TextPixel(' ')
 
 internal class TextPixel(var codePoint: Int) {
 	var background: Color = Color.Unspecified
