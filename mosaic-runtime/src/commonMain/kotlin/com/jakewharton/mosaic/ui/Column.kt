@@ -5,55 +5,55 @@ package com.jakewharton.mosaic.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import com.jakewharton.mosaic.layout.Measurable
+import androidx.compose.runtime.remember
 import com.jakewharton.mosaic.layout.MeasurePolicy
-import com.jakewharton.mosaic.layout.MeasureResult
-import com.jakewharton.mosaic.layout.MeasureScope
-import com.jakewharton.mosaic.layout.ParentDataModifier
 import com.jakewharton.mosaic.modifier.Modifier
-import com.jakewharton.mosaic.ui.unit.Constraints
 import kotlin.jvm.JvmName
 
 @Composable
 public fun Column(
 	modifier: Modifier = Modifier,
+	verticalArrangement: Arrangement.Vertical = Arrangement.Top,
 	horizontalAlignment: Alignment.Horizontal = Alignment.Start,
 	content: @Composable ColumnScope.() -> Unit,
 ) {
+	val measurePolicy = columnMeasurePolicy(verticalArrangement, horizontalAlignment)
 	Layout(
 		content = { ColumnScopeInstance.content() },
 		modifiers = modifier,
-		debugInfo = { "Column(alignment=$horizontalAlignment)" },
-		measurePolicy = ColumnMeasurePolicy(horizontalAlignment),
+		debugInfo = { "Column(arrangement=$verticalArrangement, alignment=$horizontalAlignment)" },
+		measurePolicy = measurePolicy,
 	)
 }
 
-private class ColumnMeasurePolicy(
-	private val horizontalAlignment: Alignment.Horizontal,
-) : MeasurePolicy {
-	override fun MeasureScope.measure(
-		measurables: List<Measurable>,
-		constraints: Constraints,
-	): MeasureResult {
-		var width = 0
-		var height = 0
-		val placeables = measurables.map { measurable ->
-			measurable.measure(constraints).also { placeable ->
-				width = maxOf(width, placeable.width)
-				height += placeable.height
-			}
-		}
-		return layout(width, height) {
-			var y = 0
-			placeables.forEachIndexed { index, placeable ->
-				val alignment = measurables[index].columnParentData?.alignment ?: horizontalAlignment
-				val x = alignment.align(placeable.width, width)
-				placeable.place(x, y)
-				y += placeable.height
-			}
+internal val DefaultColumnMeasurePolicy: MeasurePolicy = RowColumnMeasurePolicy(
+	orientation = LayoutOrientation.Vertical,
+	verticalArrangement = Arrangement.Top,
+	horizontalArrangement = null,
+	arrangementSpacing = Arrangement.Top.spacing,
+	crossAxisAlignment = CrossAxisAlignment.horizontal(Alignment.Start),
+	crossAxisSize = SizeMode.Wrap,
+)
+
+@Composable
+internal fun columnMeasurePolicy(
+	verticalArrangement: Arrangement.Vertical,
+	horizontalAlignment: Alignment.Horizontal,
+): MeasurePolicy =
+	if (verticalArrangement == Arrangement.Top && horizontalAlignment == Alignment.Start) {
+		DefaultColumnMeasurePolicy
+	} else {
+		remember(verticalArrangement, horizontalAlignment) {
+			RowColumnMeasurePolicy(
+				orientation = LayoutOrientation.Vertical,
+				verticalArrangement = verticalArrangement,
+				horizontalArrangement = null,
+				arrangementSpacing = verticalArrangement.spacing,
+				crossAxisAlignment = CrossAxisAlignment.horizontal(horizontalAlignment),
+				crossAxisSize = SizeMode.Wrap,
+			)
 		}
 	}
-}
 
 /**
  * Scope for the children of [Column].
@@ -61,6 +61,24 @@ private class ColumnMeasurePolicy(
 @LayoutScopeMarker
 @Immutable
 public interface ColumnScope {
+
+	/**
+	 * Size the element's height proportional to its [weight] relative to other weighted sibling
+	 * elements in the [Column]. The parent will divide the vertical space remaining after measuring
+	 * unweighted child elements and distribute it according to this weight.
+	 * When [fill] is true, the element will be forced to occupy the whole height allocated to it.
+	 * Otherwise, the element is allowed to be smaller - this will result in [Column] being smaller,
+	 * as the unused allocated height will not be redistributed to other siblings.
+	 *
+	 * @param weight The proportional height to give to this element, as related to the total of
+	 * all weighted siblings. Must be positive.
+	 * @param fill When `true`, the element will occupy the whole height allocated.
+	 */
+	@Stable
+	public fun Modifier.weight(
+		weight: Float,
+		fill: Boolean = true,
+	): Modifier
 
 	/**
 	 * Align the element horizontally within the [Column]. This alignment will have priority over
@@ -73,27 +91,19 @@ public interface ColumnScope {
 private object ColumnScopeInstance : ColumnScope {
 
 	@Stable
+	override fun Modifier.weight(weight: Float, fill: Boolean): Modifier {
+		require(weight > 0.0) { "invalid weight $weight; must be greater than zero" }
+		return this.then(
+			LayoutWeightModifier(
+				// Coerce Float.POSITIVE_INFINITY to Float.MAX_VALUE to avoid errors
+				weight = weight.coerceAtMost(Float.MAX_VALUE),
+				fill = fill,
+			),
+		)
+	}
+
+	@Stable
 	override fun Modifier.align(alignment: Alignment.Horizontal) = this.then(
 		HorizontalAlignModifier(horizontal = alignment),
 	)
 }
-
-private class HorizontalAlignModifier(
-	private val horizontal: Alignment.Horizontal,
-) : ParentDataModifier {
-
-	override fun modifyParentData(parentData: Any?): Any {
-		return ((parentData as? ColumnParentData) ?: ColumnParentData()).also {
-			it.alignment = horizontal
-		}
-	}
-
-	override fun toString(): String = "HorizontalAlign($horizontal)"
-}
-
-private data class ColumnParentData(
-	var alignment: Alignment.Horizontal = Alignment.Start,
-)
-
-private val Measurable.columnParentData: ColumnParentData?
-	get() = this.parentData as? ColumnParentData
