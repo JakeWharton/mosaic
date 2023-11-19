@@ -30,17 +30,9 @@ sleep .1
 echo -e "\e[B"
 sleep .1
 echo -e "\e[B"
-sleep .1
-echo -e "\e[B"
 
 # Right to edge
 sleep .4
-echo -e "\e[C"
-sleep .1
-echo -e "\e[C"
-sleep .1
-echo -e "\e[C"
-sleep .1
 echo -e "\e[C"
 sleep .1
 echo -e "\e[C"
