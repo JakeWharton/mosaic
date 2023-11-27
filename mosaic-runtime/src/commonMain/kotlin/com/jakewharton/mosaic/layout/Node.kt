@@ -161,11 +161,11 @@ internal class MosaicNode(
 	}
 
 	override fun minIntrinsicHeight(width: Int): Int {
-		return topLayer.minIntrinsicHeight(height)
+		return topLayer.minIntrinsicHeight(width)
 	}
 
 	override fun maxIntrinsicHeight(width: Int): Int {
-		return topLayer.maxIntrinsicHeight(height)
+		return topLayer.maxIntrinsicHeight(width)
 	}
 
 	override fun toString() = debugPolicy.run { renderDebug() }
@@ -185,6 +185,22 @@ private class BottomLayer(
 			}
 		}
 	}
+
+	override fun minIntrinsicWidth(height: Int): Int {
+		return node.measurePolicy.run { minIntrinsicWidth(node.children, height) }
+	}
+
+	override fun maxIntrinsicWidth(height: Int): Int {
+		return node.measurePolicy.run { maxIntrinsicWidth(node.children, height) }
+	}
+
+	override fun minIntrinsicHeight(width: Int): Int {
+		return node.measurePolicy.run { minIntrinsicHeight(node.children, width) }
+	}
+
+	override fun maxIntrinsicHeight(width: Int): Int {
+		return node.measurePolicy.run { maxIntrinsicHeight(node.children, width) }
+	}
 }
 
 private class LayoutLayer(
@@ -193,6 +209,22 @@ private class LayoutLayer(
 ) : AbstractMosaicNodeLayer(lowerLayer, false) {
 	override fun doMeasure(constraints: Constraints): MeasureResult {
 		return element.run { measure(lowerLayer, constraints) }
+	}
+
+	override fun minIntrinsicWidth(height: Int): Int {
+		return element.minIntrinsicWidth(lowerLayer, height)
+	}
+
+	override fun maxIntrinsicWidth(height: Int): Int {
+		return element.maxIntrinsicWidth(lowerLayer, height)
+	}
+
+	override fun minIntrinsicHeight(width: Int): Int {
+		return element.minIntrinsicHeight(lowerLayer, width)
+	}
+
+	override fun maxIntrinsicHeight(width: Int): Int {
+		return element.maxIntrinsicHeight(lowerLayer, width)
 	}
 }
 

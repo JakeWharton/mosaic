@@ -149,6 +149,28 @@ private fun Placeable.PlacementScope.placeInBox(
 }
 
 /**
+ * A box with no content that can participate in layout, drawing
+ * due to the [modifier] applied to it.
+ *
+ * @param modifier The modifier to be applied to the layout.
+ */
+@Composable
+public fun Box(modifier: Modifier) {
+	Layout(
+		content = EmptyBoxContent,
+		modifiers = modifier,
+		debugInfo = { "Box()" },
+		measurePolicy = EmptyBoxMeasurePolicy,
+	)
+}
+
+private val EmptyBoxContent: @Composable () -> Unit = {}
+
+private val EmptyBoxMeasurePolicy = MeasurePolicy { _, constraints ->
+	layout(constraints.minWidth, constraints.minHeight) {}
+}
+
+/**
  * A BoxScope provides a scope for the children of [Box].
  */
 @LayoutScopeMarker

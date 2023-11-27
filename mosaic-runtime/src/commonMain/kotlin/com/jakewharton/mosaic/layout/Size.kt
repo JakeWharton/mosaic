@@ -599,6 +599,28 @@ private class SizeModifier(
 		}
 	}
 
+	override fun equals(other: Any?): Boolean {
+		if (this === other) return true
+		if (other !is SizeModifier) return false
+
+		if (minWidth != other.minWidth) return false
+		if (minHeight != other.minHeight) return false
+		if (maxWidth != other.maxWidth) return false
+		if (maxHeight != other.maxHeight) return false
+		if (enforceIncoming != other.enforceIncoming) return false
+
+		return true
+	}
+
+	override fun hashCode(): Int {
+		var result = minWidth.hashCode()
+		result = 31 * result + minHeight.hashCode()
+		result = 31 * result + maxWidth.hashCode()
+		result = 31 * result + maxHeight.hashCode()
+		result = 31 * result + enforceIncoming.hashCode()
+		return result
+	}
+
 	override fun toString(): String {
 		val params = buildList {
 			if (minWidth != Unspecified) {
@@ -658,6 +680,22 @@ private class FillModifier(
 		}
 	}
 
+	override fun equals(other: Any?): Boolean {
+		if (this === other) return true
+		if (other !is FillModifier) return false
+
+		if (direction != other.direction) return false
+		if (fraction != other.fraction) return false
+
+		return true
+	}
+
+	override fun hashCode(): Int {
+		var result = direction.hashCode()
+		result = 31 * result + fraction.hashCode()
+		return result
+	}
+
 	override fun toString(): String = "Fill(direction=$direction, fraction=$fraction)"
 
 	companion object {
@@ -685,6 +723,7 @@ private class WrapContentModifier(
 	private val direction: Direction,
 	private val unbounded: Boolean,
 	private val alignmentCallback: (IntSize) -> IntOffset,
+	private val align: Any,
 ) : LayoutModifier {
 
 	override fun MeasureScope.measure(
@@ -719,6 +758,27 @@ private class WrapContentModifier(
 		}
 	}
 
+	override fun equals(other: Any?): Boolean {
+		if (this === other) return true
+		if (other === null) return false
+		if (this::class != other::class) return false
+
+		other as WrapContentModifier
+
+		if (direction != other.direction) return false
+		if (unbounded != other.unbounded) return false
+		if (align != other.align) return false
+
+		return true
+	}
+
+	override fun hashCode(): Int {
+		var result = direction.hashCode()
+		result = 31 * result + unbounded.hashCode()
+		result = 31 * result + align.hashCode()
+		return result
+	}
+
 	override fun toString(): String = "WrapContent(direction=$direction, unbounded=$unbounded)"
 
 	companion object {
@@ -730,6 +790,7 @@ private class WrapContentModifier(
 			direction = Direction.Horizontal,
 			unbounded = unbounded,
 			alignmentCallback = { size -> IntOffset(align.align(0, size.width), 0) },
+			align = align,
 		)
 
 		@Stable
@@ -740,6 +801,7 @@ private class WrapContentModifier(
 			direction = Direction.Vertical,
 			unbounded = unbounded,
 			alignmentCallback = { size -> IntOffset(0, align.align(0, size.height)) },
+			align = align,
 		)
 
 		@Stable
@@ -750,6 +812,7 @@ private class WrapContentModifier(
 			direction = Direction.Both,
 			unbounded = unbounded,
 			alignmentCallback = { size -> align.align(IntSize.Zero, size) },
+			align = align,
 		)
 	}
 }
@@ -809,6 +872,13 @@ private class UnspecifiedConstraintsModifier(
 	) = measurable.maxIntrinsicHeight(width).coerceAtLeast(
 		if (minHeight != Unspecified) minHeight else 0,
 	)
+
+	override fun equals(other: Any?): Boolean {
+		if (other !is UnspecifiedConstraintsModifier) return false
+		return minWidth == other.minWidth && minHeight == other.minHeight
+	}
+
+	override fun hashCode() = minWidth.hashCode() * 31 + minHeight.hashCode()
 
 	override fun toString(): String {
 		val params = buildList {

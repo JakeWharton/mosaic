@@ -37,6 +37,11 @@ private class AspectRatioModifier(
 	private val aspectRatio: Float,
 	private val matchHeightConstraintsFirst: Boolean,
 ) : LayoutModifier {
+
+	init {
+		require(aspectRatio > 0) { "aspectRatio $aspectRatio must be > 0" }
+	}
+
 	override fun MeasureScope.measure(
 		measurable: Measurable,
 		constraints: Constraints,
