@@ -9,6 +9,7 @@ import com.jakewharton.mosaic.ui.unit.IntSize
 import com.jakewharton.mosaic.ui.unit.constrain
 import com.jakewharton.mosaic.ui.unit.constrainHeight
 import com.jakewharton.mosaic.ui.unit.constrainWidth
+import dev.drewhamilton.poko.Poko
 import kotlin.math.roundToInt
 
 /**
@@ -468,6 +469,7 @@ public fun Modifier.defaultMinSize(
 	minHeight: Int = Unspecified,
 ): Modifier = this.then(UnspecifiedConstraintsModifier(minWidth = minWidth, minHeight = minHeight))
 
+@Poko
 private class SizeModifier(
 	private val minWidth: Int = Unspecified,
 	private val minHeight: Int = Unspecified,
@@ -599,28 +601,6 @@ private class SizeModifier(
 		}
 	}
 
-	override fun equals(other: Any?): Boolean {
-		if (this === other) return true
-		if (other !is SizeModifier) return false
-
-		if (minWidth != other.minWidth) return false
-		if (minHeight != other.minHeight) return false
-		if (maxWidth != other.maxWidth) return false
-		if (maxHeight != other.maxHeight) return false
-		if (enforceIncoming != other.enforceIncoming) return false
-
-		return true
-	}
-
-	override fun hashCode(): Int {
-		var result = minWidth.hashCode()
-		result = 31 * result + minHeight.hashCode()
-		result = 31 * result + maxWidth.hashCode()
-		result = 31 * result + maxHeight.hashCode()
-		result = 31 * result + enforceIncoming.hashCode()
-		return result
-	}
-
 	override fun toString(): String {
 		val params = buildList {
 			if (minWidth != Unspecified) {
@@ -641,6 +621,7 @@ private class SizeModifier(
 	}
 }
 
+@Poko
 private class FillModifier(
 	private val direction: Direction,
 	private val fraction: Float,
@@ -678,22 +659,6 @@ private class FillModifier(
 		return layout(placeable.width, placeable.height) {
 			placeable.place(0, 0)
 		}
-	}
-
-	override fun equals(other: Any?): Boolean {
-		if (this === other) return true
-		if (other !is FillModifier) return false
-
-		if (direction != other.direction) return false
-		if (fraction != other.fraction) return false
-
-		return true
-	}
-
-	override fun hashCode(): Int {
-		var result = direction.hashCode()
-		result = 31 * result + fraction.hashCode()
-		return result
 	}
 
 	override fun toString(): String = "Fill(direction=$direction, fraction=$fraction)"
@@ -817,6 +782,7 @@ private class WrapContentModifier(
 	}
 }
 
+@Poko
 private class UnspecifiedConstraintsModifier(
 	private val minWidth: Int = Unspecified,
 	private val minHeight: Int = Unspecified,
@@ -872,13 +838,6 @@ private class UnspecifiedConstraintsModifier(
 	) = measurable.maxIntrinsicHeight(width).coerceAtLeast(
 		if (minHeight != Unspecified) minHeight else 0,
 	)
-
-	override fun equals(other: Any?): Boolean {
-		if (other !is UnspecifiedConstraintsModifier) return false
-		return minWidth == other.minWidth && minHeight == other.minHeight
-	}
-
-	override fun hashCode() = minWidth.hashCode() * 31 + minHeight.hashCode()
 
 	override fun toString(): String {
 		val params = buildList {

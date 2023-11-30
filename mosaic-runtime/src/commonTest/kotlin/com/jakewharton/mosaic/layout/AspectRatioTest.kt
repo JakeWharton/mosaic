@@ -6,7 +6,6 @@ import com.jakewharton.mosaic.Container
 import com.jakewharton.mosaic.TestFiller
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.mosaicNodesWithMeasureAndPlace
-import com.jakewharton.mosaic.renderMosaic
 import com.jakewharton.mosaic.size
 import com.jakewharton.mosaic.testIntrinsics
 import com.jakewharton.mosaic.ui.Layout
@@ -18,17 +17,13 @@ import kotlin.test.assertFails
 class AspectRatioTest {
 	@Test fun aspectRatioNegative() {
 		assertFails {
-			renderMosaic {
-				TestFiller(modifier = Modifier.aspectRatio(-2.0f))
-			}
+			Modifier.aspectRatio(-2.0f)
 		}
 	}
 
 	@Test fun aspectRatioZero() {
 		assertFails {
-			renderMosaic {
-				TestFiller(modifier = Modifier.aspectRatio(0.0f))
-			}
+			Modifier.aspectRatio(0.0f)
 		}
 	}
 

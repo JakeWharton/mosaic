@@ -28,9 +28,7 @@ class PaddingTest {
 
 	@Test fun paddingLeftNegative() {
 		assertFails {
-			renderMosaic {
-				SingleFiller(Modifier.padding(left = -2))
-			}
+			Modifier.padding(left = -2)
 		}
 	}
 
@@ -65,9 +63,7 @@ class PaddingTest {
 
 	@Test fun paddingTopNegative() {
 		assertFails {
-			renderMosaic {
-				SingleFiller(Modifier.padding(top = -2))
-			}
+			Modifier.padding(top = -2)
 		}
 	}
 
@@ -104,9 +100,7 @@ class PaddingTest {
 
 	@Test fun paddingRightNegative() {
 		assertFails {
-			renderMosaic {
-				SingleFiller(Modifier.padding(right = -2))
-			}
+			Modifier.padding(right = -2)
 		}
 	}
 
@@ -141,9 +135,7 @@ class PaddingTest {
 
 	@Test fun paddingBottomNegative() {
 		assertFails {
-			renderMosaic {
-				SingleFiller(Modifier.padding(bottom = -2))
-			}
+			Modifier.padding(bottom = -2)
 		}
 	}
 
@@ -180,9 +172,7 @@ class PaddingTest {
 
 	@Test fun paddingLeftBottomNegative() {
 		assertFails {
-			renderMosaic {
-				SingleFiller(Modifier.padding(left = -1, bottom = -2))
-			}
+			Modifier.padding(left = -1, bottom = -2)
 		}
 	}
 
@@ -235,7 +225,6 @@ class PaddingTest {
 	@Test fun intrinsicMeasurements() {
 		val padding = 100
 
-		var error: Throwable? = null
 		testIntrinsics(
 			@Composable {
 				TestBox(modifier = Modifier.padding(padding)) {
@@ -261,29 +250,23 @@ class PaddingTest {
 			// Add back the padding on both sides to get the total expected height
 			val expectedTotalWidth = expectedAspectRatioWidth + totalAxisSpacing
 
-			try {
-				// Min width
-				assertThat(totalAxisSpacing).isEqualTo(minIntrinsicWidth(0))
-				assertThat(expectedTotalWidth).isEqualTo(minIntrinsicWidth(testDimension))
-				assertThat(totalAxisSpacing).isEqualTo(minIntrinsicWidth(Constraints.Infinity))
-				// Min height
-				assertThat(totalAxisSpacing).isEqualTo(minIntrinsicHeight(0))
-				assertThat(expectedTotalHeight).isEqualTo(minIntrinsicHeight(testDimension))
-				assertThat(totalAxisSpacing).isEqualTo(minIntrinsicHeight(Constraints.Infinity))
-				// Max width
-				assertThat(totalAxisSpacing).isEqualTo(maxIntrinsicWidth(0))
-				assertThat(expectedTotalWidth).isEqualTo(maxIntrinsicWidth(testDimension))
-				assertThat(totalAxisSpacing).isEqualTo(maxIntrinsicWidth(Constraints.Infinity))
-				// Max height
-				assertThat(totalAxisSpacing).isEqualTo(maxIntrinsicHeight(0))
-				assertThat(expectedTotalHeight).isEqualTo(maxIntrinsicHeight(testDimension))
-				assertThat(totalAxisSpacing).isEqualTo(maxIntrinsicHeight(Constraints.Infinity))
-			} catch (t: Throwable) {
-				error = t
-			}
+			// Min width
+			assertThat(totalAxisSpacing).isEqualTo(minIntrinsicWidth(0))
+			assertThat(expectedTotalWidth).isEqualTo(minIntrinsicWidth(testDimension))
+			assertThat(totalAxisSpacing).isEqualTo(minIntrinsicWidth(Constraints.Infinity))
+			// Min height
+			assertThat(totalAxisSpacing).isEqualTo(minIntrinsicHeight(0))
+			assertThat(expectedTotalHeight).isEqualTo(minIntrinsicHeight(testDimension))
+			assertThat(totalAxisSpacing).isEqualTo(minIntrinsicHeight(Constraints.Infinity))
+			// Max width
+			assertThat(totalAxisSpacing).isEqualTo(maxIntrinsicWidth(0))
+			assertThat(expectedTotalWidth).isEqualTo(maxIntrinsicWidth(testDimension))
+			assertThat(totalAxisSpacing).isEqualTo(maxIntrinsicWidth(Constraints.Infinity))
+			// Max height
+			assertThat(totalAxisSpacing).isEqualTo(maxIntrinsicHeight(0))
+			assertThat(expectedTotalHeight).isEqualTo(maxIntrinsicHeight(testDimension))
+			assertThat(totalAxisSpacing).isEqualTo(maxIntrinsicHeight(Constraints.Infinity))
 		}
-
-		error?.let { throw it }
 	}
 
 	/**
