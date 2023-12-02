@@ -99,7 +99,7 @@ internal class MosaicNode(
 	override var parentData: Any? = null
 		private set
 
-	var modifiers: Modifier = Modifier
+	var modifier: Modifier = Modifier
 		set(value) {
 			topLayer = value.foldOut(bottomLayer) { element, lowerLayer ->
 				when (element) {

@@ -37,15 +37,16 @@ internal sealed class NoContentMeasureScope {
 
 @Composable
 @MosaicComposable
+@Suppress("ktlint:compose:param-order-check") // Order is correct, check just can't tell.
 internal fun Layout(
-	modifiers: Modifier = Modifier,
+	modifier: Modifier = Modifier,
 	debugInfo: () -> String = { "Layout()" },
 	measurePolicy: NoContentMeasurePolicy,
 ) {
 	Node(
 		measurePolicy = NoContentMeasurePolicyMeasurePolicy(measurePolicy),
-		modifiers = modifiers,
-		debugPolicy = { debugInfo() + " x=$x y=$y w=$width h=$height${modifiers.toDebugString()}" },
+		modifier = modifier,
+		debugPolicy = { debugInfo() + " x=$x y=$y w=$width h=$height${modifier.toDebugString()}" },
 		factory = NodeFactory,
 	)
 }
@@ -63,20 +64,21 @@ private class NoContentMeasurePolicyMeasurePolicy(
 }
 
 @Composable
+@Suppress("ktlint:compose:param-order-check") // Order is what we want.
 public fun Layout(
 	content: @Composable () -> Unit,
-	modifiers: Modifier = Modifier,
+	modifier: Modifier = Modifier,
 	debugInfo: () -> String = { "Layout()" },
 	measurePolicy: MeasurePolicy,
 ) {
 	Node(
 		content = content,
 		measurePolicy = measurePolicy,
-		modifiers = modifiers,
+		modifier = modifier,
 		debugPolicy = {
 			buildString {
 				append(debugInfo())
-				append(" x=$x y=$y w=$width h=$height${modifiers.toDebugString()}")
+				append(" x=$x y=$y w=$width h=$height${modifier.toDebugString()}")
 				children.joinTo(this, separator = "") {
 					"\n" + it.toString().prependIndent("  ")
 				}

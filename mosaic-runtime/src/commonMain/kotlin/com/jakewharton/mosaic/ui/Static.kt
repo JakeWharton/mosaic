@@ -44,7 +44,7 @@ public fun <T> Static(
 				}
 			}
 		},
-		modifiers = Modifier,
+		modifier = Modifier,
 		debugPolicy = {
 			children.joinToString(prefix = "Static()") { "\n" + it.toString().prependIndent("  ") }
 		},

@@ -20,7 +20,7 @@ public fun Column(
 	val measurePolicy = columnMeasurePolicy(verticalArrangement, horizontalAlignment)
 	Layout(
 		content = { ColumnScopeInstance.content() },
-		modifiers = modifier,
+		modifier = modifier,
 		debugInfo = { "Column(arrangement=$verticalArrangement, alignment=$horizontalAlignment)" },
 		measurePolicy = measurePolicy,
 	)

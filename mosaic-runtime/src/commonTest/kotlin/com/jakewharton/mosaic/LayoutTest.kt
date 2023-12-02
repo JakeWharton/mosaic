@@ -105,7 +105,7 @@ class LayoutTest {
 				Row {
 					Text("..")
 					Layout(
-						modifiers = Modifier.drawBehind {
+						modifier = Modifier.drawBehind {
 							repeat(4) { row ->
 								drawText(row, 0, "XXXX")
 							}

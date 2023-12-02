@@ -2,7 +2,6 @@ package example
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -150,9 +149,8 @@ fun Log(complete: SnapshotStateList<Test>) {
 }
 
 @Composable
-fun Status(tests: List<Test>) {
-	val running by derivedStateOf { tests.filter { it.state == Running } }
-
+fun Status(tests: SnapshotStateList<Test>) {
+	val running = tests.filter { it.state == Running }
 	if (running.isNotEmpty()) {
 		for (test in running) {
 			TestRow(test)
@@ -163,8 +161,8 @@ fun Status(tests: List<Test>) {
 }
 
 @Composable
-private fun Summary(totalTests: Int, tests: List<Test>) {
-	val counts by derivedStateOf { tests.groupingBy { it.state }.eachCount() }
+private fun Summary(totalTests: Int, tests: SnapshotStateList<Test>) {
+	val counts = tests.groupingBy { it.state }.eachCount()
 	val failed = counts[Fail] ?: 0
 	val passed = counts[Pass] ?: 0
 	val running = counts[Running] ?: 0
@@ -179,39 +177,41 @@ private fun Summary(totalTests: Int, tests: List<Test>) {
 		}
 	}
 
-	Text(
-		buildAnnotatedString {
-			append("Tests: ")
+	Column {
+		Text(
+			buildAnnotatedString {
+				append("Tests: ")
 
-			if (failed > 0) {
-				withStyle(SpanStyle(color = Red)) {
-					append("$failed failed")
+				if (failed > 0) {
+					withStyle(SpanStyle(color = Red)) {
+						append("$failed failed")
+					}
+					append(", ")
 				}
-				append(", ")
-			}
 
-			if (passed > 0) {
-				withStyle(SpanStyle(color = Green)) {
-					append("$passed passed")
+				if (passed > 0) {
+					withStyle(SpanStyle(color = Green)) {
+						append("$passed passed")
+					}
+					append(", ")
 				}
-				append(", ")
-			}
 
-			if (running > 0) {
-				withStyle(SpanStyle(color = Yellow)) {
-					append("$running running")
+				if (running > 0) {
+					withStyle(SpanStyle(color = Yellow)) {
+						append("$running running")
+					}
+					append(", ")
 				}
-				append(", ")
-			}
 
-			append("$totalTests total")
-		},
-	)
+				append("$totalTests total")
+			},
+		)
 
-	Text("Time:  ${elapsed}s")
+		Text("Time:  ${elapsed}s")
 
-	if (running > 0) {
-		TestProgress(totalTests, passed, failed, running)
+		if (running > 0) {
+			TestProgress(totalTests, passed, failed, running)
+		}
 	}
 }
 

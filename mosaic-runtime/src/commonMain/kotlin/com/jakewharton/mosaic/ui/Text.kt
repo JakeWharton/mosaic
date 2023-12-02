@@ -31,7 +31,7 @@ public fun Text(
 			layout.measure()
 			layout(layout.width, layout.height)
 		},
-		modifiers = modifier.drawBehind {
+		modifier = modifier.drawBehind {
 			layout.lines.forEachIndexed { row, line ->
 				drawText(row, 0, line, color, background, style)
 			}
@@ -59,7 +59,7 @@ public fun Text(
 			layout.measure()
 			layout(layout.width, layout.height)
 		},
-		modifiers = modifier.drawBehind {
+		modifier = modifier.drawBehind {
 			layout.lines.forEachIndexed { row, line ->
 				drawText(row, 0, line, color, background, style)
 			}

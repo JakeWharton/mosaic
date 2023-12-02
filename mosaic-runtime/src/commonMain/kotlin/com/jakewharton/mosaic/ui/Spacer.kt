@@ -17,11 +17,11 @@ import com.jakewharton.mosaic.ui.unit.Constraints
  */
 @Composable
 @NonRestartableComposable
-public fun Spacer(modifier: Modifier) {
+public fun Spacer(modifier: Modifier = Modifier) {
 	Layout(
 		content = EmptySpacerContent,
 		measurePolicy = SpacerMeasurePolicy,
-		modifiers = modifier,
+		modifier = modifier,
 		debugInfo = { "Spacer()" },
 	)
 }
