@@ -155,10 +155,10 @@ private fun Placeable.PlacementScope.placeInBox(
  * @param modifier The modifier to be applied to the layout.
  */
 @Composable
-public fun Box(modifier: Modifier) {
+public fun Box(modifier: Modifier = Modifier) {
 	Layout(
 		content = EmptyBoxContent,
-		modifiers = modifier,
+		modifier = modifier,
 		debugInfo = { "Box()" },
 		measurePolicy = EmptyBoxMeasurePolicy,
 	)

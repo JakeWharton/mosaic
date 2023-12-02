@@ -32,7 +32,7 @@ public fun Filler(
 		content = EmptyFillerContent,
 		measurePolicy = FillerMeasurePolicy,
 		debugInfo = { "Filler('$char')" },
-		modifiers = modifier.drawBehind {
+		modifier = modifier.drawBehind {
 			val line = char.toString().repeat(width)
 			repeat(height) { row ->
 				drawText(row, 0, line, foreground, background, style)
