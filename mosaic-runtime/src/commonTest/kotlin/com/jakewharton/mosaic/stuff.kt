@@ -19,6 +19,8 @@ import com.jakewharton.mosaic.ui.unit.Constraints
 import com.jakewharton.mosaic.ui.unit.IntOffset
 import com.jakewharton.mosaic.ui.unit.IntSize
 import com.jakewharton.mosaic.ui.unit.constrain
+import com.jakewharton.mosaic.ui.unit.constrainHeight
+import com.jakewharton.mosaic.ui.unit.constrainWidth
 import kotlin.math.max
 
 const val s = " "
@@ -151,4 +153,66 @@ fun testIntrinsics(
 			)
 		}
 	}
+}
+
+@Composable
+internal fun ConstrainedBox(
+	constraints: Constraints,
+	modifier: Modifier = Modifier,
+	content: @Composable () -> Unit = {},
+) {
+	@Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
+	val measurePolicy = object : MeasurePolicy {
+		override fun MeasureScope.measure(
+			measurables: List<Measurable>,
+			incomingConstraints: Constraints,
+		): MeasureResult {
+			val measurable = measurables.firstOrNull()
+			val childConstraints = incomingConstraints.constrain(constraints)
+			val placeable = measurable?.measure(childConstraints)
+
+			val layoutWidth = placeable?.width ?: childConstraints.minWidth
+			val layoutHeight = placeable?.height ?: childConstraints.minHeight
+			return layout(layoutWidth, layoutHeight) {
+				placeable?.place(0, 0)
+			}
+		}
+
+		override fun minIntrinsicWidth(
+			measurables: List<IntrinsicMeasurable>,
+			height: Int,
+		): Int {
+			val width = measurables.firstOrNull()?.minIntrinsicWidth(height) ?: 0
+			return constraints.constrainWidth(width)
+		}
+
+		override fun minIntrinsicHeight(
+			measurables: List<IntrinsicMeasurable>,
+			width: Int,
+		): Int {
+			val height = measurables.firstOrNull()?.minIntrinsicHeight(width) ?: 0
+			return constraints.constrainHeight(height)
+		}
+
+		override fun maxIntrinsicWidth(
+			measurables: List<IntrinsicMeasurable>,
+			height: Int,
+		): Int {
+			val width = measurables.firstOrNull()?.maxIntrinsicWidth(height) ?: 0
+			return constraints.constrainWidth(width)
+		}
+
+		override fun maxIntrinsicHeight(
+			measurables: List<IntrinsicMeasurable>,
+			width: Int,
+		): Int {
+			val height = measurables.firstOrNull()?.maxIntrinsicHeight(width) ?: 0
+			return constraints.constrainHeight(height)
+		}
+	}
+	Layout(
+		content = content,
+		modifier = modifier,
+		measurePolicy = measurePolicy,
+	)
 }
