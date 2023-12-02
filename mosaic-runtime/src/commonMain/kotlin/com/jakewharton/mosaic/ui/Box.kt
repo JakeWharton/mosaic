@@ -28,7 +28,7 @@ public fun Box(
 	val measurePolicy = rememberBoxMeasurePolicy(contentAlignment, propagateMinConstraints)
 	Layout(
 		content = { BoxScopeInstance.content() },
-		modifiers = modifier,
+		modifier = modifier,
 		debugInfo = { "Box(alignment=$contentAlignment, propagateMinConstraints=$propagateMinConstraints)" },
 		measurePolicy = measurePolicy,
 	)

@@ -20,7 +20,7 @@ public fun Row(
 	val measurePolicy = rowMeasurePolicy(horizontalArrangement, verticalAlignment)
 	Layout(
 		content = { RowScopeInstance.content() },
-		modifiers = modifier,
+		modifier = modifier,
 		debugInfo = { "Row(arrangement=$horizontalArrangement, alignment=$verticalAlignment)" },
 		measurePolicy = measurePolicy,
 	)

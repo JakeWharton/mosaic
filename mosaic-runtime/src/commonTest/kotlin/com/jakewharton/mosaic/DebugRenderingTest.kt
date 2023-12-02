@@ -27,7 +27,7 @@ class DebugRenderingTest {
 		val nodes = mosaicNodes {
 			Row {
 				Text("Hello ")
-				Layout(modifiers = Modifier.drawBehind { throw UnsupportedOperationException() }) {
+				Layout(modifier = Modifier.drawBehind { throw UnsupportedOperationException() }) {
 					layout(5, 1)
 				}
 			}
