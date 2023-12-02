@@ -135,7 +135,9 @@ public class BiasAlignment(
 	}
 
 	override fun toString(): String {
-		return "Alignment(horizontalBias=${horizontalBias.toInt()}, verticalBias=${verticalBias.toInt()})"
+		val horizontalBiasStr = horizontalBias.toString().removeSuffix(".0")
+		val verticalBiasStr = verticalBias.toString().removeSuffix(".0")
+		return "Alignment(horizontalBias=$horizontalBiasStr, verticalBias=$verticalBiasStr)"
 	}
 
 	/**
@@ -157,7 +159,8 @@ public class BiasAlignment(
 		}
 
 		override fun toString(): String {
-			return "Horizontal(bias=${bias.toInt()})"
+			val biasStr = bias.toString().removeSuffix(".0")
+			return "Horizontal(bias=$biasStr)"
 		}
 	}
 
@@ -180,7 +183,8 @@ public class BiasAlignment(
 		}
 
 		override fun toString(): String {
-			return "Vertical(bias=${bias.toInt()})"
+			val biasStr = bias.toString().removeSuffix(".0")
+			return "Vertical(bias=$biasStr)"
 		}
 	}
 }

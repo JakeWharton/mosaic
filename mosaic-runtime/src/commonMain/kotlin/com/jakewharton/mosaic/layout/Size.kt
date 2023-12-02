@@ -9,6 +9,7 @@ import com.jakewharton.mosaic.ui.unit.IntSize
 import com.jakewharton.mosaic.ui.unit.constrain
 import com.jakewharton.mosaic.ui.unit.constrainHeight
 import com.jakewharton.mosaic.ui.unit.constrainWidth
+import dev.drewhamilton.poko.Poko
 import kotlin.math.roundToInt
 
 /**
@@ -468,6 +469,7 @@ public fun Modifier.defaultMinSize(
 	minHeight: Int = Unspecified,
 ): Modifier = this.then(UnspecifiedConstraintsModifier(minWidth = minWidth, minHeight = minHeight))
 
+@Poko
 private class SizeModifier(
 	private val minWidth: Int = Unspecified,
 	private val minHeight: Int = Unspecified,
@@ -619,6 +621,7 @@ private class SizeModifier(
 	}
 }
 
+@Poko
 private class FillModifier(
 	private val direction: Direction,
 	private val fraction: Float,
@@ -685,6 +688,7 @@ private class WrapContentModifier(
 	private val direction: Direction,
 	private val unbounded: Boolean,
 	private val alignmentCallback: (IntSize) -> IntOffset,
+	private val align: Any,
 ) : LayoutModifier {
 
 	override fun MeasureScope.measure(
@@ -719,6 +723,27 @@ private class WrapContentModifier(
 		}
 	}
 
+	override fun equals(other: Any?): Boolean {
+		if (this === other) return true
+		if (other === null) return false
+		if (this::class != other::class) return false
+
+		other as WrapContentModifier
+
+		if (direction != other.direction) return false
+		if (unbounded != other.unbounded) return false
+		if (align != other.align) return false
+
+		return true
+	}
+
+	override fun hashCode(): Int {
+		var result = direction.hashCode()
+		result = 31 * result + unbounded.hashCode()
+		result = 31 * result + align.hashCode()
+		return result
+	}
+
 	override fun toString(): String = "WrapContent(direction=$direction, unbounded=$unbounded)"
 
 	companion object {
@@ -730,6 +755,7 @@ private class WrapContentModifier(
 			direction = Direction.Horizontal,
 			unbounded = unbounded,
 			alignmentCallback = { size -> IntOffset(align.align(0, size.width), 0) },
+			align = align,
 		)
 
 		@Stable
@@ -740,6 +766,7 @@ private class WrapContentModifier(
 			direction = Direction.Vertical,
 			unbounded = unbounded,
 			alignmentCallback = { size -> IntOffset(0, align.align(0, size.height)) },
+			align = align,
 		)
 
 		@Stable
@@ -750,10 +777,12 @@ private class WrapContentModifier(
 			direction = Direction.Both,
 			unbounded = unbounded,
 			alignmentCallback = { size -> align.align(IntSize.Zero, size) },
+			align = align,
 		)
 	}
 }
 
+@Poko
 private class UnspecifiedConstraintsModifier(
 	private val minWidth: Int = Unspecified,
 	private val minHeight: Int = Unspecified,

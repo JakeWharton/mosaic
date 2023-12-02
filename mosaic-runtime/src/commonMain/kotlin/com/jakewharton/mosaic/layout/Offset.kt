@@ -40,7 +40,7 @@ private class OffsetModifier(
 	): MeasureResult {
 		val placeable = measurable.measure(constraints)
 		return layout(placeable.width, placeable.height) {
-			placeable.place(x, y)
+			placeable.place(this@OffsetModifier.x, this@OffsetModifier.y)
 		}
 	}
 
