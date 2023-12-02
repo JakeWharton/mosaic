@@ -93,7 +93,7 @@ class AspectRatioTest {
 				content = {
 					TestFiller(Modifier.aspectRatio(aspectRatio, matchHeightConstraintsFirst))
 				},
-				modifiers = Modifier.widthIn(max = 100).heightIn(max = 100),
+				modifier = Modifier.widthIn(max = 100).heightIn(max = 100),
 				measurePolicy = { measurables, incomingConstraints ->
 					require(measurables.isNotEmpty())
 					val placeable = measurables.first().measure(childContraints)

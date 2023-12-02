@@ -387,7 +387,7 @@ class SizeTest {
 			Layout({
 				Layout(
 					content = {},
-					modifiers = modifier,
+					modifier = modifier,
 					measurePolicy = { _, constraints ->
 						actualConstraints = constraints
 						layout(0, 0) {}
@@ -997,7 +997,7 @@ class SizeTest {
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
 			Layout(
-				modifiers = Modifier.size(100),
+				modifier = Modifier.size(100),
 				content = {
 					Container {
 						Container(Modifier.wrapContentSize(Alignment.BottomEnd).size(size))

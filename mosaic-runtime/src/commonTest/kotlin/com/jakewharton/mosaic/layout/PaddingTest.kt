@@ -275,7 +275,7 @@ class PaddingTest {
 	 */
 	@Composable
 	private fun TestBox(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
-		Layout(content = content, modifiers = modifier) { measurables, constraints ->
+		Layout(content = content, modifier = modifier) { measurables, constraints ->
 			require(measurables.size == 1) {
 				"TestBox received ${measurables.size} children; must have exactly 1"
 			}
@@ -290,7 +290,7 @@ class PaddingTest {
 	}
 
 	@Composable
-	private fun SingleFiller(modifier: Modifier) {
+	private fun SingleFiller(modifier: Modifier = Modifier) {
 		TestFiller(modifier = modifier.size(1))
 	}
 }
