@@ -20,49 +20,22 @@ internal interface TextCanvas {
 }
 
 internal class TextSurface(
-	initialWidth: Int,
-	initialHeight: Int,
+	override val width: Int,
+	override val height: Int,
 ) : TextCanvas {
-	private var realWidth: Int = initialWidth
-	private var realHeight: Int = initialHeight
-
-	override val width: Int get() = realWidth
-	override val height: Int get() = realHeight
 
 	override var translationX = 0
 	override var translationY = 0
 
-	private val rows = MutableList(height) { createBlankRow(width) }
+	private val rows = Array(height) { Array(width) { newBlankPixel } }
 
 	override operator fun get(row: Int, column: Int): TextPixel {
 		val x = translationX + column
 		val y = translationY + row
-		if (x < 0 || y < 0) {
+		if (x >= width || y >= height || x < 0 || y < 0) {
 			return reusableDirtyPixel
 		}
-		val widthDiff = x - width + 1
-		if (widthDiff > 0) {
-			if (widthDiff == 1) {
-				rows.forEach { it.add(newBlankPixel) }
-			} else {
-				rows.forEach { it.addAll(createBlankRow(widthDiff)) }
-			}
-			realWidth += widthDiff
-		}
-		val heightDiff = y - height + 1
-		if (heightDiff > 0) {
-			if (heightDiff == 1) {
-				rows.add(createBlankRow(width))
-			} else {
-				rows.addAll(MutableList(heightDiff) { createBlankRow(width) })
-			}
-			realHeight += heightDiff
-		}
 		return rows[y][x]
-	}
-
-	private inline fun createBlankRow(size: Int): MutableList<TextPixel> {
-		return MutableList(size) { newBlankPixel }
 	}
 
 	fun appendRowTo(appendable: Appendable, row: Int) {
