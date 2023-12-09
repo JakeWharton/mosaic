@@ -230,7 +230,7 @@ public object Arrangement {
 	 */
 	@Stable
 	public fun spacedBy(space: Int): HorizontalOrVertical =
-		SpacedAligned(space, true) { size -> Alignment.Start.align(0, size) }
+		SpacedAligned(space) { size -> Alignment.Start.align(0, size) }
 
 	/**
 	 * Place children horizontally such that each two adjacent ones are spaced by a fixed [space]
@@ -244,7 +244,7 @@ public object Arrangement {
 	 */
 	@Stable
 	public fun spacedBy(space: Int, alignment: Alignment.Horizontal): Horizontal =
-		SpacedAligned(space, true) { size -> alignment.align(0, size) }
+		SpacedAligned(space) { size -> alignment.align(0, size) }
 
 	/**
 	 * Place children vertically such that each two adjacent ones are spaced by a fixed [space]
@@ -258,7 +258,7 @@ public object Arrangement {
 	 */
 	@Stable
 	public fun spacedBy(space: Int, alignment: Alignment.Vertical): Vertical =
-		SpacedAligned(space, false) { size -> alignment.align(0, size) }
+		SpacedAligned(space) { size -> alignment.align(0, size) }
 
 	/**
 	 * Place children horizontally one next to the other and align the obtained group
@@ -268,7 +268,7 @@ public object Arrangement {
 	 */
 	@Stable
 	public fun aligned(alignment: Alignment.Horizontal): Horizontal =
-		SpacedAligned(0, true) { size -> alignment.align(0, size) }
+		SpacedAligned(0) { size -> alignment.align(0, size) }
 
 	/**
 	 * Place children vertically one next to the other and align the obtained group
@@ -278,16 +278,13 @@ public object Arrangement {
 	 */
 	@Stable
 	public fun aligned(alignment: Alignment.Vertical): Vertical =
-		SpacedAligned(0, false) { size -> alignment.align(0, size) }
+		SpacedAligned(0) { size -> alignment.align(0, size) }
 
 	@Immutable
 	public object Absolute {
 		/**
 		 * Place children horizontally such that they are as close as possible to the left edge of
 		 * the [Row].
-		 *
-		 * Unlike [Arrangement.Start], when the layout direction is RTL, the children will not be
-		 * mirrored and as such children will appear in the order they are composed inside the [Row].
 		 *
 		 * Visually: 123####
 		 */
@@ -396,7 +393,7 @@ public object Arrangement {
 		 */
 		@Stable
 		public fun spacedBy(space: Int): HorizontalOrVertical =
-			SpacedAligned(space, false, null)
+			SpacedAligned(space, null)
 
 		/**
 		 * Place children horizontally such that each two adjacent ones are spaced by a fixed [space]
@@ -409,7 +406,7 @@ public object Arrangement {
 		 */
 		@Stable
 		public fun spacedBy(space: Int, alignment: Alignment.Horizontal): Horizontal =
-			SpacedAligned(space, false) { size -> alignment.align(0, size) }
+			SpacedAligned(space) { size -> alignment.align(0, size) }
 
 		/**
 		 * Place children vertically such that each two adjacent ones are spaced by a fixed [space]
@@ -422,7 +419,7 @@ public object Arrangement {
 		 */
 		@Stable
 		public fun spacedBy(space: Int, alignment: Alignment.Vertical): Vertical =
-			SpacedAligned(space, false) { size -> alignment.align(0, size) }
+			SpacedAligned(space) { size -> alignment.align(0, size) }
 
 		/**
 		 * Place children horizontally one next to the other and align the obtained group
@@ -432,7 +429,7 @@ public object Arrangement {
 		 */
 		@Stable
 		public fun aligned(alignment: Alignment.Horizontal): Horizontal =
-			SpacedAligned(0, false) { size -> alignment.align(0, size) }
+			SpacedAligned(0) { size -> alignment.align(0, size) }
 	}
 
 	/**
@@ -442,7 +439,6 @@ public object Arrangement {
 	@Immutable
 	internal data class SpacedAligned(
 		val space: Int,
-		val rtlMirror: Boolean,
 		val alignment: ((Int) -> Int)?,
 	) : HorizontalOrVertical {
 
@@ -457,8 +453,7 @@ public object Arrangement {
 
 			var occupied = 0
 			var lastSpace = 0
-			val reversed = rtlMirror
-			sizes.forEachIndexed(reversed) { index, it ->
+			sizes.forEachIndexed(false) { index, it ->
 				outPositions[index] = min(occupied, totalSize - it)
 				lastSpace = min(space, totalSize - outPositions[index] - it)
 				occupied = outPositions[index] + it + lastSpace
@@ -473,8 +468,7 @@ public object Arrangement {
 			}
 		}
 
-		override fun toString() =
-			"${if (rtlMirror) "" else "Absolute"}Arrangement#spacedAligned($space, $alignment)"
+		override fun toString() = "Arrangement#spacedAligned($space, $alignment)"
 	}
 
 	internal fun placeRightOrBottom(

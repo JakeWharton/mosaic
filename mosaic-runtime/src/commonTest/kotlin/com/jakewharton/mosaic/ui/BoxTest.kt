@@ -31,6 +31,7 @@ import com.jakewharton.mosaic.testIntrinsics
 import com.jakewharton.mosaic.ui.unit.Constraints
 import com.jakewharton.mosaic.ui.unit.IntOffset
 import com.jakewharton.mosaic.ui.unit.IntSize
+import com.jakewharton.mosaic.wrapWithAnsiSynchronizedUpdate
 import kotlin.test.Test
 
 class BoxTest {
@@ -72,7 +73,7 @@ class BoxTest {
 				|     $s
 				|     $s
 				|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -152,7 +153,7 @@ class BoxTest {
 			| $TestChar$TestChar$TestChar$TestChar$TestChar
 			| $TestChar$TestChar$TestChar$TestChar$TestChar
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -200,7 +201,7 @@ class BoxTest {
 			|$TestChar$TestChar$TestChar$TestChar$TestChar$s
 			|     $s
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -248,7 +249,7 @@ class BoxTest {
 			| $TestChar$TestChar$TestChar$TestChar$s
 			| $TestChar$TestChar$TestChar$TestChar$s
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -296,7 +297,7 @@ class BoxTest {
 			|$TestChar$TestChar$TestChar$TestChar$TestChar$TestChar
 			|     $s
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 

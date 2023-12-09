@@ -88,7 +88,7 @@ public interface ColumnScope {
 	public fun Modifier.align(alignment: Alignment.Horizontal): Modifier
 }
 
-private object ColumnScopeInstance : ColumnScope {
+internal object ColumnScopeInstance : ColumnScope {
 
 	@Stable
 	override fun Modifier.weight(weight: Float, fill: Boolean): Modifier {
