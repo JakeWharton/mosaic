@@ -19,7 +19,7 @@ poko-gradlePlugin = "dev.drewhamilton.poko:poko-gradle-plugin:0.15.1"
 
 spotless-gradlePlugin = "com.diffplug.spotless:spotless-plugin-gradle:6.23.3"
 ktlint-core = "com.pinterest.ktlint:ktlint-cli:1.0.1"
-ktlint-composeRules = "io.nlopez.compose.rules:ktlint:0.3.5"
+ktlint-composeRules = "io.nlopez.compose.rules:ktlint:0.3.6"
 
 jansi = "org.fusesource.jansi:jansi:2.4.1"
 mordant = "com.github.ajalt.mordant:mordant:2.2.0"
