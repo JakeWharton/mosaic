@@ -14,7 +14,7 @@ compose-runtime = "org.jetbrains.compose.runtime:runtime:1.5.11"
 
 maven-publish-gradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.25.3"
 dokka-gradlePlugin = "org.jetbrains.dokka:dokka-gradle-plugin:1.9.10"
-buildconfig-gradlePlugin = "com.github.gmazzo.buildconfig:plugin:4.2.0"
+buildconfig-gradlePlugin = "com.github.gmazzo.buildconfig:plugin:5.0.0"
 poko-gradlePlugin = "dev.drewhamilton.poko:poko-gradle-plugin:0.15.1"
 
 spotless-gradlePlugin = "com.diffplug.spotless:spotless-plugin-gradle:6.23.3"
