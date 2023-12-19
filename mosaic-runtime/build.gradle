@@ -52,4 +52,6 @@ kotlin {
 			target.compilations.main.defaultSourceSet.dependsOn(sourceSets.concurrentMain)
 		}
 	}
+
+	compilerOptions.freeCompilerArgs.add('-Xexpect-actual-classes')
 }

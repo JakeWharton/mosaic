@@ -7,17 +7,14 @@ import example.palletes.DraculaColorsPalette
 import example.palletes.NordColorsPalette
 import example.palletes.OneDarkColorsPalette
 import example.palletes.SolarizedDarkColorsPalette
-import kotlinx.coroutines.awaitCancellation
 
-fun main(args: Array<String>) = runMosaicBlocking {
+fun main(args: Array<String>) {
 	val rrtopColorsPalette = parseArgsForColorsPalette(args)
-	val rrtopViewModel = RrtopViewModel(this)
+	val rrtopViewModel = RrtopViewModel()
 
-	setContent {
+	runMosaicBlocking {
 		RrtopApp(rrtopViewModel, rrtopColorsPalette)
 	}
-
-	awaitCancellation()
 }
 
 private fun parseArgsForColorsPalette(args: Array<String>): RrtopColorsPalette {

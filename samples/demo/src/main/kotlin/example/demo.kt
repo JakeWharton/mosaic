@@ -32,48 +32,48 @@ private val BrightGreen = Color(100, 255, 100)
 private val BrightBlue = Color(60, 140, 230)
 
 fun main() = runMosaicBlocking {
-	setContent {
-		Column {
-			val terminal = LocalTerminal.current
-			Text(
-				buildAnnotatedString {
-					append("\uD83D\uDDA5\uFE0F")
-					append("  ")
-					append("Terminal(")
-					withStyle(SpanStyle(color = BrightGreen)) {
-						append("width=")
-					}
-					withStyle(
-						SpanStyle(
-							color = BrightBlue,
-							textStyle = TextStyle.Bold + TextStyle.Underline,
-						),
-					) {
-						append(terminal.size.width.toString())
-					}
-					append(", ")
-					withStyle(SpanStyle(color = BrightGreen)) {
-						append("height=")
-					}
-					withStyle(
-						SpanStyle(
-							color = BrightBlue,
-							textStyle = TextStyle.Bold + TextStyle.Underline,
-						),
-					) {
-						append(terminal.size.height.toString())
-					}
-					append(")")
-					append(" ")
-					append("\uD83D\uDDA5\uFE0F")
-				},
-			)
-			Spacer(modifier = Modifier.height(1))
-			GradientsBlock()
-		}
+	Column {
+		val terminal = LocalTerminal.current
+		Text(
+			buildAnnotatedString {
+				append("\uD83D\uDDA5\uFE0F")
+				append("  ")
+				append("Terminal(")
+				withStyle(SpanStyle(color = BrightGreen)) {
+					append("width=")
+				}
+				withStyle(
+					SpanStyle(
+						color = BrightBlue,
+						textStyle = TextStyle.Bold + TextStyle.Underline,
+					),
+				) {
+					append(terminal.size.width.toString())
+				}
+				append(", ")
+				withStyle(SpanStyle(color = BrightGreen)) {
+					append("height=")
+				}
+				withStyle(
+					SpanStyle(
+						color = BrightBlue,
+						textStyle = TextStyle.Bold + TextStyle.Underline,
+					),
+				) {
+					append(terminal.size.height.toString())
+				}
+				append(")")
+				append(" ")
+				append("\uD83D\uDDA5\uFE0F")
+			},
+		)
+		Spacer(modifier = Modifier.height(1))
+		GradientsBlock()
 	}
 
-	awaitCancellation()
+	LaunchedEffect(Unit) {
+		awaitCancellation()
+	}
 }
 
 @Suppress("UnusedReceiverParameter") // instead of ignore rule: compose:multiple-emitters-check
