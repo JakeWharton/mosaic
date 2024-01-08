@@ -18,7 +18,7 @@ buildconfig-gradlePlugin = "com.github.gmazzo.buildconfig:plugin:5.3.3"
 poko-gradlePlugin = "dev.drewhamilton.poko:poko-gradle-plugin:0.15.2"
 
 spotless-gradlePlugin = "com.diffplug.spotless:spotless-plugin-gradle:6.23.3"
-ktlint-core = "com.pinterest.ktlint:ktlint-cli:1.1.0"
+ktlint-core = "com.pinterest.ktlint:ktlint-cli:1.1.1"
 ktlint-composeRules = "io.nlopez.compose.rules:ktlint:0.3.7"
 
 jansi = "org.fusesource.jansi:jansi:2.4.1"
