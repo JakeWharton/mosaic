@@ -10,6 +10,7 @@ buildscript {
 		classpath libs.buildconfig.gradlePlugin
 		classpath libs.poko.gradlePlugin
 		classpath libs.spotless.gradlePlugin
+		classpath libs.binary.compatibility.validator.gradlePlugin
 		classpath 'com.jakewharton.mosaic:mosaic-gradle-plugin'
 	}
 	repositories {
@@ -39,17 +40,6 @@ allprojects {
 
 	tasks.withType(KotlinCompile).configureEach {
 		compilerOptions.freeCompilerArgs.add('-Xjvm-default=all')
-	}
-
-	plugins.withId('maven-publish') {
-		publishing {
-			repositories {
-				maven {
-					name = "TestMaven"
-					url = file("${rootProject.buildDir}/testMaven").toURI().toString()
-				}
-			}
-		}
 	}
 
 	apply plugin: 'com.diffplug.spotless'

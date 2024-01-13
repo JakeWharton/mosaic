@@ -1,0 +1,11 @@
+apply plugin: "maven-publish"
+apply plugin: "binary-compatibility-validator"
+
+publishing {
+	repositories {
+		maven {
+			name = "TestMaven"
+			url = file("${layout.buildDirectory}/testMaven").toURI().toString()
+		}
+	}
+}
