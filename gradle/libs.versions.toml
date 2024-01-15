@@ -17,7 +17,7 @@ dokka-gradlePlugin = "org.jetbrains.dokka:dokka-gradle-plugin:1.9.10"
 buildconfig-gradlePlugin = "com.github.gmazzo.buildconfig:plugin:5.3.5"
 poko-gradlePlugin = "dev.drewhamilton.poko:poko-gradle-plugin:0.15.2"
 
-spotless-gradlePlugin = "com.diffplug.spotless:spotless-plugin-gradle:6.23.3"
+spotless-gradlePlugin = "com.diffplug.spotless:spotless-plugin-gradle:6.24.0"
 ktlint-core = "com.pinterest.ktlint:ktlint-cli:1.1.1"
 ktlint-composeRules = "io.nlopez.compose.rules:ktlint:0.3.7"
 
