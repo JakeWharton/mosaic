@@ -14,14 +14,13 @@ import com.jakewharton.mosaic.ui.unit.Constraints
 
 @Composable
 @MosaicComposable
-@Suppress("ktlint") // TODO why doesn't "ktlint:compose:param-order-check" work here?
 internal inline fun Node(
+	measurePolicy: MeasurePolicy,
+	debugPolicy: DebugPolicy,
+	modifier: Modifier = Modifier,
 	content:
 	@Composable @MosaicComposable
 	() -> Unit = {},
-	modifier: Modifier,
-	measurePolicy: MeasurePolicy,
-	debugPolicy: DebugPolicy,
 	noinline factory: () -> MosaicNode,
 ) {
 	ComposeNode<MosaicNode, Applier<Any>>(

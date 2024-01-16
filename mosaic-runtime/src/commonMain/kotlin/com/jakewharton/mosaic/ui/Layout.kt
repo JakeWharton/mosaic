@@ -37,7 +37,6 @@ internal sealed class NoContentMeasureScope {
 
 @Composable
 @MosaicComposable
-@Suppress("ktlint:compose:param-order-check") // Order is correct, check just can't tell.
 internal fun Layout(
 	modifier: Modifier = Modifier,
 	debugInfo: () -> String = { "Layout()" },
@@ -45,8 +44,8 @@ internal fun Layout(
 ) {
 	Node(
 		measurePolicy = NoContentMeasurePolicyMeasurePolicy(measurePolicy),
-		modifier = modifier,
 		debugPolicy = { debugInfo() + " x=$x y=$y w=$width h=$height${modifier.toDebugString()}" },
+		modifier = modifier,
 		factory = NodeFactory,
 	)
 }
@@ -64,7 +63,6 @@ private class NoContentMeasurePolicyMeasurePolicy(
 }
 
 @Composable
-@Suppress("ktlint:compose:param-order-check") // Order is what we want.
 public fun Layout(
 	content: @Composable () -> Unit,
 	modifier: Modifier = Modifier,
@@ -72,9 +70,7 @@ public fun Layout(
 	measurePolicy: MeasurePolicy,
 ) {
 	Node(
-		content = content,
 		measurePolicy = measurePolicy,
-		modifier = modifier,
 		debugPolicy = {
 			buildString {
 				append(debugInfo())
@@ -84,6 +80,8 @@ public fun Layout(
 				}
 			}
 		},
+		modifier = modifier,
+		content = content,
 		factory = NodeFactory,
 	)
 }

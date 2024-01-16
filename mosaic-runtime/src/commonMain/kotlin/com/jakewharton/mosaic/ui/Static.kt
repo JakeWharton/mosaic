@@ -24,13 +24,6 @@ public fun <T> Static(
 	var lastRendered by remember { mutableStateOf(0) }
 
 	Node(
-		content = {
-			for (i in lastDrawn until items.size) {
-				val item = items[i]
-				content(item)
-			}
-			lastRendered = items.size
-		},
 		measurePolicy = { measurables, constraints ->
 			val placeables = measurables.map { measurable ->
 				measurable.measure(constraints)
@@ -44,9 +37,16 @@ public fun <T> Static(
 				}
 			}
 		},
-		modifier = Modifier,
 		debugPolicy = {
 			children.joinToString(prefix = "Static()") { "\n" + it.toString().prependIndent("  ") }
+		},
+		modifier = Modifier,
+		content = {
+			for (i in lastDrawn until items.size) {
+				val item = items[i]
+				content(item)
+			}
+			lastRendered = items.size
 		},
 		factory = staticNodeFactory {
 			lastDrawn = lastRendered
