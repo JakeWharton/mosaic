@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMetadataTarget
 
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
 apply from: "$rootDir/addAllTargets.gradle"
-apply plugin: 'com.vanniktech.maven.publish'
+apply from: "$rootDir/publish.gradle"
 apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'com.jakewharton.mosaic'
 apply plugin: 'dev.drewhamilton.poko'
