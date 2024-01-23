@@ -7,5 +7,5 @@ application {
 }
 
 dependencies {
-	implementation 'org.jline:jline:3.25.0'
+	implementation 'org.jline:jline:3.25.1'
 }
