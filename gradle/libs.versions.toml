@@ -7,7 +7,7 @@ kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotl
 
 kotlinx-coroutines-core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3"
 
-androidx-compose-compiler = "androidx.compose.compiler:compiler:1.5.8"
+androidx-compose-compiler = "androidx.compose.compiler:compiler:1.5.9"
 
 compose-compiler = "org.jetbrains.compose.compiler:compiler:1.5.8"
 compose-runtime = "org.jetbrains.compose.runtime:runtime:1.5.12"
