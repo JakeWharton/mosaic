@@ -7,15 +7,17 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.jakewharton.mosaic.layout.background
+import com.jakewharton.mosaic.layout.height
 import com.jakewharton.mosaic.layout.padding
+import com.jakewharton.mosaic.layout.size
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.runMosaicBlocking
 import com.jakewharton.mosaic.text.SpanStyle
 import com.jakewharton.mosaic.text.buildAnnotatedString
 import com.jakewharton.mosaic.text.withStyle
+import com.jakewharton.mosaic.ui.Color
 import com.jakewharton.mosaic.ui.Color.Companion.Black
 import com.jakewharton.mosaic.ui.Color.Companion.BrightBlack
 import com.jakewharton.mosaic.ui.Color.Companion.Green
@@ -23,6 +25,7 @@ import com.jakewharton.mosaic.ui.Color.Companion.Red
 import com.jakewharton.mosaic.ui.Color.Companion.Yellow
 import com.jakewharton.mosaic.ui.Column
 import com.jakewharton.mosaic.ui.Row
+import com.jakewharton.mosaic.ui.Spacer
 import com.jakewharton.mosaic.ui.Static
 import com.jakewharton.mosaic.ui.Text
 import com.jakewharton.mosaic.ui.TextStyle.Companion.Bold
@@ -51,45 +54,46 @@ fun main() = runMosaicBlocking {
 	)
 	val totalTests = paths.size
 
+	var exit by remember { mutableStateOf(false) }
 	val complete = mutableStateListOf<Test>()
 	val tests = mutableStateListOf<Test>()
 
-	// TODO https://github.com/JakeWharton/mosaic/issues/3
-	repeat(4) { // Number of test workers.
-		launch(start = UNDISPATCHED) {
-			while (true) {
-				val path = paths.removeFirstOrNull() ?: break
-				val index = Snapshot.withMutableSnapshot {
-					val nextIndex = tests.size
-					tests += Test(path, Running)
-					nextIndex
-				}
-				delay(random.nextLong(2_500L, 4_000L))
+	LaunchedEffect(Unit) {
+		val job = launch {
+			repeat(4) { // Number of test workers.
+				launch(start = UNDISPATCHED) {
+					while (true) {
+						val path = paths.removeFirstOrNull() ?: break
+						val nextIndex = tests.size
+						tests += Test(path, Running)
+						delay(random.nextLong(2_500L, 4_000L))
 
-				// Flip a coin biased 60% to pass to produce the final state of the test.
-				tests[index] = when {
-					random.nextFloat() < .7f -> tests[index].copy(state = Pass)
-					else -> {
-						val test = tests[index]
-						val failures = buildList {
-							repeat(1 + random.nextInt(2)) {
-								add("Failure on line ${random.nextInt(50)} in ${test.path}")
+						// Flip a coin biased 60% to pass to produce the final state of the test.
+						tests[nextIndex] = when {
+							random.nextFloat() < .7f -> tests[nextIndex].copy(state = Pass)
+							else -> {
+								val test = tests[nextIndex]
+								val failures = buildList {
+									repeat(1 + random.nextInt(2)) {
+										add("Failure on line ${random.nextInt(50)} in ${test.path}")
+									}
+								}
+								test.copy(state = Fail, failures = failures)
 							}
 						}
-						test.copy(state = Fail, failures = failures)
+						complete += tests[nextIndex]
 					}
 				}
-				complete += tests[index]
 			}
 		}
+		job.join()
+		exit = true
 	}
 
-	setContent {
-		Column {
-			Log(complete)
-			Status(tests)
-			Summary(totalTests, tests)
-		}
+	Column {
+		Log(complete)
+		Status(tests)
+		Summary(totalTests, tests, exit)
 	}
 }
 
@@ -137,14 +141,14 @@ fun Log(complete: SnapshotStateList<Test>) {
 				for (failure in test.failures) {
 					Text(" ‣ $failure")
 				}
-				Text("") // Blank line
+				Spacer(Modifier.height(1)) // Blank line
 			}
 		}
 	}
 
 	// Separate logs from rest of display by a single line if latest test result is success.
 	if (complete.lastOrNull()?.state == Pass) {
-		Text("") // Blank line
+		Spacer(Modifier.height(1)) // Blank line
 	}
 }
 
@@ -156,24 +160,22 @@ fun Status(tests: SnapshotStateList<Test>) {
 			TestRow(test)
 		}
 
-		Text("") // Blank line
+		Spacer(Modifier.height(1)) // Blank line
 	}
 }
 
 @Composable
-private fun Summary(totalTests: Int, tests: SnapshotStateList<Test>) {
+private fun Summary(totalTests: Int, tests: SnapshotStateList<Test>, exit: Boolean) {
 	val counts = tests.groupingBy { it.state }.eachCount()
 	val failed = counts[Fail] ?: 0
 	val passed = counts[Pass] ?: 0
 	val running = counts[Running] ?: 0
 
 	var elapsed by remember { mutableStateOf(0) }
-	LaunchedEffect(Unit) {
-		while (true) {
-			delay(1_000)
-			Snapshot.withMutableSnapshot {
-				elapsed++
-			}
+	LaunchedEffect(exit) {
+		while (!exit) {
+			delay(1_000L)
+			elapsed++
 		}
 	}
 
@@ -210,20 +212,18 @@ private fun Summary(totalTests: Int, tests: SnapshotStateList<Test>) {
 		Text("Time:  ${elapsed}s")
 
 		if (running > 0) {
-			TestProgress(totalTests, passed, failed, running)
+			TestProgress(totalTests, passed, failed, running, exit)
 		}
 	}
 }
 
 @Composable
-fun TestProgress(totalTests: Int, passed: Int, failed: Int, running: Int) {
+fun TestProgress(totalTests: Int, passed: Int, failed: Int, running: Int, exit: Boolean) {
 	var showRunning by remember { mutableStateOf(true) }
-	LaunchedEffect(Unit) {
-		while (true) {
-			delay(500)
-			Snapshot.withMutableSnapshot {
-				showRunning = !showRunning
-			}
+	LaunchedEffect(exit) {
+		while (!exit) {
+			delay(500L)
+			showRunning = !showRunning
 		}
 	}
 
@@ -232,22 +232,17 @@ fun TestProgress(totalTests: Int, passed: Int, failed: Int, running: Int) {
 	val passedWidth = (passed.toDouble() * totalWidth / totalTests).toInt()
 	val runningWidth = if (showRunning) (running.toDouble() * totalWidth / totalTests).toInt() else 0
 
-	Text(
-		buildAnnotatedString {
-			withStyle(SpanStyle(background = Red)) {
-				append(" ".repeat(failedWidth))
-			}
-			withStyle(SpanStyle(background = Green)) {
-				append(" ".repeat(passedWidth))
-			}
-			withStyle(SpanStyle(background = Yellow)) {
-				append(" ".repeat(runningWidth))
-			}
-			withStyle(SpanStyle(background = BrightBlack)) {
-				append(" ".repeat(totalWidth - failedWidth - passedWidth - runningWidth))
-			}
-		},
-	)
+	Row {
+		TestProgressPart(Red, failedWidth)
+		TestProgressPart(Green, passedWidth)
+		TestProgressPart(Yellow, runningWidth)
+		TestProgressPart(BrightBlack, totalWidth - failedWidth - passedWidth - runningWidth)
+	}
+}
+
+@Composable
+fun TestProgressPart(color: Color, width: Int) {
+	Spacer(Modifier.background(color).size(width, 1))
 }
 
 data class Test(
