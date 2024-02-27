@@ -3,6 +3,29 @@
 ## [Unreleased]
 
 
+## [0.11.0] - 2023-02-27
+
+New:
+- Support Kotlin 1.9.22 via JetBrains Compose compiler 1.5.10.
+- `Filler` composable
+- `Box` without content
+- `Modifier.aspectRatio` attempts to constrain a composable to an aspect ratio in either the vertical or horizontal direction.
+- `Modifier.offset` offsets the composable in its parent by the given coordinates.
+- `Modifier.fillMaxWidth`, `Modifier.fillMaxHeight`, `Modifier.fillMaxSize`, `Modifier.wrapContentWidth`, `Modifier.wrapContentHeight`, `Modifier.wrapContentSize`, and `Modifier.defaultMinSize` help size composable measurement in relation to their parent.
+- `Modifier.weight` allows sizing a composable proportionally to others within the same parent.
+- `Row` and `Column` each feature an arrangement parameter which controls the placement of children on the main axis of the container.
+
+Changed:
+- `Modifier` parameter is now universally called `modifier` in the API.
+- Disable decoy generation for JS target to make compatible with JetBrains Compose 1.6. This is an ABI-breaking change, so all Compose-based libraries targeting JS will also need to have been recompiled.
+
+Fix:
+- Ensure ANSI control sequences are written properly to Windows terminals.
+- Robot sample now correctly moves on Windows.
+
+This version works with Kotlin 1.9.22 by default.
+
+
 ## [0.10.0] - 2023-11-13
 
 New:
@@ -157,7 +180,8 @@ Breaking:
 Initial release!
 
 
-[Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.10.0...HEAD
+[Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.11.0...HEAD
+[0.11.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.11.0
 [0.10.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.10.0
 [0.9.1]: https://github.com/JakeWharton/mosaic/releases/tag/0.9.1
 [0.9.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.9.0
