@@ -7,8 +7,8 @@
 
 New:
 - Support Kotlin 1.9.22 via JetBrains Compose compiler 1.5.10.
-- `Filler` composable
-- `Box` without content
+- `Filler` composable is like a `Spacer` but fills its area with a character instead of a space.
+- `Box` without content provides the ability to render using drawing modifiers without needing an empty chidlren lambda.
 - `Modifier.aspectRatio` attempts to constrain a composable to an aspect ratio in either the vertical or horizontal direction.
 - `Modifier.offset` offsets the composable in its parent by the given coordinates.
 - `Modifier.fillMaxWidth`, `Modifier.fillMaxHeight`, `Modifier.fillMaxSize`, `Modifier.wrapContentWidth`, `Modifier.wrapContentHeight`, `Modifier.wrapContentSize`, and `Modifier.defaultMinSize` help size composable measurement in relation to their parent.
