@@ -75,7 +75,9 @@ class MosaicPlugin : KotlinCompilerPluginSupportPlugin {
 		val parts = plugin.split(":")
 		return when (parts.size) {
 			1 -> SubpluginArtifact("org.jetbrains.compose.compiler", "compiler", parts[0])
+
 			3 -> SubpluginArtifact(parts[0], parts[1], parts[2])
+
 			else -> error(
 				"""
 				|Illegal format of '$extensionName.${MosaicExtension::kotlinCompilerPlugin.name}' property.

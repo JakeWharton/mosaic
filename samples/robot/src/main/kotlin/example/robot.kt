@@ -49,6 +49,7 @@ fun main() = runMosaicBlocking {
 			// TODO https://github.com/JakeWharton/mosaic/issues/10
 			when (reader.read()) {
 				'q'.code -> break
+
 				27 -> {
 					when (reader.read()) {
 						91, 79 -> {
