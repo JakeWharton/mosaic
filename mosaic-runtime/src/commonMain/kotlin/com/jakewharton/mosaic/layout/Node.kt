@@ -104,11 +104,14 @@ internal class MosaicNode(
 			topLayer = value.foldOut(bottomLayer) { element, lowerLayer ->
 				when (element) {
 					is LayoutModifier -> LayoutLayer(element, lowerLayer)
+
 					is DrawModifier -> DrawLayer(element, lowerLayer)
+
 					is ParentDataModifier -> {
 						parentData = element.modifyParentData(parentData)
 						lowerLayer
 					}
+
 					else -> lowerLayer
 				}
 			}

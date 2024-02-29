@@ -394,9 +394,13 @@ public value class Constraints(
 		private fun bitsNeedForSize(size: Int): Int {
 			return when {
 				size < MaxNonFocusMask -> MaxNonFocusBits
+
 				size < MinNonFocusMask -> MinNonFocusBits
+
 				size < MinFocusMask -> MinFocusBits
+
 				size < MaxFocusMask -> MaxFocusBits
+
 				else -> throw IllegalArgumentException(
 					"Can't represent a size of $size in " +
 						"Constraints",

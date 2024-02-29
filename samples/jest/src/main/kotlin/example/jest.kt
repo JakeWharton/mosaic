@@ -69,6 +69,7 @@ fun main() = runMosaicBlocking {
 				// Flip a coin biased 60% to pass to produce the final state of the test.
 				tests[index] = when {
 					random.nextFloat() < .7f -> tests[index].copy(state = Pass)
+
 					else -> {
 						val test = tests[index]
 						val failures = buildList {
