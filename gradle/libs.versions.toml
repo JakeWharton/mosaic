@@ -20,7 +20,7 @@ binary-compatibility-validator-gradlePlugin = "org.jetbrains.kotlinx:binary-comp
 
 spotless-gradlePlugin = "com.diffplug.spotless:spotless-plugin-gradle:6.25.0"
 ktlint-core = "com.pinterest.ktlint:ktlint-cli:1.2.1"
-ktlint-composeRules = "io.nlopez.compose.rules:ktlint:0.3.11"
+ktlint-composeRules = "io.nlopez.compose.rules:ktlint:0.3.12"
 
 jansi = "org.fusesource.jansi:jansi:2.4.1"
 mordant = "com.github.ajalt.mordant:mordant:2.3.0"
