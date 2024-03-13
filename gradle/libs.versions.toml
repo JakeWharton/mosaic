@@ -23,7 +23,7 @@ ktlint-core = "com.pinterest.ktlint:ktlint-cli:1.2.1"
 ktlint-composeRules = "io.nlopez.compose.rules:ktlint:0.3.12"
 
 jansi = "org.fusesource.jansi:jansi:2.4.1"
-mordant = "com.github.ajalt.mordant:mordant:2.3.0"
+mordant = "com.github.ajalt.mordant:mordant:2.4.0"
 codepoints = "de.cketti.unicode:kotlin-codepoints:0.7.0"
 
 junit4 = "junit:junit:4.13.2"
