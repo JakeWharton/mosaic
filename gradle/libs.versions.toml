@@ -9,7 +9,7 @@ kotlinx-coroutines-core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0"
 
 androidx-compose-compiler = "androidx.compose.compiler:compiler:1.5.11"
 
-compose-compiler = "org.jetbrains.compose.compiler:compiler:1.5.10"
+compose-compiler = "org.jetbrains.compose.compiler:compiler:1.5.10.1"
 compose-runtime = "org.jetbrains.compose.runtime:runtime:1.6.1"
 
 maven-publish-gradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.28.0"
