@@ -89,7 +89,7 @@ internal class AnsiRendering : Rendering {
 						// We have previously drawn on this line. Clear the rest to be safe.
 						append(clearLine)
 					}
-					append('\n')
+					append("\r\n")
 				}
 			}
 
@@ -107,7 +107,7 @@ internal class AnsiRendering : Rendering {
 			// If the new output contains fewer lines than the last output, clear those old lines.
 			for (i in 0 until staleLines) {
 				if (i > 0) {
-					append('\n')
+					append("\r\n")
 				}
 				append(clearLine)
 			}
