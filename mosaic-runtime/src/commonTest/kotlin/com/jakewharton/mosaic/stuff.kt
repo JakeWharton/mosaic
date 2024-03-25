@@ -23,6 +23,10 @@ const val s = " "
 
 const val TestChar = 'X'
 
+fun String.replaceLineEndingsWithCRLF(): String {
+	return this.replace("\n", "\r\n")
+}
+
 fun <T> snapshotStateListOf(vararg values: T): SnapshotStateList<T> {
 	return SnapshotStateList<T>().apply { addAll(values) }
 }

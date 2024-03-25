@@ -4,6 +4,7 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.TestChar
 import com.jakewharton.mosaic.TestFiller
+import com.jakewharton.mosaic.replaceLineEndingsWithCRLF
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.renderMosaic
 import com.jakewharton.mosaic.s
@@ -28,7 +29,7 @@ class OffsetTest {
 			|     $s
 			|     $s
 			|
-			""".trimMargin(),
+			""".trimMargin().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -67,7 +68,7 @@ class OffsetTest {
 			|$TestChar    $s
 			|     $s
 			|
-			""".trimMargin(),
+			""".trimMargin().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -106,7 +107,7 @@ class OffsetTest {
 			|   $TestChar $s
 			|     $s
 			|
-			""".trimMargin(),
+			""".trimMargin().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -150,7 +151,7 @@ class OffsetTest {
 			|     $s
 			|     $s
 			|
-			""".trimMargin(),
+			""".trimMargin().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -189,7 +190,7 @@ class OffsetTest {
 			|$TestChar    $s
 			|     $s
 			|
-			""".trimMargin(),
+			""".trimMargin().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -228,7 +229,7 @@ class OffsetTest {
 			|   $TestChar $s
 			|     $s
 			|
-			""".trimMargin(),
+			""".trimMargin().replaceLineEndingsWithCRLF(),
 		)
 	}
 
