@@ -84,7 +84,7 @@ internal class TextSurface(
 	fun render(): String = buildString {
 		for (rowIndex in 0 until height) {
 			if (rowIndex > 0) {
-				append('\n')
+				append("\r\n")
 			}
 			appendRowTo(this, rowIndex)
 		}

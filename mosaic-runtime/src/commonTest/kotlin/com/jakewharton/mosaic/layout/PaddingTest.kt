@@ -8,6 +8,7 @@ import com.jakewharton.mosaic.TestChar
 import com.jakewharton.mosaic.TestFiller
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.renderMosaic
+import com.jakewharton.mosaic.replaceLineEndingsWithCRLF
 import com.jakewharton.mosaic.s
 import com.jakewharton.mosaic.testIntrinsics
 import com.jakewharton.mosaic.ui.Layout
@@ -40,7 +41,7 @@ class PaddingTest {
 			"""
 			|$TestChar
 			|
-			""".trimMargin(),
+			""".trimMargin().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -52,7 +53,7 @@ class PaddingTest {
 			"""
 			|  $TestChar
 			|
-			""".trimMargin(),
+			""".trimMargin().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -75,7 +76,7 @@ class PaddingTest {
 			"""
 			|$TestChar
 			|
-			""".trimMargin(),
+			""".trimMargin().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -89,7 +90,7 @@ class PaddingTest {
 			|$s
 			|$TestChar
 			|
-			""".trimMargin(),
+			""".trimMargin().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -112,7 +113,7 @@ class PaddingTest {
 			"""
 			|$TestChar
 			|
-			""".trimMargin(),
+			""".trimMargin().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -124,7 +125,7 @@ class PaddingTest {
 			"""
 			|$TestChar $s
 			|
-			""".trimMargin(),
+			""".trimMargin().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -147,7 +148,7 @@ class PaddingTest {
 			"""
 			|$TestChar
 			|
-			""".trimMargin(),
+			""".trimMargin().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -161,7 +162,7 @@ class PaddingTest {
 			|$s
 			|$s
 			|
-			""".trimMargin(),
+			""".trimMargin().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -184,7 +185,7 @@ class PaddingTest {
 			"""
 			|$TestChar
 			|
-			""".trimMargin(),
+			""".trimMargin().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -198,7 +199,7 @@ class PaddingTest {
 			| $s
 			| $s
 			|
-			""".trimMargin(),
+			""".trimMargin().replaceLineEndingsWithCRLF(),
 		)
 	}
 

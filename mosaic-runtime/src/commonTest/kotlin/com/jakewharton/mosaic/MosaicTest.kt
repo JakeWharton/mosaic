@@ -21,7 +21,7 @@ class MosaicTest {
 			|Two $s
 			|Three
 			|
-			""".trimMargin(),
+			""".trimMargin().replaceLineEndingsWithCRLF(),
 		)
 	}
 }
