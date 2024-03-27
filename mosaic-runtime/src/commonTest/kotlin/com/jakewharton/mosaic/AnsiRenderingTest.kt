@@ -25,7 +25,7 @@ class AnsiRenderingTest {
 			|Hello$s
 			|World!
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF()
+			""".trimMargin().replaceLineEndingsWithCRLF(),
 		)
 	}
 
