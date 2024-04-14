@@ -1,14 +1,14 @@
 package example
 
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import com.jakewharton.mosaic.runMosaicBlocking
 import com.jakewharton.mosaic.ui.Text
 import kotlinx.coroutines.delay
 
 fun main() = runMosaicBlocking {
-	val countValue = mutableStateOf(0)
+	val countValue = mutableIntStateOf(0)
 
 	setContent {
 		val count by remember { countValue }

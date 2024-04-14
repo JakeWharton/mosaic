@@ -1,7 +1,7 @@
 package example
 
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
 import com.jakewharton.mosaic.layout.height
 import com.jakewharton.mosaic.layout.offset
@@ -25,8 +25,8 @@ private const val robotHeight = 1
 
 fun main() = runMosaicBlocking {
 	// TODO https://github.com/JakeWharton/mosaic/issues/3
-	var x by mutableStateOf(0)
-	var y by mutableStateOf(0)
+	var x by mutableIntStateOf(0)
+	var y by mutableIntStateOf(0)
 
 	setContent {
 		Column {

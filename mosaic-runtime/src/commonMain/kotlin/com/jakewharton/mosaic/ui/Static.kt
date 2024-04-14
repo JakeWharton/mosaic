@@ -4,7 +4,7 @@ package com.jakewharton.mosaic.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -20,8 +20,8 @@ public fun <T> Static(
 	items: SnapshotStateList<T>,
 	content: @Composable (T) -> Unit,
 ) {
-	var lastDrawn by remember { mutableStateOf(0) }
-	var lastRendered by remember { mutableStateOf(0) }
+	var lastDrawn by remember { mutableIntStateOf(0) }
+	var lastRendered by remember { mutableIntStateOf(0) }
 
 	Node(
 		measurePolicy = { measurables, constraints ->
