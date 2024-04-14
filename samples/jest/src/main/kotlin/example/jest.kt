@@ -3,6 +3,7 @@ package example
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -168,7 +169,7 @@ private fun Summary(totalTests: Int, tests: SnapshotStateList<Test>) {
 	val passed = counts[Pass] ?: 0
 	val running = counts[Running] ?: 0
 
-	var elapsed by remember { mutableStateOf(0) }
+	var elapsed by remember { mutableIntStateOf(0) }
 	LaunchedEffect(Unit) {
 		while (true) {
 			delay(1_000)
