@@ -27,4 +27,4 @@ mordant = "com.github.ajalt.mordant:mordant:2.4.0"
 codepoints = "de.cketti.unicode:kotlin-codepoints:0.7.0"
 
 junit4 = "junit:junit:4.13.2"
-assertk = "com.willowtreeapps.assertk:assertk:0.28.0"
+assertk = "com.willowtreeapps.assertk:assertk:0.28.1"
