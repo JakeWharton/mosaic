@@ -1,6 +1,7 @@
 package com.jakewharton.mosaic
 
 import com.jakewharton.mosaic.layout.MosaicNode
+import com.jakewharton.mosaic.ui.AnsiLevel
 import kotlin.time.ExperimentalTime
 import kotlin.time.TimeMark
 import kotlin.time.TimeSource
@@ -18,6 +19,7 @@ internal interface Rendering {
 @ExperimentalTime
 internal class DebugRendering(
 	private val systemClock: TimeSource = TimeSource.Monotonic,
+	private val ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR,
 ) : Rendering {
 	private var lastRender: TimeMark? = null
 
@@ -38,7 +40,7 @@ internal class DebugRendering(
 
 			try {
 				val statics = ArrayList<TextSurface>()
-					.also { node.paintStatics(it) }
+					.also { node.paintStatics(it, ansiLevel) }
 					.map { it.render() }
 				if (statics.isNotEmpty()) {
 					appendLine("STATIC:")
@@ -55,7 +57,7 @@ internal class DebugRendering(
 
 			appendLine("OUTPUT:")
 			try {
-				appendLine(node.paint().render())
+				appendLine(node.paint(ansiLevel).render())
 			} catch (t: Throwable) {
 				failed = true
 				append(t.stackTraceToString())
@@ -68,7 +70,9 @@ internal class DebugRendering(
 	}
 }
 
-internal class AnsiRendering : Rendering {
+internal class AnsiRendering(
+	private val ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR,
+) : Rendering {
 	private val stringBuilder = StringBuilder(100)
 	private val staticSurfaces = ArrayList<TextSurface>()
 	private var lastHeight = 0
@@ -95,13 +99,13 @@ internal class AnsiRendering : Rendering {
 
 			node.measureAndPlace()
 
-			node.paintStatics(staticSurfaces)
+			node.paintStatics(staticSurfaces, ansiLevel)
 			for (staticSurface in staticSurfaces) {
 				appendSurface(staticSurface)
 			}
 			staticSurfaces.clear()
 
-			val surface = node.paint()
+			val surface = node.paint(ansiLevel)
 			appendSurface(surface)
 
 			// If the new output contains fewer lines than the last output, clear those old lines.

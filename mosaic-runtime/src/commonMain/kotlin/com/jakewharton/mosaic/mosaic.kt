@@ -56,11 +56,13 @@ public interface MosaicScope : CoroutineScope {
 }
 
 public suspend fun runMosaic(body: suspend MosaicScope.() -> Unit): Unit = coroutineScope {
+	val terminal = MordantTerminal()
+
 	val rendering = if (debugOutput) {
 		@OptIn(ExperimentalTime::class) // Not used in production.
-		DebugRendering()
+		DebugRendering(ansiLevel = terminal.info.ansiLevel.toMosaicAnsiLevel())
 	} else {
-		AnsiRendering()
+		AnsiRendering(ansiLevel = terminal.info.ansiLevel.toMosaicAnsiLevel())
 	}
 
 	var hasFrameWaiters = false
@@ -96,7 +98,6 @@ public suspend fun runMosaic(body: suspend MosaicScope.() -> Unit): Unit = corou
 		}
 	}
 
-	val terminal = MordantTerminal()
 	val terminalInfo = mutableStateOf(
 		Terminal(
 			size = IntSize(terminal.info.width, terminal.info.height),

@@ -2,61 +2,155 @@ package com.jakewharton.mosaic.ui
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import kotlin.jvm.JvmInline
 
 @Immutable
-public class Color private constructor(
-	internal val fg: Int,
-	internal val bg: Int,
+@JvmInline
+public value class Color internal constructor(
+	private val value: Int,
 ) {
-	override fun toString(): String = "Color($fg)"
+	override fun toString(): String = "Color($redInt, $greenInt, $blueInt)"
+
+	/**
+	 * Returns the value of the red component as integer between 0 and 255.
+	 *
+	 * @see redFloat
+	 *
+	 * @see blueInt
+	 * @see greenInt
+	 */
+	@Stable
+	internal val redInt: Int
+		get() = ((value shr 16) and 0xFF)
+
+	/**
+	 * Returns the value of the red component as float between 0.0 and 1.0.
+	 *
+	 * @see redInt
+	 *
+	 * @see blueFloat
+	 * @see greenFloat
+	 */
+	@Stable
+	internal val redFloat: Float
+		get() = redInt / 255.0f
+
+	/**
+	 * Returns the value of the green component as integer between 0 and 255.
+	 *
+	 * @see greenFloat
+	 *
+	 * @see redInt
+	 * @see blueInt
+	 */
+	@Stable
+	internal val greenInt: Int
+		get() = ((value shr 8) and 0xFF)
+
+	/**
+	 * Returns the value of the green component as float between 0.0 and 1.0.
+	 *
+	 * @see greenInt
+	 *
+	 * @see redFloat
+	 * @see blueFloat
+	 */
+	@Stable
+	internal val greenFloat: Float
+		get() = greenInt / 255.0f
+
+	/**
+	 * Returns the value of the blue component as integer between 0 and 255.
+	 *
+	 * @see blueFloat
+	 *
+	 * @see redInt
+	 * @see greenInt
+	 */
+	@Stable
+	internal val blueInt: Int
+		inline get() = (value and 0xFF)
+
+	/**
+	 * Returns the value of the blue component as float between 0.0 and 1.0.
+	 *
+	 * @see blueInt
+	 *
+	 * @see redFloat
+	 * @see greenFloat
+	 */
+	@Stable
+	internal val blueFloat: Float
+		get() = blueInt / 255.0f
 
 	public companion object {
 		@Stable
-		public val Black: Color = Color(30, 40)
+		public val Black: Color = Color(0x000000)
 
 		@Stable
-		public val Red: Color = Color(31, 41)
+		public val Red: Color = Color(0xFF0000)
 
 		@Stable
-		public val Green: Color = Color(32, 42)
+		public val Green: Color = Color(0x00FF00)
 
 		@Stable
-		public val Yellow: Color = Color(33, 43)
+		public val Blue: Color = Color(0x0000FF)
 
 		@Stable
-		public val Blue: Color = Color(34, 44)
+		public val Yellow: Color = Color(0xFFFF00)
 
 		@Stable
-		public val Magenta: Color = Color(35, 45)
+		public val Magenta: Color = Color(0xFF00FF)
 
 		@Stable
-		public val Cyan: Color = Color(36, 46)
+		public val Cyan: Color = Color(0x00FFFF)
 
 		@Stable
-		public val White: Color = Color(37, 47)
-
-		@Stable
-		public val BrightBlack: Color = Color(90, 100)
-
-		@Stable
-		public val BrightRed: Color = Color(91, 101)
-
-		@Stable
-		public val BrightGreen: Color = Color(92, 102)
-
-		@Stable
-		public val BrightYellow: Color = Color(93, 103)
-
-		@Stable
-		public val BrightBlue: Color = Color(94, 104)
-
-		@Stable
-		public val BrightMagenta: Color = Color(95, 105)
-
-		@Stable
-		public val BrightCyan: Color = Color(96, 106)
-
-		@Stable
-		public val BrightWhite: Color = Color(97, 107)
+		public val White: Color = Color(0xFFFFFF)
 	}
+}
+
+/**
+ * Creates a new [Color] instance from an RGB color components.
+ *
+ * @param red The red component of the color, between 0.0 and 1.0.
+ * @param green The green component of the color, between 0.0 and 1.0.
+ * @param blue The blue component of the color, between 0.0 and 1.0.
+ *
+ * @return A non-null instance of [Color]
+ */
+@Stable
+public fun Color(red: Float, green: Float, blue: Float): Color {
+	require(red in 0.0f..1.0f)
+	require(green in 0.0f..1.0f)
+	require(blue in 0.0f..1.0f)
+
+	return Color(
+		red = (red * 255.0f + 0.5f).toInt(),
+		green = (green * 255.0f + 0.5f).toInt(),
+		blue = (blue * 255.0f + 0.5f).toInt(),
+	)
+}
+
+/**
+ * Creates a new [Color] instance from an RGB color components.
+ *
+ * @param red The red component of the color, between 0 and 255.
+ * @param green The green component of the color, between 0 and 255.
+ * @param blue The blue component of the color, between 0 and 255.
+ *
+ * @return A non-null instance of [Color]
+ */
+@Stable
+public fun Color(red: Int, green: Int, blue: Int): Color {
+	require(red in 0..0xFF)
+	require(green in 0..0xFF)
+	require(blue in 0..0xFF)
+
+	val rgb =
+		((red and 0xFF) shl 16) or
+			((green and 0xFF) shl 8) or
+			(blue and 0xFF)
+
+	return Color(rgb)
 }
