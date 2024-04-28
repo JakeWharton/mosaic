@@ -77,7 +77,7 @@ public suspend fun runMosaic(body: suspend MosaicScope.() -> Unit): Unit = corou
 	var displaySignal: CompletableDeferred<Unit>? = null
 	val applier = MosaicNodeApplier(rootNode) {
 		val render = rendering.render(rootNode)
-		platformDisplay(render)
+		platformDisplay("$ansiBeginSynchronizedUpdate$render$ansiEndSynchronizedUpdate")
 
 		displaySignal?.complete(Unit)
 		hasFrameWaiters = false

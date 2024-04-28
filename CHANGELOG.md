@@ -3,7 +3,7 @@
 ## [Unreleased]
 
 New:
-- Nothing yet!
+- Support synchronized terminal update for rendering.
 
 Changed:
 - Nothing yet!
