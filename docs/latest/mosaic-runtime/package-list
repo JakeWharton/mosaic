@@ -339,12 +339,8 @@ $dokka.location:com.jakewharton.mosaic//runMosaic/#kotlin.coroutines.SuspendFunc
 $dokka.location:com.jakewharton.mosaic//runMosaicBlocking/#kotlin.coroutines.SuspendFunction1[com.jakewharton.mosaic.MosaicScope,kotlin.Unit]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/run-mosaic-blocking.html
 $dokka.location:com.jakewharton.mosaic/MosaicScope///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/-mosaic-scope/index.html
 $dokka.location:com.jakewharton.mosaic/MosaicScope/setContent/#kotlin.Function0[kotlin.Unit]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/-mosaic-scope/set-content.html
-$dokka.location:com.jakewharton.mosaic/Terminal.Size///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/-terminal/-size/index.html
-$dokka.location:com.jakewharton.mosaic/Terminal.Size/Size/#kotlin.Int#kotlin.Int/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/-terminal/-size/-size.html
-$dokka.location:com.jakewharton.mosaic/Terminal.Size/height/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/-terminal/-size/height.html
-$dokka.location:com.jakewharton.mosaic/Terminal.Size/width/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/-terminal/-size/width.html
 $dokka.location:com.jakewharton.mosaic/Terminal///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/-terminal/index.html
-$dokka.location:com.jakewharton.mosaic/Terminal/Terminal/#com.jakewharton.mosaic.Terminal.Size/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/-terminal/-terminal.html
+$dokka.location:com.jakewharton.mosaic/Terminal/Terminal/#com.jakewharton.mosaic.ui.unit.IntSize/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/-terminal/-terminal.html
 $dokka.location:com.jakewharton.mosaic/Terminal/size/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic/-terminal/size.html
 com.jakewharton.mosaic
 com.jakewharton.mosaic.layout
