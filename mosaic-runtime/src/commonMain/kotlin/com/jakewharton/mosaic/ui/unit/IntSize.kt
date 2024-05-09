@@ -1,5 +1,3 @@
-@file:Suppress("NOTHING_TO_INLINE")
-
 package com.jakewharton.mosaic.ui.unit
 
 import androidx.compose.runtime.Immutable
