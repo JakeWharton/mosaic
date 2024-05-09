@@ -11,6 +11,7 @@ import androidx.compose.runtime.snapshots.Snapshot
 import com.github.ajalt.mordant.terminal.Terminal as MordantTerminal
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.ui.BoxMeasurePolicy
+import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
@@ -98,7 +99,7 @@ public suspend fun runMosaic(body: suspend MosaicScope.() -> Unit): Unit = corou
 	val terminal = MordantTerminal()
 	val terminalInfo = mutableStateOf(
 		Terminal(
-			size = Terminal.Size(terminal.info.width, terminal.info.height),
+			size = IntSize(terminal.info.width, terminal.info.height),
 		),
 	)
 
@@ -112,7 +113,7 @@ public suspend fun runMosaic(body: suspend MosaicScope.() -> Unit): Unit = corou
 					)
 			) {
 				terminalInfo.value = Terminal(
-					size = Terminal.Size(terminal.info.width, terminal.info.height),
+					size = IntSize(terminal.info.width, terminal.info.height),
 				)
 			}
 			delay(50)
