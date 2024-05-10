@@ -63,6 +63,7 @@ private class NoContentMeasurePolicyMeasurePolicy(
 }
 
 @Composable
+@Suppress("ktlint:compose:content-trailing-lambda") // Matches Compose UI order.
 public fun Layout(
 	content: @Composable () -> Unit,
 	modifier: Modifier = Modifier,

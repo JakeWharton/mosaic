@@ -14,6 +14,7 @@ import com.jakewharton.mosaic.ui.unit.Constraints
 
 @Composable
 @MosaicComposable
+@Suppress("ktlint:compose:content-trailing-lambda") // Not for public use.
 internal inline fun Node(
 	measurePolicy: MeasurePolicy,
 	debugPolicy: DebugPolicy,
