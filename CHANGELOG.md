@@ -4,6 +4,7 @@
 
 New:
 - Add `linuxArm64` target.
+- Add `rrtop` sample.
 
 Changed:
 - Disable klib signature clash checks for JS compilations. These occasionally occur as a result of Compose compiler behavior, and are safe to disable (the first-party JetBrains Compose Gradle plugin also disables them).
