@@ -173,6 +173,10 @@ Run `./gradlew installDist` to build the sample binaries.
 
    `./samples/robot/build/install/robot/bin/robot`
 
+ * [rrtop](samples/rrtop): An example inspired by [rrtop](https://github.com/wojciech-zurek/rrtop).
+
+   `./samples/rrtop/build/install/rrtop/bin/rrtop`
+
 
 ## FAQ
 
