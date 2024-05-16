@@ -1,0 +1,87 @@
+package example.palletes
+
+import com.jakewharton.mosaic.ui.Color
+import example.RrtopColorsPalette
+
+private val White = Color(253, 247, 205)
+private val Cyan = Color(0, 236, 216)
+private val Red = Color(233, 39, 65)
+private val Green = Color(62, 200, 64)
+private val Blue = Color(65, 143, 221)
+private val Orange = Color(255, 153, 0)
+private val Black1 = Color(0, 0, 0)
+private val Black2 = Color(52, 60, 80)
+
+val BlackBirdColorsPalette = RrtopColorsPalette(
+	mainBg = Black1,
+	menuBg = Black1,
+	menuFg = Black2,
+	menuDividerFg = Black2,
+	menuHighlightBg = Black1,
+	menuHighlightFg = Orange,
+	statusBarFg = Blue,
+	memoryTitleFg = White,
+	memoryBorderFg = Black2,
+	memoryMaxMemoryTextFg = Blue,
+	memoryUsedMemoryTextFg = Blue,
+	memoryUsedMemorySparklineFg = Blue,
+	memoryUsedMemorySparklineBaselineFg = Black2,
+	memoryFragRatioTextFg = Green,
+	memoryRssMemoryTextFg = Green,
+	memoryRssMemorySparklineFg = Green,
+	memoryRssMemorySparklineBaselineFg = Black2,
+	cpuTitleFg = White,
+	cpuBorderFg = Black2,
+	cpuChartLineFg = Black2,
+	cpuChartAxisFg = White,
+	cpuSysCpuText1Fg = White,
+	cpuSysCpuText2Fg = Red,
+	cpuSysCpuDatasetFg = Red,
+	cpuUserCpuText1Fg = White,
+	cpuUserCpuText2Fg = Green,
+	cpuUserCpuDatasetFg = Green,
+	throughputTitleFg = White,
+	throughputBorderFg = Black2,
+	throughputTotalCommandsTextFg = Blue,
+	throughputOpsTextFg = Blue,
+	throughputSparklineFg = Blue,
+	throughputSparklineBaselineFg = Black2,
+	networkTitleFg = White,
+	networkBorderFg = Black2,
+	networkRxTotalTextFg = Orange,
+	networkRxSTextFg = Orange,
+	networkRxSparklineFg = Orange,
+	networkRxSparklineBaselineFg = Black2,
+	networkTxTotalTextFg = Blue,
+	networkTxSTextFg = Blue,
+	networkTxSparklineFg = Blue,
+	networkTxSparklineBaselineFg = Black2,
+	statTitleFg = White,
+	statBorderFg = Black2,
+	statTableHeaderFg = Cyan,
+	statTableRowGaugeFg = Blue,
+	statTableRowGaugeBg = Black2,
+	statTableRowTop1Fg = White,
+	statTableRowTop2Fg = Blue,
+	statTableRowHighlightBg = Orange,
+	callsTitleFg = White,
+	callsBorderFg = Black2,
+	callsTableHeaderFg = Cyan,
+	callsTableRowGaugeFg = Blue,
+	callsTableRowGaugeBg = Black2,
+	callsTableRowTop1Fg = White,
+	callsTableRowTop2Fg = Blue,
+	callsTableRowHighlightBg = Orange,
+	rawTitleFg = White,
+	rawBorderFg = Black2,
+	rawTableHeaderFg = Cyan,
+	rawTableRowTop1Fg = White,
+	rawTableRowTop2Fg = Blue,
+	rawTableRowHighlightBg = Orange,
+	slowTitleFg = White,
+	slowBorderFg = Black2,
+	slowTableHeaderFg = Cyan,
+	slowTableRowTop1Fg = White,
+	slowTableRowTop2Fg = Blue,
+	slowTableRowHighlightBg = Orange,
+)

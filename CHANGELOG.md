@@ -5,10 +5,12 @@
 New:
 - Add `linuxArm64` target.
 - Add `rrtop` sample.
+- Support true color palette.
 
 Changed:
 - Disable klib signature clash checks for JS compilations. These occasionally occur as a result of Compose compiler behavior, and are safe to disable (the first-party JetBrains Compose Gradle plugin also disables them).
 - Remove `Terminal$Size` and use `IntSize` instead in `Terminal#size` for optimization purposes.
+- Remove Color.Bright* constants. Use Color to create the desired color.
 
 Fixed:
 - Use CRLF line endings to fix rendering when a terminal is in raw mode.

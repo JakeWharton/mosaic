@@ -18,6 +18,7 @@ data class TableData<T>(val items: List<T>)
 
 @Immutable
 data class TableConfig<T>(
+	val titleColor: Color,
 	val columnConfigs: List<ColumnConfig<T>>,
 ) {
 
@@ -29,8 +30,7 @@ data class TableConfig<T>(
 		data class StringColumnConfig<T>(
 			val title: String,
 			val stringFromItem: (T) -> String,
-			val titleColor: Color = Color.Cyan,
-			val valueColor: Color = Color.White,
+			val valueColor: Color,
 			val valueAlignment: ColumnAligment = ColumnAligment.START,
 			override val weight: Int = 1,
 		) : ColumnConfig<T>
@@ -51,18 +51,18 @@ data class TableConfig<T>(
 }
 
 @Composable
-fun <T> Table(tableData: TableData<T>, config: TableConfig<T>, modifier: Modifier = Modifier) {
+fun <T> Table(tableData: TableData<T>, tableConfig: TableConfig<T>, modifier: Modifier = Modifier) {
 	Box(
 		modifier = modifier
 			.drawBehind {
-				val weights = config.columnConfigs.sumOf { it.weight }
-				val widthSinglePart = (width - config.columnConfigs.size) / weights
-				val widths = config.columnConfigs.map { it.weight * widthSinglePart }
+				val weights = tableConfig.columnConfigs.sumOf { it.weight }
+				val widthSinglePart = (width - tableConfig.columnConfigs.size) / weights
+				val widths = tableConfig.columnConfigs.map { it.weight * widthSinglePart }
 
 				val lastRange = tableData.items.takeLast(height - 1).asReversed()
 
 				var column = 0
-				config.columnConfigs.forEachIndexed { columnIndex, columnConfig ->
+				tableConfig.columnConfigs.forEachIndexed { columnIndex, columnConfig ->
 					val columnWidth = widths[columnIndex]
 					if (columnConfig is TableConfig.ColumnConfig.StringColumnConfig) {
 						val title = if (columnConfig.title.length < columnWidth) {
@@ -74,7 +74,7 @@ fun <T> Table(tableData: TableData<T>, config: TableConfig<T>, modifier: Modifie
 							row = 0,
 							column = column,
 							string = title,
-							foreground = columnConfig.titleColor,
+							foreground = tableConfig.titleColor,
 						)
 					}
 

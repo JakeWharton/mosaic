@@ -30,7 +30,7 @@ public final class com/jakewharton/mosaic/layout/AspectRatioKt {
 }
 
 public final class com/jakewharton/mosaic/layout/BackgroundKt {
-	public static final fun background (Lcom/jakewharton/mosaic/modifier/Modifier;Lcom/jakewharton/mosaic/ui/Color;)Lcom/jakewharton/mosaic/modifier/Modifier;
+	public static final fun background-fCupJr8 (Lcom/jakewharton/mosaic/modifier/Modifier;I)Lcom/jakewharton/mosaic/modifier/Modifier;
 }
 
 public abstract interface class com/jakewharton/mosaic/layout/ContentDrawScope : com/jakewharton/mosaic/layout/DrawScope {
@@ -47,12 +47,12 @@ public final class com/jakewharton/mosaic/layout/DrawModifierKt {
 }
 
 public abstract interface class com/jakewharton/mosaic/layout/DrawScope {
-	public abstract fun drawRect (Lcom/jakewharton/mosaic/ui/Color;IIII)V
-	public static synthetic fun drawRect$default (Lcom/jakewharton/mosaic/layout/DrawScope;Lcom/jakewharton/mosaic/ui/Color;IIIIILjava/lang/Object;)V
-	public abstract fun drawText (IILcom/jakewharton/mosaic/text/AnnotatedString;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/TextStyle;)V
-	public abstract fun drawText (IILjava/lang/String;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/TextStyle;)V
-	public static synthetic fun drawText$default (Lcom/jakewharton/mosaic/layout/DrawScope;IILcom/jakewharton/mosaic/text/AnnotatedString;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/TextStyle;ILjava/lang/Object;)V
-	public static synthetic fun drawText$default (Lcom/jakewharton/mosaic/layout/DrawScope;IILjava/lang/String;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/TextStyle;ILjava/lang/Object;)V
+	public abstract fun drawRect-e5kUBSE (IIIII)V
+	public static synthetic fun drawRect-e5kUBSE$default (Lcom/jakewharton/mosaic/layout/DrawScope;IIIIIILjava/lang/Object;)V
+	public abstract fun drawText-HJtvjdw (IILcom/jakewharton/mosaic/text/AnnotatedString;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/TextStyle;)V
+	public abstract fun drawText-HJtvjdw (IILjava/lang/String;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/TextStyle;)V
+	public static synthetic fun drawText-HJtvjdw$default (Lcom/jakewharton/mosaic/layout/DrawScope;IILcom/jakewharton/mosaic/text/AnnotatedString;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/TextStyle;ILjava/lang/Object;)V
+	public static synthetic fun drawText-HJtvjdw$default (Lcom/jakewharton/mosaic/layout/DrawScope;IILjava/lang/String;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/TextStyle;ILjava/lang/Object;)V
 	public abstract fun getHeight ()I
 	public abstract fun getWidth ()I
 }
@@ -268,14 +268,13 @@ public final class com/jakewharton/mosaic/text/AnnotatedStringKt {
 
 public final class com/jakewharton/mosaic/text/SpanStyle {
 	public static final field $stable I
-	public fun <init> ()V
-	public fun <init> (Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/TextStyle;Lcom/jakewharton/mosaic/ui/Color;)V
 	public synthetic fun <init> (Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/TextStyle;Lcom/jakewharton/mosaic/ui/Color;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun copy (Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/TextStyle;Lcom/jakewharton/mosaic/ui/Color;)Lcom/jakewharton/mosaic/text/SpanStyle;
-	public static synthetic fun copy$default (Lcom/jakewharton/mosaic/text/SpanStyle;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/TextStyle;Lcom/jakewharton/mosaic/ui/Color;ILjava/lang/Object;)Lcom/jakewharton/mosaic/text/SpanStyle;
+	public synthetic fun <init> (Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/TextStyle;Lcom/jakewharton/mosaic/ui/Color;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun copy-0C4kZ_4 (Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/TextStyle;Lcom/jakewharton/mosaic/ui/Color;)Lcom/jakewharton/mosaic/text/SpanStyle;
+	public static synthetic fun copy-0C4kZ_4$default (Lcom/jakewharton/mosaic/text/SpanStyle;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/TextStyle;Lcom/jakewharton/mosaic/ui/Color;ILjava/lang/Object;)Lcom/jakewharton/mosaic/text/SpanStyle;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getBackground ()Lcom/jakewharton/mosaic/ui/Color;
-	public final fun getColor ()Lcom/jakewharton/mosaic/ui/Color;
+	public final fun getBackground-xbxrsts ()Lcom/jakewharton/mosaic/ui/Color;
+	public final fun getColor-xbxrsts ()Lcom/jakewharton/mosaic/ui/Color;
 	public final fun getTextStyle ()Lcom/jakewharton/mosaic/ui/TextStyle;
 	public fun hashCode ()I
 	public final fun merge (Lcom/jakewharton/mosaic/text/SpanStyle;)Lcom/jakewharton/mosaic/text/SpanStyle;
@@ -404,28 +403,32 @@ public abstract interface class com/jakewharton/mosaic/ui/BoxScope {
 }
 
 public final class com/jakewharton/mosaic/ui/Color {
-	public static final field $stable I
 	public static final field Companion Lcom/jakewharton/mosaic/ui/Color$Companion;
+	public static final synthetic fun box-impl (I)Lcom/jakewharton/mosaic/ui/Color;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (ILjava/lang/Object;)Z
+	public static final fun equals-impl0 (II)Z
+	public fun hashCode ()I
+	public static fun hashCode-impl (I)I
 	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (I)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()I
 }
 
 public final class com/jakewharton/mosaic/ui/Color$Companion {
-	public final fun getBlack ()Lcom/jakewharton/mosaic/ui/Color;
-	public final fun getBlue ()Lcom/jakewharton/mosaic/ui/Color;
-	public final fun getBrightBlack ()Lcom/jakewharton/mosaic/ui/Color;
-	public final fun getBrightBlue ()Lcom/jakewharton/mosaic/ui/Color;
-	public final fun getBrightCyan ()Lcom/jakewharton/mosaic/ui/Color;
-	public final fun getBrightGreen ()Lcom/jakewharton/mosaic/ui/Color;
-	public final fun getBrightMagenta ()Lcom/jakewharton/mosaic/ui/Color;
-	public final fun getBrightRed ()Lcom/jakewharton/mosaic/ui/Color;
-	public final fun getBrightWhite ()Lcom/jakewharton/mosaic/ui/Color;
-	public final fun getBrightYellow ()Lcom/jakewharton/mosaic/ui/Color;
-	public final fun getCyan ()Lcom/jakewharton/mosaic/ui/Color;
-	public final fun getGreen ()Lcom/jakewharton/mosaic/ui/Color;
-	public final fun getMagenta ()Lcom/jakewharton/mosaic/ui/Color;
-	public final fun getRed ()Lcom/jakewharton/mosaic/ui/Color;
-	public final fun getWhite ()Lcom/jakewharton/mosaic/ui/Color;
-	public final fun getYellow ()Lcom/jakewharton/mosaic/ui/Color;
+	public final fun getBlack-OrXnJU4 ()I
+	public final fun getBlue-OrXnJU4 ()I
+	public final fun getCyan-OrXnJU4 ()I
+	public final fun getGreen-OrXnJU4 ()I
+	public final fun getMagenta-OrXnJU4 ()I
+	public final fun getRed-OrXnJU4 ()I
+	public final fun getWhite-OrXnJU4 ()I
+	public final fun getYellow-OrXnJU4 ()I
+}
+
+public final class com/jakewharton/mosaic/ui/ColorKt {
+	public static final fun Color (FFF)I
+	public static final fun Color (III)I
 }
 
 public final class com/jakewharton/mosaic/ui/Column {
@@ -460,7 +463,7 @@ public final class com/jakewharton/mosaic/ui/ComposableSingletons$SpacerKt {
 }
 
 public final class com/jakewharton/mosaic/ui/FillerKt {
-	public static final fun Filler (CLcom/jakewharton/mosaic/modifier/Modifier;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/TextStyle;Landroidx/compose/runtime/Composer;II)V
+	public static final fun Filler-g8kd68k (CLcom/jakewharton/mosaic/modifier/Modifier;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/TextStyle;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/jakewharton/mosaic/ui/Layout {
@@ -492,8 +495,8 @@ public final class com/jakewharton/mosaic/ui/Static {
 }
 
 public final class com/jakewharton/mosaic/ui/Text {
-	public static final fun Text (Lcom/jakewharton/mosaic/text/AnnotatedString;Lcom/jakewharton/mosaic/modifier/Modifier;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/TextStyle;Landroidx/compose/runtime/Composer;II)V
-	public static final fun Text (Ljava/lang/String;Lcom/jakewharton/mosaic/modifier/Modifier;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/TextStyle;Landroidx/compose/runtime/Composer;II)V
+	public static final fun Text-g8kd68k (Lcom/jakewharton/mosaic/text/AnnotatedString;Lcom/jakewharton/mosaic/modifier/Modifier;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/TextStyle;Landroidx/compose/runtime/Composer;II)V
+	public static final fun Text-g8kd68k (Ljava/lang/String;Lcom/jakewharton/mosaic/modifier/Modifier;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/Color;Lcom/jakewharton/mosaic/ui/TextStyle;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/jakewharton/mosaic/ui/TextStyle {

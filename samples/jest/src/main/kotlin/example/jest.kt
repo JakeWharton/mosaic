@@ -17,8 +17,8 @@ import com.jakewharton.mosaic.runMosaicBlocking
 import com.jakewharton.mosaic.text.SpanStyle
 import com.jakewharton.mosaic.text.buildAnnotatedString
 import com.jakewharton.mosaic.text.withStyle
+import com.jakewharton.mosaic.ui.Color
 import com.jakewharton.mosaic.ui.Color.Companion.Black
-import com.jakewharton.mosaic.ui.Color.Companion.BrightBlack
 import com.jakewharton.mosaic.ui.Color.Companion.Green
 import com.jakewharton.mosaic.ui.Color.Companion.Red
 import com.jakewharton.mosaic.ui.Color.Companion.Yellow
@@ -34,6 +34,8 @@ import kotlin.random.Random
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
+private val Gray = Color(128, 128, 128)
 
 fun main() = runMosaicBlocking {
 	val paths = ArrayDeque(
@@ -245,7 +247,7 @@ fun TestProgress(totalTests: Int, passed: Int, failed: Int, running: Int) {
 			withStyle(SpanStyle(background = Yellow)) {
 				append(" ".repeat(runningWidth))
 			}
-			withStyle(SpanStyle(background = BrightBlack)) {
+			withStyle(SpanStyle(background = Gray)) {
 				append(" ".repeat(totalWidth - failedWidth - passedWidth - runningWidth))
 			}
 		},

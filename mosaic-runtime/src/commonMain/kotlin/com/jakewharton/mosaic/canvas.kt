@@ -1,5 +1,6 @@
 package com.jakewharton.mosaic
 
+import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.Color
 import com.jakewharton.mosaic.ui.TextStyle
 import com.jakewharton.mosaic.ui.TextStyle.Companion.Bold
@@ -24,6 +25,7 @@ private val blankPixel = TextPixel(' ')
 internal class TextSurface(
 	override val width: Int,
 	override val height: Int,
+	private val ansiLevel: AnsiLevel,
 ) : TextCanvas {
 	override var translationX = 0
 	override var translationY = 0
@@ -40,33 +42,53 @@ internal class TextSurface(
 		var lastPixel = blankPixel
 		for (columnIndex in 0 until width) {
 			val pixel = rowPixels[columnIndex]
-			if (pixel.foreground != lastPixel.foreground) {
-				attributes += pixel.foreground?.fg ?: 39
-			}
-			if (pixel.background != lastPixel.background) {
-				attributes += pixel.background?.bg ?: 49
-			}
 
-			fun maybeToggleStyle(style: TextStyle, on: Int, off: Int) {
-				if (style in pixel.style) {
-					if (style !in lastPixel.style) {
-						attributes += on
-					}
-				} else if (style in lastPixel.style) {
-					attributes += off
+			if (ansiLevel != AnsiLevel.NONE) {
+				if (pixel.foreground != lastPixel.foreground) {
+					attributes.addColor(
+						pixel.foreground,
+						ansiLevel,
+						ansiFgColorSelector,
+						ansiFgColorReset,
+						ansiFgColorOffset,
+					)
 				}
-			}
-			if (pixel.style != lastPixel.style) {
-				maybeToggleStyle(Bold, 1, 22)
-				maybeToggleStyle(Dim, 2, 22)
-				maybeToggleStyle(Italic, 3, 23)
-				maybeToggleStyle(Underline, 4, 24)
-				maybeToggleStyle(Invert, 7, 27)
-				maybeToggleStyle(Strikethrough, 9, 29)
-			}
-			if (attributes.isNotEmpty()) {
-				attributes.joinTo(appendable, separator = ";", prefix = "\u001B[", postfix = "m")
-				attributes.clear() // This list is reused!
+				if (pixel.background != lastPixel.background) {
+					attributes.addColor(
+						pixel.background,
+						ansiLevel,
+						ansiBgColorSelector,
+						ansiBgColorReset,
+						ansiBgColorOffset,
+					)
+				}
+
+				fun maybeToggleStyle(style: TextStyle, on: Int, off: Int) {
+					if (style in pixel.style) {
+						if (style !in lastPixel.style) {
+							attributes += on
+						}
+					} else if (style in lastPixel.style) {
+						attributes += off
+					}
+				}
+				if (pixel.style != lastPixel.style) {
+					maybeToggleStyle(Bold, 1, 22)
+					maybeToggleStyle(Dim, 2, 22)
+					maybeToggleStyle(Italic, 3, 23)
+					maybeToggleStyle(Underline, 4, 24)
+					maybeToggleStyle(Invert, 7, 27)
+					maybeToggleStyle(Strikethrough, 9, 29)
+				}
+				if (attributes.isNotEmpty()) {
+					attributes.joinTo(
+						appendable,
+						separator = ansiSeparator,
+						prefix = CSI,
+						postfix = ansiClosingCharacter,
+					)
+					attributes.clear() // This list is reused!
+				}
 			}
 
 			appendable.append(pixel.value)
@@ -77,7 +99,44 @@ internal class TextSurface(
 			lastPixel.foreground != null ||
 			lastPixel.style != None
 		) {
-			appendable.append("\u001B[0m")
+			appendable.append(ansiReset)
+			appendable.append(ansiClosingCharacter)
+		}
+	}
+
+	private fun MutableList<Int>.addColor(
+		color: Color?,
+		ansiLevel: AnsiLevel,
+		select: Int,
+		reset: Int,
+		offset: Int,
+	) {
+		if (color == null) {
+			add(reset)
+			return
+		}
+		when (ansiLevel) {
+			AnsiLevel.NONE -> add(reset)
+			AnsiLevel.ANSI16 -> {
+				val ansi16Code = color.toAnsi16Code()
+				if (ansi16Code == ansiFgColorReset || ansi16Code == ansiBgColorReset) {
+					add(reset)
+				} else {
+					add(ansi16Code + offset)
+				}
+			}
+			AnsiLevel.ANSI256 -> {
+				add(select)
+				add(ansiSelectorColor256)
+				add(color.toAnsi256Code())
+			}
+			AnsiLevel.TRUECOLOR -> {
+				add(select)
+				add(ansiSelectorColorRgb)
+				add(color.redInt)
+				add(color.greenInt)
+				add(color.blueInt)
+			}
 		}
 	}
 
