@@ -24,9 +24,9 @@ import com.jakewharton.mosaic.ui.unit.Constraints
 public fun Filler(
 	char: Char,
 	modifier: Modifier = Modifier,
-	foreground: Color? = null,
-	background: Color? = null,
-	style: TextStyle? = null,
+	foreground: Color = Color.Unspecified,
+	background: Color = Color.Unspecified,
+	textStyle: TextStyle = TextStyle.Unspecified,
 ) {
 	Layout(
 		content = EmptyFillerContent,
@@ -35,7 +35,7 @@ public fun Filler(
 		modifier = modifier.drawBehind {
 			val line = char.toString().repeat(width)
 			repeat(height) { row ->
-				drawText(row, 0, line, foreground, background, style)
+				drawText(row, 0, line, foreground, background, textStyle)
 			}
 		},
 	)

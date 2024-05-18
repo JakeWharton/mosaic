@@ -2,7 +2,6 @@ package com.jakewharton.mosaic.text
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import assertk.assertions.isNull
 import com.jakewharton.mosaic.ui.Color
 import com.jakewharton.mosaic.ui.TextStyle
 import kotlin.test.Test
@@ -12,9 +11,9 @@ class SpanStyleTest {
 	@Test fun constructorWithDefaultValues() {
 		val style = SpanStyle()
 
-		assertThat(style.color).isNull()
-		assertThat(style.textStyle).isNull()
-		assertThat(style.background).isNull()
+		assertThat(style.color).isEqualTo(Color.Unspecified)
+		assertThat(style.textStyle).isEqualTo(TextStyle.Unspecified)
+		assertThat(style.background).isEqualTo(Color.Unspecified)
 	}
 
 	@Test fun constructorWithCustomizedColor() {
@@ -52,7 +51,7 @@ class SpanStyleTest {
 	@Test fun mergeWithOthersColorIsNullShouldUseThisColor() {
 		val style = SpanStyle(color = Color.Red)
 
-		val newSpanStyle = style.merge(SpanStyle(color = null))
+		val newSpanStyle = style.merge(SpanStyle(color = Color.Unspecified))
 
 		assertThat(newSpanStyle.color).isEqualTo(style.color)
 	}
@@ -69,7 +68,7 @@ class SpanStyleTest {
 	@Test fun mergeWithOthersTextStyleIsNullShouldUseThisTextStyle() {
 		val style = SpanStyle(textStyle = TextStyle.Underline)
 
-		val newSpanStyle = style.merge(SpanStyle(textStyle = null))
+		val newSpanStyle = style.merge(SpanStyle(textStyle = TextStyle.Unspecified))
 
 		assertThat(newSpanStyle.textStyle).isEqualTo(style.textStyle)
 	}
@@ -86,7 +85,7 @@ class SpanStyleTest {
 	@Test fun mergeWithOthersBackgroundIsNullShouldUseThisBackground() {
 		val style = SpanStyle(background = Color.Red)
 
-		val newSpanStyle = style.merge(SpanStyle(background = null))
+		val newSpanStyle = style.merge(SpanStyle(background = Color.Unspecified))
 
 		assertThat(newSpanStyle.background).isEqualTo(style.background)
 	}

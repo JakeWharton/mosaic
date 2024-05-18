@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package com.jakewharton.mosaic
 
 import androidx.compose.runtime.Composable

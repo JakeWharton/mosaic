@@ -16,9 +16,9 @@ import kotlin.jvm.JvmName
 public fun Text(
 	value: String,
 	modifier: Modifier = Modifier,
-	color: Color? = null,
-	background: Color? = null,
-	style: TextStyle? = null,
+	color: Color = Color.Unspecified,
+	background: Color = Color.Unspecified,
+	textStyle: TextStyle = TextStyle.Unspecified,
 ) {
 	val layout = remember { StringTextLayout() }
 	layout.value = value
@@ -33,7 +33,7 @@ public fun Text(
 		},
 		modifier = modifier.drawBehind {
 			layout.lines.forEachIndexed { row, line ->
-				drawText(row, 0, line, color, background, style)
+				drawText(row, 0, line, color, background, textStyle)
 			}
 		},
 	)
@@ -44,9 +44,9 @@ public fun Text(
 public fun Text(
 	value: AnnotatedString,
 	modifier: Modifier = Modifier,
-	color: Color? = null,
-	background: Color? = null,
-	style: TextStyle? = null,
+	color: Color = Color.Unspecified,
+	background: Color = Color.Unspecified,
+	textStyle: TextStyle = TextStyle.Unspecified,
 ) {
 	val layout = remember { AnnotatedStringTextLayout() }
 	layout.value = value
@@ -61,7 +61,7 @@ public fun Text(
 		},
 		modifier = modifier.drawBehind {
 			layout.lines.forEachIndexed { row, line ->
-				drawText(row, 0, line, color, background, style)
+				drawText(row, 0, line, color, background, textStyle)
 			}
 		},
 	)

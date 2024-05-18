@@ -17,7 +17,7 @@ fun Modifier.border(
 	verticalEnd: Char = '│',
 	horizontalTop: Char = '─',
 	horizontalBottom: Char = '─',
-	color: Color? = null,
+	color: Color = Color.Unspecified,
 ): Modifier = this.then(
 	BorderModifier(
 		topStart.toString(),
@@ -41,7 +41,7 @@ private class BorderModifier(
 	private val verticalEnd: String,
 	private val horizontalTop: String,
 	private val horizontalBottom: String,
-	private val color: Color?,
+	private val color: Color,
 ) : DrawModifier {
 
 	override fun ContentDrawScope.draw() {
@@ -91,7 +91,7 @@ private class BorderModifier(
 		result = 31 * result + bottomEnd.hashCode()
 		result = 31 * result + horizontalBottom.hashCode()
 		result = 31 * result + bottomStart.hashCode()
-		result = 31 * result + (color?.hashCode() ?: 0)
+		result = 31 * result + color.hashCode()
 		return result
 	}
 
