@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package com.jakewharton.mosaic.ui
 
 import androidx.compose.runtime.Immutable
@@ -7,7 +9,8 @@ import kotlin.jvm.JvmInline
 @Immutable
 @JvmInline
 public value class Color internal constructor(
-	private val value: Int,
+	@PublishedApi
+	internal val value: Int,
 ) {
 	override fun toString(): String = "Color($redInt, $greenInt, $blueInt)"
 
@@ -85,6 +88,9 @@ public value class Color internal constructor(
 
 	public companion object {
 		@Stable
+		public val Unspecified: Color = Color(UnspecifiedColor)
+
+		@Stable
 		public val Black: Color = Color(0x000000)
 
 		@Stable
@@ -109,6 +115,9 @@ public value class Color internal constructor(
 		public val White: Color = Color(0xFFFFFF)
 	}
 }
+
+@PublishedApi
+internal const val UnspecifiedColor: Int = Int.MIN_VALUE
 
 /**
  * Creates a new [Color] instance from an RGB color components.
@@ -154,3 +163,21 @@ public fun Color(red: Int, green: Int, blue: Int): Color {
 
 	return Color(rgb)
 }
+
+/**
+ * `false` when this is [Color.Unspecified].
+ */
+@Stable
+public inline val Color.isSpecifiedColor: Boolean get() = value != UnspecifiedColor
+
+/**
+ * `true` when this is [Color.Unspecified].
+ */
+@Stable
+public inline val Color.isUnspecifiedColor: Boolean get() = value == UnspecifiedColor
+
+/**
+ * If this color [isSpecifiedColor] then this is returned, otherwise [block] is executed and its result
+ * is returned.
+ */
+public inline fun Color.takeOrElse(block: () -> Color): Color = if (isSpecifiedColor) this else block()

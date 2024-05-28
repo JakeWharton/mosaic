@@ -7,9 +7,12 @@ import com.jakewharton.mosaic.ui.TextStyle.Companion.Bold
 import com.jakewharton.mosaic.ui.TextStyle.Companion.Dim
 import com.jakewharton.mosaic.ui.TextStyle.Companion.Invert
 import com.jakewharton.mosaic.ui.TextStyle.Companion.Italic
-import com.jakewharton.mosaic.ui.TextStyle.Companion.None
 import com.jakewharton.mosaic.ui.TextStyle.Companion.Strikethrough
 import com.jakewharton.mosaic.ui.TextStyle.Companion.Underline
+import com.jakewharton.mosaic.ui.isNotEmptyTextStyle
+import com.jakewharton.mosaic.ui.isSpecifiedColor
+import com.jakewharton.mosaic.ui.isUnspecifiedColor
+import de.cketti.codepoints.appendCodePoint
 
 internal interface TextCanvas {
 	val width: Int
@@ -64,15 +67,15 @@ internal class TextSurface(
 				}
 
 				fun maybeToggleStyle(style: TextStyle, on: Int, off: Int) {
-					if (style in pixel.style) {
-						if (style !in lastPixel.style) {
+					if (style in pixel.textStyle) {
+						if (style !in lastPixel.textStyle) {
 							attributes += on
 						}
-					} else if (style in lastPixel.style) {
+					} else if (style in lastPixel.textStyle) {
 						attributes += off
 					}
 				}
-				if (pixel.style != lastPixel.style) {
+				if (pixel.textStyle != lastPixel.textStyle) {
 					maybeToggleStyle(Bold, 1, 22)
 					maybeToggleStyle(Dim, 2, 22)
 					maybeToggleStyle(Italic, 3, 23)
@@ -91,13 +94,13 @@ internal class TextSurface(
 				}
 			}
 
-			appendable.append(pixel.value)
+			appendable.appendCodePoint(pixel.codePoint)
 			lastPixel = pixel
 		}
 
-		if (lastPixel.background != null ||
-			lastPixel.foreground != null ||
-			lastPixel.style != None
+		if (lastPixel.background.isSpecifiedColor ||
+			lastPixel.foreground.isSpecifiedColor ||
+			lastPixel.textStyle.isNotEmptyTextStyle
 		) {
 			appendable.append(ansiReset)
 			appendable.append(ansiClosingCharacter)
@@ -105,13 +108,13 @@ internal class TextSurface(
 	}
 
 	private fun MutableList<Int>.addColor(
-		color: Color?,
+		color: Color,
 		ansiLevel: AnsiLevel,
 		select: Int,
 		reset: Int,
 		offset: Int,
 	) {
-		if (color == null) {
+		if (color.isUnspecifiedColor) {
 			add(reset)
 			return
 		}
@@ -150,22 +153,22 @@ internal class TextSurface(
 	}
 }
 
-internal class TextPixel(var value: String) {
-	var background: Color? = null
-	var foreground: Color? = null
-	var style = None
+internal class TextPixel(var codePoint: Int) {
+	var background: Color = Color.Unspecified
+	var foreground: Color = Color.Unspecified
+	var textStyle: TextStyle = TextStyle.Empty
 
-	constructor(char: Char) : this(char.toString())
+	constructor(char: Char) : this(char.code)
 
 	override fun toString() = buildString {
 		append("TextPixel(\"")
-		append(value)
+		appendCodePoint(codePoint)
 		append("\"")
-		if (background != null) {
+		if (background.isSpecifiedColor) {
 			append(" bg=")
 			append(background)
 		}
-		if (foreground != null) {
+		if (foreground.isSpecifiedColor) {
 			append(" fg=")
 			append(foreground)
 		}

@@ -4,12 +4,13 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import com.jakewharton.mosaic.ui.Color
 import com.jakewharton.mosaic.ui.TextStyle
+import com.jakewharton.mosaic.ui.takeOrElse
 
 @Immutable
-public class SpanStyle constructor(
-	public val color: Color? = null,
-	public val textStyle: TextStyle? = null,
-	public val background: Color? = null,
+public class SpanStyle(
+	public val color: Color = Color.Unspecified,
+	public val textStyle: TextStyle = TextStyle.Unspecified,
+	public val background: Color = Color.Unspecified,
 ) {
 
 	/**
@@ -25,9 +26,9 @@ public class SpanStyle constructor(
 	public fun merge(other: SpanStyle? = null): SpanStyle {
 		if (other == null) return this
 		return SpanStyle(
-			color = other.color ?: this.color,
-			textStyle = other.textStyle ?: this.textStyle,
-			background = other.background ?: this.background,
+			color = other.color.takeOrElse { this.color },
+			textStyle = other.textStyle.takeOrElse { this.textStyle },
+			background = other.background.takeOrElse { this.background },
 		)
 	}
 
@@ -38,9 +39,9 @@ public class SpanStyle constructor(
 	public operator fun plus(other: SpanStyle): SpanStyle = this.merge(other)
 
 	public fun copy(
-		color: Color? = this.color,
-		textStyle: TextStyle? = this.textStyle,
-		background: Color? = this.background,
+		color: Color = this.color,
+		textStyle: TextStyle = this.textStyle,
+		background: Color = this.background,
 	): SpanStyle {
 		return SpanStyle(
 			color = color,
@@ -63,9 +64,9 @@ public class SpanStyle constructor(
 	}
 
 	override fun hashCode(): Int {
-		var result = color?.hashCode() ?: 0
-		result = 31 * result + (textStyle?.hashCode() ?: 0)
-		result = 31 * result + (background?.hashCode() ?: 0)
+		var result = color.hashCode()
+		result = 31 * result + textStyle.hashCode()
+		result = 31 * result + background.hashCode()
 		return result
 	}
 

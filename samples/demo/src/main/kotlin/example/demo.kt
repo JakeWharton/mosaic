@@ -17,6 +17,7 @@ import com.jakewharton.mosaic.ui.Filler
 import com.jakewharton.mosaic.ui.Row
 import com.jakewharton.mosaic.ui.Spacer
 import com.jakewharton.mosaic.ui.Text
+import com.jakewharton.mosaic.ui.TextStyle
 import kotlinx.coroutines.suspendCancellableCoroutine
 
 private val BrightGreen = Color(100, 255, 100)
@@ -28,21 +29,25 @@ fun main() = runMosaicBlocking {
 			val terminal = LocalTerminal.current
 			Text(
 				buildAnnotatedString {
+					append("\uD83D\uDDA5\uFE0F")
+					append("  ")
 					append("Terminal(")
 					withStyle(SpanStyle(color = BrightGreen)) {
 						append("width=")
 					}
-					withStyle(SpanStyle(color = BrightBlue)) {
+					withStyle(SpanStyle(color = BrightBlue, textStyle = TextStyle.Bold + TextStyle.Underline)) {
 						append(terminal.size.width.toString())
 					}
 					append(", ")
 					withStyle(SpanStyle(color = BrightGreen)) {
 						append("height=")
 					}
-					withStyle(SpanStyle(color = BrightBlue)) {
+					withStyle(SpanStyle(color = BrightBlue, textStyle = TextStyle.Bold + TextStyle.Underline)) {
 						append(terminal.size.height.toString())
 					}
 					append(")")
+					append(" ")
+					append("\uD83D\uDDA5\uFE0F")
 				},
 			)
 			Spacer(modifier = Modifier.height(1))

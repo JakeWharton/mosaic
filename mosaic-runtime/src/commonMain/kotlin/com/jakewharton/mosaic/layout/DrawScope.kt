@@ -22,6 +22,9 @@ import com.jakewharton.mosaic.text.SpanStyle
 import com.jakewharton.mosaic.text.getLocalRawSpanStyles
 import com.jakewharton.mosaic.ui.Color
 import com.jakewharton.mosaic.ui.TextStyle
+import com.jakewharton.mosaic.ui.isSpecifiedColor
+import com.jakewharton.mosaic.ui.isSpecifiedTextStyle
+import de.cketti.codepoints.codePointAt
 
 public interface DrawScope {
 	public val width: Int
@@ -39,18 +42,18 @@ public interface DrawScope {
 		row: Int,
 		column: Int,
 		string: String,
-		foreground: Color? = null,
-		background: Color? = null,
-		style: TextStyle? = null,
+		foreground: Color = Color.Unspecified,
+		background: Color = Color.Unspecified,
+		textStyle: TextStyle = TextStyle.Unspecified,
 	)
 
 	public fun drawText(
 		row: Int,
 		column: Int,
 		string: AnnotatedString,
-		foreground: Color? = null,
-		background: Color? = null,
-		style: TextStyle? = null,
+		foreground: Color = Color.Unspecified,
+		background: Color = Color.Unspecified,
+		textStyle: TextStyle = TextStyle.Unspecified,
 	)
 }
 
@@ -77,22 +80,22 @@ internal open class TextCanvasDrawScope(
 		row: Int,
 		column: Int,
 		string: String,
-		foreground: Color?,
-		background: Color?,
-		style: TextStyle?,
+		foreground: Color,
+		background: Color,
+		textStyle: TextStyle,
 	) {
-		drawText(row, column, string, foreground, background, style, null)
+		drawText(row, column, string, foreground, background, textStyle, null)
 	}
 
 	override fun drawText(
 		row: Int,
 		column: Int,
 		string: AnnotatedString,
-		foreground: Color?,
-		background: Color?,
-		style: TextStyle?,
+		foreground: Color,
+		background: Color,
+		textStyle: TextStyle,
 	) {
-		drawText(row, column, string.text, foreground, background, style) { start, end ->
+		drawText(row, column, string.text, foreground, background, textStyle) { start, end ->
 			string.getLocalRawSpanStyles(start, end)
 		}
 	}
@@ -101,9 +104,9 @@ internal open class TextCanvasDrawScope(
 		row: Int,
 		column: Int,
 		text: String,
-		foreground: Color?,
-		background: Color?,
-		style: TextStyle?,
+		foreground: Color,
+		background: Color,
+		textStyle: TextStyle,
 		spanStylesProvider: ((start: Int, end: Int) -> List<SpanStyle>)?,
 	) {
 		var pixelIndex = 0
@@ -117,23 +120,23 @@ internal open class TextCanvasDrawScope(
 				pixelIndex + 1
 			}
 
-			character.value = text.substring(pixelIndex, pixelEnd)
+			character.codePoint = text.codePointAt(pixelIndex)
 			val spanStyles = spanStylesProvider?.invoke(pixelIndex, pixelEnd)
 			pixelIndex = pixelEnd
 
-			fun maybeUpdateCharacter(background: Color?, foreground: Color?, style: TextStyle?) {
-				if (background != null) {
+			fun maybeUpdateCharacter(background: Color, foreground: Color, style: TextStyle) {
+				if (background.isSpecifiedColor) {
 					character.background = background
 				}
-				if (foreground != null) {
+				if (foreground.isSpecifiedColor) {
 					character.foreground = foreground
 				}
-				if (style != null) {
-					character.style = style
+				if (style.isSpecifiedTextStyle) {
+					character.textStyle = style
 				}
 			}
 
-			maybeUpdateCharacter(background, foreground, style)
+			maybeUpdateCharacter(background, foreground, textStyle)
 			spanStyles?.forEach {
 				maybeUpdateCharacter(it.background, it.color, it.textStyle)
 			}
