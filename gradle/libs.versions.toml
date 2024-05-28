@@ -2,20 +2,17 @@
 kotlin = "2.0.0"
 
 [libraries]
-kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-plugin-core = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-plugin-compose = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 
 kotlinx-coroutines-core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1"
 
-androidx-compose-compiler = "androidx.compose.compiler:compiler:1.5.14"
-
-compose-compiler = "org.jetbrains.compose.compiler:compiler:1.5.14"
 compose-runtime = "org.jetbrains.compose.runtime:runtime:1.6.10"
 
 maven-publish-gradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.28.0"
 dokka-gradlePlugin = "org.jetbrains.dokka:dokka-gradle-plugin:1.9.20"
-buildconfig-gradlePlugin = "com.github.gmazzo.buildconfig:plugin:5.3.5"
-poko-gradlePlugin = "dev.drewhamilton.poko:poko-gradle-plugin:0.15.3"
+poko-gradlePlugin = "dev.drewhamilton.poko:poko-gradle-plugin:0.16.0-beta01"
 binary-compatibility-validator-gradlePlugin = "org.jetbrains.kotlinx:binary-compatibility-validator:0.14.0"
 
 spotless-gradlePlugin = "com.diffplug.spotless:spotless-plugin-gradle:6.25.0"

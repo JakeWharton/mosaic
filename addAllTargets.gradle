@@ -11,5 +11,7 @@ plugins.withId('org.jetbrains.kotlin.multiplatform') {
 		macosX64()
 
 		mingwX64()
+
+		applyDefaultHierarchyTemplate()
 	}
 }

@@ -4,14 +4,13 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 buildscript {
 	dependencies {
-		classpath libs.kotlin.gradlePlugin
+		classpath libs.kotlin.plugin.core
+		classpath libs.kotlin.plugin.compose
 		classpath libs.maven.publish.gradlePlugin
 		classpath libs.dokka.gradlePlugin
-		classpath libs.buildconfig.gradlePlugin
 		classpath libs.poko.gradlePlugin
 		classpath libs.spotless.gradlePlugin
 		classpath libs.binary.compatibility.validator.gradlePlugin
-		classpath 'com.jakewharton.mosaic:mosaic-gradle-plugin'
 	}
 	repositories {
 		mavenCentral()
