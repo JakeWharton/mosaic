@@ -2,10 +2,10 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMetadataTarget
 
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 apply from: "$rootDir/addAllTargets.gradle"
 apply from: "$rootDir/publish.gradle"
 apply plugin: 'org.jetbrains.dokka'
-apply plugin: 'com.jakewharton.mosaic'
 apply plugin: 'dev.drewhamilton.poko'
 
 kotlin {

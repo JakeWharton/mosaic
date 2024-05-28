@@ -3,8 +3,8 @@ import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrTarget
 
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 apply from: "$rootDir/addAllTargets.gradle"
-apply plugin: 'com.jakewharton.mosaic'
 apply plugin: 'application'
 
 application {
@@ -12,11 +12,15 @@ application {
 }
 
 kotlin {
-	targets.withType(KotlinNativeTarget).configureEach { target ->
-		// Add a common source folder instead of a nativeMain source set because
-		// runBlocking is not commonized unless you are in a jvm+native source set.
-		target.compilations.main.defaultSourceSet.kotlin.srcDir(file('src/nativeMain/kotlin'))
+	sourceSets {
+		commonMain {
+			dependencies {
+				implementation projects.mosaicRuntime
+			}
+		}
+	}
 
+	targets.withType(KotlinNativeTarget).configureEach { target ->
 		target.binaries.executable {
 			entryPoint = 'example.main'
 		}

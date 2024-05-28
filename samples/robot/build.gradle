@@ -1,5 +1,5 @@
 apply plugin: 'org.jetbrains.kotlin.jvm'
-apply plugin: 'com.jakewharton.mosaic'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 apply plugin: 'application'
 
 application {
@@ -7,5 +7,6 @@ application {
 }
 
 dependencies {
+	implementation projects.mosaicRuntime
 	implementation 'org.jline:jline:3.26.1'
 }
