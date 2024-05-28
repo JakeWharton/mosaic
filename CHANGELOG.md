@@ -3,6 +3,18 @@
 ## [Unreleased]
 
 New:
+- Nothing yet!
+
+Changed:
+- Nothing yet!
+
+Fixed:
+- Nothing yet!
+
+
+## [0.12.0] - 2024-05-28
+
+New:
 - Add `linuxArm64` target.
 - Add `rrtop` sample.
 - Support true color palette.
@@ -17,7 +29,7 @@ Fixed:
 - Use CRLF line endings to fix rendering when a terminal is in raw mode.
 
 
-## [0.11.0] - 2023-02-27
+## [0.11.0] - 2024-02-27
 
 New:
 - Support Kotlin 1.9.22 via JetBrains Compose compiler 1.5.10.
@@ -194,7 +206,8 @@ Breaking:
 Initial release!
 
 
-[Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.11.0...HEAD
+[Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.12.0...HEAD
+[0.12.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.12.0
 [0.11.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.11.0
 [0.10.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.10.0
 [0.9.1]: https://github.com/JakeWharton/mosaic/releases/tag/0.9.1

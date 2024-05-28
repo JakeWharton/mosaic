@@ -90,8 +90,8 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22'
-    classpath 'com.jakewharton.mosaic:mosaic-gradle-plugin:0.11.0'
+    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.24'
+    classpath 'com.jakewharton.mosaic:mosaic-gradle-plugin:0.12.0'
   }
 }
 
@@ -111,6 +111,7 @@ certain versions of Kotlin.
 
 | Kotlin | Mosaic        |
 |--------|---------------|
+| 1.9.24 | 0.12.0        |
 | 1.9.22 | 0.11.0        |
 | 1.9.20 | 0.10.0        |
 | 1.9.10 | 0.9.1         |
@@ -138,8 +139,8 @@ buildscript {
     }
   }
   dependencies {
-    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22'
-    classpath 'com.jakewharton.mosaic:mosaic-gradle-plugin:0.12.0-SNAPSHOT'
+    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.24'
+    classpath 'com.jakewharton.mosaic:mosaic-gradle-plugin:0.13.0-SNAPSHOT'
   }
 }
 
