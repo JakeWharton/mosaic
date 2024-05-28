@@ -4,7 +4,7 @@ import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
-import assertk.assertions.isSameAs
+import assertk.assertions.isSameInstanceAs
 import com.jakewharton.mosaic.text.AnnotatedString.Range
 import com.jakewharton.mosaic.ui.Color
 import kotlin.test.Test
@@ -80,7 +80,7 @@ class AnnotatedStringTest {
 			toAnnotatedString()
 		}
 
-		assertThat(annotatedString.subSequence(0, 3)).isSameAs(annotatedString)
+		assertThat(annotatedString.subSequence(0, 3)).isSameInstanceAs(annotatedString)
 	}
 
 	@Test fun subSequence_doesNot_include_styles_before_the_start() {
