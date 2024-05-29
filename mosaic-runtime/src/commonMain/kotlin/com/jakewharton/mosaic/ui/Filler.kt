@@ -9,6 +9,7 @@ import com.jakewharton.mosaic.layout.MeasureScope
 import com.jakewharton.mosaic.layout.drawBehind
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.ui.unit.Constraints
+import de.cketti.codepoints.CodePoints
 
 /**
  * Component that represents an layout of identical characters, whose size can be
@@ -28,15 +29,33 @@ public fun Filler(
 	background: Color = Color.Unspecified,
 	textStyle: TextStyle = TextStyle.Unspecified,
 ) {
+	Filler(char.code, modifier, foreground, background, textStyle)
+}
+
+/**
+ * Component that represents an layout of identical characters, whose size can be
+ * defined using [Modifier.width], [Modifier.height] and [Modifier.size] modifiers.
+ *
+ * This layout is similar to [Spacer].
+ *
+ * @param codePoint code point to fill in
+ * @param modifier modifiers to set to this spacer
+ */
+@Composable
+@NonRestartableComposable
+public fun Filler(
+	codePoint: Int,
+	modifier: Modifier = Modifier,
+	foreground: Color = Color.Unspecified,
+	background: Color = Color.Unspecified,
+	textStyle: TextStyle = TextStyle.Unspecified,
+) {
 	Layout(
 		content = EmptyFillerContent,
 		measurePolicy = FillerMeasurePolicy,
-		debugInfo = { "Filler('$char')" },
+		debugInfo = { "Filler('${CodePoints.toChars(codePoint).concatToString()}')" },
 		modifier = modifier.drawBehind {
-			val line = char.toString().repeat(width)
-			repeat(height) { row ->
-				drawText(row, 0, line, foreground, background, textStyle)
-			}
+			drawRect(codePoint, foreground, background, textStyle)
 		},
 	)
 }

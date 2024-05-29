@@ -3,8 +3,11 @@ package example
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
+import com.jakewharton.mosaic.layout.Stroke
+import com.jakewharton.mosaic.layout.drawBehind
 import com.jakewharton.mosaic.layout.height
 import com.jakewharton.mosaic.layout.offset
+import com.jakewharton.mosaic.layout.padding
 import com.jakewharton.mosaic.layout.size
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.runMosaicBlocking
@@ -17,8 +20,11 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import org.jline.terminal.TerminalBuilder
 
-private const val width = 20
-private const val height = 10
+private const val worldWidth = 20
+private const val worldHeight = 10
+
+private const val worldBorderChar = '*'
+private const val worldBorderWidth = 1
 
 private const val robotWidth = 3
 private const val robotHeight = 1
@@ -31,10 +37,16 @@ fun main() = runMosaicBlocking {
 	setContent {
 		Column {
 			Text("Use arrow keys to move the face. Press “q” to exit.")
-			Text("Position: $x, $y   Robot: $robotWidth, $robotHeight   World: $width, $height")
+			Text("Position: $x, $y   Robot: $robotWidth, $robotHeight   World: $worldWidth, $worldHeight")
 			Spacer(Modifier.height(1))
 			// TODO https://github.com/JakeWharton/mosaic/issues/11
-			Box(modifier = Modifier.size(width, height).offset { IntOffset(x, y) }) {
+			Box(
+				modifier = Modifier
+					.drawBehind { drawRect(worldBorderChar, drawStyle = Stroke(worldBorderWidth)) }
+					.padding(worldBorderWidth)
+					.size(worldWidth, worldHeight)
+					.offset { IntOffset(x, y) },
+			) {
 				Text("^_^")
 			}
 		}
@@ -55,8 +67,8 @@ fun main() = runMosaicBlocking {
 						91, 79 -> {
 							when (reader.read()) {
 								65 -> y = (y - 1).coerceAtLeast(0)
-								66 -> y = (y + 1).coerceAtMost(height - robotHeight)
-								67 -> x = (x + 1).coerceAtMost(width - robotWidth)
+								66 -> y = (y + 1).coerceAtMost(worldHeight - robotHeight)
+								67 -> x = (x + 1).coerceAtMost(worldWidth - robotWidth)
 								68 -> x = (x - 1).coerceAtLeast(0)
 							}
 						}
