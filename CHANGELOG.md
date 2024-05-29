@@ -12,6 +12,77 @@ Fixed:
 - Nothing yet!
 
 
+## [0.13.0] - 2024-05-28
+
+New:
+- Support Kotlin 2.0.0!
+
+Changed:
+- Remove our Gradle plugin in favor of JetBrains' (see below for more).
+
+Note: Version 0.12.0 was also released today, but it still supports Kotlin 1.9.24.
+Check out [its release entry](https://github.com/JakeWharton/mosaic/releases/tag/0.12.0) for more on what's new.
+
+
+### Gradle plugin removed
+
+This version of Mosaic removes the custom Gradle plugin in favor of [the official JetBrains Compose compiler plugin](https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-compiler.html) which ships as part of Kotlin itself.
+Each module in which you had previously applied the `com.jakewharton.mosaic` plugin should be changed to apply `org.jetbrains.kotlin.plugin.compose` instead.
+The Mosaic runtime will no longer be added as a result of the plugin change, and so any module which references Mosaic APIs should apply the `com.jakewharton.mosaic:mosaic-runtime` dependency.
+
+For posterity, the Kotlin version compatibility table and compiler version customization for our old Mosaic Gradle plugin will be archived here:
+
+<details>
+<summary>Mosaic 0.12.0 Gradle plugin Kotlin compatibility table</summary>
+<p>
+
+Since Kotlin compiler plugins are an unstable API, certain versions of Mosaic only work with
+certain versions of Kotlin.
+
+| Kotlin | Mosaic        |
+|--------|---------------|
+| 1.9.24 | 0.12.0        |
+| 1.9.22 | 0.11.0        |
+| 1.9.20 | 0.10.0        |
+| 1.9.10 | 0.9.1         |
+| 1.9.0  | 0.8.0 - 0.9.0 |
+| 1.8.22 | 0.7.1         |
+| 1.8.21 | 0.7.0         |
+| 1.8.20 | 0.6.0         |
+| 1.8.10 | 0.5.0         |
+| 1.8.0  | 0.3.0 - 0.4.0 |
+| 1.7.10 | 0.2.0         |
+| 1.5.10 | 0.1.0         |
+
+</p>
+</details>
+
+<details>
+<summary>Mosaic 0.12.0 Gradle plugin Compose compiler customization instructions</summary>
+<p>
+
+Each version of Mosaic ships with a specific JetBrains Compose compiler version which works with
+a single version of Kotlin (see [version table](#usage) above). Newer versions of the Compose
+compiler or alternate Compose compilers can be specified using the Gradle extension.
+
+To use a new version of the JetBrains Compose compiler version:
+```kotlin
+mosaic {
+  kotlinCompilerPlugin.set("1.4.8")
+}
+```
+
+To use an alternate Compose compiler dependency:
+```kotlin
+mosaic {
+  kotlinCompilerPlugin.set("com.example:custom-compose-compiler:1.0.0")
+}
+```
+
+</p>
+</details>
+
+
 ## [0.12.0] - 2024-05-28
 
 New:
@@ -206,7 +277,8 @@ Breaking:
 Initial release!
 
 
-[Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.12.0...HEAD
+[Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.13.0...HEAD
+[0.13.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.13.0
 [0.12.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.12.0
 [0.11.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.11.0
 [0.10.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.10.0

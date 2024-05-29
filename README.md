@@ -79,73 +79,34 @@ fun main() = runMosaic {
 
 ## Usage
 
-In order to use Mosaic you must write your code in Kotlin and must apply the Compose Kotlin
-compiler plugin.
+Mosaic is a library for Compose, and it relies on JetBrains' Kotlin Compose plugin to be present for use.
+Any module which wants to call `runMosaic` or define `@Composable` functions for use with Mosaic must have this plugin applied.
+For more information, see [the JetBrains Compose compiler documentation](https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-compiler.html).
 
-For Gradle users, the Mosaic Gradle plugin will take care of applying the compiler plugin.
+Mosaic itself can then be added like any other dependency:
 
 ```groovy
-buildscript {
-  repositories {
-    mavenCentral()
-  }
-  dependencies {
-    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.24'
-    classpath 'com.jakewharton.mosaic:mosaic-gradle-plugin:0.12.0'
-  }
+dependencies {
+  implementation("com.jakewharton.mosaic:mosaic-runtime:0.13.0")
 }
-
-apply plugin: 'org.jetbrains.kotlin.jvm'
-apply plugin: 'com.jakewharton.mosaic'
 ```
 
-The runtime APIs will be made available automatically by applying the plugin.
 Documentation is available at [jakewharton.github.io/mosaic/docs/0.x/](https://jakewharton.github.io/mosaic/docs/0.x/).
-
-**Note**: Any module which contains a `@Composable`-annotated function or lambda must apply the
-Mosaic plugin. While the runtime dependency will be available to downstream modules as a
-transitive dependency, the compiler plugin is not inherited and must be applied to every module.
-
-Since Kotlin compiler plugins are an unstable API, certain versions of Mosaic only work with
-certain versions of Kotlin.
-
-| Kotlin | Mosaic        |
-|--------|---------------|
-| 1.9.24 | 0.12.0        |
-| 1.9.22 | 0.11.0        |
-| 1.9.20 | 0.10.0        |
-| 1.9.10 | 0.9.1         |
-| 1.9.0  | 0.8.0 - 0.9.0 |
-| 1.8.22 | 0.7.1         |
-| 1.8.21 | 0.7.0         |
-| 1.8.20 | 0.6.0         |
-| 1.8.10 | 0.5.0         |
-| 1.8.0  | 0.3.0 - 0.4.0 |
-| 1.7.10 | 0.2.0         |
-| 1.5.10 | 0.1.0         |
-
-Versions newer than those listed may be supported but are untested.
 
 <details>
 <summary>Snapshots of the development version are available in Sonatype's snapshots repository.</summary>
 <p>
 
 ```groovy
-buildscript {
-  repository {
-    mavenCentral()
-    maven {
-      url 'https://oss.sonatype.org/content/repositories/snapshots/'
-    }
-  }
-  dependencies {
-    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.24'
-    classpath 'com.jakewharton.mosaic:mosaic-gradle-plugin:0.13.0-SNAPSHOT'
+repository {
+  mavenCentral()
+  maven {
+    url 'https://oss.sonatype.org/content/repositories/snapshots/'
   }
 }
-
-apply plugin: 'org.jetbrains.kotlin.jvm'
-apply plugin: 'com.jakewharton.mosaic'
+dependencies {
+  implementation("com.jakewharton.mosaic:mosaic-runtime:0.14.0-SNAPSHOT")
+}
 ```
 
 Snapshot documentation is available at [jakewharton.github.io/mosaic/docs/latest/](https://jakewharton.github.io/mosaic/docs/latest/).
@@ -213,27 +174,6 @@ fun main() = runMosaic {
   }
 }
 ```
-
-### Custom Compose Compiler
-
-Each version of Mosaic ships with a specific JetBrains Compose compiler version which works with
-a single version of Kotlin (see [version table](#usage) above). Newer versions of the Compose
-compiler or alternate Compose compilers can be specified using the Gradle extension.
-
-To use a new version of the JetBrains Compose compiler version:
-```kotlin
-mosaic {
-  kotlinCompilerPlugin.set("1.4.8")
-}
-```
-
-To use an alternate Compose compiler dependency:
-```kotlin
-mosaic {
-  kotlinCompilerPlugin.set("com.example:custom-compose-compiler:1.0.0")
-}
-```
-
 
 # License
 
