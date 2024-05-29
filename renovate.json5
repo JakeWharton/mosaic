@@ -3,14 +3,4 @@
   "extends": [
     "config:base"
   ],
-  "packageRules": [
-    {
-      // Compose compiler is tightly coupled to Kotlin version
-      "groupName": "Kotlin and Compose",
-      "matchPackagePrefixes": [
-        "org.jetbrains.compose.compiler",
-        "org.jetbrains.kotlin:kotlin",
-      ],
-    },
-  ],
 }
