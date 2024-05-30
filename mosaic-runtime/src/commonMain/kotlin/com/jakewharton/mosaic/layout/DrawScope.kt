@@ -63,7 +63,7 @@ public interface DrawScope {
 		textStyle: TextStyle = TextStyle.Unspecified,
 		topLeft: IntOffset = IntOffset.Zero,
 		size: IntSize = this.size.offsetSize(topLeft),
-		drawStyle: DrawStyle = Fill,
+		drawStyle: DrawStyle = DrawStyle.Fill,
 	)
 
 	/**
@@ -86,7 +86,7 @@ public interface DrawScope {
 		textStyle: TextStyle = TextStyle.Unspecified,
 		topLeft: IntOffset = IntOffset.Zero,
 		size: IntSize = this.size.offsetSize(topLeft),
-		drawStyle: DrawStyle = Fill,
+		drawStyle: DrawStyle = DrawStyle.Fill,
 	)
 
 	public fun drawText(
@@ -156,8 +156,8 @@ internal open class TextCanvasDrawScope(
 		}
 
 		when (drawStyle) {
-			Fill -> drawSolidRect(codePoint, foreground, background, textStyle, topLeft, size)
-			is Stroke -> {
+			DrawStyle.Fill -> drawSolidRect(codePoint, foreground, background, textStyle, topLeft, size)
+			is DrawStyle.Stroke -> {
 				val strokeWidth = max(1, drawStyle.width)
 				if (strokeWidth * 2 >= size.width || strokeWidth * 2 >= size.height) {
 					// fast path: stroke width is large, it turns out a full fill

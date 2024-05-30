@@ -52,14 +52,14 @@ Instead, we have to use Compose's `State` objects to hold state.
 
 ```diff
 -var count = 0
-+var count by mutableStateOf(0)
++var count by mutableIntStateOf(0)
 ```
 
 Now, when the `count` value is updated, Compose will know that it needs to re-render the string.
 
 ```kotlin
 fun main() = runMosaic {
-  var count by mutableStateOf(0)
+  var count by mutableIntStateOf(0)
 
   setContent {
     Text("The count is: $count")
@@ -162,7 +162,7 @@ This is the goal. It is currently blocked by [issuetracker.google.com/178904648]
 When that change lands, and Mosaic is updated, the counter sample will look like this:
 ```kotlin
 fun main() = runMosaic {
-  var count by remember { mutableStateOf(0) }
+  var count by remember { mutableIntStateOf(0) }
 
   Text("The count is: $count")
 

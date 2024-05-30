@@ -3,7 +3,7 @@ package example
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
-import com.jakewharton.mosaic.layout.Stroke
+import com.jakewharton.mosaic.layout.DrawStyle
 import com.jakewharton.mosaic.layout.drawBehind
 import com.jakewharton.mosaic.layout.height
 import com.jakewharton.mosaic.layout.offset
@@ -17,6 +17,7 @@ import com.jakewharton.mosaic.ui.Spacer
 import com.jakewharton.mosaic.ui.Text
 import com.jakewharton.mosaic.ui.unit.IntOffset
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 import org.jline.terminal.TerminalBuilder
 
@@ -39,15 +40,13 @@ fun main() = runMosaicBlocking {
 			Text("Use arrow keys to move the face. Press “q” to exit.")
 			Text("Position: $x, $y   Robot: $robotWidth, $robotHeight   World: $worldWidth, $worldHeight")
 			Spacer(Modifier.height(1))
-			// TODO https://github.com/JakeWharton/mosaic/issues/11
 			Box(
 				modifier = Modifier
-					.drawBehind { drawRect(worldBorderChar, drawStyle = Stroke(worldBorderWidth)) }
+					.drawBehind { drawRect(worldBorderChar, drawStyle = DrawStyle.Stroke(worldBorderWidth)) }
 					.padding(worldBorderWidth)
-					.size(worldWidth, worldHeight)
-					.offset { IntOffset(x, y) },
+					.size(worldWidth, worldHeight),
 			) {
-				Text("^_^")
+				Text("^_^", modifier = Modifier.offset { IntOffset(x, y) })
 			}
 		}
 	}
@@ -57,7 +56,7 @@ fun main() = runMosaicBlocking {
 		terminal.enterRawMode()
 		val reader = terminal.reader()
 
-		while (true) {
+		while (isActive) {
 			// TODO https://github.com/JakeWharton/mosaic/issues/10
 			when (reader.read()) {
 				'q'.code -> break
