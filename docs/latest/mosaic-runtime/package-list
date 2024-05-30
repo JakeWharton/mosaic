@@ -45,8 +45,10 @@ $dokka.location:com.jakewharton.mosaic.layout/DrawScope/drawText/#kotlin.Int#kot
 $dokka.location:com.jakewharton.mosaic.layout/DrawScope/drawText/#kotlin.Int#kotlin.Int#kotlin.String#com.jakewharton.mosaic.ui.Color#com.jakewharton.mosaic.ui.Color#com.jakewharton.mosaic.ui.TextStyle/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-draw-scope/draw-text.html
 $dokka.location:com.jakewharton.mosaic.layout/DrawScope/height/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-draw-scope/height.html
 $dokka.location:com.jakewharton.mosaic.layout/DrawScope/width/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-draw-scope/width.html
+$dokka.location:com.jakewharton.mosaic.layout/DrawStyle.Fill///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-draw-style/-fill/index.html
+$dokka.location:com.jakewharton.mosaic.layout/DrawStyle.Stroke///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-draw-style/-stroke/index.html
+$dokka.location:com.jakewharton.mosaic.layout/DrawStyle.Stroke/Stroke/#kotlin.Int/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-draw-style/-stroke/-stroke.html
 $dokka.location:com.jakewharton.mosaic.layout/DrawStyle///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-draw-style/index.html
-$dokka.location:com.jakewharton.mosaic.layout/Fill///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-fill/index.html
 $dokka.location:com.jakewharton.mosaic.layout/IntrinsicMeasurable///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-intrinsic-measurable/index.html
 $dokka.location:com.jakewharton.mosaic.layout/IntrinsicMeasurable/maxIntrinsicHeight/#kotlin.Int/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-intrinsic-measurable/max-intrinsic-height.html
 $dokka.location:com.jakewharton.mosaic.layout/IntrinsicMeasurable/maxIntrinsicWidth/#kotlin.Int/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-intrinsic-measurable/max-intrinsic-width.html
@@ -85,9 +87,6 @@ $dokka.location:com.jakewharton.mosaic.layout/Placeable///PointingToDeclaration/
 $dokka.location:com.jakewharton.mosaic.layout/Placeable/Placeable/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-placeable/-placeable.html
 $dokka.location:com.jakewharton.mosaic.layout/Placeable/height/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-placeable/height.html
 $dokka.location:com.jakewharton.mosaic.layout/Placeable/width/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-placeable/width.html
-$dokka.location:com.jakewharton.mosaic.layout/Stroke///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-stroke/index.html
-$dokka.location:com.jakewharton.mosaic.layout/Stroke/Stroke/#kotlin.Int/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-stroke/-stroke.html
-$dokka.location:com.jakewharton.mosaic.layout/Stroke/toString/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-stroke/to-string.html
 $dokka.location:com.jakewharton.mosaic.modifier////PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/index.html
 $dokka.location:com.jakewharton.mosaic.modifier/CombinedModifier///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-combined-modifier/index.html
 $dokka.location:com.jakewharton.mosaic.modifier/CombinedModifier/CombinedModifier/#com.jakewharton.mosaic.modifier.Modifier#com.jakewharton.mosaic.modifier.Modifier/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.modifier/-combined-modifier/-combined-modifier.html
