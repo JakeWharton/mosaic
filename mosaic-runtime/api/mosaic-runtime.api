@@ -62,9 +62,19 @@ public abstract interface class com/jakewharton/mosaic/layout/DrawScope {
 public abstract interface class com/jakewharton/mosaic/layout/DrawStyle {
 }
 
-public final class com/jakewharton/mosaic/layout/Fill : com/jakewharton/mosaic/layout/DrawStyle {
+public final class com/jakewharton/mosaic/layout/DrawStyle$Fill : com/jakewharton/mosaic/layout/DrawStyle {
 	public static final field $stable I
-	public static final field INSTANCE Lcom/jakewharton/mosaic/layout/Fill;
+	public static final field INSTANCE Lcom/jakewharton/mosaic/layout/DrawStyle$Fill;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/jakewharton/mosaic/layout/DrawStyle$Stroke : com/jakewharton/mosaic/layout/DrawStyle {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (I)V
+	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -183,16 +193,6 @@ public final class com/jakewharton/mosaic/layout/SizeKt {
 	public static synthetic fun wrapContentSize$default (Lcom/jakewharton/mosaic/modifier/Modifier;Lcom/jakewharton/mosaic/ui/Alignment;ZILjava/lang/Object;)Lcom/jakewharton/mosaic/modifier/Modifier;
 	public static final fun wrapContentWidth (Lcom/jakewharton/mosaic/modifier/Modifier;Lcom/jakewharton/mosaic/ui/Alignment$Horizontal;Z)Lcom/jakewharton/mosaic/modifier/Modifier;
 	public static synthetic fun wrapContentWidth$default (Lcom/jakewharton/mosaic/modifier/Modifier;Lcom/jakewharton/mosaic/ui/Alignment$Horizontal;ZILjava/lang/Object;)Lcom/jakewharton/mosaic/modifier/Modifier;
-}
-
-public final class com/jakewharton/mosaic/layout/Stroke : com/jakewharton/mosaic/layout/DrawStyle {
-	public static final field $stable I
-	public fun <init> ()V
-	public fun <init> (I)V
-	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun equals (Ljava/lang/Object;)Z
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/jakewharton/mosaic/modifier/CombinedModifier : com/jakewharton/mosaic/modifier/Modifier {
