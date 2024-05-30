@@ -47,14 +47,27 @@ public final class com/jakewharton/mosaic/layout/DrawModifierKt {
 }
 
 public abstract interface class com/jakewharton/mosaic/layout/DrawScope {
-	public abstract fun drawRect-e5kUBSE (IIIII)V
-	public static synthetic fun drawRect-e5kUBSE$default (Lcom/jakewharton/mosaic/layout/DrawScope;IIIIIILjava/lang/Object;)V
+	public abstract fun drawRect-K-Y9Gx4 (CIIIJJLcom/jakewharton/mosaic/layout/DrawStyle;)V
+	public abstract fun drawRect-K-Y9Gx4 (IIIIJJLcom/jakewharton/mosaic/layout/DrawStyle;)V
+	public static synthetic fun drawRect-K-Y9Gx4$default (Lcom/jakewharton/mosaic/layout/DrawScope;CIIIJJLcom/jakewharton/mosaic/layout/DrawStyle;ILjava/lang/Object;)V
+	public static synthetic fun drawRect-K-Y9Gx4$default (Lcom/jakewharton/mosaic/layout/DrawScope;IIIIJJLcom/jakewharton/mosaic/layout/DrawStyle;ILjava/lang/Object;)V
 	public abstract fun drawText-8Xo7vWM (IILcom/jakewharton/mosaic/text/AnnotatedString;III)V
 	public abstract fun drawText-8Xo7vWM (IILjava/lang/String;III)V
 	public static synthetic fun drawText-8Xo7vWM$default (Lcom/jakewharton/mosaic/layout/DrawScope;IILcom/jakewharton/mosaic/text/AnnotatedString;IIIILjava/lang/Object;)V
 	public static synthetic fun drawText-8Xo7vWM$default (Lcom/jakewharton/mosaic/layout/DrawScope;IILjava/lang/String;IIIILjava/lang/Object;)V
 	public abstract fun getHeight ()I
 	public abstract fun getWidth ()I
+}
+
+public abstract interface class com/jakewharton/mosaic/layout/DrawStyle {
+}
+
+public final class com/jakewharton/mosaic/layout/Fill : com/jakewharton/mosaic/layout/DrawStyle {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/jakewharton/mosaic/layout/Fill;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public abstract interface class com/jakewharton/mosaic/layout/IntrinsicMeasurable {
@@ -170,6 +183,16 @@ public final class com/jakewharton/mosaic/layout/SizeKt {
 	public static synthetic fun wrapContentSize$default (Lcom/jakewharton/mosaic/modifier/Modifier;Lcom/jakewharton/mosaic/ui/Alignment;ZILjava/lang/Object;)Lcom/jakewharton/mosaic/modifier/Modifier;
 	public static final fun wrapContentWidth (Lcom/jakewharton/mosaic/modifier/Modifier;Lcom/jakewharton/mosaic/ui/Alignment$Horizontal;Z)Lcom/jakewharton/mosaic/modifier/Modifier;
 	public static synthetic fun wrapContentWidth$default (Lcom/jakewharton/mosaic/modifier/Modifier;Lcom/jakewharton/mosaic/ui/Alignment$Horizontal;ZILjava/lang/Object;)Lcom/jakewharton/mosaic/modifier/Modifier;
+}
+
+public final class com/jakewharton/mosaic/layout/Stroke : com/jakewharton/mosaic/layout/DrawStyle {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (I)V
+	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/jakewharton/mosaic/modifier/CombinedModifier : com/jakewharton/mosaic/modifier/Modifier {
@@ -469,6 +492,7 @@ public final class com/jakewharton/mosaic/ui/ComposableSingletons$SpacerKt {
 
 public final class com/jakewharton/mosaic/ui/FillerKt {
 	public static final fun Filler-GddN7rU (CLcom/jakewharton/mosaic/modifier/Modifier;IIILandroidx/compose/runtime/Composer;II)V
+	public static final fun Filler-GddN7rU (ILcom/jakewharton/mosaic/modifier/Modifier;IIILandroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/jakewharton/mosaic/ui/Layout {

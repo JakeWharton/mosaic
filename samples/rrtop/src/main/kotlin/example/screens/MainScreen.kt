@@ -20,6 +20,8 @@ import com.jakewharton.mosaic.ui.Column
 import com.jakewharton.mosaic.ui.Row
 import com.jakewharton.mosaic.ui.Spacer
 import com.jakewharton.mosaic.ui.Text
+import com.jakewharton.mosaic.ui.unit.IntOffset
+import com.jakewharton.mosaic.ui.unit.IntSize
 import example.LocalRrtopColorsPalette
 import example.MainScreenUiState
 import example.common.BorderedTitledBox
@@ -493,11 +495,9 @@ private fun SolidPlot(
 							)
 						} else {
 							drawRect(
-								color = plotInfo.color,
-								row = height - valueHeight,
-								column = startColumn + i,
-								width = 1,
-								height = valueHeight,
+								background = plotInfo.color,
+								topLeft = IntOffset(startColumn + i, height - valueHeight),
+								size = IntSize(1, valueHeight),
 							)
 						}
 					}

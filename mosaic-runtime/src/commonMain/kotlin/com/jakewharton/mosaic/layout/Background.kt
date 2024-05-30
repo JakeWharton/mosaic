@@ -17,7 +17,7 @@ private class BackgroundModifier(
 	private val color: Color,
 ) : DrawModifier {
 	override fun ContentDrawScope.draw() {
-		drawRect(color)
+		drawRect(background = color)
 		drawContent()
 	}
 

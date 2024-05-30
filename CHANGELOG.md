@@ -6,7 +6,7 @@ New:
 - Nothing yet!
 
 Changed:
-- Nothing yet!
+- Сhange `DrawScope#drawRect` API with the ability to draw with text characters and specify `DrawStyle` (`Fill` or `Stroke`).
 
 Fixed:
 - Nothing yet!
