@@ -76,6 +76,14 @@ fun main() = runMosaic {
 
 <img src="samples/counter/demo.gif">
 
+That is the most basic sample of Mosaic.
+From there, the limit is only your imagination.
+
+<img src="samples/jest/demo.gif">
+
+<img src="samples/rrtop/demo.gif">
+
+_(Note: graphs in the above have rendering problems due to asciinema/agg which do not appear in the real output)_
 
 ## Usage
 

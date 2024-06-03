@@ -18,7 +18,7 @@ import com.jakewharton.mosaic.ui.Row
 import com.jakewharton.mosaic.ui.Spacer
 import com.jakewharton.mosaic.ui.Text
 import com.jakewharton.mosaic.ui.TextStyle
-import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.awaitCancellation
 
 private val BrightGreen = Color(100, 255, 100)
 private val BrightBlue = Color(60, 140, 230)
@@ -69,8 +69,7 @@ fun main() = runMosaicBlocking {
 		}
 	}
 
-	// Run forever!
-	suspendCancellableCoroutine { }
+	awaitCancellation()
 }
 
 @Composable
