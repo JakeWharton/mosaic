@@ -8,7 +8,7 @@ kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotl
 
 kotlinx-coroutines-core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1"
 
-compose-runtime = "org.jetbrains.compose.runtime:runtime:1.6.10"
+compose-runtime = "org.jetbrains.compose.runtime:runtime:1.6.11"
 
 maven-publish-gradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.28.0"
 dokka-gradlePlugin = "org.jetbrains.dokka:dokka-gradle-plugin:1.9.20"
