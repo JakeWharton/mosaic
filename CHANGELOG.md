@@ -3,7 +3,7 @@
 ## [Unreleased]
 
 New:
-- Nothing yet!
+- Support synchronized terminal update for rendering.
 
 Changed:
 - Сhange `DrawScope#drawRect` API with the ability to draw with text characters and specify `DrawStyle` (`Fill` or `Stroke`).
