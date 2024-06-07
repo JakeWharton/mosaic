@@ -55,9 +55,10 @@ internal class StringTextLayout : TextLayout<String>(initialValue = "") {
 	}
 }
 
-internal class AnnotatedStringTextLayout : TextLayout<AnnotatedString>(
-	initialValue = emptyAnnotatedString(),
-) {
+internal class AnnotatedStringTextLayout :
+	TextLayout<AnnotatedString>(
+		initialValue = emptyAnnotatedString(),
+	) {
 
 	override fun AnnotatedString.splitByLines(): List<AnnotatedString> {
 		return this.split("\n")

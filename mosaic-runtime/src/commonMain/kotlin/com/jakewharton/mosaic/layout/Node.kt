@@ -11,7 +11,11 @@ internal fun interface DebugPolicy {
 	fun MosaicNode.renderDebug(): String
 }
 
-internal abstract class MosaicNodeLayer : Measurable, Placeable(), PlacementScope, MeasureScope {
+internal abstract class MosaicNodeLayer :
+	Placeable(),
+	Measurable,
+	PlacementScope,
+	MeasureScope {
 	abstract fun drawTo(canvas: TextCanvas)
 }
 

@@ -73,7 +73,9 @@ public object Arrangement {
 	 * [Column].
 	 */
 	@Stable
-	public interface HorizontalOrVertical : Horizontal, Vertical {
+	public interface HorizontalOrVertical :
+		Horizontal,
+		Vertical {
 		/**
 		 * Spacing that should be added between any two adjacent layout children.
 		 */
