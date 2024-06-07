@@ -48,6 +48,8 @@ allprojects {
 			ktlint(libs.ktlint.core.get().version)
 				.editorConfigOverride([
 					'ktlint_standard_filename': 'disabled',
+					// Making something an expression body should be a choice around readability.
+					'ktlint_standard_function-expression-body': 'disabled',
 					'ktlint_standard_property-naming': 'disabled',
 					'ktlint_function_naming_ignore_when_annotated_with': 'Composable',
 					'ktlint_compose_modifier-missing-check': 'disabled',

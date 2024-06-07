@@ -58,7 +58,8 @@ fun main() = runMosaicBlocking {
 	val tests = mutableStateListOf<Test>()
 
 	// TODO https://github.com/JakeWharton/mosaic/issues/3
-	repeat(4) { // Number of test workers.
+	// Number of test workers.
+	repeat(4) {
 		launch(start = UNDISPATCHED) {
 			while (true) {
 				val path = paths.removeFirstOrNull() ?: break

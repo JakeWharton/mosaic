@@ -462,7 +462,8 @@ private fun contains(baseStart: Int, baseEnd: Int, targetStart: Int, targetEnd: 
  */
 private fun intersect(lStart: Int, lEnd: Int, rStart: Int, rEnd: Int) =
 	maxOf(lStart, rStart) < minOf(lEnd, rEnd) ||
-		contains(lStart, lEnd, rStart, rEnd) || contains(rStart, rEnd, lStart, lEnd)
+		contains(lStart, lEnd, rStart, rEnd) ||
+		contains(rStart, rEnd, lStart, lEnd)
 
 private val EmptyAnnotatedString: AnnotatedString = AnnotatedString("")
 
