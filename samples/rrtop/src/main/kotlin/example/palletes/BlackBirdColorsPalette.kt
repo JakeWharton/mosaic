@@ -17,7 +17,6 @@ val BlackBirdColorsPalette = RrtopColorsPalette(
 	menuBg = Black1,
 	menuFg = Black2,
 	menuDividerFg = Black2,
-	menuHighlightBg = Black1,
 	menuHighlightFg = Orange,
 	statusBarFg = Blue,
 	memoryTitleFg = White,
