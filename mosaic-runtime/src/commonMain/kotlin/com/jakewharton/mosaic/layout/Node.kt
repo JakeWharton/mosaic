@@ -131,13 +131,11 @@ internal class MosaicNode(
 	}
 
 	/**
-	 * Draw this node to a [TextSurface].
+	 * Draw this node to a [TextCanvas].
 	 * A call to [measureAndPlace] must precede calls to this function.
 	 */
-	fun paint(ansiLevel: AnsiLevel): TextSurface {
-		val surface = TextSurface(width, height, ansiLevel)
-		topLayer.drawTo(surface)
-		return surface
+	fun paint(textCanvas: TextCanvas) {
+		topLayer.drawTo(textCanvas)
 	}
 
 	/**
@@ -147,7 +145,9 @@ internal class MosaicNode(
 	fun paintStatics(statics: MutableList<TextSurface>, ansiLevel: AnsiLevel) {
 		for (child in children) {
 			if (isStatic) {
-				statics += child.paint(ansiLevel)
+				val textSurface = TextSurface(ansiLevel, child.width, child.height)
+				child.paint(textSurface)
+				statics += textSurface
 			}
 			child.paintStatics(statics, ansiLevel)
 		}

@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package com.jakewharton.mosaic
 
 import com.jakewharton.mosaic.ui.AnsiLevel
@@ -26,16 +28,70 @@ internal interface TextCanvas {
 private val blankPixel = TextPixel(' ')
 
 internal class TextSurface(
-	override val width: Int,
-	override val height: Int,
 	private val ansiLevel: AnsiLevel,
+	initialWidth: Int = 0,
+	initialHeight: Int = 0,
 ) : TextCanvas {
+	override var width: Int = initialWidth
+		private set
+	override var height: Int = initialHeight
+		private set
+
 	override var translationX = 0
 	override var translationY = 0
 
-	private val rows = Array(height) { Array(width) { TextPixel(' ') } }
+	private var fullWidth: Int = width
+	private var fullHeight: Int = height
 
-	override operator fun get(row: Int, column: Int) = rows[translationY + row][translationX + column]
+	private var rows = Array(fullHeight) { Array(fullWidth) { TextPixel(' ') } }
+
+	override operator fun get(row: Int, column: Int): TextPixel {
+		return rows[translationY + row][translationX + column]
+	}
+
+	fun reset() {
+		width = 0
+		height = 0
+		translationX = 0
+		translationY = 0
+		for (rowIndex in 0 until fullHeight) {
+			val row = rows[rowIndex]
+			for (columnIndex in 0 until fullWidth) {
+				row[columnIndex].reset()
+			}
+		}
+	}
+
+	fun resize(newWidth: Int, newHeight: Int) {
+		val widthDiff = newWidth - fullWidth
+		val heightDiff = newHeight - fullHeight
+		width = newWidth
+		height = newHeight
+		if (widthDiff > 0) {
+			rows.forEachIndexed { index, row ->
+				rows[index] = row.copyOf(newWidth) { TextPixel(' ') }
+			}
+			fullWidth = newWidth
+		}
+		if (heightDiff > 0) {
+			rows = rows.copyOf(newHeight) { Array(fullWidth) { TextPixel(' ') } }
+			fullHeight = newHeight
+		}
+	}
+
+	private fun <T> Array<T>.copyOf(newSize: Int, initializer: (index: Int) -> T): Array<T> {
+		if (newSize <= size) {
+			// In this case, we don't want to copy it again if the size hasn't increased.
+			return this
+		}
+		val oldSize = size
+		val new = copyOf(newSize)
+		for (i in oldSize until newSize) {
+			new[i] = initializer(i)
+		}
+		@Suppress("UNCHECKED_CAST")
+		return new as Array<T>
+	}
 
 	fun appendRowTo(appendable: Appendable, row: Int) {
 		// Reused heap allocation for building ANSI attributes inside the loop.
@@ -159,6 +215,13 @@ internal class TextPixel(var codePoint: Int) {
 	var textStyle: TextStyle = TextStyle.Empty
 
 	constructor(char: Char) : this(char.code)
+
+	fun reset() {
+		codePoint = ' '.code
+		background = Color.Unspecified
+		foreground = Color.Unspecified
+		textStyle = TextStyle.Empty
+	}
 
 	override fun toString() = buildString {
 		append("TextPixel(\"")
