@@ -52,7 +52,14 @@ public fun renderMosaic(content: @Composable () -> Unit): String {
 	return render.toString()
 }
 
-public suspend fun runMosaic(content: @Composable () -> Unit): Unit = coroutineScope {
+public suspend fun runMosaic(content: @Composable () -> Unit) {
+	runMosaic(content, ::platformDisplay)
+}
+
+internal suspend fun runMosaic(
+	content: @Composable () -> Unit,
+	display: (CharSequence) -> Unit,
+): Unit = coroutineScope {
 	val terminal = MordantTerminal()
 
 	val rendering = if (debugOutput) {
@@ -106,15 +113,21 @@ public suspend fun runMosaic(content: @Composable () -> Unit): Unit = coroutineS
 	val rootNode = createRootNode()
 	val applier = MosaicNodeApplier(rootNode) {
 		val render = rendering.render(rootNode)
-		platformDisplay("$ansiBeginSynchronizedUpdate$render$ansiEndSynchronizedUpdate")
+		display("$ansiBeginSynchronizedUpdate$render$ansiEndSynchronizedUpdate")
 	}
-
+	val composition = Composition(applier, recomposer)
 	try {
-		Composition(applier, recomposer).setContent {
+		composition.setContent {
 			CompositionLocalProvider(LocalTerminal provides terminalInfo.value) {
 				content()
 			}
 		}
+
+		val effectJob = checkNotNull(recomposer.effectCoroutineContext[Job]) {
+			"No Job in effectCoroutineContext of recomposer"
+		}
+		effectJob.children.forEach { it.join() }
+		recomposer.awaitIdle()
 
 		recomposer.close()
 		recomposer.join()
