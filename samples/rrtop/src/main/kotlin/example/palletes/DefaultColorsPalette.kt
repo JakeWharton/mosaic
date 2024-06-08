@@ -3,7 +3,6 @@ package example.palletes
 import com.jakewharton.mosaic.ui.Color
 import example.RrtopColorsPalette
 
-private val Black = Color(0, 0, 0)
 private val White = Color(211, 215, 207)
 private val DarkGray = Color(104, 106, 113)
 private val Blue = Color(114, 159, 207)
@@ -13,11 +12,10 @@ private val Gray = Color(128, 128, 128)
 private val Cyan = Color(6, 152, 154)
 
 val DefaultColorsPalette = RrtopColorsPalette(
-	mainBg = Black,
-	menuBg = Black,
+	mainBg = Color.Unspecified,
+	menuBg = Color.Unspecified,
 	menuFg = DarkGray,
 	menuDividerFg = DarkGray,
-	menuHighlightBg = Black,
 	menuHighlightFg = Blue,
 	statusBarFg = DarkGray,
 	memoryTitleFg = White,

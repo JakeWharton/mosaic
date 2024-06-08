@@ -17,7 +17,6 @@ val OneDarkColorsPalette = RrtopColorsPalette(
 	menuBg = Black1,
 	menuFg = White,
 	menuDividerFg = Black2,
-	menuHighlightBg = Black1,
 	menuHighlightFg = Purple,
 	statusBarFg = Blue,
 	memoryTitleFg = White,

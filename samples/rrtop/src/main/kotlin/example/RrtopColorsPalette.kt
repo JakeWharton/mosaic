@@ -14,7 +14,6 @@ data class RrtopColorsPalette(
 	val menuBg: Color,
 	val menuFg: Color,
 	val menuDividerFg: Color,
-	val menuHighlightBg: Color,
 	val menuHighlightFg: Color,
 	val statusBarFg: Color,
 	val memoryTitleFg: Color,

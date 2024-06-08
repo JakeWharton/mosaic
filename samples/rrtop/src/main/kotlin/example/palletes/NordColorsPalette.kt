@@ -18,7 +18,6 @@ val NordColorsPalette = RrtopColorsPalette(
 	menuBg = Nord0,
 	menuFg = Nord3,
 	menuDividerFg = Nord3,
-	menuHighlightBg = Nord0,
 	menuHighlightFg = Nord9,
 	statusBarFg = Nord3,
 	memoryTitleFg = Nord7,

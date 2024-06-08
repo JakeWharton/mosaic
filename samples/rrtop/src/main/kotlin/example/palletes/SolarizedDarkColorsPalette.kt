@@ -17,7 +17,6 @@ val SolarizedDarkColorsPalette = RrtopColorsPalette(
 	menuBg = Black1,
 	menuFg = White,
 	menuDividerFg = Black2,
-	menuHighlightBg = Black1,
 	menuHighlightFg = Orange,
 	statusBarFg = Blue,
 	memoryTitleFg = White,
