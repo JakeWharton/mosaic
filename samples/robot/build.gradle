@@ -8,5 +8,5 @@ application {
 
 dependencies {
 	implementation projects.mosaicRuntime
-	implementation 'org.jline:jline:3.26.1'
+	implementation libs.jline3
 }

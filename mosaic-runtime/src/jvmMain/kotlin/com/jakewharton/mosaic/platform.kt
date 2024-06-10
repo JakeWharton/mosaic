@@ -1,11 +1,14 @@
 package com.jakewharton.mosaic
 
+import com.jakewharton.mosaic.ui.unit.IntSize
 import java.nio.CharBuffer
 import java.nio.charset.StandardCharsets.UTF_8
-import org.fusesource.jansi.AnsiConsole
+import org.jline.terminal.TerminalBuilder
 
-private val out = AnsiConsole.out()!!.also { AnsiConsole.systemInstall() }
-private val encoder = UTF_8.newEncoder()!!
+/* invoking enterRawMode - it is a hack to use key events in samples */
+private val terminal = TerminalBuilder.terminal().also { it.enterRawMode() }
+private val out = terminal.output()
+private val encoder = UTF_8.newEncoder()
 
 internal actual fun platformDisplay(chars: CharSequence) {
 	// Write a single byte array to stdout to create an atomic visual change. If you instead write
@@ -19,4 +22,8 @@ internal actual fun platformDisplay(chars: CharSequence) {
 	// Explicitly flush to ensure the trailing line clear is sent. Empirically, this appears to be
 	// buffered and not processed until the next frame, or not at all on the final frame.
 	out.flush()
+}
+
+internal actual fun getPlatformTerminalSize(): IntSize {
+	return IntSize(terminal.width, terminal.height)
 }
