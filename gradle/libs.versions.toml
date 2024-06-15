@@ -1,5 +1,6 @@
 [versions]
 kotlin = "2.0.0"
+jline3 = "3.26.1"
 
 [libraries]
 kotlin-plugin-core = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -19,9 +20,14 @@ spotless-gradlePlugin = "com.diffplug.spotless:spotless-plugin-gradle:6.25.0"
 ktlint-core = "com.pinterest.ktlint:ktlint-cli:1.3.0"
 ktlint-composeRules = "io.nlopez.compose.rules:ktlint:0.4.4"
 
-jline3 = "org.jline:jline:3.26.1"
-mordant = "com.github.ajalt.mordant:mordant:2.6.0"
+jline3-terminal = { module = "org.jline:jline-terminal", version.ref = "jline3" }
+jline3-native = { module = "org.jline:jline-terminal-jna", version.ref = "jline3" }
+jline3-terminal-jna = { module = "org.jline:jline-terminal-jna", version.ref = "jline3" }
+
 codepoints = "de.cketti.unicode:kotlin-codepoints:0.8.0"
 
 junit4 = "junit:junit:4.13.2"
 assertk = "com.willowtreeapps.assertk:assertk:0.28.1"
+
+[bundles]
+jline3 = [ "jline3-terminal", "jline3-native", "jline3-terminal-jna" ]

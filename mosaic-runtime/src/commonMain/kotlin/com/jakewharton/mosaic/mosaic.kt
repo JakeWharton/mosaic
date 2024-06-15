@@ -8,7 +8,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Recomposer
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.Snapshot
-import com.github.ajalt.mordant.terminal.Terminal as MordantTerminal
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.ui.BoxMeasurePolicy
 import kotlin.time.ExperimentalTime
@@ -55,13 +54,11 @@ public interface MosaicScope : CoroutineScope {
 }
 
 public suspend fun runMosaic(body: suspend MosaicScope.() -> Unit): Unit = coroutineScope {
-	val terminal = MordantTerminal()
-
 	val rendering = if (debugOutput) {
 		@OptIn(ExperimentalTime::class) // Not used in production.
-		DebugRendering(ansiLevel = terminal.info.ansiLevel.toMosaicAnsiLevel())
+		DebugRendering(ansiLevel = getAnsiLevel())
 	} else {
-		AnsiRendering(ansiLevel = terminal.info.ansiLevel.toMosaicAnsiLevel())
+		AnsiRendering(ansiLevel = getAnsiLevel())
 	}
 
 	var hasFrameWaiters = false

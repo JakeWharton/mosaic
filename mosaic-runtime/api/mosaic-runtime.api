@@ -608,6 +608,12 @@ public final class com/jakewharton/mosaic/ui/unit/ConstraintsKt {
 	public static synthetic fun offset-cpom3Pk$default (JIIILjava/lang/Object;)J
 }
 
+public final class com/jakewharton/mosaic/ui/unit/InlineClassUtilsKt {
+	public static final fun packInts (II)J
+	public static final fun unpackInt1 (J)I
+	public static final fun unpackInt2 (J)I
+}
+
 public final class com/jakewharton/mosaic/ui/unit/IntOffset {
 	public static final field Companion Lcom/jakewharton/mosaic/ui/unit/IntOffset$Companion;
 	public static final synthetic fun box-impl (J)Lcom/jakewharton/mosaic/ui/unit/IntOffset;

@@ -9,5 +9,5 @@ application {
 dependencies {
 	implementation projects.mosaicRuntime
 	implementation 'org.jetbrains.kotlinx:kotlinx-datetime:0.6.0'
-	implementation libs.jline3
+	implementation libs.bundles.jline3
 }

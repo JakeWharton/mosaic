@@ -5,6 +5,7 @@ package com.jakewharton.mosaic.ui.unit
 /**
  * Packs two Int values into one Long value for use in inline classes.
  */
+@PublishedApi
 internal inline fun packInts(val1: Int, val2: Int): Long {
 	return val1.toLong().shl(32) or (val2.toLong() and 0xFFFFFFFF)
 }
@@ -12,6 +13,7 @@ internal inline fun packInts(val1: Int, val2: Int): Long {
 /**
  * Unpacks the first Int value in [packInts] from its returned ULong.
  */
+@PublishedApi
 internal inline fun unpackInt1(value: Long): Int {
 	return value.shr(32).toInt()
 }
@@ -19,6 +21,7 @@ internal inline fun unpackInt1(value: Long): Int {
 /**
  * Unpacks the second Int value in [packInts] from its returned ULong.
  */
+@PublishedApi
 internal inline fun unpackInt2(value: Long): Int {
 	return value.and(0xFFFFFFFF).toInt()
 }

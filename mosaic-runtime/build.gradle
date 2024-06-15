@@ -17,7 +17,6 @@ kotlin {
 			dependencies {
 				api libs.compose.runtime
 				api libs.kotlinx.coroutines.core
-				implementation libs.mordant
 				implementation libs.codepoints
 			}
 		}
@@ -35,7 +34,7 @@ kotlin {
 		jvmMain {
 			dependsOn(concurrentMain)
 			dependencies {
-				implementation libs.jline3
+				implementation libs.bundles.jline3
 			}
 		}
 		nonJvmMain {
