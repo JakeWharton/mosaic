@@ -16,6 +16,7 @@ buildscript {
 		mavenCentral()
 		google()
 		gradlePluginPortal()
+		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 	}
 }
 
@@ -26,6 +27,7 @@ allprojects {
 	repositories {
 		mavenCentral()
 		google()
+		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 	}
 
 	tasks.withType(JavaCompile).configureEach {
