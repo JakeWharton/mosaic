@@ -13,7 +13,7 @@ compose-runtime = "org.jetbrains.compose.runtime:runtime:1.6.11"
 maven-publish-gradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.29.0"
 dokka-gradlePlugin = "org.jetbrains.dokka:dokka-gradle-plugin:1.9.20"
 poko-gradlePlugin = "dev.drewhamilton.poko:poko-gradle-plugin:0.16.0"
-binary-compatibility-validator-gradlePlugin = "org.jetbrains.kotlinx:binary-compatibility-validator:0.16.0"
+binary-compatibility-validator-gradlePlugin = "org.jetbrains.kotlinx:binary-compatibility-validator:0.16.1"
 
 spotless-gradlePlugin = "com.diffplug.spotless:spotless-plugin-gradle:6.25.0"
 ktlint-core = "com.pinterest.ktlint:ktlint-cli:1.3.1"
