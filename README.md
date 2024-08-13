@@ -22,7 +22,7 @@ Output (for now) happens through the `setContent` function.
 You can call `setContent` multiple times, but as you'll see you probably won't need to.
 
 ```kotlin
-fun main() = runMosaic {
+suspend fun main() = runMosaic {
   setContent {
     Text("The count is: 0")
   }
@@ -33,7 +33,7 @@ To change the output dynamically we can use local properties to hold state.
 Let's update our counter to actually count to 20.
 
 ```kotlin
-fun main() = runMosaic {
+suspend fun main() = runMosaic {
   var count = 0
 
   setContent {
@@ -58,7 +58,7 @@ Instead, we have to use Compose's `State` objects to hold state.
 Now, when the `count` value is updated, Compose will know that it needs to re-render the string.
 
 ```kotlin
-fun main() = runMosaic {
+suspend fun main() = runMosaic {
   var count by mutableIntStateOf(0)
 
   setContent {
@@ -169,7 +169,7 @@ This is the goal. It is currently blocked by [issuetracker.google.com/178904648]
 
 When that change lands, and Mosaic is updated, the counter sample will look like this:
 ```kotlin
-fun main() = runMosaic {
+suspend fun main() = runMosaic {
   var count by remember { mutableIntStateOf(0) }
 
   Text("The count is: $count")
