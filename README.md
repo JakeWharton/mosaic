@@ -163,6 +163,15 @@ overshadow the core under the single "Compose" moniker in an unforced marketing 
 
 If you want another example of a non-Compose UI-based Compose project checkout JetBrains' [Compose for Web](https://blog.jetbrains.com/kotlin/2021/05/technology-preview-jetpack-compose-for-web/) project.
 
+### Output repeats with `./gradlew run` and/or inside IntelliJ IDEA
+
+Running within Gradle or IntelliJ IDEA will not work. Both tools strip ANSI control characters,
+which prevent Mosaic from redrawing over a previous frame. The output will likely just render in
+successive lines instead.
+
+In the future Mosaic will detect this case and do... something. For now, we unconditionally emit
+ANSI control characters. Run your programs directly in a terminal emulator–no IDE and no Gradle.
+
 ### Why doesn't work take place in a `LaunchedEffect`?
 
 This is the goal. It is currently blocked by [issuetracker.google.com/178904648](https://issuetracker.google.com/178904648).
