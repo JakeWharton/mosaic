@@ -1,0 +1,25 @@
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+
+kotlin {
+	jvm()
+
+//	macosArm64 {
+//		binaries.executable {
+//			entryPoint = 'com.jakewharton.mosaic.term.main'
+//		}
+//	}
+
+	sourceSets {
+		commonMain {
+			dependencies {
+				api 'org.jetbrains.kotlinx:kotlinx-io-core:0.5.1'
+			}
+		}
+		commonTest {
+			dependencies {
+				implementation libs.kotlin.test
+				implementation libs.assertk
+			}
+		}
+	}
+}

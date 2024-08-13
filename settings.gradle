@@ -1,6 +1,7 @@
 rootProject.name = 'mosaic'
 
 include ':mosaic-runtime'
+include ':mosaic-term'
 
 include ':samples:counter'
 include ':samples:demo'

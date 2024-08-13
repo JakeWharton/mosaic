@@ -5,27 +5,24 @@ import androidx.compose.runtime.BroadcastFrameClock
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Composition
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Recomposer
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.Snapshot
 import com.github.ajalt.mordant.terminal.Terminal as MordantTerminal
+import androidx.compose.runtime.MutableState
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.BoxMeasurePolicy
 import com.jakewharton.mosaic.ui.unit.IntSize
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.time.ExperimentalTime
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 
 /**
  * True for a debug-like output that renders each "frame" on its own with a timestamp delta.
