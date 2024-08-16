@@ -38,8 +38,10 @@ internal inline fun Node(
 
 @JvmField
 internal val SetModifier: MosaicNode.(Modifier) -> Unit = { setModifier(it) }
+
 @JvmField
 internal val SetMeasurePolicy: MosaicNode.(MeasurePolicy) -> Unit = { measurePolicy = it }
+
 @JvmField
 internal val SetDebugPolicy: MosaicNode.(DebugPolicy) -> Unit = { debugPolicy = it }
 
