@@ -1,9 +1,9 @@
 package example
 
 import kotlin.system.exitProcess
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,7 +14,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class RrtopViewModel(private val coroutineScope: CoroutineScope) {
+class RrtopViewModel {
+	private val coroutineScope = MainScope()
+
 	private val currentScreenFlow = MutableStateFlow(RrtopUiState.Screen.Main)
 	private val commonInfoFlow = MutableStateFlow("")
 

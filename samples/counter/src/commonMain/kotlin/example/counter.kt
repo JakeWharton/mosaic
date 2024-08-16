@@ -1,22 +1,24 @@
 package example
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.jakewharton.mosaic.MosaicScope
 import com.jakewharton.mosaic.ui.Text
 import kotlinx.coroutines.delay
 
-suspend fun MosaicScope.runCounter() {
-	// TODO https://github.com/JakeWharton/mosaic/issues/3
-	var count by mutableIntStateOf(0)
+@Composable
+fun Counter() {
+	var count by remember { mutableIntStateOf(0) }
 
-	setContent {
-		Text("The count is: $count")
-	}
+	Text("The count is: $count")
 
-	for (i in 1..20) {
-		delay(250)
-		count = i
+	LaunchedEffect(Unit) {
+		for (i in 1..20) {
+			delay(250)
+			count = i
+		}
 	}
 }

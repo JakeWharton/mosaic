@@ -7,10 +7,6 @@ public final class com/jakewharton/mosaic/MosaicKt {
 	public static final fun runMosaic (Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
-public abstract interface class com/jakewharton/mosaic/MosaicScope : kotlinx/coroutines/CoroutineScope {
-	public abstract fun setContent (Lkotlin/jvm/functions/Function2;)V
-}
-
 public final class com/jakewharton/mosaic/Terminal {
 	public static final field $stable I
 	public synthetic fun <init> (JLkotlin/jvm/internal/DefaultConstructorMarker;)V

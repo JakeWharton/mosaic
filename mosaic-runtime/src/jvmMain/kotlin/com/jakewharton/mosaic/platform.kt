@@ -2,6 +2,7 @@ package com.jakewharton.mosaic
 
 import java.nio.CharBuffer
 import java.nio.charset.StandardCharsets.UTF_8
+import java.util.concurrent.atomic.AtomicBoolean as JavaAtomicBoolean
 import org.fusesource.jansi.AnsiConsole
 
 private val out = AnsiConsole.out()!!.also { AnsiConsole.systemInstall() }
@@ -19,4 +20,16 @@ internal actual fun platformDisplay(chars: CharSequence) {
 	// Explicitly flush to ensure the trailing line clear is sent. Empirically, this appears to be
 	// buffered and not processed until the next frame, or not at all on the final frame.
 	out.flush()
+}
+
+internal actual class AtomicBoolean actual constructor(initialValue: Boolean) {
+	private val delegate = JavaAtomicBoolean(initialValue)
+
+	actual fun set(value: Boolean) {
+		delegate.set(value)
+	}
+
+	actual fun compareAndSet(expect: Boolean, update: Boolean): Boolean {
+		return delegate.compareAndSet(expect, update)
+	}
 }
