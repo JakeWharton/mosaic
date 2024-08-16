@@ -104,24 +104,22 @@ internal class MosaicNode(
 	override var parentData: Any? = null
 		private set
 
-	var modifier: Modifier = Modifier
-		set(value) {
-			topLayer = value.foldOut(bottomLayer) { element, lowerLayer ->
-				when (element) {
-					is LayoutModifier -> LayoutLayer(element, lowerLayer)
+	fun setModifier(modifier: Modifier) {
+		topLayer = modifier.foldOut(bottomLayer) { element, nextLayer ->
+			when (element) {
+				is LayoutModifier -> LayoutLayer(element, nextLayer)
 
-					is DrawModifier -> DrawLayer(element, lowerLayer)
+				is DrawModifier -> DrawLayer(element, nextLayer)
 
-					is ParentDataModifier -> {
-						parentData = element.modifyParentData(parentData)
-						lowerLayer
-					}
-
-					else -> lowerLayer
+				is ParentDataModifier -> {
+					parentData = element.modifyParentData(parentData)
+					nextLayer
 				}
+
+				else -> nextLayer
 			}
-			field = value
 		}
+	}
 
 	override fun measure(constraints: Constraints): Placeable =
 		topLayer.apply { measure(constraints) }
