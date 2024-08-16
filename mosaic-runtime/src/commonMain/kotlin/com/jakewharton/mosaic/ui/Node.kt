@@ -11,6 +11,7 @@ import com.jakewharton.mosaic.layout.MeasureScope
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.ui.unit.Constraints
+import kotlin.jvm.JvmField
 
 @Composable
 @MosaicComposable
@@ -27,13 +28,20 @@ internal inline fun Node(
 	ComposeNode<MosaicNode, Applier<Any>>(
 		factory = factory,
 		update = {
-			set(measurePolicy) { this.measurePolicy = measurePolicy }
-			set(modifier) { this.modifier = modifier }
-			set(debugPolicy) { this.debugPolicy = debugPolicy }
+			set(measurePolicy, SetMeasurePolicy)
+			set(modifier, SetModifier)
+			set(debugPolicy, SetDebugPolicy)
 		},
 		content = content,
 	)
 }
+
+@JvmField
+internal val SetModifier: MosaicNode.(Modifier) -> Unit = { setModifier(it) }
+@JvmField
+internal val SetMeasurePolicy: MosaicNode.(MeasurePolicy) -> Unit = { measurePolicy = it }
+@JvmField
+internal val SetDebugPolicy: MosaicNode.(DebugPolicy) -> Unit = { debugPolicy = it }
 
 internal val NodeFactory: () -> MosaicNode = {
 	MosaicNode(
