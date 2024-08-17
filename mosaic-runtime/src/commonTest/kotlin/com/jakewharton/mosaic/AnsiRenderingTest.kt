@@ -25,7 +25,7 @@ class AnsiRenderingTest {
 			|Hello$s
 			|World!
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -42,7 +42,7 @@ class AnsiRenderingTest {
 			|Hello$s
 			|World!
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 
 		val second = mosaicNodes {
@@ -61,7 +61,7 @@ class AnsiRenderingTest {
 			|Wor
 			|ld!
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -82,7 +82,7 @@ class AnsiRenderingTest {
 			|Wor
 			|ld!
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 
 		val second = mosaicNodes {
@@ -98,7 +98,7 @@ class AnsiRenderingTest {
 			|World!$clearLine
 			|$clearLine
 			|$clearLine$cursorUp
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -115,7 +115,7 @@ class AnsiRenderingTest {
 			|World!
 			|Hello
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -132,7 +132,7 @@ class AnsiRenderingTest {
 			|One
 			|Two
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 
 		val second = mosaicNodes {
@@ -147,7 +147,7 @@ class AnsiRenderingTest {
 			|${cursorUp}Three$clearLine
 			|Four
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -184,7 +184,7 @@ class AnsiRenderingTest {
 			|Five
 			|Sup
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -207,7 +207,7 @@ class AnsiRenderingTest {
 			|TopTopTop
 			|LeftLeft$s
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 }

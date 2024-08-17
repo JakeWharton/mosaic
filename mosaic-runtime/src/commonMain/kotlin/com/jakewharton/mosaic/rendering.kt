@@ -81,6 +81,8 @@ internal class AnsiRendering(
 		return stringBuilder.apply {
 			clear()
 
+			append(ansiBeginSynchronizedUpdate)
+
 			var staleLines = lastHeight
 			repeat(staleLines) {
 				append(cursorUp)
@@ -120,6 +122,8 @@ internal class AnsiRendering(
 			repeat(staleLines - 1) {
 				append(cursorUp)
 			}
+
+			append(ansiEndSynchronizedUpdate)
 
 			lastHeight = surface.height
 		}

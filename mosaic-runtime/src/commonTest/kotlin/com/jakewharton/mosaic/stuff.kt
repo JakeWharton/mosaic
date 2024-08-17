@@ -29,6 +29,10 @@ fun String.replaceLineEndingsWithCRLF(): String {
 	return this.replace("\n", "\r\n")
 }
 
+fun String.wrapWithAnsiSynchronizedUpdate(): String {
+	return "$ansiBeginSynchronizedUpdate$this$ansiEndSynchronizedUpdate"
+}
+
 fun <T> snapshotStateListOf(vararg values: T): SnapshotStateList<T> {
 	return SnapshotStateList<T>().apply { addAll(values) }
 }

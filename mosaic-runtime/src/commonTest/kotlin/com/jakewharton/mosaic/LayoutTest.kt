@@ -46,7 +46,7 @@ class LayoutTest {
 		val expected = """
 			|  $s
 			|
-		""".trimMargin().replaceLineEndingsWithCRLF()
+		""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF()
 		assertThat(actual).isEqualTo(expected)
 	}
 
@@ -67,7 +67,7 @@ class LayoutTest {
 		val expected = """
 			|ABC
 			|
-		""".trimMargin().replaceLineEndingsWithCRLF()
+		""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF()
 		assertThat(actual).isEqualTo(expected)
 	}
 
@@ -91,7 +91,7 @@ class LayoutTest {
 			|  BB   $s
 			|A      $s
 			|
-		""".trimMargin().replaceLineEndingsWithCRLF()
+		""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF()
 		assertThat(actual).isEqualTo(expected)
 	}
 
@@ -130,7 +130,7 @@ class LayoutTest {
 			|...XXX
 			|.....X
 			|
-		""".trimMargin().replaceLineEndingsWithCRLF()
+		""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF()
 		assertThat(actual).isEqualTo(expected)
 	}
 }
