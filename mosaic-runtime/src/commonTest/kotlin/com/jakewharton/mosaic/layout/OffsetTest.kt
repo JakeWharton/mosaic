@@ -10,6 +10,7 @@ import com.jakewharton.mosaic.replaceLineEndingsWithCRLF
 import com.jakewharton.mosaic.s
 import com.jakewharton.mosaic.ui.Box
 import com.jakewharton.mosaic.ui.unit.IntOffset
+import com.jakewharton.mosaic.wrapWithAnsiSynchronizedUpdate
 import kotlin.test.Test
 import kotlin.test.assertFails
 
@@ -29,7 +30,7 @@ class OffsetTest {
 			|     $s
 			|     $s
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -68,7 +69,7 @@ class OffsetTest {
 			|$TestChar    $s
 			|     $s
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -107,7 +108,7 @@ class OffsetTest {
 			|   $TestChar $s
 			|     $s
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -151,7 +152,7 @@ class OffsetTest {
 			|     $s
 			|     $s
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -190,7 +191,7 @@ class OffsetTest {
 			|$TestChar    $s
 			|     $s
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -229,7 +230,7 @@ class OffsetTest {
 			|   $TestChar $s
 			|     $s
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 

@@ -5,6 +5,7 @@ import androidx.compose.runtime.BroadcastFrameClock
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Composition
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Recomposer
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.Snapshot
@@ -53,86 +54,112 @@ public fun renderMosaic(content: @Composable () -> Unit): String {
 }
 
 public suspend fun runMosaic(content: @Composable () -> Unit) {
-	runMosaic(content, ::platformDisplay)
+	coroutineScope {
+		val mosaicComposition = MosaicComposition(coroutineScope = this, onRender = ::platformDisplay)
+		mosaicComposition.setContent(content)
+		mosaicComposition.awaitComplete()
+	}
 }
 
-internal suspend fun runMosaic(
-	content: @Composable () -> Unit,
-	display: (CharSequence) -> Unit,
-): Unit = coroutineScope {
-	val terminal = MordantTerminal()
+internal class MosaicComposition(
+	coroutineScope: CoroutineScope,
+	override val onRender: (CharSequence) -> Unit,
+) : BaseMosaicComposition(coroutineScope) {
+	private val terminal = MordantTerminal()
 
-	val rendering = if (debugOutput) {
+	override val rendering: Rendering = if (debugOutput) {
 		@OptIn(ExperimentalTime::class) // Not used in production.
 		DebugRendering(ansiLevel = terminal.info.ansiLevel.toMosaicAnsiLevel())
 	} else {
 		AnsiRendering(ansiLevel = terminal.info.ansiLevel.toMosaicAnsiLevel())
 	}
 
-	val clock = BroadcastFrameClock()
-	val job = Job(coroutineContext[Job])
-	val composeContext = coroutineContext + clock + job
+	override val terminalInfo: MutableState<Terminal> =
+		mutableStateOf(Terminal(size = IntSize(terminal.info.width, terminal.info.height)))
 
-	GlobalSnapshotManager.ensureStarted(composeContext)
-
-	launch(composeContext) {
-		while (true) {
-			clock.sendFrame(0L) // Frame time value is not used by Compose runtime.
-			delay(50L)
-		}
+	init {
+		coroutineScope.sendFrames()
+		coroutineScope.updateTerminalInfo()
 	}
 
-	val recomposer = Recomposer(composeContext)
-	launch(composeContext, start = CoroutineStart.UNDISPATCHED) {
-		recomposer.runRecomposeAndApplyChanges()
-	}
-
-	val terminalInfo = mutableStateOf(
-		Terminal(
-			size = IntSize(terminal.info.width, terminal.info.height),
-		),
-	)
-
-	launch(composeContext) {
-		while (true) {
-			val currentTerminalInfo = terminalInfo.value
-			if (terminal.info.updateTerminalSize() &&
-				(
-					currentTerminalInfo.size.width != terminal.info.width ||
-						currentTerminalInfo.size.height != terminal.info.height
-					)
-			) {
-				terminalInfo.value = Terminal(
-					size = IntSize(terminal.info.width, terminal.info.height),
-				)
+	private fun CoroutineScope.updateTerminalInfo() {
+		launch(composeContext) {
+			while (true) {
+				val currentTerminalInfo = terminalInfo.value
+				if (terminal.info.updateTerminalSize() &&
+					(
+						currentTerminalInfo.size.width != terminal.info.width ||
+							currentTerminalInfo.size.height != terminal.info.height
+						)
+				) {
+					terminalInfo.value = Terminal(size = IntSize(terminal.info.width, terminal.info.height))
+				}
+				delay(50L)
 			}
-			delay(50L)
+		}
+	}
+}
+
+internal abstract class BaseMosaicComposition(coroutineScope: CoroutineScope) {
+	protected abstract val onRender: (CharSequence) -> Unit
+	protected abstract val rendering: Rendering
+
+	private val job = Job(coroutineScope.coroutineContext[Job])
+	private val clock = BroadcastFrameClock()
+	protected val composeContext: CoroutineContext = coroutineScope.coroutineContext + job + clock
+
+	private val rootNode = createRootNode()
+	private val applier = MosaicNodeApplier(rootNode) { onRender(rendering.render(rootNode)) }
+	private val recomposer = Recomposer(composeContext)
+	private val composition = Composition(applier, recomposer)
+
+	protected abstract val terminalInfo: MutableState<Terminal>
+
+	init {
+		startGlobalSnapshotManager()
+		coroutineScope.startRecomposer()
+	}
+
+	private fun startGlobalSnapshotManager() {
+		GlobalSnapshotManager().ensureStarted(composeContext)
+	}
+
+	private fun CoroutineScope.startRecomposer() {
+		launch(composeContext, start = CoroutineStart.UNDISPATCHED) {
+			recomposer.runRecomposeAndApplyChanges()
 		}
 	}
 
-	val rootNode = createRootNode()
-	val applier = MosaicNodeApplier(rootNode) {
-		val render = rendering.render(rootNode)
-		display("$ansiBeginSynchronizedUpdate$render$ansiEndSynchronizedUpdate")
+	protected fun CoroutineScope.sendFrames(): Job {
+		return launch(composeContext) {
+			while (true) {
+				clock.sendFrame(0L) // Frame time value is not used by Compose runtime.
+				delay(50L)
+			}
+		}
 	}
-	val composition = Composition(applier, recomposer)
-	try {
+
+	fun setContent(content: @Composable () -> Unit) {
 		composition.setContent {
 			CompositionLocalProvider(LocalTerminal provides terminalInfo.value) {
 				content()
 			}
 		}
+	}
 
-		val effectJob = checkNotNull(recomposer.effectCoroutineContext[Job]) {
-			"No Job in effectCoroutineContext of recomposer"
+	suspend fun awaitComplete() {
+		try {
+			val effectJob = checkNotNull(recomposer.effectCoroutineContext[Job]) {
+				"No Job in effectCoroutineContext of recomposer"
+			}
+			effectJob.children.forEach { it.join() }
+			recomposer.awaitIdle()
+
+			recomposer.close()
+			recomposer.join()
+		} finally {
+			job.cancel()
 		}
-		effectJob.children.forEach { it.join() }
-		recomposer.awaitIdle()
-
-		recomposer.close()
-		recomposer.join()
-	} finally {
-		job.cancel()
 	}
 }
 
@@ -171,7 +198,7 @@ internal class MosaicNodeApplier(
 	override fun onClear() {}
 }
 
-internal object GlobalSnapshotManager {
+internal class GlobalSnapshotManager {
 	private val started = AtomicBoolean(false)
 	private val sent = AtomicBoolean(false)
 

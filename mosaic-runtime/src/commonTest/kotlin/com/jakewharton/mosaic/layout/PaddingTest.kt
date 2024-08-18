@@ -13,6 +13,7 @@ import com.jakewharton.mosaic.s
 import com.jakewharton.mosaic.testIntrinsics
 import com.jakewharton.mosaic.ui.Layout
 import com.jakewharton.mosaic.ui.unit.Constraints
+import com.jakewharton.mosaic.wrapWithAnsiSynchronizedUpdate
 import kotlin.test.Test
 import kotlin.test.assertFails
 
@@ -41,7 +42,7 @@ class PaddingTest {
 			"""
 			|$TestChar
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -53,7 +54,7 @@ class PaddingTest {
 			"""
 			|  $TestChar
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -76,7 +77,7 @@ class PaddingTest {
 			"""
 			|$TestChar
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -90,7 +91,7 @@ class PaddingTest {
 			|$s
 			|$TestChar
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -113,7 +114,7 @@ class PaddingTest {
 			"""
 			|$TestChar
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -125,7 +126,7 @@ class PaddingTest {
 			"""
 			|$TestChar $s
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -148,7 +149,7 @@ class PaddingTest {
 			"""
 			|$TestChar
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -162,7 +163,7 @@ class PaddingTest {
 			|$s
 			|$s
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -185,7 +186,7 @@ class PaddingTest {
 			"""
 			|$TestChar
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -199,7 +200,7 @@ class PaddingTest {
 			| $s
 			| $s
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
