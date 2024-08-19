@@ -30,6 +30,8 @@ jobs:
         working-directory: mosaic-terminal
 
       - run: ./gradlew build :samples:jest:run :mosaic-runtime:dokkaHtml
+        env:
+          MOSAIC_RAW_MODE: false
 
       - run: ./gradlew publish
         if: ${{ github.ref == 'refs/heads/trunk' && github.repository == 'JakeWharton/mosaic' }}
