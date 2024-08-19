@@ -11,18 +11,14 @@ internal fun interface DebugPolicy {
 	fun MosaicNode.renderDebug(): String
 }
 
-internal abstract class MosaicNodeLayer :
-	Placeable(),
+internal abstract class MosaicNodeLayer(
+	private val next: MosaicNodeLayer?,
+	private val isStatic: Boolean,
+) : Placeable(),
 	Measurable,
 	PlacementScope,
 	MeasureScope {
-	abstract fun drawTo(canvas: TextCanvas)
-}
 
-internal abstract class AbstractMosaicNodeLayer(
-	private val next: MosaicNodeLayer?,
-	private val isStatic: Boolean,
-) : MosaicNodeLayer() {
 	private var measureResult: MeasureResult = NotMeasured
 
 	final override var parentData: Any? = null
@@ -62,7 +58,7 @@ internal abstract class AbstractMosaicNodeLayer(
 		measureResult.placeChildren()
 	}
 
-	override fun drawTo(canvas: TextCanvas) {
+	open fun drawTo(canvas: TextCanvas) {
 		next?.drawTo(canvas)
 	}
 
@@ -179,7 +175,7 @@ internal class MosaicNode(
 
 private class BottomLayer(
 	private val node: MosaicNode,
-) : AbstractMosaicNodeLayer(null, node.isStatic) {
+) : MosaicNodeLayer(null, node.isStatic) {
 	override fun doMeasure(constraints: Constraints): MeasureResult {
 		return node.measurePolicy.run { measure(node.children, constraints) }
 	}
@@ -212,7 +208,7 @@ private class BottomLayer(
 private class LayoutLayer(
 	private val element: LayoutModifier,
 	private val lowerLayer: MosaicNodeLayer,
-) : AbstractMosaicNodeLayer(lowerLayer, false) {
+) : MosaicNodeLayer(lowerLayer, false) {
 	override fun doMeasure(constraints: Constraints): MeasureResult {
 		return element.run { measure(lowerLayer, constraints) }
 	}
@@ -237,7 +233,7 @@ private class LayoutLayer(
 private class DrawLayer(
 	private val element: DrawModifier,
 	private val lowerLayer: MosaicNodeLayer,
-) : AbstractMosaicNodeLayer(lowerLayer, false) {
+) : MosaicNodeLayer(lowerLayer, false) {
 	override fun drawTo(canvas: TextCanvas) {
 		val oldX = canvas.translationX
 		val oldY = canvas.translationY
