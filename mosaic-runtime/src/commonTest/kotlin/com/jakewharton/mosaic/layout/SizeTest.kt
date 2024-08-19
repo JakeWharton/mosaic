@@ -8,7 +8,7 @@ import com.jakewharton.mosaic.Container
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.mosaicNodesWithMeasureAndPlace
 import com.jakewharton.mosaic.position
-import com.jakewharton.mosaic.renderMosaic
+import com.jakewharton.mosaic.runMosaicTest
 import com.jakewharton.mosaic.size
 import com.jakewharton.mosaic.testIntrinsics
 import com.jakewharton.mosaic.ui.Alignment
@@ -20,9 +20,10 @@ import com.jakewharton.mosaic.ui.unit.Constraints
 import com.jakewharton.mosaic.ui.unit.IntOffset
 import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.test.Test
+import kotlinx.coroutines.test.runTest
 
 class SizeTest {
-	@Test fun testPreferredSize_withWidthSizeModifiers() {
+	@Test fun testPreferredSize_withWidthSizeModifiers() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -66,7 +67,7 @@ class SizeTest {
 		assertThat(sixthContainerNode.position).isEqualTo(IntOffset(0, size * 5))
 	}
 
-	@Test fun testPreferredSize_withHeightSizeModifiers() {
+	@Test fun testPreferredSize_withHeightSizeModifiers() = runTest {
 		val size = 10
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -110,7 +111,7 @@ class SizeTest {
 		assertThat(sixthContainerNode.position).isEqualTo(IntOffset(size * 5, 0))
 	}
 
-	@Test fun testPreferredSize_withSizeModifiers() {
+	@Test fun testPreferredSize_withSizeModifiers() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -164,7 +165,7 @@ class SizeTest {
 		assertThat(fifthContainerNode.position).isEqualTo(IntOffset(size * 5, 0))
 	}
 
-	@Test fun testPreferredSizeModifiers_respectMaxConstraint() {
+	@Test fun testPreferredSizeModifiers_respectMaxConstraint() = runTest {
 		val size = 100
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -187,7 +188,7 @@ class SizeTest {
 		assertThat(childContainerNode.position).isEqualTo(IntOffset.Zero)
 	}
 
-	@Test fun testMaxModifiers_withInfiniteValue() {
+	@Test fun testMaxModifiers_withInfiniteValue() = runTest {
 		val size = 20
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -230,7 +231,7 @@ class SizeTest {
 		assertThat(fourthContainerNode.size).isEqualTo(IntSize(size, size))
 	}
 
-	@Test fun testMeasurementConstraints_preferredSatisfiable() {
+	@Test fun testMeasurementConstraints_preferredSatisfiable() = runTest {
 		assertConstraints(
 			Constraints(10, 30, 15, 35),
 			Modifier.width(20),
@@ -263,7 +264,7 @@ class SizeTest {
 		)
 	}
 
-	@Test fun testMeasurementConstraints_preferredUnsatisfiable() {
+	@Test fun testMeasurementConstraints_preferredUnsatisfiable() = runTest {
 		assertConstraints(
 			Constraints(20, 40, 15, 35),
 			Modifier.width(15),
@@ -296,7 +297,7 @@ class SizeTest {
 		)
 	}
 
-	@Test fun testMeasurementConstraints_compulsorySatisfiable() {
+	@Test fun testMeasurementConstraints_compulsorySatisfiable() = runTest {
 		assertConstraints(
 			Constraints(10, 30, 15, 35),
 			Modifier.requiredWidth(20),
@@ -329,7 +330,7 @@ class SizeTest {
 		)
 	}
 
-	@Test fun testMeasurementConstraints_compulsoryUnsatisfiable() {
+	@Test fun testMeasurementConstraints_compulsoryUnsatisfiable() = runTest {
 		assertConstraints(
 			Constraints(20, 40, 15, 35),
 			Modifier.requiredWidth(15),
@@ -373,7 +374,7 @@ class SizeTest {
 		)
 	}
 
-	private fun assertConstraints(
+	private suspend fun assertConstraints(
 		incomingConstraints: Constraints,
 		modifier: Modifier,
 		expectedConstraints: Constraints,
@@ -383,95 +384,101 @@ class SizeTest {
 		// Clear contents before each test so that we don't recompose the BoxWithConstraints call;
 		// doing so would recompose the old subcomposition with old constraints in the presence of
 		// new content before the measurement performs explicit composition the new constraints.
-		renderMosaic {
-			Layout({
-				Layout(
-					content = {},
-					modifier = modifier,
-					measurePolicy = { _, constraints ->
-						actualConstraints = constraints
-						layout(0, 0) {}
-					},
-				)
-			}) { measurables, _ ->
-				measurables[0].measure(incomingConstraints)
-				layout(0, 0) {}
+		runMosaicTest {
+			setContent {
+				Layout({
+					Layout(
+						content = {},
+						modifier = modifier,
+						measurePolicy = { _, constraints ->
+							actualConstraints = constraints
+							layout(0, 0) {}
+						},
+					)
+				}) { measurables, _ ->
+					measurables[0].measure(incomingConstraints)
+					layout(0, 0) {}
+				}
 			}
 		}
 		assertThat(actualConstraints).isEqualTo(expectedConstraints)
 	}
 
-	@Test fun testDefaultMinSize() {
-		renderMosaic {
-			// Constraints are applied.
-			Layout(
-				{},
-				Modifier.wrapContentSize()
-					.requiredSizeIn(maxWidth = 30, maxHeight = 40)
-					.defaultMinSize(minWidth = 10, minHeight = 20),
-			) { _, constraints ->
-				assertThat(constraints.minWidth).isEqualTo(10)
-				assertThat(constraints.minHeight).isEqualTo(20)
-				assertThat(constraints.maxWidth).isEqualTo(30)
-				assertThat(constraints.maxHeight).isEqualTo(40)
-				layout(0, 0) {}
-			}
-			// Constraints are not applied
-			Layout(
-				{},
-				Modifier.requiredSizeIn(
-					minWidth = 10,
-					minHeight = 20,
-					maxWidth = 100,
-					maxHeight = 110,
-				).defaultMinSize(
-					minWidth = 50,
-					minHeight = 50,
-				),
-			) { _, constraints ->
-				assertThat(constraints.minWidth).isEqualTo(10)
-				assertThat(constraints.minHeight).isEqualTo(20)
-				assertThat(constraints.maxWidth).isEqualTo(100)
-				assertThat(constraints.maxHeight).isEqualTo(110)
-				layout(0, 0) {}
-			}
-			// Defaults values are not changing
-			Layout(
-				{},
-				Modifier.requiredSizeIn(
-					minWidth = 10,
-					minHeight = 20,
-					maxWidth = 100,
-					maxHeight = 110,
-				).defaultMinSize(),
-			) { _, constraints ->
-				assertThat(constraints.minWidth).isEqualTo(10)
-				assertThat(constraints.minHeight).isEqualTo(20)
-				assertThat(constraints.maxWidth).isEqualTo(100)
-				assertThat(constraints.maxHeight).isEqualTo(110)
-				layout(0, 0) {}
-			}
-		}
-	}
-
-	@Test fun testDefaultMinSize_withCoercingMaxConstraints() {
-		renderMosaic {
-			Layout(
-				{},
-				Modifier.wrapContentSize()
-					.requiredSizeIn(maxWidth = 30, maxHeight = 40)
-					.defaultMinSize(minWidth = 70, minHeight = 80),
-			) { _, constraints ->
-				assertThat(constraints.minWidth).isEqualTo(30)
-				assertThat(constraints.minHeight).isEqualTo(40)
-				assertThat(constraints.maxWidth).isEqualTo(30)
-				assertThat(constraints.maxHeight).isEqualTo(40)
-				layout(0, 0) {}
+	@Test fun testDefaultMinSize() = runTest {
+		runMosaicTest {
+			setContent {
+				// Constraints are applied.
+				Layout(
+					{},
+					Modifier.wrapContentSize()
+						.requiredSizeIn(maxWidth = 30, maxHeight = 40)
+						.defaultMinSize(minWidth = 10, minHeight = 20),
+				) { _, constraints ->
+					assertThat(constraints.minWidth).isEqualTo(10)
+					assertThat(constraints.minHeight).isEqualTo(20)
+					assertThat(constraints.maxWidth).isEqualTo(30)
+					assertThat(constraints.maxHeight).isEqualTo(40)
+					layout(0, 0) {}
+				}
+				// Constraints are not applied
+				Layout(
+					{},
+					Modifier.requiredSizeIn(
+						minWidth = 10,
+						minHeight = 20,
+						maxWidth = 100,
+						maxHeight = 110,
+					).defaultMinSize(
+						minWidth = 50,
+						minHeight = 50,
+					),
+				) { _, constraints ->
+					assertThat(constraints.minWidth).isEqualTo(10)
+					assertThat(constraints.minHeight).isEqualTo(20)
+					assertThat(constraints.maxWidth).isEqualTo(100)
+					assertThat(constraints.maxHeight).isEqualTo(110)
+					layout(0, 0) {}
+				}
+				// Defaults values are not changing
+				Layout(
+					{},
+					Modifier.requiredSizeIn(
+						minWidth = 10,
+						minHeight = 20,
+						maxWidth = 100,
+						maxHeight = 110,
+					).defaultMinSize(),
+				) { _, constraints ->
+					assertThat(constraints.minWidth).isEqualTo(10)
+					assertThat(constraints.minHeight).isEqualTo(20)
+					assertThat(constraints.maxWidth).isEqualTo(100)
+					assertThat(constraints.maxHeight).isEqualTo(110)
+					layout(0, 0) {}
+				}
 			}
 		}
 	}
 
-	@Test fun testMinWidthModifier_hasCorrectIntrinsicMeasurements() {
+	@Test fun testDefaultMinSize_withCoercingMaxConstraints() = runTest {
+		runMosaicTest {
+			setContent {
+				Layout(
+					{},
+					Modifier.wrapContentSize()
+						.requiredSizeIn(maxWidth = 30, maxHeight = 40)
+						.defaultMinSize(minWidth = 70, minHeight = 80),
+				) { _, constraints ->
+					assertThat(constraints.minWidth).isEqualTo(30)
+					assertThat(constraints.minHeight).isEqualTo(40)
+					assertThat(constraints.maxWidth).isEqualTo(30)
+					assertThat(constraints.maxHeight).isEqualTo(40)
+					layout(0, 0) {}
+				}
+			}
+		}
+	}
+
+	@Test fun testMinWidthModifier_hasCorrectIntrinsicMeasurements() = runTest {
 		testIntrinsics(
 			@Composable {
 				Container(Modifier.widthIn(min = 10)) {
@@ -502,7 +509,7 @@ class SizeTest {
 		}
 	}
 
-	@Test fun testMaxWidthModifier_hasCorrectIntrinsicMeasurements() {
+	@Test fun testMaxWidthModifier_hasCorrectIntrinsicMeasurements() = runTest {
 		testIntrinsics(
 			@Composable {
 				Container(Modifier.widthIn(max = 20)) {
@@ -533,7 +540,7 @@ class SizeTest {
 		}
 	}
 
-	@Test fun testMinHeightModifier_hasCorrectIntrinsicMeasurements() {
+	@Test fun testMinHeightModifier_hasCorrectIntrinsicMeasurements() = runTest {
 		testIntrinsics(
 			@Composable {
 				Container(Modifier.heightIn(min = 30)) {
@@ -564,7 +571,7 @@ class SizeTest {
 		}
 	}
 
-	@Test fun testMaxHeightModifier_hasCorrectIntrinsicMeasurements() {
+	@Test fun testMaxHeightModifier_hasCorrectIntrinsicMeasurements() = runTest {
 		testIntrinsics(
 			@Composable {
 				Container(Modifier.heightIn(max = 40)) {
@@ -595,7 +602,7 @@ class SizeTest {
 		}
 	}
 
-	@Test fun testWidthModifier_hasCorrectIntrinsicMeasurements() {
+	@Test fun testWidthModifier_hasCorrectIntrinsicMeasurements() = runTest {
 		testIntrinsics(
 			@Composable {
 				Container(Modifier.width(10)) {
@@ -626,7 +633,7 @@ class SizeTest {
 		}
 	}
 
-	@Test fun testHeightModifier_hasCorrectIntrinsicMeasurements() {
+	@Test fun testHeightModifier_hasCorrectIntrinsicMeasurements() = runTest {
 		testIntrinsics(
 			@Composable {
 				Container(Modifier.height(10)) {
@@ -657,7 +664,7 @@ class SizeTest {
 		}
 	}
 
-	@Test fun testWidthHeightModifiers_hasCorrectIntrinsicMeasurements() {
+	@Test fun testWidthHeightModifiers_hasCorrectIntrinsicMeasurements() = runTest {
 		testIntrinsics(
 			@Composable {
 				Container(
@@ -695,7 +702,7 @@ class SizeTest {
 		}
 	}
 
-	@Test fun testMinSizeModifier_hasCorrectIntrinsicMeasurements() {
+	@Test fun testMinSizeModifier_hasCorrectIntrinsicMeasurements() = runTest {
 		testIntrinsics(
 			@Composable {
 				Container(Modifier.sizeIn(minWidth = 20, minHeight = 30)) {
@@ -726,7 +733,7 @@ class SizeTest {
 		}
 	}
 
-	@Test fun testMaxSizeModifier_hasCorrectIntrinsicMeasurements() {
+	@Test fun testMaxSizeModifier_hasCorrectIntrinsicMeasurements() = runTest {
 		testIntrinsics(
 			@Composable {
 				Container(Modifier.sizeIn(maxWidth = 40, maxHeight = 50)) {
@@ -757,7 +764,7 @@ class SizeTest {
 		}
 	}
 
-	@Test fun testPreferredSizeModifier_hasCorrectIntrinsicMeasurements() {
+	@Test fun testPreferredSizeModifier_hasCorrectIntrinsicMeasurements() = runTest {
 		testIntrinsics(
 			@Composable {
 				Container(Modifier.size(40, 50)) {
@@ -788,7 +795,7 @@ class SizeTest {
 		}
 	}
 
-	@Test fun testFillModifier_correctSize() {
+	@Test fun testFillModifier_correctSize() = runTest {
 		val parentWidth = 100
 		val parentHeight = 80
 		val parentModifier = Modifier.requiredSize(parentWidth, parentHeight)
@@ -806,7 +813,7 @@ class SizeTest {
 			.isEqualTo(IntSize(parentWidth, parentHeight))
 	}
 
-	@Test fun testFractionalFillModifier_correctSize_whenSmallerChild() {
+	@Test fun testFractionalFillModifier_correctSize_whenSmallerChild() = runTest {
 		val parentWidth = 100
 		val parentHeight = 80
 		val parentModifier = Modifier.requiredSize(parentWidth, parentHeight)
@@ -824,7 +831,7 @@ class SizeTest {
 			.isEqualTo(IntSize(parentWidth / 2, parentHeight / 2))
 	}
 
-	@Test fun testFractionalFillModifier_correctSize_whenLargerChild() {
+	@Test fun testFractionalFillModifier_correctSize_whenLargerChild() = runTest {
 		val parentWidth = 100
 		val parentHeight = 80
 		val parentModifier = Modifier.requiredSize(parentWidth, parentHeight)
@@ -842,7 +849,7 @@ class SizeTest {
 			.isEqualTo(IntSize(parentWidth / 2, parentHeight / 2))
 	}
 
-	@Test fun testFractionalFillModifier_coerced() {
+	@Test fun testFractionalFillModifier_coerced() = runTest {
 		val childMinWidth = 40
 		val childMinHeight = 30
 		val childMaxWidth = 60
@@ -860,7 +867,7 @@ class SizeTest {
 			.isEqualTo(IntSize(childMaxWidth, childMaxHeight))
 	}
 
-	private fun calculateSizeFor(parentModifier: Modifier, modifier: Modifier): IntSize {
+	private suspend fun calculateSizeFor(parentModifier: Modifier, modifier: Modifier): IntSize {
 		val rootNode = mosaicNodesWithMeasureAndPlace {
 			Box(parentModifier) {
 				Box(modifier)
@@ -871,7 +878,7 @@ class SizeTest {
 		return IntSize(innerBoxNode.width, innerBoxNode.height)
 	}
 
-	@Test fun testDefaultMinSizeModifier_hasCorrectIntrinsicMeasurements() {
+	@Test fun testDefaultMinSizeModifier_hasCorrectIntrinsicMeasurements() = runTest {
 		testIntrinsics(
 			@Composable {
 				Container(Modifier.defaultMinSize(40, 50)) {
@@ -902,13 +909,13 @@ class SizeTest {
 		}
 	}
 
-	@Test fun testFillModifier_noChangeIntrinsicMeasurements() {
+	@Test fun testFillModifier_noChangeIntrinsicMeasurements() = runTest {
 		verifyIntrinsicMeasurements(Modifier.fillMaxWidth())
 		verifyIntrinsicMeasurements(Modifier.fillMaxHeight())
 		verifyIntrinsicMeasurements(Modifier.fillMaxSize())
 	}
 
-	private fun verifyIntrinsicMeasurements(expandedModifier: Modifier) {
+	private suspend fun verifyIntrinsicMeasurements(expandedModifier: Modifier) {
 		// intrinsic measurements do not change with the ExpandedModifier
 		testIntrinsics(
 			@Composable {
@@ -935,7 +942,7 @@ class SizeTest {
 		}
 	}
 
-	@Test fun test2DWrapContentSize() {
+	@Test fun test2DWrapContentSize() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -956,7 +963,7 @@ class SizeTest {
 			.isEqualTo(IntOffset(rootNode.width - size, rootNode.height - size))
 	}
 
-	@Test fun test1DWrapContentSize() {
+	@Test fun test1DWrapContentSize() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -976,7 +983,7 @@ class SizeTest {
 		assertThat(innerContainerNode.position).isEqualTo(IntOffset(rootNode.width - size, 0))
 	}
 
-	@Test fun testModifier_wrapsContent() {
+	@Test fun testModifier_wrapsContent() = runTest {
 		val contentSize = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -992,7 +999,7 @@ class SizeTest {
 		assertThat(middleContainerNode.size).isEqualTo(IntSize(contentSize, contentSize))
 	}
 
-	@Test fun testWrapContentSize_wrapsContent_whenMeasuredWithInfiniteConstraints() {
+	@Test fun testWrapContentSize_wrapsContent_whenMeasuredWithInfiniteConstraints() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -1021,7 +1028,7 @@ class SizeTest {
 		assertThat(childContainerNode.position).isEqualTo(IntOffset.Zero)
 	}
 
-	@Test fun test2DAlignedModifier_hasCorrectIntrinsicMeasurements() {
+	@Test fun test2DAlignedModifier_hasCorrectIntrinsicMeasurements() = runTest {
 		testIntrinsics(
 			@Composable {
 				Container(Modifier.wrapContentSize(Alignment.TopStart).aspectRatio(2f)) { }
@@ -1049,7 +1056,7 @@ class SizeTest {
 		}
 	}
 
-	@Test fun test1DAlignedModifier_hasCorrectIntrinsicMeasurements() {
+	@Test fun test1DAlignedModifier_hasCorrectIntrinsicMeasurements() = runTest {
 		testIntrinsics({
 			Container(
 				Modifier.wrapContentHeight(Alignment.CenterVertically)
@@ -1094,21 +1101,23 @@ class SizeTest {
 		assertThat(Modifier.defaultMinSize(10, 20)).isNotEqualTo(Modifier.defaultMinSize(20, 10))
 	}
 
-	@Test fun sizeModifiers_doNotCauseCrashesWhenCreatingConstraints() {
-		renderMosaic {
-			Box(Modifier.sizeIn(minWidth = -1))
-			Box(Modifier.sizeIn(minWidth = 10, maxWidth = 5))
-			Box(Modifier.sizeIn(minHeight = -1))
-			Box(Modifier.sizeIn(minHeight = 10, maxHeight = 5))
-			Box(
-				Modifier.sizeIn(
-					minWidth = Constraints.Infinity,
-					maxWidth = Constraints.Infinity,
-					minHeight = Constraints.Infinity,
-					maxHeight = Constraints.Infinity,
-				),
-			)
-			Box(Modifier.defaultMinSize(minWidth = -1, minHeight = -1))
+	@Test fun sizeModifiers_doNotCauseCrashesWhenCreatingConstraints() = runTest {
+		runMosaicTest {
+			setContent {
+				Box(Modifier.sizeIn(minWidth = -1))
+				Box(Modifier.sizeIn(minWidth = 10, maxWidth = 5))
+				Box(Modifier.sizeIn(minHeight = -1))
+				Box(Modifier.sizeIn(minHeight = 10, maxHeight = 5))
+				Box(
+					Modifier.sizeIn(
+						minWidth = Constraints.Infinity,
+						maxWidth = Constraints.Infinity,
+						minHeight = Constraints.Infinity,
+						maxHeight = Constraints.Infinity,
+					),
+				)
+				Box(Modifier.defaultMinSize(minWidth = -1, minHeight = -1))
+			}
 		}
 	}
 }

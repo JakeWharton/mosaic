@@ -14,9 +14,10 @@ import com.jakewharton.mosaic.layout.wrapContentWidth
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.mosaicNodesWithMeasureAndPlace
 import kotlin.test.Test
+import kotlinx.coroutines.test.runTest
 
 class RowColumnModifierTest {
-	@Test fun rowUpdatesOnAlignmentChange() {
+	@Test fun rowUpdatesOnAlignmentChange() = runTest {
 		val count = 5
 		var alignment by mutableStateOf(Alignment.Top)
 
@@ -43,7 +44,7 @@ class RowColumnModifierTest {
 		}
 	}
 
-	@Test fun rowUpdatesOnWeightChange() {
+	@Test fun rowUpdatesOnWeightChange() = runTest {
 		val count = 5
 		var fill by mutableStateOf(false)
 
@@ -74,7 +75,7 @@ class RowColumnModifierTest {
 		}
 	}
 
-	@Test fun rowUpdatesOnWeightAndAlignmentChange() {
+	@Test fun rowUpdatesOnWeightAndAlignmentChange() = runTest {
 		val count = 5
 		var fill by mutableStateOf(false)
 		var alignment by mutableStateOf(Alignment.Top)
@@ -115,7 +116,7 @@ class RowColumnModifierTest {
 		}
 	}
 
-	@Test fun columnUpdatesOnAlignmentChange() {
+	@Test fun columnUpdatesOnAlignmentChange() = runTest {
 		val count = 5
 		var alignment by mutableStateOf(Alignment.Start)
 
@@ -142,7 +143,7 @@ class RowColumnModifierTest {
 		}
 	}
 
-	@Test fun columnUpdatesOnWeightChange() {
+	@Test fun columnUpdatesOnWeightChange() = runTest {
 		val count = 5
 		var fill by mutableStateOf(false)
 
@@ -173,7 +174,7 @@ class RowColumnModifierTest {
 		}
 	}
 
-	@Test fun columnUpdatesOnWeightAndAlignmentChange() {
+	@Test fun columnUpdatesOnWeightAndAlignmentChange() = runTest {
 		val count = 5
 		var fill by mutableStateOf(false)
 		var alignment by mutableStateOf(Alignment.Start)

@@ -7,42 +7,40 @@ import com.jakewharton.mosaic.layout.height
 import com.jakewharton.mosaic.layout.size
 import com.jakewharton.mosaic.layout.width
 import com.jakewharton.mosaic.modifier.Modifier
-import com.jakewharton.mosaic.mosaicNodes
 import com.jakewharton.mosaic.mosaicNodesWithMeasureAndPlace
-import com.jakewharton.mosaic.renderMosaic
-import com.jakewharton.mosaic.replaceLineEndingsWithCRLF
+import com.jakewharton.mosaic.runMosaicTest
 import com.jakewharton.mosaic.s
 import com.jakewharton.mosaic.size
 import com.jakewharton.mosaic.ui.unit.Constraints
 import com.jakewharton.mosaic.ui.unit.IntSize
-import com.jakewharton.mosaic.wrapWithAnsiSynchronizedUpdate
 import kotlin.test.Test
+import kotlinx.coroutines.test.runTest
 
 class SpacerTest {
 	private val bigConstraints = Constraints(maxWidth = 5000, maxHeight = 5000)
 
-	@Test fun spacerFixed() {
+	@Test fun spacerFixed() = runTest {
 		val width = 4
 		val height = 6
 
-		val actual = renderMosaic {
-			Spacer(Modifier.size(width = width, height = height))
+		runMosaicTest {
+			setContent {
+				Spacer(Modifier.size(width = width, height = height))
+			}
+			assertThat(awaitRenderSnapshot()).isEqualTo(
+				"""
+				|   $s
+				|   $s
+				|   $s
+				|   $s
+				|   $s
+				|   $s
+				""".trimMargin(),
+			)
 		}
-
-		assertThat(actual).isEqualTo(
-			"""
-			|   $s
-			|   $s
-			|   $s
-			|   $s
-			|   $s
-			|   $s
-			|
-			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
-		)
 	}
 
-	@Test fun spacerFixedSize() {
+	@Test fun spacerFixedSize() = runTest {
 		val width = 40
 		val height = 71
 
@@ -56,7 +54,7 @@ class SpacerTest {
 		assertThat(spacerNode.size).isEqualTo(IntSize(width, height))
 	}
 
-	@Test fun spacerFixedWithSmallerContainer() {
+	@Test fun spacerFixedWithSmallerContainer() = runTest {
 		val width = 40
 		val height = 71
 
@@ -80,7 +78,7 @@ class SpacerTest {
 		assertThat(spacerNode.size).isEqualTo(IntSize(containerWidth, containerHeight))
 	}
 
-	@Test fun spacerWidth() {
+	@Test fun spacerWidth() = runTest {
 		val width = 71
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -93,7 +91,7 @@ class SpacerTest {
 		assertThat(spacerNode.size).isEqualTo(IntSize(width, 0))
 	}
 
-	@Test fun spacerWidthWithSmallerContainer() {
+	@Test fun spacerWidthWithSmallerContainer() = runTest {
 		val width = 40
 
 		val containerWidth = 5
@@ -116,7 +114,7 @@ class SpacerTest {
 		assertThat(spacerNode.size).isEqualTo(IntSize(containerWidth, 0))
 	}
 
-	@Test fun spacerHeight() {
+	@Test fun spacerHeight() = runTest {
 		val height = 7
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -129,7 +127,7 @@ class SpacerTest {
 		assertThat(spacerNode.size).isEqualTo(IntSize(0, height))
 	}
 
-	@Test fun spacerHeightWithSmallerContainer() {
+	@Test fun spacerHeightWithSmallerContainer() = runTest {
 		val height = 23
 
 		val containerWidth = 5
@@ -152,15 +150,16 @@ class SpacerTest {
 		assertThat(spacerNode.size).isEqualTo(IntSize(0, containerHeight))
 	}
 
-	@Test fun spacerDebug() {
-		val actual = mosaicNodes {
-			Spacer()
+	@Test fun spacerDebug() = runTest {
+		runMosaicTest {
+			setContent {
+				Spacer()
+			}
+			assertThat(awaitNodeSnapshot().toString()).isEqualTo(
+				"""
+				|Spacer() x=0 y=0 w=0 h=0
+				""".trimMargin(),
+			)
 		}
-
-		assertThat(actual.toString()).isEqualTo(
-			"""
-			|Spacer() x=0 y=0 w=0 h=0
-			""".trimMargin(),
-		)
 	}
 }

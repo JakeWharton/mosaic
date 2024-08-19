@@ -17,6 +17,7 @@ import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.test.Test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runTest
 
 class CounterTest {
@@ -24,7 +25,7 @@ class CounterTest {
 		runMosaicTest {
 			setCounter()
 			for (count in 0..20) {
-				assertThat(awaitSnapshot()).isEqualTo("The count is: $count")
+				assertThat(awaitRenderSnapshot()).isEqualTo("The count is: $count")
 			}
 		}
 	}
@@ -32,14 +33,14 @@ class CounterTest {
 	@Test fun counterWithAnsi() = runTest {
 		runMosaicTest(withAnsi = true) {
 			setCounter()
-			assertThat(awaitSnapshot()).isEqualTo(
+			assertThat(awaitRenderSnapshot()).isEqualTo(
 				"""
 				|${ansiBeginSynchronizedUpdate}The count is: 0
 				|$ansiEndSynchronizedUpdate
 				""".trimMargin().replaceLineEndingsWithCRLF(),
 			)
 			for (i in 1..20) {
-				assertThat(awaitSnapshot()).isEqualTo(
+				assertThat(awaitRenderSnapshot()).isEqualTo(
 					"""
 					|${ansiBeginSynchronizedUpdate}${cursorUp}The count is: ${i}$clearLine
 					|$ansiEndSynchronizedUpdate
@@ -50,10 +51,10 @@ class CounterTest {
 	}
 
 	@Test fun counterInTerminalCenter() = runTest {
-		runMosaicTest(terminalSize = IntSize(width = 30, height = 1)) {
+		runMosaicTest(initialTerminalSize = IntSize(width = 30, height = 1)) {
 			setCounterInTerminalCenter()
 			for (count in 0..9) {
-				assertThat(awaitSnapshot()).isEqualTo("        The count is: $count       ")
+				assertThat(awaitRenderSnapshot()).isEqualTo("        The count is: $count       ")
 			}
 
 			changeTerminalSize(width = 20, height = 1)
@@ -61,10 +62,10 @@ class CounterTest {
 			// after changing the terminal size, we wait for the counter to increase before getting
 			// a new snapshot, otherwise there will be the previous value (9) and a different output size
 			@OptIn(ExperimentalCoroutinesApi::class)
-			testScheduler.advanceTimeBy(250L)
+			advanceTimeBy(250L)
 
 			for (count in 10..20) {
-				assertThat(awaitSnapshot()).isEqualTo("  The count is: $count  ")
+				assertThat(awaitRenderSnapshot()).isEqualTo("  The count is: $count  ")
 			}
 		}
 	}
@@ -73,15 +74,15 @@ class CounterTest {
 		runMosaicTest {
 			setCounter()
 			for (count in 0..9) {
-				assertThat(awaitSnapshot()).isEqualTo("The count is: $count")
+				assertThat(awaitRenderSnapshot()).isEqualTo("The count is: $count")
 			}
 			setChangedCounter()
 			for (count in 0..20) {
-				assertThat(awaitSnapshot()).isEqualTo(
+				assertThat(awaitRenderSnapshot()).isEqualTo(
 					"""
 					|The count is: $count      $s
 					|The second count is: $count
-					""".trimMargin().replaceLineEndingsWithCRLF(),
+					""".trimMargin(),
 				)
 			}
 		}

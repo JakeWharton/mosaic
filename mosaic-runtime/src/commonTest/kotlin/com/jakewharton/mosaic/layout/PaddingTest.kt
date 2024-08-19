@@ -7,15 +7,14 @@ import com.jakewharton.mosaic.Container
 import com.jakewharton.mosaic.TestChar
 import com.jakewharton.mosaic.TestFiller
 import com.jakewharton.mosaic.modifier.Modifier
-import com.jakewharton.mosaic.renderMosaic
-import com.jakewharton.mosaic.replaceLineEndingsWithCRLF
+import com.jakewharton.mosaic.runMosaicTest
 import com.jakewharton.mosaic.s
 import com.jakewharton.mosaic.testIntrinsics
 import com.jakewharton.mosaic.ui.Layout
 import com.jakewharton.mosaic.ui.unit.Constraints
-import com.jakewharton.mosaic.wrapWithAnsiSynchronizedUpdate
 import kotlin.test.Test
 import kotlin.test.assertFails
+import kotlinx.coroutines.test.runTest
 
 class PaddingTest {
 	@Test fun paddingAllEqualsToPaddingWithExplicitSides() {
@@ -34,28 +33,30 @@ class PaddingTest {
 		}
 	}
 
-	@Test fun paddingLeftZero() {
-		val actual = renderMosaic {
-			SingleFiller(Modifier.padding(left = 0))
+	@Test fun paddingLeftZero() = runTest {
+		runMosaicTest {
+			setContent {
+				SingleFiller(Modifier.padding(left = 0))
+			}
+			assertThat(awaitRenderSnapshot()).isEqualTo(
+				"""
+				|$TestChar
+				""".trimMargin(),
+			)
 		}
-		assertThat(actual).isEqualTo(
-			"""
-			|$TestChar
-			|
-			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
-		)
 	}
 
-	@Test fun paddingLeft() {
-		val actual = renderMosaic {
-			SingleFiller(Modifier.padding(left = 2))
+	@Test fun paddingLeft() = runTest {
+		runMosaicTest {
+			setContent {
+				SingleFiller(Modifier.padding(left = 2))
+			}
+			assertThat(awaitRenderSnapshot()).isEqualTo(
+				"""
+				|  $TestChar
+				""".trimMargin(),
+			)
 		}
-		assertThat(actual).isEqualTo(
-			"""
-			|  $TestChar
-			|
-			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
-		)
 	}
 
 	@Test fun paddingLeftDebug() {
@@ -69,30 +70,32 @@ class PaddingTest {
 		}
 	}
 
-	@Test fun paddingTopZero() {
-		val actual = renderMosaic {
-			SingleFiller(Modifier.padding(top = 0))
+	@Test fun paddingTopZero() = runTest {
+		runMosaicTest {
+			setContent {
+				SingleFiller(Modifier.padding(top = 0))
+			}
+			assertThat(awaitRenderSnapshot()).isEqualTo(
+				"""
+				|$TestChar
+				""".trimMargin(),
+			)
 		}
-		assertThat(actual).isEqualTo(
-			"""
-			|$TestChar
-			|
-			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
-		)
 	}
 
-	@Test fun paddingTop() {
-		val actual = renderMosaic {
-			SingleFiller(Modifier.padding(top = 2))
+	@Test fun paddingTop() = runTest {
+		runMosaicTest {
+			setContent {
+				SingleFiller(Modifier.padding(top = 2))
+			}
+			assertThat(awaitRenderSnapshot()).isEqualTo(
+				"""
+				|$s
+				|$s
+				|$TestChar
+				""".trimMargin(),
+			)
 		}
-		assertThat(actual).isEqualTo(
-			"""
-			|$s
-			|$s
-			|$TestChar
-			|
-			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
-		)
 	}
 
 	@Test fun paddingTopDebug() {
@@ -106,31 +109,33 @@ class PaddingTest {
 		}
 	}
 
-	@Test fun paddingRightZero() {
-		val actual = renderMosaic {
-			SingleFiller(Modifier.padding(right = 0))
+	@Test fun paddingRightZero() = runTest {
+		runMosaicTest {
+			setContent {
+				SingleFiller(Modifier.padding(right = 0))
+			}
+			assertThat(awaitRenderSnapshot()).isEqualTo(
+				"""
+				|$TestChar
+				""".trimMargin(),
+			)
 		}
-		assertThat(actual).isEqualTo(
-			"""
-			|$TestChar
-			|
-			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
-		)
 	}
 
-	@Test fun paddingRight() {
-		val actual = renderMosaic {
-			SingleFiller(Modifier.padding(right = 2))
+	@Test fun paddingRight() = runTest {
+		runMosaicTest {
+			setContent {
+				SingleFiller(Modifier.padding(right = 2))
+			}
+			assertThat(awaitRenderSnapshot()).isEqualTo(
+				"""
+				|$TestChar $s
+				""".trimMargin(),
+			)
 		}
-		assertThat(actual).isEqualTo(
-			"""
-			|$TestChar $s
-			|
-			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
-		)
 	}
 
-	@Test fun paddingRightDebug() {
+	@Test fun paddingRightDebug() = runTest {
 		val actual = Modifier.padding(right = 2).toString()
 		assertThat(actual).isEqualTo("Padding(l=0, t=0, r=2, b=0)")
 	}
@@ -141,30 +146,32 @@ class PaddingTest {
 		}
 	}
 
-	@Test fun paddingBottomZero() {
-		val actual = renderMosaic {
-			SingleFiller(Modifier.padding(bottom = 0))
+	@Test fun paddingBottomZero() = runTest {
+		runMosaicTest {
+			setContent {
+				SingleFiller(Modifier.padding(bottom = 0))
+			}
+			assertThat(awaitRenderSnapshot()).isEqualTo(
+				"""
+				|$TestChar
+				""".trimMargin(),
+			)
 		}
-		assertThat(actual).isEqualTo(
-			"""
-			|$TestChar
-			|
-			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
-		)
 	}
 
-	@Test fun paddingBottom() {
-		val actual = renderMosaic {
-			SingleFiller(Modifier.padding(bottom = 2))
+	@Test fun paddingBottom() = runTest {
+		runMosaicTest {
+			setContent {
+				SingleFiller(Modifier.padding(bottom = 2))
+			}
+			assertThat(awaitRenderSnapshot()).isEqualTo(
+				"""
+				|$TestChar
+				|$s
+				|$s
+				""".trimMargin(),
+			)
 		}
-		assertThat(actual).isEqualTo(
-			"""
-			|$TestChar
-			|$s
-			|$s
-			|
-			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
-		)
 	}
 
 	@Test fun paddingBottomDebug() {
@@ -178,30 +185,32 @@ class PaddingTest {
 		}
 	}
 
-	@Test fun paddingLeftBottomZero() {
-		val actual = renderMosaic {
-			SingleFiller(Modifier.padding(left = 0, bottom = 0))
+	@Test fun paddingLeftBottomZero() = runTest {
+		runMosaicTest {
+			setContent {
+				SingleFiller(Modifier.padding(left = 0, bottom = 0))
+			}
+			assertThat(awaitRenderSnapshot()).isEqualTo(
+				"""
+				|$TestChar
+				""".trimMargin(),
+			)
 		}
-		assertThat(actual).isEqualTo(
-			"""
-			|$TestChar
-			|
-			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
-		)
 	}
 
-	@Test fun paddingLeftBottom() {
-		val actual = renderMosaic {
-			SingleFiller(Modifier.padding(left = 1, bottom = 2))
+	@Test fun paddingLeftBottom() = runTest {
+		runMosaicTest {
+			setContent {
+				SingleFiller(Modifier.padding(left = 1, bottom = 2))
+			}
+			assertThat(awaitRenderSnapshot()).isEqualTo(
+				"""
+				| $TestChar
+				| $s
+				| $s
+				""".trimMargin(),
+			)
 		}
-		assertThat(actual).isEqualTo(
-			"""
-			| $TestChar
-			| $s
-			| $s
-			|
-			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
-		)
 	}
 
 	@Test fun paddingLeftBottomDebug() {
@@ -224,7 +233,7 @@ class PaddingTest {
 		assertThat(actual).isEqualTo("Padding(h=0, v=2)")
 	}
 
-	@Test fun intrinsicMeasurements() {
+	@Test fun intrinsicMeasurements() = runTest {
 		val padding = 100
 
 		testIntrinsics(

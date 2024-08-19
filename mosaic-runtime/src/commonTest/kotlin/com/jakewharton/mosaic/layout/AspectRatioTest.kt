@@ -13,6 +13,7 @@ import com.jakewharton.mosaic.ui.unit.Constraints
 import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.test.Test
 import kotlin.test.assertFails
+import kotlinx.coroutines.test.runTest
 
 class AspectRatioTest {
 	@Test fun aspectRatioNegative() {
@@ -27,7 +28,7 @@ class AspectRatioTest {
 		}
 	}
 
-	@Test fun aspectRatioDefault() {
+	@Test fun aspectRatioDefault() = runTest {
 		assertThat(getSize(1f, Constraints(maxWidth = 30))).isEqualTo(IntSize(30, 30))
 		assertThat(getSize(2f, Constraints(maxWidth = 30))).isEqualTo(IntSize(30, 15))
 		assertThat(getSize(1f, Constraints(maxWidth = 30, maxHeight = 10))).isEqualTo(IntSize(10, 10))
@@ -38,7 +39,7 @@ class AspectRatioTest {
 		assertThat(getSize(2f, Constraints(minWidth = 50, minHeight = 20))).isEqualTo(IntSize(50, 25))
 	}
 
-	@Test fun aspectRatioMatchHeightConstraintsFirstTrue() {
+	@Test fun aspectRatioMatchHeightConstraintsFirstTrue() = runTest {
 		assertThat(getSize(1f, Constraints(maxHeight = 30), true)).isEqualTo(IntSize(30, 30))
 		assertThat(getSize(0.5f, Constraints(maxHeight = 30), true)).isEqualTo(IntSize(15, 30))
 		assertThat(getSize(1f, Constraints(maxWidth = 10, maxHeight = 30), true))
@@ -55,7 +56,7 @@ class AspectRatioTest {
 			.isEqualTo(IntSize(25, 50))
 	}
 
-	@Test fun aspectRatioIntrinsicDimensions() {
+	@Test fun aspectRatioIntrinsicDimensions() = runTest {
 		testIntrinsics(
 			{
 				Container(modifier = Modifier.aspectRatio(2f), width = 30, height = 40)
@@ -83,7 +84,7 @@ class AspectRatioTest {
 		assertThat(actual).isEqualTo("AspectRatio(1.5, matchHeightConstraintsFirst=true)")
 	}
 
-	private fun getSize(
+	private suspend fun getSize(
 		aspectRatio: Float,
 		childContraints: Constraints,
 		matchHeightConstraintsFirst: Boolean = false,

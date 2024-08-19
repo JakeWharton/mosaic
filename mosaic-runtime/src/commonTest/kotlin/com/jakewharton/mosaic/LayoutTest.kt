@@ -9,128 +9,140 @@ import com.jakewharton.mosaic.ui.Layout
 import com.jakewharton.mosaic.ui.Row
 import com.jakewharton.mosaic.ui.Text
 import kotlin.test.Test
+import kotlinx.coroutines.test.runTest
 
 class LayoutTest {
-	@Test fun layoutDebugInfo() {
-		val node = mosaicNodes {
-			Layout(
-				content = {
-					Text("Hi!")
-					Text("Hey!")
-				},
-				debugInfo = { "Custom()" },
-			) { _, _ ->
-				layout(0, 0) {
-				}
-			}
-		}
-		val expected = """
-			|Custom() x=0 y=0 w=0 h=0
-			|  Text("Hi!") x=0 y=0 w=0 h=0 DrawBehind
-			|  Text("Hey!") x=0 y=0 w=0 h=0 DrawBehind
-		""".trimMargin()
-		assertThat(node.toString()).isEqualTo(expected)
-	}
-
-	@Test fun noMeasureNoDraw() {
-		val actual = renderMosaic {
-			Layout({
-				Text("CCC")
-				Text("BB")
-				Text("A")
-			}) { _, _ ->
-				layout(3, 1) {
-				}
-			}
-		}
-		val expected = """
-			|  $s
-			|
-		""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF()
-		assertThat(actual).isEqualTo(expected)
-	}
-
-	@Test fun noPlacementOverlaps() {
-		val actual = renderMosaic {
-			Layout({
-				Text("CCC")
-				Text("BB")
-				Text("A")
-			}) { measurables, constraints ->
-				for (measurable in measurables) {
-					measurable.measure(constraints)
-				}
-				layout(3, 1) {
-				}
-			}
-		}
-		val expected = """
-			|ABC
-			|
-		""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF()
-		assertThat(actual).isEqualTo(expected)
-	}
-
-	@Test fun placementWorks() {
-		val actual = renderMosaic {
-			Layout({
-				Text("CCC")
-				Text("BB")
-				Text("A")
-			}) { measurables, constraints ->
-				val (c, b, a) = measurables.map { it.measure(constraints) }
-				layout(8, 3) {
-					a.place(0, 2)
-					b.place(2, 1)
-					c.place(5, 0)
-				}
-			}
-		}
-		val expected = """
-			|     CCC
-			|  BB   $s
-			|A      $s
-			|
-		""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF()
-		assertThat(actual).isEqualTo(expected)
-	}
-
-	@Test fun canvasIsNotClipped() {
-		val actual = renderMosaic {
-			Column {
-				Row {
-					// Force the width of the canvas to be 6.
-					Text("123456")
-				}
-				Row {
-					Text("..")
-					Layout(
-						modifier = Modifier.drawBehind {
-							repeat(4) { row ->
-								drawText(row, 0, "XXXX")
-							}
-						},
-					) {
-						layout(2, 2)
+	@Test fun layoutDebugInfo() = runTest {
+		runMosaicTest {
+			setContent {
+				Layout(
+					content = {
+						Text("Hi!")
+						Text("Hey!")
+					},
+					debugInfo = { "Custom()" },
+				) { _, _ ->
+					layout(0, 0) {
 					}
-					Text(".")
-				}
-				Row {
-					Text("...")
-				}
-				Row {
-					Text(".....")
 				}
 			}
+			assertThat(awaitNodeSnapshot().toString()).isEqualTo(
+				"""
+				|Custom() x=0 y=0 w=0 h=0
+				|  Text("Hi!") x=0 y=0 w=0 h=0 DrawBehind
+				|  Text("Hey!") x=0 y=0 w=0 h=0 DrawBehind
+				""".trimMargin(),
+			)
 		}
-		val expected = """
-			|123456
-			|..XX.X
-			|  XXXX
-			|...XXX
-			|.....X
-			|
-		""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF()
-		assertThat(actual).isEqualTo(expected)
+	}
+
+	@Test fun noMeasureNoDraw() = runTest {
+		runMosaicTest {
+			setContent {
+				Layout({
+					Text("CCC")
+					Text("BB")
+					Text("A")
+				}) { _, _ ->
+					layout(3, 1) {
+					}
+				}
+			}
+			assertThat(awaitRenderSnapshot()).isEqualTo(
+				"""
+				|  $s
+				""".trimMargin(),
+			)
+		}
+	}
+
+	@Test fun noPlacementOverlaps() = runTest {
+		runMosaicTest {
+			setContent {
+				Layout({
+					Text("CCC")
+					Text("BB")
+					Text("A")
+				}) { measurables, constraints ->
+					for (measurable in measurables) {
+						measurable.measure(constraints)
+					}
+					layout(3, 1) {
+					}
+				}
+			}
+			assertThat(awaitRenderSnapshot()).isEqualTo(
+				"""
+				|ABC
+				""".trimMargin(),
+			)
+		}
+	}
+
+	@Test fun placementWorks() = runTest {
+		runMosaicTest {
+			setContent {
+				Layout({
+					Text("CCC")
+					Text("BB")
+					Text("A")
+				}) { measurables, constraints ->
+					val (c, b, a) = measurables.map { it.measure(constraints) }
+					layout(8, 3) {
+						a.place(0, 2)
+						b.place(2, 1)
+						c.place(5, 0)
+					}
+				}
+			}
+			assertThat(awaitRenderSnapshot()).isEqualTo(
+				"""
+				|     CCC
+				|  BB   $s
+				|A      $s
+				""".trimMargin(),
+			)
+		}
+	}
+
+	@Test fun canvasIsNotClipped() = runTest {
+		runMosaicTest {
+			setContent {
+				Column {
+					Row {
+						// Force the width of the canvas to be 6.
+						Text("123456")
+					}
+					Row {
+						Text("..")
+						Layout(
+							modifier = Modifier.drawBehind {
+								repeat(4) { row ->
+									drawText(row, 0, "XXXX")
+								}
+							},
+						) {
+							layout(2, 2)
+						}
+						Text(".")
+					}
+					Row {
+						Text("...")
+					}
+					Row {
+						Text(".....")
+					}
+				}
+			}
+			assertThat(awaitRenderSnapshot()).isEqualTo(
+				"""
+				|123456
+				|..XX.X
+				|  XXXX
+				|...XXX
+				|.....X
+				""".trimMargin(),
+			)
+		}
 	}
 }
