@@ -51,6 +51,8 @@ internal fun mosaicNodesWithMeasureAndPlace(content: @Composable () -> Unit): Mo
 	}
 }
 
+class Holder<T>(var value: T)
+
 @Composable
 inline fun TestFiller(modifier: Modifier = Modifier) {
 	Filler(TestChar, modifier = modifier)

@@ -18,6 +18,7 @@ import com.jakewharton.mosaic.s
 import com.jakewharton.mosaic.size
 import com.jakewharton.mosaic.ui.unit.Constraints
 import com.jakewharton.mosaic.ui.unit.IntSize
+import com.jakewharton.mosaic.wrapWithAnsiSynchronizedUpdate
 import kotlin.test.Test
 
 class FillerTest {
@@ -40,7 +41,7 @@ class FillerTest {
 			|$TestChar$TestChar$TestChar$TestChar
 			|$TestChar$TestChar$TestChar$TestChar
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -61,7 +62,7 @@ class FillerTest {
 			| $TestChar$TestChar$s
 			|   $s
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 

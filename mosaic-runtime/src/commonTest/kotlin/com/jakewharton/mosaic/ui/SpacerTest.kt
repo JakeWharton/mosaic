@@ -15,6 +15,7 @@ import com.jakewharton.mosaic.s
 import com.jakewharton.mosaic.size
 import com.jakewharton.mosaic.ui.unit.Constraints
 import com.jakewharton.mosaic.ui.unit.IntSize
+import com.jakewharton.mosaic.wrapWithAnsiSynchronizedUpdate
 import kotlin.test.Test
 
 class SpacerTest {
@@ -37,7 +38,7 @@ class SpacerTest {
 			|   $s
 			|   $s
 			|
-			""".trimMargin().replaceLineEndingsWithCRLF(),
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 	}
 
