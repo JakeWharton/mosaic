@@ -72,27 +72,25 @@ private class RealTestMosaicComposition(
 		}
 	}
 
-	val mosaicComposition = object : MosaicComposition(coroutineScope) {
-		override val onEndChanges: (MosaicNode) -> Unit = { rootNode ->
-			nodeSnapshots.trySend(rootNode)
-			if (withRenderSnapshots) {
-				val stringRender = if (withAnsi) {
-					rendering.render(rootNode).toString()
-				} else {
-					rendering.render(rootNode).toString()
-						.removeSurrounding(ansiBeginSynchronizedUpdate, ansiEndSynchronizedUpdate)
-						.removeSuffix("\r\n") // without last line break for simplicity
-						.replace(clearLine, "")
-						.replace(cursorUp, "")
-						.replace("\r\n", "\n") // CRLF to LF for simplicity
-				}
-				renderSnapshots.trySend(stringRender)
-			}
-		}
+	private val terminalState: MutableState<Terminal> = mutableStateOf(
+		Terminal(size = initialTerminalSize),
+	)
 
-		override val terminalInfo: MutableState<Terminal> = mutableStateOf(
-			Terminal(size = initialTerminalSize),
-		)
+	val mosaicComposition = MosaicComposition(coroutineScope, terminalState) { rootNode ->
+		nodeSnapshots.trySend(rootNode)
+		if (withRenderSnapshots) {
+			val stringRender = if (withAnsi) {
+				rendering.render(rootNode).toString()
+			} else {
+				rendering.render(rootNode).toString()
+					.removeSurrounding(ansiBeginSynchronizedUpdate, ansiEndSynchronizedUpdate)
+					.removeSuffix("\r\n") // without last line break for simplicity
+					.replace(clearLine, "")
+					.replace(cursorUp, "")
+					.replace("\r\n", "\n") // CRLF to LF for simplicity
+			}
+			renderSnapshots.trySend(stringRender)
+		}
 	}
 
 	override fun setContent(content: @Composable () -> Unit) {
@@ -101,7 +99,7 @@ private class RealTestMosaicComposition(
 	}
 
 	override fun changeTerminalSize(width: Int, height: Int) {
-		mosaicComposition.terminalInfo.value = Terminal(size = IntSize(width, height))
+		terminalState.value = Terminal(size = IntSize(width, height))
 	}
 
 	override suspend fun awaitNodeSnapshot(duration: Duration): MosaicNode {

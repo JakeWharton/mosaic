@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composition
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Recomposer
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.Snapshot
 import com.github.ajalt.mordant.terminal.Terminal as MordantTerminal
@@ -33,11 +34,11 @@ import kotlinx.coroutines.launch
 private const val debugOutput = false
 
 internal fun renderMosaicNode(content: @Composable () -> Unit): MosaicNode {
-	val mosaicComposition = object : MordantTerminalMosaicComposition(
+	val mosaicComposition = MosaicComposition(
 		coroutineScope = CoroutineScope(EmptyCoroutineContext),
-	) {
-		override val onEndChanges: (MosaicNode) -> Unit = {}
-	}
+		terminalState = MordantTerminal().toMutableState(),
+		onEndChanges = {},
+	)
 	mosaicComposition.setContent(content)
 	mosaicComposition.cancel()
 	return mosaicComposition.applier.root
@@ -49,29 +50,27 @@ public fun renderMosaic(content: @Composable () -> Unit): String {
 
 public suspend fun runMosaic(content: @Composable () -> Unit) {
 	coroutineScope {
-		val mosaicComposition = RenderingMosaicComposition(
+		val terminal = MordantTerminal()
+		val rendering = createRendering(terminal.info.ansiLevel.toMosaicAnsiLevel())
+		val terminalState = terminal.toMutableState()
+		val mosaicComposition = MosaicComposition(
 			coroutineScope = this,
-			onRender = ::platformDisplay,
+			terminalState = terminalState,
+			onEndChanges = { rootNode ->
+				platformDisplay(rendering.render(rootNode))
+			},
 		)
+		mosaicComposition.sendFrames()
+		mosaicComposition.scope.updateTerminalInfo(terminal, terminalState)
 		mosaicComposition.setContent(content)
 		mosaicComposition.awaitComplete()
 	}
 }
 
-private class RenderingMosaicComposition(
-	coroutineScope: CoroutineScope,
-	onRender: (CharSequence) -> Unit,
-) : MordantTerminalMosaicComposition(coroutineScope) {
-
-	private val rendering: Rendering = createRendering(terminal.info.ansiLevel.toMosaicAnsiLevel())
-
-	override val onEndChanges: (MosaicNode) -> Unit = { rootNode ->
-		onRender(rendering.render(rootNode))
-	}
-
-	init {
-		coroutineScope.sendFrames()
-	}
+private fun MordantTerminal.toMutableState(): MutableState<Terminal> {
+	return mutableStateOf(
+		Terminal(size = IntSize(info.width, info.height)),
+	)
 }
 
 private fun createRendering(ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR): Rendering {
@@ -83,68 +82,50 @@ private fun createRendering(ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR): Renderi
 	}
 }
 
-private abstract class MordantTerminalMosaicComposition(
-	coroutineScope: CoroutineScope,
-) : MosaicComposition(coroutineScope) {
-
-	protected val terminal = MordantTerminal()
-
-	override val terminalInfo: MutableState<Terminal> = mutableStateOf(
-		Terminal(size = IntSize(terminal.info.width, terminal.info.height)),
-	)
-
-	init {
-		coroutineScope.updateTerminalInfo()
-	}
-
-	private fun CoroutineScope.updateTerminalInfo() {
-		launch(composeContext) {
-			while (true) {
-				val currentTerminalInfo = terminalInfo.value
-				if (terminal.info.updateTerminalSize() &&
-					(
-						currentTerminalInfo.size.width != terminal.info.width ||
-							currentTerminalInfo.size.height != terminal.info.height
-						)
-				) {
-					terminalInfo.value = Terminal(size = IntSize(terminal.info.width, terminal.info.height))
-				}
-				delay(50L)
+private fun CoroutineScope.updateTerminalInfo(terminal: MordantTerminal, terminalInfo: MutableState<Terminal>) {
+	launch {
+		while (true) {
+			val currentTerminalInfo = terminalInfo.value
+			if (terminal.info.updateTerminalSize() &&
+				(
+					currentTerminalInfo.size.width != terminal.info.width ||
+						currentTerminalInfo.size.height != terminal.info.height
+					)
+			) {
+				terminalInfo.value = Terminal(size = IntSize(terminal.info.width, terminal.info.height))
 			}
+			delay(50L)
 		}
 	}
 }
 
-internal abstract class MosaicComposition(coroutineScope: CoroutineScope) {
-	protected abstract val onEndChanges: (MosaicNode) -> Unit
-
+internal class MosaicComposition(
+	coroutineScope: CoroutineScope,
+	private val terminalState: State<Terminal>,
+	onEndChanges: (MosaicNode) -> Unit,
+) {
 	private val job = Job(coroutineScope.coroutineContext[Job])
 	private val clock = BroadcastFrameClock()
-	protected val composeContext: CoroutineContext = coroutineScope.coroutineContext + job + clock
+	private val composeContext: CoroutineContext = coroutineScope.coroutineContext + job + clock
+	val scope = CoroutineScope(composeContext)
 
-	val applier = MosaicNodeApplier { rootNode -> onEndChanges(rootNode) }
+	val applier = MosaicNodeApplier(onEndChanges)
 	private val recomposer = Recomposer(composeContext)
 	private val composition = Composition(applier, recomposer)
 
-	abstract val terminalInfo: MutableState<Terminal>
-
 	init {
-		startGlobalSnapshotManager()
-		coroutineScope.startRecomposer()
+		GlobalSnapshotManager().ensureStarted(scope)
+		startRecomposer()
 	}
 
-	private fun startGlobalSnapshotManager() {
-		GlobalSnapshotManager().ensureStarted(composeContext)
-	}
-
-	private fun CoroutineScope.startRecomposer() {
-		launch(composeContext, start = CoroutineStart.UNDISPATCHED) {
+	private fun startRecomposer() {
+		scope.launch(start = CoroutineStart.UNDISPATCHED) {
 			recomposer.runRecomposeAndApplyChanges()
 		}
 	}
 
-	fun CoroutineScope.sendFrames(): Job {
-		return launch(composeContext) {
+	fun sendFrames(): Job {
+		return scope.launch {
 			while (true) {
 				clock.sendFrame(0L) // Frame time value is not used by Compose runtime.
 				delay(50L)
@@ -154,7 +135,7 @@ internal abstract class MosaicComposition(coroutineScope: CoroutineScope) {
 
 	fun setContent(content: @Composable () -> Unit) {
 		composition.setContent {
-			CompositionLocalProvider(LocalTerminal provides terminalInfo.value) {
+			CompositionLocalProvider(LocalTerminal provides terminalState.value) {
 				content()
 			}
 		}
@@ -217,10 +198,10 @@ internal class GlobalSnapshotManager {
 	private val started = AtomicBoolean(false)
 	private val sent = AtomicBoolean(false)
 
-	fun ensureStarted(coroutineContext: CoroutineContext) {
+	fun ensureStarted(scope: CoroutineScope) {
 		if (started.compareAndSet(expect = false, update = true)) {
 			val channel = Channel<Unit>(1)
-			CoroutineScope(coroutineContext).launch {
+			scope.launch {
 				channel.consumeEach {
 					sent.set(false)
 					Snapshot.sendApplyNotifications()
