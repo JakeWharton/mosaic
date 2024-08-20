@@ -12,7 +12,6 @@ import com.jakewharton.mosaic.layout.width
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.mosaicNodesWithMeasureAndPlace
 import com.jakewharton.mosaic.runMosaicTest
-import com.jakewharton.mosaic.s
 import com.jakewharton.mosaic.size
 import com.jakewharton.mosaic.ui.unit.Constraints
 import com.jakewharton.mosaic.ui.unit.IntSize
@@ -51,12 +50,12 @@ class FillerTest {
 			}
 			assertThat(awaitRenderSnapshot()).isEqualTo(
 				"""
-				|   $s
-				| $TestChar$TestChar$s
-				| $TestChar$TestChar$s
-				| $TestChar$TestChar$s
-				| $TestChar$TestChar$s
-				|   $s
+				|
+				| $TestChar$TestChar
+				| $TestChar$TestChar
+				| $TestChar$TestChar
+				| $TestChar$TestChar
+				|
 				""".trimMargin(),
 			)
 		}

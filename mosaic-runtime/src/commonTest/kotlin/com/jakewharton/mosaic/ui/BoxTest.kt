@@ -22,7 +22,6 @@ import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.mosaicNodesWithMeasureAndPlace
 import com.jakewharton.mosaic.position
 import com.jakewharton.mosaic.runMosaicTest
-import com.jakewharton.mosaic.s
 import com.jakewharton.mosaic.size
 import com.jakewharton.mosaic.testIntrinsics
 import com.jakewharton.mosaic.ui.unit.Constraints
@@ -62,12 +61,12 @@ class BoxTest {
 
 			assertThat(render).isEqualTo(
 				"""
-				|     $s
-				|     $s
-				|  $TestChar$TestChar $s
-				|  $TestChar$TestChar $s
-				|     $s
-				|     $s
+				|
+				|
+				|  $TestChar$TestChar
+				|  $TestChar$TestChar
+				|
+				|
 				""".trimMargin(),
 			)
 		}
@@ -141,7 +140,7 @@ class BoxTest {
 
 			assertThat(render).isEqualTo(
 				"""
-				|     $s
+				|
 				| $TestChar$TestChar$TestChar$TestChar$TestChar
 				| $TestChar$TestChar$TestChar$TestChar$TestChar
 				| $TestChar$TestChar$TestChar$TestChar$TestChar
@@ -188,12 +187,12 @@ class BoxTest {
 
 			assertThat(render).isEqualTo(
 				"""
-				|$TestChar$TestChar$TestChar$TestChar$TestChar$s
-				|$TestChar$TestChar$TestChar$TestChar$TestChar$s
-				|$TestChar$TestChar$TestChar$TestChar$TestChar$s
-				|$TestChar$TestChar$TestChar$TestChar$TestChar$s
-				|$TestChar$TestChar$TestChar$TestChar$TestChar$s
-				|     $s
+				|$TestChar$TestChar$TestChar$TestChar$TestChar
+				|$TestChar$TestChar$TestChar$TestChar$TestChar
+				|$TestChar$TestChar$TestChar$TestChar$TestChar
+				|$TestChar$TestChar$TestChar$TestChar$TestChar
+				|$TestChar$TestChar$TestChar$TestChar$TestChar
+				|
 				""".trimMargin(),
 			)
 		}
@@ -235,12 +234,12 @@ class BoxTest {
 
 			assertThat(render).isEqualTo(
 				"""
-				| $TestChar$TestChar$TestChar$TestChar$s
-				| $TestChar$TestChar$TestChar$TestChar$s
-				| $TestChar$TestChar$TestChar$TestChar$s
-				| $TestChar$TestChar$TestChar$TestChar$s
-				| $TestChar$TestChar$TestChar$TestChar$s
-				| $TestChar$TestChar$TestChar$TestChar$s
+				| $TestChar$TestChar$TestChar$TestChar
+				| $TestChar$TestChar$TestChar$TestChar
+				| $TestChar$TestChar$TestChar$TestChar
+				| $TestChar$TestChar$TestChar$TestChar
+				| $TestChar$TestChar$TestChar$TestChar
+				| $TestChar$TestChar$TestChar$TestChar
 				""".trimMargin(),
 			)
 		}
@@ -282,12 +281,12 @@ class BoxTest {
 
 			assertThat(render).isEqualTo(
 				"""
-				|     $s
+				|
 				|$TestChar$TestChar$TestChar$TestChar$TestChar$TestChar
 				|$TestChar$TestChar$TestChar$TestChar$TestChar$TestChar
 				|$TestChar$TestChar$TestChar$TestChar$TestChar$TestChar
 				|$TestChar$TestChar$TestChar$TestChar$TestChar$TestChar
-				|     $s
+				|
 				""".trimMargin(),
 			)
 		}

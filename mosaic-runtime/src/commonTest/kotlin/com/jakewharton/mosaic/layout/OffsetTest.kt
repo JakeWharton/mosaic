@@ -6,7 +6,6 @@ import com.jakewharton.mosaic.TestChar
 import com.jakewharton.mosaic.TestFiller
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.runMosaicTest
-import com.jakewharton.mosaic.s
 import com.jakewharton.mosaic.ui.Box
 import com.jakewharton.mosaic.ui.unit.IntOffset
 import kotlin.test.Test
@@ -23,12 +22,12 @@ class OffsetTest {
 			}
 			assertThat(awaitRenderSnapshot()).isEqualTo(
 				"""
-				|   $TestChar $s
-				|     $s
-				|     $s
-				|     $s
-				|     $s
-				|     $s
+				|   $TestChar
+				|
+				|
+				|
+				|
+				|
 				""".trimMargin(),
 			)
 		}
@@ -67,12 +66,12 @@ class OffsetTest {
 			}
 			assertThat(awaitRenderSnapshot()).isEqualTo(
 				"""
-				|     $s
-				|     $s
-				|     $s
-				|     $s
-				|$TestChar    $s
-				|     $s
+				|
+				|
+				|
+				|
+				|$TestChar
+				|
 				""".trimMargin(),
 			)
 		}
@@ -111,12 +110,12 @@ class OffsetTest {
 			}
 			assertThat(awaitRenderSnapshot()).isEqualTo(
 				"""
-				|     $s
-				|     $s
-				|     $s
-				|     $s
-				|   $TestChar $s
-				|     $s
+				|
+				|
+				|
+				|
+				|   $TestChar
+				|
 				""".trimMargin(),
 			)
 		}
@@ -160,12 +159,12 @@ class OffsetTest {
 			}
 			assertThat(awaitRenderSnapshot()).isEqualTo(
 				"""
-				|   $TestChar $s
-				|     $s
-				|     $s
-				|     $s
-				|     $s
-				|     $s
+				|   $TestChar
+				|
+				|
+				|
+				|
+				|
 				""".trimMargin(),
 			)
 		}
@@ -204,12 +203,12 @@ class OffsetTest {
 			}
 			assertThat(awaitRenderSnapshot()).isEqualTo(
 				"""
-				|     $s
-				|     $s
-				|     $s
-				|     $s
-				|$TestChar    $s
-				|     $s
+				|
+				|
+				|
+				|
+				|$TestChar
+				|
 				""".trimMargin(),
 			)
 		}
@@ -248,12 +247,12 @@ class OffsetTest {
 			}
 			assertThat(awaitRenderSnapshot()).isEqualTo(
 				"""
-				|     $s
-				|     $s
-				|     $s
-				|     $s
-				|   $TestChar $s
-				|     $s
+				|
+				|
+				|
+				|
+				|   $TestChar
+				|
 				""".trimMargin(),
 			)
 		}

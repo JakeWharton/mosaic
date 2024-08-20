@@ -10,7 +10,7 @@ Changed:
 - Nothing yet!
 
 Fixed:
-- Nothing yet!
+- There is no addition of empty extra spaces at the end of lines.
 
 
 ## [0.14.0] - 2024-10-07
