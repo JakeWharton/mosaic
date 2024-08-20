@@ -16,8 +16,6 @@ import com.jakewharton.mosaic.ui.BoxMeasurePolicy
 import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -128,7 +126,7 @@ internal abstract class MosaicComposition(coroutineScope: CoroutineScope) {
 	private val recomposer = Recomposer(composeContext)
 	private val composition = Composition(applier, recomposer)
 
-	protected abstract val terminalInfo: MutableState<Terminal>
+	abstract val terminalInfo: MutableState<Terminal>
 
 	init {
 		startGlobalSnapshotManager()
@@ -145,7 +143,7 @@ internal abstract class MosaicComposition(coroutineScope: CoroutineScope) {
 		}
 	}
 
-	protected fun CoroutineScope.sendFrames(): Job {
+	fun CoroutineScope.sendFrames(): Job {
 		return launch(composeContext) {
 			while (true) {
 				clock.sendFrame(0L) // Frame time value is not used by Compose runtime.
@@ -154,7 +152,7 @@ internal abstract class MosaicComposition(coroutineScope: CoroutineScope) {
 		}
 	}
 
-	open fun setContent(content: @Composable () -> Unit) {
+	fun setContent(content: @Composable () -> Unit) {
 		composition.setContent {
 			CompositionLocalProvider(LocalTerminal provides terminalInfo.value) {
 				content()
@@ -235,23 +233,4 @@ internal class GlobalSnapshotManager {
 			}
 		}
 	}
-}
-
-// TestMosaicComposition is located here, not in the commonTest, because task
-// ':mosaic-runtime:compileTestKotlinLinuxArm64' fails with the message:
-// Refined declaration 'fun setContent(content: @Composable() ComposableFunction0<Unit>): Unit'
-// overrides declarations with different or no refinement from: interface TestMosaicComposition : Any
-internal interface TestMosaicComposition {
-
-	fun setContent(content: @Composable () -> Unit)
-
-	fun changeTerminalSize(width: Int, height: Int)
-
-	suspend fun awaitNodeSnapshot(duration: Duration = 1.seconds): MosaicNode
-
-	suspend fun awaitRenderSnapshot(duration: Duration = 1.seconds): String
-
-	suspend fun awaitNodeRenderSnapshot(duration: Duration = 1.seconds): NodeRenderSnapshot
-
-	data class NodeRenderSnapshot(val node: MosaicNode, val render: String)
 }

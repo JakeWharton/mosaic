@@ -7,6 +7,7 @@ import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
@@ -21,15 +22,29 @@ internal suspend fun runMosaicTest(
 	block: suspend TestMosaicComposition.() -> Unit,
 ) {
 	coroutineScope {
-		val mosaicComposition = RealTestMosaicComposition(
+		val testMosaicComposition = RealTestMosaicComposition(
 			coroutineScope = this,
 			withAnsi = withAnsi,
 			initialTerminalSize = initialTerminalSize,
 			withRenderSnapshots = withRenderSnapshots,
 		)
-		block.invoke(mosaicComposition)
-		mosaicComposition.cancel()
+		block.invoke(testMosaicComposition)
+		testMosaicComposition.mosaicComposition.cancel()
 	}
+}
+
+internal interface TestMosaicComposition {
+	fun setContent(content: @Composable () -> Unit)
+
+	fun changeTerminalSize(width: Int, height: Int)
+
+	suspend fun awaitNodeSnapshot(duration: Duration = 1.seconds): MosaicNode
+
+	suspend fun awaitRenderSnapshot(duration: Duration = 1.seconds): String
+
+	suspend fun awaitNodeRenderSnapshot(duration: Duration = 1.seconds): NodeRenderSnapshot
+
+	data class NodeRenderSnapshot(val node: MosaicNode, val render: String)
 }
 
 private class RealTestMosaicComposition(
@@ -37,8 +52,7 @@ private class RealTestMosaicComposition(
 	withAnsi: Boolean,
 	initialTerminalSize: IntSize,
 	withRenderSnapshots: Boolean,
-) : MosaicComposition(coroutineScope),
-	TestMosaicComposition {
+) : TestMosaicComposition {
 
 	private var contentSet = false
 
@@ -58,34 +72,36 @@ private class RealTestMosaicComposition(
 		}
 	}
 
-	override val onEndChanges: (MosaicNode) -> Unit = { rootNode ->
-		nodeSnapshots.trySend(rootNode)
-		if (withRenderSnapshots) {
-			val stringRender = if (withAnsi) {
-				rendering.render(rootNode).toString()
-			} else {
-				rendering.render(rootNode).toString()
-					.removeSurrounding(ansiBeginSynchronizedUpdate, ansiEndSynchronizedUpdate)
-					.removeSuffix("\r\n") // without last line break for simplicity
-					.replace(clearLine, "")
-					.replace(cursorUp, "")
-					.replace("\r\n", "\n") // CRLF to LF for simplicity
+	val mosaicComposition = object : MosaicComposition(coroutineScope) {
+		override val onEndChanges: (MosaicNode) -> Unit = { rootNode ->
+			nodeSnapshots.trySend(rootNode)
+			if (withRenderSnapshots) {
+				val stringRender = if (withAnsi) {
+					rendering.render(rootNode).toString()
+				} else {
+					rendering.render(rootNode).toString()
+						.removeSurrounding(ansiBeginSynchronizedUpdate, ansiEndSynchronizedUpdate)
+						.removeSuffix("\r\n") // without last line break for simplicity
+						.replace(clearLine, "")
+						.replace(cursorUp, "")
+						.replace("\r\n", "\n") // CRLF to LF for simplicity
+				}
+				renderSnapshots.trySend(stringRender)
 			}
-			renderSnapshots.trySend(stringRender)
 		}
-	}
 
-	override val terminalInfo: MutableState<Terminal> = mutableStateOf(
-		Terminal(size = initialTerminalSize),
-	)
+		override val terminalInfo: MutableState<Terminal> = mutableStateOf(
+			Terminal(size = initialTerminalSize),
+		)
+	}
 
 	override fun setContent(content: @Composable () -> Unit) {
 		contentSet = true
-		super.setContent(content)
+		mosaicComposition.setContent(content)
 	}
 
 	override fun changeTerminalSize(width: Int, height: Int) {
-		terminalInfo.value = Terminal(size = IntSize(width, height))
+		mosaicComposition.terminalInfo.value = Terminal(size = IntSize(width, height))
 	}
 
 	override suspend fun awaitNodeSnapshot(duration: Duration): MosaicNode {
@@ -107,7 +123,7 @@ private class RealTestMosaicComposition(
 
 		// Await at least one change, sending frames while we wait.
 		return withTimeout(duration) {
-			val sendFramesJob = sendFrames()
+			val sendFramesJob = with(mosaicComposition) { sendFrames() }
 			try {
 				block()
 			} finally {
