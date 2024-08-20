@@ -5,128 +5,142 @@ import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.TestChar
 import com.jakewharton.mosaic.TestFiller
 import com.jakewharton.mosaic.modifier.Modifier
-import com.jakewharton.mosaic.renderMosaic
-import com.jakewharton.mosaic.replaceLineEndingsWithCRLF
+import com.jakewharton.mosaic.runMosaicTest
 import com.jakewharton.mosaic.s
 import com.jakewharton.mosaic.ui.Box
 import com.jakewharton.mosaic.ui.unit.IntOffset
-import com.jakewharton.mosaic.wrapWithAnsiSynchronizedUpdate
 import kotlin.test.Test
 import kotlin.test.assertFails
+import kotlinx.coroutines.test.runTest
 
 class OffsetTest {
-	@Test fun offsetHorizontalFixed() {
-		val actual = renderMosaic {
-			Box(modifier = Modifier.size(6).offset(3, 0)) {
-				TestFiller(modifier = Modifier.size(1))
+	@Test fun offsetHorizontalFixed() = runTest {
+		runMosaicTest {
+			setContent {
+				Box(modifier = Modifier.size(6).offset(3, 0)) {
+					TestFiller(modifier = Modifier.size(1))
+				}
 			}
+			assertThat(awaitRenderSnapshot()).isEqualTo(
+				"""
+				|   $TestChar $s
+				|     $s
+				|     $s
+				|     $s
+				|     $s
+				|     $s
+				""".trimMargin(),
+			)
 		}
-		assertThat(actual).isEqualTo(
-			"""
-			|   $TestChar $s
-			|     $s
-			|     $s
-			|     $s
-			|     $s
-			|     $s
-			|
-			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
-		)
 	}
 
-	@Test fun offsetHorizontalFixedBeyondBorders() {
+	@Test fun offsetHorizontalFixedBeyondBorders() = runTest {
 		assertFails {
-			renderMosaic {
-				Box(modifier = Modifier.size(6).offset(30, 0)) {
-					TestFiller(modifier = Modifier.size(1))
+			runMosaicTest {
+				setContent {
+					Box(modifier = Modifier.size(6).offset(30, 0)) {
+						TestFiller(modifier = Modifier.size(1))
+					}
 				}
 			}
 		}
 	}
 
-	@Test fun offsetHorizontalFixedNegativeBeyondBorders() {
+	@Test fun offsetHorizontalFixedNegativeBeyondBorders() = runTest {
 		assertFails {
-			renderMosaic {
-				Box(modifier = Modifier.size(6).offset(-3, 0)) {
-					TestFiller(modifier = Modifier.size(1))
+			runMosaicTest {
+				setContent {
+					Box(modifier = Modifier.size(6).offset(-3, 0)) {
+						TestFiller(modifier = Modifier.size(1))
+					}
 				}
 			}
 		}
 	}
 
-	@Test fun offsetVerticalFixed() {
-		val actual = renderMosaic {
-			Box(modifier = Modifier.size(6).offset(0, 4)) {
-				TestFiller(modifier = Modifier.size(1))
+	@Test fun offsetVerticalFixed() = runTest {
+		runMosaicTest {
+			setContent {
+				Box(modifier = Modifier.size(6).offset(0, 4)) {
+					TestFiller(modifier = Modifier.size(1))
+				}
 			}
+			assertThat(awaitRenderSnapshot()).isEqualTo(
+				"""
+				|     $s
+				|     $s
+				|     $s
+				|     $s
+				|$TestChar    $s
+				|     $s
+				""".trimMargin(),
+			)
 		}
-		assertThat(actual).isEqualTo(
-			"""
-			|     $s
-			|     $s
-			|     $s
-			|     $s
-			|$TestChar    $s
-			|     $s
-			|
-			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
-		)
 	}
 
-	@Test fun offsetVerticalFixedBeyondBorders() {
+	@Test fun offsetVerticalFixedBeyondBorders() = runTest {
 		assertFails {
-			renderMosaic {
-				Box(modifier = Modifier.size(6).offset(0, 40)) {
-					TestFiller(modifier = Modifier.size(1))
+			runMosaicTest {
+				setContent {
+					Box(modifier = Modifier.size(6).offset(0, 40)) {
+						TestFiller(modifier = Modifier.size(1))
+					}
 				}
 			}
 		}
 	}
 
-	@Test fun offsetVerticalFixedNegativeBeyondBorders() {
+	@Test fun offsetVerticalFixedNegativeBeyondBorders() = runTest {
 		assertFails {
-			renderMosaic {
-				Box(modifier = Modifier.size(6).offset(0, -4)) {
-					TestFiller(modifier = Modifier.size(1))
+			runMosaicTest {
+				setContent {
+					Box(modifier = Modifier.size(6).offset(0, -4)) {
+						TestFiller(modifier = Modifier.size(1))
+					}
 				}
 			}
 		}
 	}
 
-	@Test fun offsetFixed() {
-		val actual = renderMosaic {
-			Box(modifier = Modifier.size(6).offset(3, 4)) {
-				TestFiller(modifier = Modifier.size(1))
+	@Test fun offsetFixed() = runTest {
+		runMosaicTest {
+			setContent {
+				Box(modifier = Modifier.size(6).offset(3, 4)) {
+					TestFiller(modifier = Modifier.size(1))
+				}
 			}
+			assertThat(awaitRenderSnapshot()).isEqualTo(
+				"""
+				|     $s
+				|     $s
+				|     $s
+				|     $s
+				|   $TestChar $s
+				|     $s
+				""".trimMargin(),
+			)
 		}
-		assertThat(actual).isEqualTo(
-			"""
-			|     $s
-			|     $s
-			|     $s
-			|     $s
-			|   $TestChar $s
-			|     $s
-			|
-			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
-		)
 	}
 
-	@Test fun offsetFixedBeyondBorders() {
+	@Test fun offsetFixedBeyondBorders() = runTest {
 		assertFails {
-			renderMosaic {
-				Box(modifier = Modifier.size(6).offset(30, 40)) {
-					TestFiller(modifier = Modifier.size(1))
+			runMosaicTest {
+				setContent {
+					Box(modifier = Modifier.size(6).offset(30, 40)) {
+						TestFiller(modifier = Modifier.size(1))
+					}
 				}
 			}
 		}
 	}
 
-	@Test fun offsetFixedNegativeBeyondBorders() {
+	@Test fun offsetFixedNegativeBeyondBorders() = runTest {
 		assertFails {
-			renderMosaic {
-				Box(modifier = Modifier.size(6).offset(-3, -4)) {
-					TestFiller(modifier = Modifier.size(1))
+			runMosaicTest {
+				setContent {
+					Box(modifier = Modifier.size(6).offset(-3, -4)) {
+						TestFiller(modifier = Modifier.size(1))
+					}
 				}
 			}
 		}
@@ -137,118 +151,133 @@ class OffsetTest {
 		assertThat(actual).isEqualTo("Offset(x=3, y=4)")
 	}
 
-	@Test fun offsetHorizontalModifiable() {
-		val actual = renderMosaic {
-			Box(modifier = Modifier.size(6).offset { IntOffset(3, 0) }) {
-				TestFiller(modifier = Modifier.size(1))
+	@Test fun offsetHorizontalModifiable() = runTest {
+		runMosaicTest {
+			setContent {
+				Box(modifier = Modifier.size(6).offset { IntOffset(3, 0) }) {
+					TestFiller(modifier = Modifier.size(1))
+				}
 			}
+			assertThat(awaitRenderSnapshot()).isEqualTo(
+				"""
+				|   $TestChar $s
+				|     $s
+				|     $s
+				|     $s
+				|     $s
+				|     $s
+				""".trimMargin(),
+			)
 		}
-		assertThat(actual).isEqualTo(
-			"""
-			|   $TestChar $s
-			|     $s
-			|     $s
-			|     $s
-			|     $s
-			|     $s
-			|
-			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
-		)
 	}
 
-	@Test fun offsetHorizontalModifiableBeyondBorders() {
+	@Test fun offsetHorizontalModifiableBeyondBorders() = runTest {
 		assertFails {
-			renderMosaic {
-				Box(modifier = Modifier.size(6).offset { IntOffset(30, 0) }) {
-					TestFiller(modifier = Modifier.size(1))
+			runMosaicTest {
+				setContent {
+					Box(modifier = Modifier.size(6).offset { IntOffset(30, 0) }) {
+						TestFiller(modifier = Modifier.size(1))
+					}
 				}
 			}
 		}
 	}
 
-	@Test fun offsetHorizontalModifiableNegativeBeyondBorders() {
+	@Test fun offsetHorizontalModifiableNegativeBeyondBorders() = runTest {
 		assertFails {
-			renderMosaic {
-				Box(modifier = Modifier.size(6).offset { IntOffset(-3, 0) }) {
-					TestFiller(modifier = Modifier.size(1))
+			runMosaicTest {
+				setContent {
+					Box(modifier = Modifier.size(6).offset { IntOffset(-3, 0) }) {
+						TestFiller(modifier = Modifier.size(1))
+					}
 				}
 			}
 		}
 	}
 
-	@Test fun offsetVerticalModifiable() {
-		val actual = renderMosaic {
-			Box(modifier = Modifier.size(6).offset { IntOffset(0, 4) }) {
-				TestFiller(modifier = Modifier.size(1))
+	@Test fun offsetVerticalModifiable() = runTest {
+		runMosaicTest {
+			setContent {
+				Box(modifier = Modifier.size(6).offset { IntOffset(0, 4) }) {
+					TestFiller(modifier = Modifier.size(1))
+				}
 			}
+			assertThat(awaitRenderSnapshot()).isEqualTo(
+				"""
+				|     $s
+				|     $s
+				|     $s
+				|     $s
+				|$TestChar    $s
+				|     $s
+				""".trimMargin(),
+			)
 		}
-		assertThat(actual).isEqualTo(
-			"""
-			|     $s
-			|     $s
-			|     $s
-			|     $s
-			|$TestChar    $s
-			|     $s
-			|
-			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
-		)
 	}
 
-	@Test fun offsetVerticalModifiableBeyondBorders() {
+	@Test fun offsetVerticalModifiableBeyondBorders() = runTest {
 		assertFails {
-			renderMosaic {
-				Box(modifier = Modifier.size(6).offset { IntOffset(0, 40) }) {
-					TestFiller(modifier = Modifier.size(1))
+			runMosaicTest {
+				setContent {
+					Box(modifier = Modifier.size(6).offset { IntOffset(0, 40) }) {
+						TestFiller(modifier = Modifier.size(1))
+					}
 				}
 			}
 		}
 	}
 
-	@Test fun offsetVerticalModifiableNegativeBeyondBorders() {
+	@Test fun offsetVerticalModifiableNegativeBeyondBorders() = runTest {
 		assertFails {
-			renderMosaic {
-				Box(modifier = Modifier.size(6).offset { IntOffset(0, -4) }) {
-					TestFiller(modifier = Modifier.size(1))
+			runMosaicTest {
+				setContent {
+					Box(modifier = Modifier.size(6).offset { IntOffset(0, -4) }) {
+						TestFiller(modifier = Modifier.size(1))
+					}
 				}
 			}
 		}
 	}
 
-	@Test fun offsetModifiable() {
-		val actual = renderMosaic {
-			Box(modifier = Modifier.size(6).offset { IntOffset(3, 4) }) {
-				TestFiller(modifier = Modifier.size(1))
+	@Test fun offsetModifiable() = runTest {
+		runMosaicTest {
+			setContent {
+				Box(modifier = Modifier.size(6).offset { IntOffset(3, 4) }) {
+					TestFiller(modifier = Modifier.size(1))
+				}
 			}
+			assertThat(awaitRenderSnapshot()).isEqualTo(
+				"""
+				|     $s
+				|     $s
+				|     $s
+				|     $s
+				|   $TestChar $s
+				|     $s
+				""".trimMargin(),
+			)
 		}
-		assertThat(actual).isEqualTo(
-			"""
-			|     $s
-			|     $s
-			|     $s
-			|     $s
-			|   $TestChar $s
-			|     $s
-			|
-			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
-		)
 	}
 
-	@Test fun offsetModifiableBeyondBorders() {
+	@Test fun offsetModifiableBeyondBorders() = runTest {
 		assertFails {
-			renderMosaic {
-				Box(modifier = Modifier.size(6).offset { IntOffset(30, 40) }) {
-					TestFiller(modifier = Modifier.size(1))
+			runMosaicTest {
+				setContent {
+					Box(modifier = Modifier.size(6).offset { IntOffset(30, 40) }) {
+						TestFiller(modifier = Modifier.size(1))
+					}
 				}
 			}
 		}
 	}
 
-	@Test fun offsetModifiableNegativeBeyondBorders() {
+	@Test fun offsetModifiableNegativeBeyondBorders() = runTest {
 		assertFails {
-			renderMosaic {
-				Box(modifier = Modifier.size(6).offset { IntOffset(-3, -4) }) {
-					TestFiller(modifier = Modifier.size(1))
+			runMosaicTest {
+				setContent {
+					Box(modifier = Modifier.size(6).offset { IntOffset(-3, -4) }) {
+						TestFiller(modifier = Modifier.size(1))
+					}
 				}
 			}
 		}

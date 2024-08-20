@@ -22,6 +22,8 @@ import com.jakewharton.mosaic.ui.unit.constrain
 import com.jakewharton.mosaic.ui.unit.constrainHeight
 import com.jakewharton.mosaic.ui.unit.constrainWidth
 import kotlin.math.max
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.first
 
 const val s = " "
 
@@ -45,10 +47,14 @@ internal val MosaicNode.size: IntSize
 internal val MosaicNode.position: IntOffset
 	get() = IntOffset(x, y)
 
-internal fun mosaicNodesWithMeasureAndPlace(content: @Composable () -> Unit): MosaicNode {
-	return mosaicNodes(content).apply {
-		measureAndPlace()
-	}
+internal suspend fun mosaicNodesWithMeasureAndPlace(content: @Composable () -> Unit): MosaicNode {
+	return callbackFlow {
+		// if rendering is enabled, the measureAndPlace is implicitly called
+		runMosaicTest(withRenderSnapshots = false) {
+			setContent(content)
+			send(awaitNodeSnapshot().also { it.measureAndPlace() })
+		}
+	}.first()
 }
 
 class Holder<T>(var value: T)
@@ -111,52 +117,54 @@ fun Container(
 	}
 }
 
-fun testIntrinsics(
+suspend fun testIntrinsics(
 	vararg layouts: @Composable () -> Unit,
 	test: ((Int) -> Int, (Int) -> Int, (Int) -> Int, (Int) -> Int) -> Unit,
 ) {
 	layouts.forEach { layout ->
-		renderMosaic {
-			val measurePolicy = object : MeasurePolicy {
-				override fun MeasureScope.measure(
-					measurables: List<Measurable>,
-					constraints: Constraints,
-				): MeasureResult {
-					val measurable = measurables.first()
-					test(
-						{ h -> measurable.minIntrinsicWidth(h) },
-						{ w -> measurable.minIntrinsicHeight(w) },
-						{ h -> measurable.maxIntrinsicWidth(h) },
-						{ w -> measurable.maxIntrinsicHeight(w) },
-					)
+		runMosaicTest {
+			setContent {
+				val measurePolicy = object : MeasurePolicy {
+					override fun MeasureScope.measure(
+						measurables: List<Measurable>,
+						constraints: Constraints,
+					): MeasureResult {
+						val measurable = measurables.first()
+						test(
+							{ h -> measurable.minIntrinsicWidth(h) },
+							{ w -> measurable.minIntrinsicHeight(w) },
+							{ h -> measurable.maxIntrinsicWidth(h) },
+							{ w -> measurable.maxIntrinsicHeight(w) },
+						)
 
-					return layout(0, 0) {}
+						return layout(0, 0) {}
+					}
+
+					override fun minIntrinsicWidth(
+						measurables: List<IntrinsicMeasurable>,
+						height: Int,
+					) = 0
+
+					override fun minIntrinsicHeight(
+						measurables: List<IntrinsicMeasurable>,
+						width: Int,
+					) = 0
+
+					override fun maxIntrinsicWidth(
+						measurables: List<IntrinsicMeasurable>,
+						height: Int,
+					) = 0
+
+					override fun maxIntrinsicHeight(
+						measurables: List<IntrinsicMeasurable>,
+						width: Int,
+					) = 0
 				}
-
-				override fun minIntrinsicWidth(
-					measurables: List<IntrinsicMeasurable>,
-					height: Int,
-				) = 0
-
-				override fun minIntrinsicHeight(
-					measurables: List<IntrinsicMeasurable>,
-					width: Int,
-				) = 0
-
-				override fun maxIntrinsicWidth(
-					measurables: List<IntrinsicMeasurable>,
-					height: Int,
-				) = 0
-
-				override fun maxIntrinsicHeight(
-					measurables: List<IntrinsicMeasurable>,
-					width: Int,
-				) = 0
+				Layout(
+					content = layout,
+					measurePolicy = measurePolicy,
+				)
 			}
-			Layout(
-				content = layout,
-				measurePolicy = measurePolicy,
-			)
 		}
 	}
 }

@@ -7,12 +7,13 @@ import com.jakewharton.mosaic.ui.Row
 import com.jakewharton.mosaic.ui.Static
 import com.jakewharton.mosaic.ui.Text
 import kotlin.test.Test
+import kotlinx.coroutines.test.runTest
 
 class AnsiRenderingTest {
 	private val rendering = AnsiRendering()
 
 	@Test fun firstRender() {
-		val hello = mosaicNodes {
+		val rootNode = renderMosaicNode {
 			Column {
 				Text("Hello")
 				Text("World!")
@@ -20,7 +21,7 @@ class AnsiRenderingTest {
 		}
 
 		// TODO We should not draw trailing whitespace.
-		assertThat(rendering.render(hello).toString()).isEqualTo(
+		assertThat(rendering.render(rootNode).toString()).isEqualTo(
 			"""
 			|Hello$s
 			|World!
@@ -30,14 +31,14 @@ class AnsiRenderingTest {
 	}
 
 	@Test fun subsequentLongerRenderClearsRenderedLines() {
-		val first = mosaicNodes {
+		val firstRootNode = renderMosaicNode {
 			Column {
 				Text("Hello")
 				Text("World!")
 			}
 		}
 
-		assertThat(rendering.render(first).toString()).isEqualTo(
+		assertThat(rendering.render(firstRootNode).toString()).isEqualTo(
 			"""
 			|Hello$s
 			|World!
@@ -45,7 +46,7 @@ class AnsiRenderingTest {
 			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 
-		val second = mosaicNodes {
+		val secondRootNode = renderMosaicNode {
 			Column {
 				Text("Hel")
 				Text("lo")
@@ -54,7 +55,7 @@ class AnsiRenderingTest {
 			}
 		}
 
-		assertThat(rendering.render(second).toString()).isEqualTo(
+		assertThat(rendering.render(secondRootNode).toString()).isEqualTo(
 			"""
 			|$cursorUp${cursorUp}Hel$clearLine
 			|lo $clearLine
@@ -66,7 +67,7 @@ class AnsiRenderingTest {
 	}
 
 	@Test fun subsequentShorterRenderClearsRenderedLines() {
-		val first = mosaicNodes {
+		val firstRootNode = renderMosaicNode {
 			Column {
 				Text("Hel")
 				Text("lo")
@@ -75,7 +76,7 @@ class AnsiRenderingTest {
 			}
 		}
 
-		assertThat(rendering.render(first).toString()).isEqualTo(
+		assertThat(rendering.render(firstRootNode).toString()).isEqualTo(
 			"""
 			|Hel
 			|lo$s
@@ -85,14 +86,14 @@ class AnsiRenderingTest {
 			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 
-		val second = mosaicNodes {
+		val secondRootNode = renderMosaicNode {
 			Column {
 				Text("Hello")
 				Text("World!")
 			}
 		}
 
-		assertThat(rendering.render(second).toString()).isEqualTo(
+		assertThat(rendering.render(secondRootNode).toString()).isEqualTo(
 			"""
 			|$cursorUp$cursorUp$cursorUp${cursorUp}Hello $clearLine
 			|World!$clearLine
@@ -103,14 +104,14 @@ class AnsiRenderingTest {
 	}
 
 	@Test fun staticRendersFirst() {
-		val hello = mosaicNodes {
+		val rootNode = renderMosaicNode {
 			Text("Hello")
 			Static(snapshotStateListOf("World!")) {
 				Text(it)
 			}
 		}
 
-		assertThat(rendering.render(hello).toString()).isEqualTo(
+		assertThat(rendering.render(rootNode).toString()).isEqualTo(
 			"""
 			|World!
 			|Hello
@@ -119,15 +120,15 @@ class AnsiRenderingTest {
 		)
 	}
 
-	@Test fun staticLinesNotErased() {
-		val first = mosaicNodes {
+	@Test fun staticLinesNotErased() = runTest {
+		val firstRootNode = renderMosaicNode {
 			Static(snapshotStateListOf("One")) {
 				Text(it)
 			}
 			Text("Two")
 		}
 
-		assertThat(rendering.render(first).toString()).isEqualTo(
+		assertThat(rendering.render(firstRootNode).toString()).isEqualTo(
 			"""
 			|One
 			|Two
@@ -135,14 +136,14 @@ class AnsiRenderingTest {
 			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)
 
-		val second = mosaicNodes {
+		val secondRootNode = renderMosaicNode {
 			Static(snapshotStateListOf("Three")) {
 				Text(it)
 			}
 			Text("Four")
 		}
 
-		assertThat(rendering.render(second).toString()).isEqualTo(
+		assertThat(rendering.render(secondRootNode).toString()).isEqualTo(
 			"""
 			|${cursorUp}Three$clearLine
 			|Four
@@ -152,7 +153,7 @@ class AnsiRenderingTest {
 	}
 
 	@Test fun staticOrderingIsDfs() {
-		val hello = mosaicNodes {
+		val rootNode = renderMosaicNode {
 			Static(snapshotStateListOf("One")) {
 				Text(it)
 			}
@@ -175,7 +176,7 @@ class AnsiRenderingTest {
 			}
 		}
 
-		assertThat(rendering.render(hello).toString()).isEqualTo(
+		assertThat(rendering.render(rootNode).toString()).isEqualTo(
 			"""
 			|One
 			|Two
@@ -189,7 +190,7 @@ class AnsiRenderingTest {
 	}
 
 	@Test fun staticInPositionedElement() {
-		val hello = mosaicNodes {
+		val firstRootNode = renderMosaicNode {
 			Column {
 				Text("TopTopTop")
 				Row {
@@ -201,7 +202,7 @@ class AnsiRenderingTest {
 			}
 		}
 
-		assertThat(rendering.render(hello).toString()).isEqualTo(
+		assertThat(rendering.render(firstRootNode).toString()).isEqualTo(
 			"""
 			|Static
 			|TopTopTop

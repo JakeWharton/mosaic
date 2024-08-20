@@ -30,10 +30,11 @@ import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.math.min
 import kotlin.test.Test
 import kotlin.test.assertFails
+import kotlinx.coroutines.test.runTest
 
 class RowColumnTest {
 	// region Size and position tests for Row and Column
-	@Test fun testRow() {
+	@Test fun testRow() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -54,7 +55,7 @@ class RowColumnTest {
 		assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(size, 0))
 	}
 
-	@Test fun testRow_withChildrenWithWeight() {
+	@Test fun testRow_withChildrenWithWeight() = runTest {
 		val width = 50
 		val height = 80
 
@@ -78,7 +79,7 @@ class RowColumnTest {
 		assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(rootWidth / 3, 0))
 	}
 
-	@Test fun testRow_withChildrenWithWeightNonFilling() {
+	@Test fun testRow_withChildrenWithWeightNonFilling() = runTest {
 		val width = 50
 		val height = 80
 
@@ -107,7 +108,7 @@ class RowColumnTest {
 		assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(width, 0))
 	}
 
-	@Test fun testRow_withChildrenWithMaxValueWeight() {
+	@Test fun testRow_withChildrenWithMaxValueWeight() = runTest {
 		val width = 50
 		val height = 80
 
@@ -131,7 +132,7 @@ class RowColumnTest {
 		assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(rootWidth, 0))
 	}
 
-	@Test fun testRow_withChildrenWithPositiveInfinityWeight() {
+	@Test fun testRow_withChildrenWithPositiveInfinityWeight() = runTest {
 		val width = 50
 		val height = 80
 
@@ -173,7 +174,7 @@ class RowColumnTest {
 		}
 	}
 
-	@Test fun testColumn() {
+	@Test fun testColumn() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -194,7 +195,7 @@ class RowColumnTest {
 		assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(0, size))
 	}
 
-	@Test fun testColumn_withChildrenWithWeight() {
+	@Test fun testColumn_withChildrenWithWeight() = runTest {
 		val width = 80
 		val height = 50
 
@@ -218,7 +219,7 @@ class RowColumnTest {
 		assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(0, rootHeight / 3))
 	}
 
-	@Test fun testColumn_withChildrenWithWeightNonFilling() {
+	@Test fun testColumn_withChildrenWithWeightNonFilling() = runTest {
 		val width = 80
 		val height = 50
 
@@ -243,7 +244,7 @@ class RowColumnTest {
 		assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(0, height))
 	}
 
-	@Test fun testColumn_withChildrenWithMaxValueWeight() {
+	@Test fun testColumn_withChildrenWithMaxValueWeight() = runTest {
 		val width = 80
 		val height = 50
 
@@ -267,7 +268,7 @@ class RowColumnTest {
 		assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(0, rootHeight))
 	}
 
-	@Test fun testColumn_withChildrenWithPositiveInfinityWeight() {
+	@Test fun testColumn_withChildrenWithPositiveInfinityWeight() = runTest {
 		val width = 80
 		val height = 50
 
@@ -309,7 +310,7 @@ class RowColumnTest {
 		}
 	}
 
-	@Test fun testRow_doesNotPlaceChildrenOutOfBounds_becauseOfRoundings() {
+	@Test fun testRow_doesNotPlaceChildrenOutOfBounds_becauseOfRoundings() = runTest {
 		val expectedRowWidth = 11
 		val leftPadding = 1
 
@@ -336,7 +337,7 @@ class RowColumnTest {
 			.isEqualTo(rowNode.width - leftPadding)
 	}
 
-	@Test fun testRow_isNotLargerThanItsChildren_becauseOfRoundings() {
+	@Test fun testRow_isNotLargerThanItsChildren_becauseOfRoundings() = runTest {
 		val expectedRowWidth = 8
 		val leftPadding = 1
 
@@ -367,7 +368,7 @@ class RowColumnTest {
 			.isEqualTo(firstChildContainerNode.width + secondChildContainerNode.width + thirdChildContainerNode.width)
 	}
 
-	@Test fun testColumn_isNotLargetThanItsChildren_becauseOfRoundings() {
+	@Test fun testColumn_isNotLargetThanItsChildren_becauseOfRoundings() = runTest {
 		val expectedColumnHeight = 8
 		val topPadding = 1
 
@@ -398,7 +399,7 @@ class RowColumnTest {
 			.isEqualTo(firstChildContainerNode.height + secondChildContainerNode.height + thirdChildContainerNode.height)
 	}
 
-	@Test fun testColumn_doesNotPlaceChildrenOutOfBounds_becauseOfRoundings() {
+	@Test fun testColumn_doesNotPlaceChildrenOutOfBounds_becauseOfRoundings() = runTest {
 		val expectedColumnHeight = 11
 		val topPadding = 1
 
@@ -428,7 +429,7 @@ class RowColumnTest {
 	// endregion
 
 	// region Cross axis alignment tests in Row
-	@Test fun testRow_withStretchCrossAxisAlignment() {
+	@Test fun testRow_withStretchCrossAxisAlignment() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -449,7 +450,7 @@ class RowColumnTest {
 		assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(size, 0))
 	}
 
-	@Test fun testRow_withGravityModifier_andGravityParameter() {
+	@Test fun testRow_withGravityModifier_andGravityParameter() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -479,7 +480,7 @@ class RowColumnTest {
 		assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(size * 2, rootHeight - size))
 	}
 
-	@Test fun testRow_withGravityModifier() {
+	@Test fun testRow_withGravityModifier() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -515,7 +516,7 @@ class RowColumnTest {
 	// endregion
 
 	// region Cross axis alignment tests in Column
-	@Test fun testColumn_withStretchCrossAxisAlignment() {
+	@Test fun testColumn_withStretchCrossAxisAlignment() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -536,7 +537,7 @@ class RowColumnTest {
 		assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(0, size))
 	}
 
-	@Test fun testColumn_withGravityModifier() {
+	@Test fun testColumn_withGravityModifier() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -565,7 +566,7 @@ class RowColumnTest {
 		assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(rootWidth - size, size * 2))
 	}
 
-	@Test fun testColumn_withGravityModifier_andGravityParameter() {
+	@Test fun testColumn_withGravityModifier_andGravityParameter() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -592,7 +593,7 @@ class RowColumnTest {
 	// endregion
 
 	// region Size tests in Row
-	@Test fun testRow_expandedWidth_withExpandedModifier() {
+	@Test fun testRow_expandedWidth_withExpandedModifier() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -609,7 +610,7 @@ class RowColumnTest {
 		assertThat(rootNode.width).isEqualTo(rowNode.width)
 	}
 
-	@Test fun testRow_wrappedWidth_withNoWeightChildren() {
+	@Test fun testRow_wrappedWidth_withNoWeightChildren() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -626,7 +627,7 @@ class RowColumnTest {
 		assertThat(rowNode.width).isEqualTo(size * 3)
 	}
 
-	@Test fun testRow_expandedWidth_withWeightChildren() {
+	@Test fun testRow_expandedWidth_withWeightChildren() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -643,7 +644,7 @@ class RowColumnTest {
 		assertThat(rowNode.width).isEqualTo(rootNode.width)
 	}
 
-	@Test fun testRow_withMaxCrossAxisSize() {
+	@Test fun testRow_withMaxCrossAxisSize() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -660,7 +661,7 @@ class RowColumnTest {
 		assertThat(rowNode.height).isEqualTo(rootNode.height)
 	}
 
-	@Test fun testRow_withMinCrossAxisSize() {
+	@Test fun testRow_withMinCrossAxisSize() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -677,7 +678,7 @@ class RowColumnTest {
 		assertThat(rowNode.height).isEqualTo(size * 2)
 	}
 
-	@Test fun testRow_withExpandedModifier_respectsMaxWidthConstraint() {
+	@Test fun testRow_withExpandedModifier_respectsMaxWidthConstraint() = runTest {
 		val size = 50
 		val rowWidth = 250
 
@@ -697,7 +698,7 @@ class RowColumnTest {
 		assertThat(rowNode.width).isEqualTo(rootNode.width)
 	}
 
-	@Test fun testRow_withChildrenWithWeight_respectsMaxWidthConstraint() {
+	@Test fun testRow_withChildrenWithWeight_respectsMaxWidthConstraint() = runTest {
 		val size = 50
 		val rowWidth = 250
 
@@ -717,7 +718,7 @@ class RowColumnTest {
 		assertThat(rowNode.width).isEqualTo(min(rootNode.width, rowWidth))
 	}
 
-	@Test fun testRow_withNoWeightChildren_respectsMinWidthConstraint() {
+	@Test fun testRow_withNoWeightChildren_respectsMinWidthConstraint() = runTest {
 		val size = 50
 		val rowWidth = 250
 
@@ -737,7 +738,7 @@ class RowColumnTest {
 		assertThat(rowNode.width).isEqualTo(rowWidth)
 	}
 
-	@Test fun testRow_withMaxCrossAxisSize_respectsMaxHeightConstraint() {
+	@Test fun testRow_withMaxCrossAxisSize_respectsMaxHeightConstraint() = runTest {
 		val size = 50
 		val rowHeight = 250
 
@@ -757,7 +758,7 @@ class RowColumnTest {
 		assertThat(rowNode.height).isEqualTo(min(rootNode.height, rowHeight))
 	}
 
-	@Test fun testRow_withMinCrossAxisSize_respectsMinHeightConstraint() {
+	@Test fun testRow_withMinCrossAxisSize_respectsMinHeightConstraint() = runTest {
 		val size = 50
 		val rowHeight = 150
 
@@ -777,7 +778,7 @@ class RowColumnTest {
 		assertThat(rowNode.height).isEqualTo(rowHeight)
 	}
 
-	@Test fun testRow_protectsAgainstOverflow() {
+	@Test fun testRow_protectsAgainstOverflow() = runTest {
 		val rowMinWidth = 0
 		val counter = Holder(3)
 
@@ -809,7 +810,7 @@ class RowColumnTest {
 		assertThat(counter.value).isZero()
 	}
 
-	@Test fun testRow_doesNotExpand_whenWeightChildrenDoNotFill() {
+	@Test fun testRow_doesNotExpand_whenWeightChildrenDoNotFill() = runTest {
 		val size = 10
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -821,7 +822,7 @@ class RowColumnTest {
 		assertThat(rootNode.width).isEqualTo(size)
 	}
 
-	@Test fun testRow_includesSpacing_withWeightChildren() {
+	@Test fun testRow_includesSpacing_withWeightChildren() = runTest {
 		val rowWidth = 40
 		val space = 8
 
@@ -846,7 +847,7 @@ class RowColumnTest {
 	// endregion
 
 	// region Size tests in Column
-	@Test fun testColumn_expandedHeight_withExpandedModifier() {
+	@Test fun testColumn_expandedHeight_withExpandedModifier() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -863,7 +864,7 @@ class RowColumnTest {
 		assertThat(columnNode.height).isEqualTo(rootNode.height)
 	}
 
-	@Test fun testColumn_wrappedHeight_withNoChildrenWithWeight() {
+	@Test fun testColumn_wrappedHeight_withNoChildrenWithWeight() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -880,7 +881,7 @@ class RowColumnTest {
 		assertThat(columnNode.height).isEqualTo(size * 3)
 	}
 
-	@Test fun testColumn_expandedHeight_withWeightChildren() {
+	@Test fun testColumn_expandedHeight_withWeightChildren() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -897,7 +898,7 @@ class RowColumnTest {
 		assertThat(columnNode.height).isEqualTo(rootNode.height)
 	}
 
-	@Test fun testColumn_withMaxCrossAxisSize() {
+	@Test fun testColumn_withMaxCrossAxisSize() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -914,7 +915,7 @@ class RowColumnTest {
 		assertThat(columnNode.width).isEqualTo(rootNode.width)
 	}
 
-	@Test fun testColumn_withMinCrossAxisSize() {
+	@Test fun testColumn_withMinCrossAxisSize() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -931,7 +932,7 @@ class RowColumnTest {
 		assertThat(columnNode.width).isEqualTo(size * 2)
 	}
 
-	@Test fun testColumn_withExpandedModifier_respectsMaxHeightConstraint() {
+	@Test fun testColumn_withExpandedModifier_respectsMaxHeightConstraint() = runTest {
 		val size = 50
 		val columnHeight = 250
 
@@ -951,7 +952,7 @@ class RowColumnTest {
 		assertThat(columnNode.height).isEqualTo(min(rootNode.height, columnHeight))
 	}
 
-	@Test fun testColumn_withWeightChildren_respectsMaxHeightConstraint() {
+	@Test fun testColumn_withWeightChildren_respectsMaxHeightConstraint() = runTest {
 		val size = 50
 		val columnHeight = 250
 
@@ -971,7 +972,7 @@ class RowColumnTest {
 		assertThat(columnNode.height).isEqualTo(min(rootNode.height, columnHeight))
 	}
 
-	@Test fun testColumn_withChildren_respectsMinHeightConstraint() {
+	@Test fun testColumn_withChildren_respectsMinHeightConstraint() = runTest {
 		val size = 50
 		val columnHeight = 250
 
@@ -991,7 +992,7 @@ class RowColumnTest {
 		assertThat(columnNode.height).isEqualTo(columnHeight)
 	}
 
-	@Test fun testColumn_withMaxCrossAxisSize_respectsMaxWidthConstraint() {
+	@Test fun testColumn_withMaxCrossAxisSize_respectsMaxWidthConstraint() = runTest {
 		val size = 50
 		val columnWidth = 250
 
@@ -1011,7 +1012,7 @@ class RowColumnTest {
 		assertThat(columnNode.width).isEqualTo(min(rootNode.width, columnWidth))
 	}
 
-	@Test fun testColumn_withMinCrossAxisSize_respectsMinWidthConstraint() {
+	@Test fun testColumn_withMinCrossAxisSize_respectsMinWidthConstraint() = runTest {
 		val size = 50
 		val columnWidth = 150
 
@@ -1031,7 +1032,7 @@ class RowColumnTest {
 		assertThat(columnNode.width).isEqualTo(columnWidth)
 	}
 
-	@Test fun testColumn_doesNotExpand_whenWeightChildrenDoNotFill() {
+	@Test fun testColumn_doesNotExpand_whenWeightChildrenDoNotFill() = runTest {
 		val size = 10
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -1043,7 +1044,7 @@ class RowColumnTest {
 		assertThat(rootNode.height).isEqualTo(size)
 	}
 
-	@Test fun testColumn_includesSpacing_withWeightChildren() {
+	@Test fun testColumn_includesSpacing_withWeightChildren() = runTest {
 		val columnHeight = 40
 		val space = 8
 
@@ -1068,7 +1069,7 @@ class RowColumnTest {
 	// endregion
 
 	// region Main axis alignment tests in Row
-	@Test fun testRow_withStartArrangement() {
+	@Test fun testRow_withStartArrangement() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -1090,7 +1091,7 @@ class RowColumnTest {
 		assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(size * 2, 0))
 	}
 
-	@Test fun testRow_withEndArrangement() {
+	@Test fun testRow_withEndArrangement() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -1115,7 +1116,7 @@ class RowColumnTest {
 		assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(rootNode.width - size, 0))
 	}
 
-	@Test fun testRow_withCenterArrangement() {
+	@Test fun testRow_withCenterArrangement() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -1147,7 +1148,7 @@ class RowColumnTest {
 		)
 	}
 
-	@Test fun testRow_withSpaceEvenlyArrangement() {
+	@Test fun testRow_withSpaceEvenlyArrangement() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -1174,7 +1175,7 @@ class RowColumnTest {
 		assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(size * 2 + gap * 3, 0))
 	}
 
-	@Test fun testRow_withSpaceBetweenArrangement_singleItem() {
+	@Test fun testRow_withSpaceBetweenArrangement_singleItem() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -1193,7 +1194,7 @@ class RowColumnTest {
 		assertThat(childContainerNode.position).isEqualTo(IntOffset.Zero)
 	}
 
-	@Test fun testRow_withSpaceBetweenArrangement_multipleItems() {
+	@Test fun testRow_withSpaceBetweenArrangement_multipleItems() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -1220,7 +1221,7 @@ class RowColumnTest {
 		assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(gap * 2 + size * 2, 0))
 	}
 
-	@Test fun testRow_withSpaceAroundArrangement() {
+	@Test fun testRow_withSpaceAroundArrangement() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -1247,7 +1248,7 @@ class RowColumnTest {
 		assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset((gap * 5 / 2) + size * 2, 0))
 	}
 
-	@Test fun testRow_withSpacedByArrangement() {
+	@Test fun testRow_withSpacedByArrangement() = runTest {
 		val space = 10
 		val size = 20
 
@@ -1267,7 +1268,7 @@ class RowColumnTest {
 		assertThat(secondChildBoxNode.x).isEqualTo(size + space)
 	}
 
-	@Test fun testRow_withSpacedByAlignedArrangement() {
+	@Test fun testRow_withSpacedByAlignedArrangement() = runTest {
 		val space = 10
 		val size = 20
 		val rowSize = 50
@@ -1294,7 +1295,7 @@ class RowColumnTest {
 		assertThat(secondChildBoxNode.x).isEqualTo(rowSize - size)
 	}
 
-	@Test fun testRow_withSpacedByArrangement_insufficientSpace() {
+	@Test fun testRow_withSpacedByArrangement_insufficientSpace() = runTest {
 		val space = 15
 		val size = 20
 		val rowSize = 50
@@ -1327,7 +1328,7 @@ class RowColumnTest {
 		assertThat(thirdChildBoxNode.x).isEqualTo(rowSize)
 	}
 
-	@Test fun testRow_withAlignedArrangement() {
+	@Test fun testRow_withAlignedArrangement() = runTest {
 		val size = 20
 		val rowSize = 50
 
@@ -1357,7 +1358,7 @@ class RowColumnTest {
 	// endregion
 
 	// region Main axis alignment tests in Column
-	@Test fun testColumn_withTopArrangement() {
+	@Test fun testColumn_withTopArrangement() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -1379,7 +1380,7 @@ class RowColumnTest {
 		assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(0, size * 2))
 	}
 
-	@Test fun testColumn_withBottomArrangement() {
+	@Test fun testColumn_withBottomArrangement() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -1406,7 +1407,7 @@ class RowColumnTest {
 		assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(0, rootHeight - size))
 	}
 
-	@Test fun testColumn_withCenterArrangement() {
+	@Test fun testColumn_withCenterArrangement() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -1438,7 +1439,7 @@ class RowColumnTest {
 		)
 	}
 
-	@Test fun testColumn_withSpaceEvenlyArrangement() {
+	@Test fun testColumn_withSpaceEvenlyArrangement() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -1465,7 +1466,7 @@ class RowColumnTest {
 		assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(0, size * 2 + gap * 3))
 	}
 
-	@Test fun testColumn_withSpaceBetweenArrangement() {
+	@Test fun testColumn_withSpaceBetweenArrangement() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -1492,7 +1493,7 @@ class RowColumnTest {
 		assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(0, size * 2 + gap * 2))
 	}
 
-	@Test fun testColumn_withSpaceAroundArrangement() {
+	@Test fun testColumn_withSpaceAroundArrangement() = runTest {
 		val size = 50
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -1519,7 +1520,7 @@ class RowColumnTest {
 		assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(0, size * 2 + (gap * 5 / 2)))
 	}
 
-	@Test fun testColumn_withSpacedByArrangement() {
+	@Test fun testColumn_withSpacedByArrangement() = runTest {
 		val space = 10
 		val size = 20
 
@@ -1542,7 +1543,7 @@ class RowColumnTest {
 		assertThat(secondChildBoxNode.y).isEqualTo(size + space)
 	}
 
-	@Test fun testColumn_withSpacedByAlignedArrangement() {
+	@Test fun testColumn_withSpacedByAlignedArrangement() = runTest {
 		val space = 10
 		val size = 20
 		val columnSize = 50
@@ -1569,7 +1570,7 @@ class RowColumnTest {
 		assertThat(secondChildBoxNode.y).isEqualTo(columnSize - size)
 	}
 
-	@Test fun testColumn_withSpacedByArrangement_insufficientSpace() {
+	@Test fun testColumn_withSpacedByArrangement_insufficientSpace() = runTest {
 		val space = 15
 		val size = 20
 		val columnSize = 50
@@ -1602,7 +1603,7 @@ class RowColumnTest {
 		assertThat(thirdChildBoxNode.y).isEqualTo(columnSize)
 	}
 
-	@Test fun testColumn_withAlignedArrangement() {
+	@Test fun testColumn_withAlignedArrangement() = runTest {
 		val size = 20
 		val columnSize = 50
 
@@ -1628,7 +1629,7 @@ class RowColumnTest {
 		assertThat(secondChildBoxNode.y).isEqualTo(columnSize - size)
 	}
 
-	@Test fun testRow_doesNotUseMinConstraintsOnChildren() {
+	@Test fun testRow_doesNotUseMinConstraintsOnChildren() = runTest {
 		val size = 50
 		val childSize = 30
 
@@ -1647,7 +1648,7 @@ class RowColumnTest {
 		assertThat(spacerNode.size).isEqualTo(IntSize(childSize, childSize))
 	}
 
-	@Test fun testColumn_doesNotUseMinConstraintsOnChildren() {
+	@Test fun testColumn_doesNotUseMinConstraintsOnChildren() = runTest {
 		val size = 50
 		val childSize = 30
 
@@ -1668,7 +1669,7 @@ class RowColumnTest {
 	// endregion
 
 	// region Intrinsic measurement tests
-	@Test fun testRow_withNoWeightChildren_hasCorrectIntrinsicMeasurements() {
+	@Test fun testRow_withNoWeightChildren_hasCorrectIntrinsicMeasurements() = runTest {
 		testIntrinsics(
 			@Composable {
 				Row {
@@ -1756,7 +1757,7 @@ class RowColumnTest {
 		}
 	}
 
-	@Test fun testRow_withWeightChildren_hasCorrectIntrinsicMeasurements() {
+	@Test fun testRow_withWeightChildren_hasCorrectIntrinsicMeasurements() = runTest {
 		testIntrinsics(
 			@Composable {
 				Row {
@@ -1906,7 +1907,7 @@ class RowColumnTest {
 		}
 	}
 
-	@Test fun testRow_withArrangementSpacing() {
+	@Test fun testRow_withArrangementSpacing() = runTest {
 		val spacing = 5
 		val childSize = 10
 		testIntrinsics(
@@ -1923,7 +1924,7 @@ class RowColumnTest {
 		}
 	}
 
-	@Test fun testColumn_withNoWeightChildren_hasCorrectIntrinsicMeasurements() {
+	@Test fun testColumn_withNoWeightChildren_hasCorrectIntrinsicMeasurements() = runTest {
 		testIntrinsics(
 			@Composable {
 				Column {
@@ -2008,7 +2009,7 @@ class RowColumnTest {
 		}
 	}
 
-	@Test fun testColumn_withWeightChildren_hasCorrectIntrinsicMeasurements() {
+	@Test fun testColumn_withWeightChildren_hasCorrectIntrinsicMeasurements() = runTest {
 		testIntrinsics(
 			@Composable {
 				Column {
@@ -2158,7 +2159,7 @@ class RowColumnTest {
 		}
 	}
 
-	@Test fun testColumn_withArrangementSpacing() {
+	@Test fun testColumn_withArrangementSpacing() = runTest {
 		val spacing = 5
 		val childSize = 10
 		testIntrinsics(
@@ -2177,7 +2178,7 @@ class RowColumnTest {
 	// endregion
 
 	// region Modifiers specific tests
-	@Test fun testRowColumnModifiersChain_leftMostWins() {
+	@Test fun testRowColumnModifiersChain_leftMostWins() = runTest {
 		val columnHeight = 24
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -2196,7 +2197,7 @@ class RowColumnTest {
 	// endregion
 
 	// region AbsoluteArrangement tests
-	@Test fun testRow_absoluteArrangementLeft() {
+	@Test fun testRow_absoluteArrangementLeft() = runTest {
 		val size = 100
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -2219,7 +2220,7 @@ class RowColumnTest {
 		assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(size * 2, 0))
 	}
 
-	@Test fun testRow_absoluteArrangementRight() {
+	@Test fun testRow_absoluteArrangementRight() = runTest {
 		val size = 100
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -2244,7 +2245,7 @@ class RowColumnTest {
 		assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(rootWidth - size, 0))
 	}
 
-	@Test fun testRow_absoluteArrangementCenter() {
+	@Test fun testRow_absoluteArrangementCenter() = runTest {
 		val size = 100
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -2274,7 +2275,7 @@ class RowColumnTest {
 		)
 	}
 
-	@Test fun testRow_absoluteArrangementSpaceEvenly() {
+	@Test fun testRow_absoluteArrangementSpaceEvenly() = runTest {
 		val size = 100
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -2299,7 +2300,7 @@ class RowColumnTest {
 		assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(size * 2 + gap * 3, 0))
 	}
 
-	@Test fun testRow_absoluteArrangementSpaceBetween() {
+	@Test fun testRow_absoluteArrangementSpaceBetween() = runTest {
 		val size = 100
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
@@ -2324,7 +2325,7 @@ class RowColumnTest {
 		assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(gap * 2 + size * 2, 0))
 	}
 
-	@Test fun testRow_absoluteArrangementSpaceAround() {
+	@Test fun testRow_absoluteArrangementSpaceAround() = runTest {
 		val size = 100
 
 		val rootNode = mosaicNodesWithMeasureAndPlace {
