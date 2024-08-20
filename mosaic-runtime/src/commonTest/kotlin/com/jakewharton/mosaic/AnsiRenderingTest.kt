@@ -2,6 +2,11 @@ package com.jakewharton.mosaic
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import com.jakewharton.mosaic.layout.background
+import com.jakewharton.mosaic.modifier.Modifier
+import com.jakewharton.mosaic.ui.Alignment
+import com.jakewharton.mosaic.ui.AnsiLevel
+import com.jakewharton.mosaic.ui.Color
 import com.jakewharton.mosaic.ui.Column
 import com.jakewharton.mosaic.ui.Row
 import com.jakewharton.mosaic.ui.Static
@@ -23,7 +28,7 @@ class AnsiRenderingTest {
 		// TODO We should not draw trailing whitespace.
 		assertThat(rendering.render(rootNode).toString()).isEqualTo(
 			"""
-			|Hello$s
+			|Hello
 			|World!
 			|
 			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
@@ -40,7 +45,7 @@ class AnsiRenderingTest {
 
 		assertThat(rendering.render(firstRootNode).toString()).isEqualTo(
 			"""
-			|Hello$s
+			|Hello
 			|World!
 			|
 			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
@@ -58,7 +63,7 @@ class AnsiRenderingTest {
 		assertThat(rendering.render(secondRootNode).toString()).isEqualTo(
 			"""
 			|$cursorUp${cursorUp}Hel$clearLine
-			|lo $clearLine
+			|lo$clearLine
 			|Wor
 			|ld!
 			|
@@ -79,7 +84,7 @@ class AnsiRenderingTest {
 		assertThat(rendering.render(firstRootNode).toString()).isEqualTo(
 			"""
 			|Hel
-			|lo$s
+			|lo
 			|Wor
 			|ld!
 			|
@@ -95,7 +100,7 @@ class AnsiRenderingTest {
 
 		assertThat(rendering.render(secondRootNode).toString()).isEqualTo(
 			"""
-			|$cursorUp$cursorUp$cursorUp${cursorUp}Hello $clearLine
+			|$cursorUp$cursorUp$cursorUp${cursorUp}Hello$clearLine
 			|World!$clearLine
 			|$clearLine
 			|$clearLine$cursorUp
@@ -190,7 +195,7 @@ class AnsiRenderingTest {
 	}
 
 	@Test fun staticInPositionedElement() {
-		val firstRootNode = renderMosaicNode {
+		val rootNode = renderMosaicNode {
 			Column {
 				Text("TopTopTop")
 				Row {
@@ -202,11 +207,181 @@ class AnsiRenderingTest {
 			}
 		}
 
-		assertThat(rendering.render(firstRootNode).toString()).isEqualTo(
+		assertThat(rendering.render(rootNode).toString()).isEqualTo(
 			"""
 			|Static
 			|TopTopTop
-			|LeftLeft$s
+			|LeftLeft
+			|
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
+		)
+	}
+
+	@Test fun withoutTrailingSpaces() {
+		val rootNode = renderMosaicNode {
+			Column {
+				Text("OneTwoThree   ")
+			}
+		}
+
+		assertThat(rendering.render(rootNode).toString()).isEqualTo(
+			"""
+			|OneTwoThree
+			|
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
+		)
+	}
+
+	@Test fun withoutTrailingSpacesInContainer() {
+		val rootNode = renderMosaicNode {
+			Column {
+				Text("OneTwoThree")
+				Text("OneTwoThreeFour")
+			}
+		}
+
+		assertThat(rendering.render(rootNode).toString()).isEqualTo(
+			"""
+			|OneTwoThree
+			|OneTwoThreeFour
+			|
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
+		)
+	}
+
+	@Test fun withoutTrailingSpacesInContainerWithAnsiNone() {
+		val renderingAnsiNone = AnsiRendering(AnsiLevel.NONE)
+		val rootNode = renderMosaicNode {
+			Column {
+				Text("OneTwoThree")
+				Text("OneTwoThreeFour")
+			}
+		}
+
+		assertThat(renderingAnsiNone.render(rootNode).toString()).isEqualTo(
+			"""
+			|OneTwoThree
+			|OneTwoThreeFour
+			|
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
+		)
+	}
+
+	@Test fun withColoredTrailingSpacesInContainer() {
+		val rootNode = renderMosaicNode {
+			Column(modifier = Modifier.background(Color.Red)) {
+				Text("OneTwoThree")
+				Text("OneTwoThreeFour")
+			}
+		}
+		val redBackgroundCommand = listOf("$CSI$ansiBgColorSelector", ansiSelectorColorRgb, Color.Red.redInt, Color.Red.greenInt, Color.Red.blueInt)
+			.joinToString(ansiSeparator) + ansiClosingCharacter
+		assertThat(rendering.render(rootNode).toString()).isEqualTo(
+			"""
+			|${redBackgroundCommand}OneTwoThree    $ansiReset$ansiClosingCharacter
+			|${redBackgroundCommand}OneTwoThreeFour$ansiReset$ansiClosingCharacter
+			|
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
+		)
+	}
+
+	@Test fun withColoredTrailingSpacesInContainerWithAnsiNone() {
+		val renderingAnsiNone = AnsiRendering(AnsiLevel.NONE)
+		val rootNode = renderMosaicNode {
+			Column(modifier = Modifier.background(Color.Red)) {
+				Text("OneTwoThree")
+				Text("OneTwoThreeFour")
+			}
+		}
+		assertThat(renderingAnsiNone.render(rootNode).toString()).isEqualTo(
+			"""
+			|OneTwoThree   $s
+			|OneTwoThreeFour
+			|
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
+		)
+	}
+
+	@Test fun withLeadingSpaces() {
+		val rootNode = renderMosaicNode {
+			Column {
+				Text("   OneTwoThree")
+			}
+		}
+
+		assertThat(rendering.render(rootNode).toString()).isEqualTo(
+			"""
+			|   OneTwoThree
+			|
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
+		)
+	}
+
+	@Test fun withLeadingSpacesInContainer() {
+		val rootNode = renderMosaicNode {
+			Column(horizontalAlignment = Alignment.End) {
+				Text("OneTwoThree")
+				Text("OneTwoThreeFour")
+			}
+		}
+
+		assertThat(rendering.render(rootNode).toString()).isEqualTo(
+			"""
+			|    OneTwoThree
+			|OneTwoThreeFour
+			|
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
+		)
+	}
+
+	@Test fun withLeadingSpacesInContainerWithAnsiNone() {
+		val renderingAnsiNone = AnsiRendering(AnsiLevel.NONE)
+		val rootNode = renderMosaicNode {
+			Column(horizontalAlignment = Alignment.End) {
+				Text("OneTwoThree")
+				Text("OneTwoThreeFour")
+			}
+		}
+
+		assertThat(renderingAnsiNone.render(rootNode).toString()).isEqualTo(
+			"""
+			|    OneTwoThree
+			|OneTwoThreeFour
+			|
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
+		)
+	}
+
+	@Test fun withColoredLeadingSpacesInContainer() {
+		val rootNode = renderMosaicNode {
+			Column(modifier = Modifier.background(Color.Red), horizontalAlignment = Alignment.End) {
+				Text("OneTwoThree")
+				Text("OneTwoThreeFour")
+			}
+		}
+		val redBackgroundCommand = listOf("$CSI$ansiBgColorSelector", ansiSelectorColorRgb, Color.Red.redInt, Color.Red.greenInt, Color.Red.blueInt)
+			.joinToString(ansiSeparator) + ansiClosingCharacter
+		assertThat(rendering.render(rootNode).toString()).isEqualTo(
+			"""
+			|$redBackgroundCommand    OneTwoThree$ansiReset$ansiClosingCharacter
+			|${redBackgroundCommand}OneTwoThreeFour$ansiReset$ansiClosingCharacter
+			|
+			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
+		)
+	}
+
+	@Test fun withColoredLeadingSpacesInContainerWithAnsiNone() {
+		val renderingAnsiNone = AnsiRendering(AnsiLevel.NONE)
+		val rootNode = renderMosaicNode {
+			Column(modifier = Modifier.background(Color.Red), horizontalAlignment = Alignment.End) {
+				Text("OneTwoThree")
+				Text("OneTwoThreeFour")
+			}
+		}
+		assertThat(renderingAnsiNone.render(rootNode).toString()).isEqualTo(
+			"""
+			|    OneTwoThree
+			|OneTwoThreeFour
 			|
 			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 		)

@@ -9,7 +9,7 @@ Changed:
 - Сhange `DrawScope#drawRect` API with the ability to draw with text characters and specify `DrawStyle` (`Fill` or `Stroke`).
 
 Fixed:
-- Nothing yet!
+- There is no addition of empty extra spaces at the end of lines.
 
 
 ## [0.13.0] - 2024-05-28

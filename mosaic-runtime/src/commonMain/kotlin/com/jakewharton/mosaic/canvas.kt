@@ -9,6 +9,7 @@ import com.jakewharton.mosaic.ui.TextStyle.Companion.Invert
 import com.jakewharton.mosaic.ui.TextStyle.Companion.Italic
 import com.jakewharton.mosaic.ui.TextStyle.Companion.Strikethrough
 import com.jakewharton.mosaic.ui.TextStyle.Companion.Underline
+import com.jakewharton.mosaic.ui.isEmptyTextStyle
 import com.jakewharton.mosaic.ui.isNotEmptyTextStyle
 import com.jakewharton.mosaic.ui.isSpecifiedColor
 import com.jakewharton.mosaic.ui.isUnspecifiedColor
@@ -23,7 +24,7 @@ internal interface TextCanvas {
 	operator fun get(row: Int, column: Int): TextPixel
 }
 
-private val blankPixel = TextPixel(' ')
+private val blankPixel = TextPixel(SpaceCharCodePoint)
 
 internal class TextSurface(
 	override val width: Int,
@@ -33,7 +34,7 @@ internal class TextSurface(
 	override var translationX = 0
 	override var translationY = 0
 
-	private val rows = Array(height) { Array(width) { TextPixel(' ') } }
+	private val rows = Array(height) { Array(width) { TextPixel(SpaceCharCodePoint) } }
 
 	override operator fun get(row: Int, column: Int) = rows[translationY + row][translationX + column]
 
@@ -42,9 +43,26 @@ internal class TextSurface(
 		val attributes = mutableListOf<Int>()
 
 		val rowPixels = rows[row]
-		var lastPixel = blankPixel
-		for (columnIndex in 0 until width) {
+		var widthWihoutEmptyTrailing = width
+		for (columnIndex in width - 1 downTo 0) {
 			val pixel = rowPixels[columnIndex]
+			if (pixel.isEmpty()) {
+				widthWihoutEmptyTrailing--
+			} else {
+				break
+			}
+		}
+
+		var leadingEmpty = true
+		var lastPixel = blankPixel
+		for (columnIndex in 0 until widthWihoutEmptyTrailing) {
+			val pixel = rowPixels[columnIndex]
+			if (leadingEmpty && pixel.isEmpty() && attributes.isEmpty()) {
+				appendable.append(SpaceChar)
+				lastPixel = pixel
+				continue
+			}
+			leadingEmpty = false
 
 			if (ansiLevel != AnsiLevel.NONE) {
 				if (pixel.foreground != lastPixel.foreground) {
@@ -98,9 +116,12 @@ internal class TextSurface(
 			lastPixel = pixel
 		}
 
-		if (lastPixel.background.isSpecifiedColor ||
-			lastPixel.foreground.isSpecifiedColor ||
-			lastPixel.textStyle.isNotEmptyTextStyle
+		if (ansiLevel != AnsiLevel.NONE &&
+			(
+				lastPixel.background.isSpecifiedColor ||
+					lastPixel.foreground.isSpecifiedColor ||
+					lastPixel.textStyle.isNotEmptyTextStyle
+				)
 		) {
 			appendable.append(ansiReset)
 			appendable.append(ansiClosingCharacter)
@@ -158,7 +179,12 @@ internal class TextPixel(var codePoint: Int) {
 	var foreground: Color = Color.Unspecified
 	var textStyle: TextStyle = TextStyle.Empty
 
-	constructor(char: Char) : this(char.code)
+	fun isEmpty(): Boolean {
+		return codePoint == SpaceCharCodePoint &&
+			background.isUnspecifiedColor &&
+			foreground.isUnspecifiedColor &&
+			textStyle.isEmptyTextStyle
+	}
 
 	override fun toString() = buildString {
 		append("TextPixel(\"")
