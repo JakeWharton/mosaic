@@ -11,6 +11,7 @@ import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.s
 import com.jakewharton.mosaic.testIntrinsics
 import com.jakewharton.mosaic.testing.runMosaicTest
+import com.jakewharton.mosaic.ui.Color
 import com.jakewharton.mosaic.ui.Layout
 import com.jakewharton.mosaic.ui.unit.Constraints
 import kotlin.test.Test
@@ -86,7 +87,7 @@ class PaddingTest {
 	@Test fun paddingTop() = runTest {
 		runMosaicTest {
 			setContent {
-				SingleFiller(Modifier.padding(top = 2))
+				SingleFiller(Modifier.background(Color.Red).padding(top = 2))
 			}
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
@@ -125,7 +126,7 @@ class PaddingTest {
 	@Test fun paddingRight() = runTest {
 		runMosaicTest {
 			setContent {
-				SingleFiller(Modifier.padding(right = 2))
+				SingleFiller(Modifier.background(Color.Red).padding(right = 2))
 			}
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
@@ -162,7 +163,7 @@ class PaddingTest {
 	@Test fun paddingBottom() = runTest {
 		runMosaicTest {
 			setContent {
-				SingleFiller(Modifier.padding(bottom = 2))
+				SingleFiller(Modifier.background(Color.Red).padding(bottom = 2))
 			}
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
@@ -201,7 +202,7 @@ class PaddingTest {
 	@Test fun paddingLeftBottom() = runTest {
 		runMosaicTest {
 			setContent {
-				SingleFiller(Modifier.padding(left = 1, bottom = 2))
+				SingleFiller(Modifier.background(Color.Red).padding(left = 1, bottom = 2))
 			}
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""

@@ -9,12 +9,14 @@ import com.jakewharton.mosaic.ui.TextStyle.Companion.Invert
 import com.jakewharton.mosaic.ui.TextStyle.Companion.Italic
 import com.jakewharton.mosaic.ui.TextStyle.Companion.Strikethrough
 import com.jakewharton.mosaic.ui.UnderlineStyle
+import com.jakewharton.mosaic.ui.isEmptyTextStyle
 import com.jakewharton.mosaic.ui.isNotEmptyTextStyle
 import com.jakewharton.mosaic.ui.isSpecifiedColor
 import com.jakewharton.mosaic.ui.isUnspecifiedColor
+import com.jakewharton.mosaic.ui.isUnspecifiedUnderlineStyle
 import de.cketti.codepoints.appendCodePoint
 
-private val blankPixel = TextPixel(' ')
+private val blankPixel = TextPixel(SpaceCharCodePoint)
 
 public interface TextCanvas {
 	public val height: Int
@@ -32,7 +34,7 @@ internal class TextSurface(
 	var translationX = 0
 	var translationY = 0
 
-	private val cells = Array(width * height) { TextPixel(' ') }
+	private val cells = Array(width * height) { TextPixel(SpaceCharCodePoint) }
 
 	operator fun get(row: Int, column: Int): TextPixel {
 		val x = translationX + column
@@ -46,10 +48,20 @@ internal class TextSurface(
 		// Reused heap allocation for building ANSI attributes inside the loop.
 		val attributes = mutableListOf<String>()
 
-		var lastPixel = blankPixel
-
 		val rowStart = row * width
-		val rowStop = rowStart + width
+		var rowStop = rowStart + width
+
+		while (rowStop > rowStart) {
+			val lastIndex = rowStop - 1
+			val pixel = cells[lastIndex]
+			if (pixel.isEmpty()) {
+				rowStop = lastIndex
+			} else {
+				break
+			}
+		}
+
+		var lastPixel = blankPixel
 		for (columnIndex in rowStart until rowStop) {
 			val pixel = cells[columnIndex]
 
@@ -190,10 +202,17 @@ internal class TextPixel(var codePoint: Int) {
 	var background: Color = Color.Unspecified
 	var foreground: Color = Color.Unspecified
 	var textStyle: TextStyle = TextStyle.Empty
-	var underlineStyle: UnderlineStyle = UnderlineStyle.None
+	var underlineStyle: UnderlineStyle = UnderlineStyle.Unspecified
 	var underlineColor: Color = Color.Unspecified
 
-	constructor(char: Char) : this(char.code)
+	fun isEmpty(): Boolean {
+		return codePoint == SpaceCharCodePoint &&
+			background.isUnspecifiedColor &&
+			foreground.isUnspecifiedColor &&
+			textStyle.isEmptyTextStyle &&
+			underlineStyle.isUnspecifiedUnderlineStyle &&
+			underlineColor.isUnspecifiedColor
+	}
 
 	override fun toString() = buildString {
 		append("TextPixel(\"")

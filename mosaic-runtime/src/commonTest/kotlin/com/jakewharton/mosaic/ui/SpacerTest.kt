@@ -6,6 +6,7 @@ import com.jakewharton.mosaic.Container
 import com.jakewharton.mosaic.DumpSnapshots
 import com.jakewharton.mosaic.NodeSnapshots
 import com.jakewharton.mosaic.layout.MosaicNode
+import com.jakewharton.mosaic.layout.background
 import com.jakewharton.mosaic.layout.height
 import com.jakewharton.mosaic.layout.size
 import com.jakewharton.mosaic.layout.testTag
@@ -29,7 +30,7 @@ class SpacerTest {
 
 		runMosaicTest {
 			setContent {
-				Spacer(Modifier.size(width = width, height = height))
+				Spacer(Modifier.background(Color.Red).size(width = width, height = height))
 			}
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""

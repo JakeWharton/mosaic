@@ -4,6 +4,8 @@ package com.jakewharton.mosaic
 
 import androidx.compose.runtime.Stable
 
+internal const val SpaceCharCodePoint = ' '.code
+
 /**
  * Unicode code point cannot contain a negative value.
  */

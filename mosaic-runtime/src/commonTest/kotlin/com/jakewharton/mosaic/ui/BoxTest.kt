@@ -22,7 +22,6 @@ import com.jakewharton.mosaic.layout.size
 import com.jakewharton.mosaic.layout.width
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.position
-import com.jakewharton.mosaic.s
 import com.jakewharton.mosaic.size
 import com.jakewharton.mosaic.testIntrinsics
 import com.jakewharton.mosaic.testing.runMosaicTest
@@ -63,12 +62,12 @@ class BoxTest {
 
 			assertThat(rootNode.paint().render(AnsiLevel.NONE, false)).isEqualTo(
 				"""
-				|     $s
-				|     $s
-				|  $TestChar$TestChar $s
-				|  $TestChar$TestChar $s
-				|     $s
-				|     $s
+				|
+				|
+				|  $TestChar$TestChar
+				|  $TestChar$TestChar
+				|
+				|
 				""".trimMargin(),
 			)
 		}
@@ -145,7 +144,7 @@ class BoxTest {
 
 			assertThat(rootNode.paint().render(AnsiLevel.NONE, false)).isEqualTo(
 				"""
-				|     $s
+				|
 				| $TestChar$TestChar$TestChar$TestChar$TestChar
 				| $TestChar$TestChar$TestChar$TestChar$TestChar
 				| $TestChar$TestChar$TestChar$TestChar$TestChar
@@ -192,12 +191,12 @@ class BoxTest {
 
 			assertThat(rootNode.paint().render(AnsiLevel.NONE, false)).isEqualTo(
 				"""
-				|$TestChar$TestChar$TestChar$TestChar$TestChar$s
-				|$TestChar$TestChar$TestChar$TestChar$TestChar$s
-				|$TestChar$TestChar$TestChar$TestChar$TestChar$s
-				|$TestChar$TestChar$TestChar$TestChar$TestChar$s
-				|$TestChar$TestChar$TestChar$TestChar$TestChar$s
-				|     $s
+				|$TestChar$TestChar$TestChar$TestChar$TestChar
+				|$TestChar$TestChar$TestChar$TestChar$TestChar
+				|$TestChar$TestChar$TestChar$TestChar$TestChar
+				|$TestChar$TestChar$TestChar$TestChar$TestChar
+				|$TestChar$TestChar$TestChar$TestChar$TestChar
+				|
 				""".trimMargin(),
 			)
 		}
@@ -239,12 +238,12 @@ class BoxTest {
 
 			assertThat(rootNode.paint().render(AnsiLevel.NONE, false)).isEqualTo(
 				"""
-				| $TestChar$TestChar$TestChar$TestChar$s
-				| $TestChar$TestChar$TestChar$TestChar$s
-				| $TestChar$TestChar$TestChar$TestChar$s
-				| $TestChar$TestChar$TestChar$TestChar$s
-				| $TestChar$TestChar$TestChar$TestChar$s
-				| $TestChar$TestChar$TestChar$TestChar$s
+				| $TestChar$TestChar$TestChar$TestChar
+				| $TestChar$TestChar$TestChar$TestChar
+				| $TestChar$TestChar$TestChar$TestChar
+				| $TestChar$TestChar$TestChar$TestChar
+				| $TestChar$TestChar$TestChar$TestChar
+				| $TestChar$TestChar$TestChar$TestChar
 				""".trimMargin(),
 			)
 		}
@@ -286,12 +285,12 @@ class BoxTest {
 
 			assertThat(rootNode.paint().render(AnsiLevel.NONE, false)).isEqualTo(
 				"""
-				|     $s
+				|
 				|$TestChar$TestChar$TestChar$TestChar$TestChar$TestChar
 				|$TestChar$TestChar$TestChar$TestChar$TestChar$TestChar
 				|$TestChar$TestChar$TestChar$TestChar$TestChar$TestChar
 				|$TestChar$TestChar$TestChar$TestChar$TestChar$TestChar
-				|     $s
+				|
 				""".trimMargin(),
 			)
 		}

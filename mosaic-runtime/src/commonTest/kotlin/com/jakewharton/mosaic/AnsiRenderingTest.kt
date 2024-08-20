@@ -2,8 +2,11 @@ package com.jakewharton.mosaic
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import com.jakewharton.mosaic.layout.background
+import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.testing.runMosaicTest
 import com.jakewharton.mosaic.ui.AnsiLevel
+import com.jakewharton.mosaic.ui.Color
 import com.jakewharton.mosaic.ui.Column
 import com.jakewharton.mosaic.ui.Row
 import com.jakewharton.mosaic.ui.Static
@@ -27,10 +30,9 @@ class AnsiRenderingTest {
 				}
 			}
 
-			// TODO We should not draw trailing whitespace.
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|Hello$s
+				|Hello
 				|World!
 				|
 				""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
@@ -49,7 +51,7 @@ class AnsiRenderingTest {
 
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|Hello$s
+				|Hello
 				|World!
 				|
 				""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
@@ -67,7 +69,7 @@ class AnsiRenderingTest {
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|${cursorUp(2)}${clearLine}Hel
-				|${clearLine}lo$s
+				|${clearLine}lo
 				|Wor
 				|ld!
 				|
@@ -90,7 +92,7 @@ class AnsiRenderingTest {
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|Hel
-				|lo$s
+				|lo
 				|Wor
 				|ld!
 				|
@@ -106,7 +108,7 @@ class AnsiRenderingTest {
 
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|${cursorUp(4)}${clearLine}Hello$s
+				|${cursorUp(4)}${clearLine}Hello
 				|${clearLine}World!
 				|$clearDisplay
 				""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
@@ -224,7 +226,85 @@ class AnsiRenderingTest {
 				"""
 				|Static
 				|TopTopTop
-				|LeftLeft$s
+				|LeftLeft
+				|
+				""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
+			)
+		}
+	}
+
+	@Test fun withoutTrailingSpaces() = runTest {
+		runMosaicTest(RenderingSnapshots(rendering)) {
+			val snapshot = setContentAndSnapshot {
+				Text("OneTwoThree   ")
+			}
+
+			assertThat(snapshot).isEqualTo(
+				"""
+				|OneTwoThree
+				|
+				""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
+			)
+		}
+	}
+
+	@Test fun withoutTrailingSpacesInContainer() = runTest {
+		runMosaicTest(RenderingSnapshots(rendering)) {
+			val snapshot = setContentAndSnapshot {
+				Column {
+					Text("OneTwoThree")
+					Text("OneTwoThreeFour")
+				}
+			}
+
+			assertThat(snapshot).isEqualTo(
+				"""
+				|OneTwoThree
+				|OneTwoThreeFour
+				|
+				""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
+			)
+		}
+	}
+
+	@Test fun withoutTrailingSpacesInContainerWithAnsiNone() = runTest {
+		val rendering = AnsiRendering(
+			ansiLevel = AnsiLevel.NONE,
+			synchronizedRendering = true,
+			supportsKittyUnderlines = false,
+		)
+		runMosaicTest(RenderingSnapshots(rendering)) {
+			val snapshot = setContentAndSnapshot {
+				Column {
+					Text("OneTwoThree")
+					Text("OneTwoThreeFour")
+				}
+			}
+
+			assertThat(snapshot).isEqualTo(
+				"""
+				|OneTwoThree
+				|OneTwoThreeFour
+				|
+				""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
+			)
+		}
+	}
+
+	@Test fun withColoredTrailingSpacesInContainer() = runTest {
+		runMosaicTest(RenderingSnapshots(rendering)) {
+			val snapshot = setContentAndSnapshot {
+				Column(modifier = Modifier.background(Color.Red)) {
+					Text("OneTwoThree")
+					Text("OneTwoThreeFour")
+				}
+			}
+
+			val red = "${CSI}48;2;255;0;0m"
+			assertThat(snapshot).isEqualTo(
+				"""
+				|${red}OneTwoThree    $ansiReset$ansiClosingCharacter
+				|${red}OneTwoThreeFour$ansiReset$ansiClosingCharacter
 				|
 				""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 			)

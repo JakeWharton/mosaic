@@ -15,6 +15,7 @@ Changed:
 Fixed:
 - Prevent final character from being erased when a row writes into the last column of the terminal.
 - Do not emit ANSI style reset escape sequence when colors are disabled (such as in testing).
+- Do not draw blank spaces at the end of every line.
 
 Removed:
 - `renderMosaic` was removed without replacement. As the capabilities of the library grow, supporting a string as a render target was increasingly difficult.
