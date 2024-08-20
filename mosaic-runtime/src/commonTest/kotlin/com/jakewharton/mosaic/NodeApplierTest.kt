@@ -9,8 +9,7 @@ import com.jakewharton.mosaic.ui.NodeFactory
 import kotlin.test.Test
 
 class NodeApplierTest {
-	private val root = createRootNode()
-	private val applier = MosaicNodeApplier(root)
+	private val applier = MosaicNodeApplier()
 
 	private fun <T> Applier<T>.insert(index: Int, instance: T) {
 		insertBottomUp(index, instance)
@@ -185,7 +184,7 @@ class NodeApplierTest {
 	}
 
 	private fun assertChildren(vararg nodes: MosaicNode) {
-		assertThat(root.children).isEqualTo(nodes.toList())
+		assertThat(applier.root.children).isEqualTo(nodes.toList())
 	}
 
 	private fun textNode(name: String): MosaicNode {

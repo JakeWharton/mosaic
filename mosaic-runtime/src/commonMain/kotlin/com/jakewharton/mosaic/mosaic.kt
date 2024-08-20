@@ -38,19 +38,11 @@ internal fun renderMosaicNode(content: @Composable () -> Unit): MosaicNode {
 	val mosaicComposition = object : MordantTerminalMosaicComposition(
 		coroutineScope = CoroutineScope(EmptyCoroutineContext),
 	) {
-		var singleNode: MosaicNode? = null
-
-		override val onEndChanges: (MosaicNode) -> Unit = { rootNode ->
-			if (singleNode == null) {
-				singleNode = rootNode
-			} else {
-				throw AssertionError()
-			}
-		}
+		override val onEndChanges: (MosaicNode) -> Unit = {}
 	}
 	mosaicComposition.setContent(content)
 	mosaicComposition.cancel()
-	return mosaicComposition.singleNode!!
+	return mosaicComposition.applier.root
 }
 
 public fun renderMosaic(content: @Composable () -> Unit): String {
@@ -132,7 +124,7 @@ internal abstract class MosaicComposition(coroutineScope: CoroutineScope) {
 	private val clock = BroadcastFrameClock()
 	protected val composeContext: CoroutineContext = coroutineScope.coroutineContext + job + clock
 
-	private val applier = MosaicNodeApplier(createRootNode()) { rootNode -> onEndChanges(rootNode) }
+	val applier = MosaicNodeApplier { rootNode -> onEndChanges(rootNode) }
 	private val recomposer = Recomposer(composeContext)
 	private val composition = Composition(applier, recomposer)
 
@@ -191,18 +183,15 @@ internal abstract class MosaicComposition(coroutineScope: CoroutineScope) {
 	}
 }
 
-internal fun createRootNode(): MosaicNode {
-	return MosaicNode(
+internal class MosaicNodeApplier(
+	private val onEndChanges: (MosaicNode) -> Unit = {},
+) : AbstractApplier<MosaicNode>(
+	root = MosaicNode(
 		measurePolicy = BoxMeasurePolicy(),
 		debugPolicy = { children.joinToString(separator = "\n") },
 		onStaticDraw = null,
-	)
-}
-
-internal class MosaicNodeApplier(
-	root: MosaicNode,
-	private val onEndChanges: (MosaicNode) -> Unit = {},
-) : AbstractApplier<MosaicNode>(root) {
+	),
+) {
 	override fun onEndChanges() {
 		onEndChanges.invoke(root)
 	}
