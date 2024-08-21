@@ -35,9 +35,6 @@ kotlin {
 
 		jvmMain {
 			dependsOn(concurrentMain)
-			dependencies {
-				implementation libs.jansi
-			}
 		}
 		nonJvmMain {
 			dependsOn(commonMain)

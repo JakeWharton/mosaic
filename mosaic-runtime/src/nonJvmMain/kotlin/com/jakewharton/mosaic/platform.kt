@@ -1,9 +1,5 @@
 package com.jakewharton.mosaic
 
-internal actual fun platformDisplay(chars: CharSequence) {
-	print(chars.toString())
-}
-
 internal actual class AtomicBoolean actual constructor(initialValue: Boolean) {
 	private var value: Boolean = initialValue
 

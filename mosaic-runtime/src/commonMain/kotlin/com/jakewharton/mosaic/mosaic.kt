@@ -57,7 +57,7 @@ public suspend fun runMosaic(content: @Composable () -> Unit) {
 			coroutineScope = this,
 			terminalState = terminalState,
 			onEndChanges = { rootNode ->
-				platformDisplay(rendering.render(rootNode))
+				print(rendering.render(rootNode))
 			},
 		)
 		mosaicComposition.sendFrames()
