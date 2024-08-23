@@ -7,6 +7,7 @@ New:
 
 Changed:
 - Сhange `DrawScope#drawRect` API with the ability to draw with text characters and specify `DrawStyle` (`Fill` or `Stroke`).
+- Drop support for JS target. If you were using this, please file an issue so we can discuss support.
 
 Fixed:
 - Nothing yet!

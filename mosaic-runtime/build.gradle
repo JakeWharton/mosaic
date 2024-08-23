@@ -1,6 +1,3 @@
-import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMetadataTarget
-
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
 apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 apply from: "$rootDir/addAllTargets.gradle"
@@ -29,28 +26,10 @@ kotlin {
 			}
 		}
 
-		concurrentMain {
-			dependsOn(commonMain)
-		}
-
 		jvmMain {
-			dependsOn(concurrentMain)
 			dependencies {
 				implementation libs.jansi
 			}
-		}
-		nonJvmMain {
-			dependsOn(commonMain)
-		}
-	}
-
-	targets.each { target ->
-		if (target instanceof KotlinMetadataTarget) return
-		if (target.platformType != KotlinPlatformType.jvm) {
-			target.compilations.main.defaultSourceSet.dependsOn(sourceSets.nonJvmMain)
-		}
-		if (target.platformType == KotlinPlatformType.native) {
-			target.compilations.main.defaultSourceSet.dependsOn(sourceSets.concurrentMain)
 		}
 	}
 

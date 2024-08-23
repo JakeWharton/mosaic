@@ -1,3 +1,5 @@
+@file:JvmName("Main")
+
 package example
 
 import androidx.compose.runtime.Composable
@@ -6,7 +8,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.jakewharton.mosaic.runMosaicBlocking
 import com.jakewharton.mosaic.ui.Text
+import kotlin.jvm.JvmName
 import kotlinx.coroutines.delay
 
 @Composable
@@ -21,4 +25,8 @@ fun Counter() {
 			count = i
 		}
 	}
+}
+
+fun main() = runMosaicBlocking {
+	Counter()
 }
