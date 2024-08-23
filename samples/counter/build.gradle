@@ -27,11 +27,6 @@ kotlin {
 	}
 
 	//noinspection ConfigurationAvoidance Cannot mutate this after buildscript evaluation.
-	targets.withType(KotlinJsIrTarget) {
-		binaries.executable()
-	}
-
-	//noinspection ConfigurationAvoidance Cannot mutate this after buildscript evaluation.
 	targets.withType(KotlinJvmTarget) {
 		// Needed for 'application' plugin.
 		withJava()

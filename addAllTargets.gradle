@@ -1,7 +1,5 @@
 plugins.withId('org.jetbrains.kotlin.multiplatform') {
 	kotlin {
-		js().nodejs()
-
 		jvm()
 
 		linuxArm64()
