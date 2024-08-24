@@ -195,8 +195,8 @@ internal class MosaicNodeApplier(
 }
 
 internal class GlobalSnapshotManager {
-	private val started = AtomicBoolean(false)
-	private val sent = AtomicBoolean(false)
+	private val started = atomicBooleanOf(false)
+	private val sent = atomicBooleanOf(false)
 
 	fun ensureStarted(scope: CoroutineScope) {
 		if (started.compareAndSet(expect = false, update = true)) {
