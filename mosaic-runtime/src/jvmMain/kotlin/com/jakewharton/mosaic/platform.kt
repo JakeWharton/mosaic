@@ -2,7 +2,6 @@ package com.jakewharton.mosaic
 
 import java.nio.CharBuffer
 import java.nio.charset.StandardCharsets.UTF_8
-import java.util.concurrent.atomic.AtomicBoolean as JavaAtomicBoolean
 import org.fusesource.jansi.AnsiConsole
 
 private val out = AnsiConsole.out()!!.also { AnsiConsole.systemInstall() }
@@ -22,14 +21,19 @@ internal actual fun platformDisplay(chars: CharSequence) {
 	out.flush()
 }
 
-internal actual class AtomicBoolean actual constructor(initialValue: Boolean) {
-	private val delegate = JavaAtomicBoolean(initialValue)
+internal actual typealias AtomicBoolean = java.util.concurrent.atomic.AtomicBoolean
 
-	actual fun set(value: Boolean) {
-		delegate.set(value)
-	}
+@Suppress("NOTHING_TO_INLINE", "EXTENSION_SHADOWED_BY_MEMBER")
+internal actual inline fun AtomicBoolean.set(value: Boolean) {
+	set(value)
+}
 
-	actual fun compareAndSet(expect: Boolean, update: Boolean): Boolean {
-		return delegate.compareAndSet(expect, update)
-	}
+@Suppress("NOTHING_TO_INLINE", "EXTENSION_SHADOWED_BY_MEMBER")
+internal actual inline fun AtomicBoolean.compareAndSet(expect: Boolean, update: Boolean): Boolean {
+	return compareAndSet(expect, update)
+}
+
+@Suppress("NOTHING_TO_INLINE")
+internal actual inline fun atomicBooleanOf(initialValue: Boolean): AtomicBoolean {
+	return AtomicBoolean(initialValue)
 }
