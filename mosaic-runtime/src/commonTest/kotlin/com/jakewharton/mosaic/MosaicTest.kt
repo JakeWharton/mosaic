@@ -5,12 +5,22 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import com.jakewharton.mosaic.layout.drawBehind
+import com.jakewharton.mosaic.layout.offset
+import com.jakewharton.mosaic.layout.size
+import com.jakewharton.mosaic.layout.width
+import com.jakewharton.mosaic.modifier.Modifier
+import com.jakewharton.mosaic.ui.Box
 import com.jakewharton.mosaic.ui.Column
+import com.jakewharton.mosaic.ui.Filler
+import com.jakewharton.mosaic.ui.Spacer
 import com.jakewharton.mosaic.ui.Text
+import com.jakewharton.mosaic.ui.unit.IntOffset
 import kotlin.test.Test
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
@@ -183,6 +193,76 @@ class MosaicTest {
 				|
 				""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 			)
+		}
+	}
+
+	@Test fun changeInCompositionPhase() = runTest {
+		runMosaicTest {
+			setContent {
+				var offsetX by remember { mutableIntStateOf(0) }
+
+				Box(modifier = Modifier.width(10)) {
+					Filler(TestChar, modifier = Modifier.size(1).offset(offsetX, 0))
+				}
+
+				LaunchedEffect(Unit) {
+					delay(100L)
+					offsetX = 5
+				}
+			}
+
+			assertThat(awaitRenderSnapshot()).isEqualTo("$TestChar         ")
+			assertThat(awaitRenderSnapshot()).isEqualTo("     $TestChar    ")
+		}
+	}
+
+	@Test fun changeInLayoutPhase() = runTest {
+		runMosaicTest {
+			setContent {
+				var offsetX by remember { mutableIntStateOf(0) }
+
+				Box(modifier = Modifier.width(10)) {
+					Filler(TestChar, modifier = Modifier.size(1).offset { IntOffset(offsetX, 0) })
+				}
+
+				LaunchedEffect(Unit) {
+					delay(100L)
+					offsetX = 5
+				}
+			}
+
+			assertThat(awaitRenderSnapshot()).isEqualTo("$TestChar         ")
+			assertThat(awaitRenderSnapshot()).isEqualTo("     $TestChar    ")
+		}
+	}
+
+	@Test fun changeInDrawingPhase() = runTest {
+		runMosaicTest {
+			setContent {
+				var drawAnother by remember { mutableStateOf(false) }
+
+				Box(modifier = Modifier.width(10)) {
+					Spacer(
+						modifier = Modifier
+							.size(1)
+							.drawBehind {
+								if (drawAnother) {
+									drawText(0, 0, "${TestChar + 1}")
+								} else {
+									drawText(0, 0, "$TestChar")
+								}
+							},
+					)
+				}
+
+				LaunchedEffect(Unit) {
+					delay(100L)
+					drawAnother = true
+				}
+			}
+
+			assertThat(awaitRenderSnapshot()).isEqualTo("$TestChar         ")
+			assertThat(awaitRenderSnapshot()).isEqualTo("${TestChar + 1}         ")
 		}
 	}
 }

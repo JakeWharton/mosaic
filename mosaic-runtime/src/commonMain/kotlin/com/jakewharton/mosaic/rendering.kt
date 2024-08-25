@@ -33,7 +33,6 @@ internal class DebugRendering(
 			}
 			lastRender = systemClock.markNow()
 
-			node.measureAndPlace()
 			appendLine("NODES:")
 			appendLine(node)
 			appendLine()
@@ -98,8 +97,6 @@ internal class AnsiRendering(
 					append("\r\n")
 				}
 			}
-
-			node.measureAndPlace()
 
 			node.paintStatics(staticSurfaces, ansiLevel)
 			for (staticSurface in staticSurfaces) {

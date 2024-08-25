@@ -9,12 +9,15 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Recomposer
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.ObserverHandle
 import androidx.compose.runtime.snapshots.Snapshot
+import androidx.compose.runtime.withFrameNanos
 import com.github.ajalt.mordant.terminal.Terminal as MordantTerminal
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.BoxMeasurePolicy
 import com.jakewharton.mosaic.ui.unit.IntSize
+import kotlin.concurrent.Volatile
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.time.ExperimentalTime
@@ -37,7 +40,7 @@ internal fun renderMosaicNode(content: @Composable () -> Unit): MosaicNode {
 	val mosaicComposition = MosaicComposition(
 		coroutineScope = CoroutineScope(EmptyCoroutineContext),
 		terminalState = MordantTerminal().toMutableState(),
-		onEndChanges = {},
+		onDrawing = {},
 	)
 	mosaicComposition.setContent(content)
 	mosaicComposition.cancel()
@@ -56,7 +59,7 @@ public suspend fun runMosaic(content: @Composable () -> Unit) {
 		val mosaicComposition = MosaicComposition(
 			coroutineScope = this,
 			terminalState = terminalState,
-			onEndChanges = { rootNode ->
+			onDrawing = { rootNode ->
 				platformDisplay(rendering.render(rootNode))
 			},
 		)
@@ -102,20 +105,81 @@ private fun CoroutineScope.updateTerminalInfo(terminal: MordantTerminal, termina
 internal class MosaicComposition(
 	coroutineScope: CoroutineScope,
 	private val terminalState: State<Terminal>,
-	onEndChanges: (MosaicNode) -> Unit,
+	private val onDrawing: (MosaicNode) -> Unit,
 ) {
 	private val job = Job(coroutineScope.coroutineContext[Job])
 	private val clock = BroadcastFrameClock()
 	private val composeContext: CoroutineContext = coroutineScope.coroutineContext + job + clock
 	val scope = CoroutineScope(composeContext)
 
-	val applier = MosaicNodeApplier(onEndChanges)
+	val applier = MosaicNodeApplier(::doLayout)
 	private val recomposer = Recomposer(composeContext)
 	private val composition = Composition(applier, recomposer)
+
+	private val applyObserverHandle: ObserverHandle
+
+	private val readingStatesOnLayout = mutableSetOf<Any>()
+	private val readingStatesOnDrawing = mutableSetOf<Any>()
+
+	private val layoutBlockStateReadObserver: (Any) -> Unit = { readingStatesOnLayout.add(it) }
+	private val drawingBlockStateReadObserver: (Any) -> Unit = { readingStatesOnDrawing.add(it) }
+
+	@Volatile
+	private var needLayout = false
+
+	@Volatile
+	private var needDrawing = false
 
 	init {
 		GlobalSnapshotManager().ensureStarted(scope)
 		startRecomposer()
+		applyObserverHandle = registerSnapshotApplyObserver()
+		startListeningToNeedToLayoutOrDraw()
+	}
+
+	private fun doLayout(rootNode: MosaicNode) {
+		needLayout = false
+		Snapshot.observe(readObserver = layoutBlockStateReadObserver) {
+			rootNode.measureAndPlace()
+		}
+		doDrawing(rootNode)
+	}
+
+	private fun doDrawing(rootNode: MosaicNode) {
+		needDrawing = false
+		Snapshot.observe(readObserver = drawingBlockStateReadObserver) {
+			onDrawing(rootNode)
+		}
+	}
+
+	private fun registerSnapshotApplyObserver(): ObserverHandle {
+		return Snapshot.registerApplyObserver { changedStates, _ ->
+			for (state in changedStates) {
+				if (needLayout && needDrawing) {
+					break
+				}
+				if (!needLayout && readingStatesOnLayout.contains(state)) {
+					needLayout = true
+				}
+				if (!needDrawing && readingStatesOnDrawing.contains(state)) {
+					needDrawing = true
+				}
+			}
+		}
+	}
+
+	private fun startListeningToNeedToLayoutOrDraw() {
+		scope.launch {
+			while (true) {
+				withFrameNanos {
+					when {
+						recomposer.currentState.value != Recomposer.State.Idle -> return@withFrameNanos
+						needLayout -> doLayout(applier.root)
+						needDrawing -> doDrawing(applier.root)
+					}
+				}
+			}
+		}
 	}
 
 	private fun startRecomposer() {
@@ -149,16 +213,27 @@ internal class MosaicComposition(
 			effectJob.children.forEach { it.join() }
 			recomposer.awaitIdle()
 
+			applyObserverHandle.dispose()
+			if (needLayout || needDrawing) {
+				awaitFrame()
+			}
+
 			recomposer.close()
 			recomposer.join()
 		} finally {
+			applyObserverHandle.dispose() // if canceled before dispose in the try block
 			job.cancel()
 		}
 	}
 
 	fun cancel() {
+		applyObserverHandle.dispose()
 		recomposer.cancel()
 		job.cancel()
+	}
+
+	private suspend fun awaitFrame() {
+		scope.launch { withFrameNanos { } }.join()
 	}
 }
 
