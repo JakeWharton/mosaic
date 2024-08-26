@@ -6,7 +6,25 @@ apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'dev.drewhamilton.poko'
 
 kotlin {
-	applyDefaultHierarchyTemplate()
+	applyDefaultHierarchyTemplate {
+		it.common {
+			it.group("native") {
+				it.group("posix") {
+					it.group("linux") {}
+					it.group("macos") {}
+				}
+			}
+			it.group("concurrent") {
+				it.group("jvm") {}
+				it.group("native") {}
+			}
+			it.group("nonJvm") {
+				it.group("js") {}
+				it.group("native") {}
+			}
+		}
+	}
+
 	explicitApi()
 
 	sourceSets {

@@ -23,7 +23,6 @@ import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -49,22 +48,30 @@ public fun renderMosaic(content: @Composable () -> Unit): String {
 }
 
 public suspend fun runMosaic(content: @Composable () -> Unit) {
-	coroutineScope {
-		val terminal = MordantTerminal()
-		val rendering = createRendering(terminal.info.ansiLevel.toMosaicAnsiLevel())
-		val terminalState = terminal.toMutableState()
-		val mosaicComposition = MosaicComposition(
-			coroutineScope = this,
-			terminalState = terminalState,
-			onEndChanges = { rootNode ->
-				platformDisplay(rendering.render(rootNode))
-			},
-		)
-		mosaicComposition.sendFrames()
-		mosaicComposition.scope.updateTerminalInfo(terminal, terminalState)
-		mosaicComposition.setContent(content)
-		mosaicComposition.awaitComplete()
-	}
+	val mordantTerminal = MordantTerminal()
+	val rendering = createRendering(mordantTerminal.info.ansiLevel.toMosaicAnsiLevel())
+	val terminalState = mordantTerminal.toMutableState()
+
+	platformDisplay(cursorHide)
+
+	withShutdownHook(
+		hook = {
+			platformDisplay(cursorShow)
+		},
+		body = {
+			val mosaicComposition = MosaicComposition(
+				coroutineScope = this,
+				terminalState = terminalState,
+				onEndChanges = { rootNode ->
+					platformDisplay(rendering.render(rootNode))
+				},
+			)
+			mosaicComposition.sendFrames()
+			mosaicComposition.scope.updateTerminalInfo(mordantTerminal, terminalState)
+			mosaicComposition.setContent(content)
+			mosaicComposition.awaitComplete()
+		},
+	)
 }
 
 private fun MordantTerminal.toMutableState(): MutableState<Terminal> {

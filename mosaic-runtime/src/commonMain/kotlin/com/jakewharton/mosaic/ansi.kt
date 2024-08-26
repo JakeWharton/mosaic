@@ -15,6 +15,9 @@ internal const val ansiReset = "${CSI}0"
 internal const val clearLine = "${CSI}K"
 internal const val cursorUp = "${CSI}F"
 
+internal const val cursorHide = "$CSI?25l"
+internal const val cursorShow = "$CSI?25h"
+
 internal const val ansiSeparator = ";"
 internal const val ansiClosingCharacter = "m"
 

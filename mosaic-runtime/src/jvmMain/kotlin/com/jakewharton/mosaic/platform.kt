@@ -2,6 +2,8 @@ package com.jakewharton.mosaic
 
 import java.nio.CharBuffer
 import java.nio.charset.StandardCharsets.UTF_8
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
 import org.fusesource.jansi.AnsiConsole
 
 private val out = AnsiConsole.out()!!.also { AnsiConsole.systemInstall() }
@@ -36,4 +38,28 @@ internal actual inline fun AtomicBoolean.compareAndSet(expect: Boolean, update: 
 @Suppress("NOTHING_TO_INLINE")
 internal actual inline fun atomicBooleanOf(initialValue: Boolean): AtomicBoolean {
 	return AtomicBoolean(initialValue)
+}
+
+internal actual suspend fun <R> withShutdownHook(
+	hook: () -> Unit,
+	body: suspend CoroutineScope.() -> R,
+): R {
+	val tryRunHook = object : AtomicBoolean(false), Runnable {
+		override fun run() {
+			if (compareAndSet(false, true)) {
+				hook()
+			}
+		}
+	}
+
+	val runtime = Runtime.getRuntime()
+	val hookThread = Thread(tryRunHook)
+	runtime.addShutdownHook(hookThread)
+
+	return try {
+		coroutineScope(body)
+	} finally {
+		tryRunHook.run()
+		runtime.removeShutdownHook(hookThread)
+	}
 }
