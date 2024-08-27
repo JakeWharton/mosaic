@@ -1,10 +1,7 @@
-public final class com/jakewharton/mosaic/BlockingKt {
-	public static final fun runMosaicBlocking (Lkotlin/jvm/functions/Function2;)V
-}
-
 public final class com/jakewharton/mosaic/MosaicKt {
 	public static final fun renderMosaic (Lkotlin/jvm/functions/Function2;)Ljava/lang/String;
 	public static final fun runMosaic (Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun runMosaicBlocking (Lkotlin/jvm/functions/Function2;)V
 }
 
 public final class com/jakewharton/mosaic/Terminal {
