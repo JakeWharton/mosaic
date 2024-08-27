@@ -25,6 +25,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 /**
  * True for a debug-like output that renders each "frame" on its own with a timestamp delta.
@@ -45,6 +46,12 @@ internal fun renderMosaicNode(content: @Composable () -> Unit): MosaicNode {
 
 public fun renderMosaic(content: @Composable () -> Unit): String {
 	return createRendering().render(renderMosaicNode(content)).toString()
+}
+
+public fun runMosaicBlocking(content: @Composable () -> Unit) {
+	runBlocking {
+		runMosaic(content)
+	}
 }
 
 public suspend fun runMosaic(content: @Composable () -> Unit) {
