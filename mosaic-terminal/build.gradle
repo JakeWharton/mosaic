@@ -1,0 +1,54 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+
+import static co.touchlab.cklib.gradle.CompileToBitcode.Language.C
+
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+apply from: "$rootDir/addAllTargets.gradle"
+apply from: "$rootDir/publish.gradle"
+apply plugin: 'org.jetbrains.dokka'
+apply plugin: 'co.touchlab.cklib'
+
+kotlin {
+	explicitApi()
+
+	jvm {
+		compilations.main.compileTaskProvider.configure {
+			doFirst {
+				def files = project.fileTree('src/jvmMain/resources').files
+				if (files.size() != 6) {
+					throw new RuntimeException(
+						"Missing native libraries. Run `zig build -p src/jvmMain/resources/jni`. Found: $files",
+					)
+				}
+			}
+		}
+	}
+
+	sourceSets {
+		commonTest {
+			dependencies {
+				implementation libs.kotlin.test
+				implementation libs.assertk
+			}
+		}
+	}
+
+	targets.withType(KotlinNativeTarget).configureEach {
+		compilations.main.cinterops {
+			create('mosaic') {
+				header(file('src/c/mosaic.h'))
+				packageName('com.jakewharton.mosaic.terminal')
+			}
+		}
+	}
+
+	compilerOptions.freeCompilerArgs.add('-Xexpect-actual-classes')
+}
+
+cklib {
+	config.kotlinVersion = libs.versions.kotlin.get()
+	create('mosaic', file('src/c'), ['main']) {
+		it.srcDirs = files('src/c')
+		it.language = C
+	}
+}

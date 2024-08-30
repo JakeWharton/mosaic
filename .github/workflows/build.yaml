@@ -23,6 +23,12 @@ jobs:
         with:
           gradle-home-cache-cleanup: true
 
+      - uses: goto-bus-stop/setup-zig@v2
+        with:
+          version: 0.13.0
+      - run: zig build -p src/jvmMain/resources/jni
+        working-directory: mosaic-terminal
+
       - run: ./gradlew build :samples:jest:run :mosaic-runtime:dokkaHtml
 
       - run: ./gradlew publish
