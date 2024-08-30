@@ -1,0 +1,7 @@
+public final class com/jakewharton/mosaic/terminal/Tty {
+	public static final field INSTANCE Lcom/jakewharton/mosaic/terminal/Tty;
+	public static final fun restore ()Z
+	public static final fun save ()Z
+	public static final fun setRawMode ()Z
+}
+
