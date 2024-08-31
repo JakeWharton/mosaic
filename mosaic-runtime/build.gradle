@@ -14,14 +14,6 @@ kotlin {
 					it.group("macos") {}
 				}
 			}
-			it.group("concurrent") {
-				it.group("jvm") {}
-				it.group("native") {}
-			}
-			it.group("nonJvm") {
-				it.group("js") {}
-				it.group("native") {}
-			}
 		}
 	}
 
