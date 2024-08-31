@@ -11,6 +11,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.Snapshot
 import com.github.ajalt.mordant.terminal.Terminal as MordantTerminal
+import com.jakewharton.finalization.withFinalizationHook
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.BoxMeasurePolicy
@@ -61,11 +62,11 @@ public suspend fun runMosaic(content: @Composable () -> Unit) {
 
 	platformDisplay(cursorHide)
 
-	withShutdownHook(
+	withFinalizationHook(
 		hook = {
 			platformDisplay(cursorShow)
 		},
-		body = {
+		block = {
 			val mosaicComposition = MosaicComposition(
 				coroutineScope = this,
 				terminalState = terminalState,
