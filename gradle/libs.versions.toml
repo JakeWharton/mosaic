@@ -25,6 +25,7 @@ ktlint-composeRules = "io.nlopez.compose.rules:ktlint:0.4.11"
 jansi = "org.fusesource.jansi:jansi:2.4.1"
 mordant = "com.github.ajalt.mordant:mordant:2.7.2"
 codepoints = "de.cketti.unicode:kotlin-codepoints:0.9.0"
+finalizationHook = "com.jakewharton.finalization:finalization-hook:0.1.0"
 
 junit4 = "junit:junit:4.13.2"
 assertk = "com.willowtreeapps.assertk:assertk:0.28.1"

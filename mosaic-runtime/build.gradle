@@ -32,6 +32,7 @@ kotlin {
 			dependencies {
 				api libs.compose.runtime
 				api libs.kotlinx.coroutines.core
+				implementation libs.finalizationHook
 				implementation libs.mordant
 				implementation libs.codepoints
 			}
