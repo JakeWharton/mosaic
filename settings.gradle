@@ -9,4 +9,6 @@ include ':samples:jest'
 include ':samples:robot'
 include ':samples:rrtop'
 
+include ':tools:raw-mode-echo'
+
 enableFeaturePreview('TYPESAFE_PROJECT_ACCESSORS')
