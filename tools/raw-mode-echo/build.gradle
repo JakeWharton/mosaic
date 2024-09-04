@@ -5,7 +5,6 @@ apply plugin: 'org.jetbrains.kotlin.multiplatform'
 apply from: "$rootDir/addAllTargets.gradle"
 apply plugin: 'application'
 
-
 application {
 	mainClass = 'example.Main'
 }
