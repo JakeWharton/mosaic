@@ -18,6 +18,7 @@ kotlin {
 		commonMain {
 			dependencies {
 				implementation projects.mosaicTerminal
+				implementation libs.clikt
 				implementation libs.finalizationHook
 			}
 		}
