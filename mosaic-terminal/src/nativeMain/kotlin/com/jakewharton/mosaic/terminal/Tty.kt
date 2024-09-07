@@ -8,7 +8,7 @@ import kotlinx.cinterop.useContents
 public actual object Tty {
 	public actual fun enableRawMode(): AutoCloseable {
 		val savedConfig = enterRawMode().useContents {
-			check(error.toInt() == 0) { "Unable to enable raw mode: $error" }
+			check(error == 0U) { "Unable to enable raw mode: $error" }
 			saved ?: throw OutOfMemoryError()
 		}
 		return RawMode(savedConfig)

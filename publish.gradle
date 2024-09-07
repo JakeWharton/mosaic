@@ -1,5 +1,6 @@
-apply plugin: "com.vanniktech.maven.publish"
-apply plugin: "binary-compatibility-validator"
+apply plugin: 'com.vanniktech.maven.publish'
+apply plugin: 'org.jetbrains.kotlinx.binary-compatibility-validator'
+apply plugin: 'org.jetbrains.dokka'
 
 publishing {
 	repositories {
@@ -8,4 +9,8 @@ publishing {
 			url = rootProject.layout.buildDirectory.dir("testMaven").get().asFile.toURI().toString()
 		}
 	}
+}
+
+apiValidation {
+	klib.enabled = true
 }
