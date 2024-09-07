@@ -2,7 +2,6 @@ apply plugin: 'org.jetbrains.kotlin.multiplatform'
 apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 apply from: "$rootDir/addAllTargets.gradle"
 apply from: "$rootDir/publish.gradle"
-apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'dev.drewhamilton.poko'
 
 kotlin {

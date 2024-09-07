@@ -5,7 +5,6 @@ import static co.touchlab.cklib.gradle.CompileToBitcode.Language.C
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
 apply from: "$rootDir/addAllTargets.gradle"
 apply from: "$rootDir/publish.gradle"
-apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'co.touchlab.cklib'
 
 kotlin {
