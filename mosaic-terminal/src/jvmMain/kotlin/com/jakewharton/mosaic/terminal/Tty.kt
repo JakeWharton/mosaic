@@ -11,14 +11,26 @@ public actual object Tty {
 		loadNativeLibrary("mosaic")
 	}
 
-	@JvmStatic
-	public actual external fun save(): Boolean
+	public actual fun enableRawMode(): AutoCloseable {
+		val savedConfig = enterRawMode()
+		if (savedConfig == 0L) throw OutOfMemoryError()
+		return RawMode(savedConfig)
+	}
+
+	private class RawMode(
+		private val savedPtr: Long,
+	) : AutoCloseable {
+		override fun close() {
+			val error = exitRawMode(savedPtr)
+			check(error == 0) { "Unable to exit raw mode: $error" }
+		}
+	}
 
 	@JvmStatic
-	public actual external fun restore(): Boolean
+	private external fun enterRawMode(): Long
 
 	@JvmStatic
-	public actual external fun setRawMode(): Boolean
+	private external fun exitRawMode(savedConfig: Long): Int
 
 	@Suppress(
 		// Only loading from our own JAR contents.

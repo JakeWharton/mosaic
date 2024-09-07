@@ -34,9 +34,11 @@ fn setupMosaicTarget(b: *std.Build, step: *std.Build.Step, tag: std.Target.Os.Ta
 		}
 	);
 
+	// TODO Tree-walk these two dirs for all C files.
 	lib.addCSourceFiles(.{
 		.files = &.{
-			"src/c/mosaic.c",
+			"src/c/mosaic-rawMode-posix.c",
+			"src/c/mosaic-rawMode-windows.c",
 			"src/jvmMain/jni/mosaic-jni.c",
 		},
 		.flags = &.{

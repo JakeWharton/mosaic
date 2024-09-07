@@ -43,12 +43,10 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 			}
 		}
 
-		Tty.save()
-		Tty.setRawMode()
-
+		val rawMode = Tty.enableRawMode()
 		withFinalizationHook(
 			hook = {
-				Tty.restore()
+				rawMode.close()
 				print("\u001b[?1003l") // Any-event disable
 				print("\u001b[?1004l") // Focus disable
 				print("\u001b[?2004l") // Bracketed paste disable
