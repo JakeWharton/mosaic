@@ -3,12 +3,15 @@ package example
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.jakewharton.mosaic.layout.DrawStyle
+import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.layout.drawBehind
 import com.jakewharton.mosaic.layout.height
 import com.jakewharton.mosaic.layout.offset
+import com.jakewharton.mosaic.layout.onKeyEvent
 import com.jakewharton.mosaic.layout.padding
 import com.jakewharton.mosaic.layout.size
 import com.jakewharton.mosaic.modifier.Modifier
@@ -18,10 +21,7 @@ import com.jakewharton.mosaic.ui.Column
 import com.jakewharton.mosaic.ui.Spacer
 import com.jakewharton.mosaic.ui.Text
 import com.jakewharton.mosaic.ui.unit.IntOffset
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.withContext
-import org.jline.terminal.TerminalBuilder
+import kotlinx.coroutines.awaitCancellation
 
 private const val worldWidth = 20
 private const val worldHeight = 10
@@ -35,8 +35,21 @@ private const val robotHeight = 1
 fun main() = runMosaicBlocking {
 	var x by remember { mutableIntStateOf(0) }
 	var y by remember { mutableIntStateOf(0) }
+	var exit by remember { mutableStateOf(false) }
 
-	Column {
+	Column(
+		modifier = Modifier.onKeyEvent {
+			when (it) {
+				KeyEvent("ArrowUp") -> y = (y - 1).coerceAtLeast(0)
+				KeyEvent("ArrowDown") -> y = (y + 1).coerceAtMost(worldHeight - robotHeight)
+				KeyEvent("ArrowLeft") -> x = (x - 1).coerceAtLeast(0)
+				KeyEvent("ArrowRight") -> x = (x + 1).coerceAtMost(worldWidth - robotWidth)
+				KeyEvent("q") -> exit = true
+				else -> return@onKeyEvent false
+			}
+			true
+		},
+	) {
 		Text("Use arrow keys to move the face. Press “q” to exit.")
 		Text("Position: $x, $y   Robot: $robotWidth, $robotHeight   World: $worldWidth, $worldHeight")
 		Spacer(Modifier.height(1))
@@ -50,31 +63,9 @@ fun main() = runMosaicBlocking {
 		}
 	}
 
-	LaunchedEffect(Unit) {
-		withContext(Dispatchers.IO) {
-			val terminal = TerminalBuilder.terminal()
-			terminal.enterRawMode()
-			val reader = terminal.reader()
-
-			while (isActive) {
-				// TODO https://github.com/JakeWharton/mosaic/issues/10
-				when (reader.read()) {
-					'q'.code -> break
-
-					27 -> {
-						when (reader.read()) {
-							91, 79 -> {
-								when (reader.read()) {
-									65 -> y = (y - 1).coerceAtLeast(0)
-									66 -> y = (y + 1).coerceAtMost(worldHeight - robotHeight)
-									67 -> x = (x + 1).coerceAtMost(worldWidth - robotWidth)
-									68 -> x = (x - 1).coerceAtLeast(0)
-								}
-							}
-						}
-					}
-				}
-			}
+	if (!exit) {
+		LaunchedEffect(Unit) {
+			awaitCancellation()
 		}
 	}
 }

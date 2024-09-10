@@ -3,6 +3,7 @@ package com.jakewharton.mosaic
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.unit.IntSize
@@ -10,6 +11,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withTimeout
 
@@ -37,6 +39,8 @@ internal interface TestMosaicComposition {
 	fun setContent(content: @Composable () -> Unit)
 
 	fun changeTerminalSize(width: Int, height: Int)
+
+	fun sendKeyEvent(keyEvent: KeyEvent)
 
 	suspend fun awaitNodeSnapshot(duration: Duration = 1.seconds): MosaicNode
 
@@ -76,7 +80,9 @@ private class RealTestMosaicComposition(
 		Terminal(size = initialTerminalSize),
 	)
 
-	val mosaicComposition = MosaicComposition(coroutineScope, terminalState) { rootNode ->
+	private val keyEvents = Channel<KeyEvent>(UNLIMITED)
+
+	val mosaicComposition = MosaicComposition(coroutineScope, terminalState, keyEvents) { rootNode ->
 		nodeSnapshots.trySend(rootNode)
 		if (withRenderSnapshots) {
 			val stringRender = if (withAnsi) {
@@ -100,6 +106,10 @@ private class RealTestMosaicComposition(
 
 	override fun changeTerminalSize(width: Int, height: Int) {
 		terminalState.value = Terminal(size = IntSize(width, height))
+	}
+
+	override fun sendKeyEvent(keyEvent: KeyEvent) {
+		keyEvents.trySend(keyEvent)
 	}
 
 	override suspend fun awaitNodeSnapshot(duration: Duration): MosaicNode {

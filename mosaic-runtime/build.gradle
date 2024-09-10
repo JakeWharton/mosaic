@@ -24,7 +24,7 @@ kotlin {
 				api libs.compose.runtime
 				api libs.kotlinx.coroutines.core
 				implementation libs.finalizationHook
-				implementation libs.mordant
+				implementation libs.mordant.core
 				implementation libs.codepoints
 			}
 		}
@@ -39,6 +39,7 @@ kotlin {
 		jvmMain {
 			dependencies {
 				implementation libs.jansi
+				implementation libs.mordant.jvmJna
 			}
 		}
 	}
