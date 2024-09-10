@@ -13,6 +13,8 @@ $dokka.location:com.jakewharton.mosaic.layout//heightIn/com.jakewharton.mosaic.m
 $dokka.location:com.jakewharton.mosaic.layout//layout/com.jakewharton.mosaic.modifier.Modifier#kotlin.Function3[com.jakewharton.mosaic.layout.MeasureScope,com.jakewharton.mosaic.layout.Measurable,com.jakewharton.mosaic.ui.unit.Constraints,com.jakewharton.mosaic.layout.MeasureResult]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/layout.html
 $dokka.location:com.jakewharton.mosaic.layout//offset/com.jakewharton.mosaic.modifier.Modifier#kotlin.Function0[com.jakewharton.mosaic.ui.unit.IntOffset]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/offset.html
 $dokka.location:com.jakewharton.mosaic.layout//offset/com.jakewharton.mosaic.modifier.Modifier#kotlin.Int#kotlin.Int/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/offset.html
+$dokka.location:com.jakewharton.mosaic.layout//onKeyEvent/com.jakewharton.mosaic.modifier.Modifier#kotlin.Function1[com.jakewharton.mosaic.layout.KeyEvent,kotlin.Boolean]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/on-key-event.html
+$dokka.location:com.jakewharton.mosaic.layout//onPreviewKeyEvent/com.jakewharton.mosaic.modifier.Modifier#kotlin.Function1[com.jakewharton.mosaic.layout.KeyEvent,kotlin.Boolean]/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/on-preview-key-event.html
 $dokka.location:com.jakewharton.mosaic.layout//padding/com.jakewharton.mosaic.modifier.Modifier#kotlin.Int#kotlin.Int#kotlin.Int#kotlin.Int/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/padding.html
 $dokka.location:com.jakewharton.mosaic.layout//padding/com.jakewharton.mosaic.modifier.Modifier#kotlin.Int#kotlin.Int/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/padding.html
 $dokka.location:com.jakewharton.mosaic.layout//padding/com.jakewharton.mosaic.modifier.Modifier#kotlin.Int/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/padding.html
@@ -55,6 +57,15 @@ $dokka.location:com.jakewharton.mosaic.layout/IntrinsicMeasurable/maxIntrinsicWi
 $dokka.location:com.jakewharton.mosaic.layout/IntrinsicMeasurable/minIntrinsicHeight/#kotlin.Int/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-intrinsic-measurable/min-intrinsic-height.html
 $dokka.location:com.jakewharton.mosaic.layout/IntrinsicMeasurable/minIntrinsicWidth/#kotlin.Int/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-intrinsic-measurable/min-intrinsic-width.html
 $dokka.location:com.jakewharton.mosaic.layout/IntrinsicMeasurable/parentData/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-intrinsic-measurable/parent-data.html
+$dokka.location:com.jakewharton.mosaic.layout/KeyEvent///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-key-event/index.html
+$dokka.location:com.jakewharton.mosaic.layout/KeyEvent/KeyEvent/#kotlin.String#kotlin.Boolean#kotlin.Boolean#kotlin.Boolean/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-key-event/-key-event.html
+$dokka.location:com.jakewharton.mosaic.layout/KeyEvent/alt/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-key-event/alt.html
+$dokka.location:com.jakewharton.mosaic.layout/KeyEvent/ctrl/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-key-event/ctrl.html
+$dokka.location:com.jakewharton.mosaic.layout/KeyEvent/key/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-key-event/key.html
+$dokka.location:com.jakewharton.mosaic.layout/KeyEvent/shift/#/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-key-event/shift.html
+$dokka.location:com.jakewharton.mosaic.layout/KeyModifier///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-key-modifier/index.html
+$dokka.location:com.jakewharton.mosaic.layout/KeyModifier/onKeyEvent/#com.jakewharton.mosaic.layout.KeyEvent/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-key-modifier/on-key-event.html
+$dokka.location:com.jakewharton.mosaic.layout/KeyModifier/onPreKeyEvent/#com.jakewharton.mosaic.layout.KeyEvent/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-key-modifier/on-pre-key-event.html
 $dokka.location:com.jakewharton.mosaic.layout/LayoutModifier///PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-layout-modifier/index.html
 $dokka.location:com.jakewharton.mosaic.layout/LayoutModifier/maxIntrinsicHeight/#com.jakewharton.mosaic.layout.IntrinsicMeasurable#kotlin.Int/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-layout-modifier/max-intrinsic-height.html
 $dokka.location:com.jakewharton.mosaic.layout/LayoutModifier/maxIntrinsicWidth/#com.jakewharton.mosaic.layout.IntrinsicMeasurable#kotlin.Int/PointingToDeclaration/mosaic-runtime/com.jakewharton.mosaic.layout/-layout-modifier/max-intrinsic-width.html
