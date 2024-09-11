@@ -68,7 +68,7 @@ public fun runMosaicBlocking(content: @Composable () -> Unit) {
 
 public suspend fun runMosaic(content: @Composable () -> Unit) {
 	val mordantTerminal = MordantTerminal()
-	val rendering = createRendering(mordantTerminal.info.ansiLevel.toMosaicAnsiLevel())
+	val rendering = createRendering(mordantTerminal.terminalInfo.ansiLevel.toMosaicAnsiLevel())
 	val terminalState = mordantTerminal.toMutableState()
 	val keyEvents = Channel<KeyEvent>(UNLIMITED)
 
