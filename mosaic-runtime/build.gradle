@@ -2,11 +2,20 @@ apply plugin: 'org.jetbrains.kotlin.multiplatform'
 apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 apply from: "$rootDir/addAllTargets.gradle"
 apply from: "$rootDir/publish.gradle"
-apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'dev.drewhamilton.poko'
 
 kotlin {
-	applyDefaultHierarchyTemplate()
+	applyDefaultHierarchyTemplate {
+		it.common {
+			it.group("native") {
+				it.group("posix") {
+					it.group("linux") {}
+					it.group("macos") {}
+				}
+			}
+		}
+	}
+
 	explicitApi()
 
 	sourceSets {
@@ -14,7 +23,8 @@ kotlin {
 			dependencies {
 				api libs.compose.runtime
 				api libs.kotlinx.coroutines.core
-				implementation libs.mordant
+				implementation libs.finalizationHook
+				implementation libs.mordant.core
 				implementation libs.codepoints
 			}
 		}
@@ -29,6 +39,7 @@ kotlin {
 		jvmMain {
 			dependencies {
 				implementation libs.jansi
+				implementation libs.mordant.jvmJna
 			}
 		}
 	}

@@ -1,0 +1,745 @@
+// Klib ABI Dump
+// Targets: [linuxArm64, linuxX64, macosArm64, macosX64, mingwX64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <com.jakewharton.mosaic:mosaic-runtime>
+open annotation class com.jakewharton.mosaic.ui/LayoutScopeMarker : kotlin/Annotation { // com.jakewharton.mosaic.ui/LayoutScopeMarker|null[0]
+    constructor <init>() // com.jakewharton.mosaic.ui/LayoutScopeMarker.<init>|<init>(){}[0]
+}
+
+open annotation class com.jakewharton.mosaic.ui/MosaicComposable : kotlin/Annotation { // com.jakewharton.mosaic.ui/MosaicComposable|null[0]
+    constructor <init>() // com.jakewharton.mosaic.ui/MosaicComposable.<init>|<init>(){}[0]
+}
+
+abstract fun interface com.jakewharton.mosaic.layout/MeasurePolicy { // com.jakewharton.mosaic.layout/MeasurePolicy|null[0]
+    abstract fun (com.jakewharton.mosaic.layout/MeasureScope).measure(kotlin.collections/List<com.jakewharton.mosaic.layout/Measurable>, com.jakewharton.mosaic.ui.unit/Constraints): com.jakewharton.mosaic.layout/MeasureResult // com.jakewharton.mosaic.layout/MeasurePolicy.measure|measure@com.jakewharton.mosaic.layout.MeasureScope(kotlin.collections.List<com.jakewharton.mosaic.layout.Measurable>;com.jakewharton.mosaic.ui.unit.Constraints){}[0]
+    open fun maxIntrinsicHeight(kotlin.collections/List<com.jakewharton.mosaic.layout/IntrinsicMeasurable>, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.layout/MeasurePolicy.maxIntrinsicHeight|maxIntrinsicHeight(kotlin.collections.List<com.jakewharton.mosaic.layout.IntrinsicMeasurable>;kotlin.Int){}[0]
+    open fun maxIntrinsicWidth(kotlin.collections/List<com.jakewharton.mosaic.layout/IntrinsicMeasurable>, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.layout/MeasurePolicy.maxIntrinsicWidth|maxIntrinsicWidth(kotlin.collections.List<com.jakewharton.mosaic.layout.IntrinsicMeasurable>;kotlin.Int){}[0]
+    open fun minIntrinsicHeight(kotlin.collections/List<com.jakewharton.mosaic.layout/IntrinsicMeasurable>, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.layout/MeasurePolicy.minIntrinsicHeight|minIntrinsicHeight(kotlin.collections.List<com.jakewharton.mosaic.layout.IntrinsicMeasurable>;kotlin.Int){}[0]
+    open fun minIntrinsicWidth(kotlin.collections/List<com.jakewharton.mosaic.layout/IntrinsicMeasurable>, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.layout/MeasurePolicy.minIntrinsicWidth|minIntrinsicWidth(kotlin.collections.List<com.jakewharton.mosaic.layout.IntrinsicMeasurable>;kotlin.Int){}[0]
+}
+
+abstract fun interface com.jakewharton.mosaic.ui/Alignment { // com.jakewharton.mosaic.ui/Alignment|null[0]
+    abstract fun align(com.jakewharton.mosaic.ui.unit/IntSize, com.jakewharton.mosaic.ui.unit/IntSize): com.jakewharton.mosaic.ui.unit/IntOffset // com.jakewharton.mosaic.ui/Alignment.align|align(com.jakewharton.mosaic.ui.unit.IntSize;com.jakewharton.mosaic.ui.unit.IntSize){}[0]
+
+    abstract fun interface Horizontal { // com.jakewharton.mosaic.ui/Alignment.Horizontal|null[0]
+        abstract fun align(kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.ui/Alignment.Horizontal.align|align(kotlin.Int;kotlin.Int){}[0]
+    }
+
+    abstract fun interface Vertical { // com.jakewharton.mosaic.ui/Alignment.Vertical|null[0]
+        abstract fun align(kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.ui/Alignment.Vertical.align|align(kotlin.Int;kotlin.Int){}[0]
+    }
+
+    final object Companion { // com.jakewharton.mosaic.ui/Alignment.Companion|null[0]
+        final val Bottom // com.jakewharton.mosaic.ui/Alignment.Companion.Bottom|{}Bottom[0]
+            final fun <get-Bottom>(): com.jakewharton.mosaic.ui/Alignment.Vertical // com.jakewharton.mosaic.ui/Alignment.Companion.Bottom.<get-Bottom>|<get-Bottom>(){}[0]
+        final val BottomCenter // com.jakewharton.mosaic.ui/Alignment.Companion.BottomCenter|{}BottomCenter[0]
+            final fun <get-BottomCenter>(): com.jakewharton.mosaic.ui/Alignment // com.jakewharton.mosaic.ui/Alignment.Companion.BottomCenter.<get-BottomCenter>|<get-BottomCenter>(){}[0]
+        final val BottomEnd // com.jakewharton.mosaic.ui/Alignment.Companion.BottomEnd|{}BottomEnd[0]
+            final fun <get-BottomEnd>(): com.jakewharton.mosaic.ui/Alignment // com.jakewharton.mosaic.ui/Alignment.Companion.BottomEnd.<get-BottomEnd>|<get-BottomEnd>(){}[0]
+        final val BottomStart // com.jakewharton.mosaic.ui/Alignment.Companion.BottomStart|{}BottomStart[0]
+            final fun <get-BottomStart>(): com.jakewharton.mosaic.ui/Alignment // com.jakewharton.mosaic.ui/Alignment.Companion.BottomStart.<get-BottomStart>|<get-BottomStart>(){}[0]
+        final val Center // com.jakewharton.mosaic.ui/Alignment.Companion.Center|{}Center[0]
+            final fun <get-Center>(): com.jakewharton.mosaic.ui/Alignment // com.jakewharton.mosaic.ui/Alignment.Companion.Center.<get-Center>|<get-Center>(){}[0]
+        final val CenterEnd // com.jakewharton.mosaic.ui/Alignment.Companion.CenterEnd|{}CenterEnd[0]
+            final fun <get-CenterEnd>(): com.jakewharton.mosaic.ui/Alignment // com.jakewharton.mosaic.ui/Alignment.Companion.CenterEnd.<get-CenterEnd>|<get-CenterEnd>(){}[0]
+        final val CenterHorizontally // com.jakewharton.mosaic.ui/Alignment.Companion.CenterHorizontally|{}CenterHorizontally[0]
+            final fun <get-CenterHorizontally>(): com.jakewharton.mosaic.ui/Alignment.Horizontal // com.jakewharton.mosaic.ui/Alignment.Companion.CenterHorizontally.<get-CenterHorizontally>|<get-CenterHorizontally>(){}[0]
+        final val CenterStart // com.jakewharton.mosaic.ui/Alignment.Companion.CenterStart|{}CenterStart[0]
+            final fun <get-CenterStart>(): com.jakewharton.mosaic.ui/Alignment // com.jakewharton.mosaic.ui/Alignment.Companion.CenterStart.<get-CenterStart>|<get-CenterStart>(){}[0]
+        final val CenterVertically // com.jakewharton.mosaic.ui/Alignment.Companion.CenterVertically|{}CenterVertically[0]
+            final fun <get-CenterVertically>(): com.jakewharton.mosaic.ui/Alignment.Vertical // com.jakewharton.mosaic.ui/Alignment.Companion.CenterVertically.<get-CenterVertically>|<get-CenterVertically>(){}[0]
+        final val End // com.jakewharton.mosaic.ui/Alignment.Companion.End|{}End[0]
+            final fun <get-End>(): com.jakewharton.mosaic.ui/Alignment.Horizontal // com.jakewharton.mosaic.ui/Alignment.Companion.End.<get-End>|<get-End>(){}[0]
+        final val Start // com.jakewharton.mosaic.ui/Alignment.Companion.Start|{}Start[0]
+            final fun <get-Start>(): com.jakewharton.mosaic.ui/Alignment.Horizontal // com.jakewharton.mosaic.ui/Alignment.Companion.Start.<get-Start>|<get-Start>(){}[0]
+        final val Top // com.jakewharton.mosaic.ui/Alignment.Companion.Top|{}Top[0]
+            final fun <get-Top>(): com.jakewharton.mosaic.ui/Alignment.Vertical // com.jakewharton.mosaic.ui/Alignment.Companion.Top.<get-Top>|<get-Top>(){}[0]
+        final val TopCenter // com.jakewharton.mosaic.ui/Alignment.Companion.TopCenter|{}TopCenter[0]
+            final fun <get-TopCenter>(): com.jakewharton.mosaic.ui/Alignment // com.jakewharton.mosaic.ui/Alignment.Companion.TopCenter.<get-TopCenter>|<get-TopCenter>(){}[0]
+        final val TopEnd // com.jakewharton.mosaic.ui/Alignment.Companion.TopEnd|{}TopEnd[0]
+            final fun <get-TopEnd>(): com.jakewharton.mosaic.ui/Alignment // com.jakewharton.mosaic.ui/Alignment.Companion.TopEnd.<get-TopEnd>|<get-TopEnd>(){}[0]
+        final val TopStart // com.jakewharton.mosaic.ui/Alignment.Companion.TopStart|{}TopStart[0]
+            final fun <get-TopStart>(): com.jakewharton.mosaic.ui/Alignment // com.jakewharton.mosaic.ui/Alignment.Companion.TopStart.<get-TopStart>|<get-TopStart>(){}[0]
+    }
+}
+
+abstract interface com.jakewharton.mosaic.layout/ContentDrawScope : com.jakewharton.mosaic.layout/DrawScope { // com.jakewharton.mosaic.layout/ContentDrawScope|null[0]
+    abstract fun drawContent() // com.jakewharton.mosaic.layout/ContentDrawScope.drawContent|drawContent(){}[0]
+}
+
+abstract interface com.jakewharton.mosaic.layout/DrawModifier : com.jakewharton.mosaic.modifier/Modifier.Element { // com.jakewharton.mosaic.layout/DrawModifier|null[0]
+    abstract fun (com.jakewharton.mosaic.layout/ContentDrawScope).draw() // com.jakewharton.mosaic.layout/DrawModifier.draw|draw@com.jakewharton.mosaic.layout.ContentDrawScope(){}[0]
+    abstract fun toString(): kotlin/String // com.jakewharton.mosaic.layout/DrawModifier.toString|toString(){}[0]
+}
+
+abstract interface com.jakewharton.mosaic.layout/DrawScope { // com.jakewharton.mosaic.layout/DrawScope|null[0]
+    abstract val height // com.jakewharton.mosaic.layout/DrawScope.height|{}height[0]
+        abstract fun <get-height>(): kotlin/Int // com.jakewharton.mosaic.layout/DrawScope.height.<get-height>|<get-height>(){}[0]
+    abstract val width // com.jakewharton.mosaic.layout/DrawScope.width|{}width[0]
+        abstract fun <get-width>(): kotlin/Int // com.jakewharton.mosaic.layout/DrawScope.width.<get-width>|<get-width>(){}[0]
+
+    abstract fun drawRect(kotlin/Char, com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/TextStyle = ..., com.jakewharton.mosaic.ui.unit/IntOffset = ..., com.jakewharton.mosaic.ui.unit/IntSize = ..., com.jakewharton.mosaic.layout/DrawStyle = ...) // com.jakewharton.mosaic.layout/DrawScope.drawRect|drawRect(kotlin.Char;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle;com.jakewharton.mosaic.ui.unit.IntOffset;com.jakewharton.mosaic.ui.unit.IntSize;com.jakewharton.mosaic.layout.DrawStyle){}[0]
+    abstract fun drawRect(kotlin/Int = ..., com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/TextStyle = ..., com.jakewharton.mosaic.ui.unit/IntOffset = ..., com.jakewharton.mosaic.ui.unit/IntSize = ..., com.jakewharton.mosaic.layout/DrawStyle = ...) // com.jakewharton.mosaic.layout/DrawScope.drawRect|drawRect(kotlin.Int;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle;com.jakewharton.mosaic.ui.unit.IntOffset;com.jakewharton.mosaic.ui.unit.IntSize;com.jakewharton.mosaic.layout.DrawStyle){}[0]
+    abstract fun drawText(kotlin/Int, kotlin/Int, com.jakewharton.mosaic.text/AnnotatedString, com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/TextStyle = ...) // com.jakewharton.mosaic.layout/DrawScope.drawText|drawText(kotlin.Int;kotlin.Int;com.jakewharton.mosaic.text.AnnotatedString;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle){}[0]
+    abstract fun drawText(kotlin/Int, kotlin/Int, kotlin/String, com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/TextStyle = ...) // com.jakewharton.mosaic.layout/DrawScope.drawText|drawText(kotlin.Int;kotlin.Int;kotlin.String;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle){}[0]
+}
+
+abstract interface com.jakewharton.mosaic.layout/IntrinsicMeasurable { // com.jakewharton.mosaic.layout/IntrinsicMeasurable|null[0]
+    abstract val parentData // com.jakewharton.mosaic.layout/IntrinsicMeasurable.parentData|{}parentData[0]
+        abstract fun <get-parentData>(): kotlin/Any? // com.jakewharton.mosaic.layout/IntrinsicMeasurable.parentData.<get-parentData>|<get-parentData>(){}[0]
+
+    abstract fun maxIntrinsicHeight(kotlin/Int): kotlin/Int // com.jakewharton.mosaic.layout/IntrinsicMeasurable.maxIntrinsicHeight|maxIntrinsicHeight(kotlin.Int){}[0]
+    abstract fun maxIntrinsicWidth(kotlin/Int): kotlin/Int // com.jakewharton.mosaic.layout/IntrinsicMeasurable.maxIntrinsicWidth|maxIntrinsicWidth(kotlin.Int){}[0]
+    abstract fun minIntrinsicHeight(kotlin/Int): kotlin/Int // com.jakewharton.mosaic.layout/IntrinsicMeasurable.minIntrinsicHeight|minIntrinsicHeight(kotlin.Int){}[0]
+    abstract fun minIntrinsicWidth(kotlin/Int): kotlin/Int // com.jakewharton.mosaic.layout/IntrinsicMeasurable.minIntrinsicWidth|minIntrinsicWidth(kotlin.Int){}[0]
+}
+
+abstract interface com.jakewharton.mosaic.layout/KeyModifier : com.jakewharton.mosaic.modifier/Modifier.Element { // com.jakewharton.mosaic.layout/KeyModifier|null[0]
+    abstract fun onKeyEvent(com.jakewharton.mosaic.layout/KeyEvent): kotlin/Boolean // com.jakewharton.mosaic.layout/KeyModifier.onKeyEvent|onKeyEvent(com.jakewharton.mosaic.layout.KeyEvent){}[0]
+    abstract fun onPreKeyEvent(com.jakewharton.mosaic.layout/KeyEvent): kotlin/Boolean // com.jakewharton.mosaic.layout/KeyModifier.onPreKeyEvent|onPreKeyEvent(com.jakewharton.mosaic.layout.KeyEvent){}[0]
+}
+
+abstract interface com.jakewharton.mosaic.layout/LayoutModifier : com.jakewharton.mosaic.modifier/Modifier.Element { // com.jakewharton.mosaic.layout/LayoutModifier|null[0]
+    abstract fun (com.jakewharton.mosaic.layout/MeasureScope).measure(com.jakewharton.mosaic.layout/Measurable, com.jakewharton.mosaic.ui.unit/Constraints): com.jakewharton.mosaic.layout/MeasureResult // com.jakewharton.mosaic.layout/LayoutModifier.measure|measure@com.jakewharton.mosaic.layout.MeasureScope(com.jakewharton.mosaic.layout.Measurable;com.jakewharton.mosaic.ui.unit.Constraints){}[0]
+    abstract fun toString(): kotlin/String // com.jakewharton.mosaic.layout/LayoutModifier.toString|toString(){}[0]
+    open fun maxIntrinsicHeight(com.jakewharton.mosaic.layout/IntrinsicMeasurable, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.layout/LayoutModifier.maxIntrinsicHeight|maxIntrinsicHeight(com.jakewharton.mosaic.layout.IntrinsicMeasurable;kotlin.Int){}[0]
+    open fun maxIntrinsicWidth(com.jakewharton.mosaic.layout/IntrinsicMeasurable, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.layout/LayoutModifier.maxIntrinsicWidth|maxIntrinsicWidth(com.jakewharton.mosaic.layout.IntrinsicMeasurable;kotlin.Int){}[0]
+    open fun minIntrinsicHeight(com.jakewharton.mosaic.layout/IntrinsicMeasurable, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.layout/LayoutModifier.minIntrinsicHeight|minIntrinsicHeight(com.jakewharton.mosaic.layout.IntrinsicMeasurable;kotlin.Int){}[0]
+    open fun minIntrinsicWidth(com.jakewharton.mosaic.layout/IntrinsicMeasurable, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.layout/LayoutModifier.minIntrinsicWidth|minIntrinsicWidth(com.jakewharton.mosaic.layout.IntrinsicMeasurable;kotlin.Int){}[0]
+}
+
+abstract interface com.jakewharton.mosaic.layout/Measurable : com.jakewharton.mosaic.layout/IntrinsicMeasurable { // com.jakewharton.mosaic.layout/Measurable|null[0]
+    abstract fun measure(com.jakewharton.mosaic.ui.unit/Constraints): com.jakewharton.mosaic.layout/Placeable // com.jakewharton.mosaic.layout/Measurable.measure|measure(com.jakewharton.mosaic.ui.unit.Constraints){}[0]
+}
+
+abstract interface com.jakewharton.mosaic.layout/MeasureResult { // com.jakewharton.mosaic.layout/MeasureResult|null[0]
+    abstract val height // com.jakewharton.mosaic.layout/MeasureResult.height|{}height[0]
+        abstract fun <get-height>(): kotlin/Int // com.jakewharton.mosaic.layout/MeasureResult.height.<get-height>|<get-height>(){}[0]
+    abstract val width // com.jakewharton.mosaic.layout/MeasureResult.width|{}width[0]
+        abstract fun <get-width>(): kotlin/Int // com.jakewharton.mosaic.layout/MeasureResult.width.<get-width>|<get-width>(){}[0]
+
+    abstract fun placeChildren() // com.jakewharton.mosaic.layout/MeasureResult.placeChildren|placeChildren(){}[0]
+}
+
+abstract interface com.jakewharton.mosaic.layout/MeasureScope { // com.jakewharton.mosaic.layout/MeasureScope|null[0]
+    open fun layout(kotlin/Int, kotlin/Int, kotlin/Function1<com.jakewharton.mosaic.layout/Placeable.PlacementScope, kotlin/Unit>): com.jakewharton.mosaic.layout/MeasureResult // com.jakewharton.mosaic.layout/MeasureScope.layout|layout(kotlin.Int;kotlin.Int;kotlin.Function1<com.jakewharton.mosaic.layout.Placeable.PlacementScope,kotlin.Unit>){}[0]
+}
+
+abstract interface com.jakewharton.mosaic.layout/ParentDataModifier : com.jakewharton.mosaic.modifier/Modifier.Element { // com.jakewharton.mosaic.layout/ParentDataModifier|null[0]
+    abstract fun modifyParentData(kotlin/Any?): kotlin/Any? // com.jakewharton.mosaic.layout/ParentDataModifier.modifyParentData|modifyParentData(kotlin.Any?){}[0]
+}
+
+abstract interface com.jakewharton.mosaic.modifier/Modifier { // com.jakewharton.mosaic.modifier/Modifier|null[0]
+    abstract fun <#A1: kotlin/Any?> foldIn(#A1, kotlin/Function2<#A1, com.jakewharton.mosaic.modifier/Modifier.Element, #A1>): #A1 // com.jakewharton.mosaic.modifier/Modifier.foldIn|foldIn(0:0;kotlin.Function2<0:0,com.jakewharton.mosaic.modifier.Modifier.Element,0:0>){0§<kotlin.Any?>}[0]
+    abstract fun <#A1: kotlin/Any?> foldOut(#A1, kotlin/Function2<com.jakewharton.mosaic.modifier/Modifier.Element, #A1, #A1>): #A1 // com.jakewharton.mosaic.modifier/Modifier.foldOut|foldOut(0:0;kotlin.Function2<com.jakewharton.mosaic.modifier.Modifier.Element,0:0,0:0>){0§<kotlin.Any?>}[0]
+    abstract fun all(kotlin/Function1<com.jakewharton.mosaic.modifier/Modifier.Element, kotlin/Boolean>): kotlin/Boolean // com.jakewharton.mosaic.modifier/Modifier.all|all(kotlin.Function1<com.jakewharton.mosaic.modifier.Modifier.Element,kotlin.Boolean>){}[0]
+    abstract fun any(kotlin/Function1<com.jakewharton.mosaic.modifier/Modifier.Element, kotlin/Boolean>): kotlin/Boolean // com.jakewharton.mosaic.modifier/Modifier.any|any(kotlin.Function1<com.jakewharton.mosaic.modifier.Modifier.Element,kotlin.Boolean>){}[0]
+    open fun then(com.jakewharton.mosaic.modifier/Modifier): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.modifier/Modifier.then|then(com.jakewharton.mosaic.modifier.Modifier){}[0]
+
+    abstract interface Element : com.jakewharton.mosaic.modifier/Modifier { // com.jakewharton.mosaic.modifier/Modifier.Element|null[0]
+        open fun <#A2: kotlin/Any?> foldIn(#A2, kotlin/Function2<#A2, com.jakewharton.mosaic.modifier/Modifier.Element, #A2>): #A2 // com.jakewharton.mosaic.modifier/Modifier.Element.foldIn|foldIn(0:0;kotlin.Function2<0:0,com.jakewharton.mosaic.modifier.Modifier.Element,0:0>){0§<kotlin.Any?>}[0]
+        open fun <#A2: kotlin/Any?> foldOut(#A2, kotlin/Function2<com.jakewharton.mosaic.modifier/Modifier.Element, #A2, #A2>): #A2 // com.jakewharton.mosaic.modifier/Modifier.Element.foldOut|foldOut(0:0;kotlin.Function2<com.jakewharton.mosaic.modifier.Modifier.Element,0:0,0:0>){0§<kotlin.Any?>}[0]
+        open fun all(kotlin/Function1<com.jakewharton.mosaic.modifier/Modifier.Element, kotlin/Boolean>): kotlin/Boolean // com.jakewharton.mosaic.modifier/Modifier.Element.all|all(kotlin.Function1<com.jakewharton.mosaic.modifier.Modifier.Element,kotlin.Boolean>){}[0]
+        open fun any(kotlin/Function1<com.jakewharton.mosaic.modifier/Modifier.Element, kotlin/Boolean>): kotlin/Boolean // com.jakewharton.mosaic.modifier/Modifier.Element.any|any(kotlin.Function1<com.jakewharton.mosaic.modifier.Modifier.Element,kotlin.Boolean>){}[0]
+    }
+
+    final object Companion : com.jakewharton.mosaic.modifier/Modifier { // com.jakewharton.mosaic.modifier/Modifier.Companion|null[0]
+        final fun <#A2: kotlin/Any?> foldIn(#A2, kotlin/Function2<#A2, com.jakewharton.mosaic.modifier/Modifier.Element, #A2>): #A2 // com.jakewharton.mosaic.modifier/Modifier.Companion.foldIn|foldIn(0:0;kotlin.Function2<0:0,com.jakewharton.mosaic.modifier.Modifier.Element,0:0>){0§<kotlin.Any?>}[0]
+        final fun <#A2: kotlin/Any?> foldOut(#A2, kotlin/Function2<com.jakewharton.mosaic.modifier/Modifier.Element, #A2, #A2>): #A2 // com.jakewharton.mosaic.modifier/Modifier.Companion.foldOut|foldOut(0:0;kotlin.Function2<com.jakewharton.mosaic.modifier.Modifier.Element,0:0,0:0>){0§<kotlin.Any?>}[0]
+        final fun all(kotlin/Function1<com.jakewharton.mosaic.modifier/Modifier.Element, kotlin/Boolean>): kotlin/Boolean // com.jakewharton.mosaic.modifier/Modifier.Companion.all|all(kotlin.Function1<com.jakewharton.mosaic.modifier.Modifier.Element,kotlin.Boolean>){}[0]
+        final fun any(kotlin/Function1<com.jakewharton.mosaic.modifier/Modifier.Element, kotlin/Boolean>): kotlin/Boolean // com.jakewharton.mosaic.modifier/Modifier.Companion.any|any(kotlin.Function1<com.jakewharton.mosaic.modifier.Modifier.Element,kotlin.Boolean>){}[0]
+        final fun then(com.jakewharton.mosaic.modifier/Modifier): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.modifier/Modifier.Companion.then|then(com.jakewharton.mosaic.modifier.Modifier){}[0]
+        final fun toString(): kotlin/String // com.jakewharton.mosaic.modifier/Modifier.Companion.toString|toString(){}[0]
+    }
+}
+
+abstract interface com.jakewharton.mosaic.ui/BoxScope { // com.jakewharton.mosaic.ui/BoxScope|null[0]
+    abstract fun (com.jakewharton.mosaic.modifier/Modifier).align(com.jakewharton.mosaic.ui/Alignment): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.ui/BoxScope.align|align@com.jakewharton.mosaic.modifier.Modifier(com.jakewharton.mosaic.ui.Alignment){}[0]
+    abstract fun (com.jakewharton.mosaic.modifier/Modifier).matchParentSize(): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.ui/BoxScope.matchParentSize|matchParentSize@com.jakewharton.mosaic.modifier.Modifier(){}[0]
+}
+
+abstract interface com.jakewharton.mosaic.ui/ColumnScope { // com.jakewharton.mosaic.ui/ColumnScope|null[0]
+    abstract fun (com.jakewharton.mosaic.modifier/Modifier).align(com.jakewharton.mosaic.ui/Alignment.Horizontal): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.ui/ColumnScope.align|align@com.jakewharton.mosaic.modifier.Modifier(com.jakewharton.mosaic.ui.Alignment.Horizontal){}[0]
+    abstract fun (com.jakewharton.mosaic.modifier/Modifier).weight(kotlin/Float, kotlin/Boolean = ...): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.ui/ColumnScope.weight|weight@com.jakewharton.mosaic.modifier.Modifier(kotlin.Float;kotlin.Boolean){}[0]
+}
+
+abstract interface com.jakewharton.mosaic.ui/RowScope { // com.jakewharton.mosaic.ui/RowScope|null[0]
+    abstract fun (com.jakewharton.mosaic.modifier/Modifier).align(com.jakewharton.mosaic.ui/Alignment.Vertical): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.ui/RowScope.align|align@com.jakewharton.mosaic.modifier.Modifier(com.jakewharton.mosaic.ui.Alignment.Vertical){}[0]
+    abstract fun (com.jakewharton.mosaic.modifier/Modifier).weight(kotlin/Float, kotlin/Boolean = ...): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.ui/RowScope.weight|weight@com.jakewharton.mosaic.modifier.Modifier(kotlin.Float;kotlin.Boolean){}[0]
+}
+
+sealed interface com.jakewharton.mosaic.layout/DrawStyle { // com.jakewharton.mosaic.layout/DrawStyle|null[0]
+    final class Stroke : com.jakewharton.mosaic.layout/DrawStyle { // com.jakewharton.mosaic.layout/DrawStyle.Stroke|null[0]
+        constructor <init>(kotlin/Int = ...) // com.jakewharton.mosaic.layout/DrawStyle.Stroke.<init>|<init>(kotlin.Int){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.layout/DrawStyle.Stroke.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.layout/DrawStyle.Stroke.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // com.jakewharton.mosaic.layout/DrawStyle.Stroke.toString|toString(){}[0]
+    }
+
+    final object Fill : com.jakewharton.mosaic.layout/DrawStyle { // com.jakewharton.mosaic.layout/DrawStyle.Fill|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.layout/DrawStyle.Fill.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.layout/DrawStyle.Fill.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // com.jakewharton.mosaic.layout/DrawStyle.Fill.toString|toString(){}[0]
+    }
+}
+
+abstract class com.jakewharton.mosaic.layout/Placeable { // com.jakewharton.mosaic.layout/Placeable|null[0]
+    constructor <init>() // com.jakewharton.mosaic.layout/Placeable.<init>|<init>(){}[0]
+
+    abstract val height // com.jakewharton.mosaic.layout/Placeable.height|{}height[0]
+        abstract fun <get-height>(): kotlin/Int // com.jakewharton.mosaic.layout/Placeable.height.<get-height>|<get-height>(){}[0]
+    abstract val width // com.jakewharton.mosaic.layout/Placeable.width|{}width[0]
+        abstract fun <get-width>(): kotlin/Int // com.jakewharton.mosaic.layout/Placeable.width.<get-width>|<get-width>(){}[0]
+
+    abstract fun placeAt(kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.layout/Placeable.placeAt|placeAt(kotlin.Int;kotlin.Int){}[0]
+
+    abstract interface PlacementScope { // com.jakewharton.mosaic.layout/Placeable.PlacementScope|null[0]
+        abstract val x // com.jakewharton.mosaic.layout/Placeable.PlacementScope.x|{}x[0]
+            abstract fun <get-x>(): kotlin/Int // com.jakewharton.mosaic.layout/Placeable.PlacementScope.x.<get-x>|<get-x>(){}[0]
+        abstract val y // com.jakewharton.mosaic.layout/Placeable.PlacementScope.y|{}y[0]
+            abstract fun <get-y>(): kotlin/Int // com.jakewharton.mosaic.layout/Placeable.PlacementScope.y.<get-y>|<get-y>(){}[0]
+
+        open fun (com.jakewharton.mosaic.layout/Placeable).place(com.jakewharton.mosaic.ui.unit/IntOffset) // com.jakewharton.mosaic.layout/Placeable.PlacementScope.place|place@com.jakewharton.mosaic.layout.Placeable(com.jakewharton.mosaic.ui.unit.IntOffset){}[0]
+        open fun (com.jakewharton.mosaic.layout/Placeable).place(kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.layout/Placeable.PlacementScope.place|place@com.jakewharton.mosaic.layout.Placeable(kotlin.Int;kotlin.Int){}[0]
+    }
+}
+
+final class com.jakewharton.mosaic.layout/KeyEvent { // com.jakewharton.mosaic.layout/KeyEvent|null[0]
+    constructor <init>(kotlin/String, kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ...) // com.jakewharton.mosaic.layout/KeyEvent.<init>|<init>(kotlin.String;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean){}[0]
+
+    final val alt // com.jakewharton.mosaic.layout/KeyEvent.alt|{}alt[0]
+        final fun <get-alt>(): kotlin/Boolean // com.jakewharton.mosaic.layout/KeyEvent.alt.<get-alt>|<get-alt>(){}[0]
+    final val ctrl // com.jakewharton.mosaic.layout/KeyEvent.ctrl|{}ctrl[0]
+        final fun <get-ctrl>(): kotlin/Boolean // com.jakewharton.mosaic.layout/KeyEvent.ctrl.<get-ctrl>|<get-ctrl>(){}[0]
+    final val key // com.jakewharton.mosaic.layout/KeyEvent.key|{}key[0]
+        final fun <get-key>(): kotlin/String // com.jakewharton.mosaic.layout/KeyEvent.key.<get-key>|<get-key>(){}[0]
+    final val shift // com.jakewharton.mosaic.layout/KeyEvent.shift|{}shift[0]
+        final fun <get-shift>(): kotlin/Boolean // com.jakewharton.mosaic.layout/KeyEvent.shift.<get-shift>|<get-shift>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.layout/KeyEvent.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.layout/KeyEvent.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.layout/KeyEvent.toString|toString(){}[0]
+}
+
+final class com.jakewharton.mosaic.modifier/CombinedModifier : com.jakewharton.mosaic.modifier/Modifier { // com.jakewharton.mosaic.modifier/CombinedModifier|null[0]
+    constructor <init>(com.jakewharton.mosaic.modifier/Modifier, com.jakewharton.mosaic.modifier/Modifier) // com.jakewharton.mosaic.modifier/CombinedModifier.<init>|<init>(com.jakewharton.mosaic.modifier.Modifier;com.jakewharton.mosaic.modifier.Modifier){}[0]
+
+    final fun <#A1: kotlin/Any?> foldIn(#A1, kotlin/Function2<#A1, com.jakewharton.mosaic.modifier/Modifier.Element, #A1>): #A1 // com.jakewharton.mosaic.modifier/CombinedModifier.foldIn|foldIn(0:0;kotlin.Function2<0:0,com.jakewharton.mosaic.modifier.Modifier.Element,0:0>){0§<kotlin.Any?>}[0]
+    final fun <#A1: kotlin/Any?> foldOut(#A1, kotlin/Function2<com.jakewharton.mosaic.modifier/Modifier.Element, #A1, #A1>): #A1 // com.jakewharton.mosaic.modifier/CombinedModifier.foldOut|foldOut(0:0;kotlin.Function2<com.jakewharton.mosaic.modifier.Modifier.Element,0:0,0:0>){0§<kotlin.Any?>}[0]
+    final fun all(kotlin/Function1<com.jakewharton.mosaic.modifier/Modifier.Element, kotlin/Boolean>): kotlin/Boolean // com.jakewharton.mosaic.modifier/CombinedModifier.all|all(kotlin.Function1<com.jakewharton.mosaic.modifier.Modifier.Element,kotlin.Boolean>){}[0]
+    final fun any(kotlin/Function1<com.jakewharton.mosaic.modifier/Modifier.Element, kotlin/Boolean>): kotlin/Boolean // com.jakewharton.mosaic.modifier/CombinedModifier.any|any(kotlin.Function1<com.jakewharton.mosaic.modifier.Modifier.Element,kotlin.Boolean>){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.modifier/CombinedModifier.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.modifier/CombinedModifier.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.modifier/CombinedModifier.toString|toString(){}[0]
+}
+
+final class com.jakewharton.mosaic.text/AnnotatedString : kotlin/CharSequence { // com.jakewharton.mosaic.text/AnnotatedString|null[0]
+    final val length // com.jakewharton.mosaic.text/AnnotatedString.length|{}length[0]
+        final fun <get-length>(): kotlin/Int // com.jakewharton.mosaic.text/AnnotatedString.length.<get-length>|<get-length>(){}[0]
+    final val spanStyles // com.jakewharton.mosaic.text/AnnotatedString.spanStyles|{}spanStyles[0]
+        final fun <get-spanStyles>(): kotlin.collections/List<com.jakewharton.mosaic.text/AnnotatedString.Range<com.jakewharton.mosaic.text/SpanStyle>> // com.jakewharton.mosaic.text/AnnotatedString.spanStyles.<get-spanStyles>|<get-spanStyles>(){}[0]
+    final val text // com.jakewharton.mosaic.text/AnnotatedString.text|{}text[0]
+        final fun <get-text>(): kotlin/String // com.jakewharton.mosaic.text/AnnotatedString.text.<get-text>|<get-text>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.text/AnnotatedString.equals|equals(kotlin.Any?){}[0]
+    final fun get(kotlin/Int): kotlin/Char // com.jakewharton.mosaic.text/AnnotatedString.get|get(kotlin.Int){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.text/AnnotatedString.hashCode|hashCode(){}[0]
+    final fun plus(com.jakewharton.mosaic.text/AnnotatedString): com.jakewharton.mosaic.text/AnnotatedString // com.jakewharton.mosaic.text/AnnotatedString.plus|plus(com.jakewharton.mosaic.text.AnnotatedString){}[0]
+    final fun subSequence(kotlin/Int, kotlin/Int): com.jakewharton.mosaic.text/AnnotatedString // com.jakewharton.mosaic.text/AnnotatedString.subSequence|subSequence(kotlin.Int;kotlin.Int){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.text/AnnotatedString.toString|toString(){}[0]
+
+    final class <#A1: kotlin/Any?> Range { // com.jakewharton.mosaic.text/AnnotatedString.Range|null[0]
+        constructor <init>(#A1, kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.text/AnnotatedString.Range.<init>|<init>(1:0;kotlin.Int;kotlin.Int){}[0]
+
+        final val end // com.jakewharton.mosaic.text/AnnotatedString.Range.end|{}end[0]
+            final fun <get-end>(): kotlin/Int // com.jakewharton.mosaic.text/AnnotatedString.Range.end.<get-end>|<get-end>(){}[0]
+        final val item // com.jakewharton.mosaic.text/AnnotatedString.Range.item|{}item[0]
+            final fun <get-item>(): #A1 // com.jakewharton.mosaic.text/AnnotatedString.Range.item.<get-item>|<get-item>(){}[0]
+        final val start // com.jakewharton.mosaic.text/AnnotatedString.Range.start|{}start[0]
+            final fun <get-start>(): kotlin/Int // com.jakewharton.mosaic.text/AnnotatedString.Range.start.<get-start>|<get-start>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.text/AnnotatedString.Range.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.text/AnnotatedString.Range.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // com.jakewharton.mosaic.text/AnnotatedString.Range.toString|toString(){}[0]
+    }
+
+    final class Builder : kotlin.text/Appendable { // com.jakewharton.mosaic.text/AnnotatedString.Builder|null[0]
+        constructor <init>(com.jakewharton.mosaic.text/AnnotatedString) // com.jakewharton.mosaic.text/AnnotatedString.Builder.<init>|<init>(com.jakewharton.mosaic.text.AnnotatedString){}[0]
+        constructor <init>(kotlin/Int = ...) // com.jakewharton.mosaic.text/AnnotatedString.Builder.<init>|<init>(kotlin.Int){}[0]
+        constructor <init>(kotlin/String) // com.jakewharton.mosaic.text/AnnotatedString.Builder.<init>|<init>(kotlin.String){}[0]
+
+        final val length // com.jakewharton.mosaic.text/AnnotatedString.Builder.length|{}length[0]
+            final fun <get-length>(): kotlin/Int // com.jakewharton.mosaic.text/AnnotatedString.Builder.length.<get-length>|<get-length>(){}[0]
+
+        final fun addStyle(com.jakewharton.mosaic.text/SpanStyle, kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.text/AnnotatedString.Builder.addStyle|addStyle(com.jakewharton.mosaic.text.SpanStyle;kotlin.Int;kotlin.Int){}[0]
+        final fun append(com.jakewharton.mosaic.text/AnnotatedString) // com.jakewharton.mosaic.text/AnnotatedString.Builder.append|append(com.jakewharton.mosaic.text.AnnotatedString){}[0]
+        final fun append(com.jakewharton.mosaic.text/AnnotatedString, kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.text/AnnotatedString.Builder.append|append(com.jakewharton.mosaic.text.AnnotatedString;kotlin.Int;kotlin.Int){}[0]
+        final fun append(kotlin/Char): com.jakewharton.mosaic.text/AnnotatedString.Builder // com.jakewharton.mosaic.text/AnnotatedString.Builder.append|append(kotlin.Char){}[0]
+        final fun append(kotlin/CharSequence?): com.jakewharton.mosaic.text/AnnotatedString.Builder // com.jakewharton.mosaic.text/AnnotatedString.Builder.append|append(kotlin.CharSequence?){}[0]
+        final fun append(kotlin/CharSequence?, kotlin/Int, kotlin/Int): com.jakewharton.mosaic.text/AnnotatedString.Builder // com.jakewharton.mosaic.text/AnnotatedString.Builder.append|append(kotlin.CharSequence?;kotlin.Int;kotlin.Int){}[0]
+        final fun append(kotlin/String) // com.jakewharton.mosaic.text/AnnotatedString.Builder.append|append(kotlin.String){}[0]
+        final fun pop() // com.jakewharton.mosaic.text/AnnotatedString.Builder.pop|pop(){}[0]
+        final fun pop(kotlin/Int) // com.jakewharton.mosaic.text/AnnotatedString.Builder.pop|pop(kotlin.Int){}[0]
+        final fun pushStyle(com.jakewharton.mosaic.text/SpanStyle): kotlin/Int // com.jakewharton.mosaic.text/AnnotatedString.Builder.pushStyle|pushStyle(com.jakewharton.mosaic.text.SpanStyle){}[0]
+        final fun toAnnotatedString(): com.jakewharton.mosaic.text/AnnotatedString // com.jakewharton.mosaic.text/AnnotatedString.Builder.toAnnotatedString|toAnnotatedString(){}[0]
+    }
+}
+
+final class com.jakewharton.mosaic.text/SpanStyle { // com.jakewharton.mosaic.text/SpanStyle|null[0]
+    constructor <init>(com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/TextStyle = ..., com.jakewharton.mosaic.ui/Color = ...) // com.jakewharton.mosaic.text/SpanStyle.<init>|<init>(com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle;com.jakewharton.mosaic.ui.Color){}[0]
+
+    final val background // com.jakewharton.mosaic.text/SpanStyle.background|{}background[0]
+        final fun <get-background>(): com.jakewharton.mosaic.ui/Color // com.jakewharton.mosaic.text/SpanStyle.background.<get-background>|<get-background>(){}[0]
+    final val color // com.jakewharton.mosaic.text/SpanStyle.color|{}color[0]
+        final fun <get-color>(): com.jakewharton.mosaic.ui/Color // com.jakewharton.mosaic.text/SpanStyle.color.<get-color>|<get-color>(){}[0]
+    final val textStyle // com.jakewharton.mosaic.text/SpanStyle.textStyle|{}textStyle[0]
+        final fun <get-textStyle>(): com.jakewharton.mosaic.ui/TextStyle // com.jakewharton.mosaic.text/SpanStyle.textStyle.<get-textStyle>|<get-textStyle>(){}[0]
+
+    final fun copy(com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/TextStyle = ..., com.jakewharton.mosaic.ui/Color = ...): com.jakewharton.mosaic.text/SpanStyle // com.jakewharton.mosaic.text/SpanStyle.copy|copy(com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle;com.jakewharton.mosaic.ui.Color){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.text/SpanStyle.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.text/SpanStyle.hashCode|hashCode(){}[0]
+    final fun merge(com.jakewharton.mosaic.text/SpanStyle? = ...): com.jakewharton.mosaic.text/SpanStyle // com.jakewharton.mosaic.text/SpanStyle.merge|merge(com.jakewharton.mosaic.text.SpanStyle?){}[0]
+    final fun plus(com.jakewharton.mosaic.text/SpanStyle): com.jakewharton.mosaic.text/SpanStyle // com.jakewharton.mosaic.text/SpanStyle.plus|plus(com.jakewharton.mosaic.text.SpanStyle){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.text/SpanStyle.toString|toString(){}[0]
+}
+
+final class com.jakewharton.mosaic.ui/BiasAlignment : com.jakewharton.mosaic.ui/Alignment { // com.jakewharton.mosaic.ui/BiasAlignment|null[0]
+    constructor <init>(kotlin/Float, kotlin/Float) // com.jakewharton.mosaic.ui/BiasAlignment.<init>|<init>(kotlin.Float;kotlin.Float){}[0]
+
+    final val horizontalBias // com.jakewharton.mosaic.ui/BiasAlignment.horizontalBias|{}horizontalBias[0]
+        final fun <get-horizontalBias>(): kotlin/Float // com.jakewharton.mosaic.ui/BiasAlignment.horizontalBias.<get-horizontalBias>|<get-horizontalBias>(){}[0]
+    final val verticalBias // com.jakewharton.mosaic.ui/BiasAlignment.verticalBias|{}verticalBias[0]
+        final fun <get-verticalBias>(): kotlin/Float // com.jakewharton.mosaic.ui/BiasAlignment.verticalBias.<get-verticalBias>|<get-verticalBias>(){}[0]
+
+    final fun align(com.jakewharton.mosaic.ui.unit/IntSize, com.jakewharton.mosaic.ui.unit/IntSize): com.jakewharton.mosaic.ui.unit/IntOffset // com.jakewharton.mosaic.ui/BiasAlignment.align|align(com.jakewharton.mosaic.ui.unit.IntSize;com.jakewharton.mosaic.ui.unit.IntSize){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.ui/BiasAlignment.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.ui/BiasAlignment.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.ui/BiasAlignment.toString|toString(){}[0]
+
+    final class Horizontal : com.jakewharton.mosaic.ui/Alignment.Horizontal { // com.jakewharton.mosaic.ui/BiasAlignment.Horizontal|null[0]
+        constructor <init>(kotlin/Float) // com.jakewharton.mosaic.ui/BiasAlignment.Horizontal.<init>|<init>(kotlin.Float){}[0]
+
+        final val bias // com.jakewharton.mosaic.ui/BiasAlignment.Horizontal.bias|{}bias[0]
+            final fun <get-bias>(): kotlin/Float // com.jakewharton.mosaic.ui/BiasAlignment.Horizontal.bias.<get-bias>|<get-bias>(){}[0]
+
+        final fun align(kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.ui/BiasAlignment.Horizontal.align|align(kotlin.Int;kotlin.Int){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.ui/BiasAlignment.Horizontal.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.ui/BiasAlignment.Horizontal.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // com.jakewharton.mosaic.ui/BiasAlignment.Horizontal.toString|toString(){}[0]
+    }
+
+    final class Vertical : com.jakewharton.mosaic.ui/Alignment.Vertical { // com.jakewharton.mosaic.ui/BiasAlignment.Vertical|null[0]
+        constructor <init>(kotlin/Float) // com.jakewharton.mosaic.ui/BiasAlignment.Vertical.<init>|<init>(kotlin.Float){}[0]
+
+        final val bias // com.jakewharton.mosaic.ui/BiasAlignment.Vertical.bias|{}bias[0]
+            final fun <get-bias>(): kotlin/Float // com.jakewharton.mosaic.ui/BiasAlignment.Vertical.bias.<get-bias>|<get-bias>(){}[0]
+
+        final fun align(kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.ui/BiasAlignment.Vertical.align|align(kotlin.Int;kotlin.Int){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.ui/BiasAlignment.Vertical.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.ui/BiasAlignment.Vertical.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // com.jakewharton.mosaic.ui/BiasAlignment.Vertical.toString|toString(){}[0]
+    }
+}
+
+final class com.jakewharton.mosaic/Terminal { // com.jakewharton.mosaic/Terminal|null[0]
+    constructor <init>(com.jakewharton.mosaic.ui.unit/IntSize) // com.jakewharton.mosaic/Terminal.<init>|<init>(com.jakewharton.mosaic.ui.unit.IntSize){}[0]
+
+    final val size // com.jakewharton.mosaic/Terminal.size|{}size[0]
+        final fun <get-size>(): com.jakewharton.mosaic.ui.unit/IntSize // com.jakewharton.mosaic/Terminal.size.<get-size>|<get-size>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic/Terminal.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic/Terminal.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic/Terminal.toString|toString(){}[0]
+}
+
+final value class com.jakewharton.mosaic.ui.unit/Constraints { // com.jakewharton.mosaic.ui.unit/Constraints|null[0]
+    constructor <init>(kotlin/Long) // com.jakewharton.mosaic.ui.unit/Constraints.<init>|<init>(kotlin.Long){}[0]
+
+    final val hasBoundedHeight // com.jakewharton.mosaic.ui.unit/Constraints.hasBoundedHeight|{}hasBoundedHeight[0]
+        final fun <get-hasBoundedHeight>(): kotlin/Boolean // com.jakewharton.mosaic.ui.unit/Constraints.hasBoundedHeight.<get-hasBoundedHeight>|<get-hasBoundedHeight>(){}[0]
+    final val hasBoundedWidth // com.jakewharton.mosaic.ui.unit/Constraints.hasBoundedWidth|{}hasBoundedWidth[0]
+        final fun <get-hasBoundedWidth>(): kotlin/Boolean // com.jakewharton.mosaic.ui.unit/Constraints.hasBoundedWidth.<get-hasBoundedWidth>|<get-hasBoundedWidth>(){}[0]
+    final val hasFixedHeight // com.jakewharton.mosaic.ui.unit/Constraints.hasFixedHeight|{}hasFixedHeight[0]
+        final fun <get-hasFixedHeight>(): kotlin/Boolean // com.jakewharton.mosaic.ui.unit/Constraints.hasFixedHeight.<get-hasFixedHeight>|<get-hasFixedHeight>(){}[0]
+    final val hasFixedWidth // com.jakewharton.mosaic.ui.unit/Constraints.hasFixedWidth|{}hasFixedWidth[0]
+        final fun <get-hasFixedWidth>(): kotlin/Boolean // com.jakewharton.mosaic.ui.unit/Constraints.hasFixedWidth.<get-hasFixedWidth>|<get-hasFixedWidth>(){}[0]
+    final val isZero // com.jakewharton.mosaic.ui.unit/Constraints.isZero|{}isZero[0]
+        final fun <get-isZero>(): kotlin/Boolean // com.jakewharton.mosaic.ui.unit/Constraints.isZero.<get-isZero>|<get-isZero>(){}[0]
+    final val maxHeight // com.jakewharton.mosaic.ui.unit/Constraints.maxHeight|{}maxHeight[0]
+        final fun <get-maxHeight>(): kotlin/Int // com.jakewharton.mosaic.ui.unit/Constraints.maxHeight.<get-maxHeight>|<get-maxHeight>(){}[0]
+    final val maxWidth // com.jakewharton.mosaic.ui.unit/Constraints.maxWidth|{}maxWidth[0]
+        final fun <get-maxWidth>(): kotlin/Int // com.jakewharton.mosaic.ui.unit/Constraints.maxWidth.<get-maxWidth>|<get-maxWidth>(){}[0]
+    final val minHeight // com.jakewharton.mosaic.ui.unit/Constraints.minHeight|{}minHeight[0]
+        final fun <get-minHeight>(): kotlin/Int // com.jakewharton.mosaic.ui.unit/Constraints.minHeight.<get-minHeight>|<get-minHeight>(){}[0]
+    final val minWidth // com.jakewharton.mosaic.ui.unit/Constraints.minWidth|{}minWidth[0]
+        final fun <get-minWidth>(): kotlin/Int // com.jakewharton.mosaic.ui.unit/Constraints.minWidth.<get-minWidth>|<get-minWidth>(){}[0]
+    final val value // com.jakewharton.mosaic.ui.unit/Constraints.value|{}value[0]
+        final fun <get-value>(): kotlin/Long // com.jakewharton.mosaic.ui.unit/Constraints.value.<get-value>|<get-value>(){}[0]
+
+    final fun copy(kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ...): com.jakewharton.mosaic.ui.unit/Constraints // com.jakewharton.mosaic.ui.unit/Constraints.copy|copy(kotlin.Int;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.ui.unit/Constraints.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.ui.unit/Constraints.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.ui.unit/Constraints.toString|toString(){}[0]
+
+    final object Companion { // com.jakewharton.mosaic.ui.unit/Constraints.Companion|null[0]
+        final const val Infinity // com.jakewharton.mosaic.ui.unit/Constraints.Companion.Infinity|{}Infinity[0]
+            final fun <get-Infinity>(): kotlin/Int // com.jakewharton.mosaic.ui.unit/Constraints.Companion.Infinity.<get-Infinity>|<get-Infinity>(){}[0]
+
+        final fun fixed(kotlin/Int, kotlin/Int): com.jakewharton.mosaic.ui.unit/Constraints // com.jakewharton.mosaic.ui.unit/Constraints.Companion.fixed|fixed(kotlin.Int;kotlin.Int){}[0]
+        final fun fixedHeight(kotlin/Int): com.jakewharton.mosaic.ui.unit/Constraints // com.jakewharton.mosaic.ui.unit/Constraints.Companion.fixedHeight|fixedHeight(kotlin.Int){}[0]
+        final fun fixedWidth(kotlin/Int): com.jakewharton.mosaic.ui.unit/Constraints // com.jakewharton.mosaic.ui.unit/Constraints.Companion.fixedWidth|fixedWidth(kotlin.Int){}[0]
+    }
+}
+
+final value class com.jakewharton.mosaic.ui.unit/IntOffset { // com.jakewharton.mosaic.ui.unit/IntOffset|null[0]
+    final val packedValue // com.jakewharton.mosaic.ui.unit/IntOffset.packedValue|{}packedValue[0]
+        final fun <get-packedValue>(): kotlin/Long // com.jakewharton.mosaic.ui.unit/IntOffset.packedValue.<get-packedValue>|<get-packedValue>(){}[0]
+    final val x // com.jakewharton.mosaic.ui.unit/IntOffset.x|{}x[0]
+        final fun <get-x>(): kotlin/Int // com.jakewharton.mosaic.ui.unit/IntOffset.x.<get-x>|<get-x>(){}[0]
+    final val y // com.jakewharton.mosaic.ui.unit/IntOffset.y|{}y[0]
+        final fun <get-y>(): kotlin/Int // com.jakewharton.mosaic.ui.unit/IntOffset.y.<get-y>|<get-y>(){}[0]
+
+    final fun component1(): kotlin/Int // com.jakewharton.mosaic.ui.unit/IntOffset.component1|component1(){}[0]
+    final fun component2(): kotlin/Int // com.jakewharton.mosaic.ui.unit/IntOffset.component2|component2(){}[0]
+    final fun copy(kotlin/Int = ..., kotlin/Int = ...): com.jakewharton.mosaic.ui.unit/IntOffset // com.jakewharton.mosaic.ui.unit/IntOffset.copy|copy(kotlin.Int;kotlin.Int){}[0]
+    final fun div(kotlin/Float): com.jakewharton.mosaic.ui.unit/IntOffset // com.jakewharton.mosaic.ui.unit/IntOffset.div|div(kotlin.Float){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.ui.unit/IntOffset.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.ui.unit/IntOffset.hashCode|hashCode(){}[0]
+    final fun rem(kotlin/Int): com.jakewharton.mosaic.ui.unit/IntOffset // com.jakewharton.mosaic.ui.unit/IntOffset.rem|rem(kotlin.Int){}[0]
+    final fun times(kotlin/Float): com.jakewharton.mosaic.ui.unit/IntOffset // com.jakewharton.mosaic.ui.unit/IntOffset.times|times(kotlin.Float){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.ui.unit/IntOffset.toString|toString(){}[0]
+    final inline fun minus(com.jakewharton.mosaic.ui.unit/IntOffset): com.jakewharton.mosaic.ui.unit/IntOffset // com.jakewharton.mosaic.ui.unit/IntOffset.minus|minus(com.jakewharton.mosaic.ui.unit.IntOffset){}[0]
+    final inline fun plus(com.jakewharton.mosaic.ui.unit/IntOffset): com.jakewharton.mosaic.ui.unit/IntOffset // com.jakewharton.mosaic.ui.unit/IntOffset.plus|plus(com.jakewharton.mosaic.ui.unit.IntOffset){}[0]
+    final inline fun unaryMinus(): com.jakewharton.mosaic.ui.unit/IntOffset // com.jakewharton.mosaic.ui.unit/IntOffset.unaryMinus|unaryMinus(){}[0]
+
+    final object Companion { // com.jakewharton.mosaic.ui.unit/IntOffset.Companion|null[0]
+        final val Zero // com.jakewharton.mosaic.ui.unit/IntOffset.Companion.Zero|{}Zero[0]
+            final fun <get-Zero>(): com.jakewharton.mosaic.ui.unit/IntOffset // com.jakewharton.mosaic.ui.unit/IntOffset.Companion.Zero.<get-Zero>|<get-Zero>(){}[0]
+    }
+}
+
+final value class com.jakewharton.mosaic.ui.unit/IntSize { // com.jakewharton.mosaic.ui.unit/IntSize|null[0]
+    final val height // com.jakewharton.mosaic.ui.unit/IntSize.height|{}height[0]
+        final fun <get-height>(): kotlin/Int // com.jakewharton.mosaic.ui.unit/IntSize.height.<get-height>|<get-height>(){}[0]
+    final val packedValue // com.jakewharton.mosaic.ui.unit/IntSize.packedValue|{}packedValue[0]
+        final fun <get-packedValue>(): kotlin/Long // com.jakewharton.mosaic.ui.unit/IntSize.packedValue.<get-packedValue>|<get-packedValue>(){}[0]
+    final val width // com.jakewharton.mosaic.ui.unit/IntSize.width|{}width[0]
+        final fun <get-width>(): kotlin/Int // com.jakewharton.mosaic.ui.unit/IntSize.width.<get-width>|<get-width>(){}[0]
+
+    final fun div(kotlin/Int): com.jakewharton.mosaic.ui.unit/IntSize // com.jakewharton.mosaic.ui.unit/IntSize.div|div(kotlin.Int){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.ui.unit/IntSize.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.ui.unit/IntSize.hashCode|hashCode(){}[0]
+    final fun times(kotlin/Int): com.jakewharton.mosaic.ui.unit/IntSize // com.jakewharton.mosaic.ui.unit/IntSize.times|times(kotlin.Int){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.ui.unit/IntSize.toString|toString(){}[0]
+    final inline fun component1(): kotlin/Int // com.jakewharton.mosaic.ui.unit/IntSize.component1|component1(){}[0]
+    final inline fun component2(): kotlin/Int // com.jakewharton.mosaic.ui.unit/IntSize.component2|component2(){}[0]
+
+    final object Companion { // com.jakewharton.mosaic.ui.unit/IntSize.Companion|null[0]
+        final val Zero // com.jakewharton.mosaic.ui.unit/IntSize.Companion.Zero|{}Zero[0]
+            final fun <get-Zero>(): com.jakewharton.mosaic.ui.unit/IntSize // com.jakewharton.mosaic.ui.unit/IntSize.Companion.Zero.<get-Zero>|<get-Zero>(){}[0]
+    }
+}
+
+final value class com.jakewharton.mosaic.ui/Color { // com.jakewharton.mosaic.ui/Color|null[0]
+    final val value // com.jakewharton.mosaic.ui/Color.value|{}value[0]
+        final fun <get-value>(): kotlin/Int // com.jakewharton.mosaic.ui/Color.value.<get-value>|<get-value>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.ui/Color.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.ui/Color.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.ui/Color.toString|toString(){}[0]
+
+    final object Companion { // com.jakewharton.mosaic.ui/Color.Companion|null[0]
+        final val Black // com.jakewharton.mosaic.ui/Color.Companion.Black|{}Black[0]
+            final fun <get-Black>(): com.jakewharton.mosaic.ui/Color // com.jakewharton.mosaic.ui/Color.Companion.Black.<get-Black>|<get-Black>(){}[0]
+        final val Blue // com.jakewharton.mosaic.ui/Color.Companion.Blue|{}Blue[0]
+            final fun <get-Blue>(): com.jakewharton.mosaic.ui/Color // com.jakewharton.mosaic.ui/Color.Companion.Blue.<get-Blue>|<get-Blue>(){}[0]
+        final val Cyan // com.jakewharton.mosaic.ui/Color.Companion.Cyan|{}Cyan[0]
+            final fun <get-Cyan>(): com.jakewharton.mosaic.ui/Color // com.jakewharton.mosaic.ui/Color.Companion.Cyan.<get-Cyan>|<get-Cyan>(){}[0]
+        final val Green // com.jakewharton.mosaic.ui/Color.Companion.Green|{}Green[0]
+            final fun <get-Green>(): com.jakewharton.mosaic.ui/Color // com.jakewharton.mosaic.ui/Color.Companion.Green.<get-Green>|<get-Green>(){}[0]
+        final val Magenta // com.jakewharton.mosaic.ui/Color.Companion.Magenta|{}Magenta[0]
+            final fun <get-Magenta>(): com.jakewharton.mosaic.ui/Color // com.jakewharton.mosaic.ui/Color.Companion.Magenta.<get-Magenta>|<get-Magenta>(){}[0]
+        final val Red // com.jakewharton.mosaic.ui/Color.Companion.Red|{}Red[0]
+            final fun <get-Red>(): com.jakewharton.mosaic.ui/Color // com.jakewharton.mosaic.ui/Color.Companion.Red.<get-Red>|<get-Red>(){}[0]
+        final val Unspecified // com.jakewharton.mosaic.ui/Color.Companion.Unspecified|{}Unspecified[0]
+            final fun <get-Unspecified>(): com.jakewharton.mosaic.ui/Color // com.jakewharton.mosaic.ui/Color.Companion.Unspecified.<get-Unspecified>|<get-Unspecified>(){}[0]
+        final val White // com.jakewharton.mosaic.ui/Color.Companion.White|{}White[0]
+            final fun <get-White>(): com.jakewharton.mosaic.ui/Color // com.jakewharton.mosaic.ui/Color.Companion.White.<get-White>|<get-White>(){}[0]
+        final val Yellow // com.jakewharton.mosaic.ui/Color.Companion.Yellow|{}Yellow[0]
+            final fun <get-Yellow>(): com.jakewharton.mosaic.ui/Color // com.jakewharton.mosaic.ui/Color.Companion.Yellow.<get-Yellow>|<get-Yellow>(){}[0]
+    }
+}
+
+final value class com.jakewharton.mosaic.ui/TextStyle { // com.jakewharton.mosaic.ui/TextStyle|null[0]
+    final val bits // com.jakewharton.mosaic.ui/TextStyle.bits|{}bits[0]
+        final fun <get-bits>(): kotlin/Int // com.jakewharton.mosaic.ui/TextStyle.bits.<get-bits>|<get-bits>(){}[0]
+
+    final fun contains(com.jakewharton.mosaic.ui/TextStyle): kotlin/Boolean // com.jakewharton.mosaic.ui/TextStyle.contains|contains(com.jakewharton.mosaic.ui.TextStyle){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.ui/TextStyle.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.ui/TextStyle.hashCode|hashCode(){}[0]
+    final fun plus(com.jakewharton.mosaic.ui/TextStyle): com.jakewharton.mosaic.ui/TextStyle // com.jakewharton.mosaic.ui/TextStyle.plus|plus(com.jakewharton.mosaic.ui.TextStyle){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.ui/TextStyle.toString|toString(){}[0]
+
+    final object Companion { // com.jakewharton.mosaic.ui/TextStyle.Companion|null[0]
+        final val Bold // com.jakewharton.mosaic.ui/TextStyle.Companion.Bold|{}Bold[0]
+            final fun <get-Bold>(): com.jakewharton.mosaic.ui/TextStyle // com.jakewharton.mosaic.ui/TextStyle.Companion.Bold.<get-Bold>|<get-Bold>(){}[0]
+        final val Dim // com.jakewharton.mosaic.ui/TextStyle.Companion.Dim|{}Dim[0]
+            final fun <get-Dim>(): com.jakewharton.mosaic.ui/TextStyle // com.jakewharton.mosaic.ui/TextStyle.Companion.Dim.<get-Dim>|<get-Dim>(){}[0]
+        final val Empty // com.jakewharton.mosaic.ui/TextStyle.Companion.Empty|{}Empty[0]
+            final fun <get-Empty>(): com.jakewharton.mosaic.ui/TextStyle // com.jakewharton.mosaic.ui/TextStyle.Companion.Empty.<get-Empty>|<get-Empty>(){}[0]
+        final val Invert // com.jakewharton.mosaic.ui/TextStyle.Companion.Invert|{}Invert[0]
+            final fun <get-Invert>(): com.jakewharton.mosaic.ui/TextStyle // com.jakewharton.mosaic.ui/TextStyle.Companion.Invert.<get-Invert>|<get-Invert>(){}[0]
+        final val Italic // com.jakewharton.mosaic.ui/TextStyle.Companion.Italic|{}Italic[0]
+            final fun <get-Italic>(): com.jakewharton.mosaic.ui/TextStyle // com.jakewharton.mosaic.ui/TextStyle.Companion.Italic.<get-Italic>|<get-Italic>(){}[0]
+        final val Strikethrough // com.jakewharton.mosaic.ui/TextStyle.Companion.Strikethrough|{}Strikethrough[0]
+            final fun <get-Strikethrough>(): com.jakewharton.mosaic.ui/TextStyle // com.jakewharton.mosaic.ui/TextStyle.Companion.Strikethrough.<get-Strikethrough>|<get-Strikethrough>(){}[0]
+        final val Underline // com.jakewharton.mosaic.ui/TextStyle.Companion.Underline|{}Underline[0]
+            final fun <get-Underline>(): com.jakewharton.mosaic.ui/TextStyle // com.jakewharton.mosaic.ui/TextStyle.Companion.Underline.<get-Underline>|<get-Underline>(){}[0]
+        final val Unspecified // com.jakewharton.mosaic.ui/TextStyle.Companion.Unspecified|{}Unspecified[0]
+            final fun <get-Unspecified>(): com.jakewharton.mosaic.ui/TextStyle // com.jakewharton.mosaic.ui/TextStyle.Companion.Unspecified.<get-Unspecified>|<get-Unspecified>(){}[0]
+    }
+}
+
+final object com.jakewharton.mosaic.ui/Arrangement { // com.jakewharton.mosaic.ui/Arrangement|null[0]
+    final val Bottom // com.jakewharton.mosaic.ui/Arrangement.Bottom|{}Bottom[0]
+        final fun <get-Bottom>(): com.jakewharton.mosaic.ui/Arrangement.Vertical // com.jakewharton.mosaic.ui/Arrangement.Bottom.<get-Bottom>|<get-Bottom>(){}[0]
+    final val Center // com.jakewharton.mosaic.ui/Arrangement.Center|{}Center[0]
+        final fun <get-Center>(): com.jakewharton.mosaic.ui/Arrangement.HorizontalOrVertical // com.jakewharton.mosaic.ui/Arrangement.Center.<get-Center>|<get-Center>(){}[0]
+    final val End // com.jakewharton.mosaic.ui/Arrangement.End|{}End[0]
+        final fun <get-End>(): com.jakewharton.mosaic.ui/Arrangement.Horizontal // com.jakewharton.mosaic.ui/Arrangement.End.<get-End>|<get-End>(){}[0]
+    final val SpaceAround // com.jakewharton.mosaic.ui/Arrangement.SpaceAround|{}SpaceAround[0]
+        final fun <get-SpaceAround>(): com.jakewharton.mosaic.ui/Arrangement.HorizontalOrVertical // com.jakewharton.mosaic.ui/Arrangement.SpaceAround.<get-SpaceAround>|<get-SpaceAround>(){}[0]
+    final val SpaceBetween // com.jakewharton.mosaic.ui/Arrangement.SpaceBetween|{}SpaceBetween[0]
+        final fun <get-SpaceBetween>(): com.jakewharton.mosaic.ui/Arrangement.HorizontalOrVertical // com.jakewharton.mosaic.ui/Arrangement.SpaceBetween.<get-SpaceBetween>|<get-SpaceBetween>(){}[0]
+    final val SpaceEvenly // com.jakewharton.mosaic.ui/Arrangement.SpaceEvenly|{}SpaceEvenly[0]
+        final fun <get-SpaceEvenly>(): com.jakewharton.mosaic.ui/Arrangement.HorizontalOrVertical // com.jakewharton.mosaic.ui/Arrangement.SpaceEvenly.<get-SpaceEvenly>|<get-SpaceEvenly>(){}[0]
+    final val Start // com.jakewharton.mosaic.ui/Arrangement.Start|{}Start[0]
+        final fun <get-Start>(): com.jakewharton.mosaic.ui/Arrangement.Horizontal // com.jakewharton.mosaic.ui/Arrangement.Start.<get-Start>|<get-Start>(){}[0]
+    final val Top // com.jakewharton.mosaic.ui/Arrangement.Top|{}Top[0]
+        final fun <get-Top>(): com.jakewharton.mosaic.ui/Arrangement.Vertical // com.jakewharton.mosaic.ui/Arrangement.Top.<get-Top>|<get-Top>(){}[0]
+
+    final fun aligned(com.jakewharton.mosaic.ui/Alignment.Horizontal): com.jakewharton.mosaic.ui/Arrangement.Horizontal // com.jakewharton.mosaic.ui/Arrangement.aligned|aligned(com.jakewharton.mosaic.ui.Alignment.Horizontal){}[0]
+    final fun aligned(com.jakewharton.mosaic.ui/Alignment.Vertical): com.jakewharton.mosaic.ui/Arrangement.Vertical // com.jakewharton.mosaic.ui/Arrangement.aligned|aligned(com.jakewharton.mosaic.ui.Alignment.Vertical){}[0]
+    final fun spacedBy(kotlin/Int): com.jakewharton.mosaic.ui/Arrangement.HorizontalOrVertical // com.jakewharton.mosaic.ui/Arrangement.spacedBy|spacedBy(kotlin.Int){}[0]
+    final fun spacedBy(kotlin/Int, com.jakewharton.mosaic.ui/Alignment.Horizontal): com.jakewharton.mosaic.ui/Arrangement.Horizontal // com.jakewharton.mosaic.ui/Arrangement.spacedBy|spacedBy(kotlin.Int;com.jakewharton.mosaic.ui.Alignment.Horizontal){}[0]
+    final fun spacedBy(kotlin/Int, com.jakewharton.mosaic.ui/Alignment.Vertical): com.jakewharton.mosaic.ui/Arrangement.Vertical // com.jakewharton.mosaic.ui/Arrangement.spacedBy|spacedBy(kotlin.Int;com.jakewharton.mosaic.ui.Alignment.Vertical){}[0]
+
+    abstract interface Horizontal { // com.jakewharton.mosaic.ui/Arrangement.Horizontal|null[0]
+        open val spacing // com.jakewharton.mosaic.ui/Arrangement.Horizontal.spacing|{}spacing[0]
+            open fun <get-spacing>(): kotlin/Int // com.jakewharton.mosaic.ui/Arrangement.Horizontal.spacing.<get-spacing>|<get-spacing>(){}[0]
+
+        abstract fun arrange(kotlin/Int, kotlin/IntArray, kotlin/IntArray) // com.jakewharton.mosaic.ui/Arrangement.Horizontal.arrange|arrange(kotlin.Int;kotlin.IntArray;kotlin.IntArray){}[0]
+    }
+
+    abstract interface HorizontalOrVertical : com.jakewharton.mosaic.ui/Arrangement.Horizontal, com.jakewharton.mosaic.ui/Arrangement.Vertical { // com.jakewharton.mosaic.ui/Arrangement.HorizontalOrVertical|null[0]
+        open val spacing // com.jakewharton.mosaic.ui/Arrangement.HorizontalOrVertical.spacing|{}spacing[0]
+            open fun <get-spacing>(): kotlin/Int // com.jakewharton.mosaic.ui/Arrangement.HorizontalOrVertical.spacing.<get-spacing>|<get-spacing>(){}[0]
+    }
+
+    abstract interface Vertical { // com.jakewharton.mosaic.ui/Arrangement.Vertical|null[0]
+        open val spacing // com.jakewharton.mosaic.ui/Arrangement.Vertical.spacing|{}spacing[0]
+            open fun <get-spacing>(): kotlin/Int // com.jakewharton.mosaic.ui/Arrangement.Vertical.spacing.<get-spacing>|<get-spacing>(){}[0]
+
+        abstract fun arrange(kotlin/Int, kotlin/IntArray, kotlin/IntArray) // com.jakewharton.mosaic.ui/Arrangement.Vertical.arrange|arrange(kotlin.Int;kotlin.IntArray;kotlin.IntArray){}[0]
+    }
+
+    final object Absolute { // com.jakewharton.mosaic.ui/Arrangement.Absolute|null[0]
+        final val Center // com.jakewharton.mosaic.ui/Arrangement.Absolute.Center|{}Center[0]
+            final fun <get-Center>(): com.jakewharton.mosaic.ui/Arrangement.Horizontal // com.jakewharton.mosaic.ui/Arrangement.Absolute.Center.<get-Center>|<get-Center>(){}[0]
+        final val Left // com.jakewharton.mosaic.ui/Arrangement.Absolute.Left|{}Left[0]
+            final fun <get-Left>(): com.jakewharton.mosaic.ui/Arrangement.Horizontal // com.jakewharton.mosaic.ui/Arrangement.Absolute.Left.<get-Left>|<get-Left>(){}[0]
+        final val Right // com.jakewharton.mosaic.ui/Arrangement.Absolute.Right|{}Right[0]
+            final fun <get-Right>(): com.jakewharton.mosaic.ui/Arrangement.Horizontal // com.jakewharton.mosaic.ui/Arrangement.Absolute.Right.<get-Right>|<get-Right>(){}[0]
+        final val SpaceAround // com.jakewharton.mosaic.ui/Arrangement.Absolute.SpaceAround|{}SpaceAround[0]
+            final fun <get-SpaceAround>(): com.jakewharton.mosaic.ui/Arrangement.Horizontal // com.jakewharton.mosaic.ui/Arrangement.Absolute.SpaceAround.<get-SpaceAround>|<get-SpaceAround>(){}[0]
+        final val SpaceBetween // com.jakewharton.mosaic.ui/Arrangement.Absolute.SpaceBetween|{}SpaceBetween[0]
+            final fun <get-SpaceBetween>(): com.jakewharton.mosaic.ui/Arrangement.Horizontal // com.jakewharton.mosaic.ui/Arrangement.Absolute.SpaceBetween.<get-SpaceBetween>|<get-SpaceBetween>(){}[0]
+        final val SpaceEvenly // com.jakewharton.mosaic.ui/Arrangement.Absolute.SpaceEvenly|{}SpaceEvenly[0]
+            final fun <get-SpaceEvenly>(): com.jakewharton.mosaic.ui/Arrangement.Horizontal // com.jakewharton.mosaic.ui/Arrangement.Absolute.SpaceEvenly.<get-SpaceEvenly>|<get-SpaceEvenly>(){}[0]
+
+        final fun aligned(com.jakewharton.mosaic.ui/Alignment.Horizontal): com.jakewharton.mosaic.ui/Arrangement.Horizontal // com.jakewharton.mosaic.ui/Arrangement.Absolute.aligned|aligned(com.jakewharton.mosaic.ui.Alignment.Horizontal){}[0]
+        final fun spacedBy(kotlin/Int): com.jakewharton.mosaic.ui/Arrangement.HorizontalOrVertical // com.jakewharton.mosaic.ui/Arrangement.Absolute.spacedBy|spacedBy(kotlin.Int){}[0]
+        final fun spacedBy(kotlin/Int, com.jakewharton.mosaic.ui/Alignment.Horizontal): com.jakewharton.mosaic.ui/Arrangement.Horizontal // com.jakewharton.mosaic.ui/Arrangement.Absolute.spacedBy|spacedBy(kotlin.Int;com.jakewharton.mosaic.ui.Alignment.Horizontal){}[0]
+        final fun spacedBy(kotlin/Int, com.jakewharton.mosaic.ui/Alignment.Vertical): com.jakewharton.mosaic.ui/Arrangement.Vertical // com.jakewharton.mosaic.ui/Arrangement.Absolute.spacedBy|spacedBy(kotlin.Int;com.jakewharton.mosaic.ui.Alignment.Vertical){}[0]
+    }
+}
+
+final const val com.jakewharton.mosaic.ui/EmptyTextStyle // com.jakewharton.mosaic.ui/EmptyTextStyle|{}EmptyTextStyle[0]
+    final fun <get-EmptyTextStyle>(): kotlin/Int // com.jakewharton.mosaic.ui/EmptyTextStyle.<get-EmptyTextStyle>|<get-EmptyTextStyle>(){}[0]
+final const val com.jakewharton.mosaic.ui/UnspecifiedColor // com.jakewharton.mosaic.ui/UnspecifiedColor|{}UnspecifiedColor[0]
+    final fun <get-UnspecifiedColor>(): kotlin/Int // com.jakewharton.mosaic.ui/UnspecifiedColor.<get-UnspecifiedColor>|<get-UnspecifiedColor>(){}[0]
+final const val com.jakewharton.mosaic.ui/UnspecifiedTextStyle // com.jakewharton.mosaic.ui/UnspecifiedTextStyle|{}UnspecifiedTextStyle[0]
+    final fun <get-UnspecifiedTextStyle>(): kotlin/Int // com.jakewharton.mosaic.ui/UnspecifiedTextStyle.<get-UnspecifiedTextStyle>|<get-UnspecifiedTextStyle>(){}[0]
+
+final val com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_DrawStyle_Fill$stableprop // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_DrawStyle_Fill$stableprop|#static{}com_jakewharton_mosaic_layout_DrawStyle_Fill$stableprop[0]
+final val com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_DrawStyle_Stroke$stableprop // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_DrawStyle_Stroke$stableprop|#static{}com_jakewharton_mosaic_layout_DrawStyle_Stroke$stableprop[0]
+final val com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_KeyEvent$stableprop // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_KeyEvent$stableprop|#static{}com_jakewharton_mosaic_layout_KeyEvent$stableprop[0]
+final val com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_MosaicNode$stableprop // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_MosaicNode$stableprop|#static{}com_jakewharton_mosaic_layout_MosaicNode$stableprop[0]
+final val com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_MosaicNodeLayer$stableprop // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_MosaicNodeLayer$stableprop|#static{}com_jakewharton_mosaic_layout_MosaicNodeLayer$stableprop[0]
+final val com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_NotMeasured$stableprop // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_NotMeasured$stableprop|#static{}com_jakewharton_mosaic_layout_NotMeasured$stableprop[0]
+final val com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_Placeable$stableprop // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_Placeable$stableprop|#static{}com_jakewharton_mosaic_layout_Placeable$stableprop[0]
+final val com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_TextCanvasDrawScope$stableprop // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_TextCanvasDrawScope$stableprop|#static{}com_jakewharton_mosaic_layout_TextCanvasDrawScope$stableprop[0]
+final val com.jakewharton.mosaic.modifier/com_jakewharton_mosaic_modifier_CombinedModifier$stableprop // com.jakewharton.mosaic.modifier/com_jakewharton_mosaic_modifier_CombinedModifier$stableprop|#static{}com_jakewharton_mosaic_modifier_CombinedModifier$stableprop[0]
+final val com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_AnnotatedString$stableprop // com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_AnnotatedString$stableprop|#static{}com_jakewharton_mosaic_text_AnnotatedString$stableprop[0]
+final val com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_AnnotatedStringTextLayout$stableprop // com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_AnnotatedStringTextLayout$stableprop|#static{}com_jakewharton_mosaic_text_AnnotatedStringTextLayout$stableprop[0]
+final val com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_AnnotatedString_Builder$stableprop // com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_AnnotatedString_Builder$stableprop|#static{}com_jakewharton_mosaic_text_AnnotatedString_Builder$stableprop[0]
+final val com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_AnnotatedString_Range$stableprop // com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_AnnotatedString_Range$stableprop|#static{}com_jakewharton_mosaic_text_AnnotatedString_Range$stableprop[0]
+final val com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_SpanStyle$stableprop // com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_SpanStyle$stableprop|#static{}com_jakewharton_mosaic_text_SpanStyle$stableprop[0]
+final val com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_StringTextLayout$stableprop // com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_StringTextLayout$stableprop|#static{}com_jakewharton_mosaic_text_StringTextLayout$stableprop[0]
+final val com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_TextLayout$stableprop // com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_TextLayout$stableprop|#static{}com_jakewharton_mosaic_text_TextLayout$stableprop[0]
+final val com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_Arrangement$stableprop // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_Arrangement$stableprop|#static{}com_jakewharton_mosaic_ui_Arrangement$stableprop[0]
+final val com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_Arrangement_Absolute$stableprop // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_Arrangement_Absolute$stableprop|#static{}com_jakewharton_mosaic_ui_Arrangement_Absolute$stableprop[0]
+final val com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_Arrangement_SpacedAligned$stableprop // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_Arrangement_SpacedAligned$stableprop|#static{}com_jakewharton_mosaic_ui_Arrangement_SpacedAligned$stableprop[0]
+final val com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_BiasAlignment$stableprop // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_BiasAlignment$stableprop|#static{}com_jakewharton_mosaic_ui_BiasAlignment$stableprop[0]
+final val com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_BiasAlignment_Horizontal$stableprop // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_BiasAlignment_Horizontal$stableprop|#static{}com_jakewharton_mosaic_ui_BiasAlignment_Horizontal$stableprop[0]
+final val com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_BiasAlignment_Vertical$stableprop // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_BiasAlignment_Vertical$stableprop|#static{}com_jakewharton_mosaic_ui_BiasAlignment_Vertical$stableprop[0]
+final val com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_BoxMeasurePolicy$stableprop // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_BoxMeasurePolicy$stableprop|#static{}com_jakewharton_mosaic_ui_BoxMeasurePolicy$stableprop[0]
+final val com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_ColumnScopeInstance$stableprop // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_ColumnScopeInstance$stableprop|#static{}com_jakewharton_mosaic_ui_ColumnScopeInstance$stableprop[0]
+final val com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_CrossAxisAlignment$stableprop // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_CrossAxisAlignment$stableprop|#static{}com_jakewharton_mosaic_ui_CrossAxisAlignment$stableprop[0]
+final val com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_DefaultIntrinsicMeasurable$stableprop // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_DefaultIntrinsicMeasurable$stableprop|#static{}com_jakewharton_mosaic_ui_DefaultIntrinsicMeasurable$stableprop[0]
+final val com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_HorizontalAlignModifier$stableprop // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_HorizontalAlignModifier$stableprop|#static{}com_jakewharton_mosaic_ui_HorizontalAlignModifier$stableprop[0]
+final val com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_IntrinsicsMeasureScope$stableprop // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_IntrinsicsMeasureScope$stableprop|#static{}com_jakewharton_mosaic_ui_IntrinsicsMeasureScope$stableprop[0]
+final val com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_LayoutWeightModifier$stableprop // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_LayoutWeightModifier$stableprop|#static{}com_jakewharton_mosaic_ui_LayoutWeightModifier$stableprop[0]
+final val com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_NoContentMeasureScope$stableprop // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_NoContentMeasureScope$stableprop|#static{}com_jakewharton_mosaic_ui_NoContentMeasureScope$stableprop[0]
+final val com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_RowColumnMeasureHelperResult$stableprop // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_RowColumnMeasureHelperResult$stableprop|#static{}com_jakewharton_mosaic_ui_RowColumnMeasureHelperResult$stableprop[0]
+final val com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_RowColumnMeasurePolicy$stableprop // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_RowColumnMeasurePolicy$stableprop|#static{}com_jakewharton_mosaic_ui_RowColumnMeasurePolicy$stableprop[0]
+final val com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_RowColumnMeasurementHelper$stableprop // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_RowColumnMeasurementHelper$stableprop|#static{}com_jakewharton_mosaic_ui_RowColumnMeasurementHelper$stableprop[0]
+final val com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_RowColumnParentData$stableprop // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_RowColumnParentData$stableprop|#static{}com_jakewharton_mosaic_ui_RowColumnParentData$stableprop[0]
+final val com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_RowScopeInstance$stableprop // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_RowScopeInstance$stableprop|#static{}com_jakewharton_mosaic_ui_RowScopeInstance$stableprop[0]
+final val com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_VerticalAlignModifier$stableprop // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_VerticalAlignModifier$stableprop|#static{}com_jakewharton_mosaic_ui_VerticalAlignModifier$stableprop[0]
+final val com.jakewharton.mosaic.ui/isEmptyTextStyle // com.jakewharton.mosaic.ui/isEmptyTextStyle|@com.jakewharton.mosaic.ui.TextStyle{}isEmptyTextStyle[0]
+    final inline fun (com.jakewharton.mosaic.ui/TextStyle).<get-isEmptyTextStyle>(): kotlin/Boolean // com.jakewharton.mosaic.ui/isEmptyTextStyle.<get-isEmptyTextStyle>|<get-isEmptyTextStyle>@com.jakewharton.mosaic.ui.TextStyle(){}[0]
+final val com.jakewharton.mosaic.ui/isNotEmptyTextStyle // com.jakewharton.mosaic.ui/isNotEmptyTextStyle|@com.jakewharton.mosaic.ui.TextStyle{}isNotEmptyTextStyle[0]
+    final inline fun (com.jakewharton.mosaic.ui/TextStyle).<get-isNotEmptyTextStyle>(): kotlin/Boolean // com.jakewharton.mosaic.ui/isNotEmptyTextStyle.<get-isNotEmptyTextStyle>|<get-isNotEmptyTextStyle>@com.jakewharton.mosaic.ui.TextStyle(){}[0]
+final val com.jakewharton.mosaic.ui/isSpecifiedColor // com.jakewharton.mosaic.ui/isSpecifiedColor|@com.jakewharton.mosaic.ui.Color{}isSpecifiedColor[0]
+    final inline fun (com.jakewharton.mosaic.ui/Color).<get-isSpecifiedColor>(): kotlin/Boolean // com.jakewharton.mosaic.ui/isSpecifiedColor.<get-isSpecifiedColor>|<get-isSpecifiedColor>@com.jakewharton.mosaic.ui.Color(){}[0]
+final val com.jakewharton.mosaic.ui/isSpecifiedTextStyle // com.jakewharton.mosaic.ui/isSpecifiedTextStyle|@com.jakewharton.mosaic.ui.TextStyle{}isSpecifiedTextStyle[0]
+    final inline fun (com.jakewharton.mosaic.ui/TextStyle).<get-isSpecifiedTextStyle>(): kotlin/Boolean // com.jakewharton.mosaic.ui/isSpecifiedTextStyle.<get-isSpecifiedTextStyle>|<get-isSpecifiedTextStyle>@com.jakewharton.mosaic.ui.TextStyle(){}[0]
+final val com.jakewharton.mosaic.ui/isUnspecifiedColor // com.jakewharton.mosaic.ui/isUnspecifiedColor|@com.jakewharton.mosaic.ui.Color{}isUnspecifiedColor[0]
+    final inline fun (com.jakewharton.mosaic.ui/Color).<get-isUnspecifiedColor>(): kotlin/Boolean // com.jakewharton.mosaic.ui/isUnspecifiedColor.<get-isUnspecifiedColor>|<get-isUnspecifiedColor>@com.jakewharton.mosaic.ui.Color(){}[0]
+final val com.jakewharton.mosaic.ui/isUnspecifiedTextStyle // com.jakewharton.mosaic.ui/isUnspecifiedTextStyle|@com.jakewharton.mosaic.ui.TextStyle{}isUnspecifiedTextStyle[0]
+    final inline fun (com.jakewharton.mosaic.ui/TextStyle).<get-isUnspecifiedTextStyle>(): kotlin/Boolean // com.jakewharton.mosaic.ui/isUnspecifiedTextStyle.<get-isUnspecifiedTextStyle>|<get-isUnspecifiedTextStyle>@com.jakewharton.mosaic.ui.TextStyle(){}[0]
+final val com.jakewharton.mosaic/LocalTerminal // com.jakewharton.mosaic/LocalTerminal|{}LocalTerminal[0]
+    final fun <get-LocalTerminal>(): androidx.compose.runtime/ProvidableCompositionLocal<com.jakewharton.mosaic/Terminal> // com.jakewharton.mosaic/LocalTerminal.<get-LocalTerminal>|<get-LocalTerminal>(){}[0]
+final val com.jakewharton.mosaic/com_jakewharton_mosaic_AnsiRendering$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_AnsiRendering$stableprop|#static{}com_jakewharton_mosaic_AnsiRendering$stableprop[0]
+final val com.jakewharton.mosaic/com_jakewharton_mosaic_DebugRendering$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_DebugRendering$stableprop|#static{}com_jakewharton_mosaic_DebugRendering$stableprop[0]
+final val com.jakewharton.mosaic/com_jakewharton_mosaic_GlobalSnapshotManager$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_GlobalSnapshotManager$stableprop|#static{}com_jakewharton_mosaic_GlobalSnapshotManager$stableprop[0]
+final val com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicComposition$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicComposition$stableprop|#static{}com_jakewharton_mosaic_MosaicComposition$stableprop[0]
+final val com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicNodeApplier$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicNodeApplier$stableprop|#static{}com_jakewharton_mosaic_MosaicNodeApplier$stableprop[0]
+final val com.jakewharton.mosaic/com_jakewharton_mosaic_Terminal$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_Terminal$stableprop|#static{}com_jakewharton_mosaic_Terminal$stableprop[0]
+final val com.jakewharton.mosaic/com_jakewharton_mosaic_TextPixel$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_TextPixel$stableprop|#static{}com_jakewharton_mosaic_TextPixel$stableprop[0]
+final val com.jakewharton.mosaic/com_jakewharton_mosaic_TextSurface$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_TextSurface$stableprop|#static{}com_jakewharton_mosaic_TextSurface$stableprop[0]
+
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/aspectRatio(kotlin/Float, kotlin/Boolean = ...): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/aspectRatio|aspectRatio@com.jakewharton.mosaic.modifier.Modifier(kotlin.Float;kotlin.Boolean){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/background(com.jakewharton.mosaic.ui/Color): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/background|background@com.jakewharton.mosaic.modifier.Modifier(com.jakewharton.mosaic.ui.Color){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/defaultMinSize(kotlin/Int = ..., kotlin/Int = ...): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/defaultMinSize|defaultMinSize@com.jakewharton.mosaic.modifier.Modifier(kotlin.Int;kotlin.Int){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/drawBehind(kotlin/Function1<com.jakewharton.mosaic.layout/DrawScope, kotlin/Unit>): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/drawBehind|drawBehind@com.jakewharton.mosaic.modifier.Modifier(kotlin.Function1<com.jakewharton.mosaic.layout.DrawScope,kotlin.Unit>){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/fillMaxHeight(kotlin/Float = ...): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/fillMaxHeight|fillMaxHeight@com.jakewharton.mosaic.modifier.Modifier(kotlin.Float){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/fillMaxSize(kotlin/Float = ...): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/fillMaxSize|fillMaxSize@com.jakewharton.mosaic.modifier.Modifier(kotlin.Float){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/fillMaxWidth(kotlin/Float = ...): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/fillMaxWidth|fillMaxWidth@com.jakewharton.mosaic.modifier.Modifier(kotlin.Float){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/height(kotlin/Int): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/height|height@com.jakewharton.mosaic.modifier.Modifier(kotlin.Int){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/heightIn(kotlin/Int = ..., kotlin/Int = ...): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/heightIn|heightIn@com.jakewharton.mosaic.modifier.Modifier(kotlin.Int;kotlin.Int){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/layout(kotlin/Function3<com.jakewharton.mosaic.layout/MeasureScope, com.jakewharton.mosaic.layout/Measurable, com.jakewharton.mosaic.ui.unit/Constraints, com.jakewharton.mosaic.layout/MeasureResult>): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/layout|layout@com.jakewharton.mosaic.modifier.Modifier(kotlin.Function3<com.jakewharton.mosaic.layout.MeasureScope,com.jakewharton.mosaic.layout.Measurable,com.jakewharton.mosaic.ui.unit.Constraints,com.jakewharton.mosaic.layout.MeasureResult>){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/offset(kotlin/Function0<com.jakewharton.mosaic.ui.unit/IntOffset>): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/offset|offset@com.jakewharton.mosaic.modifier.Modifier(kotlin.Function0<com.jakewharton.mosaic.ui.unit.IntOffset>){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/offset(kotlin/Int = ..., kotlin/Int = ...): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/offset|offset@com.jakewharton.mosaic.modifier.Modifier(kotlin.Int;kotlin.Int){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/onKeyEvent(kotlin/Function1<com.jakewharton.mosaic.layout/KeyEvent, kotlin/Boolean>): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/onKeyEvent|onKeyEvent@com.jakewharton.mosaic.modifier.Modifier(kotlin.Function1<com.jakewharton.mosaic.layout.KeyEvent,kotlin.Boolean>){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/onPreviewKeyEvent(kotlin/Function1<com.jakewharton.mosaic.layout/KeyEvent, kotlin/Boolean>): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/onPreviewKeyEvent|onPreviewKeyEvent@com.jakewharton.mosaic.modifier.Modifier(kotlin.Function1<com.jakewharton.mosaic.layout.KeyEvent,kotlin.Boolean>){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/padding(kotlin/Int = ..., kotlin/Int = ...): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/padding|padding@com.jakewharton.mosaic.modifier.Modifier(kotlin.Int;kotlin.Int){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/padding(kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ...): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/padding|padding@com.jakewharton.mosaic.modifier.Modifier(kotlin.Int;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/padding(kotlin/Int): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/padding|padding@com.jakewharton.mosaic.modifier.Modifier(kotlin.Int){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/requiredHeight(kotlin/Int): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/requiredHeight|requiredHeight@com.jakewharton.mosaic.modifier.Modifier(kotlin.Int){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/requiredHeightIn(kotlin/Int = ..., kotlin/Int = ...): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/requiredHeightIn|requiredHeightIn@com.jakewharton.mosaic.modifier.Modifier(kotlin.Int;kotlin.Int){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/requiredSize(com.jakewharton.mosaic.ui.unit/IntSize): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/requiredSize|requiredSize@com.jakewharton.mosaic.modifier.Modifier(com.jakewharton.mosaic.ui.unit.IntSize){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/requiredSize(kotlin/Int): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/requiredSize|requiredSize@com.jakewharton.mosaic.modifier.Modifier(kotlin.Int){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/requiredSize(kotlin/Int, kotlin/Int): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/requiredSize|requiredSize@com.jakewharton.mosaic.modifier.Modifier(kotlin.Int;kotlin.Int){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/requiredSizeIn(kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ...): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/requiredSizeIn|requiredSizeIn@com.jakewharton.mosaic.modifier.Modifier(kotlin.Int;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/requiredWidth(kotlin/Int): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/requiredWidth|requiredWidth@com.jakewharton.mosaic.modifier.Modifier(kotlin.Int){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/requiredWidthIn(kotlin/Int = ..., kotlin/Int = ...): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/requiredWidthIn|requiredWidthIn@com.jakewharton.mosaic.modifier.Modifier(kotlin.Int;kotlin.Int){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/size(com.jakewharton.mosaic.ui.unit/IntSize): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/size|size@com.jakewharton.mosaic.modifier.Modifier(com.jakewharton.mosaic.ui.unit.IntSize){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/size(kotlin/Int): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/size|size@com.jakewharton.mosaic.modifier.Modifier(kotlin.Int){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/size(kotlin/Int, kotlin/Int): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/size|size@com.jakewharton.mosaic.modifier.Modifier(kotlin.Int;kotlin.Int){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/sizeIn(kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ...): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/sizeIn|sizeIn@com.jakewharton.mosaic.modifier.Modifier(kotlin.Int;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/width(kotlin/Int): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/width|width@com.jakewharton.mosaic.modifier.Modifier(kotlin.Int){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/widthIn(kotlin/Int = ..., kotlin/Int = ...): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/widthIn|widthIn@com.jakewharton.mosaic.modifier.Modifier(kotlin.Int;kotlin.Int){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/wrapContentHeight(com.jakewharton.mosaic.ui/Alignment.Vertical = ..., kotlin/Boolean = ...): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/wrapContentHeight|wrapContentHeight@com.jakewharton.mosaic.modifier.Modifier(com.jakewharton.mosaic.ui.Alignment.Vertical;kotlin.Boolean){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/wrapContentSize(com.jakewharton.mosaic.ui/Alignment = ..., kotlin/Boolean = ...): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/wrapContentSize|wrapContentSize@com.jakewharton.mosaic.modifier.Modifier(com.jakewharton.mosaic.ui.Alignment;kotlin.Boolean){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/wrapContentWidth(com.jakewharton.mosaic.ui/Alignment.Horizontal = ..., kotlin/Boolean = ...): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/wrapContentWidth|wrapContentWidth@com.jakewharton.mosaic.modifier.Modifier(com.jakewharton.mosaic.ui.Alignment.Horizontal;kotlin.Boolean){}[0]
+final fun (com.jakewharton.mosaic.ui.unit/Constraints).com.jakewharton.mosaic.ui.unit/constrain(com.jakewharton.mosaic.ui.unit/Constraints): com.jakewharton.mosaic.ui.unit/Constraints // com.jakewharton.mosaic.ui.unit/constrain|constrain@com.jakewharton.mosaic.ui.unit.Constraints(com.jakewharton.mosaic.ui.unit.Constraints){}[0]
+final fun (com.jakewharton.mosaic.ui.unit/Constraints).com.jakewharton.mosaic.ui.unit/constrain(com.jakewharton.mosaic.ui.unit/IntSize): com.jakewharton.mosaic.ui.unit/IntSize // com.jakewharton.mosaic.ui.unit/constrain|constrain@com.jakewharton.mosaic.ui.unit.Constraints(com.jakewharton.mosaic.ui.unit.IntSize){}[0]
+final fun (com.jakewharton.mosaic.ui.unit/Constraints).com.jakewharton.mosaic.ui.unit/constrainHeight(kotlin/Int): kotlin/Int // com.jakewharton.mosaic.ui.unit/constrainHeight|constrainHeight@com.jakewharton.mosaic.ui.unit.Constraints(kotlin.Int){}[0]
+final fun (com.jakewharton.mosaic.ui.unit/Constraints).com.jakewharton.mosaic.ui.unit/constrainWidth(kotlin/Int): kotlin/Int // com.jakewharton.mosaic.ui.unit/constrainWidth|constrainWidth@com.jakewharton.mosaic.ui.unit.Constraints(kotlin.Int){}[0]
+final fun (com.jakewharton.mosaic.ui.unit/Constraints).com.jakewharton.mosaic.ui.unit/isSatisfiedBy(com.jakewharton.mosaic.ui.unit/IntSize): kotlin/Boolean // com.jakewharton.mosaic.ui.unit/isSatisfiedBy|isSatisfiedBy@com.jakewharton.mosaic.ui.unit.Constraints(com.jakewharton.mosaic.ui.unit.IntSize){}[0]
+final fun (com.jakewharton.mosaic.ui.unit/Constraints).com.jakewharton.mosaic.ui.unit/offset(kotlin/Int = ..., kotlin/Int = ...): com.jakewharton.mosaic.ui.unit/Constraints // com.jakewharton.mosaic.ui.unit/offset|offset@com.jakewharton.mosaic.ui.unit.Constraints(kotlin.Int;kotlin.Int){}[0]
+final fun <#A: kotlin/Any?> com.jakewharton.mosaic.ui/Static(androidx.compose.runtime.snapshots/SnapshotStateList<#A>, kotlin/Function3<#A, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int) // com.jakewharton.mosaic.ui/Static|Static(androidx.compose.runtime.snapshots.SnapshotStateList<0:0>;kotlin.Function3<0:0,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int){0§<kotlin.Any?>}[0]
+final fun com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_DrawStyle_Fill$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_DrawStyle_Fill$stableprop_getter|com_jakewharton_mosaic_layout_DrawStyle_Fill$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_DrawStyle_Stroke$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_DrawStyle_Stroke$stableprop_getter|com_jakewharton_mosaic_layout_DrawStyle_Stroke$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_KeyEvent$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_KeyEvent$stableprop_getter|com_jakewharton_mosaic_layout_KeyEvent$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_MosaicNode$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_MosaicNode$stableprop_getter|com_jakewharton_mosaic_layout_MosaicNode$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_MosaicNodeLayer$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_MosaicNodeLayer$stableprop_getter|com_jakewharton_mosaic_layout_MosaicNodeLayer$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_NotMeasured$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_NotMeasured$stableprop_getter|com_jakewharton_mosaic_layout_NotMeasured$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_Placeable$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_Placeable$stableprop_getter|com_jakewharton_mosaic_layout_Placeable$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_TextCanvasDrawScope$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_TextCanvasDrawScope$stableprop_getter|com_jakewharton_mosaic_layout_TextCanvasDrawScope$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.modifier/com_jakewharton_mosaic_modifier_CombinedModifier$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.modifier/com_jakewharton_mosaic_modifier_CombinedModifier$stableprop_getter|com_jakewharton_mosaic_modifier_CombinedModifier$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.text/AnnotatedString(kotlin/String, com.jakewharton.mosaic.text/SpanStyle): com.jakewharton.mosaic.text/AnnotatedString // com.jakewharton.mosaic.text/AnnotatedString|AnnotatedString(kotlin.String;com.jakewharton.mosaic.text.SpanStyle){}[0]
+final fun com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_AnnotatedString$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_AnnotatedString$stableprop_getter|com_jakewharton_mosaic_text_AnnotatedString$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_AnnotatedStringTextLayout$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_AnnotatedStringTextLayout$stableprop_getter|com_jakewharton_mosaic_text_AnnotatedStringTextLayout$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_AnnotatedString_Builder$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_AnnotatedString_Builder$stableprop_getter|com_jakewharton_mosaic_text_AnnotatedString_Builder$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_AnnotatedString_Range$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_AnnotatedString_Range$stableprop_getter|com_jakewharton_mosaic_text_AnnotatedString_Range$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_SpanStyle$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_SpanStyle$stableprop_getter|com_jakewharton_mosaic_text_SpanStyle$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_StringTextLayout$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_StringTextLayout$stableprop_getter|com_jakewharton_mosaic_text_StringTextLayout$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_TextLayout$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.text/com_jakewharton_mosaic_text_TextLayout$stableprop_getter|com_jakewharton_mosaic_text_TextLayout$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.ui.unit/Constraints(kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ..., kotlin/Int = ...): com.jakewharton.mosaic.ui.unit/Constraints // com.jakewharton.mosaic.ui.unit/Constraints|Constraints(kotlin.Int;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun com.jakewharton.mosaic.ui.unit/IntOffset(kotlin/Int, kotlin/Int): com.jakewharton.mosaic.ui.unit/IntOffset // com.jakewharton.mosaic.ui.unit/IntOffset|IntOffset(kotlin.Int;kotlin.Int){}[0]
+final fun com.jakewharton.mosaic.ui.unit/IntSize(kotlin/Int, kotlin/Int): com.jakewharton.mosaic.ui.unit/IntSize // com.jakewharton.mosaic.ui.unit/IntSize|IntSize(kotlin.Int;kotlin.Int){}[0]
+final fun com.jakewharton.mosaic.ui/Box(com.jakewharton.mosaic.modifier/Modifier?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.ui/Box|Box(com.jakewharton.mosaic.modifier.Modifier?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun com.jakewharton.mosaic.ui/Box(com.jakewharton.mosaic.modifier/Modifier?, com.jakewharton.mosaic.ui/Alignment?, kotlin/Boolean, kotlin/Function3<com.jakewharton.mosaic.ui/BoxScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.ui/Box|Box(com.jakewharton.mosaic.modifier.Modifier?;com.jakewharton.mosaic.ui.Alignment?;kotlin.Boolean;kotlin.Function3<com.jakewharton.mosaic.ui.BoxScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun com.jakewharton.mosaic.ui/Color(kotlin/Float, kotlin/Float, kotlin/Float): com.jakewharton.mosaic.ui/Color // com.jakewharton.mosaic.ui/Color|Color(kotlin.Float;kotlin.Float;kotlin.Float){}[0]
+final fun com.jakewharton.mosaic.ui/Color(kotlin/Int, kotlin/Int, kotlin/Int): com.jakewharton.mosaic.ui/Color // com.jakewharton.mosaic.ui/Color|Color(kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+final fun com.jakewharton.mosaic.ui/Column(com.jakewharton.mosaic.modifier/Modifier?, com.jakewharton.mosaic.ui/Arrangement.Vertical?, com.jakewharton.mosaic.ui/Alignment.Horizontal?, kotlin/Function3<com.jakewharton.mosaic.ui/ColumnScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.ui/Column|Column(com.jakewharton.mosaic.modifier.Modifier?;com.jakewharton.mosaic.ui.Arrangement.Vertical?;com.jakewharton.mosaic.ui.Alignment.Horizontal?;kotlin.Function3<com.jakewharton.mosaic.ui.ColumnScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun com.jakewharton.mosaic.ui/Filler(kotlin/Char, com.jakewharton.mosaic.modifier/Modifier?, com.jakewharton.mosaic.ui/Color, com.jakewharton.mosaic.ui/Color, com.jakewharton.mosaic.ui/TextStyle, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.ui/Filler|Filler(kotlin.Char;com.jakewharton.mosaic.modifier.Modifier?;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun com.jakewharton.mosaic.ui/Filler(kotlin/Int, com.jakewharton.mosaic.modifier/Modifier?, com.jakewharton.mosaic.ui/Color, com.jakewharton.mosaic.ui/Color, com.jakewharton.mosaic.ui/TextStyle, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.ui/Filler|Filler(kotlin.Int;com.jakewharton.mosaic.modifier.Modifier?;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun com.jakewharton.mosaic.ui/Layout(kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, com.jakewharton.mosaic.modifier/Modifier?, kotlin/Function0<kotlin/String>?, com.jakewharton.mosaic.layout/MeasurePolicy, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.ui/Layout|Layout(kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;com.jakewharton.mosaic.modifier.Modifier?;kotlin.Function0<kotlin.String>?;com.jakewharton.mosaic.layout.MeasurePolicy;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun com.jakewharton.mosaic.ui/Row(com.jakewharton.mosaic.modifier/Modifier?, com.jakewharton.mosaic.ui/Arrangement.Horizontal?, com.jakewharton.mosaic.ui/Alignment.Vertical?, kotlin/Function3<com.jakewharton.mosaic.ui/RowScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.ui/Row|Row(com.jakewharton.mosaic.modifier.Modifier?;com.jakewharton.mosaic.ui.Arrangement.Horizontal?;com.jakewharton.mosaic.ui.Alignment.Vertical?;kotlin.Function3<com.jakewharton.mosaic.ui.RowScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun com.jakewharton.mosaic.ui/Spacer(com.jakewharton.mosaic.modifier/Modifier?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.ui/Spacer|Spacer(com.jakewharton.mosaic.modifier.Modifier?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun com.jakewharton.mosaic.ui/Text(com.jakewharton.mosaic.text/AnnotatedString, com.jakewharton.mosaic.modifier/Modifier?, com.jakewharton.mosaic.ui/Color, com.jakewharton.mosaic.ui/Color, com.jakewharton.mosaic.ui/TextStyle, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.ui/Text|Text(com.jakewharton.mosaic.text.AnnotatedString;com.jakewharton.mosaic.modifier.Modifier?;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun com.jakewharton.mosaic.ui/Text(kotlin/String, com.jakewharton.mosaic.modifier/Modifier?, com.jakewharton.mosaic.ui/Color, com.jakewharton.mosaic.ui/Color, com.jakewharton.mosaic.ui/TextStyle, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.ui/Text|Text(kotlin.String;com.jakewharton.mosaic.modifier.Modifier?;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_Arrangement$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_Arrangement$stableprop_getter|com_jakewharton_mosaic_ui_Arrangement$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_Arrangement_Absolute$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_Arrangement_Absolute$stableprop_getter|com_jakewharton_mosaic_ui_Arrangement_Absolute$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_Arrangement_SpacedAligned$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_Arrangement_SpacedAligned$stableprop_getter|com_jakewharton_mosaic_ui_Arrangement_SpacedAligned$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_BiasAlignment$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_BiasAlignment$stableprop_getter|com_jakewharton_mosaic_ui_BiasAlignment$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_BiasAlignment_Horizontal$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_BiasAlignment_Horizontal$stableprop_getter|com_jakewharton_mosaic_ui_BiasAlignment_Horizontal$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_BiasAlignment_Vertical$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_BiasAlignment_Vertical$stableprop_getter|com_jakewharton_mosaic_ui_BiasAlignment_Vertical$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_BoxMeasurePolicy$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_BoxMeasurePolicy$stableprop_getter|com_jakewharton_mosaic_ui_BoxMeasurePolicy$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_ColumnScopeInstance$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_ColumnScopeInstance$stableprop_getter|com_jakewharton_mosaic_ui_ColumnScopeInstance$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_CrossAxisAlignment$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_CrossAxisAlignment$stableprop_getter|com_jakewharton_mosaic_ui_CrossAxisAlignment$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_DefaultIntrinsicMeasurable$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_DefaultIntrinsicMeasurable$stableprop_getter|com_jakewharton_mosaic_ui_DefaultIntrinsicMeasurable$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_HorizontalAlignModifier$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_HorizontalAlignModifier$stableprop_getter|com_jakewharton_mosaic_ui_HorizontalAlignModifier$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_IntrinsicsMeasureScope$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_IntrinsicsMeasureScope$stableprop_getter|com_jakewharton_mosaic_ui_IntrinsicsMeasureScope$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_LayoutWeightModifier$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_LayoutWeightModifier$stableprop_getter|com_jakewharton_mosaic_ui_LayoutWeightModifier$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_NoContentMeasureScope$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_NoContentMeasureScope$stableprop_getter|com_jakewharton_mosaic_ui_NoContentMeasureScope$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_RowColumnMeasureHelperResult$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_RowColumnMeasureHelperResult$stableprop_getter|com_jakewharton_mosaic_ui_RowColumnMeasureHelperResult$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_RowColumnMeasurePolicy$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_RowColumnMeasurePolicy$stableprop_getter|com_jakewharton_mosaic_ui_RowColumnMeasurePolicy$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_RowColumnMeasurementHelper$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_RowColumnMeasurementHelper$stableprop_getter|com_jakewharton_mosaic_ui_RowColumnMeasurementHelper$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_RowColumnParentData$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_RowColumnParentData$stableprop_getter|com_jakewharton_mosaic_ui_RowColumnParentData$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_RowScopeInstance$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_RowScopeInstance$stableprop_getter|com_jakewharton_mosaic_ui_RowScopeInstance$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_VerticalAlignModifier$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_VerticalAlignModifier$stableprop_getter|com_jakewharton_mosaic_ui_VerticalAlignModifier$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic/com_jakewharton_mosaic_AnsiRendering$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_AnsiRendering$stableprop_getter|com_jakewharton_mosaic_AnsiRendering$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic/com_jakewharton_mosaic_DebugRendering$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_DebugRendering$stableprop_getter|com_jakewharton_mosaic_DebugRendering$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic/com_jakewharton_mosaic_GlobalSnapshotManager$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_GlobalSnapshotManager$stableprop_getter|com_jakewharton_mosaic_GlobalSnapshotManager$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicComposition$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicComposition$stableprop_getter|com_jakewharton_mosaic_MosaicComposition$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicNodeApplier$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicNodeApplier$stableprop_getter|com_jakewharton_mosaic_MosaicNodeApplier$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic/com_jakewharton_mosaic_Terminal$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_Terminal$stableprop_getter|com_jakewharton_mosaic_Terminal$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic/com_jakewharton_mosaic_TextPixel$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_TextPixel$stableprop_getter|com_jakewharton_mosaic_TextPixel$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic/com_jakewharton_mosaic_TextSurface$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_TextSurface$stableprop_getter|com_jakewharton_mosaic_TextSurface$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic/renderMosaic(kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>): kotlin/String // com.jakewharton.mosaic/renderMosaic|renderMosaic(kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>){}[0]
+final fun com.jakewharton.mosaic/runMosaicBlocking(kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>) // com.jakewharton.mosaic/runMosaicBlocking|runMosaicBlocking(kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>){}[0]
+final inline fun (com.jakewharton.mosaic.ui/Color).com.jakewharton.mosaic.ui/takeOrElse(kotlin/Function0<com.jakewharton.mosaic.ui/Color>): com.jakewharton.mosaic.ui/Color // com.jakewharton.mosaic.ui/takeOrElse|takeOrElse@com.jakewharton.mosaic.ui.Color(kotlin.Function0<com.jakewharton.mosaic.ui.Color>){}[0]
+final inline fun (com.jakewharton.mosaic.ui/TextStyle).com.jakewharton.mosaic.ui/takeOrElse(kotlin/Function0<com.jakewharton.mosaic.ui/TextStyle>): com.jakewharton.mosaic.ui/TextStyle // com.jakewharton.mosaic.ui/takeOrElse|takeOrElse@com.jakewharton.mosaic.ui.TextStyle(kotlin.Function0<com.jakewharton.mosaic.ui.TextStyle>){}[0]
+final inline fun <#A: kotlin/Any> (com.jakewharton.mosaic.text/AnnotatedString.Builder).com.jakewharton.mosaic.text/withStyle(com.jakewharton.mosaic.text/SpanStyle, kotlin/Function1<com.jakewharton.mosaic.text/AnnotatedString.Builder, #A>): #A // com.jakewharton.mosaic.text/withStyle|withStyle@com.jakewharton.mosaic.text.AnnotatedString.Builder(com.jakewharton.mosaic.text.SpanStyle;kotlin.Function1<com.jakewharton.mosaic.text.AnnotatedString.Builder,0:0>){0§<kotlin.Any>}[0]
+final inline fun com.jakewharton.mosaic.text/buildAnnotatedString(kotlin/Function1<com.jakewharton.mosaic.text/AnnotatedString.Builder, kotlin/Unit>): com.jakewharton.mosaic.text/AnnotatedString // com.jakewharton.mosaic.text/buildAnnotatedString|buildAnnotatedString(kotlin.Function1<com.jakewharton.mosaic.text.AnnotatedString.Builder,kotlin.Unit>){}[0]
+final suspend fun com.jakewharton.mosaic/runMosaic(kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>) // com.jakewharton.mosaic/runMosaic|runMosaic(kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>){}[0]

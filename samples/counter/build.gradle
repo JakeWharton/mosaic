@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
-import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
 apply plugin: 'org.jetbrains.kotlin.plugin.compose'
@@ -23,6 +23,11 @@ kotlin {
 	targets.withType(KotlinNativeTarget).configureEach { target ->
 		target.binaries.executable {
 			entryPoint = 'example.main'
+			if (buildType == NativeBuildType.DEBUG) {
+				linkTaskProvider.configure {
+					enabled = false
+				}
+			}
 		}
 	}
 

@@ -62,6 +62,10 @@ internal abstract class MosaicNodeLayer(
 		next?.drawTo(canvas)
 	}
 
+	open fun sendKeyEvent(keyEvent: KeyEvent): Boolean {
+		return next?.sendKeyEvent(keyEvent) ?: false
+	}
+
 	override fun minIntrinsicWidth(height: Int): Int {
 		return next?.minIntrinsicWidth(height) ?: 0
 	}
@@ -106,6 +110,8 @@ internal class MosaicNode(
 				is LayoutModifier -> LayoutLayer(element, nextLayer)
 
 				is DrawModifier -> DrawLayer(element, nextLayer)
+
+				is KeyModifier -> KeyLayer(element, nextLayer)
 
 				is ParentDataModifier -> {
 					parentData = element.modifyParentData(parentData)
@@ -154,6 +160,10 @@ internal class MosaicNode(
 		onStaticDraw?.invoke()
 	}
 
+	fun sendKeyEvent(keyEvent: KeyEvent): Boolean {
+		return topLayer.sendKeyEvent(keyEvent)
+	}
+
 	override fun minIntrinsicWidth(height: Int): Int {
 		return topLayer.minIntrinsicWidth(height)
 	}
@@ -186,6 +196,15 @@ private class BottomLayer(
 				child.topLayer.drawTo(canvas)
 			}
 		}
+	}
+
+	override fun sendKeyEvent(keyEvent: KeyEvent): Boolean {
+		for (child in node.children) {
+			if (child.sendKeyEvent(keyEvent)) {
+				return true
+			}
+		}
+		return false
 	}
 
 	override fun minIntrinsicWidth(height: Int): Int {
@@ -248,4 +267,14 @@ private class DrawLayer(
 		canvas.translationX = oldX
 		canvas.translationY = oldY
 	}
+}
+
+private class KeyLayer(
+	private val element: KeyModifier,
+	private val lowerLayer: MosaicNodeLayer,
+) : MosaicNodeLayer(lowerLayer, false) {
+	override fun sendKeyEvent(keyEvent: KeyEvent) =
+		element.onPreKeyEvent(keyEvent) ||
+			lowerLayer.sendKeyEvent(keyEvent) ||
+			element.onKeyEvent(keyEvent)
 }

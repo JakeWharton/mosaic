@@ -1,0 +1,11 @@
+// Klib ABI Dump
+// Targets: [linuxArm64, linuxX64, macosArm64, macosX64, mingwX64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <com.jakewharton.mosaic:mosaic-terminal>
+final object com.jakewharton.mosaic.terminal/Tty { // com.jakewharton.mosaic.terminal/Tty|null[0]
+    final fun enableRawMode(): kotlin/AutoCloseable // com.jakewharton.mosaic.terminal/Tty.enableRawMode|enableRawMode(){}[0]
+}

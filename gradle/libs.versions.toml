@@ -1,6 +1,7 @@
 [versions]
 kotlin = "2.0.20"
 kotlinx-coroutines = "1.8.1"
+mordant = "3.0.0"
 
 [libraries]
 kotlin-plugin-core = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -16,14 +17,19 @@ maven-publish-gradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.29.0"
 dokka-gradlePlugin = "org.jetbrains.dokka:dokka-gradle-plugin:1.9.20"
 poko-gradlePlugin = "dev.drewhamilton.poko:poko-gradle-plugin:0.17.0"
 binary-compatibility-validator-gradlePlugin = "org.jetbrains.kotlinx:binary-compatibility-validator:0.16.3"
+cklib-gradlePlugin = "co.touchlab:cklib-gradle-plugin:0.3.3"
 
 spotless-gradlePlugin = "com.diffplug.spotless:spotless-plugin-gradle:6.25.0"
 ktlint-core = "com.pinterest.ktlint:ktlint-cli:1.3.1"
-ktlint-composeRules = "io.nlopez.compose.rules:ktlint:0.4.10"
+ktlint-composeRules = "io.nlopez.compose.rules:ktlint:0.4.12"
+
+mordant-core = { module = "com.github.ajalt.mordant:mordant-core", version.ref = "mordant" }
+mordant-jvmJna = { module = "com.github.ajalt.mordant:mordant-jvm-jna", version.ref = "mordant" }
 
 jansi = "org.fusesource.jansi:jansi:2.4.1"
-mordant = "com.github.ajalt.mordant:mordant:2.7.2"
+clikt = "com.github.ajalt.clikt:clikt:4.4.0"
 codepoints = "de.cketti.unicode:kotlin-codepoints:0.9.0"
+finalizationHook = "com.jakewharton.finalization:finalization-hook:0.1.0"
 
 junit4 = "junit:junit:4.13.2"
 assertk = "com.willowtreeapps.assertk:assertk:0.28.1"

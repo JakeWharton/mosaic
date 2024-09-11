@@ -1,0 +1,5 @@
+public final class com/jakewharton/mosaic/terminal/Tty {
+	public static final field INSTANCE Lcom/jakewharton/mosaic/terminal/Tty;
+	public final fun enableRawMode ()Ljava/lang/AutoCloseable;
+}
+

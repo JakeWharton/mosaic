@@ -1,12 +1,39 @@
-apply plugin: 'org.jetbrains.kotlin.jvm'
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
+
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
 apply plugin: 'org.jetbrains.kotlin.plugin.compose'
+apply from: "$rootDir/addAllTargets.gradle"
 apply plugin: 'application'
 
 application {
 	mainClass = 'example.RobotKt'
 }
 
-dependencies {
-	implementation projects.mosaicRuntime
-	implementation 'org.jline:jline:3.26.3'
+kotlin {
+	sourceSets {
+		commonMain {
+			dependencies {
+				implementation projects.mosaicRuntime
+			}
+		}
+	}
+
+	targets.withType(KotlinNativeTarget).configureEach { target ->
+		target.binaries.executable {
+			entryPoint = 'example.main'
+			if (buildType == NativeBuildType.DEBUG) {
+				linkTaskProvider.configure {
+					enabled = false
+				}
+			}
+		}
+	}
+
+	//noinspection ConfigurationAvoidance Cannot mutate this after buildscript evaluation.
+	targets.withType(KotlinJvmTarget) {
+		// Needed for 'application' plugin.
+		withJava()
+	}
 }

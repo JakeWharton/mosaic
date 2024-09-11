@@ -12,7 +12,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.ObserverHandle
 import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.runtime.withFrameNanos
+import com.github.ajalt.mordant.input.RawModeScope
+import com.github.ajalt.mordant.input.enterRawMode
+import com.github.ajalt.mordant.platform.MultiplatformSystem
 import com.github.ajalt.mordant.terminal.Terminal as MordantTerminal
+import com.jakewharton.finalization.withFinalizationHook
+import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.BoxMeasurePolicy
@@ -20,15 +25,21 @@ import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.concurrent.Volatile
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
+import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 /**
  * True for a debug-like output that renders each "frame" on its own with a timestamp delta.
@@ -40,39 +51,67 @@ internal fun renderMosaicNode(content: @Composable () -> Unit): MosaicNode {
 	val mosaicComposition = MosaicComposition(
 		coroutineScope = CoroutineScope(EmptyCoroutineContext),
 		terminalState = MordantTerminal().toMutableState(),
+		keyEvents = Channel(),
 		onDrawing = {},
 	)
 	mosaicComposition.setContent(content)
 	mosaicComposition.cancel()
-	return mosaicComposition.applier.root
+	return mosaicComposition.rootNode
 }
 
 public fun renderMosaic(content: @Composable () -> Unit): String {
 	return createRendering().render(renderMosaicNode(content)).toString()
 }
 
-public suspend fun runMosaic(content: @Composable () -> Unit) {
-	coroutineScope {
-		val terminal = MordantTerminal()
-		val rendering = createRendering(terminal.info.ansiLevel.toMosaicAnsiLevel())
-		val terminalState = terminal.toMutableState()
-		val mosaicComposition = MosaicComposition(
-			coroutineScope = this,
-			terminalState = terminalState,
-			onDrawing = { rootNode ->
-				platformDisplay(rendering.render(rootNode))
-			},
-		)
-		mosaicComposition.sendFrames()
-		mosaicComposition.scope.updateTerminalInfo(terminal, terminalState)
-		mosaicComposition.setContent(content)
-		mosaicComposition.awaitComplete()
+public fun runMosaicBlocking(content: @Composable () -> Unit) {
+	runBlocking {
+		runMosaic(content)
 	}
+}
+
+public suspend fun runMosaic(content: @Composable () -> Unit) {
+	val mordantTerminal = MordantTerminal()
+	val rendering = createRendering(mordantTerminal.terminalInfo.ansiLevel.toMosaicAnsiLevel())
+	val terminalState = mordantTerminal.toMutableState()
+	val keyEvents = Channel<KeyEvent>(UNLIMITED)
+
+	val rawMode = if (MultiplatformSystem.readEnvironmentVariable("MOSAIC_RAW_MODE") != "false") {
+		// In theory this call could fail, so perform it before any additional control sequences.
+		mordantTerminal.enterRawMode()
+	} else {
+		null
+	}
+
+	platformDisplay(cursorHide)
+
+	withFinalizationHook(
+		hook = {
+			platformDisplay(cursorShow)
+			rawMode?.close()
+		},
+		block = {
+			val mosaicComposition = MosaicComposition(
+				coroutineScope = this,
+				terminalState = terminalState,
+				keyEvents = keyEvents,
+				onDrawing = { rootNode ->
+					platformDisplay(rendering.render(rootNode))
+				},
+			)
+			mosaicComposition.sendFrames()
+			mosaicComposition.scope.updateTerminalInfo(mordantTerminal, terminalState)
+			rawMode?.let { rawMode ->
+				mosaicComposition.scope.readRawModeKeys(rawMode, keyEvents)
+			}
+			mosaicComposition.setContent(content)
+			mosaicComposition.awaitComplete()
+		},
+	)
 }
 
 private fun MordantTerminal.toMutableState(): MutableState<Terminal> {
 	return mutableStateOf(
-		Terminal(size = IntSize(info.width, info.height)),
+		Terminal(size = IntSize(size.width, size.height)),
 	)
 }
 
@@ -89,15 +128,28 @@ private fun CoroutineScope.updateTerminalInfo(terminal: MordantTerminal, termina
 	launch {
 		while (true) {
 			val currentTerminalInfo = terminalInfo.value
-			if (terminal.info.updateTerminalSize() &&
-				(
-					currentTerminalInfo.size.width != terminal.info.width ||
-						currentTerminalInfo.size.height != terminal.info.height
-					)
+			val newSize = terminal.updateSize()
+			if (currentTerminalInfo.size.width != newSize.width ||
+				currentTerminalInfo.size.height != newSize.height
 			) {
-				terminalInfo.value = Terminal(size = IntSize(terminal.info.width, terminal.info.height))
+				terminalInfo.value = Terminal(size = IntSize(newSize.width, newSize.height))
 			}
 			delay(50L)
+		}
+	}
+}
+
+private fun CoroutineScope.readRawModeKeys(rawMode: RawModeScope, keyEvents: Channel<KeyEvent>) {
+	launch(Dispatchers.IO) {
+		while (isActive) {
+			val keyboardEvent = rawMode.readKeyOrNull(10.milliseconds) ?: continue
+			val keyEvent = KeyEvent(
+				key = keyboardEvent.key,
+				alt = keyboardEvent.alt,
+				ctrl = keyboardEvent.ctrl,
+				shift = keyboardEvent.shift,
+			)
+			keyEvents.trySend(keyEvent)
 		}
 	}
 }
@@ -105,6 +157,7 @@ private fun CoroutineScope.updateTerminalInfo(terminal: MordantTerminal, termina
 internal class MosaicComposition(
 	coroutineScope: CoroutineScope,
 	private val terminalState: State<Terminal>,
+	private val keyEvents: ReceiveChannel<KeyEvent>,
 	private val onDrawing: (MosaicNode) -> Unit,
 ) {
 	private val job = Job(coroutineScope.coroutineContext[Job])
@@ -112,7 +165,8 @@ internal class MosaicComposition(
 	private val composeContext: CoroutineContext = coroutineScope.coroutineContext + job + clock
 	val scope = CoroutineScope(composeContext)
 
-	val applier = MosaicNodeApplier(::doLayout)
+	private val applier = MosaicNodeApplier(::doLayout)
+	val rootNode = applier.root
 	private val recomposer = Recomposer(composeContext)
 	private val composition = Composition(applier, recomposer)
 
@@ -190,7 +244,18 @@ internal class MosaicComposition(
 
 	fun sendFrames(): Job {
 		return scope.launch {
+			val ctrlC = KeyEvent("c", ctrl = true)
+
 			while (true) {
+				// Drain any pending key events before triggering the frame.
+				while (true) {
+					val keyEvent = keyEvents.tryReceive().getOrNull() ?: break
+					val keyHandled = rootNode.sendKeyEvent(keyEvent)
+					if (!keyHandled && keyEvent == ctrlC) {
+						cancel()
+					}
+				}
+
 				clock.sendFrame(0L) // Frame time value is not used by Compose runtime.
 				delay(50L)
 			}

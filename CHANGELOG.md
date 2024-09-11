@@ -4,6 +4,8 @@
 
 New:
 - Support synchronized terminal update for rendering.
+- The terminal cursor is now automatically hidden during rendering and restored afterwards.
+- Use `Modifier.onKeyEvent` or `Modifier.onPreKeyEvent` to listen to keyboard events.
 
 Changed:
 - Сhange `DrawScope#drawRect` API with the ability to draw with text characters and specify `DrawStyle` (`Fill` or `Stroke`).

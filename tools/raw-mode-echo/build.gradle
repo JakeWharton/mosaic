@@ -1,0 +1,36 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
+
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+apply from: "$rootDir/addAllTargets.gradle"
+apply plugin: 'application'
+
+application {
+	mainClass = 'example.Main'
+}
+
+kotlin {
+	// Needed for 'application' plugin.
+	jvm().withJava()
+
+	sourceSets {
+		commonMain {
+			dependencies {
+				implementation projects.mosaicTerminal
+				implementation libs.clikt
+				implementation libs.finalizationHook
+			}
+		}
+	}
+
+	targets.withType(KotlinNativeTarget).configureEach { target ->
+		target.binaries.executable {
+			entryPoint = 'example.main'
+			if (buildType == NativeBuildType.DEBUG) {
+				linkTaskProvider.configure {
+					enabled = false
+				}
+			}
+		}
+	}
+}
