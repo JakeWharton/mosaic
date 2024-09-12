@@ -11,6 +11,8 @@ kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotl
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 
+androidx-collection = "androidx.collection:collection:1.5.0-alpha01"
+
 compose-runtime = "org.jetbrains.compose.runtime:runtime:1.6.11"
 
 maven-publish-gradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.29.0"

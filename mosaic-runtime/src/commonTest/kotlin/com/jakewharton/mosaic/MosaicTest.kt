@@ -236,7 +236,7 @@ class MosaicTest {
 		}
 	}
 
-	@Test fun changeInDrawingPhase() = runTest {
+	@Test fun changeInDrawPhase() = runTest {
 		runMosaicTest {
 			setContent {
 				var drawAnother by remember { mutableStateOf(false) }

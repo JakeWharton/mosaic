@@ -1,5 +1,6 @@
 package com.jakewharton.mosaic
 
+import androidx.collection.mutableScatterSetOf
 import androidx.compose.runtime.AbstractApplier
 import androidx.compose.runtime.BroadcastFrameClock
 import androidx.compose.runtime.Composable
@@ -52,7 +53,7 @@ internal fun renderMosaicNode(content: @Composable () -> Unit): MosaicNode {
 		coroutineScope = CoroutineScope(EmptyCoroutineContext),
 		terminalState = MordantTerminal().toMutableState(),
 		keyEvents = Channel(),
-		onDrawing = {},
+		onDraw = {},
 	)
 	mosaicComposition.setContent(content)
 	mosaicComposition.cancel()
@@ -94,7 +95,7 @@ public suspend fun runMosaic(content: @Composable () -> Unit) {
 				coroutineScope = this,
 				terminalState = terminalState,
 				keyEvents = keyEvents,
-				onDrawing = { rootNode ->
+				onDraw = { rootNode ->
 					platformDisplay(rendering.render(rootNode))
 				},
 			)
@@ -158,31 +159,31 @@ internal class MosaicComposition(
 	coroutineScope: CoroutineScope,
 	private val terminalState: State<Terminal>,
 	private val keyEvents: ReceiveChannel<KeyEvent>,
-	private val onDrawing: (MosaicNode) -> Unit,
+	private val onDraw: (MosaicNode) -> Unit,
 ) {
 	private val job = Job(coroutineScope.coroutineContext[Job])
 	private val clock = BroadcastFrameClock()
 	private val composeContext: CoroutineContext = coroutineScope.coroutineContext + job + clock
 	val scope = CoroutineScope(composeContext)
 
-	private val applier = MosaicNodeApplier(::doLayout)
+	private val applier = MosaicNodeApplier(::performLayout)
 	val rootNode = applier.root
 	private val recomposer = Recomposer(composeContext)
 	private val composition = Composition(applier, recomposer)
 
 	private val applyObserverHandle: ObserverHandle
 
-	private val readingStatesOnLayout = mutableSetOf<Any>()
-	private val readingStatesOnDrawing = mutableSetOf<Any>()
+	private val readingStatesOnLayout = mutableScatterSetOf<Any>()
+	private val readingStatesOnDraw = mutableScatterSetOf<Any>()
 
 	private val layoutBlockStateReadObserver: (Any) -> Unit = { readingStatesOnLayout.add(it) }
-	private val drawingBlockStateReadObserver: (Any) -> Unit = { readingStatesOnDrawing.add(it) }
+	private val drawBlockStateReadObserver: (Any) -> Unit = { readingStatesOnDraw.add(it) }
 
 	@Volatile
 	private var needLayout = false
 
 	@Volatile
-	private var needDrawing = false
+	private var needDraw = false
 
 	init {
 		GlobalSnapshotManager().ensureStarted(scope)
@@ -191,32 +192,32 @@ internal class MosaicComposition(
 		startListeningToNeedToLayoutOrDraw()
 	}
 
-	private fun doLayout(rootNode: MosaicNode) {
+	private fun performLayout(rootNode: MosaicNode) {
 		needLayout = false
 		Snapshot.observe(readObserver = layoutBlockStateReadObserver) {
 			rootNode.measureAndPlace()
 		}
-		doDrawing(rootNode)
+		performDraw(rootNode)
 	}
 
-	private fun doDrawing(rootNode: MosaicNode) {
-		needDrawing = false
-		Snapshot.observe(readObserver = drawingBlockStateReadObserver) {
-			onDrawing(rootNode)
+	private fun performDraw(rootNode: MosaicNode) {
+		needDraw = false
+		Snapshot.observe(readObserver = drawBlockStateReadObserver) {
+			onDraw(rootNode)
 		}
 	}
 
 	private fun registerSnapshotApplyObserver(): ObserverHandle {
 		return Snapshot.registerApplyObserver { changedStates, _ ->
 			for (state in changedStates) {
-				if (needLayout && needDrawing) {
+				if (needLayout && needDraw) {
 					break
 				}
 				if (!needLayout && readingStatesOnLayout.contains(state)) {
 					needLayout = true
 				}
-				if (!needDrawing && readingStatesOnDrawing.contains(state)) {
-					needDrawing = true
+				if (!needDraw && readingStatesOnDraw.contains(state)) {
+					needDraw = true
 				}
 			}
 		}
@@ -228,8 +229,8 @@ internal class MosaicComposition(
 				withFrameNanos {
 					when {
 						recomposer.currentState.value != Recomposer.State.Idle -> return@withFrameNanos
-						needLayout -> doLayout(applier.root)
-						needDrawing -> doDrawing(applier.root)
+						needLayout -> performLayout(applier.root)
+						needDraw -> performDraw(applier.root)
 					}
 				}
 			}
@@ -279,7 +280,7 @@ internal class MosaicComposition(
 			recomposer.awaitIdle()
 
 			applyObserverHandle.dispose()
-			if (needLayout || needDrawing) {
+			if (needLayout || needDraw) {
 				awaitFrame()
 			}
 
