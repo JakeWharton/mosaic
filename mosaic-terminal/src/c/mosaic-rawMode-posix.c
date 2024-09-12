@@ -14,6 +14,7 @@ rawModeResult enterRawMode() {
 
 	struct termios *saved = calloc(1, sizeof(struct termios));
 	if (unlikely(saved == NULL)) {
+		// result.saved is set to 0 which will trigger OOM.
 		goto ret;
 	}
 

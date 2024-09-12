@@ -27,6 +27,7 @@ rawModeResult enterRawMode() {
 
 	rawModeConfigWindows *saved = malloc(sizeof(rawModeConfigWindows));
 	if (unlikely(saved == NULL)) {
+		// result.saved is set to 0 which will trigger OOM.
 		goto ret;
 	}
 
