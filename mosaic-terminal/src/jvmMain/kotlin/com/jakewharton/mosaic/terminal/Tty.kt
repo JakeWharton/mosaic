@@ -26,11 +26,40 @@ public actual object Tty {
 		}
 	}
 
+	public actual fun stdinReader(): StdinReader {
+		val reader = stdinReaderInit()
+		if (reader == 0L) throw OutOfMemoryError()
+		return StdinReader(reader)
+	}
+
 	@JvmStatic
 	private external fun enterRawMode(): Long
 
 	@JvmStatic
 	private external fun exitRawMode(savedConfig: Long): Int
+
+	@JvmStatic
+	private external fun stdinReaderInit(): Long
+
+	@JvmStatic
+	@JvmSynthetic // Hide from Java callers.
+	@JvmName("stdinReaderRead") // Avoid internal name mangling.
+	internal external fun stdinReaderRead(
+		reader: Long,
+		buffer: ByteArray,
+		offset: Int,
+		length: Int,
+	): Int
+
+	@JvmStatic
+	@JvmSynthetic // Hide from Java callers.
+	@JvmName("stdinReaderInterrupt") // Avoid internal name mangling.
+	internal external fun stdinReaderInterrupt(reader: Long)
+
+	@JvmStatic
+	@JvmSynthetic // Hide from Java callers.
+	@JvmName("stdinReaderFree") // Avoid internal name mangling.
+	internal external fun stdinReaderFree(reader: Long)
 
 	@Suppress(
 		// Only loading from our own JAR contents.
@@ -62,5 +91,21 @@ public actual object Tty {
 			throw RuntimeException("Unable to extract native library from JAR", e)
 		}
 		System.load(nativeLibraryFile.toAbsolutePath().toString())
+	}
+}
+
+public actual class StdinReader internal constructor(
+	private val readerPtr: Long,
+) : AutoCloseable {
+	public actual fun read(buffer: ByteArray, offset: Int, length: Int): Int {
+		return Tty.stdinReaderRead(readerPtr, buffer, offset, length)
+	}
+
+	public actual fun interrupt() {
+		Tty.stdinReaderInterrupt(readerPtr)
+	}
+
+	public actual override fun close() {
+		Tty.stdinReaderFree(readerPtr)
 	}
 }

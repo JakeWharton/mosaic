@@ -39,6 +39,8 @@ fn setupMosaicTarget(b: *std.Build, step: *std.Build.Step, tag: std.Target.Os.Ta
 		.files = &.{
 			"src/c/mosaic-rawMode-posix.c",
 			"src/c/mosaic-rawMode-windows.c",
+			"src/c/mosaic-stdin-posix.c",
+			"src/c/mosaic-stdin-windows.c",
 			"src/jvmMain/jni/mosaic-jni.c",
 		},
 		.flags = &.{
