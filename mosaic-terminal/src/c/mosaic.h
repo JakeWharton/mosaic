@@ -25,4 +25,22 @@ typedef struct rawModeResult {
 rawModeResult enterRawMode();
 platformError exitRawMode(rawModeConfig *saved);
 
+
+typedef struct stdinReaderImpl stdinReader;
+
+typedef struct stdinReaderResult {
+	stdinReader* reader;
+	platformError error;
+} stdinReaderResult;
+
+typedef struct stdinRead {
+	int count;
+	platformError error;
+} stdinRead;
+
+stdinReaderResult stdinReader_init();
+stdinRead stdinReader_read(stdinReader *reader, void *buffer, int count);
+platformError stdinReader_interrupt(stdinReader* reader);
+platformError stdinReader_free(stdinReader *reader);
+
 #endif // MOSAIC_H

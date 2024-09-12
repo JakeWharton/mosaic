@@ -6,6 +6,7 @@ pub fn build(b: *std.Build) !void {
 	b.getInstallStep().dependOn(&deleteLib.step);
 
 	setupMosaicTarget(b, &deleteLib.step, .linux, .aarch64, "arm64");
+	setupMosaicTarget(b, &deleteLib.step, .linux, .riscv64, "riscv");
 	setupMosaicTarget(b, &deleteLib.step, .linux, .x86_64, "x86_64");
 	setupMosaicTarget(b, &deleteLib.step, .macos, .aarch64, "aarch64");
 	setupMosaicTarget(b, &deleteLib.step, .macos, .x86_64, "x86_64");
@@ -39,6 +40,8 @@ fn setupMosaicTarget(b: *std.Build, step: *std.Build.Step, tag: std.Target.Os.Ta
 		.files = &.{
 			"src/c/mosaic-rawMode-posix.c",
 			"src/c/mosaic-rawMode-windows.c",
+			"src/c/mosaic-stdin-posix.c",
+			"src/c/mosaic-stdin-windows.c",
 			"src/jvmMain/jni/mosaic-jni.c",
 		},
 		.flags = &.{

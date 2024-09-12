@@ -1,5 +1,12 @@
+public final class com/jakewharton/mosaic/terminal/StdinReader : java/lang/AutoCloseable {
+	public fun close ()V
+	public final fun interrupt ()V
+	public final fun read ([BII)I
+}
+
 public final class com/jakewharton/mosaic/terminal/Tty {
 	public static final field INSTANCE Lcom/jakewharton/mosaic/terminal/Tty;
 	public final fun enableRawMode ()Ljava/lang/AutoCloseable;
+	public final fun stdinReader ()Lcom/jakewharton/mosaic/terminal/StdinReader;
 }
 

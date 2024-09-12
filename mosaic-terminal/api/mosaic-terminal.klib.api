@@ -6,6 +6,13 @@
 // - Show declarations: true
 
 // Library unique name: <com.jakewharton.mosaic:mosaic-terminal>
+final class com.jakewharton.mosaic.terminal/StdinReader : kotlin/AutoCloseable { // com.jakewharton.mosaic.terminal/StdinReader|null[0]
+    final fun close() // com.jakewharton.mosaic.terminal/StdinReader.close|close(){}[0]
+    final fun interrupt() // com.jakewharton.mosaic.terminal/StdinReader.interrupt|interrupt(){}[0]
+    final fun read(kotlin/ByteArray, kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.terminal/StdinReader.read|read(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
+}
+
 final object com.jakewharton.mosaic.terminal/Tty { // com.jakewharton.mosaic.terminal/Tty|null[0]
     final fun enableRawMode(): kotlin/AutoCloseable // com.jakewharton.mosaic.terminal/Tty.enableRawMode|enableRawMode(){}[0]
+    final fun stdinReader(): com.jakewharton.mosaic.terminal/StdinReader // com.jakewharton.mosaic.terminal/Tty.stdinReader|stdinReader(){}[0]
 }

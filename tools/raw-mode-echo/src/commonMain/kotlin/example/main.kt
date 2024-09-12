@@ -8,11 +8,13 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.jakewharton.finalization.withFinalizationHook
 import com.jakewharton.mosaic.terminal.Tty
 import kotlin.jvm.JvmName
+import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
-import kotlinx.coroutines.isActive
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -29,20 +31,6 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 	private val colorQuery by option().flag()
 
 	override fun run() = runBlocking {
-		val values = Channel<String>(UNLIMITED)
-		launch(Dispatchers.IO) {
-			val buffer = ByteArray(1024)
-			while (isActive) {
-				val read = stdinRead(buffer, 0, 1024)
-				val hex = buffer.toHexString(endIndex = read)
-				values.trySend(hex)
-				if (hex == "03") {
-					values.close()
-					break
-				}
-			}
-		}
-
 		val rawMode = Tty.enableRawMode()
 		withFinalizationHook(
 			hook = {
@@ -80,10 +68,40 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 					print("\u001b[?996n") // Color scheme request
 				}
 
-				for (value in values) {
-					print(value)
+				val reader = Tty.stdinReader()
+
+				// Upon receiving a signal, this block's job will be canceled. Use that to wake up the
+				// blocking stdin read so it loops and checks if its job is still active or not.
+				val readerInterruptJob = launch(start = UNDISPATCHED) {
+					try {
+						awaitCancellation()
+					} finally {
+						reader.interrupt()
+					}
+				}
+
+				val inputs = Channel<String>(UNLIMITED)
+				launch(Dispatchers.IO) {
+					val buffer = ByteArray(1024)
+					val job = coroutineContext.job
+					while (job.isActive) {
+						val read = reader.read(buffer, 0, 1024)
+						if (read > 0) {
+							val hex = buffer.toHexString(endIndex = read)
+							inputs.trySend(hex)
+							if (hex == "03") {
+								inputs.close()
+								break
+							}
+						}
+					}
+				}
+
+				for (input in inputs) {
+					print(input)
 					print("\r\n")
 				}
+				readerInterruptJob.cancel()
 			},
 		)
 	}
