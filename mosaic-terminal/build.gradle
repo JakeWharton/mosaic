@@ -11,7 +11,7 @@ kotlin {
 	explicitApi()
 
 	jvm {
-		compilations.main.compileTaskProvider.configure {
+		tasks.named(compilations.main.processResourcesTaskName).configure {
 			doFirst {
 				def files = project.fileTree('src/jvmMain/resources').files
 				if (files.size() != 7) {
