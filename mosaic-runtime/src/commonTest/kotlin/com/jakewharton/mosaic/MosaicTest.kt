@@ -8,8 +8,13 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameNanos
+import assertk.all
 import assertk.assertThat
+import assertk.assertions.hasSize
 import assertk.assertions.isEqualTo
+import assertk.assertions.isLessThan
+import assertk.assertions.isPositive
 import com.jakewharton.mosaic.layout.drawBehind
 import com.jakewharton.mosaic.layout.offset
 import com.jakewharton.mosaic.layout.size
@@ -263,6 +268,28 @@ class MosaicTest {
 
 			assertThat(awaitRenderSnapshot()).isEqualTo("$TestChar         ")
 			assertThat(awaitRenderSnapshot()).isEqualTo("${TestChar + 1}         ")
+		}
+	}
+
+	@Test fun frameTimeChanges() = runTest {
+		val frameTimes = mutableListOf<Long>()
+
+		runMosaic(enterRawMode = false) {
+			LaunchedEffect(Unit) {
+				while (frameTimes.size < 2) {
+					withFrameNanos { frameTimeNanos ->
+						frameTimes += frameTimeNanos
+					}
+				}
+			}
+		}
+
+		assertThat(frameTimes).hasSize(2)
+
+		val (frameTimeA, frameTimeB) = frameTimes
+		assertThat(frameTimeA).all {
+			isPositive()
+			isLessThan(frameTimeB)
 		}
 	}
 }
