@@ -70,12 +70,16 @@ public fun runMosaicBlocking(content: @Composable () -> Unit) {
 }
 
 public suspend fun runMosaic(content: @Composable () -> Unit) {
+	runMosaic(enterRawMode = true, content)
+}
+
+internal suspend fun runMosaic(enterRawMode: Boolean, content: @Composable () -> Unit) {
 	val mordantTerminal = MordantTerminal()
 	val rendering = createRendering(mordantTerminal.terminalInfo.ansiLevel.toMosaicAnsiLevel())
 	val terminalState = mordantTerminal.toMutableState()
 	val keyEvents = Channel<KeyEvent>(UNLIMITED)
 
-	val rawMode = if (MultiplatformSystem.readEnvironmentVariable("MOSAIC_RAW_MODE") != "false") {
+	val rawMode = if (enterRawMode && MultiplatformSystem.readEnvironmentVariable("MOSAIC_RAW_MODE") != "false") {
 		// In theory this call could fail, so perform it before any additional control sequences.
 		mordantTerminal.enterRawMode()
 	} else {
@@ -256,7 +260,7 @@ internal class MosaicComposition(
 					}
 				}
 
-				clock.sendFrame(0L) // Frame time value is not used by Compose runtime.
+				clock.sendFrame(nanoTime())
 				delay(50L)
 			}
 		}

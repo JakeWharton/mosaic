@@ -37,3 +37,6 @@ internal actual inline fun AtomicBoolean.compareAndSet(expect: Boolean, update: 
 internal actual inline fun atomicBooleanOf(initialValue: Boolean): AtomicBoolean {
 	return AtomicBoolean(initialValue)
 }
+
+@Suppress("NOTHING_TO_INLINE")
+internal actual inline fun nanoTime(): Long = System.nanoTime()
