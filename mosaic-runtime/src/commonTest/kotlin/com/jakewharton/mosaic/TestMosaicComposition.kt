@@ -20,7 +20,6 @@ private val DefaultTestTerminalSize = IntSize(80, 20)
 internal suspend fun runMosaicTest(
 	withAnsi: Boolean = false,
 	initialTerminalSize: IntSize = DefaultTestTerminalSize,
-	withRenderSnapshots: Boolean = true,
 	block: suspend TestMosaicComposition.() -> Unit,
 ) {
 	coroutineScope {
@@ -28,7 +27,6 @@ internal suspend fun runMosaicTest(
 			coroutineScope = this,
 			withAnsi = withAnsi,
 			initialTerminalSize = initialTerminalSize,
-			withRenderSnapshots = withRenderSnapshots,
 		)
 		block.invoke(testMosaicComposition)
 		testMosaicComposition.mosaicComposition.cancel()
@@ -55,7 +53,6 @@ private class RealTestMosaicComposition(
 	coroutineScope: CoroutineScope,
 	withAnsi: Boolean,
 	initialTerminalSize: IntSize,
-	withRenderSnapshots: Boolean,
 ) : TestMosaicComposition {
 
 	private var contentSet = false
@@ -66,15 +63,9 @@ private class RealTestMosaicComposition(
 	/** Channel with the most recent snapshot, if any. */
 	private val renderSnapshots = Channel<String>(Channel.CONFLATED)
 
-	private val rendering: Rendering = if (withRenderSnapshots) {
-		AnsiRendering(ansiLevel = if (withAnsi) AnsiLevel.TRUECOLOR else AnsiLevel.NONE)
-	} else {
-		object : Rendering {
-			override fun render(node: MosaicNode): CharSequence {
-				throw UnsupportedOperationException("Rendering disabled by `withRenderSnapshots`")
-			}
-		}
-	}
+	private val rendering: Rendering = AnsiRendering(
+		ansiLevel = if (withAnsi) AnsiLevel.TRUECOLOR else AnsiLevel.NONE,
+	)
 
 	private val terminalState: MutableState<Terminal> = mutableStateOf(
 		Terminal(size = initialTerminalSize),
@@ -84,19 +75,17 @@ private class RealTestMosaicComposition(
 
 	val mosaicComposition = MosaicComposition(coroutineScope, terminalState, keyEvents) { rootNode ->
 		nodeSnapshots.trySend(rootNode)
-		if (withRenderSnapshots) {
-			val stringRender = if (withAnsi) {
-				rendering.render(rootNode).toString()
-			} else {
-				rendering.render(rootNode).toString()
-					.removeSurrounding(ansiBeginSynchronizedUpdate, ansiEndSynchronizedUpdate)
-					.removeSuffix("\r\n") // without last line break for simplicity
-					.replace(clearLine, "")
-					.replace(cursorUp, "")
-					.replace("\r\n", "\n") // CRLF to LF for simplicity
-			}
-			renderSnapshots.trySend(stringRender)
+		val stringRender = if (withAnsi) {
+			rendering.render(rootNode).toString()
+		} else {
+			rendering.render(rootNode).toString()
+				.removeSurrounding(ansiBeginSynchronizedUpdate, ansiEndSynchronizedUpdate)
+				.removeSuffix("\r\n") // without last line break for simplicity
+				.replace(clearLine, "")
+				.replace(cursorUp, "")
+				.replace("\r\n", "\n") // CRLF to LF for simplicity
 		}
+		renderSnapshots.trySend(stringRender)
 	}
 
 	override fun setContent(content: @Composable () -> Unit) {

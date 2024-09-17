@@ -22,8 +22,6 @@ import com.jakewharton.mosaic.ui.unit.constrain
 import com.jakewharton.mosaic.ui.unit.constrainHeight
 import com.jakewharton.mosaic.ui.unit.constrainWidth
 import kotlin.math.max
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.first
 
 const val s = " "
 
@@ -47,14 +45,9 @@ internal val MosaicNode.size: IntSize
 internal val MosaicNode.position: IntOffset
 	get() = IntOffset(x, y)
 
-internal suspend fun mosaicNodesWithMeasureAndPlace(content: @Composable () -> Unit): MosaicNode {
-	return callbackFlow {
-		// if rendering is enabled, the measureAndPlace is implicitly called
-		runMosaicTest(withRenderSnapshots = false) {
-			setContent(content)
-			send(awaitNodeSnapshot().also { it.measureAndPlace() })
-		}
-	}.first()
+// TODO: remove
+internal fun mosaicNodesWithMeasureAndPlace(content: @Composable () -> Unit): MosaicNode {
+	return renderMosaicNode(content)
 }
 
 class Holder<T>(var value: T)
