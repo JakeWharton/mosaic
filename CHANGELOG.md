@@ -13,7 +13,7 @@ Changed:
 - Drop support for JS target. If you were using this, please file an issue so we can discuss support.
 
 Fixed:
-- Nothing yet!
+- There is no addition of empty extra spaces at the end of lines.
 
 
 ## [0.13.0] - 2024-05-28

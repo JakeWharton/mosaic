@@ -46,8 +46,8 @@ class MosaicTest {
 		}
 		assertThat(actual).isEqualTo(
 			"""
-			|One $s
-			|Two $s
+			|One
+			|Two
 			|Three
 			|
 			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
@@ -76,8 +76,8 @@ class MosaicTest {
 		}
 		assertThat(actual).isEqualTo(
 			"""
-			|One $s
-			|Two $s
+			|One
+			|Two
 			|Three
 			|
 			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
@@ -106,8 +106,8 @@ class MosaicTest {
 		}
 		assertThat(actual).isEqualTo(
 			"""
-			|One $s
-			|Two $s
+			|One
+			|Two
 			|Three
 			|
 			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
@@ -148,8 +148,8 @@ class MosaicTest {
 		}
 		assertThat(actual).isEqualTo(
 			"""
-			|One $s
-			|Two $s
+			|One
+			|Two
 			|Three
 			|
 			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
@@ -168,8 +168,8 @@ class MosaicTest {
 		}
 		assertThat(actual).isEqualTo(
 			"""
-			|One $s
-			|Two $s
+			|One
+			|Two
 			|Three
 			|
 			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
@@ -192,8 +192,8 @@ class MosaicTest {
 		actuals.forEach { actual ->
 			assertThat(actual).isEqualTo(
 				"""
-				|One $s
-				|Two $s
+				|One
+				|Two
 				|Three
 				|
 				""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),

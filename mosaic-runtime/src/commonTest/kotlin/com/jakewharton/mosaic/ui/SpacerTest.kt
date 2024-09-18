@@ -3,6 +3,7 @@ package com.jakewharton.mosaic.ui
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.Container
+import com.jakewharton.mosaic.layout.background
 import com.jakewharton.mosaic.layout.height
 import com.jakewharton.mosaic.layout.size
 import com.jakewharton.mosaic.layout.width
@@ -25,7 +26,7 @@ class SpacerTest {
 
 		runMosaicTest {
 			setContent {
-				Spacer(Modifier.size(width = width, height = height))
+				Spacer(Modifier.background(Color.Red).size(width = width, height = height))
 			}
 			assertThat(awaitRenderSnapshot()).isEqualTo(
 				"""

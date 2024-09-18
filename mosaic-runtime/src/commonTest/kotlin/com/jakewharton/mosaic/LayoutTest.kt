@@ -2,8 +2,10 @@ package com.jakewharton.mosaic
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import com.jakewharton.mosaic.layout.background
 import com.jakewharton.mosaic.layout.drawBehind
 import com.jakewharton.mosaic.modifier.Modifier
+import com.jakewharton.mosaic.ui.Color
 import com.jakewharton.mosaic.ui.Column
 import com.jakewharton.mosaic.ui.Layout
 import com.jakewharton.mosaic.ui.Row
@@ -39,14 +41,15 @@ class LayoutTest {
 	@Test fun noMeasureNoDraw() = runTest {
 		runMosaicTest {
 			setContent {
-				Layout({
-					Text("CCC")
-					Text("BB")
-					Text("A")
-				}) { _, _ ->
-					layout(3, 1) {
-					}
-				}
+				Layout(
+					content = {
+						Text("CCC")
+						Text("BB")
+						Text("A")
+					},
+					modifier = Modifier.background(Color.Red),
+					measurePolicy = { _, _ -> layout(3, 1) {} },
+				)
 			}
 			assertThat(awaitRenderSnapshot()).isEqualTo(
 				"""
@@ -98,8 +101,8 @@ class LayoutTest {
 			assertThat(awaitRenderSnapshot()).isEqualTo(
 				"""
 				|     CCC
-				|  BB   $s
-				|A      $s
+				|  BB
+				|A
 				""".trimMargin(),
 			)
 		}
