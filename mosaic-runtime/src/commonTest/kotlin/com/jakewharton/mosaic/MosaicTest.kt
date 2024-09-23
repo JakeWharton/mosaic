@@ -11,7 +11,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameNanos
 import assertk.all
 import assertk.assertThat
-import assertk.assertions.hasSize
 import assertk.assertions.isEqualTo
 import assertk.assertions.isLessThan
 import assertk.assertions.isPositive
@@ -272,21 +271,20 @@ class MosaicTest {
 	}
 
 	@Test fun frameTimeChanges() = runTest {
-		val frameTimes = mutableListOf<Long>()
+		var frameTimeA = 0L
+		var frameTimeB = 0L
 
 		runMosaic(enterRawMode = false) {
 			LaunchedEffect(Unit) {
-				while (frameTimes.size < 2) {
-					withFrameNanos { frameTimeNanos ->
-						frameTimes += frameTimeNanos
-					}
+				withFrameNanos { frameTimeNanos ->
+					frameTimeA = frameTimeNanos
+				}
+				withFrameNanos { frameTimeNanos ->
+					frameTimeB = frameTimeNanos
 				}
 			}
 		}
 
-		assertThat(frameTimes).hasSize(2)
-
-		val (frameTimeA, frameTimeB) = frameTimes
 		assertThat(frameTimeA).all {
 			isPositive()
 			isLessThan(frameTimeB)
