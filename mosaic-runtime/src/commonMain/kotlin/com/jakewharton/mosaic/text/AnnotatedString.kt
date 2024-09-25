@@ -116,9 +116,9 @@ public class AnnotatedString internal constructor(
 			}
 		}
 
-		private val text: StringBuilder = StringBuilder(capacity)
-		private val spanStyles: MutableList<MutableRange<SpanStyle>> = mutableListOf()
-		private val styleStack: MutableList<MutableRange<out Any>> = mutableListOf()
+		private val text = StringBuilder(capacity)
+		private val spanStyles = ArrayList<MutableRange<SpanStyle>>()
+		private val styleStack = ArrayList<MutableRange<out Any>>()
 
 		/**
 		 * Create an [Builder] instance using the given [String].

@@ -1,5 +1,6 @@
 package com.jakewharton.mosaic
 
+import androidx.collection.mutableObjectListOf
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.ui.AnsiLevel
 import kotlin.time.ExperimentalTime
@@ -37,20 +38,18 @@ internal class DebugRendering(
 			appendLine(node)
 			appendLine()
 
+			val statics = mutableObjectListOf<TextSurface>()
 			try {
-				val statics = ArrayList<TextSurface>()
-					.also { node.paintStatics(it, ansiLevel) }
-					.map { it.render() }
+				node.paintStatics(statics, ansiLevel)
 				if (statics.isNotEmpty()) {
 					appendLine("STATIC:")
-					for (static in statics) {
-						appendLine(static)
+					statics.forEach { static ->
+						appendLine(static.render())
 					}
 					appendLine()
 				}
 			} catch (t: Throwable) {
 				failed = true
-				appendLine("STATIC:")
 				appendLine(t.stackTraceToString())
 			}
 
@@ -73,7 +72,7 @@ internal class AnsiRendering(
 	private val ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR,
 ) : Rendering {
 	private val stringBuilder = StringBuilder(100)
-	private val staticSurfaces = ArrayList<TextSurface>()
+	private val staticSurfaces = mutableObjectListOf<TextSurface>()
 	private var lastHeight = 0
 
 	override fun render(node: MosaicNode): CharSequence {
@@ -98,11 +97,15 @@ internal class AnsiRendering(
 				}
 			}
 
-			node.paintStatics(staticSurfaces, ansiLevel)
-			for (staticSurface in staticSurfaces) {
-				appendSurface(staticSurface)
+			staticSurfaces.let { staticSurfaces ->
+				node.paintStatics(staticSurfaces, ansiLevel)
+				if (staticSurfaces.isNotEmpty()) {
+					staticSurfaces.forEach { staticSurface ->
+						appendSurface(staticSurface)
+					}
+					staticSurfaces.clear()
+				}
 			}
-			staticSurfaces.clear()
 
 			val surface = node.paint(ansiLevel)
 			appendSurface(surface)

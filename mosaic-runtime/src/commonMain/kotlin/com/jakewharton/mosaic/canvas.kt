@@ -1,5 +1,7 @@
 package com.jakewharton.mosaic
 
+import androidx.collection.MutableIntList
+import androidx.collection.mutableIntListOf
 import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.Color
 import com.jakewharton.mosaic.ui.TextStyle
@@ -39,7 +41,7 @@ internal class TextSurface(
 
 	fun appendRowTo(appendable: Appendable, row: Int) {
 		// Reused heap allocation for building ANSI attributes inside the loop.
-		val attributes = mutableListOf<Int>()
+		val attributes = mutableIntListOf()
 
 		val rowPixels = rows[row]
 		var lastPixel = blankPixel
@@ -84,12 +86,14 @@ internal class TextSurface(
 					maybeToggleStyle(Strikethrough, 9, 29)
 				}
 				if (attributes.isNotEmpty()) {
-					attributes.joinTo(
-						appendable,
-						separator = ansiSeparator,
-						prefix = CSI,
-						postfix = ansiClosingCharacter,
-					)
+					appendable.append(CSI)
+					attributes.forEachIndexed { index, element ->
+						if (index > 0) {
+							appendable.append(ansiSeparator)
+						}
+						appendable.append(element.toString())
+					}
+					appendable.append(ansiClosingCharacter)
 					attributes.clear() // This list is reused!
 				}
 			}
@@ -107,7 +111,7 @@ internal class TextSurface(
 		}
 	}
 
-	private fun MutableList<Int>.addColor(
+	private fun MutableIntList.addColor(
 		color: Color,
 		ansiLevel: AnsiLevel,
 		select: Int,
