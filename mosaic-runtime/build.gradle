@@ -23,6 +23,7 @@ kotlin {
 			dependencies {
 				api libs.compose.runtime
 				api libs.kotlinx.coroutines.core
+				implementation libs.compose.collection
 				implementation libs.finalizationHook
 				implementation libs.mordant.core
 				implementation libs.codepoints

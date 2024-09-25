@@ -1,5 +1,6 @@
 package com.jakewharton.mosaic.layout
 
+import androidx.collection.MutableObjectList
 import com.jakewharton.mosaic.TextCanvas
 import com.jakewharton.mosaic.TextSurface
 import com.jakewharton.mosaic.layout.Placeable.PlacementScope
@@ -95,7 +96,7 @@ internal class MosaicNode(
 	val onStaticDraw: (() -> Unit)?,
 ) : Measurable {
 	val isStatic get() = onStaticDraw != null
-	val children = mutableListOf<MosaicNode>()
+	val children = ArrayList<MosaicNode>()
 
 	private val bottomLayer: MosaicNodeLayer = BottomLayer(this)
 	var topLayer: MosaicNodeLayer = bottomLayer
@@ -150,8 +151,9 @@ internal class MosaicNode(
 	 * Append any static [TextSurfaces][TextSurface] to [statics].
 	 * A call to [measureAndPlace] must precede calls to this function.
 	 */
-	fun paintStatics(statics: MutableList<TextSurface>, ansiLevel: AnsiLevel) {
-		for (child in children) {
+	fun paintStatics(statics: MutableObjectList<TextSurface>, ansiLevel: AnsiLevel) {
+		for (index in children.indices) {
+			val child = children[index]
 			if (isStatic) {
 				statics += child.paint(ansiLevel)
 			}

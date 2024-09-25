@@ -1,4 +1,5 @@
 [versions]
+compose = "1.6.11"
 kotlin = "2.0.20"
 kotlinx-coroutines = "1.9.0"
 mordant = "3.0.0"
@@ -11,7 +12,8 @@ kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotl
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 
-compose-runtime = "org.jetbrains.compose.runtime:runtime:1.6.11"
+compose-collection = { module = "org.jetbrains.compose.collection-internal:collection", version.ref = "compose" }
+compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose" }
 
 maven-publish-gradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.29.0"
 dokka-gradlePlugin = "org.jetbrains.dokka:dokka-gradle-plugin:1.9.20"

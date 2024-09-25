@@ -1,5 +1,6 @@
 package com.jakewharton.mosaic
 
+import androidx.collection.mutableScatterSetOf
 import androidx.compose.runtime.AbstractApplier
 import androidx.compose.runtime.BroadcastFrameClock
 import androidx.compose.runtime.Composable
@@ -176,8 +177,8 @@ internal class MosaicComposition(
 
 	private val applyObserverHandle: ObserverHandle
 
-	private val readingStatesOnLayout = mutableSetOf<Any>()
-	private val readingStatesOnDraw = mutableSetOf<Any>()
+	private val readingStatesOnLayout = mutableScatterSetOf<Any>()
+	private val readingStatesOnDraw = mutableScatterSetOf<Any>()
 
 	private val layoutBlockStateReadObserver: (Any) -> Unit = { readingStatesOnLayout.add(it) }
 	private val drawBlockStateReadObserver: (Any) -> Unit = { readingStatesOnDraw.add(it) }
