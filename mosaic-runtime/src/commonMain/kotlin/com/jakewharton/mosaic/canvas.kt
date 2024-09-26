@@ -35,18 +35,26 @@ internal class TextSurface(
 	override var translationX = 0
 	override var translationY = 0
 
-	private val rows = Array(height) { Array(width) { TextPixel(' ') } }
+	private val cells = Array(width * height) { TextPixel(' ') }
 
-	override operator fun get(row: Int, column: Int) = rows[translationY + row][translationX + column]
+	override operator fun get(row: Int, column: Int): TextPixel {
+		val x = translationX + column
+		val y = row + translationY
+		check(x in 0 until width)
+		check(y in 0 until height)
+		return cells[y * width + x]
+	}
 
 	fun appendRowTo(appendable: Appendable, row: Int) {
 		// Reused heap allocation for building ANSI attributes inside the loop.
 		val attributes = mutableIntListOf()
 
-		val rowPixels = rows[row]
 		var lastPixel = blankPixel
-		for (columnIndex in 0 until width) {
-			val pixel = rowPixels[columnIndex]
+
+		val rowStart = row * width
+		val rowStop = rowStart + width
+		for (columnIndex in rowStart until rowStop) {
+			val pixel = cells[columnIndex]
 
 			if (ansiLevel != AnsiLevel.NONE) {
 				if (pixel.foreground != lastPixel.foreground) {
