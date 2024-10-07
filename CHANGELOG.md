@@ -23,7 +23,7 @@ New:
 - Send real frame times into Compose which can be used for things like animations.
 
 Changed:
-- The entrypoints (`runMosaic` and `runMosaicBlocking`) have been changed to directly accept a composable lambda. Asynchronous work should now be performed inside Compose's effect system (e.g., `LaunchEffect`), and rendering will complete when all effects have completed. Check out our samples for more information about how to do this.
+- The entrypoints (`runMosaic` and `runMosaicBlocking`) have been changed to directly accept a composable lambda. Asynchronous work should now be performed inside Compose's effect system (e.g., `LaunchedEffect`), and rendering will complete when all effects have completed. Check out our samples for more information about how to do this.
 - Сhange `DrawScope#drawRect` API with the ability to draw with text characters and specify `DrawStyle` (`Fill` or `Stroke`).
 - Drop support for JS target. If you were using this, please file an issue so we can discuss support.
 
