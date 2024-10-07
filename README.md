@@ -18,14 +18,9 @@ Jump to:
 The entrypoint to Mosaic is the `runMosaic` function.
 The lambda passed to this function is responsible for both output and performing work.
 
-Output (for now) happens through the `setContent` function.
-You can call `setContent` multiple times, but as you'll see you probably won't need to.
-
 ```kotlin
 suspend fun main() = runMosaic {
-  setContent {
-    Text("The count is: 0")
-  }
+  Text("The count is: 0")
 }
 ```
 
@@ -34,40 +29,15 @@ Let's update our counter to actually count to 20.
 
 ```kotlin
 suspend fun main() = runMosaic {
-  var count = 0
+  var count by remember { mutableIntStateOf(0) }
 
-  setContent {
-    Text("The count is: $count")
-  }
+  Text("The count is: $count")
 
-  for (i in 1..20) {
-    delay(250)
-    count = i
-  }
-}
-```
-
-**This will not work!** Our count stays at 0 for 5 seconds instead of incrementing until 20.
-Instead, we have to use Compose's `State` objects to hold state.
-
-```diff
--var count = 0
-+var count by mutableIntStateOf(0)
-```
-
-Now, when the `count` value is updated, Compose will know that it needs to re-render the string.
-
-```kotlin
-suspend fun main() = runMosaic {
-  var count by mutableIntStateOf(0)
-
-  setContent {
-    Text("The count is: $count")
-  }
-
-  for (i in 1..20) {
-    delay(250)
-    count = i
+  LaunchedEffect(Unit) {
+    for (i in 1..20) {
+      delay(250)
+      count = i
+    }
   }
 }
 ```
@@ -95,7 +65,7 @@ Mosaic itself can then be added like any other dependency:
 
 ```groovy
 dependencies {
-  implementation("com.jakewharton.mosaic:mosaic-runtime:0.13.0")
+  implementation("com.jakewharton.mosaic:mosaic-runtime:0.14.0")
 }
 ```
 
@@ -113,7 +83,7 @@ repository {
   }
 }
 dependencies {
-  implementation("com.jakewharton.mosaic:mosaic-runtime:0.14.0-SNAPSHOT")
+  implementation("com.jakewharton.mosaic:mosaic-runtime:0.15.0-SNAPSHOT")
 }
 ```
 
@@ -172,25 +142,6 @@ successive lines instead.
 In the future Mosaic will detect this case and do... something. For now, we unconditionally emit
 ANSI control characters. Run your programs directly in a terminal emulator–no IDE and no Gradle.
 
-### Why doesn't work take place in a `LaunchedEffect`?
-
-This is the goal. It is currently blocked by [issuetracker.google.com/178904648](https://issuetracker.google.com/178904648).
-
-When that change lands, and Mosaic is updated, the counter sample will look like this:
-```kotlin
-suspend fun main() = runMosaic {
-  var count by remember { mutableIntStateOf(0) }
-
-  Text("The count is: $count")
-
-  LaunchedEffect(Unit) {
-    for (i in 1..20) {
-      delay(250)
-      count = i
-    }
-  }
-}
-```
 
 # License
 

@@ -1,22 +1,35 @@
 # Change log
 
 ## [Unreleased]
+[Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.14.0...HEAD
 
 New:
-- Support synchronized terminal update for rendering.
-- The terminal cursor is now automatically hidden during rendering and restored afterwards.
-- Use `Modifier.onKeyEvent` or `Modifier.onPreKeyEvent` to listen to keyboard events.
-- Send real frame times into Compose which can be used for things like animations.
+- Nothing yet!
 
 Changed:
-- Сhange `DrawScope#drawRect` API with the ability to draw with text characters and specify `DrawStyle` (`Fill` or `Stroke`).
-- Drop support for JS target. If you were using this, please file an issue so we can discuss support.
+- Nothing yet!
 
 Fixed:
 - Nothing yet!
 
 
+## [0.14.0] - 2024-10-07
+[0.14.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.14.0
+
+New:
+- Support synchronized terminal update for rendering. This should eliminate tearing when rendering updates for terminals that support this feature.
+- The terminal cursor is now automatically hidden during rendering and restored afterward.
+- Added `Modifier.onKeyEvent` or `Modifier.onPreKeyEvent` to listen to keyboard events.
+- Send real frame times into Compose which can be used for things like animations.
+
+Changed:
+- The entrypoints (`runMosaic` and `runMosaicBlocking`) have been changed to directly accept a composable lambda. Asynchronous work should not be performed inside Compose's effect system (e.g., `LaunchEffect`), and rendering will complete when all effects have completed. Check out our samples for more information about how to do this.
+- Сhange `DrawScope#drawRect` API with the ability to draw with text characters and specify `DrawStyle` (`Fill` or `Stroke`).
+- Drop support for JS target. If you were using this, please file an issue so we can discuss support.
+
+
 ## [0.13.0] - 2024-05-28
+[0.13.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.13.0
 
 New:
 - Support Kotlin 2.0.0!
@@ -88,6 +101,7 @@ mosaic {
 
 
 ## [0.12.0] - 2024-05-28
+[0.12.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.12.0
 
 New:
 - Add `linuxArm64` target.
@@ -105,6 +119,7 @@ Fixed:
 
 
 ## [0.11.0] - 2024-02-27
+[0.11.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.11.0
 
 New:
 - Support Kotlin 1.9.22 via JetBrains Compose compiler 1.5.10.
@@ -128,6 +143,7 @@ This version works with Kotlin 1.9.22 by default.
 
 
 ## [0.10.0] - 2023-11-13
+[0.10.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.10.0
 
 New:
 - Support Kotlin 1.9.20 via JetBrains Compose compiler 1.5.3.
@@ -179,6 +195,7 @@ This version works with Kotlin 1.9.20 by default.
 
 
 ## [0.9.1] - 2023-09-14
+[0.9.1]: https://github.com/JakeWharton/mosaic/releases/tag/0.9.1
 
 New:
 - Support Kotlin 1.9.10 via JetBrains Compose compiler 1.5.2.
@@ -187,6 +204,7 @@ This version works with Kotlin 1.9.10 by default.
 
 
 ## [0.9.0] - 2023-08-09
+[0.9.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.9.0
 
 New:
 - Support for specifying custom Compose compiler versions. This will allow you to use the latest
@@ -196,18 +214,21 @@ New:
 
 
 ## [0.8.0] - 2023-07-20
+[0.8.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.8.0
 
 New:
 - Support Kotlin 1.9.0 via JetBrains Compose compiler 1.5.0.
 
 
 ## [0.7.1] - 2023-06-30
+[0.7.1]: https://github.com/JakeWharton/mosaic/releases/tag/0.7.1
 
 New:
 - Support Kotlin 1.8.22 via JetBrains Compose compiler 1.4.8.
 
 
 ## [0.7.0] - 2023-06-26
+[0.7.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.7.0
 
 New:
 - Support Kotlin 1.8.21 via JetBrains Compose compiler 1.4.7.
@@ -221,6 +242,7 @@ Changed:
 
 
 ## [0.6.0] - 2023-04-17
+[0.6.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.6.0
 
 New:
 - Support Kotlin 1.8.20 via JetBrains Compose compiler 1.4.5.
@@ -238,6 +260,7 @@ Breaking:
 
 
 ## [0.5.0] - 2023-03-09
+[0.5.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.5.0
 
  - Support Kotlin 1.8.10 via JetBrains Compose compiler 1.4.2.
  - New: `renderMosaic` function returns a single string of the composition for tools that require only static output.
@@ -247,6 +270,7 @@ Breaking:
 
 
 ## [0.4.0] - 2023-02-19
+[0.4.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.4.0
 
  - Mosaic is now multiplatform!
 
@@ -264,6 +288,7 @@ Breaking:
 
 
 ## [0.3.0] - 2023-01-17
+[0.3.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.3.0
 
  - Support Kotlin 1.8.0 via Compose compiler 1.4.0.
  - New: `Static` composable for rendering permanent output.
@@ -271,29 +296,13 @@ Breaking:
 
 
 ## [0.2.0] - 2022-08-12
+[0.2.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.2.0
 
  - Support Kotlin 1.7.10 via Compose compiler 1.3.0.
  - Migrate from custom build of Compose compiler and Compose runtime to Google's Compose compiler and JetBrains' multiplatform Compose runtime. Note that this will require you have the Google Maven repositories in your Gradle repositories (`google()`).
 
 
 ## [0.1.0] - 2021-06-25
+[0.1.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.1.0
 
 Initial release!
-
-
-[Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.13.0...HEAD
-[0.13.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.13.0
-[0.12.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.12.0
-[0.11.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.11.0
-[0.10.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.10.0
-[0.9.1]: https://github.com/JakeWharton/mosaic/releases/tag/0.9.1
-[0.9.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.9.0
-[0.8.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.8.0
-[0.7.1]: https://github.com/JakeWharton/mosaic/releases/tag/0.7.1
-[0.7.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.7.0
-[0.6.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.6.0
-[0.5.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.5.0
-[0.4.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.4.0
-[0.3.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.3.0
-[0.2.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.2.0
-[0.1.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.1.0
