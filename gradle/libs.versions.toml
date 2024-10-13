@@ -15,7 +15,7 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 compose-collection = { module = "org.jetbrains.compose.collection-internal:collection", version.ref = "compose" }
 compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose" }
 
-maven-publish-gradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.29.0"
+maven-publish-gradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.30.0"
 dokka-gradlePlugin = "org.jetbrains.dokka:dokka-gradle-plugin:1.9.20"
 poko-gradlePlugin = "dev.drewhamilton.poko:poko-gradle-plugin:0.17.1"
 binary-compatibility-validator-gradlePlugin = "org.jetbrains.kotlinx:binary-compatibility-validator:0.16.3"
