@@ -7,6 +7,7 @@ import com.jakewharton.mosaic.layout.Placeable.PlacementScope
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.unit.Constraints
+import com.jakewharton.mosaic.ui.unit.IntOffset
 
 internal fun interface DebugPolicy {
 	fun MosaicNode.renderDebug(): String
@@ -67,6 +68,10 @@ internal abstract class MosaicNodeLayer(
 		return next?.sendKeyEvent(keyEvent) ?: false
 	}
 
+	open fun sendPointerEvent(pointerEvent: PointerEvent, offset: IntOffset): Boolean {
+		return next?.sendPointerEvent(pointerEvent, offset) ?: false
+	}
+
 	override fun minIntrinsicWidth(height: Int): Int {
 		return next?.minIntrinsicWidth(height) ?: 0
 	}
@@ -113,6 +118,8 @@ internal class MosaicNode(
 				is DrawModifier -> DrawLayer(element, nextLayer)
 
 				is KeyModifier -> KeyLayer(element, nextLayer)
+
+				is PointerModifier -> PointerLayer(element, nextLayer)
 
 				is ParentDataModifier -> {
 					parentData = element.modifyParentData(parentData)
@@ -166,6 +173,10 @@ internal class MosaicNode(
 		return topLayer.sendKeyEvent(keyEvent)
 	}
 
+	fun sendPointerEvent(pointerEvent: PointerEvent): Boolean {
+		return topLayer.sendPointerEvent(pointerEvent, IntOffset(0, 0))
+	}
+
 	override fun minIntrinsicWidth(height: Int): Int {
 		return topLayer.minIntrinsicWidth(height)
 	}
@@ -207,6 +218,13 @@ private class BottomLayer(
 			if (child.sendKeyEvent(keyEvent)) {
 				return true
 			}
+		}
+		return false
+	}
+
+	override fun sendPointerEvent(pointerEvent: PointerEvent, offset: IntOffset): Boolean {
+		for (child in node.children) {
+			// TODO offset the offset, and send
 		}
 		return false
 	}
@@ -281,4 +299,19 @@ private class KeyLayer(
 		element.onPreKeyEvent(keyEvent) ||
 			next.sendKeyEvent(keyEvent) ||
 			element.onKeyEvent(keyEvent)
+}
+
+private class PointerLayer(
+	private val element: PointerModifier,
+	private val lowerLayer: MosaicNodeLayer,
+) : MosaicNodeLayer(lowerLayer, false) {
+	override fun sendPointerEvent(
+		pointerEvent: PointerEvent,
+		offset: IntOffset
+	): Boolean {
+		// TODO How do you get the relative offset within a modifier callback though?
+		return element.onPrePointerEvent(pointerEvent) ||
+			lowerLayer.sendPointerEvent(pointerEvent, offset) ||
+			element.onPointerEvent(pointerEvent)
+	}
 }

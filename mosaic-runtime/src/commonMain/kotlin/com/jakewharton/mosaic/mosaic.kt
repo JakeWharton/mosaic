@@ -1,5 +1,6 @@
 package com.jakewharton.mosaic
 
+import com.github.ajalt.mordant.terminal.Terminal as MordantTerminal
 import androidx.collection.mutableScatterSetOf
 import androidx.compose.runtime.AbstractApplier
 import androidx.compose.runtime.BroadcastFrameClock
@@ -13,13 +14,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.ObserverHandle
 import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.runtime.withFrameNanos
+import com.github.ajalt.mordant.input.KeyboardEvent
+import com.github.ajalt.mordant.input.MouseEvent
+import com.github.ajalt.mordant.input.MouseTracking
 import com.github.ajalt.mordant.input.RawModeScope
 import com.github.ajalt.mordant.input.enterRawMode
 import com.github.ajalt.mordant.platform.MultiplatformSystem
-import com.github.ajalt.mordant.terminal.Terminal as MordantTerminal
 import com.jakewharton.finalization.withFinalizationHook
 import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.layout.MosaicNode
+import com.jakewharton.mosaic.layout.PointerEvent
 import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.BoxMeasurePolicy
 import com.jakewharton.mosaic.ui.unit.IntSize
@@ -82,7 +86,7 @@ internal suspend fun runMosaic(enterRawMode: Boolean, content: @Composable () ->
 
 	val rawMode = if (enterRawMode && MultiplatformSystem.readEnvironmentVariable("MOSAIC_RAW_MODE") != "false") {
 		// In theory this call could fail, so perform it before any additional control sequences.
-		mordantTerminal.enterRawMode()
+		mordantTerminal.enterRawMode(MouseTracking.Any)
 	} else {
 		null
 	}
@@ -147,13 +151,21 @@ private fun CoroutineScope.updateTerminalInfo(terminal: MordantTerminal, termina
 private fun CoroutineScope.readRawModeKeys(rawMode: RawModeScope, keyEvents: Channel<KeyEvent>) {
 	launch(Dispatchers.IO) {
 		while (isActive) {
-			val keyboardEvent = rawMode.readKeyOrNull(10.milliseconds) ?: continue
-			val keyEvent = KeyEvent(
-				key = keyboardEvent.key,
-				alt = keyboardEvent.alt,
-				ctrl = keyboardEvent.ctrl,
-				shift = keyboardEvent.shift,
-			)
+			val mordantEvent = rawMode.readEventOrNull(10.milliseconds) ?: continue
+			val mosaicEvent = when (mordantEvent) {
+				is KeyboardEvent -> {
+					KeyEvent(
+						key = mordantEvent.key,
+						alt = mordantEvent.alt,
+						ctrl = mordantEvent.ctrl,
+						shift = mordantEvent.shift,
+					)
+				}
+				is MouseEvent ->
+					PointerEvent(
+
+					)
+			}
 			keyEvents.trySend(keyEvent)
 		}
 	}
