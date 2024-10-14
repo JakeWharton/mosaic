@@ -13,12 +13,12 @@ internal fun interface DebugPolicy {
 }
 
 internal abstract class MosaicNodeLayer(
-	private val next: MosaicNodeLayer?,
 	private val isStatic: Boolean,
 ) : Placeable(),
 	Measurable,
 	PlacementScope,
 	MeasureScope {
+	abstract val next: MosaicNodeLayer?
 
 	private var measureResult: MeasureResult = NotMeasured
 
@@ -187,7 +187,9 @@ internal class MosaicNode(
 
 private class BottomLayer(
 	private val node: MosaicNode,
-) : MosaicNodeLayer(null, node.isStatic) {
+) : MosaicNodeLayer(node.isStatic) {
+	override val next: MosaicNodeLayer? get() = null
+
 	override fun doMeasure(constraints: Constraints): MeasureResult {
 		return node.measurePolicy.run { measure(node.children, constraints) }
 	}
@@ -228,33 +230,33 @@ private class BottomLayer(
 
 private class LayoutLayer(
 	private val element: LayoutModifier,
-	private val lowerLayer: MosaicNodeLayer,
-) : MosaicNodeLayer(lowerLayer, false) {
+	override val next: MosaicNodeLayer,
+) : MosaicNodeLayer(false) {
 	override fun doMeasure(constraints: Constraints): MeasureResult {
-		return element.run { measure(lowerLayer, constraints) }
+		return element.run { measure(next, constraints) }
 	}
 
 	override fun minIntrinsicWidth(height: Int): Int {
-		return element.minIntrinsicWidth(lowerLayer, height)
+		return element.minIntrinsicWidth(next, height)
 	}
 
 	override fun maxIntrinsicWidth(height: Int): Int {
-		return element.maxIntrinsicWidth(lowerLayer, height)
+		return element.maxIntrinsicWidth(next, height)
 	}
 
 	override fun minIntrinsicHeight(width: Int): Int {
-		return element.minIntrinsicHeight(lowerLayer, width)
+		return element.minIntrinsicHeight(next, width)
 	}
 
 	override fun maxIntrinsicHeight(width: Int): Int {
-		return element.maxIntrinsicHeight(lowerLayer, width)
+		return element.maxIntrinsicHeight(next, width)
 	}
 }
 
 private class DrawLayer(
 	private val element: DrawModifier,
-	private val lowerLayer: MosaicNodeLayer,
-) : MosaicNodeLayer(lowerLayer, false) {
+	override val next: MosaicNodeLayer,
+) : MosaicNodeLayer(false) {
 	override fun drawTo(canvas: TextCanvas) {
 		val oldX = canvas.translationX
 		val oldY = canvas.translationY
@@ -262,7 +264,7 @@ private class DrawLayer(
 		canvas.translationY = y
 		val scope = object : TextCanvasDrawScope(canvas, width, height), ContentDrawScope {
 			override fun drawContent() {
-				lowerLayer.drawTo(canvas)
+				next.drawTo(canvas)
 			}
 		}
 		element.run { scope.draw() }
@@ -273,10 +275,10 @@ private class DrawLayer(
 
 private class KeyLayer(
 	private val element: KeyModifier,
-	private val lowerLayer: MosaicNodeLayer,
-) : MosaicNodeLayer(lowerLayer, false) {
+	override val next: MosaicNodeLayer,
+) : MosaicNodeLayer(false) {
 	override fun sendKeyEvent(keyEvent: KeyEvent) =
 		element.onPreKeyEvent(keyEvent) ||
-			lowerLayer.sendKeyEvent(keyEvent) ||
+			next.sendKeyEvent(keyEvent) ||
 			element.onKeyEvent(keyEvent)
 }
