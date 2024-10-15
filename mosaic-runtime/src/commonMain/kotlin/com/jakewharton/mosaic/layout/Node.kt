@@ -224,7 +224,7 @@ private class BottomLayer(
 
 	override fun sendPointerEvent(pointerEvent: PointerEvent, offset: IntOffset): Boolean {
 		for (child in node.children) {
-			// TODO offset the offset, and send
+			child.topLayer.sendPointerEvent(pointerEvent, offset)
 		}
 		return false
 	}
@@ -303,15 +303,15 @@ private class KeyLayer(
 
 private class PointerLayer(
 	private val element: PointerModifier,
-	private val lowerLayer: MosaicNodeLayer,
-) : MosaicNodeLayer(lowerLayer, false) {
+	override val next: MosaicNodeLayer,
+) : MosaicNodeLayer(false) {
 	override fun sendPointerEvent(
 		pointerEvent: PointerEvent,
 		offset: IntOffset
 	): Boolean {
 		// TODO How do you get the relative offset within a modifier callback though?
 		return element.onPrePointerEvent(pointerEvent) ||
-			lowerLayer.sendPointerEvent(pointerEvent, offset) ||
+			next.sendPointerEvent(pointerEvent, offset) ||
 			element.onPointerEvent(pointerEvent)
 	}
 }

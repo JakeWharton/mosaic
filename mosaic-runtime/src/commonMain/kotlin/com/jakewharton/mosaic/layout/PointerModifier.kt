@@ -24,9 +24,19 @@ public interface PointerModifier : Modifier.Element {
 
 @[Immutable Poko]
 public class PointerEvent(
-	public val key: String,
-	public val alt: Boolean = false,
+	public val x: Int,
+	public val y: Int,
+	public val left: Boolean = false,
+	public val right: Boolean = false,
+	public val middle: Boolean = false,
+	public val mouse4: Boolean = false,
+	public val mouse5: Boolean = false,
+	public val wheelUp: Boolean = false,
+	public val wheelDown: Boolean = false,
+	public val wheelLeft: Boolean = false,
+	public val wheelRight: Boolean = false,
 	public val ctrl: Boolean = false,
+	public val alt: Boolean = false,
 	public val shift: Boolean = false,
 )
 

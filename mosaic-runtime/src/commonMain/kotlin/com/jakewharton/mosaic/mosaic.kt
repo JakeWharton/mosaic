@@ -57,6 +57,7 @@ internal fun renderMosaicNode(content: @Composable () -> Unit): MosaicNode {
 		coroutineScope = CoroutineScope(EmptyCoroutineContext),
 		terminalState = MordantTerminal().toMutableState(),
 		keyEvents = Channel(),
+		pointerEvents = Channel(),
 		onDraw = {},
 	)
 	mosaicComposition.setContent(content)
@@ -83,6 +84,7 @@ internal suspend fun runMosaic(enterRawMode: Boolean, content: @Composable () ->
 	val rendering = createRendering(mordantTerminal.terminalInfo.ansiLevel.toMosaicAnsiLevel())
 	val terminalState = mordantTerminal.toMutableState()
 	val keyEvents = Channel<KeyEvent>(UNLIMITED)
+	val pointerEvents = Channel<PointerEvent>(UNLIMITED)
 
 	val rawMode = if (enterRawMode && MultiplatformSystem.readEnvironmentVariable("MOSAIC_RAW_MODE") != "false") {
 		// In theory this call could fail, so perform it before any additional control sequences.
@@ -103,6 +105,7 @@ internal suspend fun runMosaic(enterRawMode: Boolean, content: @Composable () ->
 				coroutineScope = this,
 				terminalState = terminalState,
 				keyEvents = keyEvents,
+				pointerEvents = pointerEvents,
 				onDraw = { rootNode ->
 					platformDisplay(rendering.render(rootNode))
 				},
@@ -110,7 +113,7 @@ internal suspend fun runMosaic(enterRawMode: Boolean, content: @Composable () ->
 			mosaicComposition.sendFrames()
 			mosaicComposition.scope.updateTerminalInfo(mordantTerminal, terminalState)
 			rawMode?.let { rawMode ->
-				mosaicComposition.scope.readRawModeKeys(rawMode, keyEvents)
+				mosaicComposition.scope.readRawModeKeys(rawMode, keyEvents, pointerEvents)
 			}
 			mosaicComposition.setContent(content)
 			mosaicComposition.awaitComplete()
@@ -148,25 +151,44 @@ private fun CoroutineScope.updateTerminalInfo(terminal: MordantTerminal, termina
 	}
 }
 
-private fun CoroutineScope.readRawModeKeys(rawMode: RawModeScope, keyEvents: Channel<KeyEvent>) {
+private fun CoroutineScope.readRawModeKeys(
+	rawMode: RawModeScope,
+	keyEvents: Channel<KeyEvent>,
+	pointerEvents: Channel<PointerEvent>,
+) {
 	launch(Dispatchers.IO) {
 		while (isActive) {
-			val mordantEvent = rawMode.readEventOrNull(10.milliseconds) ?: continue
-			val mosaicEvent = when (mordantEvent) {
+			when (val mordantEvent = rawMode.readEventOrNull(10.milliseconds)) {
+				null -> continue
 				is KeyboardEvent -> {
-					KeyEvent(
+					val mosaicEvent = KeyEvent(
 						key = mordantEvent.key,
 						alt = mordantEvent.alt,
 						ctrl = mordantEvent.ctrl,
 						shift = mordantEvent.shift,
 					)
+					keyEvents.trySend(mosaicEvent)
 				}
-				is MouseEvent ->
-					PointerEvent(
-
+				is MouseEvent -> {
+					val mosaicEvent = PointerEvent(
+						x = mordantEvent.x,
+						y = mordantEvent.y,
+						left = mordantEvent.left,
+						right = mordantEvent.right,
+						middle = mordantEvent.middle,
+						mouse4 = mordantEvent.mouse4,
+						mouse5 = mordantEvent.mouse5,
+						wheelUp = mordantEvent.wheelUp,
+						wheelDown = mordantEvent.wheelDown,
+						wheelLeft = mordantEvent.wheelLeft,
+						wheelRight = mordantEvent.wheelRight,
+						ctrl = mordantEvent.ctrl,
+						alt = mordantEvent.alt,
+						shift = mordantEvent.shift,
 					)
+					pointerEvents.trySend(mosaicEvent)
+				}
 			}
-			keyEvents.trySend(keyEvent)
 		}
 	}
 }
@@ -175,6 +197,7 @@ internal class MosaicComposition(
 	coroutineScope: CoroutineScope,
 	private val terminalState: State<Terminal>,
 	private val keyEvents: ReceiveChannel<KeyEvent>,
+	private val pointerEvents: ReceiveChannel<PointerEvent>,
 	private val onDraw: (MosaicNode) -> Unit,
 ) {
 	private val job = Job(coroutineScope.coroutineContext[Job])
@@ -264,13 +287,17 @@ internal class MosaicComposition(
 			val ctrlC = KeyEvent("c", ctrl = true)
 
 			while (true) {
-				// Drain any pending key events before triggering the frame.
+				// Drain any pending events before triggering the frame.
 				while (true) {
 					val keyEvent = keyEvents.tryReceive().getOrNull() ?: break
 					val keyHandled = rootNode.sendKeyEvent(keyEvent)
 					if (!keyHandled && keyEvent == ctrlC) {
 						cancel()
 					}
+				}
+				while (true) {
+					val pointerEvent = pointerEvents.tryReceive().getOrNull() ?: break
+					rootNode.sendPointerEvent(pointerEvent)
 				}
 
 				clock.sendFrame(nanoTime())
