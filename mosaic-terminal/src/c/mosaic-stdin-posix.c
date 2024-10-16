@@ -11,6 +11,7 @@
 typedef struct stdinReaderImpl {
 	int pipe[2];
 	fd_set fds;
+	timeval timeout;
 } stdinReaderImpl;
 
 stdinReaderResult stdinReader_init() {
@@ -37,7 +38,12 @@ stdinReaderResult stdinReader_init() {
 	goto ret;
 }
 
-stdinRead stdinReader_read(stdinReader *reader, void *buffer, int count) {
+stdinRead stdinReader_read(
+	stdinReader *reader,
+	void *buffer,
+	int count,
+	stdinReaderTimeout* timeout
+) {
 	int pipeIn = reader->pipe[0];
 
 	FD_SET(STDIN_FILENO, &reader->fds);
@@ -48,7 +54,7 @@ stdinRead stdinReader_read(stdinReader *reader, void *buffer, int count) {
 
 	stdinRead result = {};
 
-	if (likely(select(nfds, &reader->fds, NULL, NULL, NULL) >= 0)) {
+	if (likely(select(nfds, &reader->fds, NULL, NULL, timeout) >= 0)) {
 		if (likely(FD_ISSET(STDIN_FILENO, &reader->fds) != 0)) {
 			int c = read(STDIN_FILENO, buffer, count);
 			if (likely(c > 0)) {
@@ -59,7 +65,7 @@ stdinRead stdinReader_read(stdinReader *reader, void *buffer, int count) {
 				goto err;
 			}
 		}
-		// Otherwise if the interrupt pipe was selected we return a count of 0.
+		// Otherwise if the interrupt pipe was selected or we timed out, return a count of 0.
 	} else {
 		goto err;
 	}
@@ -92,6 +98,10 @@ platformError stdinReader_free(stdinReader *reader) {
 	}
 	free(reader);
 	return result;
+}
+
+stdinReaderTimeout stdinReaderTimeoutFromMillis(int millis) {
+
 }
 
 #endif

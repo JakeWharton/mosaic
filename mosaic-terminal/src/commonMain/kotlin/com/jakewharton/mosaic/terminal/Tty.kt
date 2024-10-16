@@ -1,5 +1,9 @@
 package com.jakewharton.mosaic.terminal
 
+import com.jakewharton.mosaic.terminal.Tty.enableRawMode
+import com.jakewharton.mosaic.terminal.Tty.stdinReader
+
+
 public expect object Tty {
 	/**
 	 * Save the current terminal settings and enter "raw" mode.
@@ -33,8 +37,19 @@ public expect class StdinReader : AutoCloseable {
 	 * Read up to [length] bytes into [buffer] at [offset]. The number of bytes read will be returned.
 	 * 0 will be returned if [interrupt] is called while waiting for input. -1 will be returned if
 	 * the input stream is closed.
+	 *
+	 * @see readWithTimeout
 	 */
 	public fun read(buffer: ByteArray, offset: Int, length: Int): Int
+
+	/**
+	 * Read up to [length] bytes into [buffer] at [offset]. The number of bytes read will be returned.
+	 * 0 will be returned if [interrupt] is called while waiting for input, or if at least
+	 * [timeoutMillis] have passed without data. -1 will be returned if the input stream is closed.
+	 *
+	 * @see read
+	 */
+	public fun readWithTimeout(buffer: ByteArray, offset: Int, length: Int, timeoutMillis: Int): Int
 
 	/** Signal blocking calls to [read] to wake up and return 0. */
 	public fun interrupt()

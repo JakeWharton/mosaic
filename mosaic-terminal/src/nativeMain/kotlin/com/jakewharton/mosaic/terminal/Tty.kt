@@ -41,8 +41,17 @@ public actual class StdinReader internal constructor(
 	public actual fun read(buffer: ByteArray, offset: Int, length: Int): Int {
 		buffer.usePinned {
 			stdinReader_read(ref, it.addressOf(offset), length).useContents {
-				if (error != 0U) throw RuntimeException(error.toString())
-				return count
+				if (error == 0U) return count
+				throw RuntimeException(error.toString())
+			}
+		}
+	}
+
+	public actual fun readWithTimeout(buffer: ByteArray, offset: Int, length: Int, timeoutMillis: Int): Int {
+		buffer.usePinned {
+			stdinReader_readWithTimeout(ref, it.addressOf(offset), length, timeoutMillis).useContents {
+				if (error == 0U) return count
+				throw RuntimeException(error.toString())
 			}
 		}
 	}
