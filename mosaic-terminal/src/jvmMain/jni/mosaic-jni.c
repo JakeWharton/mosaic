@@ -4,13 +4,22 @@
 #include <stdlib.h>
 #include <string.h>
 
-void throwIse(JNIEnv *env, unsigned int error, const char *format) {
+void throwIse(JNIEnv *env, unsigned int error, const char *prefix) {
 	jclass ise = (*env)->FindClass(env, "java/lang/IllegalStateException");
-	// TODO Do not require the caller append "%lu" to their prefix string.
-	// 10 == max length of unsigned int formatted to decimal + 1 for terminating null byte.
-	char *message = malloc((strlen(format) + 11) * sizeof(char));
+
+	int prefixLength = strlen(prefix);
+	int colonSpaceLength = 2;
+	int maxLengthUnsignedDigit = 10;
+	int extraNullByte = 1;
+	int messageLength = prefixLength + colonSpaceLength + maxLengthUnsignedDigit + extraNullByte;
+
+	char *message = malloc(messageLength * sizeof(char));
 	if (message) {
-		sprintf(message, format, error);
+		memcpy(message, prefix, prefixLength);
+		message[prefixLength] = ':';
+		message[prefixLength + 1] = ' ';
+		// Offset the location of the formatted number by the prefix and colon+space lengths.
+		sprintf(message + prefixLength + colonSpaceLength, "%lu", error);
 		(*env)->ThrowNew(env, ise, message);
 	}
 }
@@ -24,7 +33,7 @@ Java_com_jakewharton_mosaic_terminal_Tty_enterRawMode(JNIEnv *env, jclass type) 
 
 	// This throw can fail, but the only condition that should cause that is OOM which
 	// will occur from returning 0 (which is otherwise ignored if the throw succeeds).
-	throwIse(env, result.error, "Unable to enable raw mode: %lu");
+	throwIse(env, result.error, "Unable to enable raw mode");
 	return 0;
 }
 
@@ -42,7 +51,7 @@ Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderInit(JNIEnv *env, jclass typ
 
 	// This throw can fail, but the only condition that should cause that is OOM which
 	// will occur from returning 0 (which is otherwise ignored if the throw succeeds).
-	throwIse(env, result.error, "Unable to create stdin reader: %lu");
+	throwIse(env, result.error, "Unable to create stdin reader");
 	return 0;
 }
 
@@ -65,7 +74,7 @@ Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderRead(
 
 	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
 	// and should cause the program to try and exit cleanly. 0 is a valid return value.
-	throwIse(env, read.error, "Unable to read stdin: %lu");
+	throwIse(env, read.error, "Unable to read stdin");
 	return -1;
 }
 
