@@ -4,11 +4,12 @@
 #if defined(__APPLE__) || defined(__linux__)
 
 #include <termios.h>
+#include <time.h>
 
 typedef struct termios rawModeConfig;
 typedef unsigned int platformError;
 
-typedef struct timeval stdinReaderTimeout;
+typedef struct timespec stdinReaderTimeout;
 
 #elif defined(WIN32)
 
@@ -44,6 +45,6 @@ stdinReaderResult stdinReader_init();
 stdinRead stdinReader_read(stdinReader *reader, void *buffer, int count, stdinReaderTimeout* timeout);
 platformError stdinReader_interrupt(stdinReader* reader);
 platformError stdinReader_free(stdinReader *reader);
-stdinReaderTimeout stdinReaderTimeoutFromMillis(int millis);
+void stdinReader_setTimeout(stdinReader *reader, int timeoutMillis);
 
 #endif // MOSAIC_H

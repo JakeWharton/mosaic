@@ -19,7 +19,7 @@ void throwIse(JNIEnv *env, unsigned int error, const char *prefix) {
 		message[prefixLength] = ':';
 		message[prefixLength + 1] = ' ';
 		// Offset the location of the formatted number by the prefix and colon+space lengths.
-		sprintf(message + prefixLength + colonSpaceLength, "%lu", error);
+		sprintf(message + prefixLength + colonSpaceLength, "%iu", error);
 		(*env)->ThrowNew(env, ise, message);
 	}
 }
@@ -66,7 +66,35 @@ Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderRead(
 ) {
 	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
 	jbyte *nativeBufferAtOffset = nativeBuffer + offset;
-	stdinRead read = stdinReader_read((stdinReader *) ptr, nativeBufferAtOffset, length);
+	stdinRead read = stdinReader_read((stdinReader *) ptr, nativeBufferAtOffset, length, NULL);
+	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
+	if (likely(!read.error)) {
+		return read.count;
+	}
+
+	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
+	// and should cause the program to try and exit cleanly. 0 is a valid return value.
+	throwIse(env, read.error, "Unable to read stdin");
+	return -1;
+}
+
+JNIEXPORT jint JNICALL
+Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderReadWithTimeout(
+	JNIEnv *env,
+	jclass type,
+	jlong ptr,
+	jbyteArray buffer,
+	jint offset,
+	jint length,
+	jint timeoutMillis
+) {
+	stdinReader *reader = (stdinReader *) ptr;
+
+	stdinReader_setTimeout(reader, timeoutMillis);
+
+	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
+	jbyte *nativeBufferAtOffset = nativeBuffer + offset;
+	stdinRead read = stdinReader_read(reader, nativeBufferAtOffset, length, &reader->timeout);
 	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
 	if (likely(!read.error)) {
 		return read.count;

@@ -3,6 +3,7 @@ package com.jakewharton.mosaic.terminal
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.addressOf
+import kotlinx.cinterop.pointed
 import kotlinx.cinterop.useContents
 import kotlinx.cinterop.usePinned
 
@@ -40,7 +41,7 @@ public actual class StdinReader internal constructor(
 ) : AutoCloseable {
 	public actual fun read(buffer: ByteArray, offset: Int, length: Int): Int {
 		buffer.usePinned {
-			stdinReader_read(ref, it.addressOf(offset), length).useContents {
+			stdinReader_read(ref, it.addressOf(offset), length, null).useContents {
 				if (error == 0U) return count
 				throw RuntimeException(error.toString())
 			}

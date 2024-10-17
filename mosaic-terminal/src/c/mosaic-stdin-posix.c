@@ -6,12 +6,13 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <sys/select.h>
+#include <time.h>
 #include <unistd.h>
 
 typedef struct stdinReaderImpl {
 	int pipe[2];
 	fd_set fds;
-	timeval timeout;
+	struct timespec timeout;
 } stdinReaderImpl;
 
 stdinReaderResult stdinReader_init() {
@@ -54,7 +55,7 @@ stdinRead stdinReader_read(
 
 	stdinRead result = {};
 
-	if (likely(select(nfds, &reader->fds, NULL, NULL, timeout) >= 0)) {
+	if (likely(pselect(nfds, &reader->fds, NULL, NULL, timeout, NULL) >= 0)) {
 		if (likely(FD_ISSET(STDIN_FILENO, &reader->fds) != 0)) {
 			int c = read(STDIN_FILENO, buffer, count);
 			if (likely(c > 0)) {
@@ -100,8 +101,10 @@ platformError stdinReader_free(stdinReader *reader) {
 	return result;
 }
 
-stdinReaderTimeout stdinReaderTimeoutFromMillis(int millis) {
-
+void stdinReader_setMillis(stdinReader *reader, int timeoutMillis) {
+	struct timespec timeout = reader->timeout;
+	timeout.tv_sec = 0;
+	timeout.tv_nsec = timeoutMillis * 1000000;
 }
 
 #endif
