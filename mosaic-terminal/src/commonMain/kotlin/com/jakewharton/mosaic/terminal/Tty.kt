@@ -47,6 +47,7 @@ public expect class StdinReader : AutoCloseable {
 	 * 0 will be returned if [interrupt] is called while waiting for input, or if at least
 	 * [timeoutMillis] have passed without data. -1 will be returned if the input stream is closed.
 	 *
+	 * @param timeoutMillis A value of 0 will perform a non-blocking read
 	 * @see read
 	 */
 	public fun readWithTimeout(buffer: ByteArray, offset: Int, length: Int, timeoutMillis: Int): Int

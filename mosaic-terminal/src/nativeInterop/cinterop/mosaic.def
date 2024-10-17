@@ -1,0 +1,5 @@
+---
+
+// Avoid types ending up in cnames.structs.* https://youtrack.jetbrains.com/issue/KT-49034
+
+//typedef struct timespec {} timespec;

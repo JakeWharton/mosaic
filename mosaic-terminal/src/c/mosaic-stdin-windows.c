@@ -40,9 +40,9 @@ stdinReaderResult stdinReader_init() {
 	goto ret;
 }
 
-stdinRead stdinReader_read(stdinReader *reader, void *buffer, int count) {
+stdinRead stdinReader_read(stdinReader *reader, void *buffer, int count, DWORD timeout) {
 	stdinRead result = {};
-	DWORD waitResult = WaitForMultipleObjects(2, reader->handles, FALSE, INFINITE);
+	DWORD waitResult = WaitForMultipleObjects(2, reader->handles, FALSE, timeout);
 	if (likely(waitResult == WAIT_OBJECT_0)) {
 		LPDWORD read = 0;
 		if (likely(ReadConsole(reader->handles[0], buffer, count, read, NULL) != 0)) {
@@ -54,7 +54,7 @@ stdinRead stdinReader_read(stdinReader *reader, void *buffer, int count) {
 	} else if (unlikely(waitResult == WAIT_FAILED)) {
 		goto err;
 	}
-	// Else if the interrupt event was selected we return a count of 0.
+	// Else if the interrupt event was selected or we timed out, return a count of 0.
 
 	ret:
 	return result;
@@ -77,6 +77,14 @@ platformError stdinReader_free(stdinReader *reader) {
 	}
 	free(reader);
 	return result;
+}
+
+stdinReaderTimeout stdinReader_noTimeout() {
+	return INFINITE;
+}
+
+stdinReaderTimeout stdinReader_createTimeout(stdinReader *reader, int timeoutMillis) {
+	return timeoutMillis;
 }
 
 #endif

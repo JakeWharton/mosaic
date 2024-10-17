@@ -66,8 +66,12 @@ Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderRead(
 ) {
 	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
 	jbyte *nativeBufferAtOffset = nativeBuffer + offset;
-	stdinRead read = stdinReader_read((stdinReader *) ptr, nativeBufferAtOffset, length, NULL);
+
+	stdinReaderTimeout timeout = stdinReader_noTimeout();
+	stdinRead read = stdinReader_read((stdinReader *) ptr, nativeBufferAtOffset, length, timeout);
+
 	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
+
 	if (likely(!read.error)) {
 		return read.count;
 	}
@@ -88,14 +92,15 @@ Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderReadWithTimeout(
 	jint length,
 	jint timeoutMillis
 ) {
-	stdinReader *reader = (stdinReader *) ptr;
-
-	stdinReader_setTimeout(reader, timeoutMillis);
-
 	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
 	jbyte *nativeBufferAtOffset = nativeBuffer + offset;
-	stdinRead read = stdinReader_read(reader, nativeBufferAtOffset, length, &reader->timeout);
+
+	stdinReader *reader = (stdinReader *) ptr;
+	stdinReaderTimeout timeout = stdinReader_createTimeout(reader, timeoutMillis);
+	stdinRead read = stdinReader_read(reader, nativeBufferAtOffset, length, timeout);
+
 	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
+
 	if (likely(!read.error)) {
 		return read.count;
 	}

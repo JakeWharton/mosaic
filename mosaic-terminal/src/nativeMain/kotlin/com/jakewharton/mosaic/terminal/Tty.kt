@@ -41,7 +41,8 @@ public actual class StdinReader internal constructor(
 ) : AutoCloseable {
 	public actual fun read(buffer: ByteArray, offset: Int, length: Int): Int {
 		buffer.usePinned {
-			stdinReader_read(ref, it.addressOf(offset), length, null).useContents {
+			val timeout = stdinReader_noTimeout()
+			stdinReader_read(ref, it.addressOf(offset), length, timeout).useContents {
 				if (error == 0U) return count
 				throw RuntimeException(error.toString())
 			}
@@ -50,7 +51,8 @@ public actual class StdinReader internal constructor(
 
 	public actual fun readWithTimeout(buffer: ByteArray, offset: Int, length: Int, timeoutMillis: Int): Int {
 		buffer.usePinned {
-			stdinReader_readWithTimeout(ref, it.addressOf(offset), length, timeoutMillis).useContents {
+			val timeout = stdinReader_createTimeout(ref, timeoutMillis)
+			stdinReader_read(ref, it.addressOf(offset), length, timeout).useContents {
 				if (error == 0U) return count
 				throw RuntimeException(error.toString())
 			}

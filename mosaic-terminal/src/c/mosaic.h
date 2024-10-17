@@ -9,7 +9,7 @@
 typedef struct termios rawModeConfig;
 typedef unsigned int platformError;
 
-typedef struct timespec stdinReaderTimeout;
+typedef struct timespec *stdinReaderTimeout;
 
 #elif defined(WIN32)
 
@@ -17,6 +17,8 @@ typedef struct timespec stdinReaderTimeout;
 
 typedef struct rawModeConfigWindows rawModeConfig;
 typedef DWORD platformError;
+
+typedef DWORD stdinReaderTimeout;
 
 #endif
 
@@ -42,9 +44,10 @@ typedef struct stdinRead {
 } stdinRead;
 
 stdinReaderResult stdinReader_init();
-stdinRead stdinReader_read(stdinReader *reader, void *buffer, int count, stdinReaderTimeout* timeout);
+stdinRead stdinReader_read(stdinReader *reader, void *buffer, int count, stdinReaderTimeout timeout);
 platformError stdinReader_interrupt(stdinReader* reader);
 platformError stdinReader_free(stdinReader *reader);
-void stdinReader_setTimeout(stdinReader *reader, int timeoutMillis);
+stdinReaderTimeout stdinReader_noTimeout();
+stdinReaderTimeout stdinReader_createTimeout(stdinReader *reader, int timeoutMillis);
 
 #endif // MOSAIC_H

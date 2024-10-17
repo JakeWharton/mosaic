@@ -43,7 +43,7 @@ stdinRead stdinReader_read(
 	stdinReader *reader,
 	void *buffer,
 	int count,
-	stdinReaderTimeout* timeout
+	stdinReaderTimeout timeout
 ) {
 	int pipeIn = reader->pipe[0];
 
@@ -101,10 +101,15 @@ platformError stdinReader_free(stdinReader *reader) {
 	return result;
 }
 
-void stdinReader_setMillis(stdinReader *reader, int timeoutMillis) {
+stdinReaderTimeout stdinReader_noTimeout() {
+	return NULL;
+}
+
+stdinReaderTimeout stdinReader_createTimeout(stdinReader *reader, int timeoutMillis) {
 	struct timespec timeout = reader->timeout;
 	timeout.tv_sec = 0;
 	timeout.tv_nsec = timeoutMillis * 1000000;
+	return &reader->timeout;
 }
 
 #endif
