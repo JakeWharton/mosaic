@@ -2,6 +2,7 @@ public final class com/jakewharton/mosaic/terminal/StdinReader : java/lang/AutoC
 	public fun close ()V
 	public final fun interrupt ()V
 	public final fun read ([BII)I
+	public final fun readWithTimeout ([BIII)I
 }
 
 public final class com/jakewharton/mosaic/terminal/Tty {

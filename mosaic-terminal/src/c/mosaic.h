@@ -40,6 +40,7 @@ typedef struct stdinRead {
 
 stdinReaderResult stdinReader_init();
 stdinRead stdinReader_read(stdinReader *reader, void *buffer, int count);
+stdinRead stdinReader_readWithTimeout(stdinReader *reader, void *buffer, int count, int timeoutMillis);
 platformError stdinReader_interrupt(stdinReader* reader);
 platformError stdinReader_free(stdinReader *reader);
 

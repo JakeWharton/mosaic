@@ -66,8 +66,43 @@ Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderRead(
 ) {
 	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
 	jbyte *nativeBufferAtOffset = nativeBuffer + offset;
+
 	stdinRead read = stdinReader_read((stdinReader *) ptr, nativeBufferAtOffset, length);
+
 	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
+
+	if (likely(!read.error)) {
+		return read.count;
+	}
+
+	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
+	// and should cause the program to try and exit cleanly. 0 is a valid return value.
+	throwIse(env, read.error, "Unable to read stdin");
+	return -1;
+}
+
+JNIEXPORT jint JNICALL
+Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderReadWithTimeout(
+	JNIEnv *env,
+	jclass type,
+	jlong ptr,
+	jbyteArray buffer,
+	jint offset,
+	jint length,
+	jint timeoutMillis
+) {
+	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
+	jbyte *nativeBufferAtOffset = nativeBuffer + offset;
+
+	stdinRead read = stdinReader_readWithTimeout(
+		(stdinReader *) ptr,
+		nativeBufferAtOffset,
+		length,
+		timeoutMillis
+	);
+
+	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
+
 	if (likely(!read.error)) {
 		return read.count;
 	}
