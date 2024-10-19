@@ -33,8 +33,22 @@ public expect class StdinReader : AutoCloseable {
 	 * Read up to [length] bytes into [buffer] at [offset]. The number of bytes read will be returned.
 	 * 0 will be returned if [interrupt] is called while waiting for input. -1 will be returned if
 	 * the input stream is closed.
+	 *
+	 * @see readWithTimeout
 	 */
 	public fun read(buffer: ByteArray, offset: Int, length: Int): Int
+
+	/**
+	 * Read up to [length] bytes into [buffer] at [offset]. The number of bytes read will be returned.
+	 * 0 will be returned if [interrupt] is called while waiting for input, or if at least
+	 * [timeoutMillis] have passed without data. -1 will be returned if the input stream is closed.
+	 *
+	 * @param timeoutMillis A value of 0 will perform a non-blocking read. Otherwise, valid values
+	 * are 1 to 999 which represent a maximum time (in milliseconds) to wait for data. Note: This
+	 * value is not validated.
+	 * @see read
+	 */
+	public fun readWithTimeout(buffer: ByteArray, offset: Int, length: Int, timeoutMillis: Int): Int
 
 	/** Signal blocking calls to [read] to wake up and return 0. */
 	public fun interrupt()

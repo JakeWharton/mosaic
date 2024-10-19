@@ -6,6 +6,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <sys/select.h>
+#include <time.h>
 #include <unistd.h>
 
 typedef struct stdinReaderImpl {
@@ -37,7 +38,12 @@ stdinReaderResult stdinReader_init() {
 	goto ret;
 }
 
-stdinRead stdinReader_read(stdinReader *reader, void *buffer, int count) {
+stdinRead stdinReader_readInternal(
+	stdinReader *reader,
+	void *buffer,
+	int count,
+	struct timeval *timeout
+) {
 	int pipeIn = reader->pipe[0];
 
 	FD_SET(STDIN_FILENO, &reader->fds);
@@ -48,7 +54,7 @@ stdinRead stdinReader_read(stdinReader *reader, void *buffer, int count) {
 
 	stdinRead result = {};
 
-	if (likely(select(nfds, &reader->fds, NULL, NULL, NULL) >= 0)) {
+	if (likely(select(nfds, &reader->fds, NULL, NULL, timeout) >= 0)) {
 		if (likely(FD_ISSET(STDIN_FILENO, &reader->fds) != 0)) {
 			int c = read(STDIN_FILENO, buffer, count);
 			if (likely(c > 0)) {
@@ -59,7 +65,7 @@ stdinRead stdinReader_read(stdinReader *reader, void *buffer, int count) {
 				goto err;
 			}
 		}
-		// Otherwise if the interrupt pipe was selected we return a count of 0.
+		// Otherwise if the interrupt pipe was selected or we timed out, return a count of 0.
 	} else {
 		goto err;
 	}
@@ -70,6 +76,23 @@ stdinRead stdinReader_read(stdinReader *reader, void *buffer, int count) {
 	err:
 	result.error = errno;
 	goto ret;
+}
+
+stdinRead stdinReader_read(stdinReader *reader, void *buffer, int count) {
+	return stdinReader_readInternal(reader, buffer, count, NULL);
+}
+
+stdinRead stdinReader_readWithTimeout(
+	stdinReader *reader,
+	void *buffer,
+	int count,
+	int timeoutMillis
+) {
+	struct timeval timeout;
+	timeout.tv_sec = 0;
+	timeout.tv_usec = timeoutMillis * 1000;
+
+	return stdinReader_readInternal(reader, buffer, count, &timeout);
 }
 
 platformError stdinReader_interrupt(stdinReader *reader) {
