@@ -38,7 +38,7 @@ typedef struct stdinRead {
 	platformError error;
 } stdinRead;
 
-stdinReaderResult stdinReader_init();
+stdinReaderResult stdinReader_init(const char *path);
 stdinRead stdinReader_read(stdinReader *reader, void *buffer, int count);
 stdinRead stdinReader_readWithTimeout(stdinReader *reader, void *buffer, int count, int timeoutMillis);
 platformError stdinReader_interrupt(stdinReader* reader);

@@ -7,9 +7,10 @@
 
 typedef struct stdinReaderImpl {
 	HANDLE handles[2];
+	BOOL closeStdin;
 } stdinReaderImpl;
 
-stdinReaderResult stdinReader_init() {
+stdinReaderResult stdinReader_init(const char *path) {
 	stdinReaderResult result = {};
 
 	stdinReaderImpl *reader = calloc(1, sizeof(stdinReaderImpl));
@@ -18,7 +19,13 @@ stdinReaderResult stdinReader_init() {
 		goto ret;
 	}
 
-	HANDLE stdin = GetStdHandle(STD_INPUT_HANDLE);
+	HANDLE stdin;
+	if (path) {
+		stdin = CreateFileA(path, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		reader->closeStdin = TRUE;
+	} else {
+		stdin = GetStdHandle(STD_INPUT_HANDLE);
+	}
 	if (unlikely(stdin == INVALID_HANDLE_VALUE)) {
 		result.error = GetLastError();
 		goto err;
@@ -86,6 +93,9 @@ platformError stdinReader_interrupt(stdinReader *reader) {
 platformError stdinReader_free(stdinReader *reader) {
 	DWORD result = 0;
 	if (unlikely(CloseHandle(reader->handles[1]) != 0)) {
+		result = GetLastError();
+	}
+	if (unlikely(reader->closeStdin && CloseHandle(reader->handles[0]) && result != 0)) {
 		result = GetLastError();
 	}
 	free(reader);

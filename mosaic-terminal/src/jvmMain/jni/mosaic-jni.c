@@ -43,12 +43,24 @@ Java_com_jakewharton_mosaic_terminal_Tty_exitRawMode(JNIEnv *env, jclass type, j
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderInit(JNIEnv *env, jclass type) {
-	stdinReaderResult result = stdinReader_init();
+Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderInit(JNIEnv *env, jclass type, jstring path) {
+	const char* pathChars = NULL;
+	if (path) {
+		pathChars = (*env)->GetStringUTFChars(env, path, NULL);
+		if (!pathChars) goto err;
+	}
+
+	stdinReaderResult result = stdinReader_init(pathChars);
+
+	if (pathChars) {
+		(*env)->ReleaseStringUTFChars(env, path, pathChars);
+	}
+
 	if (likely(!result.error)) {
 		return (jlong) result.reader;
 	}
 
+	err:
 	// This throw can fail, but the only condition that should cause that is OOM which
 	// will occur from returning 0 (which is otherwise ignored if the throw succeeds).
 	throwIse(env, result.error, "Unable to create stdin reader");
