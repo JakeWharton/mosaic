@@ -25,8 +25,10 @@ public actual object Tty {
 		}
 	}
 
-	public actual fun stdinReader(): StdinReader {
-		val reader = stdinReader_init().useContents {
+	public actual fun stdinReader(): StdinReader = stdinReader(null)
+
+	internal actual fun stdinReader(path: String?): StdinReader {
+		val reader = stdinReader_init(path).useContents {
 			check(error == 0U) { "Unable to create stdin reader: $error" }
 			reader ?: throw OutOfMemoryError()
 		}

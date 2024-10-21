@@ -26,8 +26,11 @@ public actual object Tty {
 		}
 	}
 
-	public actual fun stdinReader(): StdinReader {
-		val reader = stdinReaderInit()
+	public actual fun stdinReader(): StdinReader = stdinReader(null)
+
+	@JvmSynthetic // Hide from Java callers.
+	internal actual fun stdinReader(path: String?): StdinReader {
+		val reader = stdinReaderInit(path)
 		if (reader == 0L) throw OutOfMemoryError()
 		return StdinReader(reader)
 	}
@@ -39,7 +42,7 @@ public actual object Tty {
 	private external fun exitRawMode(savedConfig: Long): Int
 
 	@JvmStatic
-	private external fun stdinReaderInit(): Long
+	private external fun stdinReaderInit(path: String?): Long
 
 	@JvmStatic
 	@JvmSynthetic // Hide from Java callers.

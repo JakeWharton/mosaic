@@ -4,17 +4,20 @@
 
 #include "cutils.h"
 #include <errno.h>
+#include <fcntl.h>
 #include <stdlib.h>
 #include <sys/select.h>
 #include <time.h>
 #include <unistd.h>
 
 typedef struct stdinReaderImpl {
+	int stdinFd;
 	int pipe[2];
 	fd_set fds;
+	int nfds;
 } stdinReaderImpl;
 
-stdinReaderResult stdinReader_init() {
+stdinReaderResult stdinReader_init(const char *path) {
 	stdinReaderResult result = {};
 
 	stdinReaderImpl *reader = calloc(1, sizeof(stdinReaderImpl));
@@ -27,6 +30,15 @@ stdinReaderResult stdinReader_init() {
 		result.error = errno;
 		goto err;
 	}
+
+	int stdinFd;
+	if (path) {
+		stdinFd = open(path, 0);
+	} else {
+		stdinFd = STDIN_FILENO;
+	}
+	reader->stdinFd = stdinFd;
+	reader->nfds = (stdinFd > reader->pipe[0]) ? stdinFd : reader->pipe[0];
 
 	result.reader = reader;
 
@@ -44,19 +56,18 @@ stdinRead stdinReader_readInternal(
 	int count,
 	struct timeval *timeout
 ) {
+	int stdinFd = reader->stdinFd;
+	FD_SET(stdinFd, &reader->fds);
+
 	int pipeIn = reader->pipe[0];
-
-	FD_SET(STDIN_FILENO, &reader->fds);
 	FD_SET(pipeIn, &reader->fds);
-
-	// Our pipe's FD is always going to be higher than stdin, so use it as the max value.
-	int nfds = pipeIn + 1;
 
 	stdinRead result = {};
 
-	if (likely(select(nfds, &reader->fds, NULL, NULL, timeout) >= 0)) {
-		if (likely(FD_ISSET(STDIN_FILENO, &reader->fds) != 0)) {
-			int c = read(STDIN_FILENO, buffer, count);
+	// TODO Consider setting up fd_set once in the struct and doing a stack copy here.
+	if (likely(select(reader->nfds, &reader->fds, NULL, NULL, timeout) >= 0)) {
+		if (likely(FD_ISSET(stdinFd, &reader->fds) != 0)) {
+			int c = read(stdinFd, buffer, count);
 			if (likely(c > 0)) {
 				result.count = c;
 			} else if (c == 0) {
@@ -111,6 +122,9 @@ platformError stdinReader_free(stdinReader *reader) {
 		result = errno;
 	}
 	if (unlikely(close(pipe[1]) != 0 && result != 0)) {
+		result = errno;
+	}
+	if (unlikely(reader->stdinFd != STDIN_FILENO && close(reader->stdinFd) != 0 && result != 0)) {
 		result = errno;
 	}
 	free(reader);

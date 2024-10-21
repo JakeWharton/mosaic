@@ -26,6 +26,8 @@ public expect object Tty {
 	 * Use with [enableRawMode] to read input byte-by-byte.
 	 */
 	public fun stdinReader(): StdinReader
+
+	internal fun stdinReader(path: String?): StdinReader
 }
 
 public expect class StdinReader : AutoCloseable {
