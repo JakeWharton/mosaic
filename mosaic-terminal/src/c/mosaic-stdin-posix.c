@@ -17,7 +17,12 @@ typedef struct stdinReaderImpl {
 	int nfds;
 } stdinReaderImpl;
 
-stdinReaderResult stdinReader_init(const char *path) {
+typedef struct stdinWriterImpl {
+	int pipe[2];
+	stdinReader *reader;
+} stdinWriterImpl;
+
+stdinReaderResult stdinReader_initWithFd(int stdinFd) {
 	stdinReaderResult result = {};
 
 	stdinReaderImpl *reader = calloc(1, sizeof(stdinReaderImpl));
@@ -31,13 +36,9 @@ stdinReaderResult stdinReader_init(const char *path) {
 		goto err;
 	}
 
-	int stdinFd;
-	if (path) {
-		stdinFd = open(path, 0);
-	} else {
-		stdinFd = STDIN_FILENO;
-	}
 	reader->stdinFd = stdinFd;
+	// TODO Consider forcing the writer pipe to always be lower than this pipe.
+	//  If we did this, we could always assume pipe[0] + 1 is the value for nfds.
 	reader->nfds = (stdinFd > reader->pipe[0]) ? stdinFd : reader->pipe[0];
 
 	result.reader = reader;
@@ -48,6 +49,10 @@ stdinReaderResult stdinReader_init(const char *path) {
 	err:
 	free(reader);
 	goto ret;
+}
+
+stdinReaderResult stdinReader_init() {
+	return stdinReader_initWithFd(STDIN_FILENO);
 }
 
 stdinRead stdinReader_readInternal(
@@ -124,10 +129,71 @@ platformError stdinReader_free(stdinReader *reader) {
 	if (unlikely(close(pipe[1]) != 0 && result != 0)) {
 		result = errno;
 	}
-	if (unlikely(reader->stdinFd != STDIN_FILENO && close(reader->stdinFd) != 0 && result != 0)) {
+	free(reader);
+	return result;
+}
+
+stdinWriterResult stdinWriter_init() {
+	stdinWriterResult result = {};
+
+	stdinWriterImpl *writer = calloc(1, sizeof(stdinWriterImpl));
+	if (unlikely(writer == NULL)) {
+		// result.writer is set to 0 which will trigger OOM.
+		goto ret;
+	}
+
+	if (unlikely(pipe(writer->pipe)) != 0) {
+		result.error = errno;
+		goto err;
+	}
+
+	stdinReaderResult readerResult = stdinReader_initWithFd(writer->pipe[0]);
+	if (unlikely(readerResult.error)) {
+		result.error = readerResult.error;
+		goto err;
+	}
+	writer->reader = readerResult.reader;
+
+	result.writer = writer;
+
+	ret:
+	return result;
+
+	err:
+	free(writer);
+	goto ret;
+}
+
+stdinReader *stdinWriter_getReader(stdinWriter *writer) {
+	return writer->reader;
+}
+
+platformError stdinWriter_write(stdinWriter *writer, void *buffer, int count) {
+	int pipeOut = writer->pipe[1];
+	while (count > 0) {
+		int result = write(pipeOut, buffer, count);
+		if (unlikely(result == -1)) {
+			goto err;
+		}
+		count = count - result;
+	}
+	return 0;
+
+	err:
+	return errno;
+}
+
+platformError stdinWriter_free(stdinWriter *writer) {
+	int *pipe = writer->pipe;
+
+	int result = 0;
+	if (unlikely(close(pipe[0]) != 0)) {
 		result = errno;
 	}
-	free(reader);
+	if (unlikely(close(pipe[1]) != 0 && result != 0)) {
+		result = errno;
+	}
+	free(writer);
 	return result;
 }
 

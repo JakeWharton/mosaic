@@ -27,21 +27,32 @@ platformError exitRawMode(rawModeConfig *saved);
 
 
 typedef struct stdinReaderImpl stdinReader;
+typedef struct stdinWriterImpl stdinWriter;
 
 typedef struct stdinReaderResult {
-	stdinReader* reader;
+	stdinReader *reader;
 	platformError error;
 } stdinReaderResult;
+
+typedef struct stdinWriterResult {
+	stdinWriter *writer;
+	platformError error;
+} stdinWriterResult;
 
 typedef struct stdinRead {
 	int count;
 	platformError error;
 } stdinRead;
 
-stdinReaderResult stdinReader_init(const char *path);
+stdinReaderResult stdinReader_init();
 stdinRead stdinReader_read(stdinReader *reader, void *buffer, int count);
 stdinRead stdinReader_readWithTimeout(stdinReader *reader, void *buffer, int count, int timeoutMillis);
 platformError stdinReader_interrupt(stdinReader* reader);
 platformError stdinReader_free(stdinReader *reader);
+
+stdinWriterResult stdinWriter_init();
+stdinReader *stdinWriter_getReader(stdinWriter *writer);
+platformError stdinWriter_write(stdinWriter *writer, void *buffer, int count);
+platformError stdinWriter_free(stdinWriter *writer);
 
 #endif // MOSAIC_H
