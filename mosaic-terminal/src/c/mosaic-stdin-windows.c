@@ -7,10 +7,15 @@
 
 typedef struct stdinReaderImpl {
 	HANDLE handles[2];
-	BOOL closeStdin;
 } stdinReaderImpl;
 
-stdinReaderResult stdinReader_init(const char *path) {
+typedef struct stdinWriterImpl {
+	HANDLE readHandle;
+	HANDLE writeHandle;
+	stdinReader *reader;
+} stdinWriterImpl;
+
+stdinReaderResult stdinReader_initWithHandle(HANDLE stdin) {
 	stdinReaderResult result = {};
 
 	stdinReaderImpl *reader = calloc(1, sizeof(stdinReaderImpl));
@@ -19,13 +24,6 @@ stdinReaderResult stdinReader_init(const char *path) {
 		goto ret;
 	}
 
-	HANDLE stdin;
-	if (path) {
-		stdin = CreateFileA(path, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-		reader->closeStdin = TRUE;
-	} else {
-		stdin = GetStdHandle(STD_INPUT_HANDLE);
-	}
 	if (unlikely(stdin == INVALID_HANDLE_VALUE)) {
 		result.error = GetLastError();
 		goto err;
@@ -45,6 +43,10 @@ stdinReaderResult stdinReader_init(const char *path) {
 	err:
 	free(reader);
 	goto ret;
+}
+
+stdinReaderResult stdinReader_init() {
+	return stdinReader_initWithHandle(GetStdHandle(STD_INPUT_HANDLE));
 }
 
 stdinRead stdinReader_read(
@@ -95,10 +97,63 @@ platformError stdinReader_free(stdinReader *reader) {
 	if (unlikely(CloseHandle(reader->handles[1]) != 0)) {
 		result = GetLastError();
 	}
-	if (unlikely(reader->closeStdin && CloseHandle(reader->handles[0]) && result != 0)) {
+	free(reader);
+	return result;
+}
+
+stdinWriterResult stdinWriter_init() {
+	stdinWriterResult result = {};
+
+	stdinWriterImpl *writer = calloc(1, sizeof(stdinWriterImpl));
+	if (unlikely(writer == NULL)) {
+		// result.writer is set to 0 which will trigger OOM.
+		goto ret;
+	}
+
+	if (unlikely(CreatePipe(&writer->readHandle, &writer->writeHandle, NULL, 0) == 0)) {
+		result.error = GetLastError();
+		goto err;
+	}
+
+	stdinReaderResult readerResult = stdinReader_initWithHandle(writer->readHandle);
+	if (unlikely(readerResult.error)) {
+		result.error = readerResult.error;
+		goto err;
+	}
+	writer->reader = readerResult.reader;
+
+	result.writer = writer;
+
+	ret:
+	return result;
+
+	err:
+	free(writer);
+	goto ret;
+}
+
+stdinReader *stdinWriter_getReader(stdinWriter *writer) {
+	return writer->reader;
+}
+
+platformError stdinWriter_write(stdinWriter *writer, void *buffer, int count) {
+	// Per https://learn.microsoft.com/en-us/windows/win32/api/namedpipeapi/nf-namedpipeapi-createpipe#remarks
+	// "When a process uses WriteFile to write to an anonymous pipe,
+	//  the write operation is not completed until all bytes are written."
+	return likely(WriteFile(writer->writeHandle, buffer, count, NULL, NULL))
+		? 0
+		: GetLastError();
+}
+
+platformError stdinWriter_free(stdinWriter *writer) {
+	DWORD result = 0;
+	if (unlikely(CloseHandle(writer->writeHandle) != 0)) {
 		result = GetLastError();
 	}
-	free(reader);
+	if (unlikely(CloseHandle(writer->readHandle) != 0 && result == 0)) {
+		result = GetLastError();
+	}
+	free(writer);
 	return result;
 }
 

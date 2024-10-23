@@ -43,24 +43,12 @@ Java_com_jakewharton_mosaic_terminal_Tty_exitRawMode(JNIEnv *env, jclass type, j
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderInit(JNIEnv *env, jclass type, jstring path) {
-	const char* pathChars = NULL;
-	if (path) {
-		pathChars = (*env)->GetStringUTFChars(env, path, NULL);
-		if (!pathChars) goto err;
-	}
-
-	stdinReaderResult result = stdinReader_init(pathChars);
-
-	if (pathChars) {
-		(*env)->ReleaseStringUTFChars(env, path, pathChars);
-	}
-
+Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderInit(JNIEnv *env, jclass type) {
+	stdinReaderResult result = stdinReader_init();
 	if (likely(!result.error)) {
 		return (jlong) result.reader;
 	}
 
-	err:
 	// This throw can fail, but the only condition that should cause that is OOM which
 	// will occur from returning 0 (which is otherwise ignored if the throw succeeds).
 	throwIse(env, result.error, "Unable to create stdin reader");
@@ -133,4 +121,47 @@ Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderInterrupt(JNIEnv *env, jclas
 JNIEXPORT jint JNICALL
 Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderFree(JNIEnv *env, jclass type, jlong ptr) {
 	return stdinReader_free((stdinReader *) ptr);
+}
+
+JNIEXPORT jlong JNICALL
+Java_com_jakewharton_mosaic_terminal_Tty_stdinWriterInit(JNIEnv *env, jclass type) {
+	stdinWriterResult result = stdinWriter_init();
+	if (likely(!result.error)) {
+		return (jlong) result.writer;
+	}
+
+	// This throw can fail, but the only condition that should cause that is OOM which
+	// will occur from returning 0 (which is otherwise ignored if the throw succeeds).
+	throwIse(env, result.error, "Unable to create stdin writer");
+	return 0;
+}
+
+JNIEXPORT void JNICALL
+Java_com_jakewharton_mosaic_terminal_Tty_stdinWriterWrite(
+	JNIEnv *env,
+	jclass type,
+	jlong ptr,
+	jbyteArray buffer
+) {
+	jsize count = (*env)->GetArrayLength(env, buffer);
+	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
+
+	platformError error = stdinWriter_write((stdinWriter *) ptr, nativeBuffer, count);
+
+	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
+
+	if (unlikely(error)) {
+		// This throw can fail, but the only condition that should cause that is OOM. Oh well.
+		throwIse(env, error, "Unable to write stdin");
+	}
+}
+
+JNIEXPORT jlong JNICALL
+Java_com_jakewharton_mosaic_terminal_Tty_stdinWriterGetReader(JNIEnv *env, jclass type, jlong ptr) {
+	return (jlong) stdinWriter_getReader((stdinWriter *) ptr);
+}
+
+JNIEXPORT jint JNICALL
+Java_com_jakewharton_mosaic_terminal_Tty_stdinWriterFree(JNIEnv *env, jclass type, jlong ptr) {
+	return stdinWriter_free((stdinWriter *) ptr);
 }

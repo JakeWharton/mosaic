@@ -25,14 +25,21 @@ public actual object Tty {
 		}
 	}
 
-	public actual fun stdinReader(): StdinReader = stdinReader(null)
-
-	internal actual fun stdinReader(path: String?): StdinReader {
-		val reader = stdinReader_init(path).useContents {
+	public actual fun stdinReader(): StdinReader {
+		val reader = stdinReader_init().useContents {
 			check(error == 0U) { "Unable to create stdin reader: $error" }
 			reader ?: throw OutOfMemoryError()
 		}
 		return StdinReader(reader)
+	}
+
+	internal actual fun stdinWriter(): StdinWriter {
+		val writer = stdinWriter_init().useContents {
+			check(error == 0U) { "Unable to create stdin writer: $error" }
+			writer ?: throw OutOfMemoryError()
+		}
+		val reader = stdinWriter_getReader(writer)!!
+		return StdinWriter(writer, reader)
 	}
 }
 
@@ -64,5 +71,23 @@ public actual class StdinReader internal constructor(
 
 	public actual override fun close() {
 		stdinReader_free(ref)
+	}
+}
+
+@OptIn(ExperimentalForeignApi::class)
+internal actual class StdinWriter internal constructor(
+	private val ref: CPointer<stdinWriter>,
+	readerRef: CPointer<stdinReader>,
+) : AutoCloseable {
+	actual val reader: StdinReader = StdinReader(readerRef)
+
+	actual fun write(buffer: ByteArray) {
+		buffer.usePinned {
+			stdinWriter_write(ref, it.addressOf(0), buffer.size)
+		}
+	}
+
+	actual override fun close() {
+		stdinWriter_free(ref)
 	}
 }

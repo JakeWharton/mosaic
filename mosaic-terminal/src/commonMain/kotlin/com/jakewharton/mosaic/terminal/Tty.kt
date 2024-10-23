@@ -27,7 +27,7 @@ public expect object Tty {
 	 */
 	public fun stdinReader(): StdinReader
 
-	internal fun stdinReader(path: String?): StdinReader
+	internal fun stdinWriter(): StdinWriter
 }
 
 public expect class StdinReader : AutoCloseable {
@@ -60,5 +60,16 @@ public expect class StdinReader : AutoCloseable {
 	 *
 	 * This call can be omitted if your process is exiting.
 	 */
+	override fun close()
+}
+
+internal expect class StdinWriter : AutoCloseable {
+	val reader: StdinReader
+
+	// TODO Take ByteString once it migrates to stdlib,
+	//  or if Sink/RawSink migrates expose that as a val.
+	//  https://github.com/Kotlin/kotlinx-io/issues/354
+	fun write(buffer: ByteArray)
+
 	override fun close()
 }

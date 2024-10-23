@@ -26,13 +26,18 @@ public actual object Tty {
 		}
 	}
 
-	public actual fun stdinReader(): StdinReader = stdinReader(null)
-
-	@JvmSynthetic // Hide from Java callers.
-	internal actual fun stdinReader(path: String?): StdinReader {
-		val reader = stdinReaderInit(path)
+	public actual fun stdinReader(): StdinReader {
+		val reader = stdinReaderInit()
 		if (reader == 0L) throw OutOfMemoryError()
 		return StdinReader(reader)
+	}
+
+	@JvmSynthetic // Hide from Java callers.
+	internal actual fun stdinWriter(): StdinWriter {
+		val writer = stdinWriterInit()
+		if (writer == 0L) throw OutOfMemoryError()
+		val reader = stdinWriterGetReader(writer)
+		return StdinWriter(writer, reader)
 	}
 
 	@JvmStatic
@@ -42,7 +47,7 @@ public actual object Tty {
 	private external fun exitRawMode(savedConfig: Long): Int
 
 	@JvmStatic
-	private external fun stdinReaderInit(path: String?): Long
+	private external fun stdinReaderInit(): Long
 
 	@JvmStatic
 	@JvmSynthetic // Hide from Java callers.
@@ -74,6 +79,22 @@ public actual object Tty {
 	@JvmSynthetic // Hide from Java callers.
 	@JvmName("stdinReaderFree") // Avoid internal name mangling.
 	internal external fun stdinReaderFree(reader: Long)
+
+	@JvmStatic
+	private external fun stdinWriterInit(): Long
+
+	@JvmStatic
+	private external fun stdinWriterGetReader(writer: Long): Long
+
+	@JvmStatic
+	@JvmSynthetic // Hide from Java callers.
+	@JvmName("stdinWriterWrite") // Avoid internal name mangling.
+	internal external fun stdinWriterWrite(writer: Long, buffer: ByteArray)
+
+	@JvmStatic
+	@JvmSynthetic // Hide from Java callers.
+	@JvmName("stdinWriterFree") // Avoid internal name mangling.
+	internal external fun stdinWriterFree(writer: Long)
 
 	@Suppress(
 		// Only loading from our own JAR contents.
@@ -125,5 +146,21 @@ public actual class StdinReader internal constructor(
 
 	public actual override fun close() {
 		Tty.stdinReaderFree(readerPtr)
+	}
+}
+
+// TODO @JvmSynthetic https://youtrack.jetbrains.com/issue/KT-24981
+internal actual class StdinWriter internal constructor(
+	private val writerPtr: Long,
+	readerPtr: Long,
+) : AutoCloseable {
+	actual val reader: StdinReader = StdinReader(readerPtr)
+
+	actual fun write(buffer: ByteArray) {
+		Tty.stdinWriterWrite(writerPtr, buffer)
+	}
+
+	actual override fun close() {
+		Tty.stdinWriterFree(writerPtr)
 	}
 }
