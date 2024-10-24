@@ -8,7 +8,7 @@
 typedef struct termios rawModeConfig;
 typedef unsigned int platformError;
 
-#elif defined(WIN32)
+#elif defined(_WIN32)
 
 #include <Windows.h>
 

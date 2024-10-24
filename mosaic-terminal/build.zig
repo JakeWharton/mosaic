@@ -7,11 +7,11 @@ pub fn build(b: *std.Build) !void {
 
 	setupMosaicTarget(b, &deleteLib.step, .linux, .aarch64, "arm64");
 	setupMosaicTarget(b, &deleteLib.step, .linux, .riscv64, "riscv");
-	setupMosaicTarget(b, &deleteLib.step, .linux, .x86_64, "x86_64");
+	setupMosaicTarget(b, &deleteLib.step, .linux, .x86_64, "amd64");
 	setupMosaicTarget(b, &deleteLib.step, .macos, .aarch64, "aarch64");
-	setupMosaicTarget(b, &deleteLib.step, .macos, .x86_64, "x86_64");
+	setupMosaicTarget(b, &deleteLib.step, .macos, .x86_64, "amd64");
 	setupMosaicTarget(b, &deleteLib.step, .windows, .aarch64, "arm64");
-	setupMosaicTarget(b, &deleteLib.step, .windows, .x86_64, "x86_64");
+	setupMosaicTarget(b, &deleteLib.step, .windows, .x86_64, "amd64");
 }
 
 fn setupMosaicTarget(b: *std.Build, step: *std.Build.Step, tag: std.Target.Os.Tag, arch: std.Target.Cpu.Arch, dir: []const u8) void {
