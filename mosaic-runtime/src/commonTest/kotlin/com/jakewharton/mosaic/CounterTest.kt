@@ -54,7 +54,7 @@ class CounterTest {
 		runMosaicTest(initialTerminalSize = IntSize(width = 30, height = 1)) {
 			setCounterInTerminalCenter()
 			for (count in 0..9) {
-				assertThat(awaitRenderSnapshot()).isEqualTo("        The count is: $count       ")
+				assertThat(awaitRenderSnapshot()).isEqualTo("        The count is: $count")
 			}
 
 			changeTerminalSize(width = 20, height = 1)
@@ -65,7 +65,7 @@ class CounterTest {
 			advanceTimeBy(250L)
 
 			for (count in 10..20) {
-				assertThat(awaitRenderSnapshot()).isEqualTo("  The count is: $count  ")
+				assertThat(awaitRenderSnapshot()).isEqualTo("  The count is: $count")
 			}
 		}
 	}
@@ -80,7 +80,7 @@ class CounterTest {
 			for (count in 0..20) {
 				assertThat(awaitRenderSnapshot()).isEqualTo(
 					"""
-					|The count is: $count      $s
+					|The count is: $count
 					|The second count is: $count
 					""".trimMargin(),
 				)

@@ -45,8 +45,8 @@ class MosaicTest {
 		}
 		assertThat(actual).isEqualTo(
 			"""
-			|One $s
-			|Two $s
+			|One
+			|Two
 			|Three
 			|
 			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
@@ -75,8 +75,8 @@ class MosaicTest {
 		}
 		assertThat(actual).isEqualTo(
 			"""
-			|One $s
-			|Two $s
+			|One
+			|Two
 			|Three
 			|
 			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
@@ -105,8 +105,8 @@ class MosaicTest {
 		}
 		assertThat(actual).isEqualTo(
 			"""
-			|One $s
-			|Two $s
+			|One
+			|Two
 			|Three
 			|
 			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
@@ -147,8 +147,8 @@ class MosaicTest {
 		}
 		assertThat(actual).isEqualTo(
 			"""
-			|One $s
-			|Two $s
+			|One
+			|Two
 			|Three
 			|
 			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
@@ -167,8 +167,8 @@ class MosaicTest {
 		}
 		assertThat(actual).isEqualTo(
 			"""
-			|One $s
-			|Two $s
+			|One
+			|Two
 			|Three
 			|
 			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
@@ -191,8 +191,8 @@ class MosaicTest {
 		actuals.forEach { actual ->
 			assertThat(actual).isEqualTo(
 				"""
-				|One $s
-				|Two $s
+				|One
+				|Two
 				|Three
 				|
 				""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
@@ -215,8 +215,8 @@ class MosaicTest {
 				}
 			}
 
-			assertThat(awaitRenderSnapshot()).isEqualTo("$TestChar         ")
-			assertThat(awaitRenderSnapshot()).isEqualTo("     $TestChar    ")
+			assertThat(awaitRenderSnapshot()).isEqualTo("$TestChar")
+			assertThat(awaitRenderSnapshot()).isEqualTo("     $TestChar")
 		}
 	}
 
@@ -235,8 +235,8 @@ class MosaicTest {
 				}
 			}
 
-			assertThat(awaitRenderSnapshot()).isEqualTo("$TestChar         ")
-			assertThat(awaitRenderSnapshot()).isEqualTo("     $TestChar    ")
+			assertThat(awaitRenderSnapshot()).isEqualTo("$TestChar")
+			assertThat(awaitRenderSnapshot()).isEqualTo("     $TestChar")
 		}
 	}
 
@@ -265,8 +265,8 @@ class MosaicTest {
 				}
 			}
 
-			assertThat(awaitRenderSnapshot()).isEqualTo("$TestChar         ")
-			assertThat(awaitRenderSnapshot()).isEqualTo("${TestChar + 1}         ")
+			assertThat(awaitRenderSnapshot()).isEqualTo("$TestChar")
+			assertThat(awaitRenderSnapshot()).isEqualTo("${TestChar + 1}")
 		}
 	}
 
