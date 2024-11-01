@@ -63,7 +63,8 @@ jobs:
       - uses: dorny/test-reporter@v1
         if: success() || failure()
         with:
-          name: ${{ matrix.os }} Tests
+          artifact: /\/(.*)Test\//
+          name: ${{ matrix.os }} $1 Tests
           path: '**/build/test-results/**/TEST-*.xml'
           reporter: java-junit
 
