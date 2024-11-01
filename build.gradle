@@ -20,6 +20,8 @@ buildscript {
 	}
 }
 
+apply plugin: 'org.jetbrains.dokka'
+
 allprojects {
 	group = GROUP
 	version = VERSION_NAME
@@ -40,6 +42,15 @@ allprojects {
 
 	tasks.withType(KotlinCompile).configureEach {
 		compilerOptions.freeCompilerArgs.add('-Xjvm-default=all')
+	}
+
+	tasks.withType(Test).configureEach {
+		testLogging {
+			if (System.getenv('CI') == 'true') {
+				events = ['failed', 'skipped', 'passed']
+			}
+			exceptionFormat 'full'
+		}
 	}
 
 	apply plugin: 'com.diffplug.spotless'

@@ -10,8 +10,8 @@ on:
       - '**'
 
 jobs:
-  jni-build:
-    runs-on: macos-latest
+  zig:
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
 
@@ -24,20 +24,24 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: jni
+          name: jni-binaries
           path: mosaic-terminal/src/jvmMain/resources/jni
           if-no-files-found: error
 
-  build:
+  tests:
     needs:
-      - jni-build
+      - zig
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - macos-latest
-          # TODO - ubuntu-latest
-          # TODO - windows-latest
+        include:
+          # TODO windows and ubuntu versions
+          - os: macOS-13
+            platform-test: macosX64Test
+          - os: macOS-14
+            platform-test: macosArm64Test
+          - os: macOS-15
+            platform-test: macosArm64Test
 
     runs-on: ${{ matrix.os }}
 
@@ -45,50 +49,100 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: jni
+          name: jni-binaries
           path: mosaic-terminal/src/jvmMain/resources/jni
-      - run: ls -R mosaic-terminal/src/jvmMain
 
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: 23
-      - uses: gradle/gradle-build-action@v3
-        with:
-          gradle-home-cache-cleanup: true
+      - uses: gradle/actions/setup-gradle@v4
 
-      - run: ./gradlew build
+      - run: ./gradlew jvmTest ${{ matrix.platform-test }}
+
+      - uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: ${{ matrix.os }} Tests
+          path: '**/build/test-results/**/TEST-*.xml'
+          reporter: java-junit
+
+  binaries:
+    runs-on: macos-15
+    needs:
+      - zig
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: jni-binaries
+          path: mosaic-terminal/src/jvmMain/resources/jni
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 23
+      - uses: gradle/actions/setup-gradle@v4
+
+      - run: ./gradlew assemble
+
+  checks:
+    runs-on: macos-15
+    needs:
+      - zig
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: jni-binaries
+          path: mosaic-terminal/src/jvmMain/resources/jni
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 23
+      - uses: gradle/actions/setup-gradle@v4
+
+      - run: ./gradlew spotlessCheck apiCheck
 
   publish:
-    runs-on: macos-latest
-    if: ${{ github.ref == 'refs/heads/trunk' && github.repository == 'JakeWharton/mosaic' }}
+    runs-on: macos-15
     needs:
-      - build
+      - binaries
+      - checks
+      - tests
 
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: jni
+          name: jni-binaries
           path: mosaic-terminal/src/jvmMain/resources/jni
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: 23
-      - uses: gradle/gradle-build-action@v3
-        with:
-          gradle-home-cache-cleanup: true
+      - uses: gradle/actions/setup-gradle@v4
 
-      - run: ./gradlew publish :mosaic-runtime:dokkaHtml
+      - run: ./gradlew publish
+        if: ${{ github.ref == 'refs/heads/trunk' && github.repository == 'JakeWharton/mosaic' }}
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
 
-      - name: Deploy docs to website
-        uses: JamesIves/github-pages-deploy-action@releases/v3
+      - run: ./gradlew dokkaHtmlMultiModule
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: html-docs
+          path: build/dokka/htmlMultiModule/
+          if-no-files-found: error
+
+      - uses: JamesIves/github-pages-deploy-action@releases/v3
+        if: ${{ github.ref == 'refs/heads/trunk' && github.repository == 'JakeWharton/mosaic' }}
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: site
-          FOLDER: mosaic-runtime/build/dokka/html/
+          FOLDER: build/dokka/htmlMultiModule/
           TARGET_FOLDER: docs/latest/
           CLEAN: true
