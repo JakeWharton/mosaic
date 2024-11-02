@@ -19,6 +19,8 @@ fn setupMosaicTarget(b: *std.Build, step: *std.Build.Step, tag: std.Target.Os.Ta
 		.target = b.resolveTargetQuery(.{
 			.cpu_arch = arch,
 			.os_tag = tag,
+			// We need to explicitly specify gnu for linux, as otherwise it defaults to musl.
+			// See https://github.com/ziglang/zig/issues/16624#issuecomment-1801175600.
 			.abi = if (tag == .linux) .gnu else null,
 		}),
 		.optimize = .Debug,
