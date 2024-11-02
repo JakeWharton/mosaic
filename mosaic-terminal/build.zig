@@ -21,7 +21,7 @@ fn setupMosaicTarget(b: *std.Build, step: *std.Build.Step, tag: std.Target.Os.Ta
 			.os_tag = tag,
 			.abi = if (tag == .linux) .gnu else null,
 		}),
-		.optimize = .ReleaseSmall,
+		.optimize = .Debug,
 	});
 
 	lib.linkLibC();
