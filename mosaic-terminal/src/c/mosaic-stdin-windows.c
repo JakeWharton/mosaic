@@ -1,9 +1,9 @@
 #include "mosaic.h"
 
-#if defined(WIN32)
+#if defined(_WIN32)
 
 #include "cutils.h"
-#include <Windows.h>
+#include <windows.h>
 
 typedef struct stdinReaderImpl {
 	HANDLE handles[2];

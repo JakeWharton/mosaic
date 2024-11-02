@@ -10,7 +10,7 @@ typedef unsigned int platformError;
 
 #elif defined(_WIN32)
 
-#include <Windows.h>
+#include <windows.h>
 
 typedef struct rawModeConfigWindows rawModeConfig;
 typedef DWORD platformError;
