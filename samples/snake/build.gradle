@@ -1,0 +1,12 @@
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
+apply plugin: 'application'
+
+application {
+	mainClass = 'example.SnakeKt'
+}
+
+dependencies {
+	implementation projects.mosaicRuntime
+	implementation libs.compose.collection
+}

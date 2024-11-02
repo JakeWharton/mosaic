@@ -24,6 +24,7 @@ include ':samples:demo'
 include ':samples:jest'
 include ':samples:robot'
 include ':samples:rrtop'
+include ':samples:snake'
 
 include ':tools:raw-mode-echo'
 

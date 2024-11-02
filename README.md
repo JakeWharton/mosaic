@@ -117,6 +117,9 @@ Run `./gradlew installDist` to build the sample binaries.
 
    `./samples/rrtop/build/install/rrtop/bin/rrtop`
 
+ * [snake](samples/snake): Snake game.
+
+   `./samples/snake/build/install/snake/bin/snake`
 
 ## FAQ
 
