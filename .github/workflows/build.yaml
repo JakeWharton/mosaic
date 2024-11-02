@@ -35,13 +35,23 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # TODO windows and ubuntu versions
           - os: macOS-13
             platform-test: macosX64Test
           - os: macOS-14
             platform-test: macosArm64Test
           - os: macOS-15
             platform-test: macosArm64Test
+          - os: ubuntu-20.04
+            platform-test: linuxX64Test
+          - os: ubuntu-22.04
+            platform-test: linuxX64Test
+          - os: ubuntu-24.04
+            platform-test: linuxX64Test
+          # TODO
+          #- os: windows-2019
+          #  platform-test: mingwX64Test
+          #- os: windows-2022
+          #  platform-test: mingwX64Test
 
     runs-on: ${{ matrix.os }}
 

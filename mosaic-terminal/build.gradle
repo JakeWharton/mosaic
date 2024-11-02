@@ -14,7 +14,7 @@ kotlin {
 		tasks.named(compilations.main.processResourcesTaskName).configure {
 			doFirst {
 				def files = project.fileTree('src/jvmMain/resources').files
-				if (files.size() != 7) {
+				if (files.size() != 6) {
 					throw new RuntimeException(
 						"Missing native libraries. Run `zig build -p src/jvmMain/resources/jni`. Found: $files",
 					)

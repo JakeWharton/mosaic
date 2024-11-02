@@ -6,7 +6,6 @@ pub fn build(b: *std.Build) !void {
 	b.getInstallStep().dependOn(&deleteLib.step);
 
 	setupMosaicTarget(b, &deleteLib.step, .linux, .aarch64, "arm64");
-	setupMosaicTarget(b, &deleteLib.step, .linux, .riscv64, "riscv");
 	setupMosaicTarget(b, &deleteLib.step, .linux, .x86_64, "amd64");
 	setupMosaicTarget(b, &deleteLib.step, .macos, .aarch64, "aarch64");
 	setupMosaicTarget(b, &deleteLib.step, .macos, .x86_64, "x86_64");
@@ -20,6 +19,7 @@ fn setupMosaicTarget(b: *std.Build, step: *std.Build.Step, tag: std.Target.Os.Ta
 		.target = b.resolveTargetQuery(.{
 			.cpu_arch = arch,
 			.os_tag = tag,
+			.abi = if (tag == .linux) .gnu else null,
 		}),
 		.optimize = .ReleaseSmall,
 	});
