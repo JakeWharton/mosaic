@@ -47,11 +47,10 @@ jobs:
             platform-test: linuxX64Test
           - os: ubuntu-24.04
             platform-test: linuxX64Test
-          # TODO
-          #- os: windows-2019
-          #  platform-test: mingwX64Test
-          #- os: windows-2022
-          #  platform-test: mingwX64Test
+          - os: windows-2019
+            platform-test: mingwX64Test
+          - os: windows-2022
+            platform-test: mingwX64Test
 
     runs-on: ${{ matrix.os }}
 
