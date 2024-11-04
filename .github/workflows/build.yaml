@@ -70,13 +70,6 @@ jobs:
 
       - run: ./gradlew jvmTest ${{ matrix.platform-test }}
 
-      - uses: dorny/test-reporter@v1
-        if: success() || failure()
-        with:
-          name: ${{ matrix.os }} Tests
-          path: '**/build/test-results/**/TEST-*.xml'
-          reporter: java-junit
-
   binaries:
     runs-on: macos-15
     needs:
