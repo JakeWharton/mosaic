@@ -37,6 +37,8 @@ stdinReaderResult stdinReader_initWithHandle(HANDLE stdin) {
 	}
 	reader->handles[1] = interruptEvent;
 
+	result.reader = reader;
+
 	ret:
 	return result;
 
