@@ -26,6 +26,7 @@ class StdinReaderTest {
 		assertThat(buffer.decodeToString(endIndex = read)).isEqualTo("hello")
 	}
 
+	@WindowsIgnore // Pipe in the StdinWriter doesn't work with StdinReader signal waiting.
 	@Test fun readWithTimeoutReturnsZeroOnTimeout() {
 		val read: Int
 		val took = measureTime {
