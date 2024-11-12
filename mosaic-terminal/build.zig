@@ -23,7 +23,7 @@ fn setupMosaicTarget(b: *std.Build, step: *std.Build.Step, tag: std.Target.Os.Ta
 			// See https://github.com/ziglang/zig/issues/16624#issuecomment-1801175600.
 			.abi = if (tag == .linux) .gnu else null,
 		}),
-		.optimize = .Debug,
+		.optimize = .ReleaseSmall,
 	});
 
 	lib.linkLibC();
