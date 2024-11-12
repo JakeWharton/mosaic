@@ -68,10 +68,10 @@ stdinRead stdinReader_readWithTimeout(
 	stdinRead result = {};
 	DWORD waitResult = WaitForMultipleObjects(2, reader->handles, FALSE, timeoutMillis);
 	if (likely(waitResult == WAIT_OBJECT_0)) {
-		LPDWORD read = 0;
-		if (likely(ReadConsole(reader->handles[0], buffer, count, read, NULL) != 0)) {
+		DWORD read = 0;
+		if (likely(ReadFile(reader->handles[0], buffer, count, &read, NULL) != 0)) {
 			// TODO EOF?
-			result.count = (*read);
+			result.count = read;
 		} else {
 			goto err;
 		}

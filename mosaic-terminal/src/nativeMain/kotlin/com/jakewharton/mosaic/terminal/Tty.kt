@@ -82,9 +82,11 @@ internal actual class StdinWriter internal constructor(
 	actual val reader: StdinReader = StdinReader(readerRef)
 
 	actual fun write(buffer: ByteArray) {
-		buffer.usePinned {
+		val error = buffer.usePinned {
 			stdinWriter_write(ref, it.addressOf(0), buffer.size)
 		}
+		if (error == 0U) return
+		throw RuntimeException(error.toString())
 	}
 
 	actual override fun close() {
