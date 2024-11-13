@@ -5,7 +5,6 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isGreaterThan
 import assertk.assertions.isZero
 import kotlin.test.AfterTest
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.measureTime
@@ -27,7 +26,6 @@ class StdinReaderTest {
 		assertThat(buffer.decodeToString(endIndex = read)).isEqualTo("hello")
 	}
 
-	@Ignore // Pipe in the Windows StdinWriter doesn't work with StdinReader signal waiting.
 	@Test fun readWithTimeoutReturnsZeroOnTimeout() {
 		val read: Int
 		val took = measureTime {

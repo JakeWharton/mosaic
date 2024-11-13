@@ -6,16 +6,18 @@
 #include <windows.h>
 
 typedef struct stdinReaderImpl {
-	HANDLE handles[2];
+	HANDLE waitHandles[2];
+	HANDLE readHandle;
 } stdinReaderImpl;
 
 typedef struct stdinWriterImpl {
 	HANDLE readHandle;
 	HANDLE writeHandle;
+	HANDLE eventHandle;
 	stdinReader *reader;
 } stdinWriterImpl;
 
-stdinReaderResult stdinReader_initWithHandle(HANDLE stdin) {
+stdinReaderResult stdinReader_initWithHandle(HANDLE stdinRead, HANDLE stdinWait) {
 	stdinReaderResult result = {};
 
 	stdinReaderImpl *reader = calloc(1, sizeof(stdinReaderImpl));
@@ -24,18 +26,19 @@ stdinReaderResult stdinReader_initWithHandle(HANDLE stdin) {
 		goto ret;
 	}
 
-	if (unlikely(stdin == INVALID_HANDLE_VALUE)) {
+	if (unlikely(stdinRead == INVALID_HANDLE_VALUE)) {
 		result.error = GetLastError();
 		goto err;
 	}
-	reader->handles[0] = stdin;
+	reader->readHandle = stdinRead;
+	reader->waitHandles[0] = stdinWait;
 
-	HANDLE interruptEvent = CreateEvent(NULL, FALSE, FALSE, TEXT("TODO UUID"));
+	HANDLE interruptEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 	if (unlikely(interruptEvent == NULL)) {
 		result.error = GetLastError();
 		goto err;
 	}
-	reader->handles[1] = interruptEvent;
+	reader->waitHandles[1] = interruptEvent;
 
 	result.reader = reader;
 
@@ -48,7 +51,8 @@ stdinReaderResult stdinReader_initWithHandle(HANDLE stdin) {
 }
 
 stdinReaderResult stdinReader_init() {
-	return stdinReader_initWithHandle(GetStdHandle(STD_INPUT_HANDLE));
+	HANDLE stdin = GetStdHandle(STD_INPUT_HANDLE);
+	return stdinReader_initWithHandle(stdin, stdin);
 }
 
 stdinRead stdinReader_read(
@@ -66,10 +70,10 @@ stdinRead stdinReader_readWithTimeout(
 	int timeoutMillis
 ) {
 	stdinRead result = {};
-	DWORD waitResult = WaitForMultipleObjects(2, reader->handles, FALSE, timeoutMillis);
+	DWORD waitResult = WaitForMultipleObjects(2, reader->waitHandles, FALSE, timeoutMillis);
 	if (likely(waitResult == WAIT_OBJECT_0)) {
 		DWORD read = 0;
-		if (likely(ReadFile(reader->handles[0], buffer, count, &read, NULL) != 0)) {
+		if (likely(ReadFile(reader->readHandle, buffer, count, &read, NULL) != 0)) {
 			// TODO EOF?
 			result.count = read;
 		} else {
@@ -89,14 +93,14 @@ stdinRead stdinReader_readWithTimeout(
 }
 
 platformError stdinReader_interrupt(stdinReader *reader) {
-	return likely(SetEvent(reader->handles[1]) != 0)
+	return likely(SetEvent(reader->waitHandles[1]) != 0)
 		? 0
 		: GetLastError();
 }
 
 platformError stdinReader_free(stdinReader *reader) {
 	DWORD result = 0;
-	if (unlikely(CloseHandle(reader->handles[1]) != 0)) {
+	if (unlikely(CloseHandle(reader->waitHandles[1]) != 0)) {
 		result = GetLastError();
 	}
 	free(reader);
@@ -117,7 +121,14 @@ stdinWriterResult stdinWriter_init() {
 		goto err;
 	}
 
-	stdinReaderResult readerResult = stdinReader_initWithHandle(writer->readHandle);
+	HANDLE writeEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+	if (unlikely(writeEvent == NULL)) {
+		result.error = GetLastError();
+		goto err;
+	}
+	writer->eventHandle = writeEvent;
+
+	stdinReaderResult readerResult = stdinReader_initWithHandle(writer->readHandle, writer->eventHandle);
 	if (unlikely(readerResult.error)) {
 		result.error = readerResult.error;
 		goto err;
@@ -142,14 +153,19 @@ platformError stdinWriter_write(stdinWriter *writer, void *buffer, int count) {
 	// Per https://learn.microsoft.com/en-us/windows/win32/api/namedpipeapi/nf-namedpipeapi-createpipe#remarks
 	// "When a process uses WriteFile to write to an anonymous pipe,
 	//  the write operation is not completed until all bytes are written."
-	return likely(WriteFile(writer->writeHandle, buffer, count, NULL, NULL))
-		? 0
-		: GetLastError();
+	if (likely(WriteFile(writer->writeHandle, buffer, count, NULL, NULL)
+			&& SetEvent(writer->eventHandle))) {
+		return 0;
+	}
+	return GetLastError();
 }
 
 platformError stdinWriter_free(stdinWriter *writer) {
 	DWORD result = 0;
-	if (unlikely(CloseHandle(writer->writeHandle) != 0)) {
+	if (unlikely(CloseHandle(writer->eventHandle) != 0)) {
+		result = GetLastError();
+	}
+	if (unlikely(CloseHandle(writer->writeHandle) != 0 && result == 0)) {
 		result = GetLastError();
 	}
 	if (unlikely(CloseHandle(writer->readHandle) != 0 && result == 0)) {
