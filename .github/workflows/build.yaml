@@ -65,7 +65,6 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 23
-      - uses: gradle/actions/setup-gradle@v4
 
       - run: ./gradlew jvmTest ${{ matrix.platform-test }}
 
