@@ -21,8 +21,7 @@ public actual object Tty {
 		private val savedPtr: Long,
 	) : AutoCloseable {
 		override fun close() {
-			val error = exitRawMode(savedPtr)
-			check(error == 0) { "Unable to exit raw mode: $error" }
+			exitRawMode(savedPtr)
 		}
 	}
 
@@ -44,7 +43,7 @@ public actual object Tty {
 	private external fun enterRawMode(): Long
 
 	@JvmStatic
-	private external fun exitRawMode(savedConfig: Long): Int
+	private external fun exitRawMode(savedConfig: Long)
 
 	@JvmStatic
 	private external fun stdinReaderInit(): Long
@@ -73,12 +72,12 @@ public actual object Tty {
 	@JvmStatic
 	@JvmSynthetic // Hide from Java callers.
 	@JvmName("stdinReaderInterrupt") // Avoid internal name mangling.
-	internal external fun stdinReaderInterrupt(reader: Long): Int
+	internal external fun stdinReaderInterrupt(reader: Long)
 
 	@JvmStatic
 	@JvmSynthetic // Hide from Java callers.
 	@JvmName("stdinReaderFree") // Avoid internal name mangling.
-	internal external fun stdinReaderFree(reader: Long): Int
+	internal external fun stdinReaderFree(reader: Long)
 
 	@JvmStatic
 	private external fun stdinWriterInit(): Long

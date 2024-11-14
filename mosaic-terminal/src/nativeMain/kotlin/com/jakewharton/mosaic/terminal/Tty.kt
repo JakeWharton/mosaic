@@ -21,7 +21,8 @@ public actual object Tty {
 	) : AutoCloseable {
 		override fun close() {
 			val error = exitRawMode(savedConfig)
-			check(error == 0U) { "Unable to exit raw mode: $error" }
+			if (error == 0U) return
+			throwError(error)
 		}
 	}
 
@@ -41,17 +42,21 @@ public actual object Tty {
 		val reader = stdinWriter_getReader(writer)!!
 		return StdinWriter(writer, reader)
 	}
+
+	internal fun throwError(error: UInt): Nothing {
+		throw RuntimeException(error.toString())
+	}
 }
 
 @OptIn(ExperimentalForeignApi::class)
 public actual class StdinReader internal constructor(
-	private val ref: CPointer<stdinReader>,
+	private var ref: CPointer<stdinReader>?,
 ) : AutoCloseable {
 	public actual fun read(buffer: ByteArray, offset: Int, length: Int): Int {
 		buffer.usePinned {
 			stdinReader_read(ref, it.addressOf(offset), length).useContents {
 				if (error == 0U) return count
-				throw RuntimeException(error.toString())
+				Tty.throwError(error)
 			}
 		}
 	}
@@ -60,23 +65,31 @@ public actual class StdinReader internal constructor(
 		buffer.usePinned {
 			stdinReader_readWithTimeout(ref, it.addressOf(offset), length, timeoutMillis).useContents {
 				if (error == 0U) return count
-				throw RuntimeException(error.toString())
+				Tty.throwError(error)
 			}
 		}
 	}
 
 	public actual fun interrupt() {
-		stdinReader_interrupt(ref)
+		val error = stdinReader_interrupt(ref)
+		if (error == 0U) return
+		Tty.throwError(error)
 	}
 
 	public actual override fun close() {
-		stdinReader_free(ref)
+		ref?.let { ref ->
+			this.ref = null
+
+			val error = stdinReader_free(ref)
+			if (error == 0U) return
+			Tty.throwError(error)
+		}
 	}
 }
 
 @OptIn(ExperimentalForeignApi::class)
 internal actual class StdinWriter internal constructor(
-	private val ref: CPointer<stdinWriter>,
+	private var ref: CPointer<stdinWriter>?,
 	readerRef: CPointer<stdinReader>,
 ) : AutoCloseable {
 	actual val reader: StdinReader = StdinReader(readerRef)
@@ -86,10 +99,19 @@ internal actual class StdinWriter internal constructor(
 			stdinWriter_write(ref, it.addressOf(0), buffer.size)
 		}
 		if (error == 0U) return
-		throw RuntimeException(error.toString())
+		Tty.throwError(error)
 	}
 
 	actual override fun close() {
-		stdinWriter_free(ref)
+		ref?.let { ref ->
+			this.ref = null
+
+			reader.close()
+
+			val error = stdinWriter_free(ref)
+
+			if (error == 0U) return
+			Tty.throwError(error)
+		}
 	}
 }

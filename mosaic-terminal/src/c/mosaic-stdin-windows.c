@@ -51,8 +51,8 @@ stdinReaderResult stdinReader_initWithHandle(HANDLE stdinRead, HANDLE stdinWait)
 }
 
 stdinReaderResult stdinReader_init() {
-	HANDLE stdin = GetStdHandle(STD_INPUT_HANDLE);
-	return stdinReader_initWithHandle(stdin, stdin);
+	HANDLE h = GetStdHandle(STD_INPUT_HANDLE);
+	return stdinReader_initWithHandle(h, h);
 }
 
 stdinRead stdinReader_read(
@@ -100,7 +100,7 @@ platformError stdinReader_interrupt(stdinReader *reader) {
 
 platformError stdinReader_free(stdinReader *reader) {
 	DWORD result = 0;
-	if (unlikely(CloseHandle(reader->waitHandles[1]) != 0)) {
+	if (unlikely(CloseHandle(reader->waitHandles[1]) == 0)) {
 		result = GetLastError();
 	}
 	free(reader);
@@ -162,13 +162,13 @@ platformError stdinWriter_write(stdinWriter *writer, void *buffer, int count) {
 
 platformError stdinWriter_free(stdinWriter *writer) {
 	DWORD result = 0;
-	if (unlikely(CloseHandle(writer->eventHandle) != 0)) {
+	if (unlikely(CloseHandle(writer->eventHandle) == 0)) {
 		result = GetLastError();
 	}
-	if (unlikely(CloseHandle(writer->writeHandle) != 0 && result == 0)) {
+	if (unlikely(CloseHandle(writer->writeHandle) == 0 && result == 0)) {
 		result = GetLastError();
 	}
-	if (unlikely(CloseHandle(writer->readHandle) != 0 && result == 0)) {
+	if (unlikely(CloseHandle(writer->readHandle) == 0 && result == 0)) {
 		result = GetLastError();
 	}
 	free(writer);

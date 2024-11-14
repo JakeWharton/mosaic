@@ -37,9 +37,12 @@ Java_com_jakewharton_mosaic_terminal_Tty_enterRawMode(JNIEnv *env, jclass type) 
 	return 0;
 }
 
-JNIEXPORT jint JNICALL
+JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_terminal_Tty_exitRawMode(JNIEnv *env, jclass type, jlong ptr) {
-	return exitRawMode((rawModeConfig *) ptr);
+	platformError error = exitRawMode((rawModeConfig *) ptr);
+	if (unlikely(error)) {
+		throwIse(env, error, "Unable to exit raw mode");
+	}
 }
 
 JNIEXPORT jlong JNICALL
@@ -113,14 +116,20 @@ Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderReadWithTimeout(
 	return -1;
 }
 
-JNIEXPORT jint JNICALL
+JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderInterrupt(JNIEnv *env, jclass type, jlong ptr) {
-	return stdinReader_interrupt((stdinReader *) ptr);
+	platformError error = stdinReader_interrupt((stdinReader *) ptr);
+	if (unlikely(error)) {
+		throwIse(env, error, "Unable to interrupt stdin reader");
+	}
 }
 
-JNIEXPORT jint JNICALL
+JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderFree(JNIEnv *env, jclass type, jlong ptr) {
-	return stdinReader_free((stdinReader *) ptr);
+	platformError error = stdinReader_free((stdinReader *) ptr);
+	if (unlikely(error)) {
+		throwIse(env, error, "Unable to free stdin reader");
+	}
 }
 
 JNIEXPORT jlong JNICALL
@@ -161,7 +170,10 @@ Java_com_jakewharton_mosaic_terminal_Tty_stdinWriterGetReader(JNIEnv *env, jclas
 	return (jlong) stdinWriter_getReader((stdinWriter *) ptr);
 }
 
-JNIEXPORT jint JNICALL
+JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_terminal_Tty_stdinWriterFree(JNIEnv *env, jclass type, jlong ptr) {
-	return stdinWriter_free((stdinWriter *) ptr);
+	platformError error = stdinWriter_free((stdinWriter *) ptr);
+	if (unlikely(error)) {
+		throwIse(env, error, "Unable to free stdin writer");
+	}
 }

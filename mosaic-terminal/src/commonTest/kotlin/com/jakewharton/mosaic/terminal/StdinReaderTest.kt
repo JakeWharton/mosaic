@@ -61,16 +61,19 @@ class StdinReaderTest {
 	}
 
 	@Test fun readWithTimeoutReturnsZeroOnTimeout() {
+		// The timeouts passed are slightly higher than those validated thanks to Windows which
+		// can return _slightly_ early. Usually it's around .1ms, but we go 10ms to be sure.
+
 		val readA: Int
 		val tookA = measureTime {
-			readA = reader.readWithTimeout(ByteArray(10), 0, 10, 100)
+			readA = reader.readWithTimeout(ByteArray(10), 0, 10, 110)
 		}
 		assertThat(readA).isZero()
 		assertThat(tookA).isGreaterThan(100.milliseconds)
 
 		val readB: Int
 		val tookB = measureTime {
-			readB = reader.readWithTimeout(ByteArray(10), 0, 10, 100)
+			readB = reader.readWithTimeout(ByteArray(10), 0, 10, 110)
 		}
 		assertThat(readB).isZero()
 		assertThat(tookB).isGreaterThan(100.milliseconds)
