@@ -28,6 +28,7 @@ kotlin {
 			dependencies {
 				implementation libs.kotlin.test
 				implementation libs.kotlinx.io
+				implementation libs.kotlinx.coroutines.core
 				implementation libs.assertk
 			}
 		}

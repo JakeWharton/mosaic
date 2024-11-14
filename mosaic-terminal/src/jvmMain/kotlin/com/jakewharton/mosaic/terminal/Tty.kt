@@ -73,12 +73,12 @@ public actual object Tty {
 	@JvmStatic
 	@JvmSynthetic // Hide from Java callers.
 	@JvmName("stdinReaderInterrupt") // Avoid internal name mangling.
-	internal external fun stdinReaderInterrupt(reader: Long)
+	internal external fun stdinReaderInterrupt(reader: Long): Int
 
 	@JvmStatic
 	@JvmSynthetic // Hide from Java callers.
 	@JvmName("stdinReaderFree") // Avoid internal name mangling.
-	internal external fun stdinReaderFree(reader: Long)
+	internal external fun stdinReaderFree(reader: Long): Int
 
 	@JvmStatic
 	private external fun stdinWriterInit(): Long

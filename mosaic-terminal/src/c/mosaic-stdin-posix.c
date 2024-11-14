@@ -39,7 +39,7 @@ stdinReaderResult stdinReader_initWithFd(int stdinFd) {
 	reader->stdinFd = stdinFd;
 	// TODO Consider forcing the writer pipe to always be lower than this pipe.
 	//  If we did this, we could always assume pipe[0] + 1 is the value for nfds.
-	reader->nfds = (stdinFd > reader->pipe[0]) ? stdinFd : reader->pipe[0];
+	reader->nfds = ((stdinFd > reader->pipe[0]) ? stdinFd : reader->pipe[0]) + 1;
 
 	result.reader = reader;
 
@@ -78,6 +78,12 @@ stdinRead stdinReader_readInternal(
 			} else if (c == 0) {
 				result.count = -1; // EOF
 			} else {
+				goto err;
+			}
+		} else if (unlikely(FD_ISSET(pipeIn, &reader->fds) != 0)) {
+			// Consume the single notification byte to clear the ready state for the next call.
+			int c = read(pipeIn, buffer, 1);
+			if (unlikely(c < 0)) {
 				goto err;
 			}
 		}

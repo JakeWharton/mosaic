@@ -8,7 +8,13 @@ import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.measureTime
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
+@OptIn(DelicateCoroutinesApi::class)
 class StdinReaderTest {
 	private val writer = Tty.stdinWriter()
 	private val reader = writer.reader
@@ -19,19 +25,54 @@ class StdinReaderTest {
 	}
 
 	@Test fun readWhatWasWritten() {
-		writer.write("hello".encodeToByteArray())
-
 		val buffer = ByteArray(100)
-		val read = reader.read(buffer, 0, buffer.size)
-		assertThat(buffer.decodeToString(endIndex = read)).isEqualTo("hello")
+
+		writer.write("hello".encodeToByteArray())
+		val readA = reader.read(buffer, 0, buffer.size)
+		assertThat(buffer.decodeToString(endIndex = readA)).isEqualTo("hello")
+
+		writer.write("world".encodeToByteArray())
+		val readB = reader.read(buffer, 0, buffer.size)
+		assertThat(buffer.decodeToString(endIndex = readB)).isEqualTo("world")
+	}
+
+	@Test fun readCanBeInterrupted() {
+		GlobalScope.launch(Dispatchers.Default) {
+			delay(150.milliseconds)
+			reader.interrupt()
+		}
+		val readA: Int
+		val tookA = measureTime {
+			readA = reader.read(ByteArray(10), 0, 10)
+		}
+		assertThat(readA).isZero()
+		assertThat(tookA).isGreaterThan(100.milliseconds)
+
+		GlobalScope.launch(Dispatchers.Default) {
+			delay(150.milliseconds)
+			reader.interrupt()
+		}
+		val readB: Int
+		val tookB = measureTime {
+			readB = reader.read(ByteArray(10), 0, 10)
+		}
+		assertThat(readB).isZero()
+		assertThat(tookB).isGreaterThan(100.milliseconds)
 	}
 
 	@Test fun readWithTimeoutReturnsZeroOnTimeout() {
-		val read: Int
-		val took = measureTime {
-			read = reader.readWithTimeout(ByteArray(10), 0, 10, 100)
+		val readA: Int
+		val tookA = measureTime {
+			readA = reader.readWithTimeout(ByteArray(10), 0, 10, 100)
 		}
-		assertThat(read).isZero()
-		assertThat(took).isGreaterThan(100.milliseconds)
+		assertThat(readA).isZero()
+		assertThat(tookA).isGreaterThan(100.milliseconds)
+
+		val readB: Int
+		val tookB = measureTime {
+			readB = reader.readWithTimeout(ByteArray(10), 0, 10, 100)
+		}
+		assertThat(readB).isZero()
+		assertThat(tookB).isGreaterThan(100.milliseconds)
 	}
 }
