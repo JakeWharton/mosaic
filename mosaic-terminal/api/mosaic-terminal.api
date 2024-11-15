@@ -7,7 +7,7 @@ public final class com/jakewharton/mosaic/terminal/StdinReader : java/lang/AutoC
 
 public final class com/jakewharton/mosaic/terminal/Tty {
 	public static final field INSTANCE Lcom/jakewharton/mosaic/terminal/Tty;
-	public final fun enableRawMode ()Ljava/lang/AutoCloseable;
-	public final fun stdinReader ()Lcom/jakewharton/mosaic/terminal/StdinReader;
+	public static final fun enableRawMode ()Ljava/lang/AutoCloseable;
+	public static final fun stdinReader ()Lcom/jakewharton/mosaic/terminal/StdinReader;
 }
 

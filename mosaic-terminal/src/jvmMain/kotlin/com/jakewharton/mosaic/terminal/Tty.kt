@@ -11,6 +11,7 @@ public actual object Tty {
 		loadNativeLibrary("mosaic")
 	}
 
+	@JvmStatic
 	public actual fun enableRawMode(): AutoCloseable {
 		val savedConfig = enterRawMode()
 		if (savedConfig == 0L) throw OutOfMemoryError()
@@ -25,6 +26,7 @@ public actual object Tty {
 		}
 	}
 
+	@JvmStatic
 	public actual fun stdinReader(): StdinReader {
 		val reader = stdinReaderInit()
 		if (reader == 0L) throw OutOfMemoryError()
