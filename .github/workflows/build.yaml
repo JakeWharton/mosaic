@@ -40,25 +40,25 @@ jobs:
           - 17
           - 21
           - 23
-        include:
+        platform:
           - os: macOS-13
-            platform-test: macosX64Test
+            task: macosX64Test
           - os: macOS-14
-            platform-test: macosArm64Test
+            task: macosArm64Test
           - os: macOS-15
-            platform-test: macosArm64Test
+            task: macosArm64Test
           - os: ubuntu-20.04
-            platform-test: linuxX64Test
+            task: linuxX64Test
           - os: ubuntu-22.04
-            platform-test: linuxX64Test
+            task: linuxX64Test
           - os: ubuntu-24.04
-            platform-test: linuxX64Test
+            task: linuxX64Test
           - os: windows-2019
-            platform-test: mingwX64Test
+            task: mingwX64Test
           - os: windows-2022
-            platform-test: mingwX64Test
+            task: mingwX64Test
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.platform.os }}
 
     steps:
       - uses: actions/checkout@v4
@@ -72,7 +72,7 @@ jobs:
           distribution: 'zulu'
           java-version: ${{ matrix.jdk }}
 
-      - run: ./gradlew jvmTest ${{ matrix.platform-test }}
+      - run: ./gradlew jvmTest ${{ matrix.platform.task }}
 
   binaries:
     runs-on: macos-15
