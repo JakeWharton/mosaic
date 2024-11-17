@@ -34,6 +34,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        jdk:
+          - 8
+          - 11
+          - 17
+          - 21
+          - 23
         include:
           - os: macOS-13
             platform-test: macosX64Test
@@ -64,7 +70,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: 23
+          java-version: ${{ matrix.jdk }}
 
       - run: ./gradlew jvmTest ${{ matrix.platform-test }}
 
