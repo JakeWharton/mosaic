@@ -18,6 +18,14 @@ kotlin {
 				implementation projects.mosaicRuntime
 			}
 		}
+		commonTest {
+			dependencies {
+				implementation projects.mosaicTesting
+				implementation libs.kotlin.test
+				implementation libs.kotlinx.coroutines.test
+				implementation libs.assertk
+			}
+		}
 	}
 
 	targets.withType(KotlinNativeTarget).configureEach { target ->

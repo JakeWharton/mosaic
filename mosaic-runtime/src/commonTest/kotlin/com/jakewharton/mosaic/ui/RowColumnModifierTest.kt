@@ -12,7 +12,7 @@ import com.jakewharton.mosaic.layout.width
 import com.jakewharton.mosaic.layout.wrapContentHeight
 import com.jakewharton.mosaic.layout.wrapContentWidth
 import com.jakewharton.mosaic.modifier.Modifier
-import com.jakewharton.mosaic.runMosaicTest
+import com.jakewharton.mosaic.testing.runMosaicTest
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 

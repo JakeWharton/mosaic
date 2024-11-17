@@ -2,6 +2,7 @@ package com.jakewharton.mosaic
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import com.jakewharton.mosaic.testing.runMosaicTest
 import com.jakewharton.mosaic.ui.Column
 import com.jakewharton.mosaic.ui.Row
 import com.jakewharton.mosaic.ui.Static

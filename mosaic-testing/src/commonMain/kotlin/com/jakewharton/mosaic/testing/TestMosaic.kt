@@ -1,10 +1,11 @@
-package com.jakewharton.mosaic
+package com.jakewharton.mosaic.testing
 
 import androidx.collection.MutableObjectList
 import androidx.compose.runtime.BroadcastFrameClock
 import androidx.compose.runtime.Composable
+import com.jakewharton.mosaic.Mosaic
+import com.jakewharton.mosaic.TextCanvas
 import com.jakewharton.mosaic.layout.KeyEvent
-import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.ui.AnsiLevel
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration
@@ -13,15 +14,15 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeout
 
-internal fun interface SnapshotStrategy<T> {
-	fun create(mosaic: Mosaic): T
+public fun interface SnapshotStrategy<T> {
+	public fun create(mosaic: Mosaic): T
 }
 
-internal suspend fun runMosaicTest(block: suspend TestMosaic<String>.() -> Unit) {
+public suspend fun runMosaicTest(block: suspend TestMosaic<String>.() -> Unit) {
 	runMosaicTest(PlainTextSnapshots, block)
 }
 
-internal suspend fun <T, R> runMosaicTest(
+public suspend fun <T, R> runMosaicTest(
 	snapshotStrategy: SnapshotStrategy<T>,
 	block: suspend TestMosaic<T>.() -> R,
 ): R {
@@ -36,8 +37,8 @@ internal suspend fun <T, R> runMosaicTest(
 	}
 }
 
-internal interface TestMosaic<T> : Mosaic {
-	suspend fun awaitSnapshot(duration: Duration = 1.seconds): T
+public interface TestMosaic<T> : Mosaic {
+	public suspend fun awaitSnapshot(duration: Duration = 1.seconds): T
 }
 
 private class RealTestMosaic<T>(
@@ -105,25 +106,5 @@ private class RealTestMosaic<T>(
 internal object PlainTextSnapshots : SnapshotStrategy<String> {
 	override fun create(mosaic: Mosaic): String {
 		return mosaic.paint().render(AnsiLevel.NONE)
-	}
-}
-
-internal object DumpSnapshots : SnapshotStrategy<String> {
-	override fun create(mosaic: Mosaic): String {
-		return mosaic.dump()
-	}
-}
-
-internal object NodeSnapshots : SnapshotStrategy<MosaicNode> {
-	override fun create(mosaic: Mosaic): MosaicNode {
-		return (mosaic as MosaicComposition).rootNode
-	}
-}
-
-internal class RenderingSnapshots(
-	private val rendering: Rendering,
-) : SnapshotStrategy<String> {
-	override fun create(mosaic: Mosaic): String {
-		return rendering.render(mosaic).toString()
 	}
 }

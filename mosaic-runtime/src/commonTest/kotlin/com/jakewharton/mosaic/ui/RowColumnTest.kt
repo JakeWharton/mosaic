@@ -23,9 +23,9 @@ import com.jakewharton.mosaic.layout.widthIn
 import com.jakewharton.mosaic.layout.wrapContentSize
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.position
-import com.jakewharton.mosaic.runMosaicTest
 import com.jakewharton.mosaic.size
 import com.jakewharton.mosaic.testIntrinsics
+import com.jakewharton.mosaic.testing.runMosaicTest
 import com.jakewharton.mosaic.ui.unit.Constraints
 import com.jakewharton.mosaic.ui.unit.IntOffset
 import com.jakewharton.mosaic.ui.unit.IntSize

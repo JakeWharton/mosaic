@@ -12,6 +12,7 @@ import com.jakewharton.mosaic.layout.MeasureScope
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.layout.Placeable
 import com.jakewharton.mosaic.modifier.Modifier
+import com.jakewharton.mosaic.testing.runMosaicTest
 import com.jakewharton.mosaic.ui.Alignment
 import com.jakewharton.mosaic.ui.Filler
 import com.jakewharton.mosaic.ui.Layout
@@ -53,7 +54,7 @@ inline fun TestFiller(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun Container(
+internal fun Container(
 	modifier: Modifier = Modifier,
 	alignment: Alignment = Alignment.Center,
 	expanded: Boolean = false,
@@ -158,7 +159,7 @@ suspend fun testIntrinsics(
 }
 
 @Composable
-internal fun ConstrainedBox(
+fun ConstrainedBox(
 	constraints: Constraints,
 	modifier: Modifier = Modifier,
 	content: @Composable () -> Unit = {},

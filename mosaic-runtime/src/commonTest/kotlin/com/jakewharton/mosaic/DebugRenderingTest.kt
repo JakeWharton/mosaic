@@ -9,6 +9,7 @@ import assertk.assertions.isNotNull
 import assertk.assertions.message
 import com.jakewharton.mosaic.layout.drawBehind
 import com.jakewharton.mosaic.modifier.Modifier
+import com.jakewharton.mosaic.testing.runMosaicTest
 import com.jakewharton.mosaic.ui.Layout
 import com.jakewharton.mosaic.ui.Row
 import com.jakewharton.mosaic.ui.Static

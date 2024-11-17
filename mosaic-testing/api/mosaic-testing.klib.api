@@ -1,0 +1,21 @@
+// Klib ABI Dump
+// Targets: [linuxArm64, linuxX64, macosArm64, macosX64, mingwX64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <com.jakewharton.mosaic:mosaic-testing>
+abstract fun interface <#A: kotlin/Any?> com.jakewharton.mosaic.testing/SnapshotStrategy { // com.jakewharton.mosaic.testing/SnapshotStrategy|null[0]
+    abstract fun create(com.jakewharton.mosaic/Mosaic): #A // com.jakewharton.mosaic.testing/SnapshotStrategy.create|create(com.jakewharton.mosaic.Mosaic){}[0]
+}
+
+abstract interface <#A: kotlin/Any?> com.jakewharton.mosaic.testing/TestMosaic : com.jakewharton.mosaic/Mosaic { // com.jakewharton.mosaic.testing/TestMosaic|null[0]
+    abstract suspend fun awaitSnapshot(kotlin.time/Duration = ...): #A // com.jakewharton.mosaic.testing/TestMosaic.awaitSnapshot|awaitSnapshot(kotlin.time.Duration){}[0]
+}
+
+final val com.jakewharton.mosaic.testing/com_jakewharton_mosaic_testing_PlainTextSnapshots$stableprop // com.jakewharton.mosaic.testing/com_jakewharton_mosaic_testing_PlainTextSnapshots$stableprop|#static{}com_jakewharton_mosaic_testing_PlainTextSnapshots$stableprop[0]
+
+final fun com.jakewharton.mosaic.testing/com_jakewharton_mosaic_testing_PlainTextSnapshots$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.testing/com_jakewharton_mosaic_testing_PlainTextSnapshots$stableprop_getter|com_jakewharton_mosaic_testing_PlainTextSnapshots$stableprop_getter(){}[0]
+final suspend fun <#A: kotlin/Any?, #B: kotlin/Any?> com.jakewharton.mosaic.testing/runMosaicTest(com.jakewharton.mosaic.testing/SnapshotStrategy<#A>, kotlin.coroutines/SuspendFunction1<com.jakewharton.mosaic.testing/TestMosaic<#A>, #B>): #B // com.jakewharton.mosaic.testing/runMosaicTest|runMosaicTest(com.jakewharton.mosaic.testing.SnapshotStrategy<0:0>;kotlin.coroutines.SuspendFunction1<com.jakewharton.mosaic.testing.TestMosaic<0:0>,0:1>){0§<kotlin.Any?>;1§<kotlin.Any?>}[0]
+final suspend fun com.jakewharton.mosaic.testing/runMosaicTest(kotlin.coroutines/SuspendFunction1<com.jakewharton.mosaic.testing/TestMosaic<kotlin/String>, kotlin/Unit>) // com.jakewharton.mosaic.testing/runMosaicTest|runMosaicTest(kotlin.coroutines.SuspendFunction1<com.jakewharton.mosaic.testing.TestMosaic<kotlin.String>,kotlin.Unit>){}[0]

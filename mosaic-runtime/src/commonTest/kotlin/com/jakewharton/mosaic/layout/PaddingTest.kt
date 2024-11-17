@@ -8,9 +8,9 @@ import com.jakewharton.mosaic.TestChar
 import com.jakewharton.mosaic.TestFiller
 import com.jakewharton.mosaic.assertFailure
 import com.jakewharton.mosaic.modifier.Modifier
-import com.jakewharton.mosaic.runMosaicTest
 import com.jakewharton.mosaic.s
 import com.jakewharton.mosaic.testIntrinsics
+import com.jakewharton.mosaic.testing.runMosaicTest
 import com.jakewharton.mosaic.ui.Layout
 import com.jakewharton.mosaic.ui.unit.Constraints
 import kotlin.test.Test

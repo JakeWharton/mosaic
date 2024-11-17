@@ -1,0 +1,21 @@
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
+apply from: "$rootDir/addAllTargets.gradle"
+apply from: "$rootDir/publish.gradle"
+apply plugin: 'dev.drewhamilton.poko'
+
+kotlin {
+	explicitApi()
+
+	sourceSets {
+		commonMain {
+			dependencies {
+				api projects.mosaicRuntime
+				api libs.kotlinx.coroutines.core
+				implementation libs.compose.collection
+			}
+		}
+	}
+
+	compilerOptions.freeCompilerArgs.add('-Xexpect-actual-classes')
+}
