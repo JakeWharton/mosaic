@@ -2,15 +2,16 @@ package com.jakewharton.mosaic.terminal
 
 import com.jakewharton.mosaic.terminal.event.Event
 import com.jakewharton.mosaic.terminal.event.KeyEscape
+import com.jakewharton.mosaic.terminal.event.UnknownEvent
 
-private const val bufferSize = 8 * 1024
-private const val bareEscapeDisambiguationReadTimeoutMillis = 100
+private const val BufferSize = 8 * 1024
+private const val BareEscapeDisambiguationReadTimeoutMillis = 100
 
 internal class TerminalParser(
 	private val stdinReader: StdinReader,
 	private val isInRawMode: Boolean,
 ) {
-	private val buffer = ByteArray(bufferSize)
+	private val buffer = ByteArray(BufferSize)
 	private var offset = 0
 	private var limit = 0
 
@@ -21,7 +22,7 @@ internal class TerminalParser(
 
 		while (true) {
 			if (offset < limit) {
-				parse(buffer, offset, limit)?.let { event ->
+				parseEvent(buffer, offset, limit)?.let { event ->
 					return event
 				}
 
@@ -40,7 +41,7 @@ internal class TerminalParser(
 			if (isInRawMode) {
 				// Common case: we're in raw mode and can block filling the buffer as we never need to
 				// do a disambiguation read on a bare escape (it would have come as a keyboard event).
-				val read = stdinReader.read(buffer, limit, bufferSize)
+				val read = stdinReader.read(buffer, limit, BufferSize)
 				limit += read
 				this.limit = limit
 				continue
@@ -54,8 +55,8 @@ internal class TerminalParser(
 				read = stdinReader.readWithTimeout(
 					buffer,
 					limit,
-					bufferSize,
-					bareEscapeDisambiguationReadTimeoutMillis
+					BufferSize,
+					BareEscapeDisambiguationReadTimeoutMillis
 				)
 				if (read == 0) {
 					// We know the offset is 0, so resetting the limit effectively consumes the byte.
@@ -63,14 +64,14 @@ internal class TerminalParser(
 					return KeyEscape
 				}
 			} else {
-				read = stdinReader.read(buffer, limit, bufferSize)
+				read = stdinReader.read(buffer, limit, BufferSize)
 			}
 			limit += read
 			this.limit = limit
 		}
 	}
 
-	private fun parse(buffer: ByteArray, start: Int, limit: Int): Event? {
+	private fun parseEvent(buffer: ByteArray, start: Int, limit: Int): Event? {
 		val b1 = buffer[start].toInt()
 		if (b1 == 0x1B) {
 			val b2Index = start + 1
@@ -80,19 +81,74 @@ internal class TerminalParser(
 			if (b2Index == limit) return null
 
 			when (val b2 = buffer[b2Index].toInt()) {
-//				0x4F -> parseSs3(buffer, start, limit)
-//				0x50 -> parseDcs(buffer, start, limit)
-//				0x58 -> parseUntilStringTerminator(buffer, start, limit)
-//				0x5B -> parseCsi(buffer, start, limit)
-//				0x5D -> TODO("Unhandled event")
-//				0x5E -> TODO("Unhandled event")
-//				0x5F -> parseApc(buffer, start, limit)
-//				else -> CodepointEvent(b2, alt = true)
+				// 0x4F -> parseSs3(buffer, start, limit)
+				// 0x50 -> parseDcs(buffer, start, limit)
+				0x58 -> return parseUntilStringTerminator(buffer, start, limit)
+				0x5B -> return parseCsi(buffer, start, limit)
+				// 0x5D -> TODO("Unhandled event")
+				// 0x5E -> TODO("Unhandled event")
+				// 0x5F -> parseApc(buffer, start, limit)
+				// else -> CodepointEvent(b2, alt = true)
+				else -> return TODO("Unhandled event")
+			}
+		} else {
+			when (b1) {
 				else -> return TODO("Unhandled event")
 			}
 		}
-		when (b1) {
-			else -> return TODO("Unhandled event")
+	}
+
+	private fun parseCsi(buffer: ByteArray, start: Int, limit: Int): Event? {
+		val end = buffer.indexOfFirstOrElse(
+			// Skip leading 0x1B5B.
+			start = start + 2,
+			end = limit,
+			predicate = { it.toInt() in 0x40..0xFF },
+			orElse = { return null },
+		)
+		when (val final = buffer[end]) {
+			else -> {
+				offset = end
+				return UnknownEvent(
+					context = "CSI with unknown final byte",
+					bytes = buffer.copyOfRange(start, end),
+				)
+			}
+		}
+	}
+
+	private fun parseUntilStringTerminator(
+		buffer: ByteArray,
+		start: Int,
+		limit: Int,
+		handler: (stIndex: Int) -> Event? = { null },
+	): Event? {
+		// TODO test string with 0x1b inside of it
+
+		// Skip leading discriminator.
+		var searchFrom = start + 2
+
+		while (true) {
+			val escIndex = buffer.indexOfFirstOrElse(
+				start = searchFrom,
+				end = limit,
+				predicate = { it == 0x1B.toByte() },
+				orElse = { return null },
+			)
+			// If found at end of range, underflow.
+			val slashIndex = escIndex + 1
+			if (slashIndex == limit) return null
+
+			if (buffer[slashIndex] == '\\'.code.toByte()) {
+				val end = slashIndex + 2
+				offset = end
+				return handler(escIndex)
+					?: UnknownEvent(
+						context = "Unsupported string sequence",
+						bytes = buffer.copyOfRange(searchFrom, end),
+					)
+			}
+			searchFrom = slashIndex
 		}
 	}
 }
