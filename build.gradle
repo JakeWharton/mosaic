@@ -51,6 +51,13 @@ allprojects {
 			}
 			exceptionFormat 'full'
 		}
+		def testJdk = (String) findProperty("mosaic.testJdk")
+		if (testJdk != null) {
+			println("Test JDK override: $testJdk")
+			javaLauncher = javaToolchains.launcherFor {
+				it.languageVersion = JavaLanguageVersion.of(testJdk)
+			}
+		}
 	}
 
 	apply plugin: 'com.diffplug.spotless'
