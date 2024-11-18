@@ -32,6 +32,11 @@ kotlin {
 				implementation libs.assertk
 			}
 		}
+		jvmTest {
+			dependencies {
+				implementation libs.kotlin.test.junit
+			}
+		}
 	}
 
 	targets.withType(KotlinNativeTarget).configureEach {

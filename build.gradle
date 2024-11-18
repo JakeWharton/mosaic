@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
@@ -57,17 +58,27 @@ allprojects {
 	plugins.withId('org.jetbrains.kotlin.multiplatform') {
 		kotlin.targets.configureEach { target ->
 			if (target instanceof KotlinJvmTarget) {
-				def allJdkTests = tasks.register("all${target.name.capitalize()}Tests") {
+				def allJvmTests = tasks.register("all${target.name.capitalize()}Tests") {
 					it.group = LifecycleBasePlugin.VERIFICATION_GROUP
 				}
 				for (testJdk in [8, 11, 17, 21, 23]) {
 					target.testRuns.create("Jdk$testJdk") { run ->
-						allJdkTests.configure { it.dependsOn(run.executionTask) }
+						allJvmTests.configure {
+							it.dependsOn(run.executionTask)
+						}
 						run.executionTask.configure { test->
 							test.javaLauncher = javaToolchains.launcherFor {
 								it.languageVersion = JavaLanguageVersion.of(testJdk)
 							}
 						}
+					}
+				}
+
+				// Adding additional test runs somehow removes the configuration capabilities which allow
+				// automatic resolution of the junit test dependency. Add it explicitly instead.
+				target.compilations.named(KotlinCompilation.TEST_COMPILATION_NAME).configure {
+					dependencies {
+						implementation(libs.kotlin.test.junit)
 					}
 				}
 			}
