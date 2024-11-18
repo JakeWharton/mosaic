@@ -70,7 +70,9 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: ${{ matrix.jdk }}
+          java-version: |
+            ${{ matrix.jdk }}
+            23
 
       - run: ./gradlew jvmTest ${{ matrix.platform.task }}
 
