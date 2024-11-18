@@ -34,12 +34,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jdk:
-          - 8
-          - 11
-          - 17
-          - 21
-          - 23
         platform:
           - os: macOS-13
             task: macosX64Test
@@ -71,10 +65,13 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: |
-            ${{ matrix.jdk }}
+            8
+            11
+            17
+            21
             23
 
-      - run: ./gradlew jvmTest ${{ matrix.platform.task }} -PmosaicTestJdk=${{ matrix.jdk }}
+      - run: ./gradlew allJvmTests ${{ matrix.platform.task }}
 
   binaries:
     runs-on: macos-15

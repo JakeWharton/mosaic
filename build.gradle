@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 buildscript {
@@ -51,11 +52,24 @@ allprojects {
 			}
 			exceptionFormat 'full'
 		}
-		def testJdk = (String) findProperty("mosaicTestJdk")
-		if (testJdk != null) {
-			println("Test JDK override: $testJdk")
-			javaLauncher = javaToolchains.launcherFor {
-				it.languageVersion = JavaLanguageVersion.of(testJdk)
+	}
+
+	plugins.withId('org.jetbrains.kotlin.multiplatform') {
+		kotlin.targets.configureEach { target ->
+			if (target instanceof KotlinJvmTarget) {
+				def allJdkTests = tasks.register("all${target.name.capitalize()}Tests") {
+					it.group = LifecycleBasePlugin.VERIFICATION_GROUP
+				}
+				for (testJdk in [8, 11, 17, 21, 23]) {
+					target.testRuns.create("Jdk$testJdk") { run ->
+						allJdkTests.configure { it.dependsOn(run.executionTask) }
+						run.executionTask.configure { test->
+							test.javaLauncher = javaToolchains.launcherFor {
+								it.languageVersion = JavaLanguageVersion.of(testJdk)
+							}
+						}
+					}
+				}
 			}
 		}
 	}
