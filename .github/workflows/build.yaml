@@ -74,7 +74,7 @@ jobs:
             ${{ matrix.jdk }}
             23
 
-      - run: ./gradlew jvmTest ${{ matrix.platform.task }}
+      - run: ./gradlew jvmTest ${{ matrix.platform.task }} -Pmosaic.testJdk=${{ matrix.jdk }}
 
   binaries:
     runs-on: macos-15
