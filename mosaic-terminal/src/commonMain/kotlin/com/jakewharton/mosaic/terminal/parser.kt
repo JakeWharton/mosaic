@@ -16,7 +16,7 @@ import com.jakewharton.mosaic.terminal.event.UnknownEvent
 private const val BufferSize = 8 * 1024
 private const val BareEscapeDisambiguationReadTimeoutMillis = 100
 
-internal class TerminalParser(
+public class TerminalParser(
 	private val stdinReader: StdinReader,
 	private val isInRawMode: Boolean,
 ) {
@@ -24,7 +24,7 @@ internal class TerminalParser(
 	private var offset = 0
 	private var limit = 0
 
-	fun next(): Event {
+	public fun next(): Event {
 		val buffer = buffer
 		var offset = offset
 		var limit = limit
@@ -520,7 +520,7 @@ internal class TerminalParser(
 			if (slashIndex == limit) return null
 
 			if (buffer[slashIndex] == '\\'.code.toByte()) {
-				val end = slashIndex + 2
+				val end = escIndex + 2
 				offset = end
 				return handler(escIndex, end)
 			}

@@ -4,9 +4,12 @@ package example
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.main
+import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
+import com.github.ajalt.clikt.parameters.types.enum
 import com.jakewharton.finalization.withFinalizationHook
+import com.jakewharton.mosaic.terminal.TerminalParser
 import com.jakewharton.mosaic.terminal.Tty
 import kotlin.jvm.JvmName
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
@@ -23,6 +26,11 @@ fun main(vararg args: String) = RawModeEchoCommand().main(args)
 
 @OptIn(ExperimentalStdlibApi::class)
 private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
+	private enum class Mode { Hex, Event }
+	private val mode by option()
+		.enum<Mode> { it.name.lowercase() }
+		.default(Mode.Hex)
+
 	private val all by option().flag()
 	private val focusEvents by option().flag()
 	private val kittyKeyEvents by option().flag()
@@ -83,19 +91,33 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 
 				val inputs = Channel<String>(UNLIMITED)
 				launch(Dispatchers.IO) {
-					val buffer = ByteArray(1024)
 					val job = coroutineContext.job
-					while (job.isActive) {
-						val read = reader.read(buffer, 0, 1024)
-						if (read > 0) {
-							val hex = buffer.toHexString(endIndex = read)
-							inputs.trySend(hex)
-							if (hex == "03") {
-								inputs.close()
-								break
+					when (mode) {
+						Mode.Hex -> {
+							val buffer = ByteArray(1024)
+							while (job.isActive) {
+								val read = reader.read(buffer, 0, 1024)
+								if (read > 0) {
+									val hex = buffer.toHexString(endIndex = read)
+									inputs.trySend(hex)
+									if (hex == "03") {
+										break
+									}
+								}
+							}
+						}
+						Mode.Event -> {
+							val parser = TerminalParser(reader, true)
+							while (job.isActive) {
+								val event = parser.next().toString()
+								inputs.trySend(event)
+								if (event == "CodepointEvent(Ctrl+0x63)") {
+									break
+								}
 							}
 						}
 					}
+					inputs.close()
 				}
 
 				for (input in inputs) {

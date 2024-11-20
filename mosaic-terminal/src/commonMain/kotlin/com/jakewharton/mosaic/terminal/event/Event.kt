@@ -1,6 +1,6 @@
 package com.jakewharton.mosaic.terminal.event
 
-internal sealed interface Event
+public sealed interface Event
 
 // Some temporary events while we spin up parsing...
 
@@ -92,3 +92,11 @@ internal data class MouseEvent(
 		Left, Middle, Right, None, WheelUp, WheelDown, Button8, Button9, Button10, Button11,
 	}
 }
+
+internal data class LinePositionAbsolute(
+	val row: Int,
+) : Event
+
+internal data class LinePositionRelative(
+	val rows: Int,
+) : Event
