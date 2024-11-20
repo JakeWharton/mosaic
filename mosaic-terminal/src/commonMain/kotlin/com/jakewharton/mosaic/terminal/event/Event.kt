@@ -37,6 +37,33 @@ internal data class CodepointEvent(
 		append(codepoint.toString(16).uppercase())
 		append(')')
 	}
+
+	companion object {
+		// These codepoints are defined by Kitty in the Unicode private space.
+		const val Insert = 57348
+		const val Delete = 57349
+		const val PageUp = 57354
+		const val PageDown = 57355
+		const val Up = 57352
+		const val Down = 57353
+		const val Right = 57351
+		const val Left = 57350
+		const val KpBegin = 57427
+		const val End = 57357
+		const val Home = 57356
+		const val F1 = 57364
+		const val F2 = 57365
+		const val F3 = 57366
+		const val F4 = 57367
+		const val F5 = 57368
+		const val F6 = 57369
+		const val F7 = 57370
+		const val F8 = 57371
+		const val F9 = 57372
+		const val F10 = 57373
+		const val F11 = 57374
+		const val F12 = 57375
+	}
 }
 
 internal data class FocusEvent(
@@ -72,7 +99,11 @@ internal data class DecModeReport(
 	val setting: Setting,
 ) : Event {
 	enum class Setting {
-		NotRecognized, Set, Reset, PermanentlySet, PermanentlyReset,
+		NotRecognized,
+		Set,
+		Reset,
+		PermanentlySet,
+		PermanentlyReset,
 	}
 }
 
@@ -86,10 +117,22 @@ internal data class MouseEvent(
 	val ctrl: Boolean,
 ) : Event {
 	enum class Type {
-		Drag, Motion, Release, Press,
+		Drag,
+		Motion,
+		Release,
+		Press,
 	}
 	enum class Button {
-		Left, Middle, Right, None, WheelUp, WheelDown, Button8, Button9, Button10, Button11,
+		Left,
+		Middle,
+		Right,
+		None,
+		WheelUp,
+		WheelDown,
+		Button8,
+		Button9,
+		Button10,
+		Button11,
 	}
 }
 

@@ -65,7 +65,7 @@ public class TerminalParser(
 					buffer,
 					limit,
 					BufferSize,
-					BareEscapeDisambiguationReadTimeoutMillis
+					BareEscapeDisambiguationReadTimeoutMillis,
 				)
 				if (read == 0) {
 					// We know the offset is 0, so resetting the limit effectively consumes the byte.
@@ -137,7 +137,7 @@ public class TerminalParser(
 			0x0B,
 			0x0C,
 			in 0x0E..0x1A,
-				-> {
+			-> {
 				offset = b2Index
 				return CodepointEvent(b1 + 0x60, ctrl = true)
 			}
@@ -226,44 +226,43 @@ public class TerminalParser(
 		offset = end
 
 		when (buffer[finalIndex].toInt()) {
-			// These codepoints are defined by Kitty in the Unicode private space.
-			'A'.code -> return parseCsiLegacy(buffer, start, end, 57352 /* up */)
-			'B'.code -> return parseCsiLegacy(buffer, start, end, 57353 /* down */)
-			'C'.code -> return parseCsiLegacy(buffer, start, end, 57351 /* right */)
-			'D'.code -> return parseCsiLegacy(buffer, start, end, 57350 /* left */)
-			'E'.code -> return parseCsiLegacy(buffer, start, end, 57427 /* kp_begin */)
-			'F'.code -> return parseCsiLegacy(buffer, start, end, 57457 /* end */)
-			'H'.code -> return parseCsiLegacy(buffer, start, end, 57456 /* home */)
-			'P'.code -> return parseCsiLegacy(buffer, start, end, 57364 /* f1 */)
-			'Q'.code -> return parseCsiLegacy(buffer, start, end, 57365 /* f2 */)
-			'R'.code -> return parseCsiLegacy(buffer, start, end, 57366 /* f3 */)
-			'S'.code -> return parseCsiLegacy(buffer, start, end, 57367 /* f4 */)
+			'A'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.Up)
+			'B'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.Down)
+			'C'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.Right)
+			'D'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.Left)
+			'E'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.KpBegin)
+			'F'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.End)
+			'H'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.Home)
+			'P'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.F1)
+			'Q'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.F2)
+			'R'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.F3)
+			'S'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.F4)
 
 			'~'.code -> {
 				val delimiter = buffer.indexOfOrDefault(';'.code.toByte(), b3Index, end, end)
 				val number = buffer.parseIntDigits(start = b3Index, end = delimiter)
 				val codepoint = when (number) {
-					2 -> 57348 /* insert */
-					3 -> 57349 /* delete */
-					5 -> 57354 /* page up */
-					6 -> 57355 /* page down */
-					7 -> 57356 /* home */
-					8 -> 57357 /* end */
-					11 -> 57364 /* f1 */
-					12 -> 57365 /* f2 */
-					13 -> 57366 /* f3 */
-					14 -> 57367 /* f4 */
-					15 -> 57368 /* f5 */
-					17 -> 57369 /* f6 */
-					18 -> 57370 /* f7 */
-					19 -> 57371 /* f8 */
-					20 -> 57372 /* f9 */
-					21 -> 57373 /* f10 */
-					23 -> 57374 /* f11 */
-					24 -> 57375 /* f12 */
+					2 -> CodepointEvent.Insert
+					3 -> CodepointEvent.Delete
+					5 -> CodepointEvent.PageUp
+					6 -> CodepointEvent.PageDown
+					7 -> CodepointEvent.Home
+					8 -> CodepointEvent.End
+					11 -> CodepointEvent.F1
+					12 -> CodepointEvent.F2
+					13 -> CodepointEvent.F3
+					14 -> CodepointEvent.F4
+					15 -> CodepointEvent.F5
+					17 -> CodepointEvent.F6
+					18 -> CodepointEvent.F7
+					19 -> CodepointEvent.F8
+					20 -> CodepointEvent.F9
+					21 -> CodepointEvent.F10
+					23 -> CodepointEvent.F11
+					24 -> CodepointEvent.F12
 					200 -> return PasteEvent(start = true)
 					201 -> return PasteEvent(start = false)
-					57427 -> 57427 /* kp_begin */
+					57427 -> CodepointEvent.KpBegin
 					else -> return UnknownEvent(
 						context = "Unknown CSI ~ codepoint",
 						bytes = buffer.copyOfRange(start, end),
@@ -285,7 +284,8 @@ public class TerminalParser(
 			}
 
 			'm'.code,
-			'M'.code -> {
+			'M'.code,
+			-> {
 				if (buffer[b3Index].toInt() != '<'.code) {
 					return UnknownEvent(
 						context = "TODO", // TODO
@@ -484,7 +484,7 @@ public class TerminalParser(
 				offset = b3Index
 				return UnknownEvent(
 					context = "First two bytes match SS3 but character byte was an escape",
-					bytes = buffer.copyOfRange(start, b3Index)
+					bytes = buffer.copyOfRange(start, b3Index),
 				)
 			}
 			else -> {
