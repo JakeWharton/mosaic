@@ -5,9 +5,17 @@ public final class com/jakewharton/mosaic/terminal/StdinReader : java/lang/AutoC
 	public final fun readWithTimeout ([BIII)I
 }
 
+public final class com/jakewharton/mosaic/terminal/TerminalParser {
+	public fun <init> (Lcom/jakewharton/mosaic/terminal/StdinReader;Z)V
+	public final fun next ()Lcom/jakewharton/mosaic/terminal/event/Event;
+}
+
 public final class com/jakewharton/mosaic/terminal/Tty {
 	public static final field INSTANCE Lcom/jakewharton/mosaic/terminal/Tty;
 	public static final fun enableRawMode ()Ljava/lang/AutoCloseable;
 	public static final fun stdinReader ()Lcom/jakewharton/mosaic/terminal/StdinReader;
+}
+
+public abstract interface class com/jakewharton/mosaic/terminal/event/Event {
 }
 
