@@ -10,3 +10,4 @@ com.jakewharton.mosaic.ui
 com.jakewharton.mosaic.ui.unit
 module:mosaic-terminal
 com.jakewharton.mosaic.terminal
+com.jakewharton.mosaic.terminal.event
