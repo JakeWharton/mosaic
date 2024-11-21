@@ -16,6 +16,31 @@ public final class com/jakewharton/mosaic/terminal/Tty {
 	public static final fun stdinReader ()Lcom/jakewharton/mosaic/terminal/StdinReader;
 }
 
+public final class com/jakewharton/mosaic/terminal/event/BracketedPasteEvent : com/jakewharton/mosaic/terminal/event/Event {
+	public fun <init> (Z)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getStart ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public abstract interface class com/jakewharton/mosaic/terminal/event/Event {
+}
+
+public final class com/jakewharton/mosaic/terminal/event/FocusEvent : com/jakewharton/mosaic/terminal/event/Event {
+	public fun <init> (Z)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFocused ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/jakewharton/mosaic/terminal/event/UnknownEvent : com/jakewharton/mosaic/terminal/event/Event {
+	public fun <init> (Ljava/lang/String;[B)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBytes ()[B
+	public final fun getContext ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 

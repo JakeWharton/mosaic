@@ -1,5 +1,6 @@
 package com.jakewharton.mosaic.terminal
 
+import com.jakewharton.mosaic.terminal.event.BracketedPasteEvent
 import com.jakewharton.mosaic.terminal.event.CodepointEvent
 import com.jakewharton.mosaic.terminal.event.DecModeReport
 import com.jakewharton.mosaic.terminal.event.DeviceStatusReportString
@@ -8,7 +9,6 @@ import com.jakewharton.mosaic.terminal.event.FocusEvent
 import com.jakewharton.mosaic.terminal.event.KeyEscape
 import com.jakewharton.mosaic.terminal.event.KittyGraphicsEvent
 import com.jakewharton.mosaic.terminal.event.MouseEvent
-import com.jakewharton.mosaic.terminal.event.PasteEvent
 import com.jakewharton.mosaic.terminal.event.PrimaryDeviceAttributes
 import com.jakewharton.mosaic.terminal.event.ResizeEvent
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
@@ -239,7 +239,7 @@ public class TerminalParser(
 			'S'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.F4)
 
 			'~'.code -> {
-				val delimiter = buffer.indexOfOrDefault(';'.code.toByte(), b3Index, end, end)
+				val delimiter = buffer.indexOfOrDefault(';'.code.toByte(), b3Index, finalIndex, finalIndex)
 				val number = buffer.parseIntDigits(start = b3Index, end = delimiter)
 				val codepoint = when (number) {
 					2 -> CodepointEvent.Insert
@@ -260,8 +260,8 @@ public class TerminalParser(
 					21 -> CodepointEvent.F10
 					23 -> CodepointEvent.F11
 					24 -> CodepointEvent.F12
-					200 -> return PasteEvent(start = true)
-					201 -> return PasteEvent(start = false)
+					200 -> return BracketedPasteEvent(start = true)
+					201 -> return BracketedPasteEvent(start = false)
 					57427 -> CodepointEvent.KpBegin
 					else -> return UnknownEvent(
 						context = "Unknown CSI ~ codepoint",
@@ -341,8 +341,6 @@ public class TerminalParser(
 			}
 
 			'c'.code -> {
-				// TODO can we express this conditional with b3index in relation to end?
-				if (end - start < 4) return null
 				if (buffer[b3Index].toInt() == '?'.code) {
 					return PrimaryDeviceAttributes(
 						buffer.decodeToString(start + 3, end),

@@ -1,5 +1,6 @@
 package com.jakewharton.mosaic.terminal
 
+// TODO https://youtrack.jetbrains.com/issue/KT-7067
 internal fun ByteArray.indexOf(value: Byte, start: Int, end: Int): Int {
 	return indexOfOrDefault(value, start, end, -1)
 }

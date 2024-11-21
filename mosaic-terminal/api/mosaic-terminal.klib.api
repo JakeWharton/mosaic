@@ -8,6 +8,41 @@
 // Library unique name: <com.jakewharton.mosaic:mosaic-terminal>
 sealed interface com.jakewharton.mosaic.terminal.event/Event // com.jakewharton.mosaic.terminal.event/Event|null[0]
 
+final class com.jakewharton.mosaic.terminal.event/BracketedPasteEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/BracketedPasteEvent|null[0]
+    constructor <init>(kotlin/Boolean) // com.jakewharton.mosaic.terminal.event/BracketedPasteEvent.<init>|<init>(kotlin.Boolean){}[0]
+
+    final val start // com.jakewharton.mosaic.terminal.event/BracketedPasteEvent.start|{}start[0]
+        final fun <get-start>(): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/BracketedPasteEvent.start.<get-start>|<get-start>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/BracketedPasteEvent.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal.event/BracketedPasteEvent.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/BracketedPasteEvent.toString|toString(){}[0]
+}
+
+final class com.jakewharton.mosaic.terminal.event/FocusEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/FocusEvent|null[0]
+    constructor <init>(kotlin/Boolean) // com.jakewharton.mosaic.terminal.event/FocusEvent.<init>|<init>(kotlin.Boolean){}[0]
+
+    final val focused // com.jakewharton.mosaic.terminal.event/FocusEvent.focused|{}focused[0]
+        final fun <get-focused>(): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/FocusEvent.focused.<get-focused>|<get-focused>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/FocusEvent.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal.event/FocusEvent.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/FocusEvent.toString|toString(){}[0]
+}
+
+final class com.jakewharton.mosaic.terminal.event/UnknownEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/UnknownEvent|null[0]
+    constructor <init>(kotlin/String, kotlin/ByteArray) // com.jakewharton.mosaic.terminal.event/UnknownEvent.<init>|<init>(kotlin.String;kotlin.ByteArray){}[0]
+
+    final val bytes // com.jakewharton.mosaic.terminal.event/UnknownEvent.bytes|{}bytes[0]
+        final fun <get-bytes>(): kotlin/ByteArray // com.jakewharton.mosaic.terminal.event/UnknownEvent.bytes.<get-bytes>|<get-bytes>(){}[0]
+    final val context // com.jakewharton.mosaic.terminal.event/UnknownEvent.context|{}context[0]
+        final fun <get-context>(): kotlin/String // com.jakewharton.mosaic.terminal.event/UnknownEvent.context.<get-context>|<get-context>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/UnknownEvent.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal.event/UnknownEvent.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/UnknownEvent.toString|toString(){}[0]
+}
+
 final class com.jakewharton.mosaic.terminal/StdinReader : kotlin/AutoCloseable { // com.jakewharton.mosaic.terminal/StdinReader|null[0]
     final fun close() // com.jakewharton.mosaic.terminal/StdinReader.close|close(){}[0]
     final fun interrupt() // com.jakewharton.mosaic.terminal/StdinReader.interrupt|interrupt(){}[0]

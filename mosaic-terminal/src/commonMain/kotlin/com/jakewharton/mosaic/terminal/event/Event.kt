@@ -1,12 +1,15 @@
 package com.jakewharton.mosaic.terminal.event
 
+import dev.drewhamilton.poko.ArrayContentBased
+import dev.drewhamilton.poko.Poko
+
 public sealed interface Event
 
-// Some temporary events while we spin up parsing...
-
-internal class UnknownEvent(
-	val context: String,
-	val bytes: ByteArray,
+@Poko
+public class UnknownEvent(
+	public val context: String,
+	// TODO ByteString once it moves into the stdlib.
+	@ArrayContentBased public val bytes: ByteArray,
 ) : Event {
 	@OptIn(ExperimentalStdlibApi::class)
 	override fun toString(): String {
@@ -20,7 +23,7 @@ internal class UnknownEvent(
 	}
 }
 
-internal object KeyEscape : Event
+internal data object KeyEscape : Event
 
 internal data class CodepointEvent(
 	val codepoint: Int,
@@ -34,7 +37,7 @@ internal data class CodepointEvent(
 		if (ctrl) append("Ctrl+")
 		if (alt) append("Alt+")
 		append("0x")
-		append(codepoint.toString(16).uppercase())
+		append(codepoint.toString(16).uppercase().padStart(2, '0'))
 		append(')')
 	}
 
@@ -66,12 +69,14 @@ internal data class CodepointEvent(
 	}
 }
 
-internal data class FocusEvent(
-	val focused: Boolean,
+@Poko
+public class FocusEvent(
+	public val focused: Boolean,
 ) : Event
 
-internal data class PasteEvent(
-	val start: Boolean,
+@Poko
+public class BracketedPasteEvent(
+	public val start: Boolean,
 ) : Event
 
 internal data class PrimaryDeviceAttributes(
@@ -135,11 +140,3 @@ internal data class MouseEvent(
 		Button11,
 	}
 }
-
-internal data class LinePositionAbsolute(
-	val row: Int,
-) : Event
-
-internal data class LinePositionRelative(
-	val rows: Int,
-) : Event
