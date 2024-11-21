@@ -9,7 +9,7 @@ import com.jakewharton.mosaic.terminal.event.FocusEvent
 import com.jakewharton.mosaic.terminal.event.KeyEscape
 import com.jakewharton.mosaic.terminal.event.KittyGraphicsEvent
 import com.jakewharton.mosaic.terminal.event.MouseEvent
-import com.jakewharton.mosaic.terminal.event.PrimaryDeviceAttributes
+import com.jakewharton.mosaic.terminal.event.PrimaryDeviceAttributesEvent
 import com.jakewharton.mosaic.terminal.event.ResizeEvent
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
 
@@ -273,15 +273,8 @@ public class TerminalParser(
 				return CodepointEvent(codepoint)
 			}
 
-			// TODO validate no in-between bytes?
-			'I'.code -> {
-				offset = finalIndex + 1
-				return FocusEvent(focused = true)
-			}
-			'O'.code -> {
-				offset = finalIndex + 1
-				return FocusEvent(focused = false)
-			}
+			'I'.code -> return FocusEvent(focused = true)
+			'O'.code -> return FocusEvent(focused = false)
 
 			'm'.code,
 			'M'.code,
@@ -342,9 +335,9 @@ public class TerminalParser(
 
 			'c'.code -> {
 				if (buffer[b3Index].toInt() == '?'.code) {
-					return PrimaryDeviceAttributes(
-						buffer.decodeToString(start + 3, end),
-					)
+					val data = buffer.decodeToString(start + 3, finalIndex)
+					// TODO Parse parameters from data
+					return PrimaryDeviceAttributesEvent(data)
 				}
 				return UnknownEvent(
 					context = "CSI .. c sequence without leading ?",
@@ -466,16 +459,16 @@ public class TerminalParser(
 
 		val b3Index = start + 2
 		val codepoint = when (buffer[b3Index].toInt()) {
-			'A'.code -> 57352 /* up */
-			'B'.code -> 57353 /* down */
-			'C'.code -> 57351 /* right */
-			'D'.code -> 57350 /* left */
-			'F'.code -> 57357 /* end */
-			'H'.code -> 57356 /* home */
-			'P'.code -> 57364 /* f1 */
-			'Q'.code -> 57365 /* f2 */
-			'R'.code -> 57366 /* f3 */
-			'S'.code -> 57367 /* f3 */
+			'A'.code -> CodepointEvent.Up
+			'B'.code -> CodepointEvent.Down
+			'C'.code -> CodepointEvent.Right
+			'D'.code -> CodepointEvent.Left
+			'F'.code -> CodepointEvent.End
+			'H'.code -> CodepointEvent.Home
+			'P'.code -> CodepointEvent.F1
+			'Q'.code -> CodepointEvent.F2
+			'R'.code -> CodepointEvent.F3
+			'S'.code -> CodepointEvent.F3
 			0x1b -> {
 				// libvaxis added a guard against this case
 				// https://github.com/rockorager/libvaxis/commit/b68864c3babf2767c15c52911179e8ee9158e1d2

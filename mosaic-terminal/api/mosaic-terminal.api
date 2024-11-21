@@ -35,6 +35,14 @@ public final class com/jakewharton/mosaic/terminal/event/FocusEvent : com/jakewh
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class com/jakewharton/mosaic/terminal/event/PrimaryDeviceAttributesEvent : com/jakewharton/mosaic/terminal/event/Event {
+	public fun <init> (Ljava/lang/String;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getData ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/jakewharton/mosaic/terminal/event/UnknownEvent : com/jakewharton/mosaic/terminal/event/Event {
 	public fun <init> (Ljava/lang/String;[B)V
 	public fun equals (Ljava/lang/Object;)Z

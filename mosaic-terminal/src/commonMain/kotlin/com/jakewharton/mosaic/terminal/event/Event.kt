@@ -79,8 +79,9 @@ public class BracketedPasteEvent(
 	public val start: Boolean,
 ) : Event
 
-internal data class PrimaryDeviceAttributes(
-	val data: String,
+@Poko
+public class PrimaryDeviceAttributesEvent(
+	public val data: String,
 ) : Event
 
 internal data class DeviceStatusReportString(
