@@ -14,6 +14,15 @@ internal fun ByteArray.indexOfOrDefault(
 	return indexOfFirstOrElse(start, end, { it == value }, { default })
 }
 
+internal inline fun ByteArray.indexOfOrElse(
+	value: Byte,
+	start: Int,
+	end: Int,
+	orElse: () -> Int,
+): Int {
+	return indexOfFirstOrElse(start, end, { it == value }, orElse)
+}
+
 internal inline fun ByteArray.indexOfFirstOrElse(
 	start: Int,
 	end: Int,
@@ -28,13 +37,25 @@ internal inline fun ByteArray.indexOfFirstOrElse(
 	return orElse()
 }
 
+@Deprecated("Use overload with orElse")
 internal fun ByteArray.parseIntDigits(start: Int, end: Int): Int {
-	// TODO This needs an orElse path for parsing failure on non-digits or if start == end
+	return parseIntDigits(start, end, orElse = { -1 })
+}
 
-	var value = 0
-	for (i in start until end) {
-		value *= 10
-		value += this[i].toInt() - '0'.code
-	}
-	return value
+internal inline fun ByteArray.parseIntDigits(start: Int, end: Int, orElse: () -> Int): Int {
+	error@ do {
+		if (start != end) {
+			var value = 0
+			for (i in start until end) {
+				val digit = this[i].toInt()
+				if (digit !in '0'.code..'9'.code) break@error
+
+				value *= 10
+				value += digit - '0'.code
+			}
+			return value
+		}
+	} while (false)
+
+	return orElse()
 }

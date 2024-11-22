@@ -487,21 +487,18 @@ public abstract interface class com/jakewharton/mosaic/ui/ColumnScope {
 
 public final class com/jakewharton/mosaic/ui/ComposableSingletons$BoxKt {
 	public static final field INSTANCE Lcom/jakewharton/mosaic/ui/ComposableSingletons$BoxKt;
-	public static field lambda-1 Lkotlin/jvm/functions/Function2;
 	public fun <init> ()V
 	public final fun getLambda-1$mosaic_runtime ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/jakewharton/mosaic/ui/ComposableSingletons$FillerKt {
 	public static final field INSTANCE Lcom/jakewharton/mosaic/ui/ComposableSingletons$FillerKt;
-	public static field lambda-1 Lkotlin/jvm/functions/Function2;
 	public fun <init> ()V
 	public final fun getLambda-1$mosaic_runtime ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/jakewharton/mosaic/ui/ComposableSingletons$SpacerKt {
 	public static final field INSTANCE Lcom/jakewharton/mosaic/ui/ComposableSingletons$SpacerKt;
-	public static field lambda-1 Lkotlin/jvm/functions/Function2;
 	public fun <init> ()V
 	public final fun getLambda-1$mosaic_runtime ()Lkotlin/jvm/functions/Function2;
 }

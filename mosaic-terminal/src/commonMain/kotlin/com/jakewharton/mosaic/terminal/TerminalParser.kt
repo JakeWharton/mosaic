@@ -391,12 +391,9 @@ public class TerminalParser(
 							if (end - start < 8) break@error
 
 							val b4Index = start + 3
-							val semi = buffer.indexOf(';'.code.toByte(), b4Index, dollarIndex)
-							if (semi == -1) break@error // TODO indexOfOrElse break@error
-
-							val mode = buffer.parseIntDigits(b4Index, semi)
-							val settingValue = buffer.parseIntDigits(semi + 1, dollarIndex)
-							// TODO parseIntDigits orElse break@error
+							val semi = buffer.indexOfOrElse(';'.code.toByte(), b4Index, dollarIndex, orElse = { break@error })
+							val mode = buffer.parseIntDigits(b4Index, semi, orElse = { break@error })
+							val settingValue = buffer.parseIntDigits(semi + 1, dollarIndex, orElse = { break@error })
 
 							val setting = when (settingValue) {
 								0 -> DecModeReportEvent.Setting.NotRecognized

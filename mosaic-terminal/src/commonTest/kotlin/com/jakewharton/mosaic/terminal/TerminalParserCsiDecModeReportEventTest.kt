@@ -10,7 +10,6 @@ import com.jakewharton.mosaic.terminal.event.DecModeReportEvent.Setting.Reset
 import com.jakewharton.mosaic.terminal.event.DecModeReportEvent.Setting.Set
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
 import kotlin.test.AfterTest
-import kotlin.test.Ignore
 import kotlin.test.Test
 
 @OptIn(ExperimentalStdlibApi::class)
@@ -102,11 +101,24 @@ class TerminalParserCsiDecModeReportEventTest {
 		)
 	}
 
-	@Ignore // TODO Needs parseInDigits orElse
+	@Test fun nonDigitMode() {
+		writer.writeHex("1b5b3f31302d32343b302479")
+		assertThat(parser.next()).isEqualTo(
+			UnknownEvent("1b5b3f31302d32343b302479".hexToByteArray()),
+		)
+	}
+
 	@Test fun noSetting() {
 		writer.writeHex("1b5b3f313030343b2479")
 		assertThat(parser.next()).isEqualTo(
-			UnknownEvent("1b5b3f313b2479".hexToByteArray()),
+			UnknownEvent("1b5b3f313030343b2479".hexToByteArray()),
+		)
+	}
+
+	@Test fun nonDigitSetting() {
+		writer.writeHex("1b5b3f313030343b312d322479")
+		assertThat(parser.next()).isEqualTo(
+			UnknownEvent("1b5b3f313030343b312d322479".hexToByteArray()),
 		)
 	}
 
