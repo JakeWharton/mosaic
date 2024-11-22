@@ -75,6 +75,7 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 				}
 				if (all || colorQuery) {
 					print("\u001b[?996n") // Color scheme request
+					print("\u001b[?2031h") // Color scheme enable
 				}
 
 				val reader = Tty.stdinReader()

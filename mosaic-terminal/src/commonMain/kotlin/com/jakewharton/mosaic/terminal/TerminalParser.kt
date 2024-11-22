@@ -3,7 +3,7 @@ package com.jakewharton.mosaic.terminal
 import com.jakewharton.mosaic.terminal.event.BracketedPasteEvent
 import com.jakewharton.mosaic.terminal.event.CodepointEvent
 import com.jakewharton.mosaic.terminal.event.DecModeReport
-import com.jakewharton.mosaic.terminal.event.DeviceStatusReportString
+import com.jakewharton.mosaic.terminal.event.DeviceStatusReportEvent
 import com.jakewharton.mosaic.terminal.event.Event
 import com.jakewharton.mosaic.terminal.event.FocusEvent
 import com.jakewharton.mosaic.terminal.event.KeyEscape
@@ -11,6 +11,7 @@ import com.jakewharton.mosaic.terminal.event.KittyGraphicsEvent
 import com.jakewharton.mosaic.terminal.event.MouseEvent
 import com.jakewharton.mosaic.terminal.event.PrimaryDeviceAttributesEvent
 import com.jakewharton.mosaic.terminal.event.ResizeEvent
+import com.jakewharton.mosaic.terminal.event.SystemThemeEvent
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
 
 private const val BufferSize = 8 * 1024
@@ -333,6 +334,38 @@ public class TerminalParser(
 				)
 			}
 
+			'n'.code -> {
+				if (buffer[b3Index].toInt() == '?'.code) {
+					val delimiter = buffer.indexOfOrDefault(';'.code.toByte(), start + 3, finalIndex, finalIndex)
+					when (buffer.parseIntDigits(start + 3, delimiter)) {
+						997 -> {
+							if (delimiter + 2 == finalIndex) {
+								val p2 = buffer[delimiter + 1].toInt()
+								if (p2 == '1'.code) {
+									return SystemThemeEvent(isDark = true)
+								}
+								if (p2 == '2'.code) {
+									return SystemThemeEvent(isDark = false)
+								}
+							}
+							return UnknownEvent(
+								context = "CSI ? 997 ; p2 n sequence has invalid p2",
+								bytes = buffer.copyOfRange(start, end),
+							)
+						}
+						else -> {
+							return DeviceStatusReportEvent(
+								data = buffer.decodeToString(start + 3, finalIndex),
+							)
+						}
+					}
+				}
+				return UnknownEvent(
+					context = "CSI .. n sequence without leading ?",
+					bytes = buffer.copyOfRange(start, end),
+				)
+			}
+
 			'c'.code -> {
 				if (buffer[b3Index].toInt() == '?'.code) {
 					val data = buffer.decodeToString(start + 3, finalIndex)
@@ -417,7 +450,7 @@ public class TerminalParser(
 				buffer[start + 2].toInt() == '>'.code &&
 				buffer[start + 3].toInt() == '|'.code
 			) {
-				DeviceStatusReportString(
+				DeviceStatusReportEvent(
 					data = buffer.decodeToString(start + 4, stIndex),
 				)
 			} else {

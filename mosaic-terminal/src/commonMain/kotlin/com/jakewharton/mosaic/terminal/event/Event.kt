@@ -84,8 +84,14 @@ public class PrimaryDeviceAttributesEvent(
 	public val data: String,
 ) : Event
 
-internal data class DeviceStatusReportString(
-	val data: String,
+@Poko
+public class DeviceStatusReportEvent(
+	public val data: String,
+) : Event
+
+@Poko
+public class SystemThemeEvent(
+	public val isDark: Boolean,
 ) : Event
 
 internal data class KittyGraphicsEvent(

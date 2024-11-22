@@ -29,6 +29,8 @@ internal inline fun ByteArray.indexOfFirstOrElse(
 }
 
 internal fun ByteArray.parseIntDigits(start: Int, end: Int): Int {
+	// TODO This needs an orElse path for parsing failure on non-digits.
+
 	var value = 0
 	for (i in start until end) {
 		value *= 10

@@ -24,6 +24,14 @@ public final class com/jakewharton/mosaic/terminal/event/BracketedPasteEvent : c
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class com/jakewharton/mosaic/terminal/event/DeviceStatusReportEvent : com/jakewharton/mosaic/terminal/event/Event {
+	public fun <init> (Ljava/lang/String;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getData ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public abstract interface class com/jakewharton/mosaic/terminal/event/Event {
 }
 
@@ -40,6 +48,14 @@ public final class com/jakewharton/mosaic/terminal/event/PrimaryDeviceAttributes
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getData ()Ljava/lang/String;
 	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/jakewharton/mosaic/terminal/event/SystemThemeEvent : com/jakewharton/mosaic/terminal/event/Event {
+	public fun <init> (Z)V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun isDark ()Z
 	public fun toString ()Ljava/lang/String;
 }
 
