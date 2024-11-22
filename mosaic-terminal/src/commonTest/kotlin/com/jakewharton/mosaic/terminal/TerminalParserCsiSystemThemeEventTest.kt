@@ -29,30 +29,21 @@ class TerminalParserCsiSystemThemeEventTest {
 	@Test fun missingP2() {
 		writer.writeHex("1b5b3f3939373b6e")
 		assertThat(parser.next()).isEqualTo(
-			UnknownEvent(
-				context = "CSI ? 997 ; p2 n sequence has invalid p2",
-				bytes = "1b5b3f3939373b6e".hexToByteArray(),
-			),
+			UnknownEvent("1b5b3f3939373b6e".hexToByteArray()),
 		)
 	}
 
 	@Test fun unknownP2() {
 		writer.writeHex("1b5b3f3939373b346e")
 		assertThat(parser.next()).isEqualTo(
-			UnknownEvent(
-				context = "CSI ? 997 ; p2 n sequence has invalid p2",
-				bytes = "1b5b3f3939373b346e".hexToByteArray(),
-			),
+			UnknownEvent("1b5b3f3939373b346e".hexToByteArray()),
 		)
 	}
 
 	@Test fun tooLongP2() {
 		writer.writeHex("1b5b3f3939373b31316e")
 		assertThat(parser.next()).isEqualTo(
-			UnknownEvent(
-				context = "CSI ? 997 ; p2 n sequence has invalid p2",
-				bytes = "1b5b3f3939373b31316e".hexToByteArray(),
-			),
+			UnknownEvent("1b5b3f3939373b31316e".hexToByteArray()),
 		)
 	}
 }

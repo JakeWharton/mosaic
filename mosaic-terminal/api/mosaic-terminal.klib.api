@@ -19,6 +19,33 @@ final class com.jakewharton.mosaic.terminal.event/BracketedPasteEvent : com.jake
     final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/BracketedPasteEvent.toString|toString(){}[0]
 }
 
+final class com.jakewharton.mosaic.terminal.event/DecModeReportEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/DecModeReportEvent|null[0]
+    constructor <init>(kotlin/Int, com.jakewharton.mosaic.terminal.event/DecModeReportEvent.Setting) // com.jakewharton.mosaic.terminal.event/DecModeReportEvent.<init>|<init>(kotlin.Int;com.jakewharton.mosaic.terminal.event.DecModeReportEvent.Setting){}[0]
+
+    final val mode // com.jakewharton.mosaic.terminal.event/DecModeReportEvent.mode|{}mode[0]
+        final fun <get-mode>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/DecModeReportEvent.mode.<get-mode>|<get-mode>(){}[0]
+    final val setting // com.jakewharton.mosaic.terminal.event/DecModeReportEvent.setting|{}setting[0]
+        final fun <get-setting>(): com.jakewharton.mosaic.terminal.event/DecModeReportEvent.Setting // com.jakewharton.mosaic.terminal.event/DecModeReportEvent.setting.<get-setting>|<get-setting>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/DecModeReportEvent.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal.event/DecModeReportEvent.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/DecModeReportEvent.toString|toString(){}[0]
+
+    final enum class Setting : kotlin/Enum<com.jakewharton.mosaic.terminal.event/DecModeReportEvent.Setting> { // com.jakewharton.mosaic.terminal.event/DecModeReportEvent.Setting|null[0]
+        enum entry NotRecognized // com.jakewharton.mosaic.terminal.event/DecModeReportEvent.Setting.NotRecognized|null[0]
+        enum entry PermanentlyReset // com.jakewharton.mosaic.terminal.event/DecModeReportEvent.Setting.PermanentlyReset|null[0]
+        enum entry PermanentlySet // com.jakewharton.mosaic.terminal.event/DecModeReportEvent.Setting.PermanentlySet|null[0]
+        enum entry Reset // com.jakewharton.mosaic.terminal.event/DecModeReportEvent.Setting.Reset|null[0]
+        enum entry Set // com.jakewharton.mosaic.terminal.event/DecModeReportEvent.Setting.Set|null[0]
+
+        final val entries // com.jakewharton.mosaic.terminal.event/DecModeReportEvent.Setting.entries|#static{}entries[0]
+            final fun <get-entries>(): kotlin.enums/EnumEntries<com.jakewharton.mosaic.terminal.event/DecModeReportEvent.Setting> // com.jakewharton.mosaic.terminal.event/DecModeReportEvent.Setting.entries.<get-entries>|<get-entries>#static(){}[0]
+
+        final fun valueOf(kotlin/String): com.jakewharton.mosaic.terminal.event/DecModeReportEvent.Setting // com.jakewharton.mosaic.terminal.event/DecModeReportEvent.Setting.valueOf|valueOf#static(kotlin.String){}[0]
+        final fun values(): kotlin/Array<com.jakewharton.mosaic.terminal.event/DecModeReportEvent.Setting> // com.jakewharton.mosaic.terminal.event/DecModeReportEvent.Setting.values|values#static(){}[0]
+    }
+}
+
 final class com.jakewharton.mosaic.terminal.event/DeviceStatusReportEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/DeviceStatusReportEvent|null[0]
     constructor <init>(kotlin/String) // com.jakewharton.mosaic.terminal.event/DeviceStatusReportEvent.<init>|<init>(kotlin.String){}[0]
 
@@ -96,12 +123,10 @@ final class com.jakewharton.mosaic.terminal.event/TerminalVersionEvent : com.jak
 }
 
 final class com.jakewharton.mosaic.terminal.event/UnknownEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/UnknownEvent|null[0]
-    constructor <init>(kotlin/String, kotlin/ByteArray) // com.jakewharton.mosaic.terminal.event/UnknownEvent.<init>|<init>(kotlin.String;kotlin.ByteArray){}[0]
+    constructor <init>(kotlin/ByteArray) // com.jakewharton.mosaic.terminal.event/UnknownEvent.<init>|<init>(kotlin.ByteArray){}[0]
 
     final val bytes // com.jakewharton.mosaic.terminal.event/UnknownEvent.bytes|{}bytes[0]
         final fun <get-bytes>(): kotlin/ByteArray // com.jakewharton.mosaic.terminal.event/UnknownEvent.bytes.<get-bytes>|<get-bytes>(){}[0]
-    final val context // com.jakewharton.mosaic.terminal.event/UnknownEvent.context|{}context[0]
-        final fun <get-context>(): kotlin/String // com.jakewharton.mosaic.terminal.event/UnknownEvent.context.<get-context>|<get-context>(){}[0]
 
     final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/UnknownEvent.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal.event/UnknownEvent.hashCode|hashCode(){}[0]

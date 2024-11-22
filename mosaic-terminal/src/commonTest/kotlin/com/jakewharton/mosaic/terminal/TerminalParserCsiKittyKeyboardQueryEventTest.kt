@@ -34,10 +34,7 @@ class TerminalParserCsiKittyKeyboardQueryEventTest {
 	@Test fun flagsMissing() {
 		writer.writeHex("1b5b3f75")
 		assertThat(parser.next()).isEqualTo(
-			UnknownEvent(
-				context = "Malformed Kitty keyboard query response",
-				bytes = "1b5b3f75".hexToByteArray(),
-			),
+			UnknownEvent("1b5b3f75".hexToByteArray()),
 		)
 	}
 }

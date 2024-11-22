@@ -19,10 +19,7 @@ class TerminalParserCsiPrimaryDeviceAttributesEventTest {
 	@Test fun noLeadingQuestionMarkIsUnknown() {
 		writer.writeHex("1b5b303063")
 		assertThat(parser.next()).isEqualTo(
-			UnknownEvent(
-				context = "CSI .. c sequence without leading ?",
-				bytes = "1b5b303063".hexToByteArray(),
-			),
+			UnknownEvent("1b5b303063".hexToByteArray()),
 		)
 	}
 

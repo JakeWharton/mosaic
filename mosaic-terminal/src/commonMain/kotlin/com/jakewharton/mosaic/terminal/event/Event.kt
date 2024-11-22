@@ -7,19 +7,15 @@ public sealed interface Event
 
 @Poko
 public class UnknownEvent(
-	public val context: String,
 	// TODO ByteString once it moves into the stdlib.
 	@ArrayContentBased public val bytes: ByteArray,
 ) : Event {
-	@OptIn(ExperimentalStdlibApi::class)
-	override fun toString(): String {
-		return buildString {
-			append("UnknownEvent(")
-			append(context)
-			append(' ')
-			append(bytes.toHexString())
-			append(')')
+	override fun toString(): String = buildString {
+		append("UnknownEvent(")
+		for (byte in bytes) {
+			append(byte.toString(16).padStart(2, '0'))
 		}
+		append(')')
 	}
 }
 
@@ -122,11 +118,12 @@ internal data class ResizeEvent(
 	val width: Int,
 ) : Event
 
-internal data class DecModeReport(
-	val mode: Int,
-	val setting: Setting,
+@Poko
+public class DecModeReportEvent(
+	public val mode: Int,
+	public val setting: Setting,
 ) : Event {
-	enum class Setting {
+	public enum class Setting {
 		NotRecognized,
 		Set,
 		Reset,

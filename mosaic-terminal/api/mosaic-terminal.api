@@ -24,6 +24,26 @@ public final class com/jakewharton/mosaic/terminal/event/BracketedPasteEvent : c
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class com/jakewharton/mosaic/terminal/event/DecModeReportEvent : com/jakewharton/mosaic/terminal/event/Event {
+	public fun <init> (ILcom/jakewharton/mosaic/terminal/event/DecModeReportEvent$Setting;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMode ()I
+	public final fun getSetting ()Lcom/jakewharton/mosaic/terminal/event/DecModeReportEvent$Setting;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/jakewharton/mosaic/terminal/event/DecModeReportEvent$Setting : java/lang/Enum {
+	public static final field NotRecognized Lcom/jakewharton/mosaic/terminal/event/DecModeReportEvent$Setting;
+	public static final field PermanentlyReset Lcom/jakewharton/mosaic/terminal/event/DecModeReportEvent$Setting;
+	public static final field PermanentlySet Lcom/jakewharton/mosaic/terminal/event/DecModeReportEvent$Setting;
+	public static final field Reset Lcom/jakewharton/mosaic/terminal/event/DecModeReportEvent$Setting;
+	public static final field Set Lcom/jakewharton/mosaic/terminal/event/DecModeReportEvent$Setting;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/jakewharton/mosaic/terminal/event/DecModeReportEvent$Setting;
+	public static fun values ()[Lcom/jakewharton/mosaic/terminal/event/DecModeReportEvent$Setting;
+}
+
 public final class com/jakewharton/mosaic/terminal/event/DeviceStatusReportEvent : com/jakewharton/mosaic/terminal/event/Event {
 	public fun <init> (Ljava/lang/String;)V
 	public fun equals (Ljava/lang/Object;)Z
@@ -81,10 +101,9 @@ public final class com/jakewharton/mosaic/terminal/event/TerminalVersionEvent : 
 }
 
 public final class com/jakewharton/mosaic/terminal/event/UnknownEvent : com/jakewharton/mosaic/terminal/event/Event {
-	public fun <init> (Ljava/lang/String;[B)V
+	public fun <init> ([B)V
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBytes ()[B
-	public final fun getContext ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }

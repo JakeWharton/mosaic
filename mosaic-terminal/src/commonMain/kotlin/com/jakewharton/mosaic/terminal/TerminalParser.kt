@@ -2,7 +2,7 @@ package com.jakewharton.mosaic.terminal
 
 import com.jakewharton.mosaic.terminal.event.BracketedPasteEvent
 import com.jakewharton.mosaic.terminal.event.CodepointEvent
-import com.jakewharton.mosaic.terminal.event.DecModeReport
+import com.jakewharton.mosaic.terminal.event.DecModeReportEvent
 import com.jakewharton.mosaic.terminal.event.DeviceStatusReportEvent
 import com.jakewharton.mosaic.terminal.event.Event
 import com.jakewharton.mosaic.terminal.event.FocusEvent
@@ -196,10 +196,7 @@ public class TerminalParser(
 					buffer[start + 3].toInt() != 'i'.code ||
 					buffer[b5Index].toInt() != '='.code
 				) {
-					UnknownEvent(
-						context = "Unknown Kitty graphics APC sequence",
-						bytes = buffer.copyOfRange(start, end),
-					)
+					UnknownEvent(buffer.copyOfRange(start, end))
 				} else {
 					KittyGraphicsEvent(
 						id = buffer.parseIntDigits(b5Index, delimiter),
@@ -207,10 +204,7 @@ public class TerminalParser(
 					)
 				}
 			} else {
-				UnknownEvent(
-					context = "Unknown APC sequence",
-					bytes = buffer.copyOfRange(start, end),
-				)
+				UnknownEvent(buffer.copyOfRange(start, end))
 			}
 		}
 	}
@@ -228,234 +222,200 @@ public class TerminalParser(
 		val end = finalIndex + 1
 		offset = end
 
-		when (buffer[finalIndex].toInt()) {
-			'A'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.Up)
-			'B'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.Down)
-			'C'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.Right)
-			'D'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.Left)
-			'E'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.KpBegin)
-			'F'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.End)
-			'H'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.Home)
-			'P'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.F1)
-			'Q'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.F2)
-			'R'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.F3)
-			'S'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.F4)
+		error@ do {
+			when (buffer[finalIndex].toInt()) {
+				'A'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.Up)
+				'B'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.Down)
+				'C'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.Right)
+				'D'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.Left)
+				'E'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.KpBegin)
+				'F'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.End)
+				'H'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.Home)
+				'P'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.F1)
+				'Q'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.F2)
+				'R'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.F3)
+				'S'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.F4)
 
-			'~'.code -> {
-				val delimiter = buffer.indexOfOrDefault(';'.code.toByte(), b3Index, finalIndex, finalIndex)
-				val number = buffer.parseIntDigits(start = b3Index, end = delimiter)
-				val codepoint = when (number) {
-					2 -> CodepointEvent.Insert
-					3 -> CodepointEvent.Delete
-					5 -> CodepointEvent.PageUp
-					6 -> CodepointEvent.PageDown
-					7 -> CodepointEvent.Home
-					8 -> CodepointEvent.End
-					11 -> CodepointEvent.F1
-					12 -> CodepointEvent.F2
-					13 -> CodepointEvent.F3
-					14 -> CodepointEvent.F4
-					15 -> CodepointEvent.F5
-					17 -> CodepointEvent.F6
-					18 -> CodepointEvent.F7
-					19 -> CodepointEvent.F8
-					20 -> CodepointEvent.F9
-					21 -> CodepointEvent.F10
-					23 -> CodepointEvent.F11
-					24 -> CodepointEvent.F12
-					200 -> return BracketedPasteEvent(start = true)
-					201 -> return BracketedPasteEvent(start = false)
-					57427 -> CodepointEvent.KpBegin
-					else -> return UnknownEvent(
-						context = "Unknown CSI ~ codepoint",
-						bytes = buffer.copyOfRange(start, end),
+				'~'.code -> {
+					val delimiter =
+						buffer.indexOfOrDefault(';'.code.toByte(), b3Index, finalIndex, finalIndex)
+					val number = buffer.parseIntDigits(start = b3Index, end = delimiter)
+					val codepoint = when (number) {
+						2 -> CodepointEvent.Insert
+						3 -> CodepointEvent.Delete
+						5 -> CodepointEvent.PageUp
+						6 -> CodepointEvent.PageDown
+						7 -> CodepointEvent.Home
+						8 -> CodepointEvent.End
+						11 -> CodepointEvent.F1
+						12 -> CodepointEvent.F2
+						13 -> CodepointEvent.F3
+						14 -> CodepointEvent.F4
+						15 -> CodepointEvent.F5
+						17 -> CodepointEvent.F6
+						18 -> CodepointEvent.F7
+						19 -> CodepointEvent.F8
+						20 -> CodepointEvent.F9
+						21 -> CodepointEvent.F10
+						23 -> CodepointEvent.F11
+						24 -> CodepointEvent.F12
+						200 -> return BracketedPasteEvent(start = true)
+						201 -> return BracketedPasteEvent(start = false)
+						57427 -> CodepointEvent.KpBegin
+						else -> break@error
+					}
+
+					// TODO parse rest of CSI ... ~
+					return CodepointEvent(codepoint)
+				}
+
+				'I'.code -> return FocusEvent(focused = true)
+				'O'.code -> return FocusEvent(focused = false)
+
+				'm'.code,
+				'M'.code,
+				-> {
+					if (buffer[b3Index].toInt() != '<'.code) {
+						break@error
+					}
+
+					val delim1 = buffer.indexOf(';'.code.toByte(), start + 3, finalIndex)
+					val delim2 = buffer.indexOf(';'.code.toByte(), delim1 + 1, finalIndex)
+
+					val buttonBits = buffer.parseIntDigits(start = start + 3, end = delim1)
+
+					// Incoming values are 1-based.
+					val x = buffer.parseIntDigits(delim1 + 1, delim2) - 1
+					val y = buffer.parseIntDigits(delim2 + 1, end) - 1
+
+					val button = when (buttonBits and 0b11000011) {
+						0 -> MouseEvent.Button.Left
+						1 -> MouseEvent.Button.Middle
+						2 -> MouseEvent.Button.Right
+						3 -> MouseEvent.Button.None
+						64 -> MouseEvent.Button.WheelUp
+						65 -> MouseEvent.Button.WheelDown
+						128 -> MouseEvent.Button.Button8
+						129 -> MouseEvent.Button.Button9
+						130 -> MouseEvent.Button.Button10
+						131 -> MouseEvent.Button.Button11
+						else -> break@error
+					}
+					val motion = (buttonBits and 0b00100000) != 0
+					val type = when {
+						motion && button != MouseEvent.Button.None -> MouseEvent.Type.Drag
+						motion && button == MouseEvent.Button.None -> MouseEvent.Type.Motion
+						buffer[finalIndex].toInt() == 'm'.code -> MouseEvent.Type.Release
+						else -> MouseEvent.Type.Press
+					}
+					val shift = (buttonBits and 0b00000100) != 0
+					val alt = (buttonBits and 0b00001000) != 0
+					val ctrl = (buttonBits and 0b00010000) != 0
+
+					return MouseEvent(
+						x = x,
+						y = y,
+						type = type,
+						button = button,
+						shift = shift,
+						alt = alt,
+						ctrl = ctrl,
 					)
 				}
 
-				// TODO parse rest of CSI ... ~
-				return CodepointEvent(codepoint)
-			}
-
-			'I'.code -> return FocusEvent(focused = true)
-			'O'.code -> return FocusEvent(focused = false)
-
-			'm'.code,
-			'M'.code,
-			-> {
-				if (buffer[b3Index].toInt() != '<'.code) {
-					return UnknownEvent(
-						context = "TODO", // TODO
-						bytes = buffer.copyOfRange(start, end),
-					)
-				}
-
-				val delim1 = buffer.indexOf(';'.code.toByte(), start + 3, finalIndex)
-				val delim2 = buffer.indexOf(';'.code.toByte(), delim1 + 1, finalIndex)
-
-				val buttonBits = buffer.parseIntDigits(start = start + 3, end = delim1)
-
-				// Incoming values are 1-based.
-				val x = buffer.parseIntDigits(delim1 + 1, delim2) - 1
-				val y = buffer.parseIntDigits(delim2 + 1, end) - 1
-
-				val button = when (buttonBits and 0b11000011) {
-					0 -> MouseEvent.Button.Left
-					1 -> MouseEvent.Button.Middle
-					2 -> MouseEvent.Button.Right
-					3 -> MouseEvent.Button.None
-					64 -> MouseEvent.Button.WheelUp
-					65 -> MouseEvent.Button.WheelDown
-					128 -> MouseEvent.Button.Button8
-					129 -> MouseEvent.Button.Button9
-					130 -> MouseEvent.Button.Button10
-					131 -> MouseEvent.Button.Button11
-					else -> return UnknownEvent(
-						context = "Unknown mount button value",
-						bytes = buffer.copyOfRange(start, end),
-					)
-				}
-				val motion = (buttonBits and 0b00100000) != 0
-				val type = when {
-					motion && button != MouseEvent.Button.None -> MouseEvent.Type.Drag
-					motion && button == MouseEvent.Button.None -> MouseEvent.Type.Motion
-					buffer[finalIndex].toInt() == 'm'.code -> MouseEvent.Type.Release
-					else -> MouseEvent.Type.Press
-				}
-				val shift = (buttonBits and 0b00000100) != 0
-				val alt = (buttonBits and 0b00001000) != 0
-				val ctrl = (buttonBits and 0b00010000) != 0
-
-				return MouseEvent(
-					x = x,
-					y = y,
-					type = type,
-					button = button,
-					shift = shift,
-					alt = alt,
-					ctrl = ctrl,
-				)
-			}
-
-			'n'.code -> {
-				if (buffer[b3Index].toInt() == '?'.code) {
-					val delimiter = buffer.indexOfOrDefault(';'.code.toByte(), start + 3, finalIndex, finalIndex)
-					when (buffer.parseIntDigits(start + 3, delimiter)) {
-						997 -> {
-							if (delimiter + 2 == finalIndex) {
-								val p2 = buffer[delimiter + 1].toInt()
-								if (p2 == '1'.code) {
-									return SystemThemeEvent(isDark = true)
-								}
-								if (p2 == '2'.code) {
-									return SystemThemeEvent(isDark = false)
+				'n'.code -> {
+					if (buffer[b3Index].toInt() == '?'.code) {
+						val delimiter =
+							buffer.indexOfOrDefault(';'.code.toByte(), start + 3, finalIndex, finalIndex)
+						when (buffer.parseIntDigits(start + 3, delimiter)) {
+							997 -> {
+								if (delimiter + 2 == finalIndex) {
+									val p2 = buffer[delimiter + 1].toInt()
+									if (p2 == '1'.code) {
+										return SystemThemeEvent(isDark = true)
+									}
+									if (p2 == '2'.code) {
+										return SystemThemeEvent(isDark = false)
+									}
 								}
 							}
-							return UnknownEvent(
-								context = "CSI ? 997 ; p2 n sequence has invalid p2",
-								bytes = buffer.copyOfRange(start, end),
-							)
-						}
-						else -> {
-							return DeviceStatusReportEvent(
-								data = buffer.decodeToString(start + 3, finalIndex),
-							)
+
+							else -> {
+								return DeviceStatusReportEvent(
+									data = buffer.decodeToString(start + 3, finalIndex),
+								)
+							}
 						}
 					}
 				}
-				return UnknownEvent(
-					context = "CSI .. n sequence without leading ?",
-					bytes = buffer.copyOfRange(start, end),
-				)
-			}
 
-			'c'.code -> {
-				if (buffer[b3Index].toInt() == '?'.code) {
-					val data = buffer.decodeToString(start + 3, finalIndex)
-					// TODO Parse parameters from data
-					return PrimaryDeviceAttributesEvent(data)
-				}
-				return UnknownEvent(
-					context = "CSI .. c sequence without leading ?",
-					bytes = buffer.copyOfRange(start, end),
-				)
-			}
-
-			't'.code -> {
-				// TODO validation. while(true) + indexOfOrElse + break + UnknownEvent
-				val modeDelim = buffer.indexOf(';'.code.toByte(), b3Index, finalIndex)
-				val rowDelim = buffer.indexOf(';'.code.toByte(), modeDelim + 1, finalIndex)
-				val colDelim = buffer.indexOf(';'.code.toByte(), rowDelim + 1, finalIndex)
-				val heightDelim = buffer.indexOf(';'.code.toByte(), colDelim + 1, finalIndex)
-				val widthDelim = buffer.indexOf(';'.code.toByte(), heightDelim + 1, finalIndex)
-				val mode = buffer.parseIntDigits(b3Index, modeDelim)
-				// TODO validate 48
-				val rows = buffer.parseIntDigits(modeDelim + 1, rowDelim)
-				val cols = buffer.parseIntDigits(rowDelim + 1, colDelim)
-				val height = buffer.parseIntDigits(colDelim + 1, heightDelim)
-				val width = buffer.parseIntDigits(heightDelim + 1, finalIndex)
-				return ResizeEvent(rows, cols, height, width)
-			}
-
-			'u'.code -> {
-				if (buffer[b3Index].toInt() == '?'.code) {
-					val b4Index = start + 3
-					if (b4Index != finalIndex) {
-						val flags = buffer.parseIntDigits(b4Index, finalIndex)
-						return KittyKeyboardQueryEvent(flags)
+				'c'.code -> {
+					if (buffer[b3Index].toInt() == '?'.code) {
+						val data = buffer.decodeToString(start + 3, finalIndex)
+						// TODO Parse parameters from data
+						return PrimaryDeviceAttributesEvent(data)
 					}
-					return UnknownEvent(
-						context = "Malformed Kitty keyboard query response",
-						bytes = buffer.copyOfRange(start, end),
-					)
-				}
-				return UnknownEvent(
-					context = "Kitty keyboard sequence",
-					bytes = buffer.copyOfRange(start, end),
-				)
-			}
-
-			'y'.code -> {
-				if (end < start + 7) return null
-				if (buffer[finalIndex].toInt() != '$'.code) {
-					return UnknownEvent(
-						context = "TODO", // TODO
-						bytes = buffer.copyOfRange(start, end),
-					)
 				}
 
-				if (buffer[b3Index].toInt() == '?'.code) {
-					if (end < start + 8) return null
-					val b4Index = start + 3
-					val semi = buffer.indexOf(';'.code.toByte(), b4Index, end)
-					val pd = buffer.parseIntDigits(b4Index, semi)
-					val ps = buffer.parseIntDigits(semi + 1, finalIndex)
-					val setting = when (ps) {
-						0 -> DecModeReport.Setting.NotRecognized
-						1 -> DecModeReport.Setting.Set
-						2 -> DecModeReport.Setting.Reset
-						3 -> DecModeReport.Setting.PermanentlySet
-						4 -> DecModeReport.Setting.PermanentlyReset
-						else -> return UnknownEvent(
-							context = "TODO", // TODO
-							bytes = buffer.copyOfRange(start, end),
-						)
+				't'.code -> {
+					// TODO validation. while(true) + indexOfOrElse + break + UnknownEvent
+					val modeDelim = buffer.indexOf(';'.code.toByte(), b3Index, finalIndex)
+					val rowDelim = buffer.indexOf(';'.code.toByte(), modeDelim + 1, finalIndex)
+					val colDelim = buffer.indexOf(';'.code.toByte(), rowDelim + 1, finalIndex)
+					val heightDelim = buffer.indexOf(';'.code.toByte(), colDelim + 1, finalIndex)
+					val widthDelim = buffer.indexOf(';'.code.toByte(), heightDelim + 1, finalIndex)
+					val mode = buffer.parseIntDigits(b3Index, modeDelim)
+					// TODO validate 48
+					val rows = buffer.parseIntDigits(modeDelim + 1, rowDelim)
+					val cols = buffer.parseIntDigits(rowDelim + 1, colDelim)
+					val height = buffer.parseIntDigits(colDelim + 1, heightDelim)
+					val width = buffer.parseIntDigits(heightDelim + 1, finalIndex)
+					return ResizeEvent(rows, cols, height, width)
+				}
+
+				'u'.code -> {
+					if (buffer[b3Index].toInt() == '?'.code) {
+						val b4Index = start + 3
+						if (b4Index != finalIndex) {
+							val flags = buffer.parseIntDigits(b4Index, finalIndex)
+							return KittyKeyboardQueryEvent(flags)
+						}
 					}
-					return DecModeReport(
-						mode = pd,
-						setting = setting,
-					)
-				} else {
-					TODO("ANSI mode reporter")
+				}
+
+				'y'.code -> {
+					// CSI ? Ps ; Pm $ y
+					val dollarIndex = finalIndex - 1
+					if (buffer[dollarIndex].toInt() == '$'.code) {
+						if (buffer[b3Index].toInt() == '?'.code) {
+							if (end - start < 8) break@error
+
+							val b4Index = start + 3
+							val semi = buffer.indexOf(';'.code.toByte(), b4Index, dollarIndex)
+							if (semi == -1) break@error // TODO indexOfOrElse break@error
+
+							val mode = buffer.parseIntDigits(b4Index, semi)
+							val settingValue = buffer.parseIntDigits(semi + 1, dollarIndex)
+							// TODO parseIntDigits orElse break@error
+
+							val setting = when (settingValue) {
+								0 -> DecModeReportEvent.Setting.NotRecognized
+								1 -> DecModeReportEvent.Setting.Set
+								2 -> DecModeReportEvent.Setting.Reset
+								3 -> DecModeReportEvent.Setting.PermanentlySet
+								4 -> DecModeReportEvent.Setting.PermanentlyReset
+								else -> break@error
+							}
+							return DecModeReportEvent(mode, setting)
+						} else {
+							// TODO ANSI mode reporter
+						}
+					}
 				}
 			}
+		} while (false)
 
-			else -> {
-				return UnknownEvent(
-					context = "Unknown CSI final byte",
-					bytes = buffer.copyOfRange(start, end),
-				)
-			}
-		}
+		return UnknownEvent(buffer.copyOfRange(start, end))
 	}
 
 	private fun parseCsiLegacy(buffer: ByteArray, start: Int, limit: Int, codepoint: Int): CodepointEvent {
@@ -471,14 +431,9 @@ public class TerminalParser(
 				buffer[start + 2].toInt() == '>'.code &&
 				buffer[b4Index].toInt() == '|'.code
 			) {
-				TerminalVersionEvent(
-					data = buffer.decodeToString(start + 4, stIndex),
-				)
+				TerminalVersionEvent(buffer.decodeToString(start + 4, stIndex))
 			} else {
-				UnknownEvent(
-					context = "Unknown DCS leading discriminator",
-					bytes = buffer.copyOfRange(start, end),
-				)
+				UnknownEvent(buffer.copyOfRange(start, end))
 			}
 		}
 	}
@@ -489,19 +444,13 @@ public class TerminalParser(
 
 	private fun parsePm(buffer: ByteArray, start: Int, limit: Int): Event? {
 		return parseUntilStringTerminator(buffer, start, limit) { _, end ->
-			UnknownEvent(
-				context = "Unknown PM sequence",
-				bytes = buffer.copyOfRange(start, end),
-			)
+			UnknownEvent(buffer.copyOfRange(start, end))
 		}
 	}
 
 	private fun parseSos(buffer: ByteArray, start: Int, limit: Int): Event? {
 		return parseUntilStringTerminator(buffer, start, limit) { _, end ->
-			UnknownEvent(
-				context = "Unknown SOS sequence",
-				bytes = buffer.copyOfRange(start, end),
-			)
+			UnknownEvent(buffer.copyOfRange(start, end))
 		}
 	}
 
@@ -527,16 +476,10 @@ public class TerminalParser(
 				// libvaxis added a guard against this case
 				// https://github.com/rockorager/libvaxis/commit/b68864c3babf2767c15c52911179e8ee9158e1d2
 				offset = b3Index
-				return UnknownEvent(
-					context = "First two bytes match SS3 but character byte was an escape",
-					bytes = buffer.copyOfRange(start, b3Index),
-				)
+				return UnknownEvent(buffer.copyOfRange(start, b3Index))
 			}
 			else -> {
-				return UnknownEvent(
-					context = "Unsupported SS3 character byte",
-					bytes = buffer.copyOfRange(start, end),
-				)
+				return UnknownEvent(buffer.copyOfRange(start, end))
 			}
 		}
 		return CodepointEvent(codepoint)
