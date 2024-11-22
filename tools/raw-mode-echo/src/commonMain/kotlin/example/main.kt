@@ -65,6 +65,7 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 				}
 				if (all || mouseEvents) {
 					print("\u001b[?1003h") // Any-event enable
+					print("\u001b[?1006h") // SGR extended coordinates enable
 				}
 				if (all || inBandResize) {
 					print("\u001b[?2048\$p") // In-band resize query

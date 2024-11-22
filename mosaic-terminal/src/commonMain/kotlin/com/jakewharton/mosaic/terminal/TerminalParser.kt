@@ -286,7 +286,7 @@ public class TerminalParser(
 
 					// Incoming values are 1-based.
 					val x = buffer.parseIntDigits(delim1 + 1, delim2) - 1
-					val y = buffer.parseIntDigits(delim2 + 1, end) - 1
+					val y = buffer.parseIntDigits(delim2 + 1, finalIndex) - 1
 
 					val button = when (buttonBits and 0b11000011) {
 						0 -> MouseEvent.Button.Left
