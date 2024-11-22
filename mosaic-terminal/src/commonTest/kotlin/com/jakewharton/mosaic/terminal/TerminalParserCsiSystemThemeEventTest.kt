@@ -40,6 +40,13 @@ class TerminalParserCsiSystemThemeEventTest {
 		)
 	}
 
+	@Test fun nonDigitP2() {
+		writer.writeHex("1b5b3f3939373b2b6e")
+		assertThat(parser.next()).isEqualTo(
+			UnknownEvent("1b5b3f3939373b2b6e".hexToByteArray()),
+		)
+	}
+
 	@Test fun tooLongP2() {
 		writer.writeHex("1b5b3f3939373b31316e")
 		assertThat(parser.next()).isEqualTo(

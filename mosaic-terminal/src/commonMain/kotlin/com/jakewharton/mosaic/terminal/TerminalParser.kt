@@ -3,13 +3,13 @@ package com.jakewharton.mosaic.terminal
 import com.jakewharton.mosaic.terminal.event.BracketedPasteEvent
 import com.jakewharton.mosaic.terminal.event.CodepointEvent
 import com.jakewharton.mosaic.terminal.event.DecModeReportEvent
-import com.jakewharton.mosaic.terminal.event.DeviceStatusReportEvent
 import com.jakewharton.mosaic.terminal.event.Event
 import com.jakewharton.mosaic.terminal.event.FocusEvent
 import com.jakewharton.mosaic.terminal.event.KeyEscape
 import com.jakewharton.mosaic.terminal.event.KittyGraphicsEvent
 import com.jakewharton.mosaic.terminal.event.KittyKeyboardQueryEvent
 import com.jakewharton.mosaic.terminal.event.MouseEvent
+import com.jakewharton.mosaic.terminal.event.OperatingStatusResponseEvent
 import com.jakewharton.mosaic.terminal.event.PrimaryDeviceAttributesEvent
 import com.jakewharton.mosaic.terminal.event.ResizeEvent
 import com.jakewharton.mosaic.terminal.event.SystemThemeEvent
@@ -323,37 +323,36 @@ public class TerminalParser(
 					)
 				}
 
-				'n'.code -> {
-					if (buffer[b3Index].toInt() == '?'.code) {
-						val delimiter =
-							buffer.indexOfOrDefault(';'.code.toByte(), start + 3, finalIndex, finalIndex)
-						when (buffer.parseIntDigits(start + 3, delimiter)) {
-							997 -> {
-								if (delimiter + 2 == finalIndex) {
-									val p2 = buffer[delimiter + 1].toInt()
-									if (p2 == '1'.code) {
-										return SystemThemeEvent(isDark = true)
-									}
-									if (p2 == '2'.code) {
-										return SystemThemeEvent(isDark = false)
-									}
-								}
-							}
-
-							else -> {
-								return DeviceStatusReportEvent(
-									data = buffer.decodeToString(start + 3, finalIndex),
-								)
-							}
-						}
-					}
-				}
-
 				'c'.code -> {
 					if (buffer[b3Index].toInt() == '?'.code) {
 						val data = buffer.decodeToString(start + 3, finalIndex)
 						// TODO Parse parameters from data
 						return PrimaryDeviceAttributesEvent(data)
+					}
+				}
+
+				'n'.code -> {
+					if (buffer[b3Index].toInt() == '?'.code) {
+						val b4Index = start + 3
+						val delimiter =
+							buffer.indexOfOrDefault(';'.code.toByte(), b4Index, finalIndex, finalIndex)
+						val p0 = buffer.parseIntDigits(b4Index, delimiter, orElse = { break@error })
+						when (p0) {
+							997 -> {
+								if (delimiter + 2 == finalIndex) {
+									when (buffer[delimiter + 1].toInt()) {
+										'1'.code -> return SystemThemeEvent(isDark = true)
+										'2'.code -> return SystemThemeEvent(isDark = false)
+									}
+								}
+							}
+						}
+					} else {
+						val p0 = buffer.parseIntDigits(b3Index, finalIndex, orElse = { break@error })
+						when (p0) {
+							0 -> return OperatingStatusResponseEvent(ok = true)
+							3 -> return OperatingStatusResponseEvent(ok = false)
+						}
 					}
 				}
 

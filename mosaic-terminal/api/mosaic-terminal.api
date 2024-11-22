@@ -44,14 +44,6 @@ public final class com/jakewharton/mosaic/terminal/event/DecModeReportEvent$Sett
 	public static fun values ()[Lcom/jakewharton/mosaic/terminal/event/DecModeReportEvent$Setting;
 }
 
-public final class com/jakewharton/mosaic/terminal/event/DeviceStatusReportEvent : com/jakewharton/mosaic/terminal/event/Event {
-	public fun <init> (Ljava/lang/String;)V
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getData ()Ljava/lang/String;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
 public abstract interface class com/jakewharton/mosaic/terminal/event/Event {
 }
 
@@ -72,6 +64,14 @@ public final class com/jakewharton/mosaic/terminal/event/KittyKeyboardQueryEvent
 	public final fun getReportAlternateKeys ()Z
 	public final fun getReportAssociatedText ()Z
 	public final fun getReportEventTypes ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/jakewharton/mosaic/terminal/event/OperatingStatusResponseEvent : com/jakewharton/mosaic/terminal/event/Event {
+	public fun <init> (Z)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getOk ()Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }

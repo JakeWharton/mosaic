@@ -46,17 +46,6 @@ final class com.jakewharton.mosaic.terminal.event/DecModeReportEvent : com.jakew
     }
 }
 
-final class com.jakewharton.mosaic.terminal.event/DeviceStatusReportEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/DeviceStatusReportEvent|null[0]
-    constructor <init>(kotlin/String) // com.jakewharton.mosaic.terminal.event/DeviceStatusReportEvent.<init>|<init>(kotlin.String){}[0]
-
-    final val data // com.jakewharton.mosaic.terminal.event/DeviceStatusReportEvent.data|{}data[0]
-        final fun <get-data>(): kotlin/String // com.jakewharton.mosaic.terminal.event/DeviceStatusReportEvent.data.<get-data>|<get-data>(){}[0]
-
-    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/DeviceStatusReportEvent.equals|equals(kotlin.Any?){}[0]
-    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal.event/DeviceStatusReportEvent.hashCode|hashCode(){}[0]
-    final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/DeviceStatusReportEvent.toString|toString(){}[0]
-}
-
 final class com.jakewharton.mosaic.terminal.event/FocusEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/FocusEvent|null[0]
     constructor <init>(kotlin/Boolean) // com.jakewharton.mosaic.terminal.event/FocusEvent.<init>|<init>(kotlin.Boolean){}[0]
 
@@ -87,6 +76,17 @@ final class com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent : com.
     final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent.toString|toString(){}[0]
+}
+
+final class com.jakewharton.mosaic.terminal.event/OperatingStatusResponseEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/OperatingStatusResponseEvent|null[0]
+    constructor <init>(kotlin/Boolean) // com.jakewharton.mosaic.terminal.event/OperatingStatusResponseEvent.<init>|<init>(kotlin.Boolean){}[0]
+
+    final val ok // com.jakewharton.mosaic.terminal.event/OperatingStatusResponseEvent.ok|{}ok[0]
+        final fun <get-ok>(): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/OperatingStatusResponseEvent.ok.<get-ok>|<get-ok>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/OperatingStatusResponseEvent.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal.event/OperatingStatusResponseEvent.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/OperatingStatusResponseEvent.toString|toString(){}[0]
 }
 
 final class com.jakewharton.mosaic.terminal.event/PrimaryDeviceAttributesEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/PrimaryDeviceAttributesEvent|null[0]

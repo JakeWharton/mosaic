@@ -81,8 +81,8 @@ public class PrimaryDeviceAttributesEvent(
 ) : Event
 
 @Poko
-public class DeviceStatusReportEvent(
-	public val data: String,
+public class OperatingStatusResponseEvent(
+	public val ok: Boolean,
 ) : Event
 
 @Poko
