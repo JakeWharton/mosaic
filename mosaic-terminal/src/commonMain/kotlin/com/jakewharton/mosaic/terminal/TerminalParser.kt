@@ -12,6 +12,7 @@ import com.jakewharton.mosaic.terminal.event.MouseEvent
 import com.jakewharton.mosaic.terminal.event.PrimaryDeviceAttributesEvent
 import com.jakewharton.mosaic.terminal.event.ResizeEvent
 import com.jakewharton.mosaic.terminal.event.SystemThemeEvent
+import com.jakewharton.mosaic.terminal.event.TerminalVersionEvent
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
 
 private const val BufferSize = 8 * 1024
@@ -446,11 +447,12 @@ public class TerminalParser(
 
 	private fun parseDcs(buffer: ByteArray, start: Int, limit: Int): Event? {
 		return parseUntilStringTerminator(buffer, start, limit) { stIndex, end ->
-			if (stIndex > start + 4 &&
+			val b4Index = start + 3
+			if (stIndex > b4Index &&
 				buffer[start + 2].toInt() == '>'.code &&
-				buffer[start + 3].toInt() == '|'.code
+				buffer[b4Index].toInt() == '|'.code
 			) {
-				DeviceStatusReportEvent(
+				TerminalVersionEvent(
 					data = buffer.decodeToString(start + 4, stIndex),
 				)
 			} else {

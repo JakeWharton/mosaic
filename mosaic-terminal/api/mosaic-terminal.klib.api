@@ -63,6 +63,17 @@ final class com.jakewharton.mosaic.terminal.event/SystemThemeEvent : com.jakewha
     final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/SystemThemeEvent.toString|toString(){}[0]
 }
 
+final class com.jakewharton.mosaic.terminal.event/TerminalVersionEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/TerminalVersionEvent|null[0]
+    constructor <init>(kotlin/String) // com.jakewharton.mosaic.terminal.event/TerminalVersionEvent.<init>|<init>(kotlin.String){}[0]
+
+    final val data // com.jakewharton.mosaic.terminal.event/TerminalVersionEvent.data|{}data[0]
+        final fun <get-data>(): kotlin/String // com.jakewharton.mosaic.terminal.event/TerminalVersionEvent.data.<get-data>|<get-data>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/TerminalVersionEvent.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal.event/TerminalVersionEvent.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/TerminalVersionEvent.toString|toString(){}[0]
+}
+
 final class com.jakewharton.mosaic.terminal.event/UnknownEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/UnknownEvent|null[0]
     constructor <init>(kotlin/String, kotlin/ByteArray) // com.jakewharton.mosaic.terminal.event/UnknownEvent.<init>|<init>(kotlin.String;kotlin.ByteArray){}[0]
 

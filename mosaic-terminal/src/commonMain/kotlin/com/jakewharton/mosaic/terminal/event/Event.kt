@@ -90,6 +90,11 @@ public class DeviceStatusReportEvent(
 ) : Event
 
 @Poko
+public class TerminalVersionEvent(
+	public val data: String,
+) : Event
+
+@Poko
 public class SystemThemeEvent(
 	public val isDark: Boolean,
 ) : Event
