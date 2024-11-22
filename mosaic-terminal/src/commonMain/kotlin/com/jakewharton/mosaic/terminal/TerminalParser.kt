@@ -8,6 +8,7 @@ import com.jakewharton.mosaic.terminal.event.Event
 import com.jakewharton.mosaic.terminal.event.FocusEvent
 import com.jakewharton.mosaic.terminal.event.KeyEscape
 import com.jakewharton.mosaic.terminal.event.KittyGraphicsEvent
+import com.jakewharton.mosaic.terminal.event.KittyKeyboardQueryEvent
 import com.jakewharton.mosaic.terminal.event.MouseEvent
 import com.jakewharton.mosaic.terminal.event.PrimaryDeviceAttributesEvent
 import com.jakewharton.mosaic.terminal.event.ResizeEvent
@@ -393,6 +394,24 @@ public class TerminalParser(
 				val height = buffer.parseIntDigits(colDelim + 1, heightDelim)
 				val width = buffer.parseIntDigits(heightDelim + 1, finalIndex)
 				return ResizeEvent(rows, cols, height, width)
+			}
+
+			'u'.code -> {
+				if (buffer[b3Index].toInt() == '?'.code) {
+					val b4Index = start + 3
+					if (b4Index != finalIndex) {
+						val flags = buffer.parseIntDigits(b4Index, finalIndex)
+						return KittyKeyboardQueryEvent(flags)
+					}
+					return UnknownEvent(
+						context = "Malformed Kitty keyboard query response",
+						bytes = buffer.copyOfRange(start, end),
+					)
+				}
+				return UnknownEvent(
+					context = "Kitty keyboard sequence",
+					bytes = buffer.copyOfRange(start, end),
+				)
 			}
 
 			'y'.code -> {

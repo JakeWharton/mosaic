@@ -90,6 +90,17 @@ public class DeviceStatusReportEvent(
 ) : Event
 
 @Poko
+public class KittyKeyboardQueryEvent(
+	public val flags: Int,
+) : Event {
+	public val disambiguateEscapeCodes: Boolean get() = (flags and 0b1) != 0
+	public val reportEventTypes: Boolean get() = (flags and 0b10) != 0
+	public val reportAlternateKeys: Boolean get() = (flags and 0b100) != 0
+	public val reportAllKeysAsEscapeCodes: Boolean get() = (flags and 0b1000) != 0
+	public val reportAssociatedText: Boolean get() = (flags and 0b10000) != 0
+}
+
+@Poko
 public class TerminalVersionEvent(
 	public val data: String,
 ) : Event

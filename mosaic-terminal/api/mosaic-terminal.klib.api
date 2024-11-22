@@ -41,6 +41,27 @@ final class com.jakewharton.mosaic.terminal.event/FocusEvent : com.jakewharton.m
     final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/FocusEvent.toString|toString(){}[0]
 }
 
+final class com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent|null[0]
+    constructor <init>(kotlin/Int) // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent.<init>|<init>(kotlin.Int){}[0]
+
+    final val disambiguateEscapeCodes // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent.disambiguateEscapeCodes|{}disambiguateEscapeCodes[0]
+        final fun <get-disambiguateEscapeCodes>(): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent.disambiguateEscapeCodes.<get-disambiguateEscapeCodes>|<get-disambiguateEscapeCodes>(){}[0]
+    final val flags // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent.flags|{}flags[0]
+        final fun <get-flags>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent.flags.<get-flags>|<get-flags>(){}[0]
+    final val reportAllKeysAsEscapeCodes // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent.reportAllKeysAsEscapeCodes|{}reportAllKeysAsEscapeCodes[0]
+        final fun <get-reportAllKeysAsEscapeCodes>(): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent.reportAllKeysAsEscapeCodes.<get-reportAllKeysAsEscapeCodes>|<get-reportAllKeysAsEscapeCodes>(){}[0]
+    final val reportAlternateKeys // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent.reportAlternateKeys|{}reportAlternateKeys[0]
+        final fun <get-reportAlternateKeys>(): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent.reportAlternateKeys.<get-reportAlternateKeys>|<get-reportAlternateKeys>(){}[0]
+    final val reportAssociatedText // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent.reportAssociatedText|{}reportAssociatedText[0]
+        final fun <get-reportAssociatedText>(): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent.reportAssociatedText.<get-reportAssociatedText>|<get-reportAssociatedText>(){}[0]
+    final val reportEventTypes // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent.reportEventTypes|{}reportEventTypes[0]
+        final fun <get-reportEventTypes>(): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent.reportEventTypes.<get-reportEventTypes>|<get-reportEventTypes>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent.toString|toString(){}[0]
+}
+
 final class com.jakewharton.mosaic.terminal.event/PrimaryDeviceAttributesEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/PrimaryDeviceAttributesEvent|null[0]
     constructor <init>(kotlin/String) // com.jakewharton.mosaic.terminal.event/PrimaryDeviceAttributesEvent.<init>|<init>(kotlin.String){}[0]
 

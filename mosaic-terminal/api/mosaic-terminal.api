@@ -43,6 +43,19 @@ public final class com/jakewharton/mosaic/terminal/event/FocusEvent : com/jakewh
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class com/jakewharton/mosaic/terminal/event/KittyKeyboardQueryEvent : com/jakewharton/mosaic/terminal/event/Event {
+	public fun <init> (I)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDisambiguateEscapeCodes ()Z
+	public final fun getFlags ()I
+	public final fun getReportAllKeysAsEscapeCodes ()Z
+	public final fun getReportAlternateKeys ()Z
+	public final fun getReportAssociatedText ()Z
+	public final fun getReportEventTypes ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/jakewharton/mosaic/terminal/event/PrimaryDeviceAttributesEvent : com/jakewharton/mosaic/terminal/event/Event {
 	public fun <init> (Ljava/lang/String;)V
 	public fun equals (Ljava/lang/Object;)Z
