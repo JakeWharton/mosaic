@@ -440,7 +440,9 @@ public class TerminalParser(
 	}
 
 	private fun parseOsc(buffer: ByteArray, start: Int, limit: Int): Event? {
-		TODO()
+		return parseUntilStringTerminator(buffer, start, limit, allowBell = true) { _, _, _ ->
+			null
+		}
 	}
 
 	private fun parsePm(buffer: ByteArray, start: Int, limit: Int): Event? {
@@ -494,32 +496,43 @@ public class TerminalParser(
 		buffer: ByteArray,
 		start: Int,
 		limit: Int,
+		allowBell: Boolean = false,
 		crossinline handler: (b3Index: Int, stIndex: Int, end: Int) -> Event?,
 	): Event? {
 		// TODO test string with 0x1b inside of it
 
 		// Skip leading discriminator.
 		val b3Index = start + 2
-		var searchFrom = b3Index
 
-		while (true) {
-			val escIndex = buffer.indexOfFirstOrElse(
-				start = searchFrom,
-				end = limit,
-				predicate = { it == 0x1B.toByte() },
-				orElse = { return null },
-			)
-			// If found at end of range, underflow.
-			val slashIndex = escIndex + 1
-			if (slashIndex == limit) return null
+		var stIndex: Int
+		val end: Int
+		found@ do {
+			var searchFrom = b3Index
+			while (true) {
+				stIndex = buffer.indexOfOrElse(0x1B.toByte(), searchFrom, limit, orElse = { break })
 
-			if (buffer[slashIndex] == '\\'.code.toByte()) {
-				val end = escIndex + 2
-				offset = end
-				return handler(b3Index, escIndex, end)
-					?: UnknownEvent(buffer.copyOfRange(start, end))
+				// If found at end of range, underflow.
+				// TODO What if we are not in raw mode and this is a bare escape after a BEL?
+				val slashIndex = stIndex + 1
+				if (slashIndex == limit) return null
+
+				if (buffer[slashIndex] == '\\'.code.toByte()) {
+					end = stIndex + 2
+					break@found
+				}
+				searchFrom = slashIndex
 			}
-			searchFrom = slashIndex
-		}
+
+			// Common case: no terminator in buffer and BEL not allowed. Underflow!
+			if (!allowBell) return null
+
+			// Rare case: fallback to searching for BEL.
+			stIndex = buffer.indexOfOrElse(7.toByte(), b3Index, limit, orElse = { return null })
+			end = stIndex + 1
+		} while (false)
+
+		offset = end
+		return handler(b3Index, stIndex, end)
+			?: UnknownEvent(buffer.copyOfRange(start, end))
 	}
 }
