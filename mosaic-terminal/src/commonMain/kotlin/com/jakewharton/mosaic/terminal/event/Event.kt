@@ -13,7 +13,7 @@ public class UnknownEvent(
 	override fun toString(): String = buildString {
 		append("UnknownEvent(")
 		for (byte in bytes) {
-			append(byte.toString(16).padStart(2, '0'))
+			append(byte.toUByte().toString(16).padStart(2, '0'))
 		}
 		append(')')
 	}

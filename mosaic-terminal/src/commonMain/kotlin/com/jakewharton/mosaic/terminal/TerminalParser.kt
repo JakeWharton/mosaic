@@ -186,26 +186,22 @@ public class TerminalParser(
 
 	private fun parseApc(buffer: ByteArray, start: Int, limit: Int): Event? {
 		// TODO https://stackoverflow.com/a/71632523/132047
-		return parseUntilStringTerminator(buffer, start, limit) { stIndex, end ->
-			val b3Index = start + 2
+		return parseUntilStringTerminator(buffer, start, limit) { b3Index, stIndex, end ->
 			if (stIndex > b3Index && buffer[b3Index].toInt() == 'G'.code) {
 				val delimiter = buffer.indexOf(';'.code.toByte(), b3Index, stIndex)
 				val b5Index = start + 4
-				if (delimiter == -1 ||
-					delimiter <= b5Index ||
-					buffer[start + 3].toInt() != 'i'.code ||
-					buffer[b5Index].toInt() != '='.code
+				if (delimiter != -1 &&
+					delimiter > b5Index &&
+					buffer[start + 3].toInt() == 'i'.code &&
+					buffer[b5Index].toInt() == '='.code
 				) {
-					UnknownEvent(buffer.copyOfRange(start, end))
-				} else {
-					KittyGraphicsEvent(
+					return@parseUntilStringTerminator KittyGraphicsEvent(
 						id = buffer.parseIntDigits(b5Index, delimiter),
 						message = buffer.decodeToString(delimiter + 1, stIndex),
 					)
 				}
-			} else {
-				UnknownEvent(buffer.copyOfRange(start, end))
 			}
+			null
 		}
 	}
 
@@ -275,6 +271,13 @@ public class TerminalParser(
 				'm'.code,
 				'M'.code,
 				-> {
+					if (b3Index == finalIndex) {
+						// TODO If we are in UTF-8 mode it is at minimum 3 but could be up to 6.
+						val trailingEnd = end + 3
+						if (trailingEnd > limit) return null
+						offset = trailingEnd
+						break@error
+					}
 					if (buffer[b3Index].toInt() != '<'.code) {
 						break@error
 					}
@@ -411,7 +414,9 @@ public class TerminalParser(
 			}
 		} while (false)
 
-		return UnknownEvent(buffer.copyOfRange(start, end))
+		// Use 'offset' not 'end' because some sequences put data after the "final" index. This allows
+		// parsing of that trailing data to error and still be included in the unknown event.
+		return UnknownEvent(buffer.copyOfRange(start, offset))
 	}
 
 	private fun parseCsiLegacy(buffer: ByteArray, start: Int, limit: Int, codepoint: Int): CodepointEvent {
@@ -421,15 +426,15 @@ public class TerminalParser(
 	}
 
 	private fun parseDcs(buffer: ByteArray, start: Int, limit: Int): Event? {
-		return parseUntilStringTerminator(buffer, start, limit) { stIndex, end ->
+		return parseUntilStringTerminator(buffer, start, limit) { b3Index, stIndex, end ->
 			val b4Index = start + 3
 			if (stIndex > b4Index &&
-				buffer[start + 2].toInt() == '>'.code &&
+				buffer[b3Index].toInt() == '>'.code &&
 				buffer[b4Index].toInt() == '|'.code
 			) {
 				TerminalVersionEvent(buffer.decodeToString(start + 4, stIndex))
 			} else {
-				UnknownEvent(buffer.copyOfRange(start, end))
+				null
 			}
 		}
 	}
@@ -439,14 +444,14 @@ public class TerminalParser(
 	}
 
 	private fun parsePm(buffer: ByteArray, start: Int, limit: Int): Event? {
-		return parseUntilStringTerminator(buffer, start, limit) { _, end ->
-			UnknownEvent(buffer.copyOfRange(start, end))
+		return parseUntilStringTerminator(buffer, start, limit) { _, _, _ ->
+			null
 		}
 	}
 
 	private fun parseSos(buffer: ByteArray, start: Int, limit: Int): Event? {
-		return parseUntilStringTerminator(buffer, start, limit) { _, end ->
-			UnknownEvent(buffer.copyOfRange(start, end))
+		return parseUntilStringTerminator(buffer, start, limit) { _, _, _ ->
+			null
 		}
 	}
 
@@ -457,40 +462,45 @@ public class TerminalParser(
 		offset = end
 
 		val b3Index = start + 2
-		val codepoint = when (buffer[b3Index].toInt()) {
-			'A'.code -> CodepointEvent.Up
-			'B'.code -> CodepointEvent.Down
-			'C'.code -> CodepointEvent.Right
-			'D'.code -> CodepointEvent.Left
-			'F'.code -> CodepointEvent.End
-			'H'.code -> CodepointEvent.Home
-			'P'.code -> CodepointEvent.F1
-			'Q'.code -> CodepointEvent.F2
-			'R'.code -> CodepointEvent.F3
-			'S'.code -> CodepointEvent.F3
-			0x1b -> {
-				// libvaxis added a guard against this case
-				// https://github.com/rockorager/libvaxis/commit/b68864c3babf2767c15c52911179e8ee9158e1d2
-				offset = b3Index
-				return UnknownEvent(buffer.copyOfRange(start, b3Index))
+		error@ do {
+			val codepoint = when (buffer[b3Index].toInt()) {
+				'A'.code -> CodepointEvent.Up
+				'B'.code -> CodepointEvent.Down
+				'C'.code -> CodepointEvent.Right
+				'D'.code -> CodepointEvent.Left
+				'F'.code -> CodepointEvent.End
+				'H'.code -> CodepointEvent.Home
+				'P'.code -> CodepointEvent.F1
+				'Q'.code -> CodepointEvent.F2
+				'R'.code -> CodepointEvent.F3
+				'S'.code -> CodepointEvent.F3
+				0x1b -> {
+					// libvaxis added a guard against this case
+					// https://github.com/rockorager/libvaxis/commit/b68864c3babf2767c15c52911179e8ee9158e1d2
+					offset = b3Index
+					break@error
+				}
+
+				else -> break@error
 			}
-			else -> {
-				return UnknownEvent(buffer.copyOfRange(start, end))
-			}
-		}
-		return CodepointEvent(codepoint)
+			return CodepointEvent(codepoint)
+		} while (false)
+
+		// Use 'offset' not 'end' because if end is an escape we back up the offset.
+		return UnknownEvent(buffer.copyOfRange(start, offset))
 	}
 
 	private inline fun parseUntilStringTerminator(
 		buffer: ByteArray,
 		start: Int,
 		limit: Int,
-		crossinline handler: (stIndex: Int, end: Int) -> Event,
+		crossinline handler: (b3Index: Int, stIndex: Int, end: Int) -> Event?,
 	): Event? {
 		// TODO test string with 0x1b inside of it
 
 		// Skip leading discriminator.
-		var searchFrom = start + 2
+		val b3Index = start + 2
+		var searchFrom = b3Index
 
 		while (true) {
 			val escIndex = buffer.indexOfFirstOrElse(
@@ -506,7 +516,8 @@ public class TerminalParser(
 			if (buffer[slashIndex] == '\\'.code.toByte()) {
 				val end = escIndex + 2
 				offset = end
-				return handler(escIndex, end)
+				return handler(b3Index, escIndex, end)
+					?: UnknownEvent(buffer.copyOfRange(start, end))
 			}
 			searchFrom = slashIndex
 		}
