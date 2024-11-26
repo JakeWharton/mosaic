@@ -53,7 +53,7 @@ public class TerminalParser(
 			if (isInRawMode) {
 				// Common case: we're in raw mode and can block filling the buffer as we never need to
 				// do a disambiguation read on a bare escape (it would have come as a keyboard event).
-				val read = stdinReader.read(buffer, limit, BufferSize)
+				val read = stdinReader.read(buffer, limit, BufferSize - limit)
 				limit += read
 				this.limit = limit
 				continue
@@ -66,8 +66,8 @@ public class TerminalParser(
 				// escape was truly an escape, or just the start of an escape sequence.
 				read = stdinReader.readWithTimeout(
 					buffer,
-					limit,
-					BufferSize,
+					1,
+					BufferSize - 1,
 					BareEscapeDisambiguationReadTimeoutMillis,
 				)
 				if (read == 0) {
@@ -76,7 +76,7 @@ public class TerminalParser(
 					return KeyEscape
 				}
 			} else {
-				read = stdinReader.read(buffer, limit, BufferSize)
+				read = stdinReader.read(buffer, limit, BufferSize - limit)
 			}
 			limit += read
 			this.limit = limit
