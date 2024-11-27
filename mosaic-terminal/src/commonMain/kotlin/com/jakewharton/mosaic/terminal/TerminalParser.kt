@@ -10,9 +10,11 @@ import com.jakewharton.mosaic.terminal.event.KittyGraphicsEvent
 import com.jakewharton.mosaic.terminal.event.KittyKeyboardQueryEvent
 import com.jakewharton.mosaic.terminal.event.MouseEvent
 import com.jakewharton.mosaic.terminal.event.OperatingStatusResponseEvent
+import com.jakewharton.mosaic.terminal.event.PaletteColorEvent
 import com.jakewharton.mosaic.terminal.event.PrimaryDeviceAttributesEvent
 import com.jakewharton.mosaic.terminal.event.ResizeEvent
 import com.jakewharton.mosaic.terminal.event.SystemThemeEvent
+import com.jakewharton.mosaic.terminal.event.TerminalColorEvent
 import com.jakewharton.mosaic.terminal.event.TerminalVersionEvent
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
 
@@ -186,7 +188,7 @@ public class TerminalParser(
 
 	private fun parseApc(buffer: ByteArray, start: Int, limit: Int): Event? {
 		// TODO https://stackoverflow.com/a/71632523/132047
-		return parseUntilStringTerminator(buffer, start, limit) { b3Index, stIndex, end ->
+		return parseUntilStringTerminator(buffer, start, limit) { b3Index, stIndex ->
 			if (stIndex > b3Index && buffer[b3Index].toInt() == 'G'.code) {
 				val delimiter = buffer.indexOf(';'.code.toByte(), b3Index, stIndex)
 				val b5Index = start + 4
@@ -235,7 +237,7 @@ public class TerminalParser(
 				'~'.code -> {
 					val delimiter =
 						buffer.indexOfOrDefault(';'.code.toByte(), b3Index, finalIndex, finalIndex)
-					val number = buffer.parseIntDigits(start = b3Index, end = delimiter)
+					val number = buffer.parseIntDigits(b3Index, delimiter, orElse = { break@error })
 					val codepoint = when (number) {
 						2 -> CodepointEvent.Insert
 						3 -> CodepointEvent.Delete
@@ -426,7 +428,7 @@ public class TerminalParser(
 	}
 
 	private fun parseDcs(buffer: ByteArray, start: Int, limit: Int): Event? {
-		return parseUntilStringTerminator(buffer, start, limit) { b3Index, stIndex, end ->
+		return parseUntilStringTerminator(buffer, start, limit) { b3Index, stIndex ->
 			val b4Index = start + 3
 			if (stIndex > b4Index &&
 				buffer[b3Index].toInt() == '>'.code &&
@@ -440,19 +442,60 @@ public class TerminalParser(
 	}
 
 	private fun parseOsc(buffer: ByteArray, start: Int, limit: Int): Event? {
-		return parseUntilStringTerminator(buffer, start, limit, allowBell = true) { _, _, _ ->
+		return parseUntilStringTerminator(buffer, start, limit, allowBell = true) { b3Index, stIndex ->
+			error@ do {
+				// OSC Ps ; Pt ST
+				if (stIndex - b3Index > 2) {
+					val psDelimiter =
+						buffer.indexOfOrElse(';'.code.toByte(), b3Index, stIndex, orElse = { break@error })
+					val ptIndex = psDelimiter + 1
+					val ps = buffer.parseIntDigits(b3Index, psDelimiter, orElse = { break@error })
+					when (ps) {
+						4 -> {
+							val cDelimiter = buffer.indexOfOrElse(';'.code.toByte(), ptIndex, stIndex, orElse = { break@error })
+							val c = buffer.parseIntDigits(ptIndex, cDelimiter, orElse = { break@error })
+							// TODO Actually decode color spec.
+							return@parseUntilStringTerminator PaletteColorEvent(
+								color = c,
+								value = buffer.decodeToString(cDelimiter + 1, stIndex),
+							)
+						}
+						10 -> {
+							// TODO Actually decode color spec.
+							return@parseUntilStringTerminator TerminalColorEvent(
+								color = TerminalColorEvent.Color.Foreground,
+								value = buffer.decodeToString(ptIndex, stIndex),
+							)
+						}
+						11 -> {
+							// TODO Actually decode color spec.
+							return@parseUntilStringTerminator TerminalColorEvent(
+								color = TerminalColorEvent.Color.Background,
+								value = buffer.decodeToString(ptIndex, stIndex),
+							)
+						}
+						12 -> {
+							// TODO Actually decode color spec.
+							return@parseUntilStringTerminator TerminalColorEvent(
+								color = TerminalColorEvent.Color.Cursor,
+								value = buffer.decodeToString(ptIndex, stIndex),
+							)
+						}
+					}
+				}
+			} while (false)
 			null
 		}
 	}
 
 	private fun parsePm(buffer: ByteArray, start: Int, limit: Int): Event? {
-		return parseUntilStringTerminator(buffer, start, limit) { _, _, _ ->
+		return parseUntilStringTerminator(buffer, start, limit) { _, _ ->
 			null
 		}
 	}
 
 	private fun parseSos(buffer: ByteArray, start: Int, limit: Int): Event? {
-		return parseUntilStringTerminator(buffer, start, limit) { _, _, _ ->
+		return parseUntilStringTerminator(buffer, start, limit) { _, _ ->
 			null
 		}
 	}
@@ -497,7 +540,7 @@ public class TerminalParser(
 		start: Int,
 		limit: Int,
 		allowBell: Boolean = false,
-		crossinline handler: (b3Index: Int, stIndex: Int, end: Int) -> Event?,
+		crossinline handler: (b3Index: Int, stIndex: Int) -> Event?,
 	): Event? {
 		// TODO test string with 0x1b inside of it
 
@@ -532,7 +575,7 @@ public class TerminalParser(
 		} while (false)
 
 		offset = end
-		return handler(b3Index, stIndex, end)
+		return handler(b3Index, stIndex)
 			?: UnknownEvent(buffer.copyOfRange(start, end))
 	}
 }

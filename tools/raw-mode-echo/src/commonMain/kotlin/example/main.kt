@@ -79,6 +79,13 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 					print("\u001b[?2031h") // Color scheme enable
 				}
 
+				print("\u001b]10;?\u001b\\")
+				print("\u001b]11;?\u001b\\")
+				print("\u001b]12;?\u001b\\")
+				for (i in 0 until 256) {
+					print("\u001b]4;$i;?\u001b\\")
+				}
+
 				val reader = Tty.stdinReader()
 
 				// Upon receiving a signal, this block's job will be canceled. Use that to wake up the
@@ -122,10 +129,12 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 					inputs.close()
 				}
 
+				print(inputs.receive())
 				for (input in inputs) {
-					print(input)
 					print("\r\n")
+					print(input)
 				}
+				print("\r\n")
 				readerInterruptJob.cancel()
 			},
 		)

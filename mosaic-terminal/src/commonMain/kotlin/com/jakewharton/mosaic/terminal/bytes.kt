@@ -44,7 +44,7 @@ internal fun ByteArray.parseIntDigits(start: Int, end: Int): Int {
 
 internal inline fun ByteArray.parseIntDigits(start: Int, end: Int, orElse: () -> Int): Int {
 	error@ do {
-		if (start != end) {
+		if (end > start) {
 			var value = 0
 			for (i in start until end) {
 				val digit = this[i].toInt()

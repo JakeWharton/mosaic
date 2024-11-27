@@ -76,6 +76,15 @@ public final class com/jakewharton/mosaic/terminal/event/OperatingStatusResponse
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class com/jakewharton/mosaic/terminal/event/PaletteColorEvent : com/jakewharton/mosaic/terminal/event/Event {
+	public fun <init> (ILjava/lang/String;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColor ()I
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/jakewharton/mosaic/terminal/event/PrimaryDeviceAttributesEvent : com/jakewharton/mosaic/terminal/event/Event {
 	public fun <init> (Ljava/lang/String;)V
 	public fun equals (Ljava/lang/Object;)Z
@@ -90,6 +99,24 @@ public final class com/jakewharton/mosaic/terminal/event/SystemThemeEvent : com/
 	public fun hashCode ()I
 	public final fun isDark ()Z
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/jakewharton/mosaic/terminal/event/TerminalColorEvent : com/jakewharton/mosaic/terminal/event/Event {
+	public fun <init> (Lcom/jakewharton/mosaic/terminal/event/TerminalColorEvent$Color;Ljava/lang/String;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColor ()Lcom/jakewharton/mosaic/terminal/event/TerminalColorEvent$Color;
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/jakewharton/mosaic/terminal/event/TerminalColorEvent$Color : java/lang/Enum {
+	public static final field Background Lcom/jakewharton/mosaic/terminal/event/TerminalColorEvent$Color;
+	public static final field Cursor Lcom/jakewharton/mosaic/terminal/event/TerminalColorEvent$Color;
+	public static final field Foreground Lcom/jakewharton/mosaic/terminal/event/TerminalColorEvent$Color;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/jakewharton/mosaic/terminal/event/TerminalColorEvent$Color;
+	public static fun values ()[Lcom/jakewharton/mosaic/terminal/event/TerminalColorEvent$Color;
 }
 
 public final class com/jakewharton/mosaic/terminal/event/TerminalVersionEvent : com/jakewharton/mosaic/terminal/event/Event {

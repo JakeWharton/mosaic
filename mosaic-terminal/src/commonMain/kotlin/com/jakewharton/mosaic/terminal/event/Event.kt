@@ -132,6 +132,24 @@ public class DecModeReportEvent(
 	}
 }
 
+@Poko
+public class TerminalColorEvent(
+	public val color: Color,
+	public val value: String,
+) : Event {
+	public enum class Color {
+		Foreground,
+		Background,
+		Cursor,
+	}
+}
+
+@Poko
+public class PaletteColorEvent(
+	public val color: Int,
+	public val value: String,
+) : Event
+
 internal data class MouseEvent(
 	val x: Int,
 	val y: Int,

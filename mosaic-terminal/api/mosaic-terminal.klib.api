@@ -89,6 +89,19 @@ final class com.jakewharton.mosaic.terminal.event/OperatingStatusResponseEvent :
     final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/OperatingStatusResponseEvent.toString|toString(){}[0]
 }
 
+final class com.jakewharton.mosaic.terminal.event/PaletteColorEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/PaletteColorEvent|null[0]
+    constructor <init>(kotlin/Int, kotlin/String) // com.jakewharton.mosaic.terminal.event/PaletteColorEvent.<init>|<init>(kotlin.Int;kotlin.String){}[0]
+
+    final val color // com.jakewharton.mosaic.terminal.event/PaletteColorEvent.color|{}color[0]
+        final fun <get-color>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/PaletteColorEvent.color.<get-color>|<get-color>(){}[0]
+    final val value // com.jakewharton.mosaic.terminal.event/PaletteColorEvent.value|{}value[0]
+        final fun <get-value>(): kotlin/String // com.jakewharton.mosaic.terminal.event/PaletteColorEvent.value.<get-value>|<get-value>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/PaletteColorEvent.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal.event/PaletteColorEvent.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/PaletteColorEvent.toString|toString(){}[0]
+}
+
 final class com.jakewharton.mosaic.terminal.event/PrimaryDeviceAttributesEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/PrimaryDeviceAttributesEvent|null[0]
     constructor <init>(kotlin/String) // com.jakewharton.mosaic.terminal.event/PrimaryDeviceAttributesEvent.<init>|<init>(kotlin.String){}[0]
 
@@ -109,6 +122,31 @@ final class com.jakewharton.mosaic.terminal.event/SystemThemeEvent : com.jakewha
     final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/SystemThemeEvent.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal.event/SystemThemeEvent.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/SystemThemeEvent.toString|toString(){}[0]
+}
+
+final class com.jakewharton.mosaic.terminal.event/TerminalColorEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/TerminalColorEvent|null[0]
+    constructor <init>(com.jakewharton.mosaic.terminal.event/TerminalColorEvent.Color, kotlin/String) // com.jakewharton.mosaic.terminal.event/TerminalColorEvent.<init>|<init>(com.jakewharton.mosaic.terminal.event.TerminalColorEvent.Color;kotlin.String){}[0]
+
+    final val color // com.jakewharton.mosaic.terminal.event/TerminalColorEvent.color|{}color[0]
+        final fun <get-color>(): com.jakewharton.mosaic.terminal.event/TerminalColorEvent.Color // com.jakewharton.mosaic.terminal.event/TerminalColorEvent.color.<get-color>|<get-color>(){}[0]
+    final val value // com.jakewharton.mosaic.terminal.event/TerminalColorEvent.value|{}value[0]
+        final fun <get-value>(): kotlin/String // com.jakewharton.mosaic.terminal.event/TerminalColorEvent.value.<get-value>|<get-value>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/TerminalColorEvent.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal.event/TerminalColorEvent.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/TerminalColorEvent.toString|toString(){}[0]
+
+    final enum class Color : kotlin/Enum<com.jakewharton.mosaic.terminal.event/TerminalColorEvent.Color> { // com.jakewharton.mosaic.terminal.event/TerminalColorEvent.Color|null[0]
+        enum entry Background // com.jakewharton.mosaic.terminal.event/TerminalColorEvent.Color.Background|null[0]
+        enum entry Cursor // com.jakewharton.mosaic.terminal.event/TerminalColorEvent.Color.Cursor|null[0]
+        enum entry Foreground // com.jakewharton.mosaic.terminal.event/TerminalColorEvent.Color.Foreground|null[0]
+
+        final val entries // com.jakewharton.mosaic.terminal.event/TerminalColorEvent.Color.entries|#static{}entries[0]
+            final fun <get-entries>(): kotlin.enums/EnumEntries<com.jakewharton.mosaic.terminal.event/TerminalColorEvent.Color> // com.jakewharton.mosaic.terminal.event/TerminalColorEvent.Color.entries.<get-entries>|<get-entries>#static(){}[0]
+
+        final fun valueOf(kotlin/String): com.jakewharton.mosaic.terminal.event/TerminalColorEvent.Color // com.jakewharton.mosaic.terminal.event/TerminalColorEvent.Color.valueOf|valueOf#static(kotlin.String){}[0]
+        final fun values(): kotlin/Array<com.jakewharton.mosaic.terminal.event/TerminalColorEvent.Color> // com.jakewharton.mosaic.terminal.event/TerminalColorEvent.Color.values|values#static(){}[0]
+    }
 }
 
 final class com.jakewharton.mosaic.terminal.event/TerminalVersionEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/TerminalVersionEvent|null[0]
