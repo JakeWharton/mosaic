@@ -93,6 +93,17 @@ public final class com/jakewharton/mosaic/terminal/event/PrimaryDeviceAttributes
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class com/jakewharton/mosaic/terminal/event/ResizeEvent : com/jakewharton/mosaic/terminal/event/Event {
+	public fun <init> (IIII)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColumns ()I
+	public final fun getHeight ()I
+	public final fun getRows ()I
+	public final fun getWidth ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/jakewharton/mosaic/terminal/event/SystemThemeEvent : com/jakewharton/mosaic/terminal/event/Event {
 	public fun <init> (Z)V
 	public fun equals (Ljava/lang/Object;)Z

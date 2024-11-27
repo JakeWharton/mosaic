@@ -111,11 +111,12 @@ internal data class KittyGraphicsEvent(
 	val message: String,
 ) : Event
 
-internal data class ResizeEvent(
-	val rows: Int,
-	val cols: Int,
-	val height: Int,
-	val width: Int,
+@Poko
+public class ResizeEvent(
+	public val rows: Int,
+	public val columns: Int,
+	public val height: Int,
+	public val width: Int,
 ) : Event
 
 @Poko

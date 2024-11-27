@@ -113,6 +113,23 @@ final class com.jakewharton.mosaic.terminal.event/PrimaryDeviceAttributesEvent :
     final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/PrimaryDeviceAttributesEvent.toString|toString(){}[0]
 }
 
+final class com.jakewharton.mosaic.terminal.event/ResizeEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/ResizeEvent|null[0]
+    constructor <init>(kotlin/Int, kotlin/Int, kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.terminal.event/ResizeEvent.<init>|<init>(kotlin.Int;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+
+    final val columns // com.jakewharton.mosaic.terminal.event/ResizeEvent.columns|{}columns[0]
+        final fun <get-columns>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/ResizeEvent.columns.<get-columns>|<get-columns>(){}[0]
+    final val height // com.jakewharton.mosaic.terminal.event/ResizeEvent.height|{}height[0]
+        final fun <get-height>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/ResizeEvent.height.<get-height>|<get-height>(){}[0]
+    final val rows // com.jakewharton.mosaic.terminal.event/ResizeEvent.rows|{}rows[0]
+        final fun <get-rows>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/ResizeEvent.rows.<get-rows>|<get-rows>(){}[0]
+    final val width // com.jakewharton.mosaic.terminal.event/ResizeEvent.width|{}width[0]
+        final fun <get-width>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/ResizeEvent.width.<get-width>|<get-width>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/ResizeEvent.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal.event/ResizeEvent.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/ResizeEvent.toString|toString(){}[0]
+}
+
 final class com.jakewharton.mosaic.terminal.event/SystemThemeEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/SystemThemeEvent|null[0]
     constructor <init>(kotlin/Boolean) // com.jakewharton.mosaic.terminal.event/SystemThemeEvent.<init>|<init>(kotlin.Boolean){}[0]
 

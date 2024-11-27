@@ -362,19 +362,33 @@ public class TerminalParser(
 				}
 
 				't'.code -> {
-					// TODO validation. while(true) + indexOfOrElse + break + UnknownEvent
-					val modeDelim = buffer.indexOf(';'.code.toByte(), b3Index, finalIndex)
-					val rowDelim = buffer.indexOf(';'.code.toByte(), modeDelim + 1, finalIndex)
-					val colDelim = buffer.indexOf(';'.code.toByte(), rowDelim + 1, finalIndex)
-					val heightDelim = buffer.indexOf(';'.code.toByte(), colDelim + 1, finalIndex)
-					val widthDelim = buffer.indexOf(';'.code.toByte(), heightDelim + 1, finalIndex)
-					val mode = buffer.parseIntDigits(b3Index, modeDelim)
-					// TODO validate 48
-					val rows = buffer.parseIntDigits(modeDelim + 1, rowDelim)
-					val cols = buffer.parseIntDigits(rowDelim + 1, colDelim)
-					val height = buffer.parseIntDigits(colDelim + 1, heightDelim)
-					val width = buffer.parseIntDigits(heightDelim + 1, finalIndex)
-					return ResizeEvent(rows, cols, height, width)
+					// CSI 48 ; height_chars ; width_chars ; height_pix ; width_pix t
+					// https://gist.github.com/rockorager/e695fb2924d36b2bcf1fff4a3704bd83
+
+					val modeDelimiter = buffer.indexOfOrElse(';'.code.toByte(), b3Index, finalIndex, orElse = { break@error })
+					val mode = buffer.parseIntDigits(b3Index, modeDelimiter, orElse = { break@error })
+					if (mode != 48) break@error
+
+					val rowsStart = modeDelimiter + 1
+					val rowsDelimiter = buffer.indexOfOrElse(';'.code.toByte(), rowsStart, finalIndex, orElse = { break@error })
+					val rowsEnd = buffer.indexOfOrDefault(':'.code.toByte(), rowsStart, rowsDelimiter, rowsDelimiter)
+					val rows = buffer.parseIntDigits(rowsStart, rowsEnd, orElse = { break@error })
+
+					val columnsStart = rowsDelimiter + 1
+					val columnsDelimiter = buffer.indexOfOrElse(';'.code.toByte(), columnsStart, finalIndex, orElse = { break@error })
+					val columnsEnd = buffer.indexOfOrDefault(':'.code.toByte(), columnsStart, columnsDelimiter, columnsDelimiter)
+					val columns = buffer.parseIntDigits(columnsStart, columnsEnd, orElse = { break@error })
+
+					val heightStart = columnsDelimiter + 1
+					val heightDelimiter = buffer.indexOfOrElse(';'.code.toByte(), heightStart, finalIndex, orElse = { break@error })
+					val heightEnd = buffer.indexOfOrDefault(':'.code.toByte(), heightStart, heightDelimiter, heightDelimiter)
+					val height = buffer.parseIntDigits(heightStart, heightEnd, orElse = { break@error })
+
+					val widthStart = heightDelimiter + 1
+					val widthEnd = buffer.indexOfOrDefault(':'.code.toByte(), widthStart, finalIndex, finalIndex)
+					val width = buffer.parseIntDigits(widthStart, widthEnd, orElse = { break@error })
+
+					return ResizeEvent(rows, columns, height, width)
 				}
 
 				'u'.code -> {
