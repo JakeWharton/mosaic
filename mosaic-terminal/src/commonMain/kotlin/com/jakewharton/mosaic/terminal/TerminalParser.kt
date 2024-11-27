@@ -1,13 +1,13 @@
 package com.jakewharton.mosaic.terminal
 
 import com.jakewharton.mosaic.terminal.event.BracketedPasteEvent
-import com.jakewharton.mosaic.terminal.event.CodepointEvent
 import com.jakewharton.mosaic.terminal.event.DecModeReportEvent
 import com.jakewharton.mosaic.terminal.event.Event
 import com.jakewharton.mosaic.terminal.event.FocusEvent
 import com.jakewharton.mosaic.terminal.event.KeyEscape
 import com.jakewharton.mosaic.terminal.event.KittyGraphicsEvent
 import com.jakewharton.mosaic.terminal.event.KittyKeyboardQueryEvent
+import com.jakewharton.mosaic.terminal.event.LegacyKeyboardEvent
 import com.jakewharton.mosaic.terminal.event.MouseEvent
 import com.jakewharton.mosaic.terminal.event.OperatingStatusResponseEvent
 import com.jakewharton.mosaic.terminal.event.PaletteColorEvent
@@ -104,7 +104,7 @@ public class TerminalParser(
 				0x5F -> return parseApc(buffer, start, limit)
 				else -> {
 					offset = start + 2
-					return CodepointEvent(b2, alt = true)
+					return LegacyKeyboardEvent(b2, alt = true)
 				}
 			}
 		} else {
@@ -118,24 +118,24 @@ public class TerminalParser(
 		when (b1) {
 			0x00 -> {
 				offset = b2Index
-				return CodepointEvent('@'.code, ctrl = true)
+				return LegacyKeyboardEvent('@'.code, ctrl = true)
 			}
 
 			// Backspace key canonicalization.
 			0x08 -> {
 				offset = b2Index
-				return CodepointEvent(0x7F)
+				return LegacyKeyboardEvent(0x7F)
 			}
 
 			// Enter key canonicalization.
 			0x0A -> {
 				offset = b2Index
-				return CodepointEvent(0x0D)
+				return LegacyKeyboardEvent(0x0D)
 			}
 
 			0x09, 0x0D, 0x1A -> {
 				offset = b2Index
-				return CodepointEvent(b1)
+				return LegacyKeyboardEvent(b1)
 			}
 
 			in 0x01..0x07,
@@ -144,7 +144,7 @@ public class TerminalParser(
 			in 0x0E..0x1A,
 			-> {
 				offset = b2Index
-				return CodepointEvent(b1 + 0x60, ctrl = true)
+				return LegacyKeyboardEvent(b1 + 0x60, ctrl = true)
 			}
 
 			else -> {
@@ -181,7 +181,7 @@ public class TerminalParser(
 					else -> TODO("Invalid UTF-8")
 				}
 				// TODO multi-codepoint grapheme support
-				return CodepointEvent(codepoint)
+				return LegacyKeyboardEvent(codepoint)
 			}
 		}
 	}
@@ -222,49 +222,49 @@ public class TerminalParser(
 
 		error@ do {
 			when (buffer[finalIndex].toInt()) {
-				'A'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.Up)
-				'B'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.Down)
-				'C'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.Right)
-				'D'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.Left)
-				'E'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.KpBegin)
-				'F'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.End)
-				'H'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.Home)
-				'P'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.F1)
-				'Q'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.F2)
-				'R'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.F3)
-				'S'.code -> return parseCsiLegacy(buffer, start, end, CodepointEvent.F4)
+				'A'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.Up)
+				'B'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.Down)
+				'C'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.Right)
+				'D'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.Left)
+				'E'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.KpBegin)
+				'F'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.End)
+				'H'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.Home)
+				'P'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.F1)
+				'Q'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.F2)
+				'R'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.F3)
+				'S'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.F4)
 
 				'~'.code -> {
 					val delimiter =
 						buffer.indexOfOrDefault(';'.code.toByte(), b3Index, finalIndex, finalIndex)
 					val number = buffer.parseIntDigits(b3Index, delimiter, orElse = { break@error })
 					val codepoint = when (number) {
-						2 -> CodepointEvent.Insert
-						3 -> CodepointEvent.Delete
-						5 -> CodepointEvent.PageUp
-						6 -> CodepointEvent.PageDown
-						7 -> CodepointEvent.Home
-						8 -> CodepointEvent.End
-						11 -> CodepointEvent.F1
-						12 -> CodepointEvent.F2
-						13 -> CodepointEvent.F3
-						14 -> CodepointEvent.F4
-						15 -> CodepointEvent.F5
-						17 -> CodepointEvent.F6
-						18 -> CodepointEvent.F7
-						19 -> CodepointEvent.F8
-						20 -> CodepointEvent.F9
-						21 -> CodepointEvent.F10
-						23 -> CodepointEvent.F11
-						24 -> CodepointEvent.F12
+						2 -> LegacyKeyboardEvent.Insert
+						3 -> LegacyKeyboardEvent.Delete
+						5 -> LegacyKeyboardEvent.PageUp
+						6 -> LegacyKeyboardEvent.PageDown
+						7 -> LegacyKeyboardEvent.Home
+						8 -> LegacyKeyboardEvent.End
+						11 -> LegacyKeyboardEvent.F1
+						12 -> LegacyKeyboardEvent.F2
+						13 -> LegacyKeyboardEvent.F3
+						14 -> LegacyKeyboardEvent.F4
+						15 -> LegacyKeyboardEvent.F5
+						17 -> LegacyKeyboardEvent.F6
+						18 -> LegacyKeyboardEvent.F7
+						19 -> LegacyKeyboardEvent.F8
+						20 -> LegacyKeyboardEvent.F9
+						21 -> LegacyKeyboardEvent.F10
+						23 -> LegacyKeyboardEvent.F11
+						24 -> LegacyKeyboardEvent.F12
 						200 -> return BracketedPasteEvent(start = true)
 						201 -> return BracketedPasteEvent(start = false)
-						57427 -> CodepointEvent.KpBegin
+						57427 -> LegacyKeyboardEvent.KpBegin
 						else -> break@error
 					}
 
 					// TODO parse rest of CSI ... ~
-					return CodepointEvent(codepoint)
+					return LegacyKeyboardEvent(codepoint)
 				}
 
 				'I'.code -> return FocusEvent(focused = true)
@@ -435,10 +435,23 @@ public class TerminalParser(
 		return UnknownEvent(buffer.copyOfRange(start, offset))
 	}
 
-	private fun parseCsiLegacy(buffer: ByteArray, start: Int, limit: Int, codepoint: Int): CodepointEvent {
-		// TODO parse other shit
-		//  val delimiter = buffer.indexOf(';'.code.toByte(), start + 2, limit)
-		return CodepointEvent(codepoint)
+	private fun parseCsiLegacyKeyboard(buffer: ByteArray, start: Int, end: Int, codepoint: Int): Event {
+		// CSI {ABCDEFHPQS}
+		// CSI 1 ; modifier {ABCDEFHPQS}
+		// https://sw.kovidgoyal.net/kitty/keyboard-protocol/#legacy-key-event-encoding
+
+		val b3Index = start + 2
+		if (end == b3Index) {
+			return LegacyKeyboardEvent(codepoint)
+		}
+		if (end - start > 5 &&
+			buffer[b3Index] == '1'.code.toByte() &&
+			buffer[start + 3] == ';'.code.toByte()
+		) {
+			// TODO modifiers!
+			return LegacyKeyboardEvent(codepoint)
+		}
+		return UnknownEvent(buffer.copyOfRange(start, end))
 	}
 
 	private fun parseDcs(buffer: ByteArray, start: Int, limit: Int): Event? {
@@ -515,7 +528,10 @@ public class TerminalParser(
 	}
 
 	private fun parseSs3(buffer: ByteArray, start: Int, limit: Int): Event? {
-		val end = start + 4
+		// SS3 {ABCDEFHPQRS}
+		// https://sw.kovidgoyal.net/kitty/keyboard-protocol/#legacy-functional-keys
+
+		val end = start + 3
 		if (end > limit) return null
 
 		offset = end
@@ -523,16 +539,16 @@ public class TerminalParser(
 		val b3Index = start + 2
 		error@ do {
 			val codepoint = when (buffer[b3Index].toInt()) {
-				'A'.code -> CodepointEvent.Up
-				'B'.code -> CodepointEvent.Down
-				'C'.code -> CodepointEvent.Right
-				'D'.code -> CodepointEvent.Left
-				'F'.code -> CodepointEvent.End
-				'H'.code -> CodepointEvent.Home
-				'P'.code -> CodepointEvent.F1
-				'Q'.code -> CodepointEvent.F2
-				'R'.code -> CodepointEvent.F3
-				'S'.code -> CodepointEvent.F3
+				'A'.code -> LegacyKeyboardEvent.Up
+				'B'.code -> LegacyKeyboardEvent.Down
+				'C'.code -> LegacyKeyboardEvent.Right
+				'D'.code -> LegacyKeyboardEvent.Left
+				'F'.code -> LegacyKeyboardEvent.End
+				'H'.code -> LegacyKeyboardEvent.Home
+				'P'.code -> LegacyKeyboardEvent.F1
+				'Q'.code -> LegacyKeyboardEvent.F2
+				'R'.code -> LegacyKeyboardEvent.F3
+				'S'.code -> LegacyKeyboardEvent.F4
 				0x1b -> {
 					// libvaxis added a guard against this case
 					// https://github.com/rockorager/libvaxis/commit/b68864c3babf2767c15c52911179e8ee9158e1d2
@@ -542,7 +558,7 @@ public class TerminalParser(
 
 				else -> break@error
 			}
-			return CodepointEvent(codepoint)
+			return LegacyKeyboardEvent(codepoint)
 		} while (false)
 
 		// Use 'offset' not 'end' because if end is an escape we back up the offset.

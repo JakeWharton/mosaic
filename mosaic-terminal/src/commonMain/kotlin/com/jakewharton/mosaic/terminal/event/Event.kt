@@ -21,14 +21,14 @@ public class UnknownEvent(
 
 internal data object KeyEscape : Event
 
-internal data class CodepointEvent(
+internal data class LegacyKeyboardEvent(
 	val codepoint: Int,
 	val shift: Boolean = false,
 	val alt: Boolean = false,
 	val ctrl: Boolean = false,
 ) : Event {
 	override fun toString() = buildString {
-		append("CodepointEvent(")
+		append("LegacyKeyboardEvent(")
 		if (shift) append("Shift+")
 		if (ctrl) append("Ctrl+")
 		if (alt) append("Alt+")

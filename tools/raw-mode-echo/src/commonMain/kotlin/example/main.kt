@@ -120,7 +120,7 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 							while (job.isActive) {
 								val event = parser.next().toString()
 								inputs.trySend(event)
-								if (event == "CodepointEvent(Ctrl+0x63)") {
+								if (event == "LegacyKeyboardEvent(Ctrl+0x63)") {
 									break
 								}
 							}
