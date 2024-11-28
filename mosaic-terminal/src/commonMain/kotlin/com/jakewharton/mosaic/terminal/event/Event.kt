@@ -23,21 +23,42 @@ internal data object KeyEscape : Event
 
 internal data class LegacyKeyboardEvent(
 	val codepoint: Int,
-	val shift: Boolean = false,
-	val alt: Boolean = false,
-	val ctrl: Boolean = false,
+	val modifier: Int = 0,
 ) : Event {
+	val shift: Boolean get() = (modifier and ModifierShift) != 0
+	val alt: Boolean get() = (modifier and ModifierAlt) != 0
+	val ctrl: Boolean get() = (modifier and ModifierCtrl) != 0
+	val `super`: Boolean get() = (modifier and ModifierSuper) != 0
+	val hyper: Boolean get() = (modifier and ModifierHyper) != 0
+	val meta: Boolean get() = (modifier and ModifierMeta) != 0
+	val capsLock: Boolean get() = (modifier and ModifierCapsLock) != 0
+	val numLock: Boolean get() = (modifier and ModifierNumLock) != 0
+
 	override fun toString() = buildString {
 		append("LegacyKeyboardEvent(")
 		if (shift) append("Shift+")
-		if (ctrl) append("Ctrl+")
 		if (alt) append("Alt+")
+		if (ctrl) append("Ctrl+")
+		if (`super`) append("Super+")
+		if (hyper) append("Hyper+")
+		if (meta) append("Meta+")
+		if (capsLock) append("CapsLock+")
+		if (numLock) append("NumLock+")
 		append("0x")
 		append(codepoint.toString(16).uppercase().padStart(2, '0'))
 		append(')')
 	}
 
 	companion object {
+		const val ModifierShift = 0b1
+		const val ModifierAlt = 0b10
+		const val ModifierCtrl = 0b100
+		const val ModifierSuper = 0b1000
+		const val ModifierHyper = 0b10000
+		const val ModifierMeta = 0b100000
+		const val ModifierCapsLock = 0b1000000
+		const val ModifierNumLock = 0b10000000
+
 		// These codepoints are defined by Kitty in the Unicode private space.
 		const val Insert = 57348
 		const val Delete = 57349

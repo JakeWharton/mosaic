@@ -104,7 +104,7 @@ public class TerminalParser(
 				0x5F -> return parseApc(buffer, start, limit)
 				else -> {
 					offset = start + 2
-					return LegacyKeyboardEvent(b2, alt = true)
+					return LegacyKeyboardEvent(b2, LegacyKeyboardEvent.ModifierAlt)
 				}
 			}
 		} else {
@@ -118,7 +118,7 @@ public class TerminalParser(
 		when (b1) {
 			0x00 -> {
 				offset = b2Index
-				return LegacyKeyboardEvent('@'.code, ctrl = true)
+				return LegacyKeyboardEvent('@'.code, LegacyKeyboardEvent.ModifierCtrl)
 			}
 
 			// Backspace key canonicalization.
@@ -144,7 +144,7 @@ public class TerminalParser(
 			in 0x0E..0x1A,
 			-> {
 				offset = b2Index
-				return LegacyKeyboardEvent(b1 + 0x60, ctrl = true)
+				return LegacyKeyboardEvent(b1 + 0x60, LegacyKeyboardEvent.ModifierCtrl)
 			}
 
 			else -> {
@@ -229,10 +229,11 @@ public class TerminalParser(
 				'E'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.KpBegin)
 				'F'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.End)
 				'H'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.Home)
-				'P'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.F1)
-				'Q'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.F2)
-				'R'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.F3)
-				'S'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.F4)
+				// TODO Where are these documented? I only see SS3 variants.
+				// 'P'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.F1)
+				// 'Q'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.F2)
+				// 'R'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.F3)
+				// 'S'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.F4)
 
 				'~'.code -> {
 					val delimiter =
@@ -440,17 +441,21 @@ public class TerminalParser(
 		// CSI 1 ; modifier {ABCDEFHPQS}
 		// https://sw.kovidgoyal.net/kitty/keyboard-protocol/#legacy-key-event-encoding
 
+		val finalIndex = end - 1
 		val b3Index = start + 2
-		if (end == b3Index) {
+		if (b3Index == finalIndex) {
 			return LegacyKeyboardEvent(codepoint)
 		}
-		if (end - start > 5 &&
+
+		// This is just an 'if' that can also use 'break' to jump out of its own logic.
+		error@ while (end - start == 5 &&
 			buffer[b3Index] == '1'.code.toByte() &&
 			buffer[start + 3] == ';'.code.toByte()
 		) {
-			// TODO modifiers!
-			return LegacyKeyboardEvent(codepoint)
+			val modifier = buffer.parseIntDigits(start + 4, finalIndex, orElse = { break@error }) - 1
+			return LegacyKeyboardEvent(codepoint, modifier)
 		}
+
 		return UnknownEvent(buffer.copyOfRange(start, end))
 	}
 
