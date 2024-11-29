@@ -8,6 +8,14 @@ import com.jakewharton.mosaic.terminal.event.LegacyKeyboardEvent.Companion.End
 import com.jakewharton.mosaic.terminal.event.LegacyKeyboardEvent.Companion.Home
 import com.jakewharton.mosaic.terminal.event.LegacyKeyboardEvent.Companion.KpBegin
 import com.jakewharton.mosaic.terminal.event.LegacyKeyboardEvent.Companion.Left
+import com.jakewharton.mosaic.terminal.event.LegacyKeyboardEvent.Companion.ModifierAlt
+import com.jakewharton.mosaic.terminal.event.LegacyKeyboardEvent.Companion.ModifierCapsLock
+import com.jakewharton.mosaic.terminal.event.LegacyKeyboardEvent.Companion.ModifierCtrl
+import com.jakewharton.mosaic.terminal.event.LegacyKeyboardEvent.Companion.ModifierHyper
+import com.jakewharton.mosaic.terminal.event.LegacyKeyboardEvent.Companion.ModifierMeta
+import com.jakewharton.mosaic.terminal.event.LegacyKeyboardEvent.Companion.ModifierNumLock
+import com.jakewharton.mosaic.terminal.event.LegacyKeyboardEvent.Companion.ModifierShift
+import com.jakewharton.mosaic.terminal.event.LegacyKeyboardEvent.Companion.ModifierSuper
 import com.jakewharton.mosaic.terminal.event.LegacyKeyboardEvent.Companion.Right
 import com.jakewharton.mosaic.terminal.event.LegacyKeyboardEvent.Companion.Up
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
@@ -58,7 +66,45 @@ class TerminalParserCsiLegacyKeyboardEventTest {
 		assertThat(parser.next()).isEqualTo(LegacyKeyboardEvent(Home))
 	}
 
-	// TODO with all modifier variations
+	@Test fun modifierShiftUp() {
+		writer.writeHex("1b5b313b3241")
+		assertThat(parser.next()).isEqualTo(LegacyKeyboardEvent(Up, ModifierShift))
+	}
+
+	@Test fun modifierAltUp() {
+		writer.writeHex("1b5b313b3341")
+		assertThat(parser.next()).isEqualTo(LegacyKeyboardEvent(Up, ModifierAlt))
+	}
+
+	@Test fun modifierCtrlUp() {
+		writer.writeHex("1b5b313b3541")
+		assertThat(parser.next()).isEqualTo(LegacyKeyboardEvent(Up, ModifierCtrl))
+	}
+
+	@Test fun modifierSuperUp() {
+		writer.writeHex("1b5b313b3941")
+		assertThat(parser.next()).isEqualTo(LegacyKeyboardEvent(Up, ModifierSuper))
+	}
+
+	@Test fun modifierHyperUp() {
+		writer.writeHex("1b5b313b313741")
+		assertThat(parser.next()).isEqualTo(LegacyKeyboardEvent(Up, ModifierHyper))
+	}
+
+	@Test fun modifierMetaUp() {
+		writer.writeHex("1b5b313b333341")
+		assertThat(parser.next()).isEqualTo(LegacyKeyboardEvent(Up, ModifierMeta))
+	}
+
+	@Test fun modifierCapsLockUp() {
+		writer.writeHex("1b5b313b363541")
+		assertThat(parser.next()).isEqualTo(LegacyKeyboardEvent(Up, ModifierCapsLock))
+	}
+
+	@Test fun modifierNumLockUp() {
+		writer.writeHex("1b5b313b31323941")
+		assertThat(parser.next()).isEqualTo(LegacyKeyboardEvent(Up, ModifierNumLock))
+	}
 
 	@Test fun non1p0() {
 		writer.writeHex("1b5b323b3248")
@@ -78,13 +124,6 @@ class TerminalParserCsiLegacyKeyboardEventTest {
 		writer.writeHex("1b5b313b2f48")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b313b2f48".hexToByteArray()),
-		)
-	}
-
-	@Test fun multiDigitModifier() {
-		writer.writeHex("1b5b313b323048")
-		assertThat(parser.next()).isEqualTo(
-			UnknownEvent("1b5b313b323048".hexToByteArray()),
 		)
 	}
 }

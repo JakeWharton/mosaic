@@ -448,7 +448,7 @@ public class TerminalParser(
 		}
 
 		// This is just an 'if' that can also use 'break' to jump out of its own logic.
-		error@ while (end - start == 5 &&
+		error@ while (end - start >= 6 &&
 			buffer[b3Index] == '1'.code.toByte() &&
 			buffer[start + 3] == ';'.code.toByte()
 		) {
