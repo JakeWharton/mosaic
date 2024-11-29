@@ -1,5 +1,6 @@
 package com.jakewharton.mosaic.terminal.event
 
+import com.jakewharton.cite.__TYPE__
 import dev.drewhamilton.poko.ArrayContentBased
 import dev.drewhamilton.poko.Poko
 
@@ -11,7 +12,8 @@ public class UnknownEvent(
 	@ArrayContentBased public val bytes: ByteArray,
 ) : Event {
 	override fun toString(): String = buildString {
-		append("UnknownEvent(")
+		append(__TYPE__)
+		append('(')
 		for (byte in bytes) {
 			append(byte.toUByte().toString(16).padStart(2, '0'))
 		}
@@ -19,23 +21,23 @@ public class UnknownEvent(
 	}
 }
 
-internal data object KeyEscape : Event
-
-internal data class LegacyKeyboardEvent(
-	val codepoint: Int,
-	val modifier: Int = 0,
+@Poko
+public class KeyboardEvent(
+	public val codepoint: Int,
+	public val modifiers: Int = 0,
 ) : Event {
-	val shift: Boolean get() = (modifier and ModifierShift) != 0
-	val alt: Boolean get() = (modifier and ModifierAlt) != 0
-	val ctrl: Boolean get() = (modifier and ModifierCtrl) != 0
-	val `super`: Boolean get() = (modifier and ModifierSuper) != 0
-	val hyper: Boolean get() = (modifier and ModifierHyper) != 0
-	val meta: Boolean get() = (modifier and ModifierMeta) != 0
-	val capsLock: Boolean get() = (modifier and ModifierCapsLock) != 0
-	val numLock: Boolean get() = (modifier and ModifierNumLock) != 0
+	public val shift: Boolean get() = (modifiers and ModifierShift) != 0
+	public val alt: Boolean get() = (modifiers and ModifierAlt) != 0
+	public val ctrl: Boolean get() = (modifiers and ModifierCtrl) != 0
+	public val `super`: Boolean get() = (modifiers and ModifierSuper) != 0
+	public val hyper: Boolean get() = (modifiers and ModifierHyper) != 0
+	public val meta: Boolean get() = (modifiers and ModifierMeta) != 0
+	public val capsLock: Boolean get() = (modifiers and ModifierCapsLock) != 0
+	public val numLock: Boolean get() = (modifiers and ModifierNumLock) != 0
 
-	override fun toString() = buildString {
-		append("LegacyKeyboardEvent(")
+	override fun toString(): String = buildString {
+		append(__TYPE__)
+		append('(')
 		if (shift) append("Shift+")
 		if (alt) append("Alt+")
 		if (ctrl) append("Ctrl+")
@@ -49,40 +51,40 @@ internal data class LegacyKeyboardEvent(
 		append(')')
 	}
 
-	companion object {
-		const val ModifierShift = 0b1
-		const val ModifierAlt = 0b10
-		const val ModifierCtrl = 0b100
-		const val ModifierSuper = 0b1000
-		const val ModifierHyper = 0b10000
-		const val ModifierMeta = 0b100000
-		const val ModifierCapsLock = 0b1000000
-		const val ModifierNumLock = 0b10000000
+	public companion object {
+		public const val ModifierShift: Int = 0b1
+		public const val ModifierAlt: Int = 0b10
+		public const val ModifierCtrl: Int = 0b100
+		public const val ModifierSuper: Int = 0b1000
+		public const val ModifierHyper: Int = 0b10000
+		public const val ModifierMeta: Int = 0b100000
+		public const val ModifierCapsLock: Int = 0b1000000
+		public const val ModifierNumLock: Int = 0b10000000
 
 		// These codepoints are defined by Kitty in the Unicode private space.
-		const val Insert = 57348
-		const val Delete = 57349
-		const val PageUp = 57354
-		const val PageDown = 57355
-		const val Up = 57352
-		const val Down = 57353
-		const val Right = 57351
-		const val Left = 57350
-		const val KpBegin = 57427
-		const val End = 57357
-		const val Home = 57356
-		const val F1 = 57364
-		const val F2 = 57365
-		const val F3 = 57366
-		const val F4 = 57367
-		const val F5 = 57368
-		const val F6 = 57369
-		const val F7 = 57370
-		const val F8 = 57371
-		const val F9 = 57372
-		const val F10 = 57373
-		const val F11 = 57374
-		const val F12 = 57375
+		internal const val Insert = 57348
+		internal const val Delete = 57349
+		internal const val PageUp = 57354
+		internal const val PageDown = 57355
+		internal const val Up = 57352
+		internal const val Down = 57353
+		internal const val Right = 57351
+		internal const val Left = 57350
+		internal const val KpBegin = 57427
+		internal const val End = 57357
+		internal const val Home = 57356
+		internal const val F1 = 57364
+		internal const val F2 = 57365
+		internal const val F3 = 57366
+		internal const val F4 = 57367
+		internal const val F5 = 57368
+		internal const val F6 = 57369
+		internal const val F7 = 57370
+		internal const val F8 = 57371
+		internal const val F9 = 57372
+		internal const val F10 = 57373
+		internal const val F11 = 57374
+		internal const val F12 = 57375
 	}
 }
 

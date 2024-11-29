@@ -15,7 +15,7 @@ import kotlin.test.Test
 @OptIn(ExperimentalStdlibApi::class)
 class TerminalParserCsiDecModeReportEventTest {
 	private val writer = Tty.stdinWriter()
-	private val parser = TerminalParser(writer.reader, true)
+	private val parser = TerminalParser(writer.reader)
 
 	@AfterTest fun after() {
 		writer.close()

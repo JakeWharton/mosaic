@@ -11,6 +11,8 @@ import com.github.ajalt.clikt.parameters.types.enum
 import com.jakewharton.finalization.withFinalizationHook
 import com.jakewharton.mosaic.terminal.TerminalParser
 import com.jakewharton.mosaic.terminal.Tty
+import com.jakewharton.mosaic.terminal.event.KeyboardEvent
+import com.jakewharton.mosaic.terminal.event.KeyboardEvent.Companion.ModifierCtrl
 import kotlin.jvm.JvmName
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Dispatchers
@@ -109,18 +111,19 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 								if (read > 0) {
 									val hex = buffer.toHexString(endIndex = read)
 									inputs.trySend(hex)
-									if (hex == "03") {
+									if (hex == "03" || hex == "1b5b39393b3575") {
 										break
 									}
 								}
 							}
 						}
 						Mode.Event -> {
-							val parser = TerminalParser(reader, true)
+							val parser = TerminalParser(reader)
+							val ctrlC = KeyboardEvent(0x63, ModifierCtrl)
 							while (job.isActive) {
-								val event = parser.next().toString()
-								inputs.trySend(event)
-								if (event == "LegacyKeyboardEvent(Ctrl+0x63)") {
+								val event = parser.next()
+								inputs.trySend(event.toString())
+								if (event == ctrlC) {
 									break
 								}
 							}

@@ -10,6 +10,7 @@ buildscript {
 		classpath libs.kotlin.plugin.compose
 		classpath libs.maven.publish.gradlePlugin
 		classpath libs.dokka.gradlePlugin
+		classpath libs.cite.gradlePlugin
 		classpath libs.poko.gradlePlugin
 		classpath libs.spotless.gradlePlugin
 		classpath libs.binary.compatibility.validator.gradlePlugin

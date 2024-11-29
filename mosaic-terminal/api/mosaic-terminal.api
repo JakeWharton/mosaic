@@ -6,8 +6,10 @@ public final class com/jakewharton/mosaic/terminal/StdinReader : java/lang/AutoC
 }
 
 public final class com/jakewharton/mosaic/terminal/TerminalParser {
-	public fun <init> (Lcom/jakewharton/mosaic/terminal/StdinReader;Z)V
+	public fun <init> (Lcom/jakewharton/mosaic/terminal/StdinReader;)V
+	public final fun getKittyDisambiguateEscapeCodes ()Z
 	public final fun next ()Lcom/jakewharton/mosaic/terminal/event/Event;
+	public final fun setKittyDisambiguateEscapeCodes (Z)V
 }
 
 public final class com/jakewharton/mosaic/terminal/Tty {
@@ -53,6 +55,36 @@ public final class com/jakewharton/mosaic/terminal/event/FocusEvent : com/jakewh
 	public final fun getFocused ()Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/jakewharton/mosaic/terminal/event/KeyboardEvent : com/jakewharton/mosaic/terminal/event/Event {
+	public static final field Companion Lcom/jakewharton/mosaic/terminal/event/KeyboardEvent$Companion;
+	public static final field ModifierAlt I
+	public static final field ModifierCapsLock I
+	public static final field ModifierCtrl I
+	public static final field ModifierHyper I
+	public static final field ModifierMeta I
+	public static final field ModifierNumLock I
+	public static final field ModifierShift I
+	public static final field ModifierSuper I
+	public fun <init> (II)V
+	public synthetic fun <init> (IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAlt ()Z
+	public final fun getCapsLock ()Z
+	public final fun getCodepoint ()I
+	public final fun getCtrl ()Z
+	public final fun getHyper ()Z
+	public final fun getMeta ()Z
+	public final fun getModifiers ()I
+	public final fun getNumLock ()Z
+	public final fun getShift ()Z
+	public final fun getSuper ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/jakewharton/mosaic/terminal/event/KeyboardEvent$Companion {
 }
 
 public final class com/jakewharton/mosaic/terminal/event/KittyKeyboardQueryEvent : com/jakewharton/mosaic/terminal/event/Event {

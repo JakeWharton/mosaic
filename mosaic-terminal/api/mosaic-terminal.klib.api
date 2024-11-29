@@ -57,6 +57,54 @@ final class com.jakewharton.mosaic.terminal.event/FocusEvent : com.jakewharton.m
     final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/FocusEvent.toString|toString(){}[0]
 }
 
+final class com.jakewharton.mosaic.terminal.event/KeyboardEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/KeyboardEvent|null[0]
+    constructor <init>(kotlin/Int, kotlin/Int = ...) // com.jakewharton.mosaic.terminal.event/KeyboardEvent.<init>|<init>(kotlin.Int;kotlin.Int){}[0]
+
+    final val alt // com.jakewharton.mosaic.terminal.event/KeyboardEvent.alt|{}alt[0]
+        final fun <get-alt>(): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/KeyboardEvent.alt.<get-alt>|<get-alt>(){}[0]
+    final val capsLock // com.jakewharton.mosaic.terminal.event/KeyboardEvent.capsLock|{}capsLock[0]
+        final fun <get-capsLock>(): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/KeyboardEvent.capsLock.<get-capsLock>|<get-capsLock>(){}[0]
+    final val codepoint // com.jakewharton.mosaic.terminal.event/KeyboardEvent.codepoint|{}codepoint[0]
+        final fun <get-codepoint>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/KeyboardEvent.codepoint.<get-codepoint>|<get-codepoint>(){}[0]
+    final val ctrl // com.jakewharton.mosaic.terminal.event/KeyboardEvent.ctrl|{}ctrl[0]
+        final fun <get-ctrl>(): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/KeyboardEvent.ctrl.<get-ctrl>|<get-ctrl>(){}[0]
+    final val hyper // com.jakewharton.mosaic.terminal.event/KeyboardEvent.hyper|{}hyper[0]
+        final fun <get-hyper>(): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/KeyboardEvent.hyper.<get-hyper>|<get-hyper>(){}[0]
+    final val meta // com.jakewharton.mosaic.terminal.event/KeyboardEvent.meta|{}meta[0]
+        final fun <get-meta>(): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/KeyboardEvent.meta.<get-meta>|<get-meta>(){}[0]
+    final val modifiers // com.jakewharton.mosaic.terminal.event/KeyboardEvent.modifiers|{}modifiers[0]
+        final fun <get-modifiers>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/KeyboardEvent.modifiers.<get-modifiers>|<get-modifiers>(){}[0]
+    final val numLock // com.jakewharton.mosaic.terminal.event/KeyboardEvent.numLock|{}numLock[0]
+        final fun <get-numLock>(): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/KeyboardEvent.numLock.<get-numLock>|<get-numLock>(){}[0]
+    final val shift // com.jakewharton.mosaic.terminal.event/KeyboardEvent.shift|{}shift[0]
+        final fun <get-shift>(): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/KeyboardEvent.shift.<get-shift>|<get-shift>(){}[0]
+    final val super // com.jakewharton.mosaic.terminal.event/KeyboardEvent.super|{}super[0]
+        final fun <get-super>(): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/KeyboardEvent.super.<get-super>|<get-super>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/KeyboardEvent.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal.event/KeyboardEvent.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/KeyboardEvent.toString|toString(){}[0]
+
+    final object Companion { // com.jakewharton.mosaic.terminal.event/KeyboardEvent.Companion|null[0]
+        final const val ModifierAlt // com.jakewharton.mosaic.terminal.event/KeyboardEvent.Companion.ModifierAlt|{}ModifierAlt[0]
+            final fun <get-ModifierAlt>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/KeyboardEvent.Companion.ModifierAlt.<get-ModifierAlt>|<get-ModifierAlt>(){}[0]
+        final const val ModifierCapsLock // com.jakewharton.mosaic.terminal.event/KeyboardEvent.Companion.ModifierCapsLock|{}ModifierCapsLock[0]
+            final fun <get-ModifierCapsLock>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/KeyboardEvent.Companion.ModifierCapsLock.<get-ModifierCapsLock>|<get-ModifierCapsLock>(){}[0]
+        final const val ModifierCtrl // com.jakewharton.mosaic.terminal.event/KeyboardEvent.Companion.ModifierCtrl|{}ModifierCtrl[0]
+            final fun <get-ModifierCtrl>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/KeyboardEvent.Companion.ModifierCtrl.<get-ModifierCtrl>|<get-ModifierCtrl>(){}[0]
+        final const val ModifierHyper // com.jakewharton.mosaic.terminal.event/KeyboardEvent.Companion.ModifierHyper|{}ModifierHyper[0]
+            final fun <get-ModifierHyper>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/KeyboardEvent.Companion.ModifierHyper.<get-ModifierHyper>|<get-ModifierHyper>(){}[0]
+        final const val ModifierMeta // com.jakewharton.mosaic.terminal.event/KeyboardEvent.Companion.ModifierMeta|{}ModifierMeta[0]
+            final fun <get-ModifierMeta>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/KeyboardEvent.Companion.ModifierMeta.<get-ModifierMeta>|<get-ModifierMeta>(){}[0]
+        final const val ModifierNumLock // com.jakewharton.mosaic.terminal.event/KeyboardEvent.Companion.ModifierNumLock|{}ModifierNumLock[0]
+            final fun <get-ModifierNumLock>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/KeyboardEvent.Companion.ModifierNumLock.<get-ModifierNumLock>|<get-ModifierNumLock>(){}[0]
+        final const val ModifierShift // com.jakewharton.mosaic.terminal.event/KeyboardEvent.Companion.ModifierShift|{}ModifierShift[0]
+            final fun <get-ModifierShift>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/KeyboardEvent.Companion.ModifierShift.<get-ModifierShift>|<get-ModifierShift>(){}[0]
+        final const val ModifierSuper // com.jakewharton.mosaic.terminal.event/KeyboardEvent.Companion.ModifierSuper|{}ModifierSuper[0]
+            final fun <get-ModifierSuper>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/KeyboardEvent.Companion.ModifierSuper.<get-ModifierSuper>|<get-ModifierSuper>(){}[0]
+    }
+}
+
 final class com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent|null[0]
     constructor <init>(kotlin/Int) // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent.<init>|<init>(kotlin.Int){}[0]
 
@@ -196,7 +244,11 @@ final class com.jakewharton.mosaic.terminal/StdinReader : kotlin/AutoCloseable {
 }
 
 final class com.jakewharton.mosaic.terminal/TerminalParser { // com.jakewharton.mosaic.terminal/TerminalParser|null[0]
-    constructor <init>(com.jakewharton.mosaic.terminal/StdinReader, kotlin/Boolean) // com.jakewharton.mosaic.terminal/TerminalParser.<init>|<init>(com.jakewharton.mosaic.terminal.StdinReader;kotlin.Boolean){}[0]
+    constructor <init>(com.jakewharton.mosaic.terminal/StdinReader) // com.jakewharton.mosaic.terminal/TerminalParser.<init>|<init>(com.jakewharton.mosaic.terminal.StdinReader){}[0]
+
+    final var kittyDisambiguateEscapeCodes // com.jakewharton.mosaic.terminal/TerminalParser.kittyDisambiguateEscapeCodes|{}kittyDisambiguateEscapeCodes[0]
+        final fun <get-kittyDisambiguateEscapeCodes>(): kotlin/Boolean // com.jakewharton.mosaic.terminal/TerminalParser.kittyDisambiguateEscapeCodes.<get-kittyDisambiguateEscapeCodes>|<get-kittyDisambiguateEscapeCodes>(){}[0]
+        final fun <set-kittyDisambiguateEscapeCodes>(kotlin/Boolean) // com.jakewharton.mosaic.terminal/TerminalParser.kittyDisambiguateEscapeCodes.<set-kittyDisambiguateEscapeCodes>|<set-kittyDisambiguateEscapeCodes>(kotlin.Boolean){}[0]
 
     final fun next(): com.jakewharton.mosaic.terminal.event/Event // com.jakewharton.mosaic.terminal/TerminalParser.next|next(){}[0]
 }

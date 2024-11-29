@@ -10,7 +10,7 @@ import kotlin.test.Test
 @OptIn(ExperimentalStdlibApi::class)
 class TerminalParserCsiKittyKeyboardQueryEventTest {
 	private val writer = Tty.stdinWriter()
-	private val parser = TerminalParser(writer.reader, true)
+	private val parser = TerminalParser(writer.reader)
 
 	@AfterTest fun after() {
 		writer.close()
@@ -35,6 +35,13 @@ class TerminalParserCsiKittyKeyboardQueryEventTest {
 		writer.writeHex("1b5b3f75")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3f75".hexToByteArray()),
+		)
+	}
+
+	@Test fun flagsNonDigit() {
+		writer.writeHex("1b5b3f312b2075")
+		assertThat(parser.next()).isEqualTo(
+			UnknownEvent("1b5b3f312b2075".hexToByteArray()),
 		)
 	}
 }
