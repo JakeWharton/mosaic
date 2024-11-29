@@ -58,7 +58,7 @@ final class com.jakewharton.mosaic.terminal.event/FocusEvent : com.jakewharton.m
 }
 
 final class com.jakewharton.mosaic.terminal.event/KeyboardEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/KeyboardEvent|null[0]
-    constructor <init>(kotlin/Int, kotlin/Int = ...) // com.jakewharton.mosaic.terminal.event/KeyboardEvent.<init>|<init>(kotlin.Int;kotlin.Int){}[0]
+    constructor <init>(kotlin/Int, kotlin/Int = ..., kotlin/Int = ...) // com.jakewharton.mosaic.terminal.event/KeyboardEvent.<init>|<init>(kotlin.Int;kotlin.Int;kotlin.Int){}[0]
 
     final val alt // com.jakewharton.mosaic.terminal.event/KeyboardEvent.alt|{}alt[0]
         final fun <get-alt>(): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/KeyboardEvent.alt.<get-alt>|<get-alt>(){}[0]
@@ -68,6 +68,8 @@ final class com.jakewharton.mosaic.terminal.event/KeyboardEvent : com.jakewharto
         final fun <get-codepoint>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/KeyboardEvent.codepoint.<get-codepoint>|<get-codepoint>(){}[0]
     final val ctrl // com.jakewharton.mosaic.terminal.event/KeyboardEvent.ctrl|{}ctrl[0]
         final fun <get-ctrl>(): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/KeyboardEvent.ctrl.<get-ctrl>|<get-ctrl>(){}[0]
+    final val eventType // com.jakewharton.mosaic.terminal.event/KeyboardEvent.eventType|{}eventType[0]
+        final fun <get-eventType>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/KeyboardEvent.eventType.<get-eventType>|<get-eventType>(){}[0]
     final val hyper // com.jakewharton.mosaic.terminal.event/KeyboardEvent.hyper|{}hyper[0]
         final fun <get-hyper>(): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/KeyboardEvent.hyper.<get-hyper>|<get-hyper>(){}[0]
     final val meta // com.jakewharton.mosaic.terminal.event/KeyboardEvent.meta|{}meta[0]

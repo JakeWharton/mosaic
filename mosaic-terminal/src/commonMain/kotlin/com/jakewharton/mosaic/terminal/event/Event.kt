@@ -25,6 +25,7 @@ public class UnknownEvent(
 public class KeyboardEvent(
 	public val codepoint: Int,
 	public val modifiers: Int = 0,
+	public val eventType: Int = 1,
 ) : Event {
 	public val shift: Boolean get() = (modifiers and ModifierShift) != 0
 	public val alt: Boolean get() = (modifiers and ModifierAlt) != 0
@@ -38,6 +39,12 @@ public class KeyboardEvent(
 	override fun toString(): String = buildString {
 		append(__TYPE__)
 		append('(')
+		when (eventType) {
+			1 -> append("Press")
+			2 -> append("Repeat")
+			3 -> append("Release")
+		}
+		append(' ')
 		if (shift) append("Shift+")
 		if (alt) append("Alt+")
 		if (ctrl) append("Ctrl+")

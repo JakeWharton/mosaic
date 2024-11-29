@@ -408,9 +408,10 @@ public class TerminalParser(
 						val modifiersDelimiter = buffer.indexOfOrDefault(';'.code.toByte(), modifiersStart, finalIndex, finalIndex)
 						val modifiersEnd = buffer.indexOfOrDefault(':'.code.toByte(), modifiersStart, modifiersDelimiter, modifiersDelimiter)
 						val modifiers = buffer.parseIntDigits(modifiersStart, modifiersEnd, orElse = { break@error }) - 1
+						val eventType = buffer.parseIntDigits(modifiersEnd + 1, modifiersDelimiter, orElse = { 1 })
 
 						// TODO parse everything else!
-						return KeyboardEvent(codepoint, modifiers)
+						return KeyboardEvent(codepoint, modifiers, eventType)
 					}
 				}
 
@@ -450,8 +451,8 @@ public class TerminalParser(
 
 	private fun parseCsiLegacyKeyboard(buffer: ByteArray, start: Int, end: Int, codepoint: Int): Event {
 		// CSI {ABCDEFHPQS}
-		// CSI 1 ; modifier {ABCDEFHPQS}
-		// https://sw.kovidgoyal.net/kitty/keyboard-protocol/#legacy-key-event-encoding
+		// CSI 1 ; modifier:event-type {ABCDEFHPQS}
+		//  https://sw.kovidgoyal.net/kitty/keyboard-protocol/#legacy-key-event-encoding
 
 		val finalIndex = end - 1
 		val b3Index = start + 2
@@ -464,8 +465,13 @@ public class TerminalParser(
 			buffer[b3Index] == '1'.code.toByte() &&
 			buffer[start + 3] == ';'.code.toByte()
 		) {
-			val modifiers = buffer.parseIntDigits(start + 4, finalIndex, orElse = { break@error }) - 1
-			return KeyboardEvent(codepoint, modifiers)
+			val b5Index = start + 4
+			val modifiersDelimiter = buffer.indexOfOrDefault(';'.code.toByte(), b5Index, finalIndex, finalIndex)
+			val modifiersEnd = buffer.indexOfOrDefault(':'.code.toByte(), b5Index, modifiersDelimiter, modifiersDelimiter)
+			val modifiers = buffer.parseIntDigits(b5Index, modifiersEnd, orElse = { break@error }) - 1
+			val eventType = buffer.parseIntDigits(modifiersEnd + 1, modifiersDelimiter, orElse = { 1 })
+
+			return KeyboardEvent(codepoint, modifiers, eventType)
 		}
 
 		return UnknownEvent(buffer.copyOfRange(start, end))

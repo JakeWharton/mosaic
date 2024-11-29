@@ -67,13 +67,14 @@ public final class com/jakewharton/mosaic/terminal/event/KeyboardEvent : com/jak
 	public static final field ModifierNumLock I
 	public static final field ModifierShift I
 	public static final field ModifierSuper I
-	public fun <init> (II)V
-	public synthetic fun <init> (IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (III)V
+	public synthetic fun <init> (IIIILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAlt ()Z
 	public final fun getCapsLock ()Z
 	public final fun getCodepoint ()I
 	public final fun getCtrl ()Z
+	public final fun getEventType ()I
 	public final fun getHyper ()Z
 	public final fun getMeta ()Z
 	public final fun getModifiers ()I
