@@ -33,7 +33,7 @@ mordant-core = { module = "com.github.ajalt.mordant:mordant-core", version.ref =
 mordant-jvmJna = { module = "com.github.ajalt.mordant:mordant-jvm-jna", version.ref = "mordant" }
 
 jansi = "org.fusesource.jansi:jansi:2.4.1"
-clikt = "com.github.ajalt.clikt:clikt:5.0.1"
+clikt = "com.github.ajalt.clikt:clikt:5.0.2"
 codepoints = "de.cketti.unicode:kotlin-codepoints:0.9.0"
 finalizationHook = "com.jakewharton.finalization:finalization-hook:0.1.0"
 
