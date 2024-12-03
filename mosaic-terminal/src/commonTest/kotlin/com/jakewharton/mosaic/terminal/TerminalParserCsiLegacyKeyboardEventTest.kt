@@ -68,42 +68,42 @@ class TerminalParserCsiLegacyKeyboardEventTest {
 
 	@Test fun modifierShiftUp() {
 		writer.writeHex("1b5b313b3241")
-		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, ModifierShift))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierShift))
 	}
 
 	@Test fun modifierAltUp() {
 		writer.writeHex("1b5b313b3341")
-		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, ModifierAlt))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierAlt))
 	}
 
 	@Test fun modifierCtrlUp() {
 		writer.writeHex("1b5b313b3541")
-		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, ModifierCtrl))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierCtrl))
 	}
 
 	@Test fun modifierSuperUp() {
 		writer.writeHex("1b5b313b3941")
-		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, ModifierSuper))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierSuper))
 	}
 
 	@Test fun modifierHyperUp() {
 		writer.writeHex("1b5b313b313741")
-		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, ModifierHyper))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierHyper))
 	}
 
 	@Test fun modifierMetaUp() {
 		writer.writeHex("1b5b313b333341")
-		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, ModifierMeta))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierMeta))
 	}
 
 	@Test fun modifierCapsLockUp() {
 		writer.writeHex("1b5b313b363541")
-		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, ModifierCapsLock))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierCapsLock))
 	}
 
 	@Test fun modifierNumLockUp() {
 		writer.writeHex("1b5b313b31323941")
-		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, ModifierNumLock))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierNumLock))
 	}
 
 	@Test fun non1p0() {

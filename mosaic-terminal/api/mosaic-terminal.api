@@ -59,6 +59,9 @@ public final class com/jakewharton/mosaic/terminal/event/FocusEvent : com/jakewh
 
 public final class com/jakewharton/mosaic/terminal/event/KeyboardEvent : com/jakewharton/mosaic/terminal/event/Event {
 	public static final field Companion Lcom/jakewharton/mosaic/terminal/event/KeyboardEvent$Companion;
+	public static final field EventTypePress I
+	public static final field EventTypeRelease I
+	public static final field EventTypeRepeat I
 	public static final field ModifierAlt I
 	public static final field ModifierCapsLock I
 	public static final field ModifierCtrl I
@@ -67,10 +70,11 @@ public final class com/jakewharton/mosaic/terminal/event/KeyboardEvent : com/jak
 	public static final field ModifierNumLock I
 	public static final field ModifierShift I
 	public static final field ModifierSuper I
-	public fun <init> (III)V
-	public synthetic fun <init> (IIIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (IIIIILjava/lang/String;)V
+	public synthetic fun <init> (IIIIILjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAlt ()Z
+	public final fun getBaseLayoutCodepoint ()I
 	public final fun getCapsLock ()Z
 	public final fun getCodepoint ()I
 	public final fun getCtrl ()Z
@@ -80,7 +84,9 @@ public final class com/jakewharton/mosaic/terminal/event/KeyboardEvent : com/jak
 	public final fun getModifiers ()I
 	public final fun getNumLock ()Z
 	public final fun getShift ()Z
+	public final fun getShiftedCodepoint ()I
 	public final fun getSuper ()Z
+	public final fun getText ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }

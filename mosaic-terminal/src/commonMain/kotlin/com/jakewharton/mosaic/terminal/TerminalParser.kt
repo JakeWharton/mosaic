@@ -99,7 +99,7 @@ public class TerminalParser(
 				0x5F -> return parseApc(buffer, start, limit)
 				else -> {
 					offset = start + 2
-					return KeyboardEvent(b2, KeyboardEvent.ModifierAlt)
+					return KeyboardEvent(b2, modifiers = KeyboardEvent.ModifierAlt)
 				}
 			}
 		} else {
@@ -404,14 +404,62 @@ public class TerminalParser(
 						val codepointEnd = buffer.indexOfOrDefault(':'.code.toByte(), b3Index, codepointDelimiter, codepointDelimiter)
 						val codepoint = buffer.parseIntDigits(b3Index, codepointEnd, orElse = { break@error })
 
-						val modifiersStart = codepointDelimiter + 1
-						val modifiersDelimiter = buffer.indexOfOrDefault(';'.code.toByte(), modifiersStart, finalIndex, finalIndex)
-						val modifiersEnd = buffer.indexOfOrDefault(':'.code.toByte(), modifiersStart, modifiersDelimiter, modifiersDelimiter)
-						val modifiers = buffer.parseIntDigits(modifiersStart, modifiersEnd, orElse = { break@error }) - 1
-						val eventType = buffer.parseIntDigits(modifiersEnd + 1, modifiersDelimiter, orElse = { 1 })
+						var shiftedCodepoint = -1
+						var baseLayoutCodepoint = -1
+						var modifiers = 0
+						var eventType = KeyboardEvent.EventTypePress
+						var text: String? = null
 
-						// TODO parse everything else!
-						return KeyboardEvent(codepoint, modifiers, eventType)
+						if (codepointEnd != codepointDelimiter) {
+							val shiftedCodepointStart = codepointEnd + 1
+							val shiftedCodepointEnd = buffer.indexOfOrDefault(':'.code.toByte(), shiftedCodepointStart, codepointDelimiter, codepointDelimiter)
+							if (shiftedCodepointEnd != shiftedCodepointStart) {
+								shiftedCodepoint = buffer.parseIntDigits(shiftedCodepointStart, shiftedCodepointEnd, orElse = { break@error })
+							}
+							if (shiftedCodepointEnd != codepointDelimiter) {
+								val baseLayoutCodepointStart = shiftedCodepointEnd + 1
+								baseLayoutCodepoint = buffer.parseIntDigits(baseLayoutCodepointStart, codepointDelimiter, orElse = { break@error })
+							}
+						}
+
+						if (codepointDelimiter != finalIndex) {
+							val modifiersStart = codepointDelimiter + 1
+							val modifiersDelimiter = buffer.indexOfOrDefault(';'.code.toByte(), modifiersStart, finalIndex, finalIndex)
+							val modifiersEnd = buffer.indexOfOrDefault(':'.code.toByte(), modifiersStart, modifiersDelimiter, modifiersDelimiter)
+							if (modifiersEnd != modifiersStart) {
+								modifiers = buffer.parseIntDigits(modifiersStart, modifiersEnd, orElse = { break@error }) - 1
+
+								if (modifiersEnd != modifiersDelimiter) {
+									val eventTypeStart = modifiersEnd + 1
+									eventType = buffer.parseIntDigits(eventTypeStart, modifiersDelimiter, orElse = { break@error })
+								}
+							}
+
+							if (modifiersDelimiter != finalIndex) {
+								val textCodepoints = StringBuilder()
+								var textCodepointStart = modifiersDelimiter + 1
+								while (true) {
+									val textCodepointEnd = buffer.indexOfOrDefault(':'.code.toByte(), textCodepointStart, finalIndex, finalIndex)
+									val textCodepoint = buffer.parseIntDigits(textCodepointStart, textCodepointEnd, orElse = { break@error })
+									textCodepoints.appendCodepoint(textCodepoint)
+									if (textCodepointEnd == finalIndex) {
+										break
+									}
+									textCodepointStart = textCodepointEnd + 1
+								}
+
+								text = textCodepoints.toString()
+							}
+						}
+
+						return KeyboardEvent(
+							codepoint,
+							shiftedCodepoint,
+							baseLayoutCodepoint,
+							modifiers,
+							eventType,
+							text,
+						)
 					}
 				}
 
@@ -471,7 +519,7 @@ public class TerminalParser(
 			val modifiers = buffer.parseIntDigits(b5Index, modifiersEnd, orElse = { break@error }) - 1
 			val eventType = buffer.parseIntDigits(modifiersEnd + 1, modifiersDelimiter, orElse = { 1 })
 
-			return KeyboardEvent(codepoint, modifiers, eventType)
+			return KeyboardEvent(codepoint, modifiers = modifiers, eventType = eventType)
 		}
 
 		return UnknownEvent(buffer.copyOfRange(start, end))

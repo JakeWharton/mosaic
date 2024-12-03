@@ -24,8 +24,11 @@ public class UnknownEvent(
 @Poko
 public class KeyboardEvent(
 	public val codepoint: Int,
+	public val shiftedCodepoint: Int = -1,
+	public val baseLayoutCodepoint: Int = -1,
 	public val modifiers: Int = 0,
-	public val eventType: Int = 1,
+	public val eventType: Int = EventTypePress,
+	public val text: String? = null,
 ) : Event {
 	public val shift: Boolean get() = (modifiers and ModifierShift) != 0
 	public val alt: Boolean get() = (modifiers and ModifierAlt) != 0
@@ -36,28 +39,6 @@ public class KeyboardEvent(
 	public val capsLock: Boolean get() = (modifiers and ModifierCapsLock) != 0
 	public val numLock: Boolean get() = (modifiers and ModifierNumLock) != 0
 
-	override fun toString(): String = buildString {
-		append(__TYPE__)
-		append('(')
-		when (eventType) {
-			1 -> append("Press")
-			2 -> append("Repeat")
-			3 -> append("Release")
-		}
-		append(' ')
-		if (shift) append("Shift+")
-		if (alt) append("Alt+")
-		if (ctrl) append("Ctrl+")
-		if (`super`) append("Super+")
-		if (hyper) append("Hyper+")
-		if (meta) append("Meta+")
-		if (capsLock) append("CapsLock+")
-		if (numLock) append("NumLock+")
-		append("0x")
-		append(codepoint.toString(16).uppercase().padStart(2, '0'))
-		append(')')
-	}
-
 	public companion object {
 		public const val ModifierShift: Int = 0b1
 		public const val ModifierAlt: Int = 0b10
@@ -67,6 +48,10 @@ public class KeyboardEvent(
 		public const val ModifierMeta: Int = 0b100000
 		public const val ModifierCapsLock: Int = 0b1000000
 		public const val ModifierNumLock: Int = 0b10000000
+
+		public const val EventTypePress: Int = 1
+		public const val EventTypeRepeat: Int = 2
+		public const val EventTypeRelease: Int = 3
 
 		// These codepoints are defined by Kitty in the Unicode private space.
 		internal const val Insert = 57348

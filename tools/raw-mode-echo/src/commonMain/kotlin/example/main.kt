@@ -119,11 +119,14 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 						}
 						Mode.Event -> {
 							val parser = TerminalParser(reader)
-							val ctrlC = KeyboardEvent(0x63, ModifierCtrl)
 							while (job.isActive) {
 								val event = parser.next()
 								inputs.trySend(event.toString())
-								if (event == ctrlC) {
+
+								if (event is KeyboardEvent &&
+									event.codepoint == 0x63 &&
+									event.modifiers == ModifierCtrl
+								) {
 									break
 								}
 							}
