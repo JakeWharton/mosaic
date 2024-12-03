@@ -27,6 +27,10 @@ const val s = " "
 
 const val TestChar = 'X'
 
+fun ansiMoveCursorUp(lines: Int): String {
+	return buildString { ansiMoveCursorUp(lines) }
+}
+
 fun String.replaceLineEndingsWithCRLF(): String {
 	return this.replace("\n", "\r\n")
 }

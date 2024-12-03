@@ -7,7 +7,7 @@ New:
 - Nothing yet!
 
 Changed:
-- Nothing yet!
+- An empty line is not added at the end of the output.
 
 Fixed:
 - Nothing yet!

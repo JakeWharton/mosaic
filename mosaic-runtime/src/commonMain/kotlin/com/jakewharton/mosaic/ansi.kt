@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package com.jakewharton.mosaic
 
 import com.github.ajalt.mordant.rendering.AnsiLevel as MordantAnsiLevel
@@ -5,15 +7,17 @@ import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.Color
 import kotlin.math.roundToInt
 
-private const val ESC = "\u001B"
+internal const val ESC = "\u001B"
 internal const val CSI = "$ESC["
 
 internal const val ansiBeginSynchronizedUpdate = "$CSI?2026h"
 internal const val ansiEndSynchronizedUpdate = "$CSI?2026l"
 
+internal const val ansiClearLineAfterCursor = "${CSI}K"
+internal const val ansiMoveCursorToFirstColumn = "${CSI}0G"
+internal const val ansiClearAllAfterCursor = "${CSI}0J"
+
 internal const val ansiReset = "${CSI}0"
-internal const val clearLine = "${CSI}K"
-internal const val cursorUp = "${CSI}F"
 
 internal const val cursorHide = "$CSI?25l"
 internal const val cursorShow = "$CSI?25h"
@@ -31,6 +35,12 @@ internal const val ansiBgColorOffset = 10
 
 internal const val ansiSelectorColor256 = 5
 internal const val ansiSelectorColorRgb = 2
+
+internal inline fun StringBuilder.ansiMoveCursorUp(lines: Int) {
+	append(CSI)
+	append(lines)
+	append("A")
+}
 
 internal fun MordantAnsiLevel.toMosaicAnsiLevel(): AnsiLevel {
 	return when (this) {

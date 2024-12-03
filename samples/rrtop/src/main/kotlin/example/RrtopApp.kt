@@ -11,7 +11,7 @@ import com.jakewharton.mosaic.layout.fillMaxWidth
 import com.jakewharton.mosaic.layout.height
 import com.jakewharton.mosaic.layout.onKeyEvent
 import com.jakewharton.mosaic.layout.padding
-import com.jakewharton.mosaic.layout.width
+import com.jakewharton.mosaic.layout.size
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.text.SpanStyle
 import com.jakewharton.mosaic.text.buildAnnotatedString
@@ -32,8 +32,7 @@ fun RrtopApp(rrtopViewModel: RrtopViewModel, colorsPalette: RrtopColorsPalette) 
 	CompositionLocalProvider(LocalRrtopColorsPalette provides colorsPalette) {
 		Box(
 			modifier = Modifier
-				.width(terminal.size.width)
-				.height(terminal.size.height - 1) // subtraction of one is necessary, because there is a line with a cursor at the bottom, which moves up all the content
+				.size(terminal.size)
 				.background(LocalRrtopColorsPalette.current.mainBg)
 				.onKeyEvent {
 					when (it) {
