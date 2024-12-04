@@ -26,6 +26,10 @@ kotlin {
 	}
 
 	sourceSets {
+		configureEach {
+			languageSettings.optIn('kotlin.contracts.ExperimentalContracts')
+		}
+
 		commonTest {
 			dependencies {
 				implementation libs.kotlin.test

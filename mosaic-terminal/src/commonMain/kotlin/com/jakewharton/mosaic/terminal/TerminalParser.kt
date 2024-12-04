@@ -27,7 +27,30 @@ public class TerminalParser(
 	private var offset = 0
 	private var limit = 0
 
+	/**
+	 * Indicate whether Kitty's
+	 * [escape code disambiguation](https://sw.kovidgoyal.net/kitty/keyboard-protocol/#disambiguate-escape-codes)
+	 * progressive-enhancement is enabled.
+	 *
+	 * Normally, when a bare escape (`0x1b`) is encountered as the final byte read from `stdinReader`,
+	 * it is not possible to disambiguate this as the start of an escape sequence or as a bare
+	 * <kbd>Esc</kbd> key press. The parser will perform a fast disambiguation read to look for
+	 * additional bytes to try and guess. Setting this property to true eliminates the disambiguation
+	 * read under the assumption that any <kbd>Esc</kbd> key press will be encoded using the Kitty
+	 * keyboard protocol.
+	 */
 	public var kittyDisambiguateEscapeCodes: Boolean = false
+
+	/**
+	 * Indicate whether XTerm's
+	 * [UTF-8 extended mouse](https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h3-Extended-coordinates)
+	 * is enabled (mode 1005).
+	 *
+	 * Normally, mouse events use three bytes for the flags, x, and y coordinate values. In UTF-8
+	 * mode, the number of bytes switches to be variable-length as the values are now UTF-8 encoded,
+	 * and setting this property to true correctly changes the parser to consume the values as UTF-8.
+	 */
+	public var xtermExtendedUtf8Mouse: Boolean = false
 
 	public fun next(): Event {
 		val buffer = buffer
@@ -144,38 +167,18 @@ public class TerminalParser(
 
 			else -> {
 				// TODO Non-UTF-8 support?
-				// TODO validate continuation bytes?
-				val codepoint = when {
-					b1 and 0b10000000 == 0 -> {
-						offset = b2Index
-						b1
-					}
-					b1 and 0b11100000 == 0b11000000 -> {
-						if (b2Index == limit) return null
-						offset = start + 2
-						b1.and(0b00011111).shl(6) or
-							buffer[b2Index].toInt().and(0b00111111)
-					}
-					b1 and 0b11110000 == 0b11100000 -> {
-						val b3Index = start + 2
-						if (b3Index >= limit) return null
-						offset = start + 3
-						b1.and(0b00001111).shl(12) or
-							buffer[b2Index].toInt().and(0b00111111).shl(6) or
-							buffer[b3Index].toInt().and(0b00111111)
-					}
-					b1 and 0b11111000 == 0b11110000 -> {
-						val b4Index = start + 3
-						if (b4Index >= limit) return null
-						offset = start + 4
-						b1.and(0b00000111).shl(18) or
-							buffer[b2Index].toInt().and(0b00111111).shl(12) or
-							buffer[start + 2].toInt().and(0b00111111).shl(6) or
-							buffer[b4Index].toInt().and(0b00111111)
-					}
-					else -> TODO("Invalid UTF-8")
-				}
 				// TODO multi-codepoint grapheme support
+				val codepoint = buffer.parseUtf8(
+					start,
+					limit,
+					onUnderflow = { return null },
+					onSuccess = { offset = it },
+					onError = {
+						val nextStart = start + 1
+						offset = nextStart
+						return UnknownEvent(buffer.copyOfRange(start, nextStart))
+					},
+				)
 				return KeyboardEvent(codepoint)
 			}
 		}
@@ -269,27 +272,75 @@ public class TerminalParser(
 				'm'.code,
 				'M'.code,
 				-> {
-					if (b3Index == finalIndex) {
-						// TODO If we are in UTF-8 mode it is at minimum 3 but could be up to 6.
-						val trailingEnd = end + 3
-						if (trailingEnd > limit) return null
-						offset = trailingEnd
-						break@error
+					val cbStart = start + 3
+					val cb: Int
+					val cx: Int
+					val cy: Int
+
+					val release = buffer[finalIndex].toInt() == 'm'.code
+
+					if (b3Index == finalIndex && !release) {
+						// CSI M Cb Cx Cy
+
+						if (!xtermExtendedUtf8Mouse) {
+							if (end + 3 > limit) return null
+							cb = buffer[cbStart].toInt() - 0x20
+							cx = buffer[start + 4].toInt() - 0x20
+							cy = buffer[start + 5].toInt() - 0x20
+							offset = start + 6
+						} else {
+							val cxStart: Int
+							cb = buffer.parseUtf8(
+								cbStart,
+								limit,
+								onUnderflow = { return null },
+								onSuccess = { cxStart = it },
+								onError = {
+									offset = cbStart
+									break@error
+								},
+							) - 0x20
+							val cyStart: Int
+							cx = buffer.parseUtf8(
+								cxStart,
+								limit,
+								onUnderflow = { return null },
+								onSuccess = { cyStart = it },
+								onError = {
+									offset = cxStart + 1
+									break@error
+								},
+							) - 0x20
+							cy = buffer.parseUtf8(
+								cyStart,
+								limit,
+								onUnderflow = { return null },
+								onSuccess = { offset = it },
+								onError = {
+									offset = cyStart + 1
+									break@error
+								},
+							) - 0x20
+						}
+					} else {
+						// CSI < Pb ; Px ; Py {Mm}
+
+						if (buffer[b3Index].toInt() != '<'.code) {
+							break@error
+						}
+
+						val cbEnd = buffer.indexOfOrElse(';'.code.toByte(), cbStart, finalIndex, orElse = { break@error })
+						cb = buffer.parseIntDigits(cbStart, cbEnd, orElse = { break@error })
+
+						val cxStart = cbEnd + 1
+						val cxEnd = buffer.indexOfOrElse(';'.code.toByte(), cxStart, finalIndex, orElse = { break@error })
+						cx = buffer.parseIntDigits(cxStart, cxEnd, orElse = { break@error })
+
+						val cyStart = cxEnd + 1
+						cy = buffer.parseIntDigits(cyStart, finalIndex, orElse = { break@error })
 					}
-					if (buffer[b3Index].toInt() != '<'.code) {
-						break@error
-					}
 
-					val delim1 = buffer.indexOf(';'.code.toByte(), start + 3, finalIndex)
-					val delim2 = buffer.indexOf(';'.code.toByte(), delim1 + 1, finalIndex)
-
-					val buttonBits = buffer.parseIntDigits(start = start + 3, end = delim1)
-
-					// Incoming values are 1-based.
-					val x = buffer.parseIntDigits(delim1 + 1, delim2) - 1
-					val y = buffer.parseIntDigits(delim2 + 1, finalIndex) - 1
-
-					val button = when (buttonBits and 0b11000011) {
+					val button = when (cb and 0b11000011) {
 						0 -> MouseEvent.Button.Left
 						1 -> MouseEvent.Button.Middle
 						2 -> MouseEvent.Button.Right
@@ -302,20 +353,21 @@ public class TerminalParser(
 						131 -> MouseEvent.Button.Button11
 						else -> break@error
 					}
-					val motion = (buttonBits and 0b00100000) != 0
+					val motion = (cb and 0b00100000) != 0
 					val type = when {
 						motion && button != MouseEvent.Button.None -> MouseEvent.Type.Drag
 						motion && button == MouseEvent.Button.None -> MouseEvent.Type.Motion
-						buffer[finalIndex].toInt() == 'm'.code -> MouseEvent.Type.Release
+						release -> MouseEvent.Type.Release
 						else -> MouseEvent.Type.Press
 					}
-					val shift = (buttonBits and 0b00000100) != 0
-					val alt = (buttonBits and 0b00001000) != 0
-					val ctrl = (buttonBits and 0b00010000) != 0
+					val shift = (cb and 0b00000100) != 0
+					val alt = (cb and 0b00001000) != 0
+					val ctrl = (cb and 0b00010000) != 0
 
 					return MouseEvent(
-						x = x,
-						y = y,
+						// Incoming coordinates are 1-based.
+						x = cx - 1,
+						y = cy - 1,
 						type = type,
 						button = button,
 						shift = shift,

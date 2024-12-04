@@ -263,6 +263,9 @@ final class com.jakewharton.mosaic.terminal/TerminalParser { // com.jakewharton.
     final var kittyDisambiguateEscapeCodes // com.jakewharton.mosaic.terminal/TerminalParser.kittyDisambiguateEscapeCodes|{}kittyDisambiguateEscapeCodes[0]
         final fun <get-kittyDisambiguateEscapeCodes>(): kotlin/Boolean // com.jakewharton.mosaic.terminal/TerminalParser.kittyDisambiguateEscapeCodes.<get-kittyDisambiguateEscapeCodes>|<get-kittyDisambiguateEscapeCodes>(){}[0]
         final fun <set-kittyDisambiguateEscapeCodes>(kotlin/Boolean) // com.jakewharton.mosaic.terminal/TerminalParser.kittyDisambiguateEscapeCodes.<set-kittyDisambiguateEscapeCodes>|<set-kittyDisambiguateEscapeCodes>(kotlin.Boolean){}[0]
+    final var xtermExtendedUtf8Mouse // com.jakewharton.mosaic.terminal/TerminalParser.xtermExtendedUtf8Mouse|{}xtermExtendedUtf8Mouse[0]
+        final fun <get-xtermExtendedUtf8Mouse>(): kotlin/Boolean // com.jakewharton.mosaic.terminal/TerminalParser.xtermExtendedUtf8Mouse.<get-xtermExtendedUtf8Mouse>|<get-xtermExtendedUtf8Mouse>(){}[0]
+        final fun <set-xtermExtendedUtf8Mouse>(kotlin/Boolean) // com.jakewharton.mosaic.terminal/TerminalParser.xtermExtendedUtf8Mouse.<set-xtermExtendedUtf8Mouse>|<set-xtermExtendedUtf8Mouse>(kotlin.Boolean){}[0]
 
     final fun next(): com.jakewharton.mosaic.terminal.event/Event // com.jakewharton.mosaic.terminal/TerminalParser.next|next(){}[0]
 }

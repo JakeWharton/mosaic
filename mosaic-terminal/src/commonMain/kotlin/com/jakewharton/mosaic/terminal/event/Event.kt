@@ -170,10 +170,10 @@ internal data class MouseEvent(
 	val x: Int,
 	val y: Int,
 	val type: Type,
-	val button: Button,
-	val shift: Boolean,
-	val alt: Boolean,
-	val ctrl: Boolean,
+	val button: Button = Button.None,
+	val shift: Boolean = false,
+	val alt: Boolean = false,
+	val ctrl: Boolean = false,
 ) : Event {
 	enum class Type {
 		Drag,

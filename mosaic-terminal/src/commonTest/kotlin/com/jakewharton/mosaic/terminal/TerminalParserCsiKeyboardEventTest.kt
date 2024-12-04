@@ -23,7 +23,7 @@ import kotlin.test.AfterTest
 import kotlin.test.Test
 
 @OptIn(ExperimentalStdlibApi::class)
-class TerminalParserCsiLegacyKeyboardEventTest {
+class TerminalParserCsiKeyboardEventTest {
 	private val writer = Tty.stdinWriter()
 	private val parser = TerminalParser(writer.reader)
 
