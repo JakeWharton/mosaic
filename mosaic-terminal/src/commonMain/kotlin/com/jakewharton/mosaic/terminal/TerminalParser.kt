@@ -17,7 +17,7 @@ import com.jakewharton.mosaic.terminal.event.TerminalColorEvent
 import com.jakewharton.mosaic.terminal.event.TerminalVersionEvent
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
 
-internal const val BufferSize = 8 * 1024
+private const val BufferSize = 8 * 1024
 private const val BareEscapeDisambiguationReadTimeoutMillis = 100
 
 public class TerminalParser(
