@@ -17,7 +17,7 @@ import com.jakewharton.mosaic.terminal.event.TerminalColorEvent
 import com.jakewharton.mosaic.terminal.event.TerminalVersionEvent
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
 
-private const val BufferSize = 8 * 1024
+internal const val BufferSize = 8 * 1024
 private const val BareEscapeDisambiguationReadTimeoutMillis = 100
 
 public class TerminalParser(
@@ -62,23 +62,22 @@ public class TerminalParser(
 				parse(buffer, offset, limit)?.let { event ->
 					return event
 				}
-
-				// Underflow! Copy data to start of buffer (if not already there) in preparation for a read.
-				if (offset > 0) {
-					buffer.copyInto(buffer, 0, startIndex = offset, endIndex = limit)
-
-					// Do not write the new limit to the member property because the read code below will.
-					limit = limit - offset
-
-					offset = 0
-					this.offset = 0
-				}
 			}
+
+			// Underflow! Copy any data to start of buffer in preparation for a read.
+			buffer.copyInto(buffer, 0, startIndex = offset, endIndex = limit)
+
+			// Do not write the new limit to the member property because the read code below will.
+			limit = limit - offset
+
+			offset = 0
+			this.offset = 0
 
 			if (kittyDisambiguateEscapeCodes || limit != 1 || buffer[0] != 0x1B.toByte()) {
 				// Common case: we are using the Kitty keyboard protocol to disambiguate escape keys, or
 				// the buffer contains anything other than a bare escape. Do a normal read for more data.
 				val read = stdinReader.read(buffer, limit, BufferSize - limit)
+				if (read == -1) break
 				limit += read
 				this.limit = limit
 				continue
@@ -97,10 +96,14 @@ public class TerminalParser(
 				// We know the offset is 0, so resetting the limit effectively consumes the byte.
 				this.limit = 0
 				return KeyboardEvent(0x1B)
+			} else if (read == -1) {
+				break
 			}
 			limit += read
 			this.limit = limit
 		}
+
+		throw RuntimeException("stdin eof")
 	}
 
 	private fun parse(buffer: ByteArray, start: Int, limit: Int): Event? {
