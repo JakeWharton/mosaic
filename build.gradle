@@ -47,10 +47,10 @@ allprojects {
 		compilerOptions.freeCompilerArgs.add('-Xjvm-default=all')
 	}
 
-	tasks.withType(Test).configureEach {
+	tasks.withType(AbstractTestTask).configureEach {
 		testLogging {
 			if (System.getenv('CI') == 'true') {
-				events = ['failed', 'skipped', 'passed']
+				events = ['started', 'failed', 'skipped', 'passed']
 			}
 			exceptionFormat 'full'
 		}
