@@ -116,7 +116,10 @@ stdinWriterResult stdinWriter_init() {
 		goto ret;
 	}
 
-	if (unlikely(CreatePipe(&writer->readHandle, &writer->writeHandle, NULL, 0) == 0)) {
+	// Double the buffer size in TerminalParser.
+	const int PIPE_SIZE = 16384;
+
+	if (unlikely(CreatePipe(&writer->readHandle, &writer->writeHandle, NULL, PIPE_SIZE) == 0)) {
 		result.error = GetLastError();
 		goto err;
 	}
