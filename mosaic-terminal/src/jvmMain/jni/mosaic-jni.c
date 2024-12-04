@@ -65,12 +65,12 @@ Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderRead(
 	jlong ptr,
 	jbyteArray buffer,
 	jint offset,
-	jint length
+	jint count
 ) {
 	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
 	jbyte *nativeBufferAtOffset = nativeBuffer + offset;
 
-	stdinRead read = stdinReader_read((stdinReader *) ptr, nativeBufferAtOffset, length);
+	stdinRead read = stdinReader_read((stdinReader *) ptr, nativeBufferAtOffset, count);
 
 	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
 
@@ -91,7 +91,7 @@ Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderReadWithTimeout(
 	jlong ptr,
 	jbyteArray buffer,
 	jint offset,
-	jint length,
+	jint count,
 	jint timeoutMillis
 ) {
 	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
@@ -100,7 +100,7 @@ Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderReadWithTimeout(
 	stdinRead read = stdinReader_readWithTimeout(
 		(stdinReader *) ptr,
 		nativeBufferAtOffset,
-		length,
+		count,
 		timeoutMillis
 	);
 

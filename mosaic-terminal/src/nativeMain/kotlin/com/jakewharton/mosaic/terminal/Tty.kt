@@ -52,19 +52,19 @@ public actual object Tty {
 public actual class StdinReader internal constructor(
 	private var ref: CPointer<stdinReader>?,
 ) : AutoCloseable {
-	public actual fun read(buffer: ByteArray, offset: Int, length: Int): Int {
+	public actual fun read(buffer: ByteArray, offset: Int, count: Int): Int {
 		buffer.usePinned {
-			stdinReader_read(ref, it.addressOf(offset), length).useContents {
-				if (error == 0U) return count
+			stdinReader_read(ref, it.addressOf(offset), count).useContents {
+				if (error == 0U) return this.count
 				Tty.throwError(error)
 			}
 		}
 	}
 
-	public actual fun readWithTimeout(buffer: ByteArray, offset: Int, length: Int, timeoutMillis: Int): Int {
+	public actual fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
 		buffer.usePinned {
-			stdinReader_readWithTimeout(ref, it.addressOf(offset), length, timeoutMillis).useContents {
-				if (error == 0U) return count
+			stdinReader_readWithTimeout(ref, it.addressOf(offset), count, timeoutMillis).useContents {
+				if (error == 0U) return this.count
 				Tty.throwError(error)
 			}
 		}

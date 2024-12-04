@@ -57,7 +57,7 @@ public actual object Tty {
 		reader: Long,
 		buffer: ByteArray,
 		offset: Int,
-		length: Int,
+		count: Int,
 	): Int
 
 	@JvmStatic
@@ -67,7 +67,7 @@ public actual object Tty {
 		reader: Long,
 		buffer: ByteArray,
 		offset: Int,
-		length: Int,
+		count: Int,
 		timeoutMillis: Int,
 	): Int
 
@@ -133,12 +133,12 @@ public actual object Tty {
 public actual class StdinReader internal constructor(
 	private val readerPtr: Long,
 ) : AutoCloseable {
-	public actual fun read(buffer: ByteArray, offset: Int, length: Int): Int {
-		return Tty.stdinReaderRead(readerPtr, buffer, offset, length)
+	public actual fun read(buffer: ByteArray, offset: Int, count: Int): Int {
+		return Tty.stdinReaderRead(readerPtr, buffer, offset, count)
 	}
 
-	public actual fun readWithTimeout(buffer: ByteArray, offset: Int, length: Int, timeoutMillis: Int): Int {
-		return Tty.stdinReaderReadWithTimeout(readerPtr, buffer, offset, length, timeoutMillis)
+	public actual fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
+		return Tty.stdinReaderReadWithTimeout(readerPtr, buffer, offset, count, timeoutMillis)
 	}
 
 	public actual fun interrupt() {
