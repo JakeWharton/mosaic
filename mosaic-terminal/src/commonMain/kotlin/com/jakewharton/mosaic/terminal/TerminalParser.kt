@@ -134,57 +134,32 @@ public class TerminalParser(
 	}
 
 	private fun parseGround(buffer: ByteArray, start: Int, limit: Int, b1: Int): Event? {
-		val b2Index = start + 1
-
-		when (b1) {
-			0x00 -> {
-				offset = b2Index
-				return KeyboardEvent('@'.code, KeyboardEvent.ModifierCtrl)
-			}
-
-			// Backspace key canonicalization.
-			0x08 -> {
-				offset = b2Index
-				return KeyboardEvent(0x7F)
-			}
-
-			// Enter key canonicalization.
-			0x0A -> {
-				offset = b2Index
-				return KeyboardEvent(0x0D)
-			}
-
-			0x09, 0x0D, 0x1A -> {
-				offset = b2Index
-				return KeyboardEvent(b1)
-			}
-
-			in 0x01..0x07,
-			0x0B,
-			0x0C,
-			in 0x0E..0x1A,
-			-> {
-				offset = b2Index
-				return KeyboardEvent(b1 + 0x60, KeyboardEvent.ModifierCtrl)
-			}
-
-			else -> {
-				// TODO Non-UTF-8 support?
-				// TODO multi-codepoint grapheme support
-				val codepoint = buffer.parseUtf8(
-					start,
-					limit,
-					onUnderflow = { return null },
-					onSuccess = { offset = it },
-					onError = {
-						val nextStart = start + 1
-						offset = nextStart
-						return UnknownEvent(buffer.copyOfRange(start, nextStart))
-					},
-				)
-				return KeyboardEvent(codepoint)
+		if (b1 < 0x20) {
+			offset = start + 1
+			return when (b1) {
+				0x00 -> KeyboardEvent('@'.code, modifiers = KeyboardEvent.ModifierCtrl)
+				0x08 -> KeyboardEvent(0x7F)
+				0x09 -> KeyboardEvent(0x09)
+				0x0A -> KeyboardEvent(0x0D)
+				0x0D -> KeyboardEvent(0x0D)
+				else -> KeyboardEvent(b1 + 0x60, modifiers = KeyboardEvent.ModifierCtrl)
 			}
 		}
+
+		// TODO Non-UTF-8 support?
+		// TODO multi-codepoint grapheme support
+		val codepoint = buffer.parseUtf8(
+			start,
+			limit,
+			onUnderflow = { return null },
+			onSuccess = { offset = it },
+			onError = {
+				val nextStart = start + 1
+				offset = nextStart
+				return UnknownEvent(buffer.copyOfRange(start, nextStart))
+			},
+		)
+		return KeyboardEvent(codepoint)
 	}
 
 	private fun parseApc(buffer: ByteArray, start: Int, limit: Int): Event? {
