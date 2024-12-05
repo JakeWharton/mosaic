@@ -250,6 +250,32 @@ final class com.jakewharton.mosaic.terminal.event/UnknownEvent : com.jakewharton
     final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/UnknownEvent.toString|toString(){}[0]
 }
 
+final class com.jakewharton.mosaic.terminal.event/XtermCharacterSizeEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/XtermCharacterSizeEvent|null[0]
+    constructor <init>(kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.terminal.event/XtermCharacterSizeEvent.<init>|<init>(kotlin.Int;kotlin.Int){}[0]
+
+    final val columns // com.jakewharton.mosaic.terminal.event/XtermCharacterSizeEvent.columns|{}columns[0]
+        final fun <get-columns>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/XtermCharacterSizeEvent.columns.<get-columns>|<get-columns>(){}[0]
+    final val rows // com.jakewharton.mosaic.terminal.event/XtermCharacterSizeEvent.rows|{}rows[0]
+        final fun <get-rows>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/XtermCharacterSizeEvent.rows.<get-rows>|<get-rows>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/XtermCharacterSizeEvent.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal.event/XtermCharacterSizeEvent.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/XtermCharacterSizeEvent.toString|toString(){}[0]
+}
+
+final class com.jakewharton.mosaic.terminal.event/XtermPixelSizeEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/XtermPixelSizeEvent|null[0]
+    constructor <init>(kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.terminal.event/XtermPixelSizeEvent.<init>|<init>(kotlin.Int;kotlin.Int){}[0]
+
+    final val height // com.jakewharton.mosaic.terminal.event/XtermPixelSizeEvent.height|{}height[0]
+        final fun <get-height>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/XtermPixelSizeEvent.height.<get-height>|<get-height>(){}[0]
+    final val width // com.jakewharton.mosaic.terminal.event/XtermPixelSizeEvent.width|{}width[0]
+        final fun <get-width>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/XtermPixelSizeEvent.width.<get-width>|<get-width>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/XtermPixelSizeEvent.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal.event/XtermPixelSizeEvent.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/XtermPixelSizeEvent.toString|toString(){}[0]
+}
+
 final class com.jakewharton.mosaic.terminal/StdinReader : kotlin/AutoCloseable { // com.jakewharton.mosaic.terminal/StdinReader|null[0]
     final fun close() // com.jakewharton.mosaic.terminal/StdinReader.close|close(){}[0]
     final fun interrupt() // com.jakewharton.mosaic.terminal/StdinReader.interrupt|interrupt(){}[0]

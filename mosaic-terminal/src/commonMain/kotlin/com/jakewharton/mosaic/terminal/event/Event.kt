@@ -135,6 +135,18 @@ public class ResizeEvent(
 ) : Event
 
 @Poko
+public class XtermPixelSizeEvent(
+	public val height: Int,
+	public val width: Int,
+) : Event
+
+@Poko
+public class XtermCharacterSizeEvent(
+	public val rows: Int,
+	public val columns: Int,
+) : Event
+
+@Poko
 public class DecModeReportEvent(
 	public val mode: Int,
 	public val setting: Setting,

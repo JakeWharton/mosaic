@@ -16,6 +16,8 @@ import com.jakewharton.mosaic.terminal.event.SystemThemeEvent
 import com.jakewharton.mosaic.terminal.event.TerminalColorEvent
 import com.jakewharton.mosaic.terminal.event.TerminalVersionEvent
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
+import com.jakewharton.mosaic.terminal.event.XtermCharacterSizeEvent
+import com.jakewharton.mosaic.terminal.event.XtermPixelSizeEvent
 
 private const val BufferSize = 8 * 1024
 private const val BareEscapeDisambiguationReadTimeoutMillis = 100
@@ -388,33 +390,61 @@ public class TerminalParser(
 				}
 
 				't'.code -> {
-					// CSI 48 ; height_chars ; width_chars ; height_pix ; width_pix t
-					// https://gist.github.com/rockorager/e695fb2924d36b2bcf1fff4a3704bd83
-
 					val modeDelimiter = buffer.indexOfOrElse(';'.code.toByte(), b3Index, finalIndex, orElse = { break@error })
 					val mode = buffer.parseIntDigits(b3Index, modeDelimiter, orElse = { break@error })
-					if (mode != 48) break@error
+					when (mode) {
+						4 -> {
+							// CSI 4 ; height ; width t
+							// https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h4-Functions-using-CSI-_-ordered-by-the-final-character-lparen-s-rparen:CSI-Ps;Ps;Ps-t:Ps-=-1-4.2064
 
-					val rowsStart = modeDelimiter + 1
-					val rowsDelimiter = buffer.indexOfOrElse(';'.code.toByte(), rowsStart, finalIndex, orElse = { break@error })
-					val rowsEnd = buffer.indexOfOrDefault(':'.code.toByte(), rowsStart, rowsDelimiter, rowsDelimiter)
-					val rows = buffer.parseIntDigits(rowsStart, rowsEnd, orElse = { break@error })
+							val heightStart = modeDelimiter + 1
+							val heightEnd = buffer.indexOfOrElse(';'.code.toByte(), heightStart, finalIndex, orElse = { break@error })
+							val height = buffer.parseIntDigits(heightStart, heightEnd, orElse = { break@error })
 
-					val columnsStart = rowsDelimiter + 1
-					val columnsDelimiter = buffer.indexOfOrElse(';'.code.toByte(), columnsStart, finalIndex, orElse = { break@error })
-					val columnsEnd = buffer.indexOfOrDefault(':'.code.toByte(), columnsStart, columnsDelimiter, columnsDelimiter)
-					val columns = buffer.parseIntDigits(columnsStart, columnsEnd, orElse = { break@error })
+							val widthStart = heightEnd + 1
+							val width = buffer.parseIntDigits(widthStart, finalIndex, orElse = { break@error })
 
-					val heightStart = columnsDelimiter + 1
-					val heightDelimiter = buffer.indexOfOrElse(';'.code.toByte(), heightStart, finalIndex, orElse = { break@error })
-					val heightEnd = buffer.indexOfOrDefault(':'.code.toByte(), heightStart, heightDelimiter, heightDelimiter)
-					val height = buffer.parseIntDigits(heightStart, heightEnd, orElse = { break@error })
+							return XtermPixelSizeEvent(height, width)
+						}
+						8 -> {
+							// CSI 8 ; height ; width t
+							// https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h4-Functions-using-CSI-_-ordered-by-the-final-character-lparen-s-rparen:CSI-Ps;Ps;Ps-t:Ps-=-1-8.2068
 
-					val widthStart = heightDelimiter + 1
-					val widthEnd = buffer.indexOfOrDefault(':'.code.toByte(), widthStart, finalIndex, finalIndex)
-					val width = buffer.parseIntDigits(widthStart, widthEnd, orElse = { break@error })
+							val rowsStart = modeDelimiter + 1
+							val rowsEnd = buffer.indexOfOrElse(';'.code.toByte(), rowsStart, finalIndex, orElse = { break@error })
+							val rows = buffer.parseIntDigits(rowsStart, rowsEnd, orElse = { break@error })
 
-					return ResizeEvent(rows, columns, height, width)
+							val columnsStart = rowsEnd + 1
+							val columns = buffer.parseIntDigits(columnsStart, finalIndex, orElse = { break@error })
+
+							return XtermCharacterSizeEvent(rows, columns)
+						}
+						48 -> {
+							// CSI 48 ; height_chars ; width_chars ; height_pix ; width_pix t
+							// https://gist.github.com/rockorager/e695fb2924d36b2bcf1fff4a3704bd83
+
+							val rowsStart = modeDelimiter + 1
+							val rowsDelimiter = buffer.indexOfOrElse(';'.code.toByte(), rowsStart, finalIndex, orElse = { break@error })
+							val rowsEnd = buffer.indexOfOrDefault(':'.code.toByte(), rowsStart, rowsDelimiter, rowsDelimiter)
+							val rows = buffer.parseIntDigits(rowsStart, rowsEnd, orElse = { break@error })
+
+							val columnsStart = rowsDelimiter + 1
+							val columnsDelimiter = buffer.indexOfOrElse(';'.code.toByte(), columnsStart, finalIndex, orElse = { break@error })
+							val columnsEnd = buffer.indexOfOrDefault(':'.code.toByte(), columnsStart, columnsDelimiter, columnsDelimiter)
+							val columns = buffer.parseIntDigits(columnsStart, columnsEnd, orElse = { break@error })
+
+							val heightStart = columnsDelimiter + 1
+							val heightDelimiter = buffer.indexOfOrElse(';'.code.toByte(), heightStart, finalIndex, orElse = { break@error })
+							val heightEnd = buffer.indexOfOrDefault(':'.code.toByte(), heightStart, heightDelimiter, heightDelimiter)
+							val height = buffer.parseIntDigits(heightStart, heightEnd, orElse = { break@error })
+
+							val widthStart = heightDelimiter + 1
+							val widthEnd = buffer.indexOfOrDefault(':'.code.toByte(), widthStart, finalIndex, finalIndex)
+							val width = buffer.parseIntDigits(widthStart, widthEnd, orElse = { break@error })
+
+							return ResizeEvent(rows, columns, height, width)
+						}
+					}
 				}
 
 				'u'.code -> {
