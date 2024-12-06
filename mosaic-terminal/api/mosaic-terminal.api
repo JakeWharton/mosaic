@@ -7,6 +7,7 @@ public final class com/jakewharton/mosaic/terminal/StdinReader : java/lang/AutoC
 
 public final class com/jakewharton/mosaic/terminal/TerminalParser {
 	public fun <init> (Lcom/jakewharton/mosaic/terminal/StdinReader;)V
+	public final fun debugNext ()Lkotlin/Pair;
 	public final fun getKittyDisambiguateEscapeCodes ()Z
 	public final fun getXtermExtendedUtf8Mouse ()Z
 	public final fun next ()Lcom/jakewharton/mosaic/terminal/event/Event;

@@ -13,6 +13,7 @@ import com.jakewharton.mosaic.terminal.TerminalParser
 import com.jakewharton.mosaic.terminal.Tty
 import com.jakewharton.mosaic.terminal.event.KeyboardEvent
 import com.jakewharton.mosaic.terminal.event.KeyboardEvent.Companion.ModifierCtrl
+import com.jakewharton.mosaic.terminal.event.UnknownEvent
 import kotlin.jvm.JvmName
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Dispatchers
@@ -120,8 +121,14 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 						Mode.Event -> {
 							val parser = TerminalParser(reader)
 							while (job.isActive) {
-								val event = parser.next()
-								inputs.trySend(event.toString())
+								val (event, bytes) = parser.debugNext()
+								if (event is UnknownEvent) {
+									// The bytes are already displayed by this event.
+									inputs.trySend("$event\r\n")
+								} else {
+									val hex = bytes.toHexString()
+									inputs.trySend("$event\r\n  $hex\r\n")
+								}
 
 								if (event is KeyboardEvent &&
 									event.codepoint == 0x63 &&

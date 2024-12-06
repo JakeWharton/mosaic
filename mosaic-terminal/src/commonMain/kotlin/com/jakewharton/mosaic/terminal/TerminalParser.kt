@@ -54,6 +54,23 @@ public class TerminalParser(
 	 */
 	public var xtermExtendedUtf8Mouse: Boolean = false
 
+	/**
+	 * A version of [next] which also returns the bytes that produced the event.
+	 *
+	 * **WARNING** This function is expensive, and should only be used for debugging.
+	 */
+	public fun debugNext(): Pair<Event, ByteArray> {
+		// Move any existing data to index 0 of the buffer. This will ensure we can capture all the
+		// bytes consumed (even across multiple reads) since the original offset will always be 0.
+		buffer.copyInto(buffer, 0, startIndex = offset, endIndex = limit)
+		limit = limit - offset
+		offset = 0
+
+		val event = next()
+		val bytes = buffer.copyOfRange(0, offset)
+		return event to bytes
+	}
+
 	public fun next(): Event {
 		val buffer = buffer
 		var offset = offset

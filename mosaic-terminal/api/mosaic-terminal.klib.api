@@ -293,6 +293,7 @@ final class com.jakewharton.mosaic.terminal/TerminalParser { // com.jakewharton.
         final fun <get-xtermExtendedUtf8Mouse>(): kotlin/Boolean // com.jakewharton.mosaic.terminal/TerminalParser.xtermExtendedUtf8Mouse.<get-xtermExtendedUtf8Mouse>|<get-xtermExtendedUtf8Mouse>(){}[0]
         final fun <set-xtermExtendedUtf8Mouse>(kotlin/Boolean) // com.jakewharton.mosaic.terminal/TerminalParser.xtermExtendedUtf8Mouse.<set-xtermExtendedUtf8Mouse>|<set-xtermExtendedUtf8Mouse>(kotlin.Boolean){}[0]
 
+    final fun debugNext(): kotlin/Pair<com.jakewharton.mosaic.terminal.event/Event, kotlin/ByteArray> // com.jakewharton.mosaic.terminal/TerminalParser.debugNext|debugNext(){}[0]
     final fun next(): com.jakewharton.mosaic.terminal.event/Event // com.jakewharton.mosaic.terminal/TerminalParser.next|next(){}[0]
 }
 
