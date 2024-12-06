@@ -1,5 +1,9 @@
 package com.jakewharton.mosaic.terminal
 
+import com.jakewharton.mosaic.terminal.Tty.enableRawMode
+import com.jakewharton.mosaic.terminal.Tty.stdinReader
+import com.jakewharton.mosaic.terminal.event.ResizeEvent
+
 public expect object Tty {
 	/**
 	 * Save the current terminal settings and enter "raw" mode.
@@ -52,7 +56,29 @@ public expect class StdinReader : AutoCloseable {
 	 */
 	public fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int
 
-	/** Signal blocking calls to [read] to wake up and return 0. */
+	/**
+	 * Enable standalone terminal resize reporting.
+	 *
+	 * In-band resize reporting is accomplished via [TerminalParser] and enabling
+	 * [mode 2048](https://gist.github.com/rockorager/e695fb2924d36b2bcf1fff4a3704bd83) which will be
+	 * delivered as [ResizeEvent]s. If that mode is not supported by the terminal, however,
+	 * standalone reporting can be enabled by passing a non-`null` [ResizeListener] to this function.
+	 * Pass `null` or call [close] to stop callbacks.
+	 *
+	 * Once enabled, the behavior of this function varies by operating system:
+	 *
+	 * - On Windows, resize callbacks may be delivered to the [listener] during calls to [read]
+	 *   prior to it actually reading bytes. The [listener] will be invoked on the callers thread.
+	 *
+	 * - On Linux and macOS, resize events can occur at any time and will be delivered to [listener]
+	 *   on an arbitrary thread.
+	 *
+	 * On every operating system it is crucial that calls to [listener] complete quickly and do not
+	 * throw exceptions.
+	 */
+	public fun setResizeListener(listener: ResizeListener?)
+
+	/** Signal an active, blocking call to [read] or [readWithTimeout] to wake up and return 0. */
 	public fun interrupt()
 
 	/**
@@ -61,6 +87,16 @@ public expect class StdinReader : AutoCloseable {
 	 * This call can be omitted if your process is exiting.
 	 */
 	override fun close()
+}
+
+/** Callback for [StdinReader.setResizeListener]. */
+public fun interface ResizeListener {
+	/**
+	 * Invoked when the terminal size has changed.
+	 *
+	 * Implementations of this function should complete quickly and must not throw exceptions.
+	 */
+	public fun onResize(rows: Int, columns: Int, height: Int, width: Int)
 }
 
 internal expect class StdinWriter : AutoCloseable {

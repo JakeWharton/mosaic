@@ -117,6 +117,10 @@ stdinRead stdinReader_readWithTimeout(
 	return stdinReader_readInternal(reader, buffer, count, &timeout);
 }
 
+platformError stdinReader_setResizeListener(stdinReader *reader, void *listener) {
+	return 0;
+}
+
 platformError stdinReader_interrupt(stdinReader *reader) {
 	int pipeOut = reader->pipe[1];
 	int result = write(pipeOut, " ", 1);

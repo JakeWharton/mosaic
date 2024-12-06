@@ -43,6 +43,7 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 
 	override fun run() = runBlocking {
 		val rawMode = Tty.enableRawMode()
+
 		withFinalizationHook(
 			hook = {
 				rawMode.close()
@@ -89,6 +90,10 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 				}
 
 				val reader = Tty.stdinReader()
+
+				reader.setResizeListener { rows, columns, height, width ->
+					print("RESIZE LISTENER!!! $rows $columns $height $width\r\n")
+				}
 
 				// Upon receiving a signal, this block's job will be canceled. Use that to wake up the
 				// blocking stdin read so it loops and checks if its job is still active or not.

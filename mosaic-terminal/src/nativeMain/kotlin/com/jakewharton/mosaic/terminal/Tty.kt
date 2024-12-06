@@ -70,6 +70,13 @@ public actual class StdinReader internal constructor(
 		}
 	}
 
+	public actual fun setResizeListener(listener: ResizeListener?) {
+		// TODO probably have to put this into a var and use a staticCFunction to access?
+//		val error = stdinReader_setResizeListener(ref, listener)
+//		if (error == 0U) return
+//		Tty.throwError(error)
+	}
+
 	public actual fun interrupt() {
 		val error = stdinReader_interrupt(ref)
 		if (error == 0U) return

@@ -73,6 +73,11 @@ public actual object Tty {
 
 	@JvmStatic
 	@JvmSynthetic // Hide from Java callers.
+	@JvmName("stdinReaderSetResizeListener") // Avoid internal name mangling.
+	internal external fun stdinReaderSetResizeListener(reader: Long, listener: ResizeListener?)
+
+	@JvmStatic
+	@JvmSynthetic // Hide from Java callers.
 	@JvmName("stdinReaderInterrupt") // Avoid internal name mangling.
 	internal external fun stdinReaderInterrupt(reader: Long)
 
@@ -139,6 +144,10 @@ public actual class StdinReader internal constructor(
 
 	public actual fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
 		return Tty.stdinReaderReadWithTimeout(readerPtr, buffer, offset, count, timeoutMillis)
+	}
+
+	public actual fun setResizeListener(listener: ResizeListener?) {
+		Tty.stdinReaderSetResizeListener(readerPtr, listener)
 	}
 
 	public actual fun interrupt() {

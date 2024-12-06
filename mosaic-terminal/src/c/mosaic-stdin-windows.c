@@ -92,6 +92,10 @@ stdinRead stdinReader_readWithTimeout(
 	goto ret;
 }
 
+platformError stdinReader_setResizeListener(stdinReader *reader, void *listener) {
+	return 0;
+}
+
 platformError stdinReader_interrupt(stdinReader *reader) {
 	return likely(SetEvent(reader->waitHandles[1]) != 0)
 		? 0

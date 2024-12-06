@@ -117,6 +117,22 @@ Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderReadWithTimeout(
 }
 
 JNIEXPORT void JNICALL
+Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderSetResizeListener(
+	JNIEnv *env,
+	jclass type,
+	jlong ptr,
+	jobject listener
+) {
+	jclass resizeListenerClass = (*env)->GetObjectClass(env, listener);
+	jmethodID onResizeMethodId = (*env)->GetMethodID(env, resizeListenerClass, "onResize", "(IIII)V");
+	if (unlikely(!onResizeMethodId)) {
+		// Exception already thrown within VM.
+		return;
+	}
+	(*env)->CallVoidMethod(env, listener, onResizeMethodId, 1, 2, 3, 4);
+}
+
+JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderInterrupt(JNIEnv *env, jclass type, jlong ptr) {
 	platformError error = stdinReader_interrupt((stdinReader *) ptr);
 	if (unlikely(error)) {
