@@ -63,5 +63,9 @@ cklib {
 	create('mosaic', file('src/c'), ['main']) {
 		it.srcDirs = files('src/c')
 		it.language = C
+		it.compilerArgs.addAll([
+			// StdinWriter (test-specific API) depends on APIs in Windows 10 October 2018 update.
+			"-DNTDDI_VERSION=0x0A000006",
+		])
 	}
 }

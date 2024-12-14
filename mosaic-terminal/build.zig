@@ -48,6 +48,8 @@ fn setupMosaicTarget(b: *std.Build, step: *std.Build.Step, tag: std.Target.Os.Ta
 		},
 		.flags = &.{
 			"-std=gnu99",
+			// StdinWriter (test-specific API) depends on APIs in Windows 10 October 2018 update.
+			"-DNTDDI_VERSION=0x0A000006",
 		},
 	});
 
