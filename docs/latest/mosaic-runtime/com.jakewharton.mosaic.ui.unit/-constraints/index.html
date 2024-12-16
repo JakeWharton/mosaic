@@ -25,44 +25,76 @@
 <link href="../../../styles/prism.css" rel="Stylesheet">
 <link href="../../../styles/logo-styles.css" rel="Stylesheet">
 <link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<link href="../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
 <script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
 <script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../../scripts/main.js" defer></script>
 <script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" defer></script>
 <script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
 <body>
     <div class="root">
-<nav class="navigation" id="navigation-wrapper">
-    <div class="navigation--inner">
-        <div class="navigation-title">
-            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
-            <div class="library-name">
+    <nav class="navigation theme-dark" id="navigation-wrapper">
 <a class="library-name--link" href="../../../index.html">
-                            mosaic
-                    </a>            </div>
-            <div class="library-version">0.15.0-SNAPSHOT
+                    mosaic
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.15.0-SNAPSHOT
+        </div>
+        <div class="navigation-controls">
+        <div class="filter-section filter-section_loading" id="filter-section">
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":mosaic-runtime:dokkaHtmlPartial/commonMain">common</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox">
+                    <div class="dropdown--header"><span>Platform filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close platform filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":mosaic-runtime:dokkaHtmlPartial/commonMain" data-filter=":mosaic-runtime:dokkaHtmlPartial/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
             </div>
         </div>
-        <div class="filter-section" id="filter-section">
-                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":mosaic-runtime:dokkaHtmlPartial/commonMain">common</button>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
         </div>
-    </div>
-    <div class="navigation-controls">
-        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
-        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
-    </div>
-</nav>
+    </nav>
         <div id="container">
             <div class="sidebar" id="leftColumn">
-                <div class="sidebar--inner" id="sideMenu"></div>
+                <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                    <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox">
+                        <div class="dropdown--header">
+                            <span>
+                                    mosaic
+                            </span>
+                            <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                                <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                            </button>
+                        </div>
+                        <div class="sidebar--inner" id="sideMenu"></div>
+                    </ul>
+                    <div class="dropdown--overlay"></div>
+                </div>
             </div>
             <div id="main">
 <div class="main-content" data-page-type="classlike" id="content" pageids="mosaic-runtime::com.jakewharton.mosaic.ui.unit/Constraints///PointingToDeclaration//844273566">
   <div class="breadcrumbs"><a href="../../index.html">mosaic-runtime</a><span class="delimiter">/</span><a href="../index.html">com.jakewharton.mosaic.ui.unit</a><span class="delimiter">/</span><span class="current">Constraints</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Constraints</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Immutable///PointingToDeclaration/"><span class="token annotation builtin">Immutable</span></span></div><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-inline/index.html"><span class="token annotation builtin">JvmInline</span></a></div></div><span class="token keyword">value </span><span class="token keyword">class </span><a href="index.html">Constraints</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span></div><p class="paragraph">Immutable constraints for measuring layouts, used by <a href="../../../mosaic-runtime/com.jakewharton.mosaic.ui/index.html">layouts</a> or <a href="../../com.jakewharton.mosaic.layout/-layout-modifier/index.html">layout modifiers</a> to measure their layout children. The parent chooses the <a href="index.html">Constraints</a> defining a range, in pixels, within which the measured layout should choose a size:</p><ul><li><p class="paragraph"><code class="lang-kotlin">minWidth</code>&lt;= <code class="lang-kotlin">chosenWidth</code>&lt;= <code class="lang-kotlin">maxWidth</code></p></li><li><p class="paragraph"><code class="lang-kotlin">minHeight</code>&lt;= <code class="lang-kotlin">chosenHeight</code>&lt;= <code class="lang-kotlin">maxHeight</code></p></li></ul><p class="paragraph">For more details about how layout measurement works, see <a href="../../com.jakewharton.mosaic.layout/-measure-policy/index.html">com.jakewharton.mosaic.layout.MeasurePolicy</a> or <a href="../../com.jakewharton.mosaic.layout/-layout-modifier/measure.html">com.jakewharton.mosaic.layout.LayoutModifier.measure</a>.</p><p class="paragraph">A set of <a href="index.html">Constraints</a> can have infinite maxWidth and/or maxHeight. This is a trick often used by parents to ask their children for their preferred size: unbounded constraints force children whose default behavior is to fill the available space (always size to maxWidth/maxHeight) to have an opinion about their preferred size. Most commonly, when measured with unbounded <a href="index.html">Constraints</a>, these children will fallback to size themselves to wrap their content, instead of expanding to fill the available space (this is not always true as it depends on the child layout model, but is a common behavior for core layout components).</p><p class="paragraph"><a href="index.html">Constraints</a> uses a <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a> to represent four values, <a href="min-width.html">minWidth</a>, <a href="min-height.html">minHeight</a>, <a href="max-width.html">maxWidth</a>, and <a href="max-height.html">maxHeight</a>. The range of the values varies to allow for at most 256K in one dimension. There are four possible maximum ranges, 13 bits/18 bits, and 15 bits/16 bits for either width or height, depending on the needs. For example, a width could range up to 18 bits and the height up to 13 bits. Alternatively, the width could range up to 16 bits and the height up to 15 bits. The height and width requirements can be reversed, with a height of up to 18 bits and width of 13 bits or height of 16 bits and width of 15 bits. Any constraints exceeding this range will fail.</p></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Immutable///PointingToDeclaration/"><span class="token annotation builtin">Immutable</span></span></div><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.jvm/-jvm-inline/index.html"><span class="token annotation builtin">JvmInline</span></a></div></div><span class="token keyword">value </span><span class="token keyword">class </span><a href="index.html">Constraints</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span></div><p class="paragraph">Immutable constraints for measuring layouts, used by <a href="../../../mosaic-runtime/com.jakewharton.mosaic.ui/index.html">layouts</a> or <a href="../../com.jakewharton.mosaic.layout/-layout-modifier/index.html">layout modifiers</a> to measure their layout children. The parent chooses the <a href="index.html">Constraints</a> defining a range, in pixels, within which the measured layout should choose a size:</p><ul><li><p class="paragraph"><code class="lang-kotlin">minWidth</code>&lt;= <code class="lang-kotlin">chosenWidth</code>&lt;= <code class="lang-kotlin">maxWidth</code></p></li><li><p class="paragraph"><code class="lang-kotlin">minHeight</code>&lt;= <code class="lang-kotlin">chosenHeight</code>&lt;= <code class="lang-kotlin">maxHeight</code></p></li></ul><p class="paragraph">For more details about how layout measurement works, see <a href="../../com.jakewharton.mosaic.layout/-measure-policy/index.html">com.jakewharton.mosaic.layout.MeasurePolicy</a> or <a href="../../com.jakewharton.mosaic.layout/-layout-modifier/measure.html">com.jakewharton.mosaic.layout.LayoutModifier.measure</a>.</p><p class="paragraph">A set of <a href="index.html">Constraints</a> can have infinite maxWidth and/or maxHeight. This is a trick often used by parents to ask their children for their preferred size: unbounded constraints force children whose default behavior is to fill the available space (always size to maxWidth/maxHeight) to have an opinion about their preferred size. Most commonly, when measured with unbounded <a href="index.html">Constraints</a>, these children will fallback to size themselves to wrap their content, instead of expanding to fill the available space (this is not always true as it depends on the child layout model, but is a common behavior for core layout components).</p><p class="paragraph"><a href="index.html">Constraints</a> uses a <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a> to represent four values, <a href="min-width.html">minWidth</a>, <a href="min-height.html">minHeight</a>, <a href="max-width.html">maxWidth</a>, and <a href="max-height.html">maxHeight</a>. The range of the values varies to allow for at most 256K in one dimension. There are four possible maximum ranges, 13 bits/18 bits, and 15 bits/16 bits for either width or height, depending on the needs. For example, a width could range up to 18 bits and the height up to 13 bits. Alternatively, the width could range up to 16 bits and the height up to 15 bits. The height and width requirements can be reversed, with a height of up to 18 bits and width of 13 bits or height of 16 bits and width of 15 bits. Any constraints exceeding this range will fail.</p></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button><button class="section-tab" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION,EXTENSION_PROPERTY,EXTENSION_FUNCTION">Members &amp; Extensions</button></div>
@@ -79,7 +111,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -117,7 +149,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="has-bounded-height.html">hasBoundedHeight</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph"><code class="lang-kotlin">false</code> when <a href="max-height.html">maxHeight</a> is <a href="-companion/-infinity.html">Infinity</a> and <code class="lang-kotlin">true</code> if <a href="max-height.html">maxHeight</a> is a non-<a href="-companion/-infinity.html">Infinity</a> value.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="has-bounded-height.html">hasBoundedHeight</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph"><code class="lang-kotlin">false</code> when <a href="max-height.html">maxHeight</a> is <a href="-companion/-infinity.html">Infinity</a> and <code class="lang-kotlin">true</code> if <a href="max-height.html">maxHeight</a> is a non-<a href="-companion/-infinity.html">Infinity</a> value.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -132,7 +164,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="has-bounded-width.html">hasBoundedWidth</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph"><code class="lang-kotlin">false</code> when <a href="max-width.html">maxWidth</a> is <a href="-companion/-infinity.html">Infinity</a> and <code class="lang-kotlin">true</code> if <a href="max-width.html">maxWidth</a> is a non-<a href="-companion/-infinity.html">Infinity</a> value.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="has-bounded-width.html">hasBoundedWidth</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph"><code class="lang-kotlin">false</code> when <a href="max-width.html">maxWidth</a> is <a href="-companion/-infinity.html">Infinity</a> and <code class="lang-kotlin">true</code> if <a href="max-width.html">maxWidth</a> is a non-<a href="-companion/-infinity.html">Infinity</a> value.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -147,7 +179,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword">val </span><a href="has-fixed-height.html">hasFixedHeight</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Whether there is exactly one height value that satisfies the constraints.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword">val </span><a href="has-fixed-height.html">hasFixedHeight</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Whether there is exactly one height value that satisfies the constraints.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -162,7 +194,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword">val </span><a href="has-fixed-width.html">hasFixedWidth</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Whether there is exactly one width value that satisfies the constraints.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword">val </span><a href="has-fixed-width.html">hasFixedWidth</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Whether there is exactly one width value that satisfies the constraints.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -177,7 +209,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword">val </span><a href="is-zero.html">isZero</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Whether the area of a component respecting these constraints will definitely be 0. This is true when at least one of maxWidth and maxHeight are 0.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword">val </span><a href="is-zero.html">isZero</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Whether the area of a component respecting these constraints will definitely be 0. This is true when at least one of maxWidth and maxHeight are 0.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -192,7 +224,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="max-height.html">maxHeight</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">The maximum height that the measurement can take, in pixels. This will either be a positive value greater than or equal to <a href="min-height.html">minHeight</a> or <a href="-companion/-infinity.html">Constraints.Infinity</a>.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="max-height.html">maxHeight</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">The maximum height that the measurement can take, in pixels. This will either be a positive value greater than or equal to <a href="min-height.html">minHeight</a> or <a href="-companion/-infinity.html">Constraints.Infinity</a>.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -207,7 +239,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="max-width.html">maxWidth</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">The maximum width that the measurement can take, in pixels. This will either be a positive value greater than or equal to <a href="min-width.html">minWidth</a> or <a href="-companion/-infinity.html">Constraints.Infinity</a>.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="max-width.html">maxWidth</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">The maximum width that the measurement can take, in pixels. This will either be a positive value greater than or equal to <a href="min-width.html">minWidth</a> or <a href="-companion/-infinity.html">Constraints.Infinity</a>.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -222,7 +254,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="min-height.html">minHeight</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">The minimum height that the measurement can take, in pixels.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="min-height.html">minHeight</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">The minimum height that the measurement can take, in pixels.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -237,7 +269,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="min-width.html">minWidth</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">The minimum width that the measurement can take, in pixels.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="min-width.html">minWidth</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">The minimum width that the measurement can take, in pixels.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -271,7 +303,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword">fun </span><a href="index.html">Constraints</a><span class="token punctuation">.</span><a href="../constrain-height.html"><span class="token function">constrainHeight</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">height<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Takes a height and returns the closest size to it that satisfies the constraints.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword">fun </span><a href="index.html">Constraints</a><span class="token punctuation">.</span><a href="../constrain-height.html"><span class="token function">constrainHeight</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">height<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Takes a height and returns the closest size to it that satisfies the constraints.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -286,7 +318,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword">fun </span><a href="index.html">Constraints</a><span class="token punctuation">.</span><a href="../constrain-width.html"><span class="token function">constrainWidth</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">width<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Takes a width and returns the closest size to it that satisfies the constraints.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword">fun </span><a href="index.html">Constraints</a><span class="token punctuation">.</span><a href="../constrain-width.html"><span class="token function">constrainWidth</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">width<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Takes a width and returns the closest size to it that satisfies the constraints.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -301,7 +333,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="copy.html"><span class="token function">copy</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">minWidth<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>this.minWidth<span class="token punctuation">, </span></span><span class="parameter ">maxWidth<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>this.maxWidth<span class="token punctuation">, </span></span><span class="parameter ">minHeight<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>this.minHeight<span class="token punctuation">, </span></span><span class="parameter ">maxHeight<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>this.maxHeight</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">Constraints</a></div><div class="brief "><p class="paragraph">Copies the existing <a href="index.html">Constraints</a>, replacing some of <a href="copy.html">minWidth</a>, <a href="copy.html">minHeight</a>, <a href="copy.html">maxWidth</a>, or <a href="copy.html">maxHeight</a> as desired. <a href="copy.html">minWidth</a> and <a href="copy.html">minHeight</a> must be positive and <a href="copy.html">maxWidth</a> and <a href="copy.html">maxHeight</a> must be greater than or equal to <a href="copy.html">minWidth</a> and <a href="copy.html">minHeight</a>, respectively, or <a href="-companion/-infinity.html">Infinity</a>.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="copy.html"><span class="token function">copy</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">minWidth<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>this.minWidth<span class="token punctuation">, </span></span><span class="parameter ">maxWidth<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>this.maxWidth<span class="token punctuation">, </span></span><span class="parameter ">minHeight<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>this.minHeight<span class="token punctuation">, </span></span><span class="parameter ">maxHeight<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>this.maxHeight</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">Constraints</a></div><div class="brief "><p class="paragraph">Copies the existing <a href="index.html">Constraints</a>, replacing some of <a href="copy.html">minWidth</a>, <a href="copy.html">minHeight</a>, <a href="copy.html">maxWidth</a>, or <a href="copy.html">maxHeight</a> as desired. <a href="copy.html">minWidth</a> and <a href="copy.html">minHeight</a> must be positive and <a href="copy.html">maxWidth</a> and <a href="copy.html">maxHeight</a> must be greater than or equal to <a href="copy.html">minWidth</a> and <a href="copy.html">minHeight</a>, respectively, or <a href="-companion/-infinity.html">Infinity</a>.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -316,7 +348,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword">fun </span><a href="index.html">Constraints</a><span class="token punctuation">.</span><a href="../is-satisfied-by.html"><span class="token function">isSatisfiedBy</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">size<span class="token operator">: </span><a href="../-int-size/index.html">IntSize</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Takes a size and returns whether it satisfies the current constraints.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword">fun </span><a href="index.html">Constraints</a><span class="token punctuation">.</span><a href="../is-satisfied-by.html"><span class="token function">isSatisfiedBy</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">size<span class="token operator">: </span><a href="../-int-size/index.html">IntSize</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Takes a size and returns whether it satisfies the current constraints.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -331,7 +363,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword">fun </span><a href="index.html">Constraints</a><span class="token punctuation">.</span><a href="../offset.html"><span class="token function">offset</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">horizontal<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span><span class="token punctuation">, </span></span><span class="parameter ">vertical<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">Constraints</a></div><div class="brief "><p class="paragraph">Returns the Constraints obtained by offsetting the current instance with the given values.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Stable///PointingToDeclaration/"><span class="token annotation builtin">Stable</span></span></div></div><span class="token keyword">fun </span><a href="index.html">Constraints</a><span class="token punctuation">.</span><a href="../offset.html"><span class="token function">offset</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">horizontal<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span><span class="token punctuation">, </span></span><span class="parameter ">vertical<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">Constraints</a></div><div class="brief "><p class="paragraph">Returns the Constraints obtained by offsetting the current instance with the given values.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -346,7 +378,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="to-string.html"><span class="token function">toString</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-runtime:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="to-string.html"><span class="token function">toString</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -356,12 +388,18 @@
     </div>
   </div>
 </div>
-      <div class="footer">
-        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
-      </div>
+    <div class="footer">
+        <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+        <span>© 2024 Copyright</span>
+        <span class="pull-right">
+            <span>Generated by </span>
+            <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                <span>dokka</span>
+            </a>
+        </span>
+    </div>
             </div>
         </div>
     </div>
 </body>
 </html>
-
