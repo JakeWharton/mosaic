@@ -170,7 +170,7 @@ internal class MosaicComposition(
 	private val composeContext: CoroutineContext = coroutineScope.coroutineContext + job + clock
 	val scope = CoroutineScope(composeContext)
 
-	private val applier = MosaicNodeApplier(::performLayout)
+	private val applier = MosaicNodeApplier { needLayout = true }
 	val rootNode = applier.root
 	private val recomposer = Recomposer(composeContext)
 	private val composition = Composition(applier, recomposer)
@@ -193,18 +193,17 @@ internal class MosaicComposition(
 		GlobalSnapshotManager().ensureStarted(scope)
 		startRecomposer()
 		applyObserverHandle = registerSnapshotApplyObserver()
-		startListeningToNeedToLayoutOrDraw()
 	}
 
-	private fun performLayout(rootNode: MosaicNode) {
+	private fun performLayout() {
 		needLayout = false
 		Snapshot.observe(readObserver = layoutBlockStateReadObserver) {
 			rootNode.measureAndPlace()
 		}
-		performDraw(rootNode)
+		performDraw()
 	}
 
-	private fun performDraw(rootNode: MosaicNode) {
+	private fun performDraw() {
 		needDraw = false
 		Snapshot.observe(readObserver = drawBlockStateReadObserver) {
 			onDraw(rootNode)
@@ -213,28 +212,19 @@ internal class MosaicComposition(
 
 	private fun registerSnapshotApplyObserver(): ObserverHandle {
 		return Snapshot.registerApplyObserver { changedStates, _ ->
-			for (state in changedStates) {
-				if (needLayout && needDraw) {
-					break
-				}
-				if (!needLayout && readingStatesOnLayout.contains(state)) {
-					needLayout = true
-				}
-				if (!needDraw && readingStatesOnDraw.contains(state)) {
-					needDraw = true
-				}
-			}
-		}
-	}
-
-	private fun startListeningToNeedToLayoutOrDraw() {
-		scope.launch {
-			while (true) {
-				withFrameNanos {
-					when {
-						recomposer.currentState.value != Recomposer.State.Idle -> return@withFrameNanos
-						needLayout -> performLayout(applier.root)
-						needDraw -> performDraw(applier.root)
+			if (!needLayout) {
+				var setDraw = needDraw
+				for (state in changedStates) {
+					if (state in readingStatesOnLayout) {
+						needLayout = true
+						break
+					}
+					if (setDraw) {
+						continue
+					}
+					if (state in readingStatesOnDraw) {
+						setDraw = true
+						needDraw = true
 					}
 				}
 			}
@@ -253,16 +243,27 @@ internal class MosaicComposition(
 
 			while (true) {
 				// Drain any pending key events before triggering the frame.
-				while (true) {
-					val keyEvent = keyEvents.tryReceive().getOrNull() ?: break
+				keyEvents.tryReceive().getOrNull()?.let { keyEvent ->
 					val keyHandled = rootNode.sendKeyEvent(keyEvent)
 					if (!keyHandled && keyEvent == ctrlC) {
 						cancel()
 					}
+					continue
 				}
 
 				clock.sendFrame(nanoTime())
-				delay(50L)
+
+				if (needLayout) {
+					performLayout()
+				} else if (needDraw) {
+					performDraw()
+				}
+
+				// "1000 FPS should be enough for anybody"
+				// We need to yield in order for other coroutines on this dispatcher to run, otherwise
+				// this is effectively a spin loop. We do a delay instead of a yield since dispatchers
+				// are not required to support yield, but reasonable delay support is almost a guarantee.
+				delay(1)
 			}
 		}
 	}
@@ -273,6 +274,7 @@ internal class MosaicComposition(
 				content()
 			}
 		}
+		performLayout()
 	}
 
 	suspend fun awaitComplete() {
@@ -308,7 +310,7 @@ internal class MosaicComposition(
 }
 
 internal class MosaicNodeApplier(
-	private val onEndChanges: (MosaicNode) -> Unit = {},
+	private val onChanges: () -> Unit = {},
 ) : AbstractApplier<MosaicNode>(
 	root = MosaicNode(
 		measurePolicy = BoxMeasurePolicy(),
@@ -316,8 +318,11 @@ internal class MosaicNodeApplier(
 		onStaticDraw = null,
 	),
 ) {
-	override fun onEndChanges() {
-		onEndChanges.invoke(root)
+	override fun onBeginChanges() {
+		super.onBeginChanges()
+		// We invoke this here rather than in the end change callback to try and ensure
+		// no one relies on it to signal the end of changes.
+		onChanges.invoke()
 	}
 
 	override fun insertTopDown(index: Int, instance: MosaicNode) {

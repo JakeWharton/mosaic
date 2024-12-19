@@ -7,7 +7,7 @@ New:
 - Nothing yet!
 
 Changed:
-- Nothing yet!
+- Rendering now occurs as fast as possible, although still only when necessary. Previously the maximum FPS was capped to 20 which could cause minor visual delays when processing events.
 
 Fixed:
 - Nothing yet!
