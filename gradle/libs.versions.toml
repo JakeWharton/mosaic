@@ -22,7 +22,7 @@ maven-publish-gradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.30.0"
 dokka-gradlePlugin = "org.jetbrains.dokka:dokka-gradle-plugin:2.0.0"
 cite-gradlePlugin = "com.jakewharton.cite:cite-gradle-plugin:0.6.0"
 poko-gradlePlugin = "dev.drewhamilton.poko:poko-gradle-plugin:0.18.1"
-binary-compatibility-validator-gradlePlugin = "org.jetbrains.kotlinx:binary-compatibility-validator:0.16.3"
+binary-compatibility-validator-gradlePlugin = "org.jetbrains.kotlinx:binary-compatibility-validator:0.17.0"
 cklib-gradlePlugin = "co.touchlab:cklib-gradle-plugin:0.3.3"
 
 spotless-gradlePlugin = "com.diffplug.spotless:spotless-plugin-gradle:6.25.0"
