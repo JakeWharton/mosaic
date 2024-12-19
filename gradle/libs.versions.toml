@@ -1,7 +1,7 @@
 [versions]
 compose = "1.7.1"
 kotlin = "2.1.0"
-kotlinx-coroutines = "1.9.0"
+kotlinx-coroutines = "1.10.0"
 mordant = "3.0.1"
 
 [libraries]
