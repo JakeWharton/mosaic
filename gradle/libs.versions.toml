@@ -1,5 +1,5 @@
 [versions]
-compose = "1.7.1"
+compose = "1.7.3"
 kotlin = "2.1.0"
 kotlinx-coroutines = "1.10.0"
 mordant = "3.0.1"
