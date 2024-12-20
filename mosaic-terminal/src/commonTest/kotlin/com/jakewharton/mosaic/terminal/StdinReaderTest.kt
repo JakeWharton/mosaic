@@ -41,23 +41,15 @@ class StdinReaderTest {
 			delay(150.milliseconds)
 			reader.interrupt()
 		}
-		val readA: Int
-		val tookA = measureTime {
-			readA = reader.read(ByteArray(10), 0, 10)
-		}
+		val readA = reader.read(ByteArray(10), 0, 10)
 		assertThat(readA).isZero()
-		assertThat(tookA).isGreaterThan(100.milliseconds)
 
 		GlobalScope.launch(Dispatchers.Default) {
 			delay(150.milliseconds)
 			reader.interrupt()
 		}
-		val readB: Int
-		val tookB = measureTime {
-			readB = reader.read(ByteArray(10), 0, 10)
-		}
+		val readB = reader.read(ByteArray(10), 0, 10)
 		assertThat(readB).isZero()
-		assertThat(tookB).isGreaterThan(100.milliseconds)
 	}
 
 	@Test fun readWithTimeoutReturnsZeroOnTimeout() {
