@@ -1,6 +1,9 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 
 import static co.touchlab.cklib.gradle.CompileToBitcode.Language.C
+import static org.gradle.language.base.plugins.LifecycleBasePlugin.VERIFICATION_GROUP
+import static org.jetbrains.kotlin.gradle.plugin.KotlinCompilation.TEST_COMPILATION_NAME
 
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
 apply from: "$rootDir/addAllTargets.gradle"
@@ -38,9 +41,35 @@ kotlin {
 				implementation libs.assertk
 			}
 		}
-		jvmTest {
+	}
+
+	targets.withType(KotlinJvmTarget).configureEach { target ->
+		def allJvmTests = tasks.register("all${target.name.capitalize()}Tests") {
+			group = VERIFICATION_GROUP
+			description = "Run all of the tests for the ${target.name} target."
+		}
+
+		// Create dedicated compilation tasks for each LTS JDK as well as the latest JDK. One of these
+		// may be redundant with the normal test task, but that depends on the user's JDK version,
+		// and we don't really care about the duplication because these run very quickly.
+		for (testJdk in [8, 11, 17, 21, 23]) {
+			target.testRuns.create("Jdk$testJdk") { run ->
+				allJvmTests.configure {
+					it.dependsOn(run.executionTask)
+				}
+				run.executionTask.configure { test->
+					test.javaLauncher = javaToolchains.launcherFor {
+						it.languageVersion = JavaLanguageVersion.of(testJdk)
+					}
+				}
+			}
+		}
+
+		// Adding additional test runs somehow removes the configuration capabilities which allow
+		// automatic resolution of the junit test dependency. Add it explicitly instead.
+		target.compilations.named(TEST_COMPILATION_NAME).configure {
 			dependencies {
-				implementation libs.kotlin.test.junit
+				implementation(libs.kotlin.test.junit)
 			}
 		}
 	}
