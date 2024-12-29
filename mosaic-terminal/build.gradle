@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 
 import static co.touchlab.cklib.gradle.CompileToBitcode.Language.C
+import static org.gradle.language.base.plugins.LifecycleBasePlugin.BUILD_GROUP
 import static org.gradle.language.base.plugins.LifecycleBasePlugin.VERIFICATION_GROUP
 import static org.jetbrains.kotlin.gradle.plugin.KotlinCompilation.MAIN_COMPILATION_NAME
 import static org.jetbrains.kotlin.gradle.plugin.KotlinCompilation.TEST_COMPILATION_NAME
@@ -12,6 +13,14 @@ apply from: "$rootDir/publish.gradle"
 apply plugin: 'co.touchlab.cklib'
 apply plugin: 'com.jakewharton.cite'
 apply plugin: 'dev.drewhamilton.poko'
+
+configurations {
+	proGuard
+}
+
+dependencies {
+	proGuard 'com.guardsquare:proguard-base:7.6.1'
+}
 
 kotlin {
 	explicitApi()
@@ -32,7 +41,10 @@ kotlin {
 	}
 
 	targets.withType(KotlinJvmTarget).configureEach { target ->
-		target.compilations.named(MAIN_COMPILATION_NAME).configure { main ->
+		def mainCompilation = target.compilations.named(MAIN_COMPILATION_NAME)
+		def testCompilation = target.compilations.named(TEST_COMPILATION_NAME)
+
+		mainCompilation.configure { main ->
 			tasks.named(main.processResourcesTaskName).configure {
 				doFirst {
 					def jniDir = file("src/${target.name}Main/resources/jni")
@@ -70,9 +82,53 @@ kotlin {
 			}
 		}
 
+		def dependencyFiles = testCompilation.map { it.runtimeDependencyFiles }
+		def proGuardJar = base.archivesName.flatMap { archivesName ->
+			layout.buildDirectory.file("libs/$archivesName-tests-${target.name}-$version-ProGuard.jar")
+		}
+		def proGuardTask = tasks.register("${target.name}TestJarProGuard", JavaExec) {
+			group = BUILD_GROUP
+			description = 'Assembles an archive containing the test classes run through ProGuard.'
+
+			inputs.files(configurations.proGuard)
+			inputs.files(dependencyFiles)
+			outputs.file(proGuardJar.get())
+
+			classpath(configurations.proGuard)
+			mainClass = 'proguard.ProGuard'
+			args = [
+				'-libraryjars', '<java.home>/jmods/java.base.jmod(!**.jar;!module-info.class)',
+				// TODO These should be pulled from the jars, but for now this unblocks us.
+				'@src/jvmMain/resources/META-INF/proguard/com.jakewharton.mosaic-terminal.pro',
+				'@src/jvmTest/resources/META-INF/proguard/com.jakewharton.mosaic-terminal-test.pro',
+			]
+
+			doFirst {
+				// Defer resolving this until execution time since JavaExec lacks provider-based args.
+				args += '-injars'
+				args += dependencyFiles.get().files.join(File.pathSeparator)
+				// These do not need deferred, but since it must come after -injars it has to go here.
+				args += '-outjars'
+				args += proGuardJar.get().asFile.toString()
+			}
+		}
+
+		target.testRuns.create("ProGuard") { run ->
+			allJvmTests.configure {
+				it.dependsOn(run.executionTask)
+			}
+			run.executionTask.configure {
+				dependsOn(proGuardTask)
+			}
+			run.setExecutionSourceFrom(
+				project.files(proGuardJar.get()),
+				dependencyFiles.get().filter { it.isDirectory() },
+			)
+		}
+
 		// Adding additional test runs somehow removes the configuration capabilities which allow
 		// automatic resolution of the junit test dependency. Add it explicitly instead.
-		target.compilations.named(TEST_COMPILATION_NAME).configure {
+		testCompilation.configure {
 			dependencies {
 				implementation(libs.kotlin.test.junit)
 			}

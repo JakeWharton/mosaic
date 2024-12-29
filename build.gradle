@@ -51,6 +51,7 @@ allprojects {
 		testLogging {
 			if (System.getenv('CI') == 'true') {
 				events = ['started', 'failed', 'skipped', 'passed']
+				showStandardStreams = true
 			}
 			exceptionFormat 'full'
 		}

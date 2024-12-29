@@ -37,18 +37,30 @@ class StdinReaderTest {
 	}
 
 	@Test fun readCanBeInterrupted() {
+		println(1)
 		GlobalScope.launch(Dispatchers.Default) {
+			println(3)
 			delay(150.milliseconds)
+			println(4)
 			reader.interrupt()
+			println(8)
 		}
+		println(2)
 		val readA = reader.read(ByteArray(10), 0, 10)
+		println(5)
 		assertThat(readA).isZero()
 
+		println(6)
 		GlobalScope.launch(Dispatchers.Default) {
+			println(8)
 			delay(150.milliseconds)
+			println(9)
 			reader.interrupt()
+			println(11)
 		}
+		println(7)
 		val readB = reader.read(ByteArray(10), 0, 10)
+		println(10)
 		assertThat(readB).isZero()
 	}
 
