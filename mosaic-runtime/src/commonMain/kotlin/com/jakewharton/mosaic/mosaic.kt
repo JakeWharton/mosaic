@@ -270,9 +270,10 @@ internal class MosaicComposition(
 
 	fun setContent(content: @Composable () -> Unit) {
 		composition.setContent {
-			CompositionLocalProvider(LocalTerminal provides terminalState.value) {
-				content()
-			}
+			CompositionLocalProvider(
+				LocalTerminal provides terminalState.value,
+				content,
+			)
 		}
 		performLayout()
 	}
