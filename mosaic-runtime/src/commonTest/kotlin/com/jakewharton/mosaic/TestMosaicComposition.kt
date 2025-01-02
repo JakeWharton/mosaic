@@ -55,7 +55,7 @@ internal interface TestMosaicComposition {
 
 private class RealTestMosaicComposition(
 	coroutineContext: CoroutineContext,
-	withAnsi: Boolean,
+	private val withAnsi: Boolean,
 	initialTerminalSize: IntSize,
 ) : TestMosaicComposition {
 
@@ -65,7 +65,7 @@ private class RealTestMosaicComposition(
 	private var hasChanges = false
 
 	/** Channel with the most recent snapshot, if any. */
-	private val snapshots = Channel<NodeRenderSnapshot>(CONFLATED)
+	private val snapshots = Channel<MosaicNode>(CONFLATED)
 
 	private val rendering: Rendering = AnsiRendering(
 		ansiLevel = if (withAnsi) AnsiLevel.TRUECOLOR else AnsiLevel.NONE,
@@ -83,17 +83,7 @@ private class RealTestMosaicComposition(
 		terminalState = terminalState,
 		keyEvents = keyEvents,
 		onDraw = { rootNode ->
-			val stringRender = if (withAnsi) {
-				rendering.render(rootNode).toString()
-			} else {
-				rendering.render(rootNode).toString()
-					.removeSurrounding(ansiBeginSynchronizedUpdate, ansiEndSynchronizedUpdate)
-					.removeSuffix("\r\n") // without last line break for simplicity
-					.replace(clearLine, "")
-					.replace(cursorUp, "")
-					.replace("\r\n", "\n") // CRLF to LF for simplicity
-			}
-			snapshots.trySend(NodeRenderSnapshot(rootNode, stringRender))
+			snapshots.trySend(rootNode)
 			hasChanges = true
 		},
 	)
@@ -112,14 +102,6 @@ private class RealTestMosaicComposition(
 	}
 
 	override suspend fun awaitNodeSnapshot(duration: Duration): MosaicNode {
-		return awaitNodeRenderSnapshot(duration).node
-	}
-
-	override suspend fun awaitRenderSnapshot(duration: Duration): String {
-		return awaitNodeRenderSnapshot(duration).render
-	}
-
-	override suspend fun awaitNodeRenderSnapshot(duration: Duration): NodeRenderSnapshot {
 		check(contentSet) { "setContent must be called first!" }
 
 		// Await changes, sending at least one frame while we wait.
@@ -135,5 +117,27 @@ private class RealTestMosaicComposition(
 
 		hasChanges = false
 		return snapshots.receive()
+	}
+
+	override suspend fun awaitRenderSnapshot(duration: Duration): String {
+		return awaitNodeSnapshot(duration).render()
+	}
+
+	override suspend fun awaitNodeRenderSnapshot(duration: Duration): NodeRenderSnapshot {
+		val rootNode = awaitNodeSnapshot(duration)
+		return NodeRenderSnapshot(rootNode, rootNode.render())
+	}
+
+	private fun MosaicNode.render(): String {
+		val render = rendering.render(this).toString()
+		if (withAnsi) {
+			return render
+		}
+		return render
+			.removeSurrounding(ansiBeginSynchronizedUpdate, ansiEndSynchronizedUpdate)
+			.removeSuffix("\r\n") // without last line break for simplicity
+			.replace(clearLine, "")
+			.replace(cursorUp, "")
+			.replace("\r\n", "\n") // CRLF to LF for simplicity
 	}
 }
