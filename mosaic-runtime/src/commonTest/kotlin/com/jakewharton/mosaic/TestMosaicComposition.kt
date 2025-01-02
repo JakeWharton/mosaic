@@ -3,6 +3,7 @@ package com.jakewharton.mosaic
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import com.jakewharton.mosaic.TestMosaicComposition.NodeRenderSnapshot
 import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.ui.AnsiLevel
@@ -11,6 +12,7 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withTimeout
@@ -58,10 +60,7 @@ private class RealTestMosaicComposition(
 	private var contentSet = false
 
 	/** Channel with the most recent snapshot, if any. */
-	private val nodeSnapshots = Channel<MosaicNode>(Channel.CONFLATED)
-
-	/** Channel with the most recent snapshot, if any. */
-	private val renderSnapshots = Channel<String>(Channel.CONFLATED)
+	private val snapshots = Channel<NodeRenderSnapshot>(CONFLATED)
 
 	private val rendering: Rendering = AnsiRendering(
 		ansiLevel = if (withAnsi) AnsiLevel.TRUECOLOR else AnsiLevel.NONE,
@@ -74,7 +73,6 @@ private class RealTestMosaicComposition(
 	private val keyEvents = Channel<KeyEvent>(UNLIMITED)
 
 	val mosaicComposition = MosaicComposition(coroutineContext, terminalState, keyEvents) { rootNode ->
-		nodeSnapshots.trySend(rootNode)
 		val stringRender = if (withAnsi) {
 			rendering.render(rootNode).toString()
 		} else {
@@ -85,7 +83,7 @@ private class RealTestMosaicComposition(
 				.replace(cursorUp, "")
 				.replace("\r\n", "\n") // CRLF to LF for simplicity
 		}
-		renderSnapshots.trySend(stringRender)
+		snapshots.trySend(NodeRenderSnapshot(rootNode, stringRender))
 	}
 
 	override fun setContent(content: @Composable () -> Unit) {
@@ -102,27 +100,21 @@ private class RealTestMosaicComposition(
 	}
 
 	override suspend fun awaitNodeSnapshot(duration: Duration): MosaicNode {
-		return awaitSnapshot(duration) { nodeSnapshots.receive() }
+		return awaitNodeRenderSnapshot(duration).node
 	}
 
 	override suspend fun awaitRenderSnapshot(duration: Duration): String {
-		return awaitSnapshot(duration) { renderSnapshots.receive() }
+		return awaitNodeRenderSnapshot(duration).render
 	}
 
-	override suspend fun awaitNodeRenderSnapshot(duration: Duration): TestMosaicComposition.NodeRenderSnapshot {
-		return awaitSnapshot(duration) {
-			TestMosaicComposition.NodeRenderSnapshot(nodeSnapshots.receive(), renderSnapshots.receive())
-		}
-	}
-
-	private suspend fun <T> awaitSnapshot(duration: Duration, block: suspend () -> T): T {
+	override suspend fun awaitNodeRenderSnapshot(duration: Duration): NodeRenderSnapshot {
 		check(contentSet) { "setContent must be called first!" }
 
 		// Await at least one change, sending frames while we wait.
 		return withTimeout(duration) {
 			val sendFramesJob = with(mosaicComposition) { sendFrames() }
 			try {
-				block()
+				snapshots.receive()
 			} finally {
 				sendFramesJob.cancel()
 			}
