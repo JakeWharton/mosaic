@@ -8,4 +8,10 @@ apiValidation {
 	// We run API checks on a Mac where all possible Kotlin targets are available.
 	// Setting this to true will allow us to catch when targets are removed.
 	klib.strictValidation = System.getenv("CI") == "true"
+
+	nonPublicMarkers += [
+			"com.jakewharton.mosaic.animation.ExperimentalAnimationSpecApi",
+			"com.jakewharton.mosaic.animation.ExperimentalTransitionApi",
+			"com.jakewharton.mosaic.animation.InternalAnimationApi"
+	]
 }

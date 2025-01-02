@@ -4,7 +4,7 @@
 [Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.14.0...HEAD
 
 New:
-- Nothing yet!
+- Create `mosaic-animation` library, that provides various possibilities for animating Mosaic. An analog of [androidx.compose.animation-core](https://developer.android.com/reference/kotlin/androidx/compose/animation/core/package-summary).
 
 Changed:
 - Rendering now occurs as fast as possible, although still only when necessary. Previously the maximum FPS was capped to 20 which could cause minor visual delays when processing events.

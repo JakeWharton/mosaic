@@ -34,6 +34,7 @@ public value class Color internal constructor(
 	 * @see blueFloat
 	 * @see greenFloat
 	 */
+	@PublishedApi
 	@Stable
 	internal val redFloat: Float
 		get() = redInt / 255.0f
@@ -58,6 +59,7 @@ public value class Color internal constructor(
 	 * @see redFloat
 	 * @see blueFloat
 	 */
+	@PublishedApi
 	@Stable
 	internal val greenFloat: Float
 		get() = greenInt / 255.0f
@@ -82,9 +84,19 @@ public value class Color internal constructor(
 	 * @see redFloat
 	 * @see greenFloat
 	 */
+	@PublishedApi
 	@Stable
 	internal val blueFloat: Float
 		get() = blueInt / 255.0f
+
+	@Stable
+	public inline operator fun component1(): Float = redFloat
+
+	@Stable
+	public inline operator fun component2(): Float = greenFloat
+
+	@Stable
+	public inline operator fun component3(): Float = blueFloat
 
 	public companion object {
 		@Stable
@@ -180,4 +192,5 @@ public inline val Color.isUnspecifiedColor: Boolean get() = value == Unspecified
  * If this color [isSpecifiedColor] then this is returned, otherwise [block] is executed and its result
  * is returned.
  */
-public inline fun Color.takeOrElse(block: () -> Color): Color = if (isSpecifiedColor) this else block()
+public inline fun Color.takeOrElse(block: () -> Color): Color =
+	if (isSpecifiedColor) this else block()

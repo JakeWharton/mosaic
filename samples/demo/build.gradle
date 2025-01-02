@@ -8,4 +8,5 @@ application {
 
 dependencies {
 	implementation projects.mosaicRuntime
+	implementation projects.mosaicAnimation
 }

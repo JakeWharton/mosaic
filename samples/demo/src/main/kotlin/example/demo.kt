@@ -1,13 +1,24 @@
 package example
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.IntState
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import com.jakewharton.mosaic.LocalTerminal
+import com.jakewharton.mosaic.animation.Animatable
+import com.jakewharton.mosaic.animation.LinearEasing
+import com.jakewharton.mosaic.animation.Spring
+import com.jakewharton.mosaic.animation.VectorConverter
+import com.jakewharton.mosaic.animation.animateValue
+import com.jakewharton.mosaic.animation.infiniteRepeatable
+import com.jakewharton.mosaic.animation.rememberInfiniteTransition
+import com.jakewharton.mosaic.animation.spring
+import com.jakewharton.mosaic.animation.tween
 import com.jakewharton.mosaic.layout.background
 import com.jakewharton.mosaic.layout.height
 import com.jakewharton.mosaic.layout.size
@@ -25,118 +36,178 @@ import com.jakewharton.mosaic.ui.Row
 import com.jakewharton.mosaic.ui.Spacer
 import com.jakewharton.mosaic.ui.Text
 import com.jakewharton.mosaic.ui.TextStyle
+import kotlin.math.abs
 import kotlinx.coroutines.awaitCancellation
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 
 private val BrightGreen = Color(100, 255, 100)
 private val BrightBlue = Color(60, 140, 230)
 
 fun main() = runMosaicBlocking {
 	Column {
-		val terminal = LocalTerminal.current
-		Text(
-			buildAnnotatedString {
-				append("\uD83D\uDDA5\uFE0F")
-				append("  ")
-				append("Terminal(")
-				withStyle(SpanStyle(color = BrightGreen)) {
-					append("width=")
-				}
-				withStyle(
-					SpanStyle(
-						color = BrightBlue,
-						textStyle = TextStyle.Bold + TextStyle.Underline,
-					),
-				) {
-					append(terminal.size.width.toString())
-				}
-				append(", ")
-				withStyle(SpanStyle(color = BrightGreen)) {
-					append("height=")
-				}
-				withStyle(
-					SpanStyle(
-						color = BrightBlue,
-						textStyle = TextStyle.Bold + TextStyle.Underline,
-					),
-				) {
-					append(terminal.size.height.toString())
-				}
-				append(")")
-				append(" ")
-				append("\uD83D\uDDA5\uFE0F")
-			},
-		)
+		TerminalInfo()
 		Spacer(modifier = Modifier.height(1))
 		GradientsBlock()
 	}
-
 	LaunchedEffect(Unit) {
 		awaitCancellation()
 	}
 }
 
+@Composable
+private fun TerminalInfo() {
+	val widthAndHeightTitleColorAnimatable = remember { Animatable(Color.White) }
+
+	val screenSize = LocalTerminal.current.size
+	val screenWidth = screenSize.width
+	val screenHeight = screenSize.height
+
+	val screenWidthState = rememberUpdatedIntState(screenWidth)
+	val screenHeightState = rememberUpdatedIntState(screenHeight)
+
+	val widthValueColor by terminalSizeValueColorAsState(screenWidthState)
+	val heightValueColor by terminalSizeValueColorAsState(screenHeightState)
+
+	Text(
+		buildAnnotatedString {
+			append("\uD83D\uDDA5\uFE0F")
+			append(" ")
+			append("Terminal(")
+			withStyle(SpanStyle(color = widthAndHeightTitleColorAnimatable.value)) {
+				append("width=")
+			}
+			withStyle(
+				SpanStyle(
+					color = widthValueColor,
+					textStyle = TextStyle.Bold + TextStyle.Underline,
+				),
+			) {
+				append(screenWidth.toString())
+			}
+			append(", ")
+			withStyle(SpanStyle(color = widthAndHeightTitleColorAnimatable.value)) {
+				append("height=")
+			}
+			withStyle(
+				SpanStyle(
+					color = heightValueColor,
+					textStyle = TextStyle.Bold + TextStyle.Underline,
+				),
+			) {
+				append(screenHeight.toString())
+			}
+			append(")")
+			append(" ")
+			append("\uD83D\uDDA5\uFE0F")
+		},
+	)
+	LaunchedEffect(Unit) {
+		widthAndHeightTitleColorAnimatable.animateTo(
+			targetValue = BrightGreen,
+			animationSpec = tween(durationMillis = 2000, delayMillis = 500),
+		)
+	}
+}
+
+@Composable
+private fun terminalSizeValueColorAsState(valueState: IntState): State<Color> {
+	var previousValue by remember { mutableIntStateOf(valueState.intValue) }
+	val valueColorAnimatable = remember { Animatable(BrightBlue) }
+	LaunchedEffect(Unit) {
+		snapshotFlow { valueState.intValue }
+			.collectLatest { value ->
+				val diff = abs(value - previousValue)
+				if (diff == 0) {
+					return@collectLatest
+				}
+				val normalizedDiff = (diff / 20f).coerceIn(0f, 1f)
+				valueColorAnimatable.animateTo(
+					targetValue = Color((244 * normalizedDiff).toInt(), 151, 151), // BrightRed
+					animationSpec = spring(
+						dampingRatio = Spring.DampingRatioMediumBouncy,
+						stiffness = Spring.StiffnessMediumLow,
+					),
+				)
+				previousValue = value
+				valueColorAnimatable.animateTo(
+					targetValue = BrightBlue,
+					animationSpec = tween(500),
+				)
+			}
+	}
+	return valueColorAnimatable.asState()
+}
+
 @Suppress("UnusedReceiverParameter") // instead of ignore rule: compose:multiple-emitters-check
 @Composable
 private fun ColumnScope.GradientsBlock() {
-	val screenHalfWidth = LocalTerminal.current.size.width / 2
-	var gradientWidth by remember { mutableIntStateOf(0) }
-	val gradientWidthDiff by remember(screenHalfWidth) {
-		derivedStateOf { (screenHalfWidth - gradientWidth) / 5 }
+	val gradientWidthAnimatable = remember {
+		Animatable(
+			initialValue = 0,
+			typeConverter = Int.VectorConverter,
+			label = "Width",
+		)
 	}
+	val gradientWidthState = gradientWidthAnimatable.asState()
 	Gradient(
 		repeatedWord = "Red",
-		width = gradientWidth,
+		widthState = gradientWidthState,
 		textColorProvider = { percent -> Color(1.0f - percent, 0.0f, 0.0f) },
 		backgroundColorProvider = { percent -> Color(percent, 0.0f, 0.0f) },
 	)
 	Gradient(
 		repeatedWord = "Yellow",
-		width = gradientWidth,
+		widthState = gradientWidthState,
 		textColorProvider = { percent -> Color(1.0f - percent, 1.0f - percent, 0.0f) },
 		backgroundColorProvider = { percent -> Color(percent, percent, 0.0f) },
 	)
 	Gradient(
 		repeatedWord = "Green",
-		width = gradientWidth,
+		widthState = gradientWidthState,
 		textColorProvider = { percent -> Color(0.0f, 1.0f - percent, 0.0f) },
 		backgroundColorProvider = { percent -> Color(0.0f, percent, 0.0f) },
 	)
 	Gradient(
 		repeatedWord = "Cyan",
-		width = gradientWidth,
+		widthState = gradientWidthState,
 		textColorProvider = { percent -> Color(0.0f, 1.0f - percent, 1.0f - percent) },
 		backgroundColorProvider = { percent -> Color(0.0f, percent, percent) },
 	)
 	Gradient(
 		repeatedWord = "Blue",
-		width = gradientWidth,
+		widthState = gradientWidthState,
 		textColorProvider = { percent -> Color(0.0f, 0.0f, 1.0f - percent) },
 		backgroundColorProvider = { percent -> Color(0.0f, 0.0f, percent) },
 	)
 	Gradient(
 		repeatedWord = "Magenta",
-		width = gradientWidth,
+		widthState = gradientWidthState,
 		textColorProvider = { percent -> Color(1.0f - percent, 0.0f, 1.0f - percent) },
 		backgroundColorProvider = { percent -> Color(percent, 0.0f, percent) },
 	)
+	val screenHalfWidth = LocalTerminal.current.size.width / 2
 	LaunchedEffect(screenHalfWidth) {
-		while (true) {
-			delay(100L)
-			gradientWidth += gradientWidthDiff
-		}
+		gradientWidthAnimatable.animateTo(screenHalfWidth)
 	}
 }
 
 @Composable
 private fun Gradient(
 	repeatedWord: String,
-	width: Int,
+	widthState: State<Int>,
 	textColorProvider: (percent: Float) -> Color,
 	backgroundColorProvider: (percent: Float) -> Color,
 ) {
-	var textBias by remember { mutableIntStateOf(0) }
+	val textBias by rememberInfiniteTransition().animateValue(
+		initialValue = repeatedWord.length,
+		targetValue = 0,
+		typeConverter = Int.VectorConverter,
+		animationSpec = infiniteRepeatable(
+			tween(repeatedWord.length * 200, easing = LinearEasing),
+		),
+	)
 	Box {
+		val width = widthState.value
 		Row {
 			var wordCharIndex = textBias
 			repeat(width) { index ->
@@ -161,13 +232,9 @@ private fun Gradient(
 			}
 		}
 	}
-	LaunchedEffect(Unit) {
-		while (true) {
-			delay(200L)
-			textBias--
-			if (textBias < 0) {
-				textBias = repeatedWord.length - 1
-			}
-		}
-	}
 }
+
+@Composable
+fun rememberUpdatedIntState(newValue: Int): IntState = remember {
+	mutableIntStateOf(newValue)
+}.apply { value = newValue }

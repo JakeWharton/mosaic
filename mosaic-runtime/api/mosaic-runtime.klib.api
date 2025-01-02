@@ -446,12 +446,21 @@ final value class com.jakewharton.mosaic.ui.unit/IntSize { // com.jakewharton.mo
 }
 
 final value class com.jakewharton.mosaic.ui/Color { // com.jakewharton.mosaic.ui/Color|null[0]
+    final val blueFloat // com.jakewharton.mosaic.ui/Color.blueFloat|{}blueFloat[0]
+        final fun <get-blueFloat>(): kotlin/Float // com.jakewharton.mosaic.ui/Color.blueFloat.<get-blueFloat>|<get-blueFloat>(){}[0]
+    final val greenFloat // com.jakewharton.mosaic.ui/Color.greenFloat|{}greenFloat[0]
+        final fun <get-greenFloat>(): kotlin/Float // com.jakewharton.mosaic.ui/Color.greenFloat.<get-greenFloat>|<get-greenFloat>(){}[0]
+    final val redFloat // com.jakewharton.mosaic.ui/Color.redFloat|{}redFloat[0]
+        final fun <get-redFloat>(): kotlin/Float // com.jakewharton.mosaic.ui/Color.redFloat.<get-redFloat>|<get-redFloat>(){}[0]
     final val value // com.jakewharton.mosaic.ui/Color.value|{}value[0]
         final fun <get-value>(): kotlin/Int // com.jakewharton.mosaic.ui/Color.value.<get-value>|<get-value>(){}[0]
 
     final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.ui/Color.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.ui/Color.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // com.jakewharton.mosaic.ui/Color.toString|toString(){}[0]
+    final inline fun component1(): kotlin/Float // com.jakewharton.mosaic.ui/Color.component1|component1(){}[0]
+    final inline fun component2(): kotlin/Float // com.jakewharton.mosaic.ui/Color.component2|component2(){}[0]
+    final inline fun component3(): kotlin/Float // com.jakewharton.mosaic.ui/Color.component3|component3(){}[0]
 
     final object Companion { // com.jakewharton.mosaic.ui/Color.Companion|null[0]
         final val Black // com.jakewharton.mosaic.ui/Color.Companion.Black|{}Black[0]

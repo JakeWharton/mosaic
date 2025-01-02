@@ -1,0 +1,33 @@
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
+apply from: "$rootDir/addAllTargets.gradle"
+apply from: "$rootDir/publish.gradle"
+apply plugin: 'dev.drewhamilton.poko'
+
+kotlin {
+	applyDefaultHierarchyTemplate {
+		it.common {
+			it.group("native") {
+				it.group("posix") {
+					it.group("linux") {}
+					it.group("macos") {}
+				}
+			}
+		}
+	}
+
+	explicitApi()
+
+	sourceSets {
+		commonMain {
+			dependencies {
+				implementation projects.mosaicRuntime
+				implementation libs.compose.collection
+				implementation libs.androidx.annotation
+			}
+		}
+	}
+
+	compilerOptions.freeCompilerArgs.add('-Xexpect-actual-classes')
+	compilerOptions.freeCompilerArgs.add('-Xnon-local-break-continue')
+}

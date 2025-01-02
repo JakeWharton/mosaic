@@ -444,9 +444,15 @@ public abstract interface class com/jakewharton/mosaic/ui/BoxScope {
 public final class com/jakewharton/mosaic/ui/Color {
 	public static final field Companion Lcom/jakewharton/mosaic/ui/Color$Companion;
 	public static final synthetic fun box-impl (I)Lcom/jakewharton/mosaic/ui/Color;
+	public static final fun component1-impl (I)F
+	public static final fun component2-impl (I)F
+	public static final fun component3-impl (I)F
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun equals-impl (ILjava/lang/Object;)Z
 	public static final fun equals-impl0 (II)Z
+	public static final fun getBlueFloat-impl (I)F
+	public static final fun getGreenFloat-impl (I)F
+	public static final fun getRedFloat-impl (I)F
 	public fun hashCode ()I
 	public static fun hashCode-impl (I)I
 	public fun toString ()Ljava/lang/String;

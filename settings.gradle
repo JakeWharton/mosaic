@@ -16,6 +16,7 @@ develocity {
 
 rootProject.name = 'mosaic'
 
+include ':mosaic-animation'
 include ':mosaic-runtime'
 include ':mosaic-terminal'
 

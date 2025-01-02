@@ -1,0 +1,1055 @@
+// Klib ABI Dump
+// Targets: [linuxArm64, linuxX64, macosArm64, macosX64, mingwX64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <com.jakewharton.mosaic:mosaic-animation>
+open annotation class com.jakewharton.mosaic.animation/ExperimentalAnimatableApi : kotlin/Annotation { // com.jakewharton.mosaic.animation/ExperimentalAnimatableApi|null[0]
+    constructor <init>() // com.jakewharton.mosaic.animation/ExperimentalAnimatableApi.<init>|<init>(){}[0]
+}
+
+open annotation class com.jakewharton.mosaic.animation/ExperimentalAnimationSpecApi : kotlin/Annotation { // com.jakewharton.mosaic.animation/ExperimentalAnimationSpecApi|null[0]
+    constructor <init>() // com.jakewharton.mosaic.animation/ExperimentalAnimationSpecApi.<init>|<init>(){}[0]
+}
+
+open annotation class com.jakewharton.mosaic.animation/ExperimentalTransitionApi : kotlin/Annotation { // com.jakewharton.mosaic.animation/ExperimentalTransitionApi|null[0]
+    constructor <init>() // com.jakewharton.mosaic.animation/ExperimentalTransitionApi.<init>|<init>(){}[0]
+}
+
+open annotation class com.jakewharton.mosaic.animation/InternalAnimationApi : kotlin/Annotation { // com.jakewharton.mosaic.animation/InternalAnimationApi|null[0]
+    constructor <init>() // com.jakewharton.mosaic.animation/InternalAnimationApi.<init>|<init>(){}[0]
+}
+
+final enum class com.jakewharton.mosaic.animation/AnimationEndReason : kotlin/Enum<com.jakewharton.mosaic.animation/AnimationEndReason> { // com.jakewharton.mosaic.animation/AnimationEndReason|null[0]
+    enum entry BoundReached // com.jakewharton.mosaic.animation/AnimationEndReason.BoundReached|null[0]
+    enum entry Finished // com.jakewharton.mosaic.animation/AnimationEndReason.Finished|null[0]
+
+    final val entries // com.jakewharton.mosaic.animation/AnimationEndReason.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<com.jakewharton.mosaic.animation/AnimationEndReason> // com.jakewharton.mosaic.animation/AnimationEndReason.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): com.jakewharton.mosaic.animation/AnimationEndReason // com.jakewharton.mosaic.animation/AnimationEndReason.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<com.jakewharton.mosaic.animation/AnimationEndReason> // com.jakewharton.mosaic.animation/AnimationEndReason.values|values#static(){}[0]
+}
+
+final enum class com.jakewharton.mosaic.animation/RepeatMode : kotlin/Enum<com.jakewharton.mosaic.animation/RepeatMode> { // com.jakewharton.mosaic.animation/RepeatMode|null[0]
+    enum entry Restart // com.jakewharton.mosaic.animation/RepeatMode.Restart|null[0]
+    enum entry Reverse // com.jakewharton.mosaic.animation/RepeatMode.Reverse|null[0]
+
+    final val entries // com.jakewharton.mosaic.animation/RepeatMode.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<com.jakewharton.mosaic.animation/RepeatMode> // com.jakewharton.mosaic.animation/RepeatMode.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): com.jakewharton.mosaic.animation/RepeatMode // com.jakewharton.mosaic.animation/RepeatMode.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<com.jakewharton.mosaic.animation/RepeatMode> // com.jakewharton.mosaic.animation/RepeatMode.values|values#static(){}[0]
+}
+
+abstract fun interface com.jakewharton.mosaic.animation/Easing { // com.jakewharton.mosaic.animation/Easing|null[0]
+    abstract fun transform(kotlin/Float): kotlin/Float // com.jakewharton.mosaic.animation/Easing.transform|transform(kotlin.Float){}[0]
+}
+
+abstract interface <#A: com.jakewharton.mosaic.animation/AnimationVector> com.jakewharton.mosaic.animation/VectorizedAnimationSpec { // com.jakewharton.mosaic.animation/VectorizedAnimationSpec|null[0]
+    abstract val isInfinite // com.jakewharton.mosaic.animation/VectorizedAnimationSpec.isInfinite|{}isInfinite[0]
+        abstract fun <get-isInfinite>(): kotlin/Boolean // com.jakewharton.mosaic.animation/VectorizedAnimationSpec.isInfinite.<get-isInfinite>|<get-isInfinite>(){}[0]
+
+    abstract fun getDurationNanos(#A, #A, #A): kotlin/Long // com.jakewharton.mosaic.animation/VectorizedAnimationSpec.getDurationNanos|getDurationNanos(1:0;1:0;1:0){}[0]
+    abstract fun getValueFromNanos(kotlin/Long, #A, #A, #A): #A // com.jakewharton.mosaic.animation/VectorizedAnimationSpec.getValueFromNanos|getValueFromNanos(kotlin.Long;1:0;1:0;1:0){}[0]
+    abstract fun getVelocityFromNanos(kotlin/Long, #A, #A, #A): #A // com.jakewharton.mosaic.animation/VectorizedAnimationSpec.getVelocityFromNanos|getVelocityFromNanos(kotlin.Long;1:0;1:0;1:0){}[0]
+    open fun getEndVelocity(#A, #A, #A): #A // com.jakewharton.mosaic.animation/VectorizedAnimationSpec.getEndVelocity|getEndVelocity(1:0;1:0;1:0){}[0]
+}
+
+abstract interface <#A: com.jakewharton.mosaic.animation/AnimationVector> com.jakewharton.mosaic.animation/VectorizedDecayAnimationSpec { // com.jakewharton.mosaic.animation/VectorizedDecayAnimationSpec|null[0]
+    abstract val absVelocityThreshold // com.jakewharton.mosaic.animation/VectorizedDecayAnimationSpec.absVelocityThreshold|{}absVelocityThreshold[0]
+        abstract fun <get-absVelocityThreshold>(): kotlin/Float // com.jakewharton.mosaic.animation/VectorizedDecayAnimationSpec.absVelocityThreshold.<get-absVelocityThreshold>|<get-absVelocityThreshold>(){}[0]
+
+    abstract fun getDurationNanos(#A, #A): kotlin/Long // com.jakewharton.mosaic.animation/VectorizedDecayAnimationSpec.getDurationNanos|getDurationNanos(1:0;1:0){}[0]
+    abstract fun getTargetValue(#A, #A): #A // com.jakewharton.mosaic.animation/VectorizedDecayAnimationSpec.getTargetValue|getTargetValue(1:0;1:0){}[0]
+    abstract fun getValueFromNanos(kotlin/Long, #A, #A): #A // com.jakewharton.mosaic.animation/VectorizedDecayAnimationSpec.getValueFromNanos|getValueFromNanos(kotlin.Long;1:0;1:0){}[0]
+    abstract fun getVelocityFromNanos(kotlin/Long, #A, #A): #A // com.jakewharton.mosaic.animation/VectorizedDecayAnimationSpec.getVelocityFromNanos|getVelocityFromNanos(kotlin.Long;1:0;1:0){}[0]
+}
+
+abstract interface <#A: com.jakewharton.mosaic.animation/AnimationVector> com.jakewharton.mosaic.animation/VectorizedDurationBasedAnimationSpec : com.jakewharton.mosaic.animation/VectorizedFiniteAnimationSpec<#A> { // com.jakewharton.mosaic.animation/VectorizedDurationBasedAnimationSpec|null[0]
+    abstract val delayMillis // com.jakewharton.mosaic.animation/VectorizedDurationBasedAnimationSpec.delayMillis|{}delayMillis[0]
+        abstract fun <get-delayMillis>(): kotlin/Int // com.jakewharton.mosaic.animation/VectorizedDurationBasedAnimationSpec.delayMillis.<get-delayMillis>|<get-delayMillis>(){}[0]
+    abstract val durationMillis // com.jakewharton.mosaic.animation/VectorizedDurationBasedAnimationSpec.durationMillis|{}durationMillis[0]
+        abstract fun <get-durationMillis>(): kotlin/Int // com.jakewharton.mosaic.animation/VectorizedDurationBasedAnimationSpec.durationMillis.<get-durationMillis>|<get-durationMillis>(){}[0]
+
+    open fun getDurationNanos(#A, #A, #A): kotlin/Long // com.jakewharton.mosaic.animation/VectorizedDurationBasedAnimationSpec.getDurationNanos|getDurationNanos(1:0;1:0;1:0){}[0]
+}
+
+abstract interface <#A: com.jakewharton.mosaic.animation/AnimationVector> com.jakewharton.mosaic.animation/VectorizedFiniteAnimationSpec : com.jakewharton.mosaic.animation/VectorizedAnimationSpec<#A> { // com.jakewharton.mosaic.animation/VectorizedFiniteAnimationSpec|null[0]
+    open val isInfinite // com.jakewharton.mosaic.animation/VectorizedFiniteAnimationSpec.isInfinite|{}isInfinite[0]
+        open fun <get-isInfinite>(): kotlin/Boolean // com.jakewharton.mosaic.animation/VectorizedFiniteAnimationSpec.isInfinite.<get-isInfinite>|<get-isInfinite>(){}[0]
+}
+
+abstract interface <#A: kotlin/Any?, #B: com.jakewharton.mosaic.animation/AnimationVector> com.jakewharton.mosaic.animation/Animation { // com.jakewharton.mosaic.animation/Animation|null[0]
+    abstract val durationNanos // com.jakewharton.mosaic.animation/Animation.durationNanos|{}durationNanos[0]
+        abstract fun <get-durationNanos>(): kotlin/Long // com.jakewharton.mosaic.animation/Animation.durationNanos.<get-durationNanos>|<get-durationNanos>(){}[0]
+    abstract val isInfinite // com.jakewharton.mosaic.animation/Animation.isInfinite|{}isInfinite[0]
+        abstract fun <get-isInfinite>(): kotlin/Boolean // com.jakewharton.mosaic.animation/Animation.isInfinite.<get-isInfinite>|<get-isInfinite>(){}[0]
+    abstract val targetValue // com.jakewharton.mosaic.animation/Animation.targetValue|{}targetValue[0]
+        abstract fun <get-targetValue>(): #A // com.jakewharton.mosaic.animation/Animation.targetValue.<get-targetValue>|<get-targetValue>(){}[0]
+    abstract val typeConverter // com.jakewharton.mosaic.animation/Animation.typeConverter|{}typeConverter[0]
+        abstract fun <get-typeConverter>(): com.jakewharton.mosaic.animation/TwoWayConverter<#A, #B> // com.jakewharton.mosaic.animation/Animation.typeConverter.<get-typeConverter>|<get-typeConverter>(){}[0]
+
+    abstract fun getValueFromNanos(kotlin/Long): #A // com.jakewharton.mosaic.animation/Animation.getValueFromNanos|getValueFromNanos(kotlin.Long){}[0]
+    abstract fun getVelocityVectorFromNanos(kotlin/Long): #B // com.jakewharton.mosaic.animation/Animation.getVelocityVectorFromNanos|getVelocityVectorFromNanos(kotlin.Long){}[0]
+    open fun isFinishedFromNanos(kotlin/Long): kotlin/Boolean // com.jakewharton.mosaic.animation/Animation.isFinishedFromNanos|isFinishedFromNanos(kotlin.Long){}[0]
+}
+
+abstract interface <#A: kotlin/Any?, #B: com.jakewharton.mosaic.animation/AnimationVector> com.jakewharton.mosaic.animation/TwoWayConverter { // com.jakewharton.mosaic.animation/TwoWayConverter|null[0]
+    abstract val convertFromVector // com.jakewharton.mosaic.animation/TwoWayConverter.convertFromVector|{}convertFromVector[0]
+        abstract fun <get-convertFromVector>(): kotlin/Function1<#B, #A> // com.jakewharton.mosaic.animation/TwoWayConverter.convertFromVector.<get-convertFromVector>|<get-convertFromVector>(){}[0]
+    abstract val convertToVector // com.jakewharton.mosaic.animation/TwoWayConverter.convertToVector|{}convertToVector[0]
+        abstract fun <get-convertToVector>(): kotlin/Function1<#A, #B> // com.jakewharton.mosaic.animation/TwoWayConverter.convertToVector.<get-convertToVector>|<get-convertToVector>(){}[0]
+}
+
+abstract interface <#A: kotlin/Any?> com.jakewharton.mosaic.animation/AnimationSpec { // com.jakewharton.mosaic.animation/AnimationSpec|null[0]
+    abstract fun <#A1: com.jakewharton.mosaic.animation/AnimationVector> vectorize(com.jakewharton.mosaic.animation/TwoWayConverter<#A, #A1>): com.jakewharton.mosaic.animation/VectorizedAnimationSpec<#A1> // com.jakewharton.mosaic.animation/AnimationSpec.vectorize|vectorize(com.jakewharton.mosaic.animation.TwoWayConverter<1:0,0:0>){0§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+}
+
+abstract interface <#A: kotlin/Any?> com.jakewharton.mosaic.animation/DecayAnimationSpec { // com.jakewharton.mosaic.animation/DecayAnimationSpec|null[0]
+    abstract fun <#A1: com.jakewharton.mosaic.animation/AnimationVector> vectorize(com.jakewharton.mosaic.animation/TwoWayConverter<#A, #A1>): com.jakewharton.mosaic.animation/VectorizedDecayAnimationSpec<#A1> // com.jakewharton.mosaic.animation/DecayAnimationSpec.vectorize|vectorize(com.jakewharton.mosaic.animation.TwoWayConverter<1:0,0:0>){0§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+}
+
+abstract interface <#A: kotlin/Any?> com.jakewharton.mosaic.animation/DurationBasedAnimationSpec : com.jakewharton.mosaic.animation/FiniteAnimationSpec<#A> { // com.jakewharton.mosaic.animation/DurationBasedAnimationSpec|null[0]
+    abstract fun <#A1: com.jakewharton.mosaic.animation/AnimationVector> vectorize(com.jakewharton.mosaic.animation/TwoWayConverter<#A, #A1>): com.jakewharton.mosaic.animation/VectorizedDurationBasedAnimationSpec<#A1> // com.jakewharton.mosaic.animation/DurationBasedAnimationSpec.vectorize|vectorize(com.jakewharton.mosaic.animation.TwoWayConverter<1:0,0:0>){0§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+}
+
+abstract interface <#A: kotlin/Any?> com.jakewharton.mosaic.animation/FiniteAnimationSpec : com.jakewharton.mosaic.animation/AnimationSpec<#A> { // com.jakewharton.mosaic.animation/FiniteAnimationSpec|null[0]
+    abstract fun <#A1: com.jakewharton.mosaic.animation/AnimationVector> vectorize(com.jakewharton.mosaic.animation/TwoWayConverter<#A, #A1>): com.jakewharton.mosaic.animation/VectorizedFiniteAnimationSpec<#A1> // com.jakewharton.mosaic.animation/FiniteAnimationSpec.vectorize|vectorize(com.jakewharton.mosaic.animation.TwoWayConverter<1:0,0:0>){0§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+}
+
+abstract interface com.jakewharton.mosaic.animation/FloatAnimationSpec : com.jakewharton.mosaic.animation/AnimationSpec<kotlin/Float> { // com.jakewharton.mosaic.animation/FloatAnimationSpec|null[0]
+    abstract fun getDurationNanos(kotlin/Float, kotlin/Float, kotlin/Float): kotlin/Long // com.jakewharton.mosaic.animation/FloatAnimationSpec.getDurationNanos|getDurationNanos(kotlin.Float;kotlin.Float;kotlin.Float){}[0]
+    abstract fun getValueFromNanos(kotlin/Long, kotlin/Float, kotlin/Float, kotlin/Float): kotlin/Float // com.jakewharton.mosaic.animation/FloatAnimationSpec.getValueFromNanos|getValueFromNanos(kotlin.Long;kotlin.Float;kotlin.Float;kotlin.Float){}[0]
+    abstract fun getVelocityFromNanos(kotlin/Long, kotlin/Float, kotlin/Float, kotlin/Float): kotlin/Float // com.jakewharton.mosaic.animation/FloatAnimationSpec.getVelocityFromNanos|getVelocityFromNanos(kotlin.Long;kotlin.Float;kotlin.Float;kotlin.Float){}[0]
+    open fun <#A1: com.jakewharton.mosaic.animation/AnimationVector> vectorize(com.jakewharton.mosaic.animation/TwoWayConverter<kotlin/Float, #A1>): com.jakewharton.mosaic.animation/VectorizedFloatAnimationSpec<#A1> // com.jakewharton.mosaic.animation/FloatAnimationSpec.vectorize|vectorize(com.jakewharton.mosaic.animation.TwoWayConverter<kotlin.Float,0:0>){0§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+    open fun getEndVelocity(kotlin/Float, kotlin/Float, kotlin/Float): kotlin/Float // com.jakewharton.mosaic.animation/FloatAnimationSpec.getEndVelocity|getEndVelocity(kotlin.Float;kotlin.Float;kotlin.Float){}[0]
+}
+
+abstract interface com.jakewharton.mosaic.animation/FloatDecayAnimationSpec { // com.jakewharton.mosaic.animation/FloatDecayAnimationSpec|null[0]
+    abstract val absVelocityThreshold // com.jakewharton.mosaic.animation/FloatDecayAnimationSpec.absVelocityThreshold|{}absVelocityThreshold[0]
+        abstract fun <get-absVelocityThreshold>(): kotlin/Float // com.jakewharton.mosaic.animation/FloatDecayAnimationSpec.absVelocityThreshold.<get-absVelocityThreshold>|<get-absVelocityThreshold>(){}[0]
+
+    abstract fun getDurationNanos(kotlin/Float, kotlin/Float): kotlin/Long // com.jakewharton.mosaic.animation/FloatDecayAnimationSpec.getDurationNanos|getDurationNanos(kotlin.Float;kotlin.Float){}[0]
+    abstract fun getTargetValue(kotlin/Float, kotlin/Float): kotlin/Float // com.jakewharton.mosaic.animation/FloatDecayAnimationSpec.getTargetValue|getTargetValue(kotlin.Float;kotlin.Float){}[0]
+    abstract fun getValueFromNanos(kotlin/Long, kotlin/Float, kotlin/Float): kotlin/Float // com.jakewharton.mosaic.animation/FloatDecayAnimationSpec.getValueFromNanos|getValueFromNanos(kotlin.Long;kotlin.Float;kotlin.Float){}[0]
+    abstract fun getVelocityFromNanos(kotlin/Long, kotlin/Float, kotlin/Float): kotlin/Float // com.jakewharton.mosaic.animation/FloatDecayAnimationSpec.getVelocityFromNanos|getVelocityFromNanos(kotlin.Long;kotlin.Float;kotlin.Float){}[0]
+}
+
+abstract interface com.jakewharton.mosaic.animation/InfiniteAnimationPolicy : kotlin.coroutines/CoroutineContext.Element { // com.jakewharton.mosaic.animation/InfiniteAnimationPolicy|null[0]
+    open val key // com.jakewharton.mosaic.animation/InfiniteAnimationPolicy.key|{}key[0]
+        open fun <get-key>(): kotlin.coroutines/CoroutineContext.Key<*> // com.jakewharton.mosaic.animation/InfiniteAnimationPolicy.key.<get-key>|<get-key>(){}[0]
+
+    abstract suspend fun <#A1: kotlin/Any?> onInfiniteOperation(kotlin.coroutines/SuspendFunction0<#A1>): #A1 // com.jakewharton.mosaic.animation/InfiniteAnimationPolicy.onInfiniteOperation|onInfiniteOperation(kotlin.coroutines.SuspendFunction0<0:0>){0§<kotlin.Any?>}[0]
+
+    final object Key : kotlin.coroutines/CoroutineContext.Key<com.jakewharton.mosaic.animation/InfiniteAnimationPolicy> // com.jakewharton.mosaic.animation/InfiniteAnimationPolicy.Key|null[0]
+}
+
+abstract interface com.jakewharton.mosaic.animation/MotionDurationScale : kotlin.coroutines/CoroutineContext.Element { // com.jakewharton.mosaic.animation/MotionDurationScale|null[0]
+    abstract val scaleFactor // com.jakewharton.mosaic.animation/MotionDurationScale.scaleFactor|{}scaleFactor[0]
+        abstract fun <get-scaleFactor>(): kotlin/Float // com.jakewharton.mosaic.animation/MotionDurationScale.scaleFactor.<get-scaleFactor>|<get-scaleFactor>(){}[0]
+    open val key // com.jakewharton.mosaic.animation/MotionDurationScale.key|{}key[0]
+        open fun <get-key>(): kotlin.coroutines/CoroutineContext.Key<*> // com.jakewharton.mosaic.animation/MotionDurationScale.key.<get-key>|<get-key>(){}[0]
+
+    final object Key : kotlin.coroutines/CoroutineContext.Key<com.jakewharton.mosaic.animation/MotionDurationScale> // com.jakewharton.mosaic.animation/MotionDurationScale.Key|null[0]
+}
+
+final class <#A: com.jakewharton.mosaic.animation/AnimationVector> com.jakewharton.mosaic.animation/VectorizedFloatAnimationSpec : com.jakewharton.mosaic.animation/VectorizedFiniteAnimationSpec<#A> { // com.jakewharton.mosaic.animation/VectorizedFloatAnimationSpec|null[0]
+    constructor <init>(com.jakewharton.mosaic.animation/FloatAnimationSpec) // com.jakewharton.mosaic.animation/VectorizedFloatAnimationSpec.<init>|<init>(com.jakewharton.mosaic.animation.FloatAnimationSpec){}[0]
+
+    final fun getDurationNanos(#A, #A, #A): kotlin/Long // com.jakewharton.mosaic.animation/VectorizedFloatAnimationSpec.getDurationNanos|getDurationNanos(1:0;1:0;1:0){}[0]
+    final fun getEndVelocity(#A, #A, #A): #A // com.jakewharton.mosaic.animation/VectorizedFloatAnimationSpec.getEndVelocity|getEndVelocity(1:0;1:0;1:0){}[0]
+    final fun getValueFromNanos(kotlin/Long, #A, #A, #A): #A // com.jakewharton.mosaic.animation/VectorizedFloatAnimationSpec.getValueFromNanos|getValueFromNanos(kotlin.Long;1:0;1:0;1:0){}[0]
+    final fun getVelocityFromNanos(kotlin/Long, #A, #A, #A): #A // com.jakewharton.mosaic.animation/VectorizedFloatAnimationSpec.getVelocityFromNanos|getVelocityFromNanos(kotlin.Long;1:0;1:0;1:0){}[0]
+}
+
+final class <#A: com.jakewharton.mosaic.animation/AnimationVector> com.jakewharton.mosaic.animation/VectorizedInfiniteRepeatableSpec : com.jakewharton.mosaic.animation/VectorizedAnimationSpec<#A> { // com.jakewharton.mosaic.animation/VectorizedInfiniteRepeatableSpec|null[0]
+    constructor <init>(com.jakewharton.mosaic.animation/VectorizedDurationBasedAnimationSpec<#A>, com.jakewharton.mosaic.animation/RepeatMode = ..., com.jakewharton.mosaic.animation/StartOffset = ...) // com.jakewharton.mosaic.animation/VectorizedInfiniteRepeatableSpec.<init>|<init>(com.jakewharton.mosaic.animation.VectorizedDurationBasedAnimationSpec<1:0>;com.jakewharton.mosaic.animation.RepeatMode;com.jakewharton.mosaic.animation.StartOffset){}[0]
+
+    final val isInfinite // com.jakewharton.mosaic.animation/VectorizedInfiniteRepeatableSpec.isInfinite|{}isInfinite[0]
+        final fun <get-isInfinite>(): kotlin/Boolean // com.jakewharton.mosaic.animation/VectorizedInfiniteRepeatableSpec.isInfinite.<get-isInfinite>|<get-isInfinite>(){}[0]
+
+    final fun getDurationNanos(#A, #A, #A): kotlin/Long // com.jakewharton.mosaic.animation/VectorizedInfiniteRepeatableSpec.getDurationNanos|getDurationNanos(1:0;1:0;1:0){}[0]
+    final fun getValueFromNanos(kotlin/Long, #A, #A, #A): #A // com.jakewharton.mosaic.animation/VectorizedInfiniteRepeatableSpec.getValueFromNanos|getValueFromNanos(kotlin.Long;1:0;1:0;1:0){}[0]
+    final fun getVelocityFromNanos(kotlin/Long, #A, #A, #A): #A // com.jakewharton.mosaic.animation/VectorizedInfiniteRepeatableSpec.getVelocityFromNanos|getVelocityFromNanos(kotlin.Long;1:0;1:0;1:0){}[0]
+}
+
+final class <#A: com.jakewharton.mosaic.animation/AnimationVector> com.jakewharton.mosaic.animation/VectorizedKeyframesSpec : com.jakewharton.mosaic.animation/VectorizedDurationBasedAnimationSpec<#A> { // com.jakewharton.mosaic.animation/VectorizedKeyframesSpec|null[0]
+    constructor <init>(kotlin.collections/Map<kotlin/Int, kotlin/Pair<#A, com.jakewharton.mosaic.animation/Easing>>, kotlin/Int, kotlin/Int = ...) // com.jakewharton.mosaic.animation/VectorizedKeyframesSpec.<init>|<init>(kotlin.collections.Map<kotlin.Int,kotlin.Pair<1:0,com.jakewharton.mosaic.animation.Easing>>;kotlin.Int;kotlin.Int){}[0]
+
+    final val delayMillis // com.jakewharton.mosaic.animation/VectorizedKeyframesSpec.delayMillis|{}delayMillis[0]
+        final fun <get-delayMillis>(): kotlin/Int // com.jakewharton.mosaic.animation/VectorizedKeyframesSpec.delayMillis.<get-delayMillis>|<get-delayMillis>(){}[0]
+    final val durationMillis // com.jakewharton.mosaic.animation/VectorizedKeyframesSpec.durationMillis|{}durationMillis[0]
+        final fun <get-durationMillis>(): kotlin/Int // com.jakewharton.mosaic.animation/VectorizedKeyframesSpec.durationMillis.<get-durationMillis>|<get-durationMillis>(){}[0]
+
+    final fun getValueFromNanos(kotlin/Long, #A, #A, #A): #A // com.jakewharton.mosaic.animation/VectorizedKeyframesSpec.getValueFromNanos|getValueFromNanos(kotlin.Long;1:0;1:0;1:0){}[0]
+    final fun getVelocityFromNanos(kotlin/Long, #A, #A, #A): #A // com.jakewharton.mosaic.animation/VectorizedKeyframesSpec.getVelocityFromNanos|getVelocityFromNanos(kotlin.Long;1:0;1:0;1:0){}[0]
+}
+
+final class <#A: com.jakewharton.mosaic.animation/AnimationVector> com.jakewharton.mosaic.animation/VectorizedRepeatableSpec : com.jakewharton.mosaic.animation/VectorizedFiniteAnimationSpec<#A> { // com.jakewharton.mosaic.animation/VectorizedRepeatableSpec|null[0]
+    constructor <init>(kotlin/Int, com.jakewharton.mosaic.animation/VectorizedDurationBasedAnimationSpec<#A>, com.jakewharton.mosaic.animation/RepeatMode = ..., com.jakewharton.mosaic.animation/StartOffset = ...) // com.jakewharton.mosaic.animation/VectorizedRepeatableSpec.<init>|<init>(kotlin.Int;com.jakewharton.mosaic.animation.VectorizedDurationBasedAnimationSpec<1:0>;com.jakewharton.mosaic.animation.RepeatMode;com.jakewharton.mosaic.animation.StartOffset){}[0]
+
+    final fun getDurationNanos(#A, #A, #A): kotlin/Long // com.jakewharton.mosaic.animation/VectorizedRepeatableSpec.getDurationNanos|getDurationNanos(1:0;1:0;1:0){}[0]
+    final fun getValueFromNanos(kotlin/Long, #A, #A, #A): #A // com.jakewharton.mosaic.animation/VectorizedRepeatableSpec.getValueFromNanos|getValueFromNanos(kotlin.Long;1:0;1:0;1:0){}[0]
+    final fun getVelocityFromNanos(kotlin/Long, #A, #A, #A): #A // com.jakewharton.mosaic.animation/VectorizedRepeatableSpec.getVelocityFromNanos|getVelocityFromNanos(kotlin.Long;1:0;1:0;1:0){}[0]
+}
+
+final class <#A: com.jakewharton.mosaic.animation/AnimationVector> com.jakewharton.mosaic.animation/VectorizedSnapSpec : com.jakewharton.mosaic.animation/VectorizedDurationBasedAnimationSpec<#A> { // com.jakewharton.mosaic.animation/VectorizedSnapSpec|null[0]
+    constructor <init>(kotlin/Int = ...) // com.jakewharton.mosaic.animation/VectorizedSnapSpec.<init>|<init>(kotlin.Int){}[0]
+
+    final val delayMillis // com.jakewharton.mosaic.animation/VectorizedSnapSpec.delayMillis|{}delayMillis[0]
+        final fun <get-delayMillis>(): kotlin/Int // com.jakewharton.mosaic.animation/VectorizedSnapSpec.delayMillis.<get-delayMillis>|<get-delayMillis>(){}[0]
+    final val durationMillis // com.jakewharton.mosaic.animation/VectorizedSnapSpec.durationMillis|{}durationMillis[0]
+        final fun <get-durationMillis>(): kotlin/Int // com.jakewharton.mosaic.animation/VectorizedSnapSpec.durationMillis.<get-durationMillis>|<get-durationMillis>(){}[0]
+
+    final fun getValueFromNanos(kotlin/Long, #A, #A, #A): #A // com.jakewharton.mosaic.animation/VectorizedSnapSpec.getValueFromNanos|getValueFromNanos(kotlin.Long;1:0;1:0;1:0){}[0]
+    final fun getVelocityFromNanos(kotlin/Long, #A, #A, #A): #A // com.jakewharton.mosaic.animation/VectorizedSnapSpec.getVelocityFromNanos|getVelocityFromNanos(kotlin.Long;1:0;1:0;1:0){}[0]
+}
+
+final class <#A: com.jakewharton.mosaic.animation/AnimationVector> com.jakewharton.mosaic.animation/VectorizedSpringSpec : com.jakewharton.mosaic.animation/VectorizedFiniteAnimationSpec<#A> { // com.jakewharton.mosaic.animation/VectorizedSpringSpec|null[0]
+    constructor <init>(kotlin/Float = ..., kotlin/Float = ..., #A? = ...) // com.jakewharton.mosaic.animation/VectorizedSpringSpec.<init>|<init>(kotlin.Float;kotlin.Float;1:0?){}[0]
+
+    final val dampingRatio // com.jakewharton.mosaic.animation/VectorizedSpringSpec.dampingRatio|{}dampingRatio[0]
+        final fun <get-dampingRatio>(): kotlin/Float // com.jakewharton.mosaic.animation/VectorizedSpringSpec.dampingRatio.<get-dampingRatio>|<get-dampingRatio>(){}[0]
+    final val isInfinite // com.jakewharton.mosaic.animation/VectorizedSpringSpec.isInfinite|{}isInfinite[0]
+        final fun <get-isInfinite>(): kotlin/Boolean // com.jakewharton.mosaic.animation/VectorizedSpringSpec.isInfinite.<get-isInfinite>|<get-isInfinite>(){}[0]
+    final val stiffness // com.jakewharton.mosaic.animation/VectorizedSpringSpec.stiffness|{}stiffness[0]
+        final fun <get-stiffness>(): kotlin/Float // com.jakewharton.mosaic.animation/VectorizedSpringSpec.stiffness.<get-stiffness>|<get-stiffness>(){}[0]
+
+    final fun getDurationNanos(#A, #A, #A): kotlin/Long // com.jakewharton.mosaic.animation/VectorizedSpringSpec.getDurationNanos|getDurationNanos(1:0;1:0;1:0){}[0]
+    final fun getEndVelocity(#A, #A, #A): #A // com.jakewharton.mosaic.animation/VectorizedSpringSpec.getEndVelocity|getEndVelocity(1:0;1:0;1:0){}[0]
+    final fun getValueFromNanos(kotlin/Long, #A, #A, #A): #A // com.jakewharton.mosaic.animation/VectorizedSpringSpec.getValueFromNanos|getValueFromNanos(kotlin.Long;1:0;1:0;1:0){}[0]
+    final fun getVelocityFromNanos(kotlin/Long, #A, #A, #A): #A // com.jakewharton.mosaic.animation/VectorizedSpringSpec.getVelocityFromNanos|getVelocityFromNanos(kotlin.Long;1:0;1:0;1:0){}[0]
+}
+
+final class <#A: com.jakewharton.mosaic.animation/AnimationVector> com.jakewharton.mosaic.animation/VectorizedTweenSpec : com.jakewharton.mosaic.animation/VectorizedDurationBasedAnimationSpec<#A> { // com.jakewharton.mosaic.animation/VectorizedTweenSpec|null[0]
+    constructor <init>(kotlin/Int = ..., kotlin/Int = ..., com.jakewharton.mosaic.animation/Easing = ...) // com.jakewharton.mosaic.animation/VectorizedTweenSpec.<init>|<init>(kotlin.Int;kotlin.Int;com.jakewharton.mosaic.animation.Easing){}[0]
+
+    final val delayMillis // com.jakewharton.mosaic.animation/VectorizedTweenSpec.delayMillis|{}delayMillis[0]
+        final fun <get-delayMillis>(): kotlin/Int // com.jakewharton.mosaic.animation/VectorizedTweenSpec.delayMillis.<get-delayMillis>|<get-delayMillis>(){}[0]
+    final val durationMillis // com.jakewharton.mosaic.animation/VectorizedTweenSpec.durationMillis|{}durationMillis[0]
+        final fun <get-durationMillis>(): kotlin/Int // com.jakewharton.mosaic.animation/VectorizedTweenSpec.durationMillis.<get-durationMillis>|<get-durationMillis>(){}[0]
+    final val easing // com.jakewharton.mosaic.animation/VectorizedTweenSpec.easing|{}easing[0]
+        final fun <get-easing>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/VectorizedTweenSpec.easing.<get-easing>|<get-easing>(){}[0]
+
+    final fun getValueFromNanos(kotlin/Long, #A, #A, #A): #A // com.jakewharton.mosaic.animation/VectorizedTweenSpec.getValueFromNanos|getValueFromNanos(kotlin.Long;1:0;1:0;1:0){}[0]
+    final fun getVelocityFromNanos(kotlin/Long, #A, #A, #A): #A // com.jakewharton.mosaic.animation/VectorizedTweenSpec.getVelocityFromNanos|getVelocityFromNanos(kotlin.Long;1:0;1:0;1:0){}[0]
+}
+
+final class <#A: kotlin/Any?, #B: com.jakewharton.mosaic.animation/AnimationVector> com.jakewharton.mosaic.animation/Animatable { // com.jakewharton.mosaic.animation/Animatable|null[0]
+    constructor <init>(#A, com.jakewharton.mosaic.animation/TwoWayConverter<#A, #B>, #A? = ..., kotlin/String = ...) // com.jakewharton.mosaic.animation/Animatable.<init>|<init>(1:0;com.jakewharton.mosaic.animation.TwoWayConverter<1:0,1:1>;1:0?;kotlin.String){}[0]
+
+    final val label // com.jakewharton.mosaic.animation/Animatable.label|{}label[0]
+        final fun <get-label>(): kotlin/String // com.jakewharton.mosaic.animation/Animatable.label.<get-label>|<get-label>(){}[0]
+    final val typeConverter // com.jakewharton.mosaic.animation/Animatable.typeConverter|{}typeConverter[0]
+        final fun <get-typeConverter>(): com.jakewharton.mosaic.animation/TwoWayConverter<#A, #B> // com.jakewharton.mosaic.animation/Animatable.typeConverter.<get-typeConverter>|<get-typeConverter>(){}[0]
+    final val value // com.jakewharton.mosaic.animation/Animatable.value|{}value[0]
+        final fun <get-value>(): #A // com.jakewharton.mosaic.animation/Animatable.value.<get-value>|<get-value>(){}[0]
+    final val velocity // com.jakewharton.mosaic.animation/Animatable.velocity|{}velocity[0]
+        final fun <get-velocity>(): #A // com.jakewharton.mosaic.animation/Animatable.velocity.<get-velocity>|<get-velocity>(){}[0]
+    final val velocityVector // com.jakewharton.mosaic.animation/Animatable.velocityVector|{}velocityVector[0]
+        final fun <get-velocityVector>(): #B // com.jakewharton.mosaic.animation/Animatable.velocityVector.<get-velocityVector>|<get-velocityVector>(){}[0]
+
+    final var isRunning // com.jakewharton.mosaic.animation/Animatable.isRunning|{}isRunning[0]
+        final fun <get-isRunning>(): kotlin/Boolean // com.jakewharton.mosaic.animation/Animatable.isRunning.<get-isRunning>|<get-isRunning>(){}[0]
+    final var lowerBound // com.jakewharton.mosaic.animation/Animatable.lowerBound|{}lowerBound[0]
+        final fun <get-lowerBound>(): #A? // com.jakewharton.mosaic.animation/Animatable.lowerBound.<get-lowerBound>|<get-lowerBound>(){}[0]
+    final var targetValue // com.jakewharton.mosaic.animation/Animatable.targetValue|{}targetValue[0]
+        final fun <get-targetValue>(): #A // com.jakewharton.mosaic.animation/Animatable.targetValue.<get-targetValue>|<get-targetValue>(){}[0]
+    final var upperBound // com.jakewharton.mosaic.animation/Animatable.upperBound|{}upperBound[0]
+        final fun <get-upperBound>(): #A? // com.jakewharton.mosaic.animation/Animatable.upperBound.<get-upperBound>|<get-upperBound>(){}[0]
+
+    final fun asState(): androidx.compose.runtime/State<#A> // com.jakewharton.mosaic.animation/Animatable.asState|asState(){}[0]
+    final fun updateBounds(#A? = ..., #A? = ...) // com.jakewharton.mosaic.animation/Animatable.updateBounds|updateBounds(1:0?;1:0?){}[0]
+    final suspend fun animateDecay(#A, com.jakewharton.mosaic.animation/DecayAnimationSpec<#A>, kotlin/Function1<com.jakewharton.mosaic.animation/Animatable<#A, #B>, kotlin/Unit>? = ...): com.jakewharton.mosaic.animation/AnimationResult<#A, #B> // com.jakewharton.mosaic.animation/Animatable.animateDecay|animateDecay(1:0;com.jakewharton.mosaic.animation.DecayAnimationSpec<1:0>;kotlin.Function1<com.jakewharton.mosaic.animation.Animatable<1:0,1:1>,kotlin.Unit>?){}[0]
+    final suspend fun animateTo(#A, com.jakewharton.mosaic.animation/AnimationSpec<#A> = ..., #A = ..., kotlin/Function1<com.jakewharton.mosaic.animation/Animatable<#A, #B>, kotlin/Unit>? = ...): com.jakewharton.mosaic.animation/AnimationResult<#A, #B> // com.jakewharton.mosaic.animation/Animatable.animateTo|animateTo(1:0;com.jakewharton.mosaic.animation.AnimationSpec<1:0>;1:0;kotlin.Function1<com.jakewharton.mosaic.animation.Animatable<1:0,1:1>,kotlin.Unit>?){}[0]
+    final suspend fun snapTo(#A) // com.jakewharton.mosaic.animation/Animatable.snapTo|snapTo(1:0){}[0]
+    final suspend fun stop() // com.jakewharton.mosaic.animation/Animatable.stop|stop(){}[0]
+}
+
+final class <#A: kotlin/Any?, #B: com.jakewharton.mosaic.animation/AnimationVector> com.jakewharton.mosaic.animation/AnimationResult { // com.jakewharton.mosaic.animation/AnimationResult|null[0]
+    constructor <init>(com.jakewharton.mosaic.animation/AnimationState<#A, #B>, com.jakewharton.mosaic.animation/AnimationEndReason) // com.jakewharton.mosaic.animation/AnimationResult.<init>|<init>(com.jakewharton.mosaic.animation.AnimationState<1:0,1:1>;com.jakewharton.mosaic.animation.AnimationEndReason){}[0]
+
+    final val endReason // com.jakewharton.mosaic.animation/AnimationResult.endReason|{}endReason[0]
+        final fun <get-endReason>(): com.jakewharton.mosaic.animation/AnimationEndReason // com.jakewharton.mosaic.animation/AnimationResult.endReason.<get-endReason>|<get-endReason>(){}[0]
+    final val endState // com.jakewharton.mosaic.animation/AnimationResult.endState|{}endState[0]
+        final fun <get-endState>(): com.jakewharton.mosaic.animation/AnimationState<#A, #B> // com.jakewharton.mosaic.animation/AnimationResult.endState.<get-endState>|<get-endState>(){}[0]
+
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.animation/AnimationResult.toString|toString(){}[0]
+}
+
+final class <#A: kotlin/Any?, #B: com.jakewharton.mosaic.animation/AnimationVector> com.jakewharton.mosaic.animation/AnimationScope { // com.jakewharton.mosaic.animation/AnimationScope|null[0]
+    final val startTimeNanos // com.jakewharton.mosaic.animation/AnimationScope.startTimeNanos|{}startTimeNanos[0]
+        final fun <get-startTimeNanos>(): kotlin/Long // com.jakewharton.mosaic.animation/AnimationScope.startTimeNanos.<get-startTimeNanos>|<get-startTimeNanos>(){}[0]
+    final val targetValue // com.jakewharton.mosaic.animation/AnimationScope.targetValue|{}targetValue[0]
+        final fun <get-targetValue>(): #A // com.jakewharton.mosaic.animation/AnimationScope.targetValue.<get-targetValue>|<get-targetValue>(){}[0]
+    final val typeConverter // com.jakewharton.mosaic.animation/AnimationScope.typeConverter|{}typeConverter[0]
+        final fun <get-typeConverter>(): com.jakewharton.mosaic.animation/TwoWayConverter<#A, #B> // com.jakewharton.mosaic.animation/AnimationScope.typeConverter.<get-typeConverter>|<get-typeConverter>(){}[0]
+    final val velocity // com.jakewharton.mosaic.animation/AnimationScope.velocity|{}velocity[0]
+        final fun <get-velocity>(): #A // com.jakewharton.mosaic.animation/AnimationScope.velocity.<get-velocity>|<get-velocity>(){}[0]
+
+    final var finishedTimeNanos // com.jakewharton.mosaic.animation/AnimationScope.finishedTimeNanos|{}finishedTimeNanos[0]
+        final fun <get-finishedTimeNanos>(): kotlin/Long // com.jakewharton.mosaic.animation/AnimationScope.finishedTimeNanos.<get-finishedTimeNanos>|<get-finishedTimeNanos>(){}[0]
+    final var isRunning // com.jakewharton.mosaic.animation/AnimationScope.isRunning|{}isRunning[0]
+        final fun <get-isRunning>(): kotlin/Boolean // com.jakewharton.mosaic.animation/AnimationScope.isRunning.<get-isRunning>|<get-isRunning>(){}[0]
+    final var lastFrameTimeNanos // com.jakewharton.mosaic.animation/AnimationScope.lastFrameTimeNanos|{}lastFrameTimeNanos[0]
+        final fun <get-lastFrameTimeNanos>(): kotlin/Long // com.jakewharton.mosaic.animation/AnimationScope.lastFrameTimeNanos.<get-lastFrameTimeNanos>|<get-lastFrameTimeNanos>(){}[0]
+    final var value // com.jakewharton.mosaic.animation/AnimationScope.value|{}value[0]
+        final fun <get-value>(): #A // com.jakewharton.mosaic.animation/AnimationScope.value.<get-value>|<get-value>(){}[0]
+    final var velocityVector // com.jakewharton.mosaic.animation/AnimationScope.velocityVector|{}velocityVector[0]
+        final fun <get-velocityVector>(): #B // com.jakewharton.mosaic.animation/AnimationScope.velocityVector.<get-velocityVector>|<get-velocityVector>(){}[0]
+
+    final fun cancelAnimation() // com.jakewharton.mosaic.animation/AnimationScope.cancelAnimation|cancelAnimation(){}[0]
+    final fun toAnimationState(): com.jakewharton.mosaic.animation/AnimationState<#A, #B> // com.jakewharton.mosaic.animation/AnimationScope.toAnimationState|toAnimationState(){}[0]
+}
+
+final class <#A: kotlin/Any?, #B: com.jakewharton.mosaic.animation/AnimationVector> com.jakewharton.mosaic.animation/AnimationState : androidx.compose.runtime/State<#A> { // com.jakewharton.mosaic.animation/AnimationState|null[0]
+    constructor <init>(com.jakewharton.mosaic.animation/TwoWayConverter<#A, #B>, #A, #B? = ..., kotlin/Long = ..., kotlin/Long = ..., kotlin/Boolean = ...) // com.jakewharton.mosaic.animation/AnimationState.<init>|<init>(com.jakewharton.mosaic.animation.TwoWayConverter<1:0,1:1>;1:0;1:1?;kotlin.Long;kotlin.Long;kotlin.Boolean){}[0]
+
+    final val typeConverter // com.jakewharton.mosaic.animation/AnimationState.typeConverter|{}typeConverter[0]
+        final fun <get-typeConverter>(): com.jakewharton.mosaic.animation/TwoWayConverter<#A, #B> // com.jakewharton.mosaic.animation/AnimationState.typeConverter.<get-typeConverter>|<get-typeConverter>(){}[0]
+    final val velocity // com.jakewharton.mosaic.animation/AnimationState.velocity|{}velocity[0]
+        final fun <get-velocity>(): #A // com.jakewharton.mosaic.animation/AnimationState.velocity.<get-velocity>|<get-velocity>(){}[0]
+
+    final var finishedTimeNanos // com.jakewharton.mosaic.animation/AnimationState.finishedTimeNanos|{}finishedTimeNanos[0]
+        final fun <get-finishedTimeNanos>(): kotlin/Long // com.jakewharton.mosaic.animation/AnimationState.finishedTimeNanos.<get-finishedTimeNanos>|<get-finishedTimeNanos>(){}[0]
+    final var isRunning // com.jakewharton.mosaic.animation/AnimationState.isRunning|{}isRunning[0]
+        final fun <get-isRunning>(): kotlin/Boolean // com.jakewharton.mosaic.animation/AnimationState.isRunning.<get-isRunning>|<get-isRunning>(){}[0]
+    final var lastFrameTimeNanos // com.jakewharton.mosaic.animation/AnimationState.lastFrameTimeNanos|{}lastFrameTimeNanos[0]
+        final fun <get-lastFrameTimeNanos>(): kotlin/Long // com.jakewharton.mosaic.animation/AnimationState.lastFrameTimeNanos.<get-lastFrameTimeNanos>|<get-lastFrameTimeNanos>(){}[0]
+    final var value // com.jakewharton.mosaic.animation/AnimationState.value|{}value[0]
+        final fun <get-value>(): #A // com.jakewharton.mosaic.animation/AnimationState.value.<get-value>|<get-value>(){}[0]
+    final var velocityVector // com.jakewharton.mosaic.animation/AnimationState.velocityVector|{}velocityVector[0]
+        final fun <get-velocityVector>(): #B // com.jakewharton.mosaic.animation/AnimationState.velocityVector.<get-velocityVector>|<get-velocityVector>(){}[0]
+
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.animation/AnimationState.toString|toString(){}[0]
+}
+
+final class <#A: kotlin/Any?, #B: com.jakewharton.mosaic.animation/AnimationVector> com.jakewharton.mosaic.animation/DecayAnimation : com.jakewharton.mosaic.animation/Animation<#A, #B> { // com.jakewharton.mosaic.animation/DecayAnimation|null[0]
+    constructor <init>(com.jakewharton.mosaic.animation/DecayAnimationSpec<#A>, com.jakewharton.mosaic.animation/TwoWayConverter<#A, #B>, #A, #A) // com.jakewharton.mosaic.animation/DecayAnimation.<init>|<init>(com.jakewharton.mosaic.animation.DecayAnimationSpec<1:0>;com.jakewharton.mosaic.animation.TwoWayConverter<1:0,1:1>;1:0;1:0){}[0]
+    constructor <init>(com.jakewharton.mosaic.animation/DecayAnimationSpec<#A>, com.jakewharton.mosaic.animation/TwoWayConverter<#A, #B>, #A, #B) // com.jakewharton.mosaic.animation/DecayAnimation.<init>|<init>(com.jakewharton.mosaic.animation.DecayAnimationSpec<1:0>;com.jakewharton.mosaic.animation.TwoWayConverter<1:0,1:1>;1:0;1:1){}[0]
+    constructor <init>(com.jakewharton.mosaic.animation/VectorizedDecayAnimationSpec<#B>, com.jakewharton.mosaic.animation/TwoWayConverter<#A, #B>, #A, #B) // com.jakewharton.mosaic.animation/DecayAnimation.<init>|<init>(com.jakewharton.mosaic.animation.VectorizedDecayAnimationSpec<1:1>;com.jakewharton.mosaic.animation.TwoWayConverter<1:0,1:1>;1:0;1:1){}[0]
+
+    final val durationNanos // com.jakewharton.mosaic.animation/DecayAnimation.durationNanos|{}durationNanos[0]
+        final fun <get-durationNanos>(): kotlin/Long // com.jakewharton.mosaic.animation/DecayAnimation.durationNanos.<get-durationNanos>|<get-durationNanos>(){}[0]
+    final val initialValue // com.jakewharton.mosaic.animation/DecayAnimation.initialValue|{}initialValue[0]
+        final fun <get-initialValue>(): #A // com.jakewharton.mosaic.animation/DecayAnimation.initialValue.<get-initialValue>|<get-initialValue>(){}[0]
+    final val initialVelocityVector // com.jakewharton.mosaic.animation/DecayAnimation.initialVelocityVector|{}initialVelocityVector[0]
+        final fun <get-initialVelocityVector>(): #B // com.jakewharton.mosaic.animation/DecayAnimation.initialVelocityVector.<get-initialVelocityVector>|<get-initialVelocityVector>(){}[0]
+    final val isInfinite // com.jakewharton.mosaic.animation/DecayAnimation.isInfinite|{}isInfinite[0]
+        final fun <get-isInfinite>(): kotlin/Boolean // com.jakewharton.mosaic.animation/DecayAnimation.isInfinite.<get-isInfinite>|<get-isInfinite>(){}[0]
+    final val targetValue // com.jakewharton.mosaic.animation/DecayAnimation.targetValue|{}targetValue[0]
+        final fun <get-targetValue>(): #A // com.jakewharton.mosaic.animation/DecayAnimation.targetValue.<get-targetValue>|<get-targetValue>(){}[0]
+    final val typeConverter // com.jakewharton.mosaic.animation/DecayAnimation.typeConverter|{}typeConverter[0]
+        final fun <get-typeConverter>(): com.jakewharton.mosaic.animation/TwoWayConverter<#A, #B> // com.jakewharton.mosaic.animation/DecayAnimation.typeConverter.<get-typeConverter>|<get-typeConverter>(){}[0]
+
+    final fun getValueFromNanos(kotlin/Long): #A // com.jakewharton.mosaic.animation/DecayAnimation.getValueFromNanos|getValueFromNanos(kotlin.Long){}[0]
+    final fun getVelocityVectorFromNanos(kotlin/Long): #B // com.jakewharton.mosaic.animation/DecayAnimation.getVelocityVectorFromNanos|getVelocityVectorFromNanos(kotlin.Long){}[0]
+}
+
+final class <#A: kotlin/Any?, #B: com.jakewharton.mosaic.animation/AnimationVector> com.jakewharton.mosaic.animation/DeferredTargetAnimation { // com.jakewharton.mosaic.animation/DeferredTargetAnimation|null[0]
+    constructor <init>(com.jakewharton.mosaic.animation/TwoWayConverter<#A, #B>) // com.jakewharton.mosaic.animation/DeferredTargetAnimation.<init>|<init>(com.jakewharton.mosaic.animation.TwoWayConverter<1:0,1:1>){}[0]
+
+    final val isIdle // com.jakewharton.mosaic.animation/DeferredTargetAnimation.isIdle|{}isIdle[0]
+        final fun <get-isIdle>(): kotlin/Boolean // com.jakewharton.mosaic.animation/DeferredTargetAnimation.isIdle.<get-isIdle>|<get-isIdle>(){}[0]
+    final val pendingTarget // com.jakewharton.mosaic.animation/DeferredTargetAnimation.pendingTarget|{}pendingTarget[0]
+        final fun <get-pendingTarget>(): #A? // com.jakewharton.mosaic.animation/DeferredTargetAnimation.pendingTarget.<get-pendingTarget>|<get-pendingTarget>(){}[0]
+
+    final fun updateTarget(#A, kotlinx.coroutines/CoroutineScope, com.jakewharton.mosaic.animation/FiniteAnimationSpec<#A> = ...): #A // com.jakewharton.mosaic.animation/DeferredTargetAnimation.updateTarget|updateTarget(1:0;kotlinx.coroutines.CoroutineScope;com.jakewharton.mosaic.animation.FiniteAnimationSpec<1:0>){}[0]
+}
+
+final class <#A: kotlin/Any?, #B: com.jakewharton.mosaic.animation/AnimationVector> com.jakewharton.mosaic.animation/TargetBasedAnimation : com.jakewharton.mosaic.animation/Animation<#A, #B> { // com.jakewharton.mosaic.animation/TargetBasedAnimation|null[0]
+    constructor <init>(com.jakewharton.mosaic.animation/AnimationSpec<#A>, com.jakewharton.mosaic.animation/TwoWayConverter<#A, #B>, #A, #A, #B? = ...) // com.jakewharton.mosaic.animation/TargetBasedAnimation.<init>|<init>(com.jakewharton.mosaic.animation.AnimationSpec<1:0>;com.jakewharton.mosaic.animation.TwoWayConverter<1:0,1:1>;1:0;1:0;1:1?){}[0]
+
+    final val durationNanos // com.jakewharton.mosaic.animation/TargetBasedAnimation.durationNanos|{}durationNanos[0]
+        final fun <get-durationNanos>(): kotlin/Long // com.jakewharton.mosaic.animation/TargetBasedAnimation.durationNanos.<get-durationNanos>|<get-durationNanos>(){}[0]
+    final val initialValue // com.jakewharton.mosaic.animation/TargetBasedAnimation.initialValue|{}initialValue[0]
+        final fun <get-initialValue>(): #A // com.jakewharton.mosaic.animation/TargetBasedAnimation.initialValue.<get-initialValue>|<get-initialValue>(){}[0]
+    final val isInfinite // com.jakewharton.mosaic.animation/TargetBasedAnimation.isInfinite|{}isInfinite[0]
+        final fun <get-isInfinite>(): kotlin/Boolean // com.jakewharton.mosaic.animation/TargetBasedAnimation.isInfinite.<get-isInfinite>|<get-isInfinite>(){}[0]
+    final val targetValue // com.jakewharton.mosaic.animation/TargetBasedAnimation.targetValue|{}targetValue[0]
+        final fun <get-targetValue>(): #A // com.jakewharton.mosaic.animation/TargetBasedAnimation.targetValue.<get-targetValue>|<get-targetValue>(){}[0]
+    final val typeConverter // com.jakewharton.mosaic.animation/TargetBasedAnimation.typeConverter|{}typeConverter[0]
+        final fun <get-typeConverter>(): com.jakewharton.mosaic.animation/TwoWayConverter<#A, #B> // com.jakewharton.mosaic.animation/TargetBasedAnimation.typeConverter.<get-typeConverter>|<get-typeConverter>(){}[0]
+
+    final fun getValueFromNanos(kotlin/Long): #A // com.jakewharton.mosaic.animation/TargetBasedAnimation.getValueFromNanos|getValueFromNanos(kotlin.Long){}[0]
+    final fun getVelocityVectorFromNanos(kotlin/Long): #B // com.jakewharton.mosaic.animation/TargetBasedAnimation.getVelocityVectorFromNanos|getVelocityVectorFromNanos(kotlin.Long){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.animation/TargetBasedAnimation.toString|toString(){}[0]
+}
+
+final class <#A: kotlin/Any?> com.jakewharton.mosaic.animation/InfiniteRepeatableSpec : com.jakewharton.mosaic.animation/AnimationSpec<#A> { // com.jakewharton.mosaic.animation/InfiniteRepeatableSpec|null[0]
+    constructor <init>(com.jakewharton.mosaic.animation/DurationBasedAnimationSpec<#A>, com.jakewharton.mosaic.animation/RepeatMode = ..., com.jakewharton.mosaic.animation/StartOffset = ...) // com.jakewharton.mosaic.animation/InfiniteRepeatableSpec.<init>|<init>(com.jakewharton.mosaic.animation.DurationBasedAnimationSpec<1:0>;com.jakewharton.mosaic.animation.RepeatMode;com.jakewharton.mosaic.animation.StartOffset){}[0]
+
+    final val animation // com.jakewharton.mosaic.animation/InfiniteRepeatableSpec.animation|{}animation[0]
+        final fun <get-animation>(): com.jakewharton.mosaic.animation/DurationBasedAnimationSpec<#A> // com.jakewharton.mosaic.animation/InfiniteRepeatableSpec.animation.<get-animation>|<get-animation>(){}[0]
+    final val initialStartOffset // com.jakewharton.mosaic.animation/InfiniteRepeatableSpec.initialStartOffset|{}initialStartOffset[0]
+        final fun <get-initialStartOffset>(): com.jakewharton.mosaic.animation/StartOffset // com.jakewharton.mosaic.animation/InfiniteRepeatableSpec.initialStartOffset.<get-initialStartOffset>|<get-initialStartOffset>(){}[0]
+    final val repeatMode // com.jakewharton.mosaic.animation/InfiniteRepeatableSpec.repeatMode|{}repeatMode[0]
+        final fun <get-repeatMode>(): com.jakewharton.mosaic.animation/RepeatMode // com.jakewharton.mosaic.animation/InfiniteRepeatableSpec.repeatMode.<get-repeatMode>|<get-repeatMode>(){}[0]
+
+    final fun <#A1: com.jakewharton.mosaic.animation/AnimationVector> vectorize(com.jakewharton.mosaic.animation/TwoWayConverter<#A, #A1>): com.jakewharton.mosaic.animation/VectorizedAnimationSpec<#A1> // com.jakewharton.mosaic.animation/InfiniteRepeatableSpec.vectorize|vectorize(com.jakewharton.mosaic.animation.TwoWayConverter<1:0,0:0>){0§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.animation/InfiniteRepeatableSpec.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.animation/InfiniteRepeatableSpec.hashCode|hashCode(){}[0]
+}
+
+final class <#A: kotlin/Any?> com.jakewharton.mosaic.animation/KeyframesSpec : com.jakewharton.mosaic.animation/DurationBasedAnimationSpec<#A> { // com.jakewharton.mosaic.animation/KeyframesSpec|null[0]
+    constructor <init>(com.jakewharton.mosaic.animation/KeyframesSpec.KeyframesSpecConfig<#A>) // com.jakewharton.mosaic.animation/KeyframesSpec.<init>|<init>(com.jakewharton.mosaic.animation.KeyframesSpec.KeyframesSpecConfig<1:0>){}[0]
+
+    final val config // com.jakewharton.mosaic.animation/KeyframesSpec.config|{}config[0]
+        final fun <get-config>(): com.jakewharton.mosaic.animation/KeyframesSpec.KeyframesSpecConfig<#A> // com.jakewharton.mosaic.animation/KeyframesSpec.config.<get-config>|<get-config>(){}[0]
+
+    final fun <#A1: com.jakewharton.mosaic.animation/AnimationVector> vectorize(com.jakewharton.mosaic.animation/TwoWayConverter<#A, #A1>): com.jakewharton.mosaic.animation/VectorizedKeyframesSpec<#A1> // com.jakewharton.mosaic.animation/KeyframesSpec.vectorize|vectorize(com.jakewharton.mosaic.animation.TwoWayConverter<1:0,0:0>){0§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+
+    final class <#A1: kotlin/Any?> KeyframeEntity : com.jakewharton.mosaic.animation/KeyframeBaseEntity<#A1> { // com.jakewharton.mosaic.animation/KeyframesSpec.KeyframeEntity|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.animation/KeyframesSpec.KeyframeEntity.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.animation/KeyframesSpec.KeyframeEntity.hashCode|hashCode(){}[0]
+    }
+
+    final class <#A1: kotlin/Any?> KeyframesSpecConfig : com.jakewharton.mosaic.animation/KeyframesSpecBaseConfig<#A1, com.jakewharton.mosaic.animation/KeyframesSpec.KeyframeEntity<#A1>> { // com.jakewharton.mosaic.animation/KeyframesSpec.KeyframesSpecConfig|null[0]
+        constructor <init>() // com.jakewharton.mosaic.animation/KeyframesSpec.KeyframesSpecConfig.<init>|<init>(){}[0]
+
+        final fun (#A1).at(kotlin/Int): com.jakewharton.mosaic.animation/KeyframesSpec.KeyframeEntity<#A1> // com.jakewharton.mosaic.animation/KeyframesSpec.KeyframesSpecConfig.at|at@1:0(kotlin.Int){}[0]
+        final fun (#A1).atFraction(kotlin/Float): com.jakewharton.mosaic.animation/KeyframesSpec.KeyframeEntity<#A1> // com.jakewharton.mosaic.animation/KeyframesSpec.KeyframesSpecConfig.atFraction|atFraction@1:0(kotlin.Float){}[0]
+        final fun (com.jakewharton.mosaic.animation/KeyframesSpec.KeyframeEntity<#A1>).using(com.jakewharton.mosaic.animation/ArcMode): com.jakewharton.mosaic.animation/KeyframesSpec.KeyframeEntity<#A1> // com.jakewharton.mosaic.animation/KeyframesSpec.KeyframesSpecConfig.using|using@com.jakewharton.mosaic.animation.KeyframesSpec.KeyframeEntity<1:0>(com.jakewharton.mosaic.animation.ArcMode){}[0]
+    }
+}
+
+final class <#A: kotlin/Any?> com.jakewharton.mosaic.animation/KeyframesWithSplineSpec : com.jakewharton.mosaic.animation/DurationBasedAnimationSpec<#A> { // com.jakewharton.mosaic.animation/KeyframesWithSplineSpec|null[0]
+    constructor <init>(com.jakewharton.mosaic.animation/KeyframesWithSplineSpec.KeyframesWithSplineSpecConfig<#A>) // com.jakewharton.mosaic.animation/KeyframesWithSplineSpec.<init>|<init>(com.jakewharton.mosaic.animation.KeyframesWithSplineSpec.KeyframesWithSplineSpecConfig<1:0>){}[0]
+    constructor <init>(com.jakewharton.mosaic.animation/KeyframesWithSplineSpec.KeyframesWithSplineSpecConfig<#A>, kotlin/Float) // com.jakewharton.mosaic.animation/KeyframesWithSplineSpec.<init>|<init>(com.jakewharton.mosaic.animation.KeyframesWithSplineSpec.KeyframesWithSplineSpecConfig<1:0>;kotlin.Float){}[0]
+
+    final val config // com.jakewharton.mosaic.animation/KeyframesWithSplineSpec.config|{}config[0]
+        final fun <get-config>(): com.jakewharton.mosaic.animation/KeyframesWithSplineSpec.KeyframesWithSplineSpecConfig<#A> // com.jakewharton.mosaic.animation/KeyframesWithSplineSpec.config.<get-config>|<get-config>(){}[0]
+
+    final fun <#A1: com.jakewharton.mosaic.animation/AnimationVector> vectorize(com.jakewharton.mosaic.animation/TwoWayConverter<#A, #A1>): com.jakewharton.mosaic.animation/VectorizedDurationBasedAnimationSpec<#A1> // com.jakewharton.mosaic.animation/KeyframesWithSplineSpec.vectorize|vectorize(com.jakewharton.mosaic.animation.TwoWayConverter<1:0,0:0>){0§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+
+    final class <#A1: kotlin/Any?> KeyframesWithSplineSpecConfig : com.jakewharton.mosaic.animation/KeyframesSpecBaseConfig<#A1, com.jakewharton.mosaic.animation/KeyframesSpec.KeyframeEntity<#A1>> { // com.jakewharton.mosaic.animation/KeyframesWithSplineSpec.KeyframesWithSplineSpecConfig|null[0]
+        constructor <init>() // com.jakewharton.mosaic.animation/KeyframesWithSplineSpec.KeyframesWithSplineSpecConfig.<init>|<init>(){}[0]
+    }
+}
+
+final class <#A: kotlin/Any?> com.jakewharton.mosaic.animation/MutableTransitionState : com.jakewharton.mosaic.animation/TransitionState<#A> { // com.jakewharton.mosaic.animation/MutableTransitionState|null[0]
+    constructor <init>(#A) // com.jakewharton.mosaic.animation/MutableTransitionState.<init>|<init>(1:0){}[0]
+
+    final val isIdle // com.jakewharton.mosaic.animation/MutableTransitionState.isIdle|{}isIdle[0]
+        final fun <get-isIdle>(): kotlin/Boolean // com.jakewharton.mosaic.animation/MutableTransitionState.isIdle.<get-isIdle>|<get-isIdle>(){}[0]
+
+    final var currentState // com.jakewharton.mosaic.animation/MutableTransitionState.currentState|{}currentState[0]
+        final fun <get-currentState>(): #A // com.jakewharton.mosaic.animation/MutableTransitionState.currentState.<get-currentState>|<get-currentState>(){}[0]
+    final var targetState // com.jakewharton.mosaic.animation/MutableTransitionState.targetState|{}targetState[0]
+        final fun <get-targetState>(): #A // com.jakewharton.mosaic.animation/MutableTransitionState.targetState.<get-targetState>|<get-targetState>(){}[0]
+        final fun <set-targetState>(#A) // com.jakewharton.mosaic.animation/MutableTransitionState.targetState.<set-targetState>|<set-targetState>(1:0){}[0]
+}
+
+final class <#A: kotlin/Any?> com.jakewharton.mosaic.animation/RepeatableSpec : com.jakewharton.mosaic.animation/FiniteAnimationSpec<#A> { // com.jakewharton.mosaic.animation/RepeatableSpec|null[0]
+    constructor <init>(kotlin/Int, com.jakewharton.mosaic.animation/DurationBasedAnimationSpec<#A>, com.jakewharton.mosaic.animation/RepeatMode = ..., com.jakewharton.mosaic.animation/StartOffset = ...) // com.jakewharton.mosaic.animation/RepeatableSpec.<init>|<init>(kotlin.Int;com.jakewharton.mosaic.animation.DurationBasedAnimationSpec<1:0>;com.jakewharton.mosaic.animation.RepeatMode;com.jakewharton.mosaic.animation.StartOffset){}[0]
+
+    final val animation // com.jakewharton.mosaic.animation/RepeatableSpec.animation|{}animation[0]
+        final fun <get-animation>(): com.jakewharton.mosaic.animation/DurationBasedAnimationSpec<#A> // com.jakewharton.mosaic.animation/RepeatableSpec.animation.<get-animation>|<get-animation>(){}[0]
+    final val initialStartOffset // com.jakewharton.mosaic.animation/RepeatableSpec.initialStartOffset|{}initialStartOffset[0]
+        final fun <get-initialStartOffset>(): com.jakewharton.mosaic.animation/StartOffset // com.jakewharton.mosaic.animation/RepeatableSpec.initialStartOffset.<get-initialStartOffset>|<get-initialStartOffset>(){}[0]
+    final val iterations // com.jakewharton.mosaic.animation/RepeatableSpec.iterations|{}iterations[0]
+        final fun <get-iterations>(): kotlin/Int // com.jakewharton.mosaic.animation/RepeatableSpec.iterations.<get-iterations>|<get-iterations>(){}[0]
+    final val repeatMode // com.jakewharton.mosaic.animation/RepeatableSpec.repeatMode|{}repeatMode[0]
+        final fun <get-repeatMode>(): com.jakewharton.mosaic.animation/RepeatMode // com.jakewharton.mosaic.animation/RepeatableSpec.repeatMode.<get-repeatMode>|<get-repeatMode>(){}[0]
+
+    final fun <#A1: com.jakewharton.mosaic.animation/AnimationVector> vectorize(com.jakewharton.mosaic.animation/TwoWayConverter<#A, #A1>): com.jakewharton.mosaic.animation/VectorizedFiniteAnimationSpec<#A1> // com.jakewharton.mosaic.animation/RepeatableSpec.vectorize|vectorize(com.jakewharton.mosaic.animation.TwoWayConverter<1:0,0:0>){0§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.animation/RepeatableSpec.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.animation/RepeatableSpec.hashCode|hashCode(){}[0]
+}
+
+final class <#A: kotlin/Any?> com.jakewharton.mosaic.animation/SeekableTransitionState : com.jakewharton.mosaic.animation/TransitionState<#A> { // com.jakewharton.mosaic.animation/SeekableTransitionState|null[0]
+    constructor <init>(#A) // com.jakewharton.mosaic.animation/SeekableTransitionState.<init>|<init>(1:0){}[0]
+
+    final var currentState // com.jakewharton.mosaic.animation/SeekableTransitionState.currentState|{}currentState[0]
+        final fun <get-currentState>(): #A // com.jakewharton.mosaic.animation/SeekableTransitionState.currentState.<get-currentState>|<get-currentState>(){}[0]
+    final var fraction // com.jakewharton.mosaic.animation/SeekableTransitionState.fraction|{}fraction[0]
+        final fun <get-fraction>(): kotlin/Float // com.jakewharton.mosaic.animation/SeekableTransitionState.fraction.<get-fraction>|<get-fraction>(){}[0]
+    final var targetState // com.jakewharton.mosaic.animation/SeekableTransitionState.targetState|{}targetState[0]
+        final fun <get-targetState>(): #A // com.jakewharton.mosaic.animation/SeekableTransitionState.targetState.<get-targetState>|<get-targetState>(){}[0]
+
+    final suspend fun animateTo(#A = ..., com.jakewharton.mosaic.animation/FiniteAnimationSpec<kotlin/Float>? = ...) // com.jakewharton.mosaic.animation/SeekableTransitionState.animateTo|animateTo(1:0;com.jakewharton.mosaic.animation.FiniteAnimationSpec<kotlin.Float>?){}[0]
+    final suspend fun seekTo(kotlin/Float, #A = ...) // com.jakewharton.mosaic.animation/SeekableTransitionState.seekTo|seekTo(kotlin.Float;1:0){}[0]
+    final suspend fun snapTo(#A) // com.jakewharton.mosaic.animation/SeekableTransitionState.snapTo|snapTo(1:0){}[0]
+}
+
+final class <#A: kotlin/Any?> com.jakewharton.mosaic.animation/SnapSpec : com.jakewharton.mosaic.animation/DurationBasedAnimationSpec<#A> { // com.jakewharton.mosaic.animation/SnapSpec|null[0]
+    constructor <init>(kotlin/Int = ...) // com.jakewharton.mosaic.animation/SnapSpec.<init>|<init>(kotlin.Int){}[0]
+
+    final val delay // com.jakewharton.mosaic.animation/SnapSpec.delay|{}delay[0]
+        final fun <get-delay>(): kotlin/Int // com.jakewharton.mosaic.animation/SnapSpec.delay.<get-delay>|<get-delay>(){}[0]
+
+    final fun <#A1: com.jakewharton.mosaic.animation/AnimationVector> vectorize(com.jakewharton.mosaic.animation/TwoWayConverter<#A, #A1>): com.jakewharton.mosaic.animation/VectorizedDurationBasedAnimationSpec<#A1> // com.jakewharton.mosaic.animation/SnapSpec.vectorize|vectorize(com.jakewharton.mosaic.animation.TwoWayConverter<1:0,0:0>){0§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.animation/SnapSpec.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.animation/SnapSpec.hashCode|hashCode(){}[0]
+}
+
+final class <#A: kotlin/Any?> com.jakewharton.mosaic.animation/SpringSpec : com.jakewharton.mosaic.animation/FiniteAnimationSpec<#A> { // com.jakewharton.mosaic.animation/SpringSpec|null[0]
+    constructor <init>(kotlin/Float = ..., kotlin/Float = ..., #A? = ...) // com.jakewharton.mosaic.animation/SpringSpec.<init>|<init>(kotlin.Float;kotlin.Float;1:0?){}[0]
+
+    final val dampingRatio // com.jakewharton.mosaic.animation/SpringSpec.dampingRatio|{}dampingRatio[0]
+        final fun <get-dampingRatio>(): kotlin/Float // com.jakewharton.mosaic.animation/SpringSpec.dampingRatio.<get-dampingRatio>|<get-dampingRatio>(){}[0]
+    final val stiffness // com.jakewharton.mosaic.animation/SpringSpec.stiffness|{}stiffness[0]
+        final fun <get-stiffness>(): kotlin/Float // com.jakewharton.mosaic.animation/SpringSpec.stiffness.<get-stiffness>|<get-stiffness>(){}[0]
+    final val visibilityThreshold // com.jakewharton.mosaic.animation/SpringSpec.visibilityThreshold|{}visibilityThreshold[0]
+        final fun <get-visibilityThreshold>(): #A? // com.jakewharton.mosaic.animation/SpringSpec.visibilityThreshold.<get-visibilityThreshold>|<get-visibilityThreshold>(){}[0]
+
+    final fun <#A1: com.jakewharton.mosaic.animation/AnimationVector> vectorize(com.jakewharton.mosaic.animation/TwoWayConverter<#A, #A1>): com.jakewharton.mosaic.animation/VectorizedSpringSpec<#A1> // com.jakewharton.mosaic.animation/SpringSpec.vectorize|vectorize(com.jakewharton.mosaic.animation.TwoWayConverter<1:0,0:0>){0§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.animation/SpringSpec.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.animation/SpringSpec.hashCode|hashCode(){}[0]
+}
+
+final class <#A: kotlin/Any?> com.jakewharton.mosaic.animation/Transition { // com.jakewharton.mosaic.animation/Transition|null[0]
+    constructor <init>(com.jakewharton.mosaic.animation/MutableTransitionState<#A>, kotlin/String? = ...) // com.jakewharton.mosaic.animation/Transition.<init>|<init>(com.jakewharton.mosaic.animation.MutableTransitionState<1:0>;kotlin.String?){}[0]
+    constructor <init>(com.jakewharton.mosaic.animation/TransitionState<#A>, kotlin/String? = ...) // com.jakewharton.mosaic.animation/Transition.<init>|<init>(com.jakewharton.mosaic.animation.TransitionState<1:0>;kotlin.String?){}[0]
+
+    final val animations // com.jakewharton.mosaic.animation/Transition.animations|{}animations[0]
+        final fun <get-animations>(): kotlin.collections/List<com.jakewharton.mosaic.animation/Transition.TransitionAnimationState<*, *, #A>> // com.jakewharton.mosaic.animation/Transition.animations.<get-animations>|<get-animations>(){}[0]
+    final val currentState // com.jakewharton.mosaic.animation/Transition.currentState|{}currentState[0]
+        final fun <get-currentState>(): #A // com.jakewharton.mosaic.animation/Transition.currentState.<get-currentState>|<get-currentState>(){}[0]
+    final val isRunning // com.jakewharton.mosaic.animation/Transition.isRunning|{}isRunning[0]
+        final fun <get-isRunning>(): kotlin/Boolean // com.jakewharton.mosaic.animation/Transition.isRunning.<get-isRunning>|<get-isRunning>(){}[0]
+    final val label // com.jakewharton.mosaic.animation/Transition.label|{}label[0]
+        final fun <get-label>(): kotlin/String? // com.jakewharton.mosaic.animation/Transition.label.<get-label>|<get-label>(){}[0]
+    final val parentTransition // com.jakewharton.mosaic.animation/Transition.parentTransition|{}parentTransition[0]
+        final fun <get-parentTransition>(): com.jakewharton.mosaic.animation/Transition<*>? // com.jakewharton.mosaic.animation/Transition.parentTransition.<get-parentTransition>|<get-parentTransition>(){}[0]
+    final val totalDurationNanos // com.jakewharton.mosaic.animation/Transition.totalDurationNanos|{}totalDurationNanos[0]
+        final fun <get-totalDurationNanos>(): kotlin/Long // com.jakewharton.mosaic.animation/Transition.totalDurationNanos.<get-totalDurationNanos>|<get-totalDurationNanos>(){}[0]
+    final val transitions // com.jakewharton.mosaic.animation/Transition.transitions|{}transitions[0]
+        final fun <get-transitions>(): kotlin.collections/List<com.jakewharton.mosaic.animation/Transition<*>> // com.jakewharton.mosaic.animation/Transition.transitions.<get-transitions>|<get-transitions>(){}[0]
+
+    final var isSeeking // com.jakewharton.mosaic.animation/Transition.isSeeking|{}isSeeking[0]
+        final fun <get-isSeeking>(): kotlin/Boolean // com.jakewharton.mosaic.animation/Transition.isSeeking.<get-isSeeking>|<get-isSeeking>(){}[0]
+    final var segment // com.jakewharton.mosaic.animation/Transition.segment|{}segment[0]
+        final fun <get-segment>(): com.jakewharton.mosaic.animation/Transition.Segment<#A> // com.jakewharton.mosaic.animation/Transition.segment.<get-segment>|<get-segment>(){}[0]
+    final var targetState // com.jakewharton.mosaic.animation/Transition.targetState|{}targetState[0]
+        final fun <get-targetState>(): #A // com.jakewharton.mosaic.animation/Transition.targetState.<get-targetState>|<get-targetState>(){}[0]
+
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.animation/Transition.toString|toString(){}[0]
+
+    abstract interface <#A1: kotlin/Any?> Segment { // com.jakewharton.mosaic.animation/Transition.Segment|null[0]
+        abstract val initialState // com.jakewharton.mosaic.animation/Transition.Segment.initialState|{}initialState[0]
+            abstract fun <get-initialState>(): #A1 // com.jakewharton.mosaic.animation/Transition.Segment.initialState.<get-initialState>|<get-initialState>(){}[0]
+        abstract val targetState // com.jakewharton.mosaic.animation/Transition.Segment.targetState|{}targetState[0]
+            abstract fun <get-targetState>(): #A1 // com.jakewharton.mosaic.animation/Transition.Segment.targetState.<get-targetState>|<get-targetState>(){}[0]
+
+        open fun (#A1).isTransitioningTo(#A1): kotlin/Boolean // com.jakewharton.mosaic.animation/Transition.Segment.isTransitioningTo|isTransitioningTo@1:0(1:0){}[0]
+    }
+
+    final inner class <#A1: kotlin/Any?, #B1: com.jakewharton.mosaic.animation/AnimationVector> DeferredAnimation { // com.jakewharton.mosaic.animation/Transition.DeferredAnimation|null[0]
+        final val label // com.jakewharton.mosaic.animation/Transition.DeferredAnimation.label|{}label[0]
+            final fun <get-label>(): kotlin/String // com.jakewharton.mosaic.animation/Transition.DeferredAnimation.label.<get-label>|<get-label>(){}[0]
+        final val typeConverter // com.jakewharton.mosaic.animation/Transition.DeferredAnimation.typeConverter|{}typeConverter[0]
+            final fun <get-typeConverter>(): com.jakewharton.mosaic.animation/TwoWayConverter<#A1, #B1> // com.jakewharton.mosaic.animation/Transition.DeferredAnimation.typeConverter.<get-typeConverter>|<get-typeConverter>(){}[0]
+
+        final fun animate(kotlin/Function1<com.jakewharton.mosaic.animation/Transition.Segment<#A>, com.jakewharton.mosaic.animation/FiniteAnimationSpec<#A1>>, kotlin/Function1<#A, #A1>): androidx.compose.runtime/State<#A1> // com.jakewharton.mosaic.animation/Transition.DeferredAnimation.animate|animate(kotlin.Function1<com.jakewharton.mosaic.animation.Transition.Segment<2:0>,com.jakewharton.mosaic.animation.FiniteAnimationSpec<1:0>>;kotlin.Function1<2:0,1:0>){}[0]
+    }
+
+    final inner class <#A1: kotlin/Any?, #B1: com.jakewharton.mosaic.animation/AnimationVector> TransitionAnimationState : androidx.compose.runtime/State<#A1> { // com.jakewharton.mosaic.animation/Transition.TransitionAnimationState|null[0]
+        final val label // com.jakewharton.mosaic.animation/Transition.TransitionAnimationState.label|{}label[0]
+            final fun <get-label>(): kotlin/String // com.jakewharton.mosaic.animation/Transition.TransitionAnimationState.label.<get-label>|<get-label>(){}[0]
+        final val typeConverter // com.jakewharton.mosaic.animation/Transition.TransitionAnimationState.typeConverter|{}typeConverter[0]
+            final fun <get-typeConverter>(): com.jakewharton.mosaic.animation/TwoWayConverter<#A1, #B1> // com.jakewharton.mosaic.animation/Transition.TransitionAnimationState.typeConverter.<get-typeConverter>|<get-typeConverter>(){}[0]
+
+        final var animation // com.jakewharton.mosaic.animation/Transition.TransitionAnimationState.animation|{}animation[0]
+            final fun <get-animation>(): com.jakewharton.mosaic.animation/TargetBasedAnimation<#A1, #B1> // com.jakewharton.mosaic.animation/Transition.TransitionAnimationState.animation.<get-animation>|<get-animation>(){}[0]
+        final var animationSpec // com.jakewharton.mosaic.animation/Transition.TransitionAnimationState.animationSpec|{}animationSpec[0]
+            final fun <get-animationSpec>(): com.jakewharton.mosaic.animation/FiniteAnimationSpec<#A1> // com.jakewharton.mosaic.animation/Transition.TransitionAnimationState.animationSpec.<get-animationSpec>|<get-animationSpec>(){}[0]
+        final var value // com.jakewharton.mosaic.animation/Transition.TransitionAnimationState.value|{}value[0]
+            final fun <get-value>(): #A1 // com.jakewharton.mosaic.animation/Transition.TransitionAnimationState.value.<get-value>|<get-value>(){}[0]
+
+        final fun toString(): kotlin/String // com.jakewharton.mosaic.animation/Transition.TransitionAnimationState.toString|toString(){}[0]
+    }
+}
+
+final class <#A: kotlin/Any?> com.jakewharton.mosaic.animation/TweenSpec : com.jakewharton.mosaic.animation/DurationBasedAnimationSpec<#A> { // com.jakewharton.mosaic.animation/TweenSpec|null[0]
+    constructor <init>(kotlin/Int = ..., kotlin/Int = ..., com.jakewharton.mosaic.animation/Easing = ...) // com.jakewharton.mosaic.animation/TweenSpec.<init>|<init>(kotlin.Int;kotlin.Int;com.jakewharton.mosaic.animation.Easing){}[0]
+
+    final val delay // com.jakewharton.mosaic.animation/TweenSpec.delay|{}delay[0]
+        final fun <get-delay>(): kotlin/Int // com.jakewharton.mosaic.animation/TweenSpec.delay.<get-delay>|<get-delay>(){}[0]
+    final val durationMillis // com.jakewharton.mosaic.animation/TweenSpec.durationMillis|{}durationMillis[0]
+        final fun <get-durationMillis>(): kotlin/Int // com.jakewharton.mosaic.animation/TweenSpec.durationMillis.<get-durationMillis>|<get-durationMillis>(){}[0]
+    final val easing // com.jakewharton.mosaic.animation/TweenSpec.easing|{}easing[0]
+        final fun <get-easing>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/TweenSpec.easing.<get-easing>|<get-easing>(){}[0]
+
+    final fun <#A1: com.jakewharton.mosaic.animation/AnimationVector> vectorize(com.jakewharton.mosaic.animation/TwoWayConverter<#A, #A1>): com.jakewharton.mosaic.animation/VectorizedTweenSpec<#A1> // com.jakewharton.mosaic.animation/TweenSpec.vectorize|vectorize(com.jakewharton.mosaic.animation.TwoWayConverter<1:0,0:0>){0§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.animation/TweenSpec.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.animation/TweenSpec.hashCode|hashCode(){}[0]
+}
+
+final class com.jakewharton.mosaic.animation/AnimationVector1D : com.jakewharton.mosaic.animation/AnimationVector { // com.jakewharton.mosaic.animation/AnimationVector1D|null[0]
+    constructor <init>(kotlin/Float) // com.jakewharton.mosaic.animation/AnimationVector1D.<init>|<init>(kotlin.Float){}[0]
+
+    final var value // com.jakewharton.mosaic.animation/AnimationVector1D.value|{}value[0]
+        final fun <get-value>(): kotlin/Float // com.jakewharton.mosaic.animation/AnimationVector1D.value.<get-value>|<get-value>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.animation/AnimationVector1D.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.animation/AnimationVector1D.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.animation/AnimationVector1D.toString|toString(){}[0]
+}
+
+final class com.jakewharton.mosaic.animation/AnimationVector2D : com.jakewharton.mosaic.animation/AnimationVector { // com.jakewharton.mosaic.animation/AnimationVector2D|null[0]
+    constructor <init>(kotlin/Float, kotlin/Float) // com.jakewharton.mosaic.animation/AnimationVector2D.<init>|<init>(kotlin.Float;kotlin.Float){}[0]
+
+    final var v1 // com.jakewharton.mosaic.animation/AnimationVector2D.v1|{}v1[0]
+        final fun <get-v1>(): kotlin/Float // com.jakewharton.mosaic.animation/AnimationVector2D.v1.<get-v1>|<get-v1>(){}[0]
+    final var v2 // com.jakewharton.mosaic.animation/AnimationVector2D.v2|{}v2[0]
+        final fun <get-v2>(): kotlin/Float // com.jakewharton.mosaic.animation/AnimationVector2D.v2.<get-v2>|<get-v2>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.animation/AnimationVector2D.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.animation/AnimationVector2D.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.animation/AnimationVector2D.toString|toString(){}[0]
+}
+
+final class com.jakewharton.mosaic.animation/AnimationVector3D : com.jakewharton.mosaic.animation/AnimationVector { // com.jakewharton.mosaic.animation/AnimationVector3D|null[0]
+    constructor <init>(kotlin/Float, kotlin/Float, kotlin/Float) // com.jakewharton.mosaic.animation/AnimationVector3D.<init>|<init>(kotlin.Float;kotlin.Float;kotlin.Float){}[0]
+
+    final var v1 // com.jakewharton.mosaic.animation/AnimationVector3D.v1|{}v1[0]
+        final fun <get-v1>(): kotlin/Float // com.jakewharton.mosaic.animation/AnimationVector3D.v1.<get-v1>|<get-v1>(){}[0]
+    final var v2 // com.jakewharton.mosaic.animation/AnimationVector3D.v2|{}v2[0]
+        final fun <get-v2>(): kotlin/Float // com.jakewharton.mosaic.animation/AnimationVector3D.v2.<get-v2>|<get-v2>(){}[0]
+    final var v3 // com.jakewharton.mosaic.animation/AnimationVector3D.v3|{}v3[0]
+        final fun <get-v3>(): kotlin/Float // com.jakewharton.mosaic.animation/AnimationVector3D.v3.<get-v3>|<get-v3>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.animation/AnimationVector3D.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.animation/AnimationVector3D.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.animation/AnimationVector3D.toString|toString(){}[0]
+}
+
+final class com.jakewharton.mosaic.animation/AnimationVector4D : com.jakewharton.mosaic.animation/AnimationVector { // com.jakewharton.mosaic.animation/AnimationVector4D|null[0]
+    constructor <init>(kotlin/Float, kotlin/Float, kotlin/Float, kotlin/Float) // com.jakewharton.mosaic.animation/AnimationVector4D.<init>|<init>(kotlin.Float;kotlin.Float;kotlin.Float;kotlin.Float){}[0]
+
+    final var v1 // com.jakewharton.mosaic.animation/AnimationVector4D.v1|{}v1[0]
+        final fun <get-v1>(): kotlin/Float // com.jakewharton.mosaic.animation/AnimationVector4D.v1.<get-v1>|<get-v1>(){}[0]
+    final var v2 // com.jakewharton.mosaic.animation/AnimationVector4D.v2|{}v2[0]
+        final fun <get-v2>(): kotlin/Float // com.jakewharton.mosaic.animation/AnimationVector4D.v2.<get-v2>|<get-v2>(){}[0]
+    final var v3 // com.jakewharton.mosaic.animation/AnimationVector4D.v3|{}v3[0]
+        final fun <get-v3>(): kotlin/Float // com.jakewharton.mosaic.animation/AnimationVector4D.v3.<get-v3>|<get-v3>(){}[0]
+    final var v4 // com.jakewharton.mosaic.animation/AnimationVector4D.v4|{}v4[0]
+        final fun <get-v4>(): kotlin/Float // com.jakewharton.mosaic.animation/AnimationVector4D.v4.<get-v4>|<get-v4>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.animation/AnimationVector4D.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.animation/AnimationVector4D.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.animation/AnimationVector4D.toString|toString(){}[0]
+}
+
+final class com.jakewharton.mosaic.animation/CubicBezierEasing : com.jakewharton.mosaic.animation/Easing { // com.jakewharton.mosaic.animation/CubicBezierEasing|null[0]
+    constructor <init>(kotlin/Float, kotlin/Float, kotlin/Float, kotlin/Float) // com.jakewharton.mosaic.animation/CubicBezierEasing.<init>|<init>(kotlin.Float;kotlin.Float;kotlin.Float;kotlin.Float){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.animation/CubicBezierEasing.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.animation/CubicBezierEasing.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.animation/CubicBezierEasing.toString|toString(){}[0]
+    final fun transform(kotlin/Float): kotlin/Float // com.jakewharton.mosaic.animation/CubicBezierEasing.transform|transform(kotlin.Float){}[0]
+}
+
+final class com.jakewharton.mosaic.animation/FloatExponentialDecaySpec : com.jakewharton.mosaic.animation/FloatDecayAnimationSpec { // com.jakewharton.mosaic.animation/FloatExponentialDecaySpec|null[0]
+    constructor <init>(kotlin/Float = ..., kotlin/Float = ...) // com.jakewharton.mosaic.animation/FloatExponentialDecaySpec.<init>|<init>(kotlin.Float;kotlin.Float){}[0]
+
+    final val absVelocityThreshold // com.jakewharton.mosaic.animation/FloatExponentialDecaySpec.absVelocityThreshold|{}absVelocityThreshold[0]
+        final fun <get-absVelocityThreshold>(): kotlin/Float // com.jakewharton.mosaic.animation/FloatExponentialDecaySpec.absVelocityThreshold.<get-absVelocityThreshold>|<get-absVelocityThreshold>(){}[0]
+
+    final fun getDurationNanos(kotlin/Float, kotlin/Float): kotlin/Long // com.jakewharton.mosaic.animation/FloatExponentialDecaySpec.getDurationNanos|getDurationNanos(kotlin.Float;kotlin.Float){}[0]
+    final fun getTargetValue(kotlin/Float, kotlin/Float): kotlin/Float // com.jakewharton.mosaic.animation/FloatExponentialDecaySpec.getTargetValue|getTargetValue(kotlin.Float;kotlin.Float){}[0]
+    final fun getValueFromNanos(kotlin/Long, kotlin/Float, kotlin/Float): kotlin/Float // com.jakewharton.mosaic.animation/FloatExponentialDecaySpec.getValueFromNanos|getValueFromNanos(kotlin.Long;kotlin.Float;kotlin.Float){}[0]
+    final fun getVelocityFromNanos(kotlin/Long, kotlin/Float, kotlin/Float): kotlin/Float // com.jakewharton.mosaic.animation/FloatExponentialDecaySpec.getVelocityFromNanos|getVelocityFromNanos(kotlin.Long;kotlin.Float;kotlin.Float){}[0]
+}
+
+final class com.jakewharton.mosaic.animation/FloatSpringSpec : com.jakewharton.mosaic.animation/FloatAnimationSpec { // com.jakewharton.mosaic.animation/FloatSpringSpec|null[0]
+    constructor <init>(kotlin/Float = ..., kotlin/Float = ..., kotlin/Float = ...) // com.jakewharton.mosaic.animation/FloatSpringSpec.<init>|<init>(kotlin.Float;kotlin.Float;kotlin.Float){}[0]
+
+    final val dampingRatio // com.jakewharton.mosaic.animation/FloatSpringSpec.dampingRatio|{}dampingRatio[0]
+        final fun <get-dampingRatio>(): kotlin/Float // com.jakewharton.mosaic.animation/FloatSpringSpec.dampingRatio.<get-dampingRatio>|<get-dampingRatio>(){}[0]
+    final val stiffness // com.jakewharton.mosaic.animation/FloatSpringSpec.stiffness|{}stiffness[0]
+        final fun <get-stiffness>(): kotlin/Float // com.jakewharton.mosaic.animation/FloatSpringSpec.stiffness.<get-stiffness>|<get-stiffness>(){}[0]
+
+    final fun getDurationNanos(kotlin/Float, kotlin/Float, kotlin/Float): kotlin/Long // com.jakewharton.mosaic.animation/FloatSpringSpec.getDurationNanos|getDurationNanos(kotlin.Float;kotlin.Float;kotlin.Float){}[0]
+    final fun getEndVelocity(kotlin/Float, kotlin/Float, kotlin/Float): kotlin/Float // com.jakewharton.mosaic.animation/FloatSpringSpec.getEndVelocity|getEndVelocity(kotlin.Float;kotlin.Float;kotlin.Float){}[0]
+    final fun getValueFromNanos(kotlin/Long, kotlin/Float, kotlin/Float, kotlin/Float): kotlin/Float // com.jakewharton.mosaic.animation/FloatSpringSpec.getValueFromNanos|getValueFromNanos(kotlin.Long;kotlin.Float;kotlin.Float;kotlin.Float){}[0]
+    final fun getVelocityFromNanos(kotlin/Long, kotlin/Float, kotlin/Float, kotlin/Float): kotlin/Float // com.jakewharton.mosaic.animation/FloatSpringSpec.getVelocityFromNanos|getVelocityFromNanos(kotlin.Long;kotlin.Float;kotlin.Float;kotlin.Float){}[0]
+}
+
+final class com.jakewharton.mosaic.animation/FloatTweenSpec : com.jakewharton.mosaic.animation/FloatAnimationSpec { // com.jakewharton.mosaic.animation/FloatTweenSpec|null[0]
+    constructor <init>(kotlin/Int = ..., kotlin/Int = ..., com.jakewharton.mosaic.animation/Easing = ...) // com.jakewharton.mosaic.animation/FloatTweenSpec.<init>|<init>(kotlin.Int;kotlin.Int;com.jakewharton.mosaic.animation.Easing){}[0]
+
+    final val delay // com.jakewharton.mosaic.animation/FloatTweenSpec.delay|{}delay[0]
+        final fun <get-delay>(): kotlin/Int // com.jakewharton.mosaic.animation/FloatTweenSpec.delay.<get-delay>|<get-delay>(){}[0]
+    final val duration // com.jakewharton.mosaic.animation/FloatTweenSpec.duration|{}duration[0]
+        final fun <get-duration>(): kotlin/Int // com.jakewharton.mosaic.animation/FloatTweenSpec.duration.<get-duration>|<get-duration>(){}[0]
+
+    final fun getDurationNanos(kotlin/Float, kotlin/Float, kotlin/Float): kotlin/Long // com.jakewharton.mosaic.animation/FloatTweenSpec.getDurationNanos|getDurationNanos(kotlin.Float;kotlin.Float;kotlin.Float){}[0]
+    final fun getValueFromNanos(kotlin/Long, kotlin/Float, kotlin/Float, kotlin/Float): kotlin/Float // com.jakewharton.mosaic.animation/FloatTweenSpec.getValueFromNanos|getValueFromNanos(kotlin.Long;kotlin.Float;kotlin.Float;kotlin.Float){}[0]
+    final fun getVelocityFromNanos(kotlin/Long, kotlin/Float, kotlin/Float, kotlin/Float): kotlin/Float // com.jakewharton.mosaic.animation/FloatTweenSpec.getVelocityFromNanos|getVelocityFromNanos(kotlin.Long;kotlin.Float;kotlin.Float;kotlin.Float){}[0]
+}
+
+final class com.jakewharton.mosaic.animation/InfiniteTransition { // com.jakewharton.mosaic.animation/InfiniteTransition|null[0]
+    final val animations // com.jakewharton.mosaic.animation/InfiniteTransition.animations|{}animations[0]
+        final fun <get-animations>(): kotlin.collections/List<com.jakewharton.mosaic.animation/InfiniteTransition.TransitionAnimationState<*, *>> // com.jakewharton.mosaic.animation/InfiniteTransition.animations.<get-animations>|<get-animations>(){}[0]
+    final val label // com.jakewharton.mosaic.animation/InfiniteTransition.label|{}label[0]
+        final fun <get-label>(): kotlin/String // com.jakewharton.mosaic.animation/InfiniteTransition.label.<get-label>|<get-label>(){}[0]
+
+    final inner class <#A1: kotlin/Any?, #B1: com.jakewharton.mosaic.animation/AnimationVector> TransitionAnimationState : androidx.compose.runtime/State<#A1> { // com.jakewharton.mosaic.animation/InfiniteTransition.TransitionAnimationState|null[0]
+        final val label // com.jakewharton.mosaic.animation/InfiniteTransition.TransitionAnimationState.label|{}label[0]
+            final fun <get-label>(): kotlin/String // com.jakewharton.mosaic.animation/InfiniteTransition.TransitionAnimationState.label.<get-label>|<get-label>(){}[0]
+        final val typeConverter // com.jakewharton.mosaic.animation/InfiniteTransition.TransitionAnimationState.typeConverter|{}typeConverter[0]
+            final fun <get-typeConverter>(): com.jakewharton.mosaic.animation/TwoWayConverter<#A1, #B1> // com.jakewharton.mosaic.animation/InfiniteTransition.TransitionAnimationState.typeConverter.<get-typeConverter>|<get-typeConverter>(){}[0]
+
+        final var animation // com.jakewharton.mosaic.animation/InfiniteTransition.TransitionAnimationState.animation|{}animation[0]
+            final fun <get-animation>(): com.jakewharton.mosaic.animation/TargetBasedAnimation<#A1, #B1> // com.jakewharton.mosaic.animation/InfiniteTransition.TransitionAnimationState.animation.<get-animation>|<get-animation>(){}[0]
+        final var animationSpec // com.jakewharton.mosaic.animation/InfiniteTransition.TransitionAnimationState.animationSpec|{}animationSpec[0]
+            final fun <get-animationSpec>(): com.jakewharton.mosaic.animation/AnimationSpec<#A1> // com.jakewharton.mosaic.animation/InfiniteTransition.TransitionAnimationState.animationSpec.<get-animationSpec>|<get-animationSpec>(){}[0]
+        final var value // com.jakewharton.mosaic.animation/InfiniteTransition.TransitionAnimationState.value|{}value[0]
+            final fun <get-value>(): #A1 // com.jakewharton.mosaic.animation/InfiniteTransition.TransitionAnimationState.value.<get-value>|<get-value>(){}[0]
+    }
+}
+
+final value class com.jakewharton.mosaic.animation/ArcMode { // com.jakewharton.mosaic.animation/ArcMode|null[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.animation/ArcMode.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.animation/ArcMode.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.animation/ArcMode.toString|toString(){}[0]
+
+    final object Companion { // com.jakewharton.mosaic.animation/ArcMode.Companion|null[0]
+        final val ArcAbove // com.jakewharton.mosaic.animation/ArcMode.Companion.ArcAbove|{}ArcAbove[0]
+            final fun <get-ArcAbove>(): com.jakewharton.mosaic.animation/ArcMode // com.jakewharton.mosaic.animation/ArcMode.Companion.ArcAbove.<get-ArcAbove>|<get-ArcAbove>(){}[0]
+        final val ArcBelow // com.jakewharton.mosaic.animation/ArcMode.Companion.ArcBelow|{}ArcBelow[0]
+            final fun <get-ArcBelow>(): com.jakewharton.mosaic.animation/ArcMode // com.jakewharton.mosaic.animation/ArcMode.Companion.ArcBelow.<get-ArcBelow>|<get-ArcBelow>(){}[0]
+        final val ArcLinear // com.jakewharton.mosaic.animation/ArcMode.Companion.ArcLinear|{}ArcLinear[0]
+            final fun <get-ArcLinear>(): com.jakewharton.mosaic.animation/ArcMode // com.jakewharton.mosaic.animation/ArcMode.Companion.ArcLinear.<get-ArcLinear>|<get-ArcLinear>(){}[0]
+    }
+}
+
+final value class com.jakewharton.mosaic.animation/StartOffset { // com.jakewharton.mosaic.animation/StartOffset|null[0]
+    constructor <init>(kotlin/Int, com.jakewharton.mosaic.animation/StartOffsetType = ...) // com.jakewharton.mosaic.animation/StartOffset.<init>|<init>(kotlin.Int;com.jakewharton.mosaic.animation.StartOffsetType){}[0]
+
+    final val offsetMillis // com.jakewharton.mosaic.animation/StartOffset.offsetMillis|{}offsetMillis[0]
+        final fun <get-offsetMillis>(): kotlin/Int // com.jakewharton.mosaic.animation/StartOffset.offsetMillis.<get-offsetMillis>|<get-offsetMillis>(){}[0]
+    final val offsetType // com.jakewharton.mosaic.animation/StartOffset.offsetType|{}offsetType[0]
+        final fun <get-offsetType>(): com.jakewharton.mosaic.animation/StartOffsetType // com.jakewharton.mosaic.animation/StartOffset.offsetType.<get-offsetType>|<get-offsetType>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.animation/StartOffset.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.animation/StartOffset.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.animation/StartOffset.toString|toString(){}[0]
+}
+
+final value class com.jakewharton.mosaic.animation/StartOffsetType { // com.jakewharton.mosaic.animation/StartOffsetType|null[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.animation/StartOffsetType.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.animation/StartOffsetType.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.animation/StartOffsetType.toString|toString(){}[0]
+
+    final object Companion { // com.jakewharton.mosaic.animation/StartOffsetType.Companion|null[0]
+        final val Delay // com.jakewharton.mosaic.animation/StartOffsetType.Companion.Delay|{}Delay[0]
+            final fun <get-Delay>(): com.jakewharton.mosaic.animation/StartOffsetType // com.jakewharton.mosaic.animation/StartOffsetType.Companion.Delay.<get-Delay>|<get-Delay>(){}[0]
+        final val FastForward // com.jakewharton.mosaic.animation/StartOffsetType.Companion.FastForward|{}FastForward[0]
+            final fun <get-FastForward>(): com.jakewharton.mosaic.animation/StartOffsetType // com.jakewharton.mosaic.animation/StartOffsetType.Companion.FastForward.<get-FastForward>|<get-FastForward>(){}[0]
+    }
+}
+
+sealed class <#A: kotlin/Any?, #B: com.jakewharton.mosaic.animation/KeyframeBaseEntity<#A>> com.jakewharton.mosaic.animation/KeyframesSpecBaseConfig { // com.jakewharton.mosaic.animation/KeyframesSpecBaseConfig|null[0]
+    final var delayMillis // com.jakewharton.mosaic.animation/KeyframesSpecBaseConfig.delayMillis|{}delayMillis[0]
+        final fun <get-delayMillis>(): kotlin/Int // com.jakewharton.mosaic.animation/KeyframesSpecBaseConfig.delayMillis.<get-delayMillis>|<get-delayMillis>(){}[0]
+        final fun <set-delayMillis>(kotlin/Int) // com.jakewharton.mosaic.animation/KeyframesSpecBaseConfig.delayMillis.<set-delayMillis>|<set-delayMillis>(kotlin.Int){}[0]
+    final var durationMillis // com.jakewharton.mosaic.animation/KeyframesSpecBaseConfig.durationMillis|{}durationMillis[0]
+        final fun <get-durationMillis>(): kotlin/Int // com.jakewharton.mosaic.animation/KeyframesSpecBaseConfig.durationMillis.<get-durationMillis>|<get-durationMillis>(){}[0]
+        final fun <set-durationMillis>(kotlin/Int) // com.jakewharton.mosaic.animation/KeyframesSpecBaseConfig.durationMillis.<set-durationMillis>|<set-durationMillis>(kotlin.Int){}[0]
+
+    final fun (#B).using(com.jakewharton.mosaic.animation/Easing): #B // com.jakewharton.mosaic.animation/KeyframesSpecBaseConfig.using|using@1:1(com.jakewharton.mosaic.animation.Easing){}[0]
+    open fun (#A).at(kotlin/Int): #B // com.jakewharton.mosaic.animation/KeyframesSpecBaseConfig.at|at@1:0(kotlin.Int){}[0]
+    open fun (#A).atFraction(kotlin/Float): #B // com.jakewharton.mosaic.animation/KeyframesSpecBaseConfig.atFraction|atFraction@1:0(kotlin.Float){}[0]
+}
+
+sealed class <#A: kotlin/Any?> com.jakewharton.mosaic.animation/KeyframeBaseEntity // com.jakewharton.mosaic.animation/KeyframeBaseEntity|null[0]
+
+sealed class <#A: kotlin/Any?> com.jakewharton.mosaic.animation/TransitionState { // com.jakewharton.mosaic.animation/TransitionState|null[0]
+    abstract var currentState // com.jakewharton.mosaic.animation/TransitionState.currentState|{}currentState[0]
+        abstract fun <get-currentState>(): #A // com.jakewharton.mosaic.animation/TransitionState.currentState.<get-currentState>|<get-currentState>(){}[0]
+    abstract var targetState // com.jakewharton.mosaic.animation/TransitionState.targetState|{}targetState[0]
+        abstract fun <get-targetState>(): #A // com.jakewharton.mosaic.animation/TransitionState.targetState.<get-targetState>|<get-targetState>(){}[0]
+}
+
+sealed class com.jakewharton.mosaic.animation/AnimationVector // com.jakewharton.mosaic.animation/AnimationVector|null[0]
+
+final object com.jakewharton.mosaic.animation/AnimationConstants { // com.jakewharton.mosaic.animation/AnimationConstants|null[0]
+    final const val DefaultDurationMillis // com.jakewharton.mosaic.animation/AnimationConstants.DefaultDurationMillis|{}DefaultDurationMillis[0]
+        final fun <get-DefaultDurationMillis>(): kotlin/Int // com.jakewharton.mosaic.animation/AnimationConstants.DefaultDurationMillis.<get-DefaultDurationMillis>|<get-DefaultDurationMillis>(){}[0]
+    final const val UnspecifiedTime // com.jakewharton.mosaic.animation/AnimationConstants.UnspecifiedTime|{}UnspecifiedTime[0]
+        final fun <get-UnspecifiedTime>(): kotlin/Long // com.jakewharton.mosaic.animation/AnimationConstants.UnspecifiedTime.<get-UnspecifiedTime>|<get-UnspecifiedTime>(){}[0]
+}
+
+final object com.jakewharton.mosaic.animation/Spring { // com.jakewharton.mosaic.animation/Spring|null[0]
+    final const val DampingRatioHighBouncy // com.jakewharton.mosaic.animation/Spring.DampingRatioHighBouncy|{}DampingRatioHighBouncy[0]
+        final fun <get-DampingRatioHighBouncy>(): kotlin/Float // com.jakewharton.mosaic.animation/Spring.DampingRatioHighBouncy.<get-DampingRatioHighBouncy>|<get-DampingRatioHighBouncy>(){}[0]
+    final const val DampingRatioLowBouncy // com.jakewharton.mosaic.animation/Spring.DampingRatioLowBouncy|{}DampingRatioLowBouncy[0]
+        final fun <get-DampingRatioLowBouncy>(): kotlin/Float // com.jakewharton.mosaic.animation/Spring.DampingRatioLowBouncy.<get-DampingRatioLowBouncy>|<get-DampingRatioLowBouncy>(){}[0]
+    final const val DampingRatioMediumBouncy // com.jakewharton.mosaic.animation/Spring.DampingRatioMediumBouncy|{}DampingRatioMediumBouncy[0]
+        final fun <get-DampingRatioMediumBouncy>(): kotlin/Float // com.jakewharton.mosaic.animation/Spring.DampingRatioMediumBouncy.<get-DampingRatioMediumBouncy>|<get-DampingRatioMediumBouncy>(){}[0]
+    final const val DampingRatioNoBouncy // com.jakewharton.mosaic.animation/Spring.DampingRatioNoBouncy|{}DampingRatioNoBouncy[0]
+        final fun <get-DampingRatioNoBouncy>(): kotlin/Float // com.jakewharton.mosaic.animation/Spring.DampingRatioNoBouncy.<get-DampingRatioNoBouncy>|<get-DampingRatioNoBouncy>(){}[0]
+    final const val DefaultDisplacementThreshold // com.jakewharton.mosaic.animation/Spring.DefaultDisplacementThreshold|{}DefaultDisplacementThreshold[0]
+        final fun <get-DefaultDisplacementThreshold>(): kotlin/Float // com.jakewharton.mosaic.animation/Spring.DefaultDisplacementThreshold.<get-DefaultDisplacementThreshold>|<get-DefaultDisplacementThreshold>(){}[0]
+    final const val StiffnessHigh // com.jakewharton.mosaic.animation/Spring.StiffnessHigh|{}StiffnessHigh[0]
+        final fun <get-StiffnessHigh>(): kotlin/Float // com.jakewharton.mosaic.animation/Spring.StiffnessHigh.<get-StiffnessHigh>|<get-StiffnessHigh>(){}[0]
+    final const val StiffnessLow // com.jakewharton.mosaic.animation/Spring.StiffnessLow|{}StiffnessLow[0]
+        final fun <get-StiffnessLow>(): kotlin/Float // com.jakewharton.mosaic.animation/Spring.StiffnessLow.<get-StiffnessLow>|<get-StiffnessLow>(){}[0]
+    final const val StiffnessMedium // com.jakewharton.mosaic.animation/Spring.StiffnessMedium|{}StiffnessMedium[0]
+        final fun <get-StiffnessMedium>(): kotlin/Float // com.jakewharton.mosaic.animation/Spring.StiffnessMedium.<get-StiffnessMedium>|<get-StiffnessMedium>(){}[0]
+    final const val StiffnessMediumLow // com.jakewharton.mosaic.animation/Spring.StiffnessMediumLow|{}StiffnessMediumLow[0]
+        final fun <get-StiffnessMediumLow>(): kotlin/Float // com.jakewharton.mosaic.animation/Spring.StiffnessMediumLow.<get-StiffnessMediumLow>|<get-StiffnessMediumLow>(){}[0]
+    final const val StiffnessVeryLow // com.jakewharton.mosaic.animation/Spring.StiffnessVeryLow|{}StiffnessVeryLow[0]
+        final fun <get-StiffnessVeryLow>(): kotlin/Float // com.jakewharton.mosaic.animation/Spring.StiffnessVeryLow.<get-StiffnessVeryLow>|<get-StiffnessVeryLow>(){}[0]
+}
+
+final val com.jakewharton.mosaic.animation/Ease // com.jakewharton.mosaic.animation/Ease|{}Ease[0]
+    final fun <get-Ease>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/Ease.<get-Ease>|<get-Ease>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseIn // com.jakewharton.mosaic.animation/EaseIn|{}EaseIn[0]
+    final fun <get-EaseIn>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseIn.<get-EaseIn>|<get-EaseIn>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseInBack // com.jakewharton.mosaic.animation/EaseInBack|{}EaseInBack[0]
+    final fun <get-EaseInBack>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseInBack.<get-EaseInBack>|<get-EaseInBack>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseInBounce // com.jakewharton.mosaic.animation/EaseInBounce|{}EaseInBounce[0]
+    final fun <get-EaseInBounce>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseInBounce.<get-EaseInBounce>|<get-EaseInBounce>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseInCirc // com.jakewharton.mosaic.animation/EaseInCirc|{}EaseInCirc[0]
+    final fun <get-EaseInCirc>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseInCirc.<get-EaseInCirc>|<get-EaseInCirc>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseInCubic // com.jakewharton.mosaic.animation/EaseInCubic|{}EaseInCubic[0]
+    final fun <get-EaseInCubic>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseInCubic.<get-EaseInCubic>|<get-EaseInCubic>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseInElastic // com.jakewharton.mosaic.animation/EaseInElastic|{}EaseInElastic[0]
+    final fun <get-EaseInElastic>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseInElastic.<get-EaseInElastic>|<get-EaseInElastic>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseInExpo // com.jakewharton.mosaic.animation/EaseInExpo|{}EaseInExpo[0]
+    final fun <get-EaseInExpo>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseInExpo.<get-EaseInExpo>|<get-EaseInExpo>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseInOut // com.jakewharton.mosaic.animation/EaseInOut|{}EaseInOut[0]
+    final fun <get-EaseInOut>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseInOut.<get-EaseInOut>|<get-EaseInOut>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseInOutBack // com.jakewharton.mosaic.animation/EaseInOutBack|{}EaseInOutBack[0]
+    final fun <get-EaseInOutBack>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseInOutBack.<get-EaseInOutBack>|<get-EaseInOutBack>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseInOutBounce // com.jakewharton.mosaic.animation/EaseInOutBounce|{}EaseInOutBounce[0]
+    final fun <get-EaseInOutBounce>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseInOutBounce.<get-EaseInOutBounce>|<get-EaseInOutBounce>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseInOutCirc // com.jakewharton.mosaic.animation/EaseInOutCirc|{}EaseInOutCirc[0]
+    final fun <get-EaseInOutCirc>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseInOutCirc.<get-EaseInOutCirc>|<get-EaseInOutCirc>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseInOutCubic // com.jakewharton.mosaic.animation/EaseInOutCubic|{}EaseInOutCubic[0]
+    final fun <get-EaseInOutCubic>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseInOutCubic.<get-EaseInOutCubic>|<get-EaseInOutCubic>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseInOutElastic // com.jakewharton.mosaic.animation/EaseInOutElastic|{}EaseInOutElastic[0]
+    final fun <get-EaseInOutElastic>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseInOutElastic.<get-EaseInOutElastic>|<get-EaseInOutElastic>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseInOutExpo // com.jakewharton.mosaic.animation/EaseInOutExpo|{}EaseInOutExpo[0]
+    final fun <get-EaseInOutExpo>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseInOutExpo.<get-EaseInOutExpo>|<get-EaseInOutExpo>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseInOutQuad // com.jakewharton.mosaic.animation/EaseInOutQuad|{}EaseInOutQuad[0]
+    final fun <get-EaseInOutQuad>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseInOutQuad.<get-EaseInOutQuad>|<get-EaseInOutQuad>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseInOutQuart // com.jakewharton.mosaic.animation/EaseInOutQuart|{}EaseInOutQuart[0]
+    final fun <get-EaseInOutQuart>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseInOutQuart.<get-EaseInOutQuart>|<get-EaseInOutQuart>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseInOutQuint // com.jakewharton.mosaic.animation/EaseInOutQuint|{}EaseInOutQuint[0]
+    final fun <get-EaseInOutQuint>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseInOutQuint.<get-EaseInOutQuint>|<get-EaseInOutQuint>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseInOutSine // com.jakewharton.mosaic.animation/EaseInOutSine|{}EaseInOutSine[0]
+    final fun <get-EaseInOutSine>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseInOutSine.<get-EaseInOutSine>|<get-EaseInOutSine>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseInQuad // com.jakewharton.mosaic.animation/EaseInQuad|{}EaseInQuad[0]
+    final fun <get-EaseInQuad>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseInQuad.<get-EaseInQuad>|<get-EaseInQuad>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseInQuart // com.jakewharton.mosaic.animation/EaseInQuart|{}EaseInQuart[0]
+    final fun <get-EaseInQuart>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseInQuart.<get-EaseInQuart>|<get-EaseInQuart>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseInQuint // com.jakewharton.mosaic.animation/EaseInQuint|{}EaseInQuint[0]
+    final fun <get-EaseInQuint>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseInQuint.<get-EaseInQuint>|<get-EaseInQuint>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseInSine // com.jakewharton.mosaic.animation/EaseInSine|{}EaseInSine[0]
+    final fun <get-EaseInSine>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseInSine.<get-EaseInSine>|<get-EaseInSine>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseOut // com.jakewharton.mosaic.animation/EaseOut|{}EaseOut[0]
+    final fun <get-EaseOut>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseOut.<get-EaseOut>|<get-EaseOut>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseOutBack // com.jakewharton.mosaic.animation/EaseOutBack|{}EaseOutBack[0]
+    final fun <get-EaseOutBack>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseOutBack.<get-EaseOutBack>|<get-EaseOutBack>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseOutBounce // com.jakewharton.mosaic.animation/EaseOutBounce|{}EaseOutBounce[0]
+    final fun <get-EaseOutBounce>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseOutBounce.<get-EaseOutBounce>|<get-EaseOutBounce>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseOutCirc // com.jakewharton.mosaic.animation/EaseOutCirc|{}EaseOutCirc[0]
+    final fun <get-EaseOutCirc>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseOutCirc.<get-EaseOutCirc>|<get-EaseOutCirc>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseOutCubic // com.jakewharton.mosaic.animation/EaseOutCubic|{}EaseOutCubic[0]
+    final fun <get-EaseOutCubic>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseOutCubic.<get-EaseOutCubic>|<get-EaseOutCubic>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseOutElastic // com.jakewharton.mosaic.animation/EaseOutElastic|{}EaseOutElastic[0]
+    final fun <get-EaseOutElastic>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseOutElastic.<get-EaseOutElastic>|<get-EaseOutElastic>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseOutExpo // com.jakewharton.mosaic.animation/EaseOutExpo|{}EaseOutExpo[0]
+    final fun <get-EaseOutExpo>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseOutExpo.<get-EaseOutExpo>|<get-EaseOutExpo>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseOutQuad // com.jakewharton.mosaic.animation/EaseOutQuad|{}EaseOutQuad[0]
+    final fun <get-EaseOutQuad>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseOutQuad.<get-EaseOutQuad>|<get-EaseOutQuad>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseOutQuart // com.jakewharton.mosaic.animation/EaseOutQuart|{}EaseOutQuart[0]
+    final fun <get-EaseOutQuart>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseOutQuart.<get-EaseOutQuart>|<get-EaseOutQuart>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseOutQuint // com.jakewharton.mosaic.animation/EaseOutQuint|{}EaseOutQuint[0]
+    final fun <get-EaseOutQuint>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseOutQuint.<get-EaseOutQuint>|<get-EaseOutQuint>(){}[0]
+final val com.jakewharton.mosaic.animation/EaseOutSine // com.jakewharton.mosaic.animation/EaseOutSine|{}EaseOutSine[0]
+    final fun <get-EaseOutSine>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/EaseOutSine.<get-EaseOutSine>|<get-EaseOutSine>(){}[0]
+final val com.jakewharton.mosaic.animation/FastOutLinearInEasing // com.jakewharton.mosaic.animation/FastOutLinearInEasing|{}FastOutLinearInEasing[0]
+    final fun <get-FastOutLinearInEasing>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/FastOutLinearInEasing.<get-FastOutLinearInEasing>|<get-FastOutLinearInEasing>(){}[0]
+final val com.jakewharton.mosaic.animation/FastOutSlowInEasing // com.jakewharton.mosaic.animation/FastOutSlowInEasing|{}FastOutSlowInEasing[0]
+    final fun <get-FastOutSlowInEasing>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/FastOutSlowInEasing.<get-FastOutSlowInEasing>|<get-FastOutSlowInEasing>(){}[0]
+final val com.jakewharton.mosaic.animation/LinearEasing // com.jakewharton.mosaic.animation/LinearEasing|{}LinearEasing[0]
+    final fun <get-LinearEasing>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/LinearEasing.<get-LinearEasing>|<get-LinearEasing>(){}[0]
+final val com.jakewharton.mosaic.animation/LinearOutSlowInEasing // com.jakewharton.mosaic.animation/LinearOutSlowInEasing|{}LinearOutSlowInEasing[0]
+    final fun <get-LinearOutSlowInEasing>(): com.jakewharton.mosaic.animation/Easing // com.jakewharton.mosaic.animation/LinearOutSlowInEasing.<get-LinearOutSlowInEasing>|<get-LinearOutSlowInEasing>(){}[0]
+final val com.jakewharton.mosaic.animation/VectorConverter // com.jakewharton.mosaic.animation/VectorConverter|@com.jakewharton.mosaic.ui.Color.Companion{}VectorConverter[0]
+    final fun (com.jakewharton.mosaic.ui/Color.Companion).<get-VectorConverter>(): com.jakewharton.mosaic.animation/TwoWayConverter<com.jakewharton.mosaic.ui/Color, com.jakewharton.mosaic.animation/AnimationVector3D> // com.jakewharton.mosaic.animation/VectorConverter.<get-VectorConverter>|<get-VectorConverter>@com.jakewharton.mosaic.ui.Color.Companion(){}[0]
+final val com.jakewharton.mosaic.animation/VectorConverter // com.jakewharton.mosaic.animation/VectorConverter|@com.jakewharton.mosaic.ui.unit.IntOffset.Companion{}VectorConverter[0]
+    final fun (com.jakewharton.mosaic.ui.unit/IntOffset.Companion).<get-VectorConverter>(): com.jakewharton.mosaic.animation/TwoWayConverter<com.jakewharton.mosaic.ui.unit/IntOffset, com.jakewharton.mosaic.animation/AnimationVector2D> // com.jakewharton.mosaic.animation/VectorConverter.<get-VectorConverter>|<get-VectorConverter>@com.jakewharton.mosaic.ui.unit.IntOffset.Companion(){}[0]
+final val com.jakewharton.mosaic.animation/VectorConverter // com.jakewharton.mosaic.animation/VectorConverter|@com.jakewharton.mosaic.ui.unit.IntSize.Companion{}VectorConverter[0]
+    final fun (com.jakewharton.mosaic.ui.unit/IntSize.Companion).<get-VectorConverter>(): com.jakewharton.mosaic.animation/TwoWayConverter<com.jakewharton.mosaic.ui.unit/IntSize, com.jakewharton.mosaic.animation/AnimationVector2D> // com.jakewharton.mosaic.animation/VectorConverter.<get-VectorConverter>|<get-VectorConverter>@com.jakewharton.mosaic.ui.unit.IntSize.Companion(){}[0]
+final val com.jakewharton.mosaic.animation/VectorConverter // com.jakewharton.mosaic.animation/VectorConverter|@kotlin.Float.Companion{}VectorConverter[0]
+    final fun (kotlin/Float.Companion).<get-VectorConverter>(): com.jakewharton.mosaic.animation/TwoWayConverter<kotlin/Float, com.jakewharton.mosaic.animation/AnimationVector1D> // com.jakewharton.mosaic.animation/VectorConverter.<get-VectorConverter>|<get-VectorConverter>@kotlin.Float.Companion(){}[0]
+final val com.jakewharton.mosaic.animation/VectorConverter // com.jakewharton.mosaic.animation/VectorConverter|@kotlin.Int.Companion{}VectorConverter[0]
+    final fun (kotlin/Int.Companion).<get-VectorConverter>(): com.jakewharton.mosaic.animation/TwoWayConverter<kotlin/Int, com.jakewharton.mosaic.animation/AnimationVector1D> // com.jakewharton.mosaic.animation/VectorConverter.<get-VectorConverter>|<get-VectorConverter>@kotlin.Int.Companion(){}[0]
+final val com.jakewharton.mosaic.animation/VisibilityThreshold // com.jakewharton.mosaic.animation/VisibilityThreshold|@com.jakewharton.mosaic.ui.unit.IntOffset.Companion{}VisibilityThreshold[0]
+    final fun (com.jakewharton.mosaic.ui.unit/IntOffset.Companion).<get-VisibilityThreshold>(): com.jakewharton.mosaic.ui.unit/IntOffset // com.jakewharton.mosaic.animation/VisibilityThreshold.<get-VisibilityThreshold>|<get-VisibilityThreshold>@com.jakewharton.mosaic.ui.unit.IntOffset.Companion(){}[0]
+final val com.jakewharton.mosaic.animation/VisibilityThreshold // com.jakewharton.mosaic.animation/VisibilityThreshold|@com.jakewharton.mosaic.ui.unit.IntSize.Companion{}VisibilityThreshold[0]
+    final fun (com.jakewharton.mosaic.ui.unit/IntSize.Companion).<get-VisibilityThreshold>(): com.jakewharton.mosaic.ui.unit/IntSize // com.jakewharton.mosaic.animation/VisibilityThreshold.<get-VisibilityThreshold>|<get-VisibilityThreshold>@com.jakewharton.mosaic.ui.unit.IntSize.Companion(){}[0]
+final val com.jakewharton.mosaic.animation/VisibilityThreshold // com.jakewharton.mosaic.animation/VisibilityThreshold|@kotlin.Int.Companion{}VisibilityThreshold[0]
+    final fun (kotlin/Int.Companion).<get-VisibilityThreshold>(): kotlin/Int // com.jakewharton.mosaic.animation/VisibilityThreshold.<get-VisibilityThreshold>|<get-VisibilityThreshold>@kotlin.Int.Companion(){}[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_Animatable$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_Animatable$stableprop|#static{}com_jakewharton_mosaic_animation_Animatable$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationConstants$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationConstants$stableprop|#static{}com_jakewharton_mosaic_animation_AnimationConstants$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationResult$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationResult$stableprop|#static{}com_jakewharton_mosaic_animation_AnimationResult$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationScope$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationScope$stableprop|#static{}com_jakewharton_mosaic_animation_AnimationScope$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationState$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationState$stableprop|#static{}com_jakewharton_mosaic_animation_AnimationState$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationVector$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationVector$stableprop|#static{}com_jakewharton_mosaic_animation_AnimationVector$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationVector1D$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationVector1D$stableprop|#static{}com_jakewharton_mosaic_animation_AnimationVector1D$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationVector2D$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationVector2D$stableprop|#static{}com_jakewharton_mosaic_animation_AnimationVector2D$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationVector3D$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationVector3D$stableprop|#static{}com_jakewharton_mosaic_animation_AnimationVector3D$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationVector4D$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationVector4D$stableprop|#static{}com_jakewharton_mosaic_animation_AnimationVector4D$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_ArcAnimationSpec$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_ArcAnimationSpec$stableprop|#static{}com_jakewharton_mosaic_animation_ArcAnimationSpec$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_ArcSpline$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_ArcSpline$stableprop|#static{}com_jakewharton_mosaic_animation_ArcSpline$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_ArcSpline_Arc$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_ArcSpline_Arc$stableprop|#static{}com_jakewharton_mosaic_animation_ArcSpline_Arc$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_CubicBezierEasing$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_CubicBezierEasing$stableprop|#static{}com_jakewharton_mosaic_animation_CubicBezierEasing$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_DecayAnimation$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_DecayAnimation$stableprop|#static{}com_jakewharton_mosaic_animation_DecayAnimation$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_DeferredTargetAnimation$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_DeferredTargetAnimation$stableprop|#static{}com_jakewharton_mosaic_animation_DeferredTargetAnimation$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_FloatExponentialDecaySpec$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_FloatExponentialDecaySpec$stableprop|#static{}com_jakewharton_mosaic_animation_FloatExponentialDecaySpec$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_FloatSpringSpec$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_FloatSpringSpec$stableprop|#static{}com_jakewharton_mosaic_animation_FloatSpringSpec$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_FloatTweenSpec$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_FloatTweenSpec$stableprop|#static{}com_jakewharton_mosaic_animation_FloatTweenSpec$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_InfiniteRepeatableSpec$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_InfiniteRepeatableSpec$stableprop|#static{}com_jakewharton_mosaic_animation_InfiniteRepeatableSpec$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_InfiniteTransition$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_InfiniteTransition$stableprop|#static{}com_jakewharton_mosaic_animation_InfiniteTransition$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframeBaseEntity$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframeBaseEntity$stableprop|#static{}com_jakewharton_mosaic_animation_KeyframeBaseEntity$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframesSpec$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframesSpec$stableprop|#static{}com_jakewharton_mosaic_animation_KeyframesSpec$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframesSpecBaseConfig$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframesSpecBaseConfig$stableprop|#static{}com_jakewharton_mosaic_animation_KeyframesSpecBaseConfig$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframesSpec_KeyframeEntity$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframesSpec_KeyframeEntity$stableprop|#static{}com_jakewharton_mosaic_animation_KeyframesSpec_KeyframeEntity$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframesSpec_KeyframesSpecConfig$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframesSpec_KeyframesSpecConfig$stableprop|#static{}com_jakewharton_mosaic_animation_KeyframesSpec_KeyframesSpecConfig$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframesWithSplineSpec$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframesWithSplineSpec$stableprop|#static{}com_jakewharton_mosaic_animation_KeyframesWithSplineSpec$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframesWithSplineSpec_KeyframesWithSplineSpecConfig$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframesWithSplineSpec_KeyframesWithSplineSpecConfig$stableprop|#static{}com_jakewharton_mosaic_animation_KeyframesWithSplineSpec_KeyframesWithSplineSpecConfig$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_MonoSpline$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_MonoSpline$stableprop|#static{}com_jakewharton_mosaic_animation_MonoSpline$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_MutableTransitionState$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_MutableTransitionState$stableprop|#static{}com_jakewharton_mosaic_animation_MutableTransitionState$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_MutatorMutex$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_MutatorMutex$stableprop|#static{}com_jakewharton_mosaic_animation_MutatorMutex$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_RepeatableSpec$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_RepeatableSpec$stableprop|#static{}com_jakewharton_mosaic_animation_RepeatableSpec$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_SeekableTransitionState$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_SeekableTransitionState$stableprop|#static{}com_jakewharton_mosaic_animation_SeekableTransitionState$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_SeekableTransitionState_SeekingAnimationState$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_SeekableTransitionState_SeekingAnimationState$stableprop|#static{}com_jakewharton_mosaic_animation_SeekableTransitionState_SeekingAnimationState$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_SnapSpec$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_SnapSpec$stableprop|#static{}com_jakewharton_mosaic_animation_SnapSpec$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_Spring$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_Spring$stableprop|#static{}com_jakewharton_mosaic_animation_Spring$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_SpringSimulation$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_SpringSimulation$stableprop|#static{}com_jakewharton_mosaic_animation_SpringSimulation$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_SpringSpec$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_SpringSpec$stableprop|#static{}com_jakewharton_mosaic_animation_SpringSpec$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_TargetBasedAnimation$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_TargetBasedAnimation$stableprop|#static{}com_jakewharton_mosaic_animation_TargetBasedAnimation$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_Transition$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_Transition$stableprop|#static{}com_jakewharton_mosaic_animation_Transition$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_TransitionState$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_TransitionState$stableprop|#static{}com_jakewharton_mosaic_animation_TransitionState$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_TweenSpec$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_TweenSpec$stableprop|#static{}com_jakewharton_mosaic_animation_TweenSpec$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedFloatAnimationSpec$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedFloatAnimationSpec$stableprop|#static{}com_jakewharton_mosaic_animation_VectorizedFloatAnimationSpec$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedInfiniteRepeatableSpec$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedInfiniteRepeatableSpec$stableprop|#static{}com_jakewharton_mosaic_animation_VectorizedInfiniteRepeatableSpec$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedKeyframeSpecElementInfo$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedKeyframeSpecElementInfo$stableprop|#static{}com_jakewharton_mosaic_animation_VectorizedKeyframeSpecElementInfo$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedKeyframesSpec$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedKeyframesSpec$stableprop|#static{}com_jakewharton_mosaic_animation_VectorizedKeyframesSpec$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedMonoSplineKeyframesSpec$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedMonoSplineKeyframesSpec$stableprop|#static{}com_jakewharton_mosaic_animation_VectorizedMonoSplineKeyframesSpec$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedRepeatableSpec$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedRepeatableSpec$stableprop|#static{}com_jakewharton_mosaic_animation_VectorizedRepeatableSpec$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedSnapSpec$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedSnapSpec$stableprop|#static{}com_jakewharton_mosaic_animation_VectorizedSnapSpec$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedSpringSpec$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedSpringSpec$stableprop|#static{}com_jakewharton_mosaic_animation_VectorizedSpringSpec$stableprop[0]
+final val com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedTweenSpec$stableprop // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedTweenSpec$stableprop|#static{}com_jakewharton_mosaic_animation_VectorizedTweenSpec$stableprop[0]
+final val com.jakewharton.mosaic.animation/isFinished // com.jakewharton.mosaic.animation/isFinished|@com.jakewharton.mosaic.animation.AnimationState<*,*>{}isFinished[0]
+    final fun (com.jakewharton.mosaic.animation/AnimationState<*, *>).<get-isFinished>(): kotlin/Boolean // com.jakewharton.mosaic.animation/isFinished.<get-isFinished>|<get-isFinished>@com.jakewharton.mosaic.animation.AnimationState<*,*>(){}[0]
+
+final fun (com.jakewharton.mosaic.animation/AnimationState<kotlin/Float, com.jakewharton.mosaic.animation/AnimationVector1D>).com.jakewharton.mosaic.animation/copy(kotlin/Float = ..., kotlin/Float = ..., kotlin/Long = ..., kotlin/Long = ..., kotlin/Boolean = ...): com.jakewharton.mosaic.animation/AnimationState<kotlin/Float, com.jakewharton.mosaic.animation/AnimationVector1D> // com.jakewharton.mosaic.animation/copy|copy@com.jakewharton.mosaic.animation.AnimationState<kotlin.Float,com.jakewharton.mosaic.animation.AnimationVector1D>(kotlin.Float;kotlin.Float;kotlin.Long;kotlin.Long;kotlin.Boolean){}[0]
+final fun (com.jakewharton.mosaic.animation/DecayAnimationSpec<kotlin/Float>).com.jakewharton.mosaic.animation/calculateTargetValue(kotlin/Float, kotlin/Float): kotlin/Float // com.jakewharton.mosaic.animation/calculateTargetValue|calculateTargetValue@com.jakewharton.mosaic.animation.DecayAnimationSpec<kotlin.Float>(kotlin.Float;kotlin.Float){}[0]
+final fun (com.jakewharton.mosaic.animation/InfiniteTransition).com.jakewharton.mosaic.animation/animateColor(com.jakewharton.mosaic.ui/Color, com.jakewharton.mosaic.ui/Color, com.jakewharton.mosaic.animation/InfiniteRepeatableSpec<com.jakewharton.mosaic.ui/Color>, kotlin/String?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): androidx.compose.runtime/State<com.jakewharton.mosaic.ui/Color> // com.jakewharton.mosaic.animation/animateColor|animateColor@com.jakewharton.mosaic.animation.InfiniteTransition(com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.animation.InfiniteRepeatableSpec<com.jakewharton.mosaic.ui.Color>;kotlin.String?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun (com.jakewharton.mosaic.animation/InfiniteTransition).com.jakewharton.mosaic.animation/animateFloat(kotlin/Float, kotlin/Float, com.jakewharton.mosaic.animation/InfiniteRepeatableSpec<kotlin/Float>, kotlin/String?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): androidx.compose.runtime/State<kotlin/Float> // com.jakewharton.mosaic.animation/animateFloat|animateFloat@com.jakewharton.mosaic.animation.InfiniteTransition(kotlin.Float;kotlin.Float;com.jakewharton.mosaic.animation.InfiniteRepeatableSpec<kotlin.Float>;kotlin.String?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun <#A: com.jakewharton.mosaic.animation/AnimationVector> (com.jakewharton.mosaic.animation/VectorizedAnimationSpec<#A>).com.jakewharton.mosaic.animation/createAnimation(#A, #A, #A): com.jakewharton.mosaic.animation/TargetBasedAnimation<#A, #A> // com.jakewharton.mosaic.animation/createAnimation|createAnimation@com.jakewharton.mosaic.animation.VectorizedAnimationSpec<0:0>(0:0;0:0;0:0){0§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+final fun <#A: kotlin/Any?, #B: com.jakewharton.mosaic.animation/AnimationVector> (com.jakewharton.mosaic.animation/Animation<#A, #B>).com.jakewharton.mosaic.animation/getVelocityFromNanos(kotlin/Long): #A // com.jakewharton.mosaic.animation/getVelocityFromNanos|getVelocityFromNanos@com.jakewharton.mosaic.animation.Animation<0:0,0:1>(kotlin.Long){0§<kotlin.Any?>;1§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+final fun <#A: kotlin/Any?, #B: com.jakewharton.mosaic.animation/AnimationVector> (com.jakewharton.mosaic.animation/AnimationState<#A, #B>).com.jakewharton.mosaic.animation/copy(#A = ..., #B? = ..., kotlin/Long = ..., kotlin/Long = ..., kotlin/Boolean = ...): com.jakewharton.mosaic.animation/AnimationState<#A, #B> // com.jakewharton.mosaic.animation/copy|copy@com.jakewharton.mosaic.animation.AnimationState<0:0,0:1>(0:0;0:1?;kotlin.Long;kotlin.Long;kotlin.Boolean){0§<kotlin.Any?>;1§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+final fun <#A: kotlin/Any?, #B: com.jakewharton.mosaic.animation/AnimationVector> (com.jakewharton.mosaic.animation/DecayAnimationSpec<#A>).com.jakewharton.mosaic.animation/calculateTargetValue(com.jakewharton.mosaic.animation/TwoWayConverter<#A, #B>, #A, #A): #A // com.jakewharton.mosaic.animation/calculateTargetValue|calculateTargetValue@com.jakewharton.mosaic.animation.DecayAnimationSpec<0:0>(com.jakewharton.mosaic.animation.TwoWayConverter<0:0,0:1>;0:0;0:0){0§<kotlin.Any?>;1§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+final fun <#A: kotlin/Any?, #B: com.jakewharton.mosaic.animation/AnimationVector> (com.jakewharton.mosaic.animation/InfiniteTransition).com.jakewharton.mosaic.animation/animateValue(#A, #A, com.jakewharton.mosaic.animation/TwoWayConverter<#A, #B>, com.jakewharton.mosaic.animation/InfiniteRepeatableSpec<#A>, kotlin/String?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): androidx.compose.runtime/State<#A> // com.jakewharton.mosaic.animation/animateValue|animateValue@com.jakewharton.mosaic.animation.InfiniteTransition(0:0;0:0;com.jakewharton.mosaic.animation.TwoWayConverter<0:0,0:1>;com.jakewharton.mosaic.animation.InfiniteRepeatableSpec<0:0>;kotlin.String?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){0§<kotlin.Any?>;1§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+final fun <#A: kotlin/Any?, #B: com.jakewharton.mosaic.animation/AnimationVector> (com.jakewharton.mosaic.animation/TwoWayConverter<#A, #B>).com.jakewharton.mosaic.animation/createZeroVectorFrom(#A): #B // com.jakewharton.mosaic.animation/createZeroVectorFrom|createZeroVectorFrom@com.jakewharton.mosaic.animation.TwoWayConverter<0:0,0:1>(0:0){0§<kotlin.Any?>;1§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+final fun <#A: kotlin/Any?, #B: com.jakewharton.mosaic.animation/AnimationVector> com.jakewharton.mosaic.animation/AnimationState(com.jakewharton.mosaic.animation/TwoWayConverter<#A, #B>, #A, #A, kotlin/Long = ..., kotlin/Long = ..., kotlin/Boolean = ...): com.jakewharton.mosaic.animation/AnimationState<#A, #B> // com.jakewharton.mosaic.animation/AnimationState|AnimationState(com.jakewharton.mosaic.animation.TwoWayConverter<0:0,0:1>;0:0;0:0;kotlin.Long;kotlin.Long;kotlin.Boolean){0§<kotlin.Any?>;1§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+final fun <#A: kotlin/Any?, #B: com.jakewharton.mosaic.animation/AnimationVector> com.jakewharton.mosaic.animation/TargetBasedAnimation(com.jakewharton.mosaic.animation/AnimationSpec<#A>, com.jakewharton.mosaic.animation/TwoWayConverter<#A, #B>, #A, #A, #A): com.jakewharton.mosaic.animation/TargetBasedAnimation<#A, #B> // com.jakewharton.mosaic.animation/TargetBasedAnimation|TargetBasedAnimation(com.jakewharton.mosaic.animation.AnimationSpec<0:0>;com.jakewharton.mosaic.animation.TwoWayConverter<0:0,0:1>;0:0;0:0;0:0){0§<kotlin.Any?>;1§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+final fun <#A: kotlin/Any?, #B: com.jakewharton.mosaic.animation/AnimationVector> com.jakewharton.mosaic.animation/TwoWayConverter(kotlin/Function1<#A, #B>, kotlin/Function1<#B, #A>): com.jakewharton.mosaic.animation/TwoWayConverter<#A, #B> // com.jakewharton.mosaic.animation/TwoWayConverter|TwoWayConverter(kotlin.Function1<0:0,0:1>;kotlin.Function1<0:1,0:0>){0§<kotlin.Any?>;1§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+final fun <#A: kotlin/Any?, #B: com.jakewharton.mosaic.animation/AnimationVector> com.jakewharton.mosaic.animation/animateValueAsState(#A, com.jakewharton.mosaic.animation/TwoWayConverter<#A, #B>, com.jakewharton.mosaic.animation/AnimationSpec<#A>?, #A?, kotlin/String?, kotlin/Function1<#A, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): androidx.compose.runtime/State<#A> // com.jakewharton.mosaic.animation/animateValueAsState|animateValueAsState(0:0;com.jakewharton.mosaic.animation.TwoWayConverter<0:0,0:1>;com.jakewharton.mosaic.animation.AnimationSpec<0:0>?;0:0?;kotlin.String?;kotlin.Function1<0:0,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){0§<kotlin.Any?>;1§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+final fun <#A: kotlin/Any?, #B: kotlin/Any?, #C: com.jakewharton.mosaic.animation/AnimationVector> (com.jakewharton.mosaic.animation/Transition<#A>).com.jakewharton.mosaic.animation/createDeferredAnimation(com.jakewharton.mosaic.animation/TwoWayConverter<#B, #C>, kotlin/String?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): com.jakewharton.mosaic.animation/Transition.DeferredAnimation<#B, #C, #A> // com.jakewharton.mosaic.animation/createDeferredAnimation|createDeferredAnimation@com.jakewharton.mosaic.animation.Transition<0:0>(com.jakewharton.mosaic.animation.TwoWayConverter<0:1,0:2>;kotlin.String?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){0§<kotlin.Any?>;1§<kotlin.Any?>;2§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+final fun <#A: kotlin/Any?, #B: kotlin/Any?, #C: com.jakewharton.mosaic.animation/AnimationVector> (com.jakewharton.mosaic.animation/Transition<#A>).com.jakewharton.mosaic.animation/createTransitionAnimation(#B, #B, com.jakewharton.mosaic.animation/FiniteAnimationSpec<#B>, com.jakewharton.mosaic.animation/TwoWayConverter<#B, #C>, kotlin/String, androidx.compose.runtime/Composer?, kotlin/Int): androidx.compose.runtime/State<#B> // com.jakewharton.mosaic.animation/createTransitionAnimation|createTransitionAnimation@com.jakewharton.mosaic.animation.Transition<0:0>(0:1;0:1;com.jakewharton.mosaic.animation.FiniteAnimationSpec<0:1>;com.jakewharton.mosaic.animation.TwoWayConverter<0:1,0:2>;kotlin.String;androidx.compose.runtime.Composer?;kotlin.Int){0§<kotlin.Any?>;1§<kotlin.Any?>;2§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+final fun <#A: kotlin/Any?, #B: kotlin/Any?> (com.jakewharton.mosaic.animation/Transition<#A>).com.jakewharton.mosaic.animation/createChildTransitionInternal(#B, #B, kotlin/String, androidx.compose.runtime/Composer?, kotlin/Int): com.jakewharton.mosaic.animation/Transition<#B> // com.jakewharton.mosaic.animation/createChildTransitionInternal|createChildTransitionInternal@com.jakewharton.mosaic.animation.Transition<0:0>(0:1;0:1;kotlin.String;androidx.compose.runtime.Composer?;kotlin.Int){0§<kotlin.Any?>;1§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> (com.jakewharton.mosaic.animation/FloatDecayAnimationSpec).com.jakewharton.mosaic.animation/generateDecayAnimationSpec(): com.jakewharton.mosaic.animation/DecayAnimationSpec<#A> // com.jakewharton.mosaic.animation/generateDecayAnimationSpec|generateDecayAnimationSpec@com.jakewharton.mosaic.animation.FloatDecayAnimationSpec(){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> com.jakewharton.mosaic.animation/exponentialDecay(kotlin/Float = ..., kotlin/Float = ...): com.jakewharton.mosaic.animation/DecayAnimationSpec<#A> // com.jakewharton.mosaic.animation/exponentialDecay|exponentialDecay(kotlin.Float;kotlin.Float){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> com.jakewharton.mosaic.animation/infiniteRepeatable(com.jakewharton.mosaic.animation/DurationBasedAnimationSpec<#A>, com.jakewharton.mosaic.animation/RepeatMode = ..., com.jakewharton.mosaic.animation/StartOffset = ...): com.jakewharton.mosaic.animation/InfiniteRepeatableSpec<#A> // com.jakewharton.mosaic.animation/infiniteRepeatable|infiniteRepeatable(com.jakewharton.mosaic.animation.DurationBasedAnimationSpec<0:0>;com.jakewharton.mosaic.animation.RepeatMode;com.jakewharton.mosaic.animation.StartOffset){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> com.jakewharton.mosaic.animation/keyframes(kotlin/Function1<com.jakewharton.mosaic.animation/KeyframesSpec.KeyframesSpecConfig<#A>, kotlin/Unit>): com.jakewharton.mosaic.animation/KeyframesSpec<#A> // com.jakewharton.mosaic.animation/keyframes|keyframes(kotlin.Function1<com.jakewharton.mosaic.animation.KeyframesSpec.KeyframesSpecConfig<0:0>,kotlin.Unit>){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> com.jakewharton.mosaic.animation/keyframesWithSpline(kotlin/Float, kotlin/Function1<com.jakewharton.mosaic.animation/KeyframesWithSplineSpec.KeyframesWithSplineSpecConfig<#A>, kotlin/Unit>): com.jakewharton.mosaic.animation/KeyframesWithSplineSpec<#A> // com.jakewharton.mosaic.animation/keyframesWithSpline|keyframesWithSpline(kotlin.Float;kotlin.Function1<com.jakewharton.mosaic.animation.KeyframesWithSplineSpec.KeyframesWithSplineSpecConfig<0:0>,kotlin.Unit>){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> com.jakewharton.mosaic.animation/keyframesWithSpline(kotlin/Function1<com.jakewharton.mosaic.animation/KeyframesWithSplineSpec.KeyframesWithSplineSpecConfig<#A>, kotlin/Unit>): com.jakewharton.mosaic.animation/KeyframesWithSplineSpec<#A> // com.jakewharton.mosaic.animation/keyframesWithSpline|keyframesWithSpline(kotlin.Function1<com.jakewharton.mosaic.animation.KeyframesWithSplineSpec.KeyframesWithSplineSpecConfig<0:0>,kotlin.Unit>){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> com.jakewharton.mosaic.animation/rememberTransition(com.jakewharton.mosaic.animation/TransitionState<#A>, kotlin/String?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): com.jakewharton.mosaic.animation/Transition<#A> // com.jakewharton.mosaic.animation/rememberTransition|rememberTransition(com.jakewharton.mosaic.animation.TransitionState<0:0>;kotlin.String?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> com.jakewharton.mosaic.animation/repeatable(kotlin/Int, com.jakewharton.mosaic.animation/DurationBasedAnimationSpec<#A>, com.jakewharton.mosaic.animation/RepeatMode = ..., com.jakewharton.mosaic.animation/StartOffset = ...): com.jakewharton.mosaic.animation/RepeatableSpec<#A> // com.jakewharton.mosaic.animation/repeatable|repeatable(kotlin.Int;com.jakewharton.mosaic.animation.DurationBasedAnimationSpec<0:0>;com.jakewharton.mosaic.animation.RepeatMode;com.jakewharton.mosaic.animation.StartOffset){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> com.jakewharton.mosaic.animation/snap(kotlin/Int = ...): com.jakewharton.mosaic.animation/SnapSpec<#A> // com.jakewharton.mosaic.animation/snap|snap(kotlin.Int){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> com.jakewharton.mosaic.animation/spring(kotlin/Float = ..., kotlin/Float = ..., #A? = ...): com.jakewharton.mosaic.animation/SpringSpec<#A> // com.jakewharton.mosaic.animation/spring|spring(kotlin.Float;kotlin.Float;0:0?){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> com.jakewharton.mosaic.animation/tween(kotlin/Int = ..., kotlin/Int = ..., com.jakewharton.mosaic.animation/Easing = ...): com.jakewharton.mosaic.animation/TweenSpec<#A> // com.jakewharton.mosaic.animation/tween|tween(kotlin.Int;kotlin.Int;com.jakewharton.mosaic.animation.Easing){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> com.jakewharton.mosaic.animation/updateTransition(#A, kotlin/String?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): com.jakewharton.mosaic.animation/Transition<#A> // com.jakewharton.mosaic.animation/updateTransition|updateTransition(0:0;kotlin.String?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){0§<kotlin.Any?>}[0]
+final fun com.jakewharton.mosaic.animation/Animatable(com.jakewharton.mosaic.ui/Color): com.jakewharton.mosaic.animation/Animatable<com.jakewharton.mosaic.ui/Color, com.jakewharton.mosaic.animation/AnimationVector3D> // com.jakewharton.mosaic.animation/Animatable|Animatable(com.jakewharton.mosaic.ui.Color){}[0]
+final fun com.jakewharton.mosaic.animation/Animatable(kotlin/Float, kotlin/Float = ...): com.jakewharton.mosaic.animation/Animatable<kotlin/Float, com.jakewharton.mosaic.animation/AnimationVector1D> // com.jakewharton.mosaic.animation/Animatable|Animatable(kotlin.Float;kotlin.Float){}[0]
+final fun com.jakewharton.mosaic.animation/AnimationState(kotlin/Float, kotlin/Float = ..., kotlin/Long = ..., kotlin/Long = ..., kotlin/Boolean = ...): com.jakewharton.mosaic.animation/AnimationState<kotlin/Float, com.jakewharton.mosaic.animation/AnimationVector1D> // com.jakewharton.mosaic.animation/AnimationState|AnimationState(kotlin.Float;kotlin.Float;kotlin.Long;kotlin.Long;kotlin.Boolean){}[0]
+final fun com.jakewharton.mosaic.animation/AnimationVector(kotlin/Float): com.jakewharton.mosaic.animation/AnimationVector1D // com.jakewharton.mosaic.animation/AnimationVector|AnimationVector(kotlin.Float){}[0]
+final fun com.jakewharton.mosaic.animation/AnimationVector(kotlin/Float, kotlin/Float): com.jakewharton.mosaic.animation/AnimationVector2D // com.jakewharton.mosaic.animation/AnimationVector|AnimationVector(kotlin.Float;kotlin.Float){}[0]
+final fun com.jakewharton.mosaic.animation/AnimationVector(kotlin/Float, kotlin/Float, kotlin/Float): com.jakewharton.mosaic.animation/AnimationVector3D // com.jakewharton.mosaic.animation/AnimationVector|AnimationVector(kotlin.Float;kotlin.Float;kotlin.Float){}[0]
+final fun com.jakewharton.mosaic.animation/AnimationVector(kotlin/Float, kotlin/Float, kotlin/Float, kotlin/Float): com.jakewharton.mosaic.animation/AnimationVector4D // com.jakewharton.mosaic.animation/AnimationVector|AnimationVector(kotlin.Float;kotlin.Float;kotlin.Float;kotlin.Float){}[0]
+final fun com.jakewharton.mosaic.animation/DecayAnimation(com.jakewharton.mosaic.animation/FloatDecayAnimationSpec, kotlin/Float, kotlin/Float = ...): com.jakewharton.mosaic.animation/DecayAnimation<kotlin/Float, com.jakewharton.mosaic.animation/AnimationVector1D> // com.jakewharton.mosaic.animation/DecayAnimation|DecayAnimation(com.jakewharton.mosaic.animation.FloatDecayAnimationSpec;kotlin.Float;kotlin.Float){}[0]
+final fun com.jakewharton.mosaic.animation/animateColorAsState(com.jakewharton.mosaic.ui/Color, com.jakewharton.mosaic.animation/AnimationSpec<com.jakewharton.mosaic.ui/Color>?, kotlin/String?, kotlin/Function1<com.jakewharton.mosaic.ui/Color, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): androidx.compose.runtime/State<com.jakewharton.mosaic.ui/Color> // com.jakewharton.mosaic.animation/animateColorAsState|animateColorAsState(com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.animation.AnimationSpec<com.jakewharton.mosaic.ui.Color>?;kotlin.String?;kotlin.Function1<com.jakewharton.mosaic.ui.Color,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun com.jakewharton.mosaic.animation/animateFloatAsState(kotlin/Float, com.jakewharton.mosaic.animation/AnimationSpec<kotlin/Float>?, kotlin/Float, kotlin/String?, kotlin/Function1<kotlin/Float, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): androidx.compose.runtime/State<kotlin/Float> // com.jakewharton.mosaic.animation/animateFloatAsState|animateFloatAsState(kotlin.Float;com.jakewharton.mosaic.animation.AnimationSpec<kotlin.Float>?;kotlin.Float;kotlin.String?;kotlin.Function1<kotlin.Float,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun com.jakewharton.mosaic.animation/animateIntAsState(kotlin/Int, com.jakewharton.mosaic.animation/AnimationSpec<kotlin/Int>?, kotlin/String?, kotlin/Function1<kotlin/Int, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): androidx.compose.runtime/State<kotlin/Int> // com.jakewharton.mosaic.animation/animateIntAsState|animateIntAsState(kotlin.Int;com.jakewharton.mosaic.animation.AnimationSpec<kotlin.Int>?;kotlin.String?;kotlin.Function1<kotlin.Int,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun com.jakewharton.mosaic.animation/animateIntOffsetAsState(com.jakewharton.mosaic.ui.unit/IntOffset, com.jakewharton.mosaic.animation/AnimationSpec<com.jakewharton.mosaic.ui.unit/IntOffset>?, kotlin/String?, kotlin/Function1<com.jakewharton.mosaic.ui.unit/IntOffset, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): androidx.compose.runtime/State<com.jakewharton.mosaic.ui.unit/IntOffset> // com.jakewharton.mosaic.animation/animateIntOffsetAsState|animateIntOffsetAsState(com.jakewharton.mosaic.ui.unit.IntOffset;com.jakewharton.mosaic.animation.AnimationSpec<com.jakewharton.mosaic.ui.unit.IntOffset>?;kotlin.String?;kotlin.Function1<com.jakewharton.mosaic.ui.unit.IntOffset,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun com.jakewharton.mosaic.animation/animateIntSizeAsState(com.jakewharton.mosaic.ui.unit/IntSize, com.jakewharton.mosaic.animation/AnimationSpec<com.jakewharton.mosaic.ui.unit/IntSize>?, kotlin/String?, kotlin/Function1<com.jakewharton.mosaic.ui.unit/IntSize, kotlin/Unit>?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): androidx.compose.runtime/State<com.jakewharton.mosaic.ui.unit/IntSize> // com.jakewharton.mosaic.animation/animateIntSizeAsState|animateIntSizeAsState(com.jakewharton.mosaic.ui.unit.IntSize;com.jakewharton.mosaic.animation.AnimationSpec<com.jakewharton.mosaic.ui.unit.IntSize>?;kotlin.String?;kotlin.Function1<com.jakewharton.mosaic.ui.unit.IntSize,kotlin.Unit>?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_Animatable$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_Animatable$stableprop_getter|com_jakewharton_mosaic_animation_Animatable$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationConstants$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationConstants$stableprop_getter|com_jakewharton_mosaic_animation_AnimationConstants$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationResult$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationResult$stableprop_getter|com_jakewharton_mosaic_animation_AnimationResult$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationScope$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationScope$stableprop_getter|com_jakewharton_mosaic_animation_AnimationScope$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationState$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationState$stableprop_getter|com_jakewharton_mosaic_animation_AnimationState$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationVector$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationVector$stableprop_getter|com_jakewharton_mosaic_animation_AnimationVector$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationVector1D$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationVector1D$stableprop_getter|com_jakewharton_mosaic_animation_AnimationVector1D$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationVector2D$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationVector2D$stableprop_getter|com_jakewharton_mosaic_animation_AnimationVector2D$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationVector3D$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationVector3D$stableprop_getter|com_jakewharton_mosaic_animation_AnimationVector3D$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationVector4D$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_AnimationVector4D$stableprop_getter|com_jakewharton_mosaic_animation_AnimationVector4D$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_ArcAnimationSpec$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_ArcAnimationSpec$stableprop_getter|com_jakewharton_mosaic_animation_ArcAnimationSpec$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_ArcSpline$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_ArcSpline$stableprop_getter|com_jakewharton_mosaic_animation_ArcSpline$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_ArcSpline_Arc$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_ArcSpline_Arc$stableprop_getter|com_jakewharton_mosaic_animation_ArcSpline_Arc$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_CubicBezierEasing$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_CubicBezierEasing$stableprop_getter|com_jakewharton_mosaic_animation_CubicBezierEasing$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_DecayAnimation$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_DecayAnimation$stableprop_getter|com_jakewharton_mosaic_animation_DecayAnimation$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_DeferredTargetAnimation$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_DeferredTargetAnimation$stableprop_getter|com_jakewharton_mosaic_animation_DeferredTargetAnimation$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_FloatExponentialDecaySpec$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_FloatExponentialDecaySpec$stableprop_getter|com_jakewharton_mosaic_animation_FloatExponentialDecaySpec$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_FloatSpringSpec$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_FloatSpringSpec$stableprop_getter|com_jakewharton_mosaic_animation_FloatSpringSpec$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_FloatTweenSpec$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_FloatTweenSpec$stableprop_getter|com_jakewharton_mosaic_animation_FloatTweenSpec$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_InfiniteRepeatableSpec$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_InfiniteRepeatableSpec$stableprop_getter|com_jakewharton_mosaic_animation_InfiniteRepeatableSpec$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_InfiniteTransition$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_InfiniteTransition$stableprop_getter|com_jakewharton_mosaic_animation_InfiniteTransition$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframeBaseEntity$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframeBaseEntity$stableprop_getter|com_jakewharton_mosaic_animation_KeyframeBaseEntity$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframesSpec$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframesSpec$stableprop_getter|com_jakewharton_mosaic_animation_KeyframesSpec$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframesSpecBaseConfig$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframesSpecBaseConfig$stableprop_getter|com_jakewharton_mosaic_animation_KeyframesSpecBaseConfig$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframesSpec_KeyframeEntity$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframesSpec_KeyframeEntity$stableprop_getter|com_jakewharton_mosaic_animation_KeyframesSpec_KeyframeEntity$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframesSpec_KeyframesSpecConfig$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframesSpec_KeyframesSpecConfig$stableprop_getter|com_jakewharton_mosaic_animation_KeyframesSpec_KeyframesSpecConfig$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframesWithSplineSpec$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframesWithSplineSpec$stableprop_getter|com_jakewharton_mosaic_animation_KeyframesWithSplineSpec$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframesWithSplineSpec_KeyframesWithSplineSpecConfig$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_KeyframesWithSplineSpec_KeyframesWithSplineSpecConfig$stableprop_getter|com_jakewharton_mosaic_animation_KeyframesWithSplineSpec_KeyframesWithSplineSpecConfig$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_MonoSpline$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_MonoSpline$stableprop_getter|com_jakewharton_mosaic_animation_MonoSpline$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_MutableTransitionState$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_MutableTransitionState$stableprop_getter|com_jakewharton_mosaic_animation_MutableTransitionState$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_MutatorMutex$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_MutatorMutex$stableprop_getter|com_jakewharton_mosaic_animation_MutatorMutex$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_RepeatableSpec$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_RepeatableSpec$stableprop_getter|com_jakewharton_mosaic_animation_RepeatableSpec$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_SeekableTransitionState$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_SeekableTransitionState$stableprop_getter|com_jakewharton_mosaic_animation_SeekableTransitionState$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_SeekableTransitionState_SeekingAnimationState$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_SeekableTransitionState_SeekingAnimationState$stableprop_getter|com_jakewharton_mosaic_animation_SeekableTransitionState_SeekingAnimationState$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_SnapSpec$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_SnapSpec$stableprop_getter|com_jakewharton_mosaic_animation_SnapSpec$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_Spring$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_Spring$stableprop_getter|com_jakewharton_mosaic_animation_Spring$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_SpringSimulation$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_SpringSimulation$stableprop_getter|com_jakewharton_mosaic_animation_SpringSimulation$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_SpringSpec$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_SpringSpec$stableprop_getter|com_jakewharton_mosaic_animation_SpringSpec$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_TargetBasedAnimation$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_TargetBasedAnimation$stableprop_getter|com_jakewharton_mosaic_animation_TargetBasedAnimation$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_Transition$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_Transition$stableprop_getter|com_jakewharton_mosaic_animation_Transition$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_TransitionState$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_TransitionState$stableprop_getter|com_jakewharton_mosaic_animation_TransitionState$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_TweenSpec$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_TweenSpec$stableprop_getter|com_jakewharton_mosaic_animation_TweenSpec$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedFloatAnimationSpec$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedFloatAnimationSpec$stableprop_getter|com_jakewharton_mosaic_animation_VectorizedFloatAnimationSpec$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedInfiniteRepeatableSpec$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedInfiniteRepeatableSpec$stableprop_getter|com_jakewharton_mosaic_animation_VectorizedInfiniteRepeatableSpec$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedKeyframeSpecElementInfo$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedKeyframeSpecElementInfo$stableprop_getter|com_jakewharton_mosaic_animation_VectorizedKeyframeSpecElementInfo$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedKeyframesSpec$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedKeyframesSpec$stableprop_getter|com_jakewharton_mosaic_animation_VectorizedKeyframesSpec$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedMonoSplineKeyframesSpec$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedMonoSplineKeyframesSpec$stableprop_getter|com_jakewharton_mosaic_animation_VectorizedMonoSplineKeyframesSpec$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedRepeatableSpec$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedRepeatableSpec$stableprop_getter|com_jakewharton_mosaic_animation_VectorizedRepeatableSpec$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedSnapSpec$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedSnapSpec$stableprop_getter|com_jakewharton_mosaic_animation_VectorizedSnapSpec$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedSpringSpec$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedSpringSpec$stableprop_getter|com_jakewharton_mosaic_animation_VectorizedSpringSpec$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedTweenSpec$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.animation/com_jakewharton_mosaic_animation_VectorizedTweenSpec$stableprop_getter|com_jakewharton_mosaic_animation_VectorizedTweenSpec$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.animation/estimateAnimationDurationMillis(kotlin/Float, kotlin/Float, kotlin/Float, kotlin/Float, kotlin/Float): kotlin/Long // com.jakewharton.mosaic.animation/estimateAnimationDurationMillis|estimateAnimationDurationMillis(kotlin.Float;kotlin.Float;kotlin.Float;kotlin.Float;kotlin.Float){}[0]
+final fun com.jakewharton.mosaic.animation/rememberInfiniteTransition(kotlin/String?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): com.jakewharton.mosaic.animation/InfiniteTransition // com.jakewharton.mosaic.animation/rememberInfiniteTransition|rememberInfiniteTransition(kotlin.String?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final inline fun <#A: kotlin/Any?, #B: kotlin/Any?, #C: com.jakewharton.mosaic.animation/AnimationVector> (com.jakewharton.mosaic.animation/Transition<#A>).com.jakewharton.mosaic.animation/animateValue(com.jakewharton.mosaic.animation/TwoWayConverter<#B, #C>, noinline kotlin/Function3<com.jakewharton.mosaic.animation/Transition.Segment<#A>, androidx.compose.runtime/Composer, kotlin/Int, com.jakewharton.mosaic.animation/FiniteAnimationSpec<#B>>?, kotlin/String?, kotlin/Function3<#A, androidx.compose.runtime/Composer, kotlin/Int, #B>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): androidx.compose.runtime/State<#B> // com.jakewharton.mosaic.animation/animateValue|animateValue@com.jakewharton.mosaic.animation.Transition<0:0>(com.jakewharton.mosaic.animation.TwoWayConverter<0:1,0:2>;kotlin.Function3<com.jakewharton.mosaic.animation.Transition.Segment<0:0>,androidx.compose.runtime.Composer,kotlin.Int,com.jakewharton.mosaic.animation.FiniteAnimationSpec<0:1>>?;kotlin.String?;kotlin.Function3<0:0,androidx.compose.runtime.Composer,kotlin.Int,0:1>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){0§<kotlin.Any?>;1§<kotlin.Any?>;2§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+final inline fun <#A: kotlin/Any?> (com.jakewharton.mosaic.animation/Transition<#A>).com.jakewharton.mosaic.animation/animateColor(noinline kotlin/Function3<com.jakewharton.mosaic.animation/Transition.Segment<#A>, androidx.compose.runtime/Composer, kotlin/Int, com.jakewharton.mosaic.animation/FiniteAnimationSpec<com.jakewharton.mosaic.ui/Color>>?, kotlin/String?, kotlin/Function3<#A, androidx.compose.runtime/Composer, kotlin/Int, com.jakewharton.mosaic.ui/Color>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): androidx.compose.runtime/State<com.jakewharton.mosaic.ui/Color> // com.jakewharton.mosaic.animation/animateColor|animateColor@com.jakewharton.mosaic.animation.Transition<0:0>(kotlin.Function3<com.jakewharton.mosaic.animation.Transition.Segment<0:0>,androidx.compose.runtime.Composer,kotlin.Int,com.jakewharton.mosaic.animation.FiniteAnimationSpec<com.jakewharton.mosaic.ui.Color>>?;kotlin.String?;kotlin.Function3<0:0,androidx.compose.runtime.Composer,kotlin.Int,com.jakewharton.mosaic.ui.Color>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){0§<kotlin.Any?>}[0]
+final inline fun <#A: kotlin/Any?> (com.jakewharton.mosaic.animation/Transition<#A>).com.jakewharton.mosaic.animation/animateFloat(noinline kotlin/Function3<com.jakewharton.mosaic.animation/Transition.Segment<#A>, androidx.compose.runtime/Composer, kotlin/Int, com.jakewharton.mosaic.animation/FiniteAnimationSpec<kotlin/Float>>?, kotlin/String?, kotlin/Function3<#A, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Float>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): androidx.compose.runtime/State<kotlin/Float> // com.jakewharton.mosaic.animation/animateFloat|animateFloat@com.jakewharton.mosaic.animation.Transition<0:0>(kotlin.Function3<com.jakewharton.mosaic.animation.Transition.Segment<0:0>,androidx.compose.runtime.Composer,kotlin.Int,com.jakewharton.mosaic.animation.FiniteAnimationSpec<kotlin.Float>>?;kotlin.String?;kotlin.Function3<0:0,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Float>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){0§<kotlin.Any?>}[0]
+final inline fun <#A: kotlin/Any?> (com.jakewharton.mosaic.animation/Transition<#A>).com.jakewharton.mosaic.animation/animateInt(noinline kotlin/Function3<com.jakewharton.mosaic.animation/Transition.Segment<#A>, androidx.compose.runtime/Composer, kotlin/Int, com.jakewharton.mosaic.animation/FiniteAnimationSpec<kotlin/Int>>?, kotlin/String?, kotlin/Function3<#A, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Int>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): androidx.compose.runtime/State<kotlin/Int> // com.jakewharton.mosaic.animation/animateInt|animateInt@com.jakewharton.mosaic.animation.Transition<0:0>(kotlin.Function3<com.jakewharton.mosaic.animation.Transition.Segment<0:0>,androidx.compose.runtime.Composer,kotlin.Int,com.jakewharton.mosaic.animation.FiniteAnimationSpec<kotlin.Int>>?;kotlin.String?;kotlin.Function3<0:0,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Int>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){0§<kotlin.Any?>}[0]
+final inline fun <#A: kotlin/Any?> (com.jakewharton.mosaic.animation/Transition<#A>).com.jakewharton.mosaic.animation/animateIntOffset(noinline kotlin/Function3<com.jakewharton.mosaic.animation/Transition.Segment<#A>, androidx.compose.runtime/Composer, kotlin/Int, com.jakewharton.mosaic.animation/FiniteAnimationSpec<com.jakewharton.mosaic.ui.unit/IntOffset>>?, kotlin/String?, kotlin/Function3<#A, androidx.compose.runtime/Composer, kotlin/Int, com.jakewharton.mosaic.ui.unit/IntOffset>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): androidx.compose.runtime/State<com.jakewharton.mosaic.ui.unit/IntOffset> // com.jakewharton.mosaic.animation/animateIntOffset|animateIntOffset@com.jakewharton.mosaic.animation.Transition<0:0>(kotlin.Function3<com.jakewharton.mosaic.animation.Transition.Segment<0:0>,androidx.compose.runtime.Composer,kotlin.Int,com.jakewharton.mosaic.animation.FiniteAnimationSpec<com.jakewharton.mosaic.ui.unit.IntOffset>>?;kotlin.String?;kotlin.Function3<0:0,androidx.compose.runtime.Composer,kotlin.Int,com.jakewharton.mosaic.ui.unit.IntOffset>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){0§<kotlin.Any?>}[0]
+final inline fun <#A: kotlin/Any?> (com.jakewharton.mosaic.animation/Transition<#A>).com.jakewharton.mosaic.animation/animateIntSize(noinline kotlin/Function3<com.jakewharton.mosaic.animation/Transition.Segment<#A>, androidx.compose.runtime/Composer, kotlin/Int, com.jakewharton.mosaic.animation/FiniteAnimationSpec<com.jakewharton.mosaic.ui.unit/IntSize>>?, kotlin/String?, kotlin/Function3<#A, androidx.compose.runtime/Composer, kotlin/Int, com.jakewharton.mosaic.ui.unit/IntSize>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int): androidx.compose.runtime/State<com.jakewharton.mosaic.ui.unit/IntSize> // com.jakewharton.mosaic.animation/animateIntSize|animateIntSize@com.jakewharton.mosaic.animation.Transition<0:0>(kotlin.Function3<com.jakewharton.mosaic.animation.Transition.Segment<0:0>,androidx.compose.runtime.Composer,kotlin.Int,com.jakewharton.mosaic.animation.FiniteAnimationSpec<com.jakewharton.mosaic.ui.unit.IntSize>>?;kotlin.String?;kotlin.Function3<0:0,androidx.compose.runtime.Composer,kotlin.Int,com.jakewharton.mosaic.ui.unit.IntSize>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){0§<kotlin.Any?>}[0]
+final suspend fun <#A: kotlin/Any?, #B: com.jakewharton.mosaic.animation/AnimationVector> (com.jakewharton.mosaic.animation/AnimationState<#A, #B>).com.jakewharton.mosaic.animation/animateDecay(com.jakewharton.mosaic.animation/DecayAnimationSpec<#A>, kotlin/Boolean = ..., kotlin/Function1<com.jakewharton.mosaic.animation/AnimationScope<#A, #B>, kotlin/Unit> = ...) // com.jakewharton.mosaic.animation/animateDecay|animateDecay@com.jakewharton.mosaic.animation.AnimationState<0:0,0:1>(com.jakewharton.mosaic.animation.DecayAnimationSpec<0:0>;kotlin.Boolean;kotlin.Function1<com.jakewharton.mosaic.animation.AnimationScope<0:0,0:1>,kotlin.Unit>){0§<kotlin.Any?>;1§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+final suspend fun <#A: kotlin/Any?, #B: com.jakewharton.mosaic.animation/AnimationVector> (com.jakewharton.mosaic.animation/AnimationState<#A, #B>).com.jakewharton.mosaic.animation/animateTo(#A, com.jakewharton.mosaic.animation/AnimationSpec<#A> = ..., kotlin/Boolean = ..., kotlin/Function1<com.jakewharton.mosaic.animation/AnimationScope<#A, #B>, kotlin/Unit> = ...) // com.jakewharton.mosaic.animation/animateTo|animateTo@com.jakewharton.mosaic.animation.AnimationState<0:0,0:1>(0:0;com.jakewharton.mosaic.animation.AnimationSpec<0:0>;kotlin.Boolean;kotlin.Function1<com.jakewharton.mosaic.animation.AnimationScope<0:0,0:1>,kotlin.Unit>){0§<kotlin.Any?>;1§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+final suspend fun <#A: kotlin/Any?, #B: com.jakewharton.mosaic.animation/AnimationVector> com.jakewharton.mosaic.animation/animate(com.jakewharton.mosaic.animation/TwoWayConverter<#A, #B>, #A, #A, #A? = ..., com.jakewharton.mosaic.animation/AnimationSpec<#A> = ..., kotlin/Function2<#A, #A, kotlin/Unit>) // com.jakewharton.mosaic.animation/animate|animate(com.jakewharton.mosaic.animation.TwoWayConverter<0:0,0:1>;0:0;0:0;0:0?;com.jakewharton.mosaic.animation.AnimationSpec<0:0>;kotlin.Function2<0:0,0:0,kotlin.Unit>){0§<kotlin.Any?>;1§<com.jakewharton.mosaic.animation.AnimationVector>}[0]
+final suspend fun <#A: kotlin/Any?> com.jakewharton.mosaic.animation/withInfiniteAnimationFrameNanos(kotlin/Function1<kotlin/Long, #A>): #A // com.jakewharton.mosaic.animation/withInfiniteAnimationFrameNanos|withInfiniteAnimationFrameNanos(kotlin.Function1<kotlin.Long,0:0>){0§<kotlin.Any?>}[0]
+final suspend fun com.jakewharton.mosaic.animation/animate(kotlin/Float, kotlin/Float, kotlin/Float = ..., com.jakewharton.mosaic.animation/AnimationSpec<kotlin/Float> = ..., kotlin/Function2<kotlin/Float, kotlin/Float, kotlin/Unit>) // com.jakewharton.mosaic.animation/animate|animate(kotlin.Float;kotlin.Float;kotlin.Float;com.jakewharton.mosaic.animation.AnimationSpec<kotlin.Float>;kotlin.Function2<kotlin.Float,kotlin.Float,kotlin.Unit>){}[0]
+final suspend fun com.jakewharton.mosaic.animation/animateDecay(kotlin/Float, kotlin/Float, com.jakewharton.mosaic.animation/FloatDecayAnimationSpec, kotlin/Function2<kotlin/Float, kotlin/Float, kotlin/Unit>) // com.jakewharton.mosaic.animation/animateDecay|animateDecay(kotlin.Float;kotlin.Float;com.jakewharton.mosaic.animation.FloatDecayAnimationSpec;kotlin.Function2<kotlin.Float,kotlin.Float,kotlin.Unit>){}[0]
+final suspend inline fun <#A: kotlin/Any?> com.jakewharton.mosaic.animation/withInfiniteAnimationFrameMillis(crossinline kotlin/Function1<kotlin/Long, #A>): #A // com.jakewharton.mosaic.animation/withInfiniteAnimationFrameMillis|withInfiniteAnimationFrameMillis(kotlin.Function1<kotlin.Long,0:0>){0§<kotlin.Any?>}[0]
