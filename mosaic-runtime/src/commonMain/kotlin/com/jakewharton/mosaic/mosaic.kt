@@ -29,7 +29,7 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
@@ -252,13 +252,13 @@ internal class MosaicComposition(
 	}
 
 	private fun startRecomposer() {
-		scope.launch(start = CoroutineStart.UNDISPATCHED) {
+		scope.launch(start = UNDISPATCHED) {
 			recomposer.runRecomposeAndApplyChanges()
 		}
 	}
 
 	private fun startFrameListener() {
-		scope.launch {
+		scope.launch(start = UNDISPATCHED) {
 			val ctrlC = KeyEvent("c", ctrl = true)
 
 			do {
