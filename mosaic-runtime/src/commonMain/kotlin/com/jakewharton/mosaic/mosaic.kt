@@ -50,7 +50,7 @@ private const val debugOutput = false
 
 internal fun renderMosaicNode(content: @Composable () -> Unit): MosaicNode {
 	val mosaicComposition = MosaicComposition(
-		coroutineScope = CoroutineScope(EmptyCoroutineContext),
+		coroutineContext = EmptyCoroutineContext,
 		terminalState = MordantTerminal().toMutableState(),
 		keyEvents = Channel(),
 		onDraw = {},
@@ -96,7 +96,7 @@ internal suspend fun runMosaic(enterRawMode: Boolean, content: @Composable () ->
 		},
 		block = {
 			val mosaicComposition = MosaicComposition(
-				coroutineScope = this,
+				coroutineContext = coroutineContext,
 				terminalState = terminalState,
 				keyEvents = keyEvents,
 				onDraw = { rootNode ->
@@ -160,14 +160,14 @@ private fun CoroutineScope.readRawModeKeys(rawMode: RawModeScope, keyEvents: Cha
 }
 
 internal class MosaicComposition(
-	coroutineScope: CoroutineScope,
+	coroutineContext: CoroutineContext,
 	private val terminalState: State<Terminal>,
 	private val keyEvents: ReceiveChannel<KeyEvent>,
 	private val onDraw: (MosaicNode) -> Unit,
 ) {
-	private val job = Job(coroutineScope.coroutineContext[Job])
+	private val job = Job(coroutineContext[Job])
 	private val clock = BroadcastFrameClock()
-	private val composeContext: CoroutineContext = coroutineScope.coroutineContext + job + clock
+	private val composeContext: CoroutineContext = coroutineContext + job + clock
 	val scope = CoroutineScope(composeContext)
 
 	private val applier = MosaicNodeApplier { needLayout = true }

@@ -7,9 +7,9 @@ import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.unit.IntSize
+import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.coroutineScope
@@ -24,7 +24,7 @@ internal suspend fun runMosaicTest(
 ) {
 	coroutineScope {
 		val testMosaicComposition = RealTestMosaicComposition(
-			coroutineScope = this,
+			coroutineContext = coroutineContext,
 			withAnsi = withAnsi,
 			initialTerminalSize = initialTerminalSize,
 		)
@@ -50,7 +50,7 @@ internal interface TestMosaicComposition {
 }
 
 private class RealTestMosaicComposition(
-	coroutineScope: CoroutineScope,
+	coroutineContext: CoroutineContext,
 	withAnsi: Boolean,
 	initialTerminalSize: IntSize,
 ) : TestMosaicComposition {
@@ -73,7 +73,7 @@ private class RealTestMosaicComposition(
 
 	private val keyEvents = Channel<KeyEvent>(UNLIMITED)
 
-	val mosaicComposition = MosaicComposition(coroutineScope, terminalState, keyEvents) { rootNode ->
+	val mosaicComposition = MosaicComposition(coroutineContext, terminalState, keyEvents) { rootNode ->
 		nodeSnapshots.trySend(rootNode)
 		val stringRender = if (withAnsi) {
 			rendering.render(rootNode).toString()
