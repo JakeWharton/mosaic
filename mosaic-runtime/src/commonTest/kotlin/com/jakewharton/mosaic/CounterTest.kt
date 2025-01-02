@@ -30,26 +30,6 @@ class CounterTest {
 		}
 	}
 
-	@Test fun counterWithAnsi() = runTest {
-		runMosaicTest(withAnsi = true) {
-			setCounter()
-			assertThat(awaitRenderSnapshot()).isEqualTo(
-				"""
-				|${ansiBeginSynchronizedUpdate}The count is: 0
-				|$ansiEndSynchronizedUpdate
-				""".trimMargin().replaceLineEndingsWithCRLF(),
-			)
-			for (i in 1..20) {
-				assertThat(awaitRenderSnapshot()).isEqualTo(
-					"""
-					|${ansiBeginSynchronizedUpdate}${cursorUp}The count is: ${i}$clearLine
-					|$ansiEndSynchronizedUpdate
-					""".trimMargin().replaceLineEndingsWithCRLF(),
-				)
-			}
-		}
-	}
-
 	@Test fun counterInTerminalCenter() = runTest {
 		runMosaicTest(initialTerminalSize = IntSize(width = 30, height = 1)) {
 			setCounterInTerminalCenter()

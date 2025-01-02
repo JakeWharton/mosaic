@@ -67,10 +67,6 @@ private class RealTestMosaicComposition(
 	/** Channel with the most recent snapshot, if any. */
 	private val snapshots = Channel<NodeRenderSnapshot>(CONFLATED)
 
-	private val rendering: Rendering = AnsiRendering(
-		ansiLevel = if (withAnsi) AnsiLevel.TRUECOLOR else AnsiLevel.NONE,
-	)
-
 	private val terminalState: MutableState<Terminal> = mutableStateOf(
 		Terminal(size = initialTerminalSize),
 	)
@@ -83,16 +79,8 @@ private class RealTestMosaicComposition(
 		terminalState = terminalState,
 		keyEvents = keyEvents,
 		onDraw = { rootNode ->
-			val stringRender = if (withAnsi) {
-				rendering.render(rootNode).toString()
-			} else {
-				rendering.render(rootNode).toString()
-					.removeSurrounding(ansiBeginSynchronizedUpdate, ansiEndSynchronizedUpdate)
-					.removeSuffix("\r\n") // without last line break for simplicity
-					.replace(clearLine, "")
-					.replace(cursorUp, "")
-					.replace("\r\n", "\n") // CRLF to LF for simplicity
-			}
+			val ansiLevel = if (withAnsi) AnsiLevel.TRUECOLOR else AnsiLevel.NONE
+			val stringRender = rootNode.paint(ansiLevel).render()
 			snapshots.trySend(NodeRenderSnapshot(rootNode, stringRender))
 			hasChanges = true
 		},

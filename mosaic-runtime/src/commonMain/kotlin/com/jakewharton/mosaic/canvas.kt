@@ -156,11 +156,13 @@ internal class TextSurface(
 	}
 
 	fun render(): String = buildString {
-		for (rowIndex in 0 until height) {
-			if (rowIndex > 0) {
-				append("\r\n")
+		if (height > 0) {
+			for (rowIndex in 0 until height) {
+				appendRowTo(this, rowIndex)
+				append("\n")
 			}
-			appendRowTo(this, rowIndex)
+			// Remove trailing newline.
+			setLength(length - 1)
 		}
 	}
 }
