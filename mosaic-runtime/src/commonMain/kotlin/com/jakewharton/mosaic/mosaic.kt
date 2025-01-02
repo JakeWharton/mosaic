@@ -247,6 +247,7 @@ internal class MosaicComposition(
 					val keyHandled = rootNode.sendKeyEvent(keyEvent)
 					if (!keyHandled && keyEvent == ctrlC) {
 						cancel()
+						break
 					}
 					continue
 				}
