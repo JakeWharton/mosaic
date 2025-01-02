@@ -80,7 +80,7 @@ private class RealTestMosaicComposition(
 		keyEvents = keyEvents,
 		onDraw = { rootNode ->
 			val ansiLevel = if (withAnsi) AnsiLevel.TRUECOLOR else AnsiLevel.NONE
-			val stringRender = rootNode.paint(ansiLevel).render()
+			val stringRender = rootNode.paint().render(ansiLevel)
 			snapshots.trySend(NodeRenderSnapshot(rootNode, stringRender))
 			hasChanges = true
 		},

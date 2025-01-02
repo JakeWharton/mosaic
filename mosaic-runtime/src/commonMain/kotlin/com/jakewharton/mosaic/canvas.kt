@@ -30,7 +30,6 @@ private val blankPixel = TextPixel(' ')
 internal class TextSurface(
 	override val width: Int,
 	override val height: Int,
-	private val ansiLevel: AnsiLevel,
 ) : TextCanvas {
 	override var translationX = 0
 	override var translationY = 0
@@ -45,7 +44,7 @@ internal class TextSurface(
 		return cells[y * width + x]
 	}
 
-	fun appendRowTo(appendable: Appendable, row: Int) {
+	fun appendRowTo(appendable: Appendable, row: Int, ansiLevel: AnsiLevel) {
 		// Reused heap allocation for building ANSI attributes inside the loop.
 		val attributes = mutableIntListOf()
 
@@ -155,10 +154,10 @@ internal class TextSurface(
 		}
 	}
 
-	fun render(): String = buildString {
+	fun render(ansiLevel: AnsiLevel): String = buildString {
 		if (height > 0) {
 			for (rowIndex in 0 until height) {
-				appendRowTo(this, rowIndex)
+				appendRowTo(this, rowIndex, ansiLevel)
 				append("\n")
 			}
 			// Remove trailing newline.

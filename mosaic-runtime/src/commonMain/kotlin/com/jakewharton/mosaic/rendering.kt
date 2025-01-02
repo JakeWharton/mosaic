@@ -40,11 +40,11 @@ internal class DebugRendering(
 
 			val statics = mutableObjectListOf<TextSurface>()
 			try {
-				node.paintStatics(statics, ansiLevel)
+				node.paintStatics(statics)
 				if (statics.isNotEmpty()) {
 					appendLine("STATIC:")
 					statics.forEach { static ->
-						appendLine(static.render())
+						appendLine(static.render(ansiLevel))
 					}
 					appendLine()
 				}
@@ -55,7 +55,7 @@ internal class DebugRendering(
 
 			appendLine("OUTPUT:")
 			try {
-				appendLine(node.paint(ansiLevel).render())
+				appendLine(node.paint().render(ansiLevel))
 			} catch (t: Throwable) {
 				failed = true
 				append(t.stackTraceToString())
@@ -88,7 +88,7 @@ internal class AnsiRendering(
 
 			fun appendSurface(canvas: TextSurface) {
 				for (row in 0 until canvas.height) {
-					canvas.appendRowTo(this, row)
+					canvas.appendRowTo(this, row, ansiLevel)
 					if (staleLines-- > 0) {
 						// We have previously drawn on this line. Clear the rest to be safe.
 						append(clearLine)
@@ -98,7 +98,7 @@ internal class AnsiRendering(
 			}
 
 			staticSurfaces.let { staticSurfaces ->
-				node.paintStatics(staticSurfaces, ansiLevel)
+				node.paintStatics(staticSurfaces)
 				if (staticSurfaces.isNotEmpty()) {
 					staticSurfaces.forEach { staticSurface ->
 						appendSurface(staticSurface)
@@ -107,7 +107,7 @@ internal class AnsiRendering(
 				}
 			}
 
-			val surface = node.paint(ansiLevel)
+			val surface = node.paint()
 			appendSurface(surface)
 
 			// If the new output contains fewer lines than the last output, clear those old lines.

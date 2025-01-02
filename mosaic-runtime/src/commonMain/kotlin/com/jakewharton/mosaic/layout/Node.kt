@@ -5,7 +5,6 @@ import com.jakewharton.mosaic.TextCanvas
 import com.jakewharton.mosaic.TextSurface
 import com.jakewharton.mosaic.layout.Placeable.PlacementScope
 import com.jakewharton.mosaic.modifier.Modifier
-import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.unit.Constraints
 
 internal fun interface DebugPolicy {
@@ -141,8 +140,8 @@ internal class MosaicNode(
 	 * Draw this node to a [TextSurface].
 	 * A call to [measureAndPlace] must precede calls to this function.
 	 */
-	fun paint(ansiLevel: AnsiLevel): TextSurface {
-		val surface = TextSurface(width, height, ansiLevel)
+	fun paint(): TextSurface {
+		val surface = TextSurface(width, height)
 		topLayer.drawTo(surface)
 		return surface
 	}
@@ -151,13 +150,13 @@ internal class MosaicNode(
 	 * Append any static [TextSurfaces][TextSurface] to [statics].
 	 * A call to [measureAndPlace] must precede calls to this function.
 	 */
-	fun paintStatics(statics: MutableObjectList<TextSurface>, ansiLevel: AnsiLevel) {
+	fun paintStatics(statics: MutableObjectList<TextSurface>) {
 		for (index in children.indices) {
 			val child = children[index]
 			if (isStatic) {
-				statics += child.paint(ansiLevel)
+				statics += child.paint()
 			}
-			child.paintStatics(statics, ansiLevel)
+			child.paintStatics(statics)
 		}
 		onStaticDraw?.invoke()
 	}
