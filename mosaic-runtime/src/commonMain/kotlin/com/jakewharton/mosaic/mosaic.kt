@@ -180,8 +180,8 @@ internal class MosaicComposition(
 	private val readingStatesOnLayout = mutableScatterSetOf<Any>()
 	private val readingStatesOnDraw = mutableScatterSetOf<Any>()
 
-	private val layoutBlockStateReadObserver: (Any) -> Unit = { readingStatesOnLayout.add(it) }
-	private val drawBlockStateReadObserver: (Any) -> Unit = { readingStatesOnDraw.add(it) }
+	private val layoutBlockStateReadObserver: (Any) -> Unit = readingStatesOnLayout::add
+	private val drawBlockStateReadObserver: (Any) -> Unit = readingStatesOnDraw::add
 
 	@Volatile
 	private var needLayout = false
