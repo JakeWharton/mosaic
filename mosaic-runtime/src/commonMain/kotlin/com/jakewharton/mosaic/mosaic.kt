@@ -6,6 +6,7 @@ import androidx.compose.runtime.BroadcastFrameClock
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Composition
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.MonotonicFrameClock
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Recomposer
 import androidx.compose.runtime.State
@@ -25,7 +26,6 @@ import com.jakewharton.mosaic.ui.BoxMeasurePolicy
 import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.concurrent.Volatile
 import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.CoroutineScope
@@ -50,7 +50,7 @@ private const val debugOutput = false
 
 internal fun renderMosaicNode(content: @Composable () -> Unit): MosaicNode {
 	val mosaicComposition = MosaicComposition(
-		coroutineContext = EmptyCoroutineContext,
+		coroutineContext = BroadcastFrameClock(),
 		terminalState = MordantTerminal().toMutableState(),
 		keyEvents = Channel(),
 		onDraw = {},
@@ -95,20 +95,35 @@ internal suspend fun runMosaic(enterRawMode: Boolean, content: @Composable () ->
 			rawMode?.close()
 		},
 		block = {
+			val clock = BroadcastFrameClock()
 			val mosaicComposition = MosaicComposition(
-				coroutineContext = coroutineContext,
+				coroutineContext = coroutineContext + clock,
 				terminalState = terminalState,
 				keyEvents = keyEvents,
 				onDraw = { rootNode ->
 					platformDisplay(rendering.render(rootNode))
 				},
 			)
-			mosaicComposition.sendFrames()
+
 			mosaicComposition.scope.updateTerminalInfo(mordantTerminal, terminalState)
 			rawMode?.let { rawMode ->
 				mosaicComposition.scope.readRawModeKeys(rawMode, keyEvents)
 			}
+
 			mosaicComposition.setContent(content)
+
+			mosaicComposition.scope.launch {
+				while (true) {
+					clock.sendFrame(nanoTime())
+
+					// "1000 FPS should be enough for anybody"
+					// We need to yield in order for other coroutines on this dispatcher to run, otherwise
+					// this is effectively a spin loop. We do a delay instead of a yield since dispatchers
+					// are not required to support yield, but reasonable delay support is almost a guarantee.
+					delay(1)
+				}
+			}
+
 			mosaicComposition.awaitComplete()
 		},
 	)
@@ -165,9 +180,13 @@ internal class MosaicComposition(
 	private val keyEvents: ReceiveChannel<KeyEvent>,
 	private val onDraw: (MosaicNode) -> Unit,
 ) {
+	private val externalClock = checkNotNull(coroutineContext[MonotonicFrameClock]) {
+		"Mosaic requires an external MonotonicFrameClock in its coroutine context"
+	}
+	private val internalClock = BroadcastFrameClock()
+
 	private val job = Job(coroutineContext[Job])
-	private val clock = BroadcastFrameClock()
-	private val composeContext: CoroutineContext = coroutineContext + job + clock
+	private val composeContext: CoroutineContext = coroutineContext + job + internalClock
 	val scope = CoroutineScope(composeContext)
 
 	private val applier = MosaicNodeApplier { needLayout = true }
@@ -192,6 +211,7 @@ internal class MosaicComposition(
 	init {
 		GlobalSnapshotManager().ensureStarted(scope)
 		startRecomposer()
+		startFrameListener()
 		applyObserverHandle = registerSnapshotApplyObserver()
 	}
 
@@ -237,35 +257,31 @@ internal class MosaicComposition(
 		}
 	}
 
-	fun sendFrames(): Job {
-		return scope.launch {
+	private fun startFrameListener() {
+		scope.launch {
 			val ctrlC = KeyEvent("c", ctrl = true)
 
-			while (true) {
-				// Drain any pending key events before triggering the frame.
-				keyEvents.tryReceive().getOrNull()?.let { keyEvent ->
-					val keyHandled = rootNode.sendKeyEvent(keyEvent)
-					if (!keyHandled && keyEvent == ctrlC) {
-						cancel()
-						break
+			do {
+				externalClock.withFrameNanos { nanos ->
+					// Drain any pending key events before triggering the frame.
+					while (true) {
+						val keyEvent = keyEvents.tryReceive().getOrNull() ?: break
+						val keyHandled = rootNode.sendKeyEvent(keyEvent)
+						if (!keyHandled && keyEvent == ctrlC) {
+							job.cancel()
+							return@withFrameNanos
+						}
 					}
-					continue
+
+					internalClock.sendFrame(nanos)
+
+					if (needLayout) {
+						performLayout()
+					} else if (needDraw) {
+						performDraw()
+					}
 				}
-
-				clock.sendFrame(nanoTime())
-
-				if (needLayout) {
-					performLayout()
-				} else if (needDraw) {
-					performDraw()
-				}
-
-				// "1000 FPS should be enough for anybody"
-				// We need to yield in order for other coroutines on this dispatcher to run, otherwise
-				// this is effectively a spin loop. We do a delay instead of a yield since dispatchers
-				// are not required to support yield, but reasonable delay support is almost a guarantee.
-				delay(1)
-			}
+			} while (job.isActive)
 		}
 	}
 

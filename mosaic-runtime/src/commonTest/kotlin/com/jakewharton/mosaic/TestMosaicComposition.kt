@@ -1,5 +1,6 @@
 package com.jakewharton.mosaic
 
+import androidx.compose.runtime.BroadcastFrameClock
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -15,6 +16,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeout
 
 private val DefaultTestTerminalSize = IntSize(80, 20)
@@ -57,7 +59,10 @@ private class RealTestMosaicComposition(
 	initialTerminalSize: IntSize,
 ) : TestMosaicComposition {
 
+	private var timeNanos = 0L
+	private val frameDelay = 1.seconds / 60
 	private var contentSet = false
+	private var hasChanges = false
 
 	/** Channel with the most recent snapshot, if any. */
 	private val snapshots = Channel<NodeRenderSnapshot>(CONFLATED)
@@ -72,19 +77,26 @@ private class RealTestMosaicComposition(
 
 	private val keyEvents = Channel<KeyEvent>(UNLIMITED)
 
-	val mosaicComposition = MosaicComposition(coroutineContext, terminalState, keyEvents) { rootNode ->
-		val stringRender = if (withAnsi) {
-			rendering.render(rootNode).toString()
-		} else {
-			rendering.render(rootNode).toString()
-				.removeSurrounding(ansiBeginSynchronizedUpdate, ansiEndSynchronizedUpdate)
-				.removeSuffix("\r\n") // without last line break for simplicity
-				.replace(clearLine, "")
-				.replace(cursorUp, "")
-				.replace("\r\n", "\n") // CRLF to LF for simplicity
-		}
-		snapshots.trySend(NodeRenderSnapshot(rootNode, stringRender))
-	}
+	private val clock = BroadcastFrameClock()
+	val mosaicComposition = MosaicComposition(
+		coroutineContext = coroutineContext + clock,
+		terminalState = terminalState,
+		keyEvents = keyEvents,
+		onDraw = { rootNode ->
+			val stringRender = if (withAnsi) {
+				rendering.render(rootNode).toString()
+			} else {
+				rendering.render(rootNode).toString()
+					.removeSurrounding(ansiBeginSynchronizedUpdate, ansiEndSynchronizedUpdate)
+					.removeSuffix("\r\n") // without last line break for simplicity
+					.replace(clearLine, "")
+					.replace(cursorUp, "")
+					.replace("\r\n", "\n") // CRLF to LF for simplicity
+			}
+			snapshots.trySend(NodeRenderSnapshot(rootNode, stringRender))
+			hasChanges = true
+		},
+	)
 
 	override fun setContent(content: @Composable () -> Unit) {
 		contentSet = true
@@ -110,14 +122,18 @@ private class RealTestMosaicComposition(
 	override suspend fun awaitNodeRenderSnapshot(duration: Duration): NodeRenderSnapshot {
 		check(contentSet) { "setContent must be called first!" }
 
-		// Await at least one change, sending frames while we wait.
-		return withTimeout(duration) {
-			val sendFramesJob = with(mosaicComposition) { sendFrames() }
-			try {
-				snapshots.receive()
-			} finally {
-				sendFramesJob.cancel()
+		// Await changes, sending at least one frame while we wait.
+		withTimeout(duration) {
+			while (true) {
+				clock.sendFrame(timeNanos)
+				if (hasChanges) break
+
+				timeNanos += frameDelay.inWholeNanoseconds
+				delay(frameDelay)
 			}
 		}
+
+		hasChanges = false
+		return snapshots.receive()
 	}
 }
