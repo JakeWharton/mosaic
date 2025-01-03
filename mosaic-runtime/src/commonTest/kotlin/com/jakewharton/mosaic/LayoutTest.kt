@@ -13,7 +13,7 @@ import kotlinx.coroutines.test.runTest
 
 class LayoutTest {
 	@Test fun layoutDebugInfo() = runTest {
-		runMosaicTest {
+		runMosaicTest(DumpSnapshots) {
 			setContent {
 				Layout(
 					content = {
@@ -26,7 +26,7 @@ class LayoutTest {
 					}
 				}
 			}
-			assertThat(awaitNodeSnapshot().toString()).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|Custom() x=0 y=0 w=0 h=0
 				|  Text("Hi!") x=0 y=0 w=0 h=0 DrawBehind
@@ -48,7 +48,7 @@ class LayoutTest {
 					}
 				}
 			}
-			assertThat(awaitRenderSnapshot()).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|  $s
 				""".trimMargin(),
@@ -71,7 +71,7 @@ class LayoutTest {
 					}
 				}
 			}
-			assertThat(awaitRenderSnapshot()).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|ABC
 				""".trimMargin(),
@@ -95,7 +95,7 @@ class LayoutTest {
 					}
 				}
 			}
-			assertThat(awaitRenderSnapshot()).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|     CCC
 				|  BB   $s
@@ -134,7 +134,7 @@ class LayoutTest {
 					}
 				}
 			}
-			assertThat(awaitRenderSnapshot()).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|123456
 				|..XX.X

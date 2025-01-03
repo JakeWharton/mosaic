@@ -3,9 +3,10 @@ package com.jakewharton.mosaic.layout
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.Container
+import com.jakewharton.mosaic.NodeSnapshots
 import com.jakewharton.mosaic.TestFiller
 import com.jakewharton.mosaic.modifier.Modifier
-import com.jakewharton.mosaic.mosaicNodesWithMeasureAndPlace
+import com.jakewharton.mosaic.runMosaicTest
 import com.jakewharton.mosaic.size
 import com.jakewharton.mosaic.testIntrinsics
 import com.jakewharton.mosaic.ui.Layout
@@ -89,22 +90,25 @@ class AspectRatioTest {
 		childContraints: Constraints,
 		matchHeightConstraintsFirst: Boolean = false,
 	): IntSize {
-		val rootNode = mosaicNodesWithMeasureAndPlace {
-			Layout(
-				content = {
-					TestFiller(Modifier.aspectRatio(aspectRatio, matchHeightConstraintsFirst))
-				},
-				modifier = Modifier.widthIn(max = 100).heightIn(max = 100),
-				measurePolicy = { measurables, incomingConstraints ->
-					require(measurables.isNotEmpty())
-					val placeable = measurables.first().measure(childContraints)
-					layout(incomingConstraints.maxWidth, incomingConstraints.maxHeight) {
-						placeable.place(0, 0)
-					}
-				},
-			)
-		}
+		return runMosaicTest(NodeSnapshots) {
+			setContent {
+				Layout(
+					content = {
+						TestFiller(Modifier.aspectRatio(aspectRatio, matchHeightConstraintsFirst))
+					},
+					modifier = Modifier.widthIn(max = 100).heightIn(max = 100),
+					measurePolicy = { measurables, incomingConstraints ->
+						require(measurables.isNotEmpty())
+						val placeable = measurables.first().measure(childContraints)
+						layout(incomingConstraints.maxWidth, incomingConstraints.maxHeight) {
+							placeable.place(0, 0)
+						}
+					},
+				)
+			}
 
-		return rootNode.children[0].children[0].size
+			val rootNode = awaitSnapshot()
+			rootNode.children[0].children[0].size
+		}
 	}
 }

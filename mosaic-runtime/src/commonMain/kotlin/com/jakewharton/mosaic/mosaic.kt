@@ -45,19 +45,14 @@ import kotlinx.coroutines.runBlocking
  */
 private const val debugOutput = false
 
-// TODO Replace with the testing API using a snapshot strategy which uses Rendering.
-internal fun renderMosaicOnce(content: @Composable () -> Unit): MosaicComposition {
+public fun renderMosaic(content: @Composable () -> Unit): String {
 	val mosaicComposition = MosaicComposition(
 		coroutineContext = BroadcastFrameClock(),
 		onDraw = {},
 	)
 	mosaicComposition.setContent(content)
 	mosaicComposition.cancel()
-	return mosaicComposition
-}
-
-public fun renderMosaic(content: @Composable () -> Unit): String {
-	return createRendering().render(renderMosaicOnce(content)).toString()
+	return createRendering().render(mosaicComposition).toString()
 }
 
 public fun runMosaicBlocking(content: @Composable () -> Unit) {

@@ -45,11 +45,6 @@ internal val MosaicNode.size: IntSize
 internal val MosaicNode.position: IntOffset
 	get() = IntOffset(x, y)
 
-// TODO: remove
-internal fun mosaicNodesWithMeasureAndPlace(content: @Composable () -> Unit): MosaicNode {
-	return renderMosaicOnce(content).rootNode
-}
-
 class Holder<T>(var value: T)
 
 @Composable

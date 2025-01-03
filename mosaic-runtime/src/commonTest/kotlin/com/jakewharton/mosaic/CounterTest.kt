@@ -22,7 +22,7 @@ class CounterTest {
 		runMosaicTest {
 			setCounter()
 			for (count in 0..20) {
-				assertThat(awaitRenderSnapshot()).isEqualTo("The count is: $count")
+				assertThat(awaitSnapshot()).isEqualTo("The count is: $count")
 			}
 		}
 	}
@@ -32,7 +32,7 @@ class CounterTest {
 			setTerminalSize(width = 30, height = 1)
 			setCounterInTerminalCenter()
 			for (count in 0..9) {
-				assertThat(awaitRenderSnapshot()).isEqualTo("        The count is: $count       ")
+				assertThat(awaitSnapshot()).isEqualTo("        The count is: $count       ")
 			}
 
 			setTerminalSize(width = 20, height = 1)
@@ -42,7 +42,7 @@ class CounterTest {
 			delay(250L)
 
 			for (count in 10..20) {
-				assertThat(awaitRenderSnapshot()).isEqualTo("  The count is: $count  ")
+				assertThat(awaitSnapshot()).isEqualTo("  The count is: $count  ")
 			}
 		}
 	}
@@ -51,11 +51,11 @@ class CounterTest {
 		runMosaicTest {
 			setCounter()
 			for (count in 0..9) {
-				assertThat(awaitRenderSnapshot()).isEqualTo("The count is: $count")
+				assertThat(awaitSnapshot()).isEqualTo("The count is: $count")
 			}
 			setChangedCounter()
 			for (count in 0..20) {
-				assertThat(awaitRenderSnapshot()).isEqualTo(
+				assertThat(awaitSnapshot()).isEqualTo(
 					"""
 					|The count is: $count      $s
 					|The second count is: $count
@@ -65,7 +65,7 @@ class CounterTest {
 		}
 	}
 
-	private fun TestMosaicComposition.setCounter() {
+	private fun TestMosaic<*>.setCounter() {
 		setContent {
 			var count by remember { mutableIntStateOf(0) }
 
@@ -80,7 +80,7 @@ class CounterTest {
 		}
 	}
 
-	private fun TestMosaicComposition.setCounterInTerminalCenter() {
+	private fun TestMosaic<*>.setCounterInTerminalCenter() {
 		setContent {
 			var count by remember { mutableIntStateOf(0) }
 
@@ -100,7 +100,7 @@ class CounterTest {
 		}
 	}
 
-	private fun TestMosaicComposition.setChangedCounter() {
+	private fun TestMosaic<*>.setChangedCounter() {
 		setContent {
 			var count by remember { mutableIntStateOf(0) }
 			var secondCount by remember { mutableIntStateOf(0) }

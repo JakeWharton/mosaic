@@ -38,7 +38,7 @@ class PaddingTest {
 			setContent {
 				SingleFiller(Modifier.padding(left = 0))
 			}
-			assertThat(awaitRenderSnapshot()).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|$TestChar
 				""".trimMargin(),
@@ -51,7 +51,7 @@ class PaddingTest {
 			setContent {
 				SingleFiller(Modifier.padding(left = 2))
 			}
-			assertThat(awaitRenderSnapshot()).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|  $TestChar
 				""".trimMargin(),
@@ -75,7 +75,7 @@ class PaddingTest {
 			setContent {
 				SingleFiller(Modifier.padding(top = 0))
 			}
-			assertThat(awaitRenderSnapshot()).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|$TestChar
 				""".trimMargin(),
@@ -88,7 +88,7 @@ class PaddingTest {
 			setContent {
 				SingleFiller(Modifier.padding(top = 2))
 			}
-			assertThat(awaitRenderSnapshot()).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|$s
 				|$s
@@ -114,7 +114,7 @@ class PaddingTest {
 			setContent {
 				SingleFiller(Modifier.padding(right = 0))
 			}
-			assertThat(awaitRenderSnapshot()).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|$TestChar
 				""".trimMargin(),
@@ -127,7 +127,7 @@ class PaddingTest {
 			setContent {
 				SingleFiller(Modifier.padding(right = 2))
 			}
-			assertThat(awaitRenderSnapshot()).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|$TestChar $s
 				""".trimMargin(),
@@ -151,7 +151,7 @@ class PaddingTest {
 			setContent {
 				SingleFiller(Modifier.padding(bottom = 0))
 			}
-			assertThat(awaitRenderSnapshot()).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|$TestChar
 				""".trimMargin(),
@@ -164,7 +164,7 @@ class PaddingTest {
 			setContent {
 				SingleFiller(Modifier.padding(bottom = 2))
 			}
-			assertThat(awaitRenderSnapshot()).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|$TestChar
 				|$s
@@ -190,7 +190,7 @@ class PaddingTest {
 			setContent {
 				SingleFiller(Modifier.padding(left = 0, bottom = 0))
 			}
-			assertThat(awaitRenderSnapshot()).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|$TestChar
 				""".trimMargin(),
@@ -203,7 +203,7 @@ class PaddingTest {
 			setContent {
 				SingleFiller(Modifier.padding(left = 1, bottom = 2))
 			}
-			assertThat(awaitRenderSnapshot()).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				| $TestChar
 				| $s

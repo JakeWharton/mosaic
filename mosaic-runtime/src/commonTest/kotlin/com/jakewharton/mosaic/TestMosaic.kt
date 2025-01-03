@@ -2,7 +2,6 @@ package com.jakewharton.mosaic
 
 import androidx.compose.runtime.BroadcastFrameClock
 import androidx.compose.runtime.Composable
-import com.jakewharton.mosaic.TestMosaicComposition.NodeRenderSnapshot
 import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.ui.AnsiLevel
@@ -14,40 +13,43 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeout
 
-internal suspend fun runMosaicTest(
-	withAnsi: Boolean = false,
-	block: suspend TestMosaicComposition.() -> Unit,
-) {
-	coroutineScope {
-		val testMosaicComposition = RealTestMosaicComposition(
+internal fun interface SnapshotStrategy<T> {
+	fun create(mosaic: Mosaic): T
+}
+
+internal suspend fun runMosaicTest(block: suspend TestMosaic<String>.() -> Unit) {
+	runMosaicTest(PlainTextSnapshots, block)
+}
+
+internal suspend fun <T, R> runMosaicTest(
+	snapshotStrategy: SnapshotStrategy<T>,
+	block: suspend TestMosaic<T>.() -> R,
+): R {
+	return coroutineScope {
+		val testMosaicComposition = RealTestMosaic<T>(
 			coroutineContext = coroutineContext,
-			withAnsi = withAnsi,
+			snapshotStrategy = snapshotStrategy,
 		)
-		block.invoke(testMosaicComposition)
+		val result = block.invoke(testMosaicComposition)
 		testMosaicComposition.mosaicComposition.cancel()
+		result
 	}
 }
 
-internal interface TestMosaicComposition {
+internal interface TestMosaic<T> {
 	fun setContent(content: @Composable () -> Unit)
 
 	fun setTerminalSize(width: Int, height: Int)
 
 	fun sendKeyEvent(keyEvent: KeyEvent)
 
-	suspend fun awaitNodeSnapshot(duration: Duration = 1.seconds): MosaicNode
-
-	suspend fun awaitRenderSnapshot(duration: Duration = 1.seconds): String
-
-	suspend fun awaitNodeRenderSnapshot(duration: Duration = 1.seconds): NodeRenderSnapshot
-
-	data class NodeRenderSnapshot(val node: MosaicNode, val render: String)
+	suspend fun awaitSnapshot(duration: Duration = 1.seconds): T
 }
 
-private class RealTestMosaicComposition(
+private class RealTestMosaic<T>(
 	coroutineContext: CoroutineContext,
-	private val withAnsi: Boolean,
-) : TestMosaicComposition {
+	private val snapshotStrategy: SnapshotStrategy<T>,
+) : TestMosaic<T> {
 
 	private var timeNanos = 0L
 	private val frameDelay = 1.seconds / 60
@@ -73,15 +75,7 @@ private class RealTestMosaicComposition(
 		mosaicComposition.sendKeyEvent(keyEvent)
 	}
 
-	override suspend fun awaitNodeSnapshot(duration: Duration): MosaicNode {
-		return awaitNodeRenderSnapshot(duration).node
-	}
-
-	override suspend fun awaitRenderSnapshot(duration: Duration): String {
-		return awaitNodeRenderSnapshot(duration).render
-	}
-
-	override suspend fun awaitNodeRenderSnapshot(duration: Duration): NodeRenderSnapshot {
+	override suspend fun awaitSnapshot(duration: Duration): T {
 		check(contentSet) { "setContent must be called first!" }
 
 		// Await changes, sending at least one frame while we wait.
@@ -96,9 +90,32 @@ private class RealTestMosaicComposition(
 		}
 
 		hasChanges = false
+		return snapshotStrategy.create(mosaicComposition)
+	}
+}
 
-		val ansiLevel = if (withAnsi) AnsiLevel.TRUECOLOR else AnsiLevel.NONE
-		val render = mosaicComposition.paint().render(ansiLevel)
-		return NodeRenderSnapshot(mosaicComposition.rootNode, render)
+internal object PlainTextSnapshots : SnapshotStrategy<String> {
+	override fun create(mosaic: Mosaic): String {
+		return mosaic.paint().render(AnsiLevel.NONE)
+	}
+}
+
+internal object DumpSnapshots : SnapshotStrategy<String> {
+	override fun create(mosaic: Mosaic): String {
+		return mosaic.dump()
+	}
+}
+
+internal object NodeSnapshots : SnapshotStrategy<MosaicNode> {
+	override fun create(mosaic: Mosaic): MosaicNode {
+		return (mosaic as MosaicComposition).rootNode
+	}
+}
+
+internal class RenderingSnapshots(
+	private val rendering: Rendering,
+) : SnapshotStrategy<String> {
+	override fun create(mosaic: Mosaic): String {
+		return rendering.render(mosaic).toString()
 	}
 }

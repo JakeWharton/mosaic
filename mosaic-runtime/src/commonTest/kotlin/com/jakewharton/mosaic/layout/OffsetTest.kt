@@ -21,7 +21,7 @@ class OffsetTest {
 					TestFiller(modifier = Modifier.size(1))
 				}
 			}
-			assertThat(awaitRenderSnapshot()).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|   $TestChar $s
 				|     $s
@@ -42,7 +42,7 @@ class OffsetTest {
 				}
 			}
 			assertFails {
-				awaitRenderSnapshot()
+				awaitSnapshot()
 			}
 		}
 	}
@@ -55,7 +55,7 @@ class OffsetTest {
 				}
 			}
 			assertFails {
-				awaitRenderSnapshot()
+				awaitSnapshot()
 			}
 		}
 	}
@@ -67,7 +67,7 @@ class OffsetTest {
 					TestFiller(modifier = Modifier.size(1))
 				}
 			}
-			assertThat(awaitRenderSnapshot()).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|     $s
 				|     $s
@@ -88,7 +88,7 @@ class OffsetTest {
 				}
 			}
 			assertFails {
-				awaitRenderSnapshot()
+				awaitSnapshot()
 			}
 		}
 	}
@@ -101,7 +101,7 @@ class OffsetTest {
 				}
 			}
 			assertFails {
-				awaitRenderSnapshot()
+				awaitSnapshot()
 			}
 		}
 	}
@@ -113,7 +113,7 @@ class OffsetTest {
 					TestFiller(modifier = Modifier.size(1))
 				}
 			}
-			assertThat(awaitRenderSnapshot()).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|     $s
 				|     $s
@@ -134,7 +134,7 @@ class OffsetTest {
 				}
 			}
 			assertFails {
-				awaitRenderSnapshot()
+				awaitSnapshot()
 			}
 		}
 	}
@@ -147,7 +147,7 @@ class OffsetTest {
 				}
 			}
 			assertFails {
-				awaitRenderSnapshot()
+				awaitSnapshot()
 			}
 		}
 	}
@@ -164,7 +164,7 @@ class OffsetTest {
 					TestFiller(modifier = Modifier.size(1))
 				}
 			}
-			assertThat(awaitRenderSnapshot()).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|   $TestChar $s
 				|     $s
@@ -185,7 +185,7 @@ class OffsetTest {
 				}
 			}
 			assertFails {
-				awaitNodeSnapshot()
+				awaitSnapshot()
 			}
 		}
 	}
@@ -198,7 +198,7 @@ class OffsetTest {
 				}
 			}
 			assertFails {
-				awaitRenderSnapshot()
+				awaitSnapshot()
 			}
 		}
 	}
@@ -210,7 +210,7 @@ class OffsetTest {
 					TestFiller(modifier = Modifier.size(1))
 				}
 			}
-			assertThat(awaitRenderSnapshot()).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|     $s
 				|     $s
@@ -231,7 +231,7 @@ class OffsetTest {
 				}
 			}
 			assertFails {
-				awaitRenderSnapshot()
+				awaitSnapshot()
 			}
 		}
 	}
@@ -244,7 +244,7 @@ class OffsetTest {
 				}
 			}
 			assertFails {
-				awaitRenderSnapshot()
+				awaitSnapshot()
 			}
 		}
 	}
@@ -256,7 +256,7 @@ class OffsetTest {
 					TestFiller(modifier = Modifier.size(1))
 				}
 			}
-			assertThat(awaitRenderSnapshot()).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|     $s
 				|     $s
@@ -277,7 +277,7 @@ class OffsetTest {
 				}
 			}
 			assertFails {
-				awaitRenderSnapshot()
+				awaitSnapshot()
 			}
 		}
 	}
@@ -290,7 +290,7 @@ class OffsetTest {
 				}
 			}
 			assertFails {
-				awaitRenderSnapshot()
+				awaitSnapshot()
 			}
 		}
 	}
