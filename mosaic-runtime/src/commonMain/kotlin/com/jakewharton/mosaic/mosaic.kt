@@ -27,7 +27,6 @@ import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.concurrent.Volatile
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Dispatchers
@@ -137,7 +136,6 @@ private fun MordantTerminal.toMutableState(): MutableState<Terminal> {
 
 private fun createRendering(ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR): Rendering {
 	return if (debugOutput) {
-		@OptIn(ExperimentalTime::class) // Not used in production.
 		DebugRendering(ansiLevel = ansiLevel)
 	} else {
 		AnsiRendering(ansiLevel = ansiLevel)

@@ -3,7 +3,6 @@ package com.jakewharton.mosaic
 import androidx.collection.mutableObjectListOf
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.ui.AnsiLevel
-import kotlin.time.ExperimentalTime
 import kotlin.time.TimeMark
 import kotlin.time.TimeSource
 
@@ -17,7 +16,6 @@ internal interface Rendering {
 	fun render(node: MosaicNode): CharSequence
 }
 
-@ExperimentalTime
 internal class DebugRendering(
 	private val systemClock: TimeSource = TimeSource.Monotonic,
 	private val ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR,

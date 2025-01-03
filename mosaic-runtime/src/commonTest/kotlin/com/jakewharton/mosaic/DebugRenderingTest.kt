@@ -15,10 +15,8 @@ import com.jakewharton.mosaic.ui.Static
 import com.jakewharton.mosaic.ui.Text
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.ExperimentalTime
 import kotlin.time.TestTimeSource
 
-@OptIn(ExperimentalTime::class)
 class DebugRenderingTest {
 	private val timeSource = TestTimeSource()
 	private val rendering = DebugRendering(timeSource)
