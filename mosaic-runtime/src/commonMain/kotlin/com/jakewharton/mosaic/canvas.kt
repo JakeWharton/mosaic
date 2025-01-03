@@ -16,27 +16,18 @@ import com.jakewharton.mosaic.ui.isSpecifiedColor
 import com.jakewharton.mosaic.ui.isUnspecifiedColor
 import de.cketti.codepoints.appendCodePoint
 
-internal interface TextCanvas {
-	val width: Int
-	val height: Int
-	var translationX: Int
-	var translationY: Int
-
-	operator fun get(row: Int, column: Int): TextPixel
-}
-
 private val blankPixel = TextPixel(' ')
 
 internal class TextSurface(
-	override val width: Int,
-	override val height: Int,
-) : TextCanvas {
-	override var translationX = 0
-	override var translationY = 0
+	val width: Int,
+	val height: Int,
+) {
+	var translationX = 0
+	var translationY = 0
 
 	private val cells = Array(width * height) { TextPixel(' ') }
 
-	override operator fun get(row: Int, column: Int): TextPixel {
+	operator fun get(row: Int, column: Int): TextPixel {
 		val x = translationX + column
 		val y = row + translationY
 		check(x in 0 until width)

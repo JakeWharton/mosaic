@@ -1,7 +1,6 @@
 package com.jakewharton.mosaic.layout
 
 import androidx.collection.MutableObjectList
-import com.jakewharton.mosaic.TextCanvas
 import com.jakewharton.mosaic.TextSurface
 import com.jakewharton.mosaic.layout.Placeable.PlacementScope
 import com.jakewharton.mosaic.modifier.Modifier
@@ -58,7 +57,7 @@ internal abstract class MosaicNodeLayer(
 		measureResult.placeChildren()
 	}
 
-	open fun drawTo(canvas: TextCanvas) {
+	open fun drawTo(canvas: TextSurface) {
 		next?.drawTo(canvas)
 	}
 
@@ -193,7 +192,7 @@ private class BottomLayer(
 		return node.measurePolicy.run { measure(node.children, constraints) }
 	}
 
-	override fun drawTo(canvas: TextCanvas) {
+	override fun drawTo(canvas: TextSurface) {
 		for (child in node.children) {
 			if (child.width != 0 && child.height != 0) {
 				child.topLayer.drawTo(canvas)
@@ -256,7 +255,7 @@ private class DrawLayer(
 	private val element: DrawModifier,
 	override val next: MosaicNodeLayer,
 ) : MosaicNodeLayer(false) {
-	override fun drawTo(canvas: TextCanvas) {
+	override fun drawTo(canvas: TextSurface) {
 		val oldX = canvas.translationX
 		val oldY = canvas.translationY
 		canvas.translationX = x
