@@ -25,6 +25,19 @@ final enum class com.jakewharton.mosaic.layout/IntrinsicSize : kotlin/Enum<com.j
     final fun values(): kotlin/Array<com.jakewharton.mosaic.layout/IntrinsicSize> // com.jakewharton.mosaic.layout/IntrinsicSize.values|values#static(){}[0]
 }
 
+final enum class com.jakewharton.mosaic.ui/AnsiLevel : kotlin/Enum<com.jakewharton.mosaic.ui/AnsiLevel> { // com.jakewharton.mosaic.ui/AnsiLevel|null[0]
+    enum entry ANSI16 // com.jakewharton.mosaic.ui/AnsiLevel.ANSI16|null[0]
+    enum entry ANSI256 // com.jakewharton.mosaic.ui/AnsiLevel.ANSI256|null[0]
+    enum entry NONE // com.jakewharton.mosaic.ui/AnsiLevel.NONE|null[0]
+    enum entry TRUECOLOR // com.jakewharton.mosaic.ui/AnsiLevel.TRUECOLOR|null[0]
+
+    final val entries // com.jakewharton.mosaic.ui/AnsiLevel.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<com.jakewharton.mosaic.ui/AnsiLevel> // com.jakewharton.mosaic.ui/AnsiLevel.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): com.jakewharton.mosaic.ui/AnsiLevel // com.jakewharton.mosaic.ui/AnsiLevel.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<com.jakewharton.mosaic.ui/AnsiLevel> // com.jakewharton.mosaic.ui/AnsiLevel.values|values#static(){}[0]
+}
+
 abstract fun interface com.jakewharton.mosaic.layout/MeasurePolicy { // com.jakewharton.mosaic.layout/MeasurePolicy|null[0]
     abstract fun (com.jakewharton.mosaic.layout/MeasureScope).measure(kotlin.collections/List<com.jakewharton.mosaic.layout/Measurable>, com.jakewharton.mosaic.ui.unit/Constraints): com.jakewharton.mosaic.layout/MeasureResult // com.jakewharton.mosaic.layout/MeasurePolicy.measure|measure@com.jakewharton.mosaic.layout.MeasureScope(kotlin.collections.List<com.jakewharton.mosaic.layout.Measurable>;com.jakewharton.mosaic.ui.unit.Constraints){}[0]
     open fun maxIntrinsicHeight(kotlin.collections/List<com.jakewharton.mosaic.layout/IntrinsicMeasurable>, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.layout/MeasurePolicy.maxIntrinsicHeight|maxIntrinsicHeight(kotlin.collections.List<com.jakewharton.mosaic.layout.IntrinsicMeasurable>;kotlin.Int){}[0]
@@ -181,6 +194,29 @@ abstract interface com.jakewharton.mosaic.ui/ColumnScope { // com.jakewharton.mo
 abstract interface com.jakewharton.mosaic.ui/RowScope { // com.jakewharton.mosaic.ui/RowScope|null[0]
     abstract fun (com.jakewharton.mosaic.modifier/Modifier).align(com.jakewharton.mosaic.ui/Alignment.Vertical): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.ui/RowScope.align|align@com.jakewharton.mosaic.modifier.Modifier(com.jakewharton.mosaic.ui.Alignment.Vertical){}[0]
     abstract fun (com.jakewharton.mosaic.modifier/Modifier).weight(kotlin/Float, kotlin/Boolean = ...): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.ui/RowScope.weight|weight@com.jakewharton.mosaic.modifier.Modifier(kotlin.Float;kotlin.Boolean){}[0]
+}
+
+abstract interface com.jakewharton.mosaic/Mosaic { // com.jakewharton.mosaic/Mosaic|null[0]
+    abstract val terminalState // com.jakewharton.mosaic/Mosaic.terminalState|{}terminalState[0]
+        abstract fun <get-terminalState>(): androidx.compose.runtime/MutableState<com.jakewharton.mosaic/Terminal> // com.jakewharton.mosaic/Mosaic.terminalState.<get-terminalState>|<get-terminalState>(){}[0]
+
+    abstract fun cancel() // com.jakewharton.mosaic/Mosaic.cancel|cancel(){}[0]
+    abstract fun dump(): kotlin/String // com.jakewharton.mosaic/Mosaic.dump|dump(){}[0]
+    abstract fun paint(): com.jakewharton.mosaic/TextCanvas // com.jakewharton.mosaic/Mosaic.paint|paint(){}[0]
+    abstract fun paintStaticsTo(androidx.collection/MutableObjectList<com.jakewharton.mosaic/TextCanvas>) // com.jakewharton.mosaic/Mosaic.paintStaticsTo|paintStaticsTo(androidx.collection.MutableObjectList<com.jakewharton.mosaic.TextCanvas>){}[0]
+    abstract fun sendKeyEvent(com.jakewharton.mosaic.layout/KeyEvent) // com.jakewharton.mosaic/Mosaic.sendKeyEvent|sendKeyEvent(com.jakewharton.mosaic.layout.KeyEvent){}[0]
+    abstract fun setContent(kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>) // com.jakewharton.mosaic/Mosaic.setContent|setContent(kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>){}[0]
+    abstract suspend fun awaitComplete() // com.jakewharton.mosaic/Mosaic.awaitComplete|awaitComplete(){}[0]
+}
+
+abstract interface com.jakewharton.mosaic/TextCanvas { // com.jakewharton.mosaic/TextCanvas|null[0]
+    abstract val height // com.jakewharton.mosaic/TextCanvas.height|{}height[0]
+        abstract fun <get-height>(): kotlin/Int // com.jakewharton.mosaic/TextCanvas.height.<get-height>|<get-height>(){}[0]
+    abstract val width // com.jakewharton.mosaic/TextCanvas.width|{}width[0]
+        abstract fun <get-width>(): kotlin/Int // com.jakewharton.mosaic/TextCanvas.width.<get-width>|<get-width>(){}[0]
+
+    abstract fun appendRowTo(kotlin.text/Appendable, kotlin/Int, com.jakewharton.mosaic.ui/AnsiLevel) // com.jakewharton.mosaic/TextCanvas.appendRowTo|appendRowTo(kotlin.text.Appendable;kotlin.Int;com.jakewharton.mosaic.ui.AnsiLevel){}[0]
+    abstract fun render(com.jakewharton.mosaic.ui/AnsiLevel): kotlin/String // com.jakewharton.mosaic/TextCanvas.render|render(com.jakewharton.mosaic.ui.AnsiLevel){}[0]
 }
 
 sealed interface com.jakewharton.mosaic.layout/DrawStyle { // com.jakewharton.mosaic.layout/DrawStyle|null[0]
@@ -752,6 +788,7 @@ final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_RowColumnMeasureme
 final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_RowColumnParentData$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_RowColumnParentData$stableprop_getter|com_jakewharton_mosaic_ui_RowColumnParentData$stableprop_getter(){}[0]
 final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_RowScopeInstance$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_RowScopeInstance$stableprop_getter|com_jakewharton_mosaic_ui_RowScopeInstance$stableprop_getter(){}[0]
 final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_VerticalAlignModifier$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_VerticalAlignModifier$stableprop_getter|com_jakewharton_mosaic_ui_VerticalAlignModifier$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic/Mosaic(kotlin.coroutines/CoroutineContext, kotlin/Function1<com.jakewharton.mosaic/Mosaic, kotlin/Unit>): com.jakewharton.mosaic/Mosaic // com.jakewharton.mosaic/Mosaic|Mosaic(kotlin.coroutines.CoroutineContext;kotlin.Function1<com.jakewharton.mosaic.Mosaic,kotlin.Unit>){}[0]
 final fun com.jakewharton.mosaic/com_jakewharton_mosaic_AnsiRendering$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_AnsiRendering$stableprop_getter|com_jakewharton_mosaic_AnsiRendering$stableprop_getter(){}[0]
 final fun com.jakewharton.mosaic/com_jakewharton_mosaic_DebugRendering$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_DebugRendering$stableprop_getter|com_jakewharton_mosaic_DebugRendering$stableprop_getter(){}[0]
 final fun com.jakewharton.mosaic/com_jakewharton_mosaic_GlobalSnapshotManager$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_GlobalSnapshotManager$stableprop_getter|com_jakewharton_mosaic_GlobalSnapshotManager$stableprop_getter(){}[0]

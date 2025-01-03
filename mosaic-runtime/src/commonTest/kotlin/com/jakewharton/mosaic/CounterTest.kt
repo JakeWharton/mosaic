@@ -13,6 +13,7 @@ import com.jakewharton.mosaic.ui.Alignment
 import com.jakewharton.mosaic.ui.Box
 import com.jakewharton.mosaic.ui.Column
 import com.jakewharton.mosaic.ui.Text
+import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.test.Test
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
@@ -29,13 +30,13 @@ class CounterTest {
 
 	@Test fun counterInTerminalCenter() = runTest {
 		runMosaicTest {
-			setTerminalSize(width = 30, height = 1)
+			terminalState.value = Terminal(size = IntSize(width = 30, height = 1))
 			setCounterInTerminalCenter()
 			for (count in 0..9) {
 				assertThat(awaitSnapshot()).isEqualTo("        The count is: $count       ")
 			}
 
-			setTerminalSize(width = 20, height = 1)
+			terminalState.value = Terminal(size = IntSize(width = 20, height = 1))
 
 			// After changing the terminal size, we wait for the counter to increase before getting a
 			// new snapshot, otherwise there will be the previous value (9) and a different output size.

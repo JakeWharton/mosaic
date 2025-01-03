@@ -1,11 +1,11 @@
 package com.jakewharton.mosaic
 
+import androidx.collection.MutableObjectList
 import androidx.compose.runtime.BroadcastFrameClock
 import androidx.compose.runtime.Composable
 import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.ui.AnsiLevel
-import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -26,23 +26,17 @@ internal suspend fun <T, R> runMosaicTest(
 	block: suspend TestMosaic<T>.() -> R,
 ): R {
 	return coroutineScope {
-		val testMosaicComposition = RealTestMosaic<T>(
+		val tester = RealTestMosaic<T>(
 			coroutineContext = coroutineContext,
 			snapshotStrategy = snapshotStrategy,
 		)
-		val result = block.invoke(testMosaicComposition)
-		testMosaicComposition.mosaicComposition.cancel()
+		val result = block.invoke(tester)
+		tester.cancel()
 		result
 	}
 }
 
-internal interface TestMosaic<T> {
-	fun setContent(content: @Composable () -> Unit)
-
-	fun setTerminalSize(width: Int, height: Int)
-
-	fun sendKeyEvent(keyEvent: KeyEvent)
-
+internal interface TestMosaic<T> : Mosaic {
 	suspend fun awaitSnapshot(duration: Duration = 1.seconds): T
 }
 
@@ -57,22 +51,14 @@ private class RealTestMosaic<T>(
 	private var hasChanges = false
 
 	private val clock = BroadcastFrameClock()
-	val mosaicComposition = MosaicComposition(
+	val mosaic = Mosaic(
 		coroutineContext = coroutineContext + clock,
 		onDraw = { hasChanges = true },
 	)
 
 	override fun setContent(content: @Composable () -> Unit) {
 		contentSet = true
-		mosaicComposition.setContent(content)
-	}
-
-	override fun setTerminalSize(width: Int, height: Int) {
-		mosaicComposition.terminalState.value = Terminal(size = IntSize(width, height))
-	}
-
-	override fun sendKeyEvent(keyEvent: KeyEvent) {
-		mosaicComposition.sendKeyEvent(keyEvent)
+		mosaic.setContent(content)
 	}
 
 	override suspend fun awaitSnapshot(duration: Duration): T {
@@ -90,7 +76,29 @@ private class RealTestMosaic<T>(
 		}
 
 		hasChanges = false
-		return snapshotStrategy.create(mosaicComposition)
+		return snapshotStrategy.create(mosaic)
+	}
+
+	override fun sendKeyEvent(keyEvent: KeyEvent) {
+		mosaic.sendKeyEvent(keyEvent)
+	}
+
+	override val terminalState get() = mosaic.terminalState
+
+	override fun paint() = mosaic.paint()
+
+	override fun paintStaticsTo(list: MutableObjectList<TextCanvas>) {
+		mosaic.paintStaticsTo(list)
+	}
+
+	override fun dump() = mosaic.dump()
+
+	override suspend fun awaitComplete() {
+		mosaic.awaitComplete()
+	}
+
+	override fun cancel() {
+		mosaic.cancel()
 	}
 }
 

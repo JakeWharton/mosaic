@@ -35,7 +35,7 @@ internal class DebugRendering(
 			appendLine(mosaic.dump())
 			appendLine()
 
-			val statics = mutableObjectListOf<TextSurface>()
+			val statics = mutableObjectListOf<TextCanvas>()
 			try {
 				mosaic.paintStaticsTo(statics)
 				if (statics.isNotEmpty()) {
@@ -69,7 +69,7 @@ internal class AnsiRendering(
 	private val ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR,
 ) : Rendering {
 	private val stringBuilder = StringBuilder(100)
-	private val staticSurfaces = mutableObjectListOf<TextSurface>()
+	private val staticSurfaces = mutableObjectListOf<TextCanvas>()
 	private var lastHeight = 0
 
 	override fun render(mosaic: Mosaic): CharSequence {
@@ -83,7 +83,7 @@ internal class AnsiRendering(
 				append(cursorUp)
 			}
 
-			fun appendSurface(canvas: TextSurface) {
+			fun appendSurface(canvas: TextCanvas) {
 				for (row in 0 until canvas.height) {
 					canvas.appendRowTo(this, row, ansiLevel)
 					if (staleLines-- > 0) {

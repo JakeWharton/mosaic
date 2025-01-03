@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Composition
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.MonotonicFrameClock
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Recomposer
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.ObserverHandle
@@ -124,7 +125,7 @@ private fun createRendering(ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR): Renderi
 	}
 }
 
-private fun CoroutineScope.updateTerminalInfo(terminal: MordantTerminal, mosaic: MosaicComposition) {
+private fun CoroutineScope.updateTerminalInfo(terminal: MordantTerminal, mosaic: Mosaic) {
 	launch(start = UNDISPATCHED) {
 		while (true) {
 			val currentTerminalInfo = mosaic.terminalState.value
@@ -139,7 +140,7 @@ private fun CoroutineScope.updateTerminalInfo(terminal: MordantTerminal, mosaic:
 	}
 }
 
-private fun CoroutineScope.readRawModeKeys(rawMode: RawModeScope, mosaic: MosaicComposition) {
+private fun CoroutineScope.readRawModeKeys(rawMode: RawModeScope, mosaic: Mosaic) {
 	launch(Dispatchers.IO) {
 		while (isActive) {
 			val keyboardEvent = rawMode.readKeyOrNull(10.milliseconds) ?: continue
@@ -154,14 +155,27 @@ private fun CoroutineScope.readRawModeKeys(rawMode: RawModeScope, mosaic: Mosaic
 	}
 }
 
-internal interface Mosaic {
-	fun paint(): TextSurface
-	fun paintStaticsTo(list: MutableObjectList<TextSurface>)
-	fun dump(): String
+public interface Mosaic {
+	public fun setContent(content: @Composable () -> Unit)
+
+	public fun sendKeyEvent(keyEvent: KeyEvent)
+	public val terminalState: MutableState<Terminal>
+
+	public fun paint(): TextCanvas
+	public fun paintStaticsTo(list: MutableObjectList<TextCanvas>)
+	public fun dump(): String
+
+	public suspend fun awaitComplete()
+	public fun cancel()
 }
 
-// https://en.wikipedia.org/wiki/VT52
-private val DefaultTestTerminalSize = IntSize(width = 80, height = 24)
+// TODO This function signature is all kinds of broken for structured concurrency!
+public fun Mosaic(
+	coroutineContext: CoroutineContext,
+	onDraw: (Mosaic) -> Unit,
+): Mosaic {
+	return MosaicComposition(coroutineContext, onDraw)
+}
 
 internal class MosaicComposition(
 	coroutineContext: CoroutineContext,
@@ -177,7 +191,7 @@ internal class MosaicComposition(
 	val scope = CoroutineScope(composeContext)
 
 	private val keyEvents = Channel<KeyEvent>(UNLIMITED)
-	val terminalState = mutableStateOf(Terminal(DefaultTestTerminalSize))
+	override val terminalState = mutableStateOf(Terminal(DefaultTestTerminalSize))
 
 	private val applier = MosaicNodeApplier { needLayout = true }
 	val rootNode = applier.root
@@ -218,13 +232,13 @@ internal class MosaicComposition(
 		onDraw(this)
 	}
 
-	override fun paint(): TextSurface {
+	override fun paint(): TextCanvas {
 		return Snapshot.observe(readObserver = drawBlockStateReadObserver) {
 			rootNode.paint()
 		}
 	}
 
-	override fun paintStaticsTo(list: MutableObjectList<TextSurface>) {
+	override fun paintStaticsTo(list: MutableObjectList<TextCanvas>) {
 		rootNode.paintStaticsTo(list)
 	}
 
@@ -287,7 +301,7 @@ internal class MosaicComposition(
 		}
 	}
 
-	fun setContent(content: @Composable () -> Unit) {
+	override fun setContent(content: @Composable () -> Unit) {
 		composition.setContent {
 			CompositionLocalProvider(
 				LocalTerminal provides terminalState.value,
@@ -297,11 +311,11 @@ internal class MosaicComposition(
 		performLayout()
 	}
 
-	fun sendKeyEvent(keyEvent: KeyEvent) {
+	override fun sendKeyEvent(keyEvent: KeyEvent) {
 		keyEvents.trySend(keyEvent)
 	}
 
-	suspend fun awaitComplete() {
+	override suspend fun awaitComplete() {
 		try {
 			val effectJob = checkNotNull(recomposer.effectCoroutineContext[Job]) {
 				"No Job in effectCoroutineContext of recomposer"
@@ -322,7 +336,7 @@ internal class MosaicComposition(
 		}
 	}
 
-	fun cancel() {
+	override fun cancel() {
 		applyObserverHandle.dispose()
 		recomposer.cancel()
 		job.cancel()
@@ -332,6 +346,9 @@ internal class MosaicComposition(
 		scope.launch { withFrameNanos { } }.join()
 	}
 }
+
+// https://en.wikipedia.org/wiki/VT52
+private val DefaultTestTerminalSize = IntSize(width = 80, height = 24)
 
 internal class MosaicNodeApplier(
 	private val onChanges: () -> Unit = {},

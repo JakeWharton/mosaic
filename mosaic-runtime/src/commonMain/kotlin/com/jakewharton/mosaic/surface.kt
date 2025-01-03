@@ -18,10 +18,18 @@ import de.cketti.codepoints.appendCodePoint
 
 private val blankPixel = TextPixel(' ')
 
+public interface TextCanvas {
+	public val height: Int
+	public val width: Int
+
+	public fun render(ansiLevel: AnsiLevel): String
+	public fun appendRowTo(appendable: Appendable, row: Int, ansiLevel: AnsiLevel)
+}
+
 internal class TextSurface(
-	val width: Int,
-	val height: Int,
-) {
+	override val width: Int,
+	override val height: Int,
+) : TextCanvas {
 	var translationX = 0
 	var translationY = 0
 
@@ -35,7 +43,7 @@ internal class TextSurface(
 		return cells[y * width + x]
 	}
 
-	fun appendRowTo(appendable: Appendable, row: Int, ansiLevel: AnsiLevel) {
+	override fun appendRowTo(appendable: Appendable, row: Int, ansiLevel: AnsiLevel) {
 		// Reused heap allocation for building ANSI attributes inside the loop.
 		val attributes = mutableIntListOf()
 
@@ -145,7 +153,7 @@ internal class TextSurface(
 		}
 	}
 
-	fun render(ansiLevel: AnsiLevel): String = buildString {
+	override fun render(ansiLevel: AnsiLevel): String = buildString {
 		if (height > 0) {
 			for (rowIndex in 0 until height) {
 				appendRowTo(this, rowIndex, ansiLevel)

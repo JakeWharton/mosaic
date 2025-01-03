@@ -1,4 +1,16 @@
+public abstract interface class com/jakewharton/mosaic/Mosaic {
+	public abstract fun awaitComplete (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun cancel ()V
+	public abstract fun dump ()Ljava/lang/String;
+	public abstract fun getTerminalState ()Landroidx/compose/runtime/MutableState;
+	public abstract fun paint ()Lcom/jakewharton/mosaic/TextCanvas;
+	public abstract fun paintStaticsTo (Landroidx/collection/MutableObjectList;)V
+	public abstract fun sendKeyEvent (Lcom/jakewharton/mosaic/layout/KeyEvent;)V
+	public abstract fun setContent (Lkotlin/jvm/functions/Function2;)V
+}
+
 public final class com/jakewharton/mosaic/MosaicKt {
+	public static final fun Mosaic (Lkotlin/coroutines/CoroutineContext;Lkotlin/jvm/functions/Function1;)Lcom/jakewharton/mosaic/Mosaic;
 	public static final fun renderMosaic (Lkotlin/jvm/functions/Function2;)Ljava/lang/String;
 	public static final fun runMosaic (Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static final fun runMosaicBlocking (Lkotlin/jvm/functions/Function2;)V
@@ -15,6 +27,13 @@ public final class com/jakewharton/mosaic/Terminal {
 
 public final class com/jakewharton/mosaic/TerminalKt {
 	public static final fun getLocalTerminal ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public abstract interface class com/jakewharton/mosaic/TextCanvas {
+	public abstract fun appendRowTo (Ljava/lang/Appendable;ILcom/jakewharton/mosaic/ui/AnsiLevel;)V
+	public abstract fun getHeight ()I
+	public abstract fun getWidth ()I
+	public abstract fun render (Lcom/jakewharton/mosaic/ui/AnsiLevel;)Ljava/lang/String;
 }
 
 public final class com/jakewharton/mosaic/layout/AspectRatioKt {
@@ -366,6 +385,16 @@ public abstract interface class com/jakewharton/mosaic/ui/Alignment$Horizontal {
 
 public abstract interface class com/jakewharton/mosaic/ui/Alignment$Vertical {
 	public abstract fun align (II)I
+}
+
+public final class com/jakewharton/mosaic/ui/AnsiLevel : java/lang/Enum {
+	public static final field ANSI16 Lcom/jakewharton/mosaic/ui/AnsiLevel;
+	public static final field ANSI256 Lcom/jakewharton/mosaic/ui/AnsiLevel;
+	public static final field NONE Lcom/jakewharton/mosaic/ui/AnsiLevel;
+	public static final field TRUECOLOR Lcom/jakewharton/mosaic/ui/AnsiLevel;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/jakewharton/mosaic/ui/AnsiLevel;
+	public static fun values ()[Lcom/jakewharton/mosaic/ui/AnsiLevel;
 }
 
 public final class com/jakewharton/mosaic/ui/Arrangement {

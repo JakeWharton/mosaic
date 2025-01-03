@@ -1,6 +1,6 @@
 package com.jakewharton.mosaic.ui
 
-internal enum class AnsiLevel {
+public enum class AnsiLevel {
 	NONE,
 	ANSI16,
 	ANSI256,

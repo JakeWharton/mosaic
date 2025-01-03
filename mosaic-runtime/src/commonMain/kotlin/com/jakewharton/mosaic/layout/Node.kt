@@ -1,6 +1,7 @@
 package com.jakewharton.mosaic.layout
 
 import androidx.collection.MutableObjectList
+import com.jakewharton.mosaic.TextCanvas
 import com.jakewharton.mosaic.TextSurface
 import com.jakewharton.mosaic.layout.Placeable.PlacementScope
 import com.jakewharton.mosaic.modifier.Modifier
@@ -139,7 +140,7 @@ internal class MosaicNode(
 	 * Draw this node to a [TextSurface].
 	 * A call to [measureAndPlace] must precede calls to this function.
 	 */
-	fun paint(): TextSurface {
+	fun paint(): TextCanvas {
 		val surface = TextSurface(width, height)
 		topLayer.drawTo(surface)
 		return surface
@@ -149,7 +150,7 @@ internal class MosaicNode(
 	 * Append any static [TextSurfaces][TextSurface] to [statics].
 	 * A call to [measureAndPlace] must precede calls to this function.
 	 */
-	fun paintStaticsTo(statics: MutableObjectList<TextSurface>) {
+	fun paintStaticsTo(statics: MutableObjectList<TextCanvas>) {
 		for (index in children.indices) {
 			val child = children[index]
 			if (isStatic) {
