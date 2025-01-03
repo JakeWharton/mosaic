@@ -8,6 +8,7 @@ import com.jakewharton.mosaic.ConstrainedBox
 import com.jakewharton.mosaic.Container
 import com.jakewharton.mosaic.Holder
 import com.jakewharton.mosaic.NodeSnapshots
+import com.jakewharton.mosaic.assertFailure
 import com.jakewharton.mosaic.layout.aspectRatio
 import com.jakewharton.mosaic.layout.fillMaxHeight
 import com.jakewharton.mosaic.layout.fillMaxWidth
@@ -30,7 +31,6 @@ import com.jakewharton.mosaic.ui.unit.IntOffset
 import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.math.min
 import kotlin.test.Test
-import kotlin.test.assertFails
 import kotlinx.coroutines.test.runTest
 
 class RowColumnTest {
@@ -182,13 +182,13 @@ class RowColumnTest {
 
 	@Test fun testRow_invalidWeight() {
 		with(RowScopeInstance) {
-			assertFails {
+			assertFailure<IllegalArgumentException> {
 				Modifier.weight(-1.0f)
 			}
-			assertFails {
+			assertFailure<IllegalArgumentException> {
 				Modifier.weight(Float.NaN)
 			}
-			assertFails {
+			assertFailure<IllegalArgumentException> {
 				Modifier.weight(Float.NEGATIVE_INFINITY)
 			}
 		}
@@ -341,13 +341,13 @@ class RowColumnTest {
 
 	@Test fun testColumn_invalidWeight() {
 		with(ColumnScopeInstance) {
-			assertFails {
+			assertFailure<IllegalArgumentException> {
 				Modifier.weight(-1.0f)
 			}
-			assertFails {
+			assertFailure<IllegalArgumentException> {
 				Modifier.weight(Float.NaN)
 			}
-			assertFails {
+			assertFailure<IllegalArgumentException> {
 				Modifier.weight(Float.NEGATIVE_INFINITY)
 			}
 		}

@@ -6,6 +6,7 @@ import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.Container
 import com.jakewharton.mosaic.TestChar
 import com.jakewharton.mosaic.TestFiller
+import com.jakewharton.mosaic.assertFailure
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.runMosaicTest
 import com.jakewharton.mosaic.s
@@ -13,7 +14,6 @@ import com.jakewharton.mosaic.testIntrinsics
 import com.jakewharton.mosaic.ui.Layout
 import com.jakewharton.mosaic.ui.unit.Constraints
 import kotlin.test.Test
-import kotlin.test.assertFails
 import kotlinx.coroutines.test.runTest
 
 class PaddingTest {
@@ -28,7 +28,7 @@ class PaddingTest {
 	}
 
 	@Test fun paddingLeftNegative() {
-		assertFails {
+		assertFailure<IllegalArgumentException> {
 			Modifier.padding(left = -2)
 		}
 	}
@@ -65,7 +65,7 @@ class PaddingTest {
 	}
 
 	@Test fun paddingTopNegative() {
-		assertFails {
+		assertFailure<IllegalArgumentException> {
 			Modifier.padding(top = -2)
 		}
 	}
@@ -104,7 +104,7 @@ class PaddingTest {
 	}
 
 	@Test fun paddingRightNegative() {
-		assertFails {
+		assertFailure<IllegalArgumentException> {
 			Modifier.padding(right = -2)
 		}
 	}
@@ -141,7 +141,7 @@ class PaddingTest {
 	}
 
 	@Test fun paddingBottomNegative() {
-		assertFails {
+		assertFailure<IllegalArgumentException> {
 			Modifier.padding(bottom = -2)
 		}
 	}
@@ -180,7 +180,7 @@ class PaddingTest {
 	}
 
 	@Test fun paddingLeftBottomNegative() {
-		assertFails {
+		assertFailure<IllegalArgumentException> {
 			Modifier.padding(left = -1, bottom = -2)
 		}
 	}

@@ -5,6 +5,7 @@ import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.Container
 import com.jakewharton.mosaic.NodeSnapshots
 import com.jakewharton.mosaic.TestFiller
+import com.jakewharton.mosaic.assertFailure
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.runMosaicTest
 import com.jakewharton.mosaic.size
@@ -13,18 +14,17 @@ import com.jakewharton.mosaic.ui.Layout
 import com.jakewharton.mosaic.ui.unit.Constraints
 import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.test.Test
-import kotlin.test.assertFails
 import kotlinx.coroutines.test.runTest
 
 class AspectRatioTest {
 	@Test fun aspectRatioNegative() {
-		assertFails {
+		assertFailure<IllegalArgumentException> {
 			Modifier.aspectRatio(-2.0f)
 		}
 	}
 
 	@Test fun aspectRatioZero() {
-		assertFails {
+		assertFailure<IllegalArgumentException> {
 			Modifier.aspectRatio(0.0f)
 		}
 	}

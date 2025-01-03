@@ -4,13 +4,13 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.TestChar
 import com.jakewharton.mosaic.TestFiller
+import com.jakewharton.mosaic.assertFailure
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.runMosaicTest
 import com.jakewharton.mosaic.s
 import com.jakewharton.mosaic.ui.Box
 import com.jakewharton.mosaic.ui.unit.IntOffset
 import kotlin.test.Test
-import kotlin.test.assertFails
 import kotlinx.coroutines.test.runTest
 
 class OffsetTest {
@@ -41,7 +41,8 @@ class OffsetTest {
 					TestFiller(modifier = Modifier.size(1))
 				}
 			}
-			assertFails {
+			// check when going beyond the border of the TextSurface#get
+			assertFailure<IllegalStateException> {
 				awaitSnapshot()
 			}
 		}
@@ -54,7 +55,8 @@ class OffsetTest {
 					TestFiller(modifier = Modifier.size(1))
 				}
 			}
-			assertFails {
+			// check when going beyond the border of the TextSurface#get
+			assertFailure<IllegalStateException> {
 				awaitSnapshot()
 			}
 		}
@@ -87,7 +89,8 @@ class OffsetTest {
 					TestFiller(modifier = Modifier.size(1))
 				}
 			}
-			assertFails {
+			// check when going beyond the border of the TextSurface#get
+			assertFailure<IllegalStateException> {
 				awaitSnapshot()
 			}
 		}
@@ -100,7 +103,8 @@ class OffsetTest {
 					TestFiller(modifier = Modifier.size(1))
 				}
 			}
-			assertFails {
+			// check when going beyond the border of the TextSurface#get
+			assertFailure<IllegalStateException> {
 				awaitSnapshot()
 			}
 		}
@@ -133,7 +137,8 @@ class OffsetTest {
 					TestFiller(modifier = Modifier.size(1))
 				}
 			}
-			assertFails {
+			// check when going beyond the border of the TextSurface#get
+			assertFailure<IllegalStateException> {
 				awaitSnapshot()
 			}
 		}
@@ -146,7 +151,8 @@ class OffsetTest {
 					TestFiller(modifier = Modifier.size(1))
 				}
 			}
-			assertFails {
+			// check when going beyond the border of the TextSurface#get
+			assertFailure<IllegalStateException> {
 				awaitSnapshot()
 			}
 		}
@@ -184,7 +190,8 @@ class OffsetTest {
 					TestFiller(modifier = Modifier.size(1))
 				}
 			}
-			assertFails {
+			// check when going beyond the border of the TextSurface#get
+			assertFailure<IllegalStateException> {
 				awaitSnapshot()
 			}
 		}
@@ -197,7 +204,8 @@ class OffsetTest {
 					TestFiller(modifier = Modifier.size(1))
 				}
 			}
-			assertFails {
+			// check when going beyond the border of the TextSurface#get
+			assertFailure<IllegalStateException> {
 				awaitSnapshot()
 			}
 		}
@@ -230,7 +238,8 @@ class OffsetTest {
 					TestFiller(modifier = Modifier.size(1))
 				}
 			}
-			assertFails {
+			// check when going beyond the border of the TextSurface#get
+			assertFailure<IllegalStateException> {
 				awaitSnapshot()
 			}
 		}
@@ -243,7 +252,8 @@ class OffsetTest {
 					TestFiller(modifier = Modifier.size(1))
 				}
 			}
-			assertFails {
+			// check when going beyond the border of the TextSurface#get
+			assertFailure<IllegalStateException> {
 				awaitSnapshot()
 			}
 		}
@@ -276,7 +286,8 @@ class OffsetTest {
 					TestFiller(modifier = Modifier.size(1))
 				}
 			}
-			assertFails {
+			// check when going beyond the border of the TextSurface#get
+			assertFailure<IllegalStateException> {
 				awaitSnapshot()
 			}
 		}
@@ -289,7 +300,8 @@ class OffsetTest {
 					TestFiller(modifier = Modifier.size(1))
 				}
 			}
-			assertFails {
+			// check when going beyond the border of the TextSurface#get
+			assertFailure<IllegalStateException> {
 				awaitSnapshot()
 			}
 		}
