@@ -14,7 +14,6 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
-import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeout
@@ -71,13 +70,10 @@ private class RealTestMosaicComposition(
 		Terminal(size = initialTerminalSize),
 	)
 
-	private val keyEvents = Channel<KeyEvent>(UNLIMITED)
-
 	private val clock = BroadcastFrameClock()
 	val mosaicComposition = MosaicComposition(
 		coroutineContext = coroutineContext + clock,
 		terminalState = terminalState,
-		keyEvents = keyEvents,
 		onDraw = { rootNode ->
 			val ansiLevel = if (withAnsi) AnsiLevel.TRUECOLOR else AnsiLevel.NONE
 			val stringRender = rootNode.paint().render(ansiLevel)
@@ -96,7 +92,7 @@ private class RealTestMosaicComposition(
 	}
 
 	override fun sendKeyEvent(keyEvent: KeyEvent) {
-		keyEvents.trySend(keyEvent)
+		mosaicComposition.sendKeyEvent(keyEvent)
 	}
 
 	override suspend fun awaitNodeSnapshot(duration: Duration): MosaicNode {

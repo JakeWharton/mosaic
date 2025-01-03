@@ -34,7 +34,6 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
-import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -51,7 +50,6 @@ internal fun renderMosaicNode(content: @Composable () -> Unit): MosaicNode {
 	val mosaicComposition = MosaicComposition(
 		coroutineContext = BroadcastFrameClock(),
 		terminalState = MordantTerminal().toMutableState(),
-		keyEvents = Channel(),
 		onDraw = {},
 	)
 	mosaicComposition.setContent(content)
@@ -77,7 +75,6 @@ internal suspend fun runMosaic(enterRawMode: Boolean, content: @Composable () ->
 	val mordantTerminal = MordantTerminal()
 	val rendering = createRendering(mordantTerminal.terminalInfo.ansiLevel.toMosaicAnsiLevel())
 	val terminalState = mordantTerminal.toMutableState()
-	val keyEvents = Channel<KeyEvent>(UNLIMITED)
 
 	val rawMode = if (enterRawMode && MultiplatformSystem.readEnvironmentVariable("MOSAIC_RAW_MODE") != "false") {
 		// In theory this call could fail, so perform it before any additional control sequences.
@@ -98,7 +95,6 @@ internal suspend fun runMosaic(enterRawMode: Boolean, content: @Composable () ->
 			val mosaicComposition = MosaicComposition(
 				coroutineContext = coroutineContext + clock,
 				terminalState = terminalState,
-				keyEvents = keyEvents,
 				onDraw = { rootNode ->
 					platformDisplay(rendering.render(rootNode))
 				},
@@ -106,7 +102,7 @@ internal suspend fun runMosaic(enterRawMode: Boolean, content: @Composable () ->
 
 			mosaicComposition.scope.updateTerminalInfo(mordantTerminal, terminalState)
 			rawMode?.let { rawMode ->
-				mosaicComposition.scope.readRawModeKeys(rawMode, keyEvents)
+				mosaicComposition.scope.readRawModeKeys(rawMode, mosaicComposition)
 			}
 
 			mosaicComposition.setContent(content)
@@ -157,7 +153,7 @@ private fun CoroutineScope.updateTerminalInfo(terminal: MordantTerminal, termina
 	}
 }
 
-private fun CoroutineScope.readRawModeKeys(rawMode: RawModeScope, keyEvents: Channel<KeyEvent>) {
+private fun CoroutineScope.readRawModeKeys(rawMode: RawModeScope, mosaic: MosaicComposition) {
 	launch(Dispatchers.IO) {
 		while (isActive) {
 			val keyboardEvent = rawMode.readKeyOrNull(10.milliseconds) ?: continue
@@ -167,7 +163,7 @@ private fun CoroutineScope.readRawModeKeys(rawMode: RawModeScope, keyEvents: Cha
 				ctrl = keyboardEvent.ctrl,
 				shift = keyboardEvent.shift,
 			)
-			keyEvents.trySend(keyEvent)
+			mosaic.sendKeyEvent(keyEvent)
 		}
 	}
 }
@@ -175,7 +171,6 @@ private fun CoroutineScope.readRawModeKeys(rawMode: RawModeScope, keyEvents: Cha
 internal class MosaicComposition(
 	coroutineContext: CoroutineContext,
 	private val terminalState: State<Terminal>,
-	private val keyEvents: ReceiveChannel<KeyEvent>,
 	private val onDraw: (MosaicNode) -> Unit,
 ) {
 	private val externalClock = checkNotNull(coroutineContext[MonotonicFrameClock]) {
@@ -186,6 +181,8 @@ internal class MosaicComposition(
 	private val job = Job(coroutineContext[Job])
 	private val composeContext: CoroutineContext = coroutineContext + job + internalClock
 	val scope = CoroutineScope(composeContext)
+
+	private val keyEvents = Channel<KeyEvent>(UNLIMITED)
 
 	private val applier = MosaicNodeApplier { needLayout = true }
 	val rootNode = applier.root
@@ -291,6 +288,10 @@ internal class MosaicComposition(
 			)
 		}
 		performLayout()
+	}
+
+	fun sendKeyEvent(keyEvent: KeyEvent) {
+		keyEvents.trySend(keyEvent)
 	}
 
 	suspend fun awaitComplete() {
