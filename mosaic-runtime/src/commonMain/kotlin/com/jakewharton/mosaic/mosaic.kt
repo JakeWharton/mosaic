@@ -7,9 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Composition
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.MonotonicFrameClock
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Recomposer
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.ObserverHandle
 import androidx.compose.runtime.snapshots.Snapshot
@@ -49,7 +47,6 @@ private const val debugOutput = false
 internal fun renderMosaicNode(content: @Composable () -> Unit): MosaicNode {
 	val mosaicComposition = MosaicComposition(
 		coroutineContext = BroadcastFrameClock(),
-		terminalState = MordantTerminal().toMutableState(),
 		onDraw = {},
 	)
 	mosaicComposition.setContent(content)
@@ -74,7 +71,6 @@ public suspend fun runMosaic(content: @Composable () -> Unit) {
 internal suspend fun runMosaic(enterRawMode: Boolean, content: @Composable () -> Unit) {
 	val mordantTerminal = MordantTerminal()
 	val rendering = createRendering(mordantTerminal.terminalInfo.ansiLevel.toMosaicAnsiLevel())
-	val terminalState = mordantTerminal.toMutableState()
 
 	val rawMode = if (enterRawMode && MultiplatformSystem.readEnvironmentVariable("MOSAIC_RAW_MODE") != "false") {
 		// In theory this call could fail, so perform it before any additional control sequences.
@@ -94,13 +90,12 @@ internal suspend fun runMosaic(enterRawMode: Boolean, content: @Composable () ->
 			val clock = BroadcastFrameClock()
 			val mosaicComposition = MosaicComposition(
 				coroutineContext = coroutineContext + clock,
-				terminalState = terminalState,
 				onDraw = { rootNode ->
 					platformDisplay(rendering.render(rootNode))
 				},
 			)
 
-			mosaicComposition.scope.updateTerminalInfo(mordantTerminal, terminalState)
+			mosaicComposition.scope.updateTerminalInfo(mordantTerminal, mosaicComposition)
 			rawMode?.let { rawMode ->
 				mosaicComposition.scope.readRawModeKeys(rawMode, mosaicComposition)
 			}
@@ -124,12 +119,6 @@ internal suspend fun runMosaic(enterRawMode: Boolean, content: @Composable () ->
 	)
 }
 
-private fun MordantTerminal.toMutableState(): MutableState<Terminal> {
-	return mutableStateOf(
-		Terminal(size = IntSize(size.width, size.height)),
-	)
-}
-
 private fun createRendering(ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR): Rendering {
 	return if (debugOutput) {
 		DebugRendering(ansiLevel = ansiLevel)
@@ -138,15 +127,15 @@ private fun createRendering(ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR): Renderi
 	}
 }
 
-private fun CoroutineScope.updateTerminalInfo(terminal: MordantTerminal, terminalInfo: MutableState<Terminal>) {
-	launch {
+private fun CoroutineScope.updateTerminalInfo(terminal: MordantTerminal, mosaic: MosaicComposition) {
+	launch(start = UNDISPATCHED) {
 		while (true) {
-			val currentTerminalInfo = terminalInfo.value
+			val currentTerminalInfo = mosaic.terminalState.value
 			val newSize = terminal.updateSize()
 			if (currentTerminalInfo.size.width != newSize.width ||
 				currentTerminalInfo.size.height != newSize.height
 			) {
-				terminalInfo.value = Terminal(size = IntSize(newSize.width, newSize.height))
+				mosaic.terminalState.value = Terminal(size = IntSize(newSize.width, newSize.height))
 			}
 			delay(50L)
 		}
@@ -168,9 +157,11 @@ private fun CoroutineScope.readRawModeKeys(rawMode: RawModeScope, mosaic: Mosaic
 	}
 }
 
+// https://en.wikipedia.org/wiki/VT52
+private val DefaultTestTerminalSize = IntSize(width = 80, height = 24)
+
 internal class MosaicComposition(
 	coroutineContext: CoroutineContext,
-	private val terminalState: State<Terminal>,
 	private val onDraw: (MosaicNode) -> Unit,
 ) {
 	private val externalClock = checkNotNull(coroutineContext[MonotonicFrameClock]) {
@@ -183,6 +174,7 @@ internal class MosaicComposition(
 	val scope = CoroutineScope(composeContext)
 
 	private val keyEvents = Channel<KeyEvent>(UNLIMITED)
+	val terminalState = mutableStateOf(Terminal(DefaultTestTerminalSize))
 
 	private val applier = MosaicNodeApplier { needLayout = true }
 	val rootNode = applier.root

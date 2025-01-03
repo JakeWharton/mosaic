@@ -2,8 +2,6 @@ package com.jakewharton.mosaic
 
 import androidx.compose.runtime.BroadcastFrameClock
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import com.jakewharton.mosaic.TestMosaicComposition.NodeRenderSnapshot
 import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.layout.MosaicNode
@@ -18,18 +16,14 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeout
 
-private val DefaultTestTerminalSize = IntSize(80, 20)
-
 internal suspend fun runMosaicTest(
 	withAnsi: Boolean = false,
-	initialTerminalSize: IntSize = DefaultTestTerminalSize,
 	block: suspend TestMosaicComposition.() -> Unit,
 ) {
 	coroutineScope {
 		val testMosaicComposition = RealTestMosaicComposition(
 			coroutineContext = coroutineContext,
 			withAnsi = withAnsi,
-			initialTerminalSize = initialTerminalSize,
 		)
 		block.invoke(testMosaicComposition)
 		testMosaicComposition.mosaicComposition.cancel()
@@ -39,7 +33,7 @@ internal suspend fun runMosaicTest(
 internal interface TestMosaicComposition {
 	fun setContent(content: @Composable () -> Unit)
 
-	fun changeTerminalSize(width: Int, height: Int)
+	fun setTerminalSize(width: Int, height: Int)
 
 	fun sendKeyEvent(keyEvent: KeyEvent)
 
@@ -55,7 +49,6 @@ internal interface TestMosaicComposition {
 private class RealTestMosaicComposition(
 	coroutineContext: CoroutineContext,
 	withAnsi: Boolean,
-	initialTerminalSize: IntSize,
 ) : TestMosaicComposition {
 
 	private var timeNanos = 0L
@@ -66,14 +59,9 @@ private class RealTestMosaicComposition(
 	/** Channel with the most recent snapshot, if any. */
 	private val snapshots = Channel<NodeRenderSnapshot>(CONFLATED)
 
-	private val terminalState: MutableState<Terminal> = mutableStateOf(
-		Terminal(size = initialTerminalSize),
-	)
-
 	private val clock = BroadcastFrameClock()
 	val mosaicComposition = MosaicComposition(
 		coroutineContext = coroutineContext + clock,
-		terminalState = terminalState,
 		onDraw = { rootNode ->
 			val ansiLevel = if (withAnsi) AnsiLevel.TRUECOLOR else AnsiLevel.NONE
 			val stringRender = rootNode.paint().render(ansiLevel)
@@ -87,8 +75,8 @@ private class RealTestMosaicComposition(
 		mosaicComposition.setContent(content)
 	}
 
-	override fun changeTerminalSize(width: Int, height: Int) {
-		terminalState.value = Terminal(size = IntSize(width, height))
+	override fun setTerminalSize(width: Int, height: Int) {
+		mosaicComposition.terminalState.value = Terminal(size = IntSize(width, height))
 	}
 
 	override fun sendKeyEvent(keyEvent: KeyEvent) {
