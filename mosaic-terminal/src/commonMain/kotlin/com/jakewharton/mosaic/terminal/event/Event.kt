@@ -1,15 +1,15 @@
 package com.jakewharton.mosaic.terminal.event
 
 import com.jakewharton.cite.__TYPE__
-import dev.drewhamilton.poko.ArrayContentBased
 import dev.drewhamilton.poko.Poko
+import dev.drewhamilton.poko.Poko.ReadArrayContent
 
 public sealed interface Event
 
 @Poko
 public class UnknownEvent(
 	// TODO ByteString once it moves into the stdlib.
-	@ArrayContentBased public val bytes: ByteArray,
+	@ReadArrayContent public val bytes: ByteArray,
 ) : Event {
 	override fun toString(): String = buildString {
 		append(__TYPE__)
