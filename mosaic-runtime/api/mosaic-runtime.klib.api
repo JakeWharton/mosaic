@@ -38,6 +38,17 @@ final enum class com.jakewharton.mosaic.ui/AnsiLevel : kotlin/Enum<com.jakewhart
     final fun values(): kotlin/Array<com.jakewharton.mosaic.ui/AnsiLevel> // com.jakewharton.mosaic.ui/AnsiLevel.values|values#static(){}[0]
 }
 
+final enum class com.jakewharton.mosaic/MosaicLogLevel : kotlin/Enum<com.jakewharton.mosaic/MosaicLogLevel> { // com.jakewharton.mosaic/MosaicLogLevel|null[0]
+    enum entry DEBUG // com.jakewharton.mosaic/MosaicLogLevel.DEBUG|null[0]
+    enum entry VERBOSE // com.jakewharton.mosaic/MosaicLogLevel.VERBOSE|null[0]
+
+    final val entries // com.jakewharton.mosaic/MosaicLogLevel.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<com.jakewharton.mosaic/MosaicLogLevel> // com.jakewharton.mosaic/MosaicLogLevel.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): com.jakewharton.mosaic/MosaicLogLevel // com.jakewharton.mosaic/MosaicLogLevel.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<com.jakewharton.mosaic/MosaicLogLevel> // com.jakewharton.mosaic/MosaicLogLevel.values|values#static(){}[0]
+}
+
 abstract fun interface com.jakewharton.mosaic.layout/MeasurePolicy { // com.jakewharton.mosaic.layout/MeasurePolicy|null[0]
     abstract fun (com.jakewharton.mosaic.layout/MeasureScope).measure(kotlin.collections/List<com.jakewharton.mosaic.layout/Measurable>, com.jakewharton.mosaic.ui.unit/Constraints): com.jakewharton.mosaic.layout/MeasureResult // com.jakewharton.mosaic.layout/MeasurePolicy.measure|measure@com.jakewharton.mosaic.layout.MeasureScope(kotlin.collections.List<com.jakewharton.mosaic.layout.Measurable>;com.jakewharton.mosaic.ui.unit.Constraints){}[0]
     open fun maxIntrinsicHeight(kotlin.collections/List<com.jakewharton.mosaic.layout/IntrinsicMeasurable>, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.layout/MeasurePolicy.maxIntrinsicHeight|maxIntrinsicHeight(kotlin.collections.List<com.jakewharton.mosaic.layout.IntrinsicMeasurable>;kotlin.Int){}[0]
@@ -207,6 +218,11 @@ abstract interface com.jakewharton.mosaic/Mosaic { // com.jakewharton.mosaic/Mos
     abstract fun sendKeyEvent(com.jakewharton.mosaic.layout/KeyEvent) // com.jakewharton.mosaic/Mosaic.sendKeyEvent|sendKeyEvent(com.jakewharton.mosaic.layout.KeyEvent){}[0]
     abstract fun setContent(kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>) // com.jakewharton.mosaic/Mosaic.setContent|setContent(kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>){}[0]
     abstract suspend fun awaitComplete() // com.jakewharton.mosaic/Mosaic.awaitComplete|awaitComplete(){}[0]
+}
+
+abstract interface com.jakewharton.mosaic/MosaicLogWriter { // com.jakewharton.mosaic/MosaicLogWriter|null[0]
+    abstract fun close() // com.jakewharton.mosaic/MosaicLogWriter.close|close(){}[0]
+    abstract fun writeLine(kotlin/String) // com.jakewharton.mosaic/MosaicLogWriter.writeLine|writeLine(kotlin.String){}[0]
 }
 
 abstract interface com.jakewharton.mosaic/TextCanvas { // com.jakewharton.mosaic/TextCanvas|null[0]
@@ -625,6 +641,19 @@ final object com.jakewharton.mosaic.ui/Arrangement { // com.jakewharton.mosaic.u
     }
 }
 
+final object com.jakewharton.mosaic/MosaicLogger { // com.jakewharton.mosaic/MosaicLogger|null[0]
+    final var logLevel // com.jakewharton.mosaic/MosaicLogger.logLevel|{}logLevel[0]
+        final fun <get-logLevel>(): com.jakewharton.mosaic/MosaicLogLevel // com.jakewharton.mosaic/MosaicLogger.logLevel.<get-logLevel>|<get-logLevel>(){}[0]
+        final fun <set-logLevel>(com.jakewharton.mosaic/MosaicLogLevel) // com.jakewharton.mosaic/MosaicLogger.logLevel.<set-logLevel>|<set-logLevel>(com.jakewharton.mosaic.MosaicLogLevel){}[0]
+    final var logWriter // com.jakewharton.mosaic/MosaicLogger.logWriter|{}logWriter[0]
+        final fun <get-logWriter>(): com.jakewharton.mosaic/MosaicLogWriter? // com.jakewharton.mosaic/MosaicLogger.logWriter.<get-logWriter>|<get-logWriter>(){}[0]
+        final fun <set-logWriter>(com.jakewharton.mosaic/MosaicLogWriter?) // com.jakewharton.mosaic/MosaicLogger.logWriter.<set-logWriter>|<set-logWriter>(com.jakewharton.mosaic.MosaicLogWriter?){}[0]
+
+    final inline fun d(kotlin/Function0<kotlin/String>) // com.jakewharton.mosaic/MosaicLogger.d|d(kotlin.Function0<kotlin.String>){}[0]
+    final inline fun log(com.jakewharton.mosaic/MosaicLogLevel, kotlin/Function0<kotlin/String>) // com.jakewharton.mosaic/MosaicLogger.log|log(com.jakewharton.mosaic.MosaicLogLevel;kotlin.Function0<kotlin.String>){}[0]
+    final inline fun v(kotlin/Function0<kotlin/String>) // com.jakewharton.mosaic/MosaicLogger.v|v(kotlin.Function0<kotlin.String>){}[0]
+}
+
 final const val com.jakewharton.mosaic.ui/EmptyTextStyle // com.jakewharton.mosaic.ui/EmptyTextStyle|{}EmptyTextStyle[0]
     final fun <get-EmptyTextStyle>(): kotlin/Int // com.jakewharton.mosaic.ui/EmptyTextStyle.<get-EmptyTextStyle>|<get-EmptyTextStyle>(){}[0]
 final const val com.jakewharton.mosaic.ui/UnspecifiedColor // com.jakewharton.mosaic.ui/UnspecifiedColor|{}UnspecifiedColor[0]
@@ -686,6 +715,7 @@ final val com.jakewharton.mosaic/com_jakewharton_mosaic_AnsiRendering$stableprop
 final val com.jakewharton.mosaic/com_jakewharton_mosaic_DebugRendering$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_DebugRendering$stableprop|#static{}com_jakewharton_mosaic_DebugRendering$stableprop[0]
 final val com.jakewharton.mosaic/com_jakewharton_mosaic_GlobalSnapshotManager$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_GlobalSnapshotManager$stableprop|#static{}com_jakewharton_mosaic_GlobalSnapshotManager$stableprop[0]
 final val com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicComposition$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicComposition$stableprop|#static{}com_jakewharton_mosaic_MosaicComposition$stableprop[0]
+final val com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicLogger$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicLogger$stableprop|#static{}com_jakewharton_mosaic_MosaicLogger$stableprop[0]
 final val com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicNodeApplier$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicNodeApplier$stableprop|#static{}com_jakewharton_mosaic_MosaicNodeApplier$stableprop[0]
 final val com.jakewharton.mosaic/com_jakewharton_mosaic_Terminal$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_Terminal$stableprop|#static{}com_jakewharton_mosaic_Terminal$stableprop[0]
 final val com.jakewharton.mosaic/com_jakewharton_mosaic_TextPixel$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_TextPixel$stableprop|#static{}com_jakewharton_mosaic_TextPixel$stableprop[0]
@@ -793,6 +823,7 @@ final fun com.jakewharton.mosaic/com_jakewharton_mosaic_AnsiRendering$stableprop
 final fun com.jakewharton.mosaic/com_jakewharton_mosaic_DebugRendering$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_DebugRendering$stableprop_getter|com_jakewharton_mosaic_DebugRendering$stableprop_getter(){}[0]
 final fun com.jakewharton.mosaic/com_jakewharton_mosaic_GlobalSnapshotManager$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_GlobalSnapshotManager$stableprop_getter|com_jakewharton_mosaic_GlobalSnapshotManager$stableprop_getter(){}[0]
 final fun com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicComposition$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicComposition$stableprop_getter|com_jakewharton_mosaic_MosaicComposition$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicLogger$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicLogger$stableprop_getter|com_jakewharton_mosaic_MosaicLogger$stableprop_getter(){}[0]
 final fun com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicNodeApplier$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicNodeApplier$stableprop_getter|com_jakewharton_mosaic_MosaicNodeApplier$stableprop_getter(){}[0]
 final fun com.jakewharton.mosaic/com_jakewharton_mosaic_Terminal$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_Terminal$stableprop_getter|com_jakewharton_mosaic_Terminal$stableprop_getter(){}[0]
 final fun com.jakewharton.mosaic/com_jakewharton_mosaic_TextPixel$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_TextPixel$stableprop_getter|com_jakewharton_mosaic_TextPixel$stableprop_getter(){}[0]

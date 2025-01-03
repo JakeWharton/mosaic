@@ -16,6 +16,29 @@ public final class com/jakewharton/mosaic/MosaicKt {
 	public static final fun runMosaicBlocking (Lkotlin/jvm/functions/Function2;)V
 }
 
+public final class com/jakewharton/mosaic/MosaicLogLevel : java/lang/Enum {
+	public static final field DEBUG Lcom/jakewharton/mosaic/MosaicLogLevel;
+	public static final field VERBOSE Lcom/jakewharton/mosaic/MosaicLogLevel;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/jakewharton/mosaic/MosaicLogLevel;
+	public static fun values ()[Lcom/jakewharton/mosaic/MosaicLogLevel;
+}
+
+public abstract interface class com/jakewharton/mosaic/MosaicLogWriter {
+	public abstract fun close ()V
+	public abstract fun writeLine (Ljava/lang/String;)V
+}
+
+public final class com/jakewharton/mosaic/MosaicLogger {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/jakewharton/mosaic/MosaicLogger;
+	public static field logLevel Lcom/jakewharton/mosaic/MosaicLogLevel;
+	public static field logWriter Lcom/jakewharton/mosaic/MosaicLogWriter;
+	public final fun d (Lkotlin/jvm/functions/Function0;)V
+	public final fun log (Lcom/jakewharton/mosaic/MosaicLogLevel;Lkotlin/jvm/functions/Function0;)V
+	public final fun v (Lkotlin/jvm/functions/Function0;)V
+}
+
 public final class com/jakewharton/mosaic/Terminal {
 	public static final field $stable I
 	public synthetic fun <init> (JLkotlin/jvm/internal/DefaultConstructorMarker;)V

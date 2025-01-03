@@ -67,6 +67,7 @@ public suspend fun runMosaic(content: @Composable () -> Unit) {
 }
 
 internal suspend fun runMosaic(enterRawMode: Boolean, content: @Composable () -> Unit) {
+	MosaicLogger.init()
 	val mordantTerminal = MordantTerminal()
 	val rendering = createRendering(mordantTerminal.terminalInfo.ansiLevel.toMosaicAnsiLevel())
 
@@ -83,6 +84,7 @@ internal suspend fun runMosaic(enterRawMode: Boolean, content: @Composable () ->
 		hook = {
 			platformDisplay(cursorShow)
 			rawMode?.close()
+			MosaicLogger.finalize()
 		},
 		block = {
 			val clock = BroadcastFrameClock()
