@@ -18,8 +18,8 @@
 
 package com.jakewharton.mosaic.layout
 
-import com.jakewharton.mosaic.TextCanvas
 import com.jakewharton.mosaic.TextPixel
+import com.jakewharton.mosaic.TextSurface
 import com.jakewharton.mosaic.UnspecifiedCodePoint
 import com.jakewharton.mosaic.isSpecifiedCodePoint
 import com.jakewharton.mosaic.isUnspecifiedCodePoint
@@ -115,7 +115,7 @@ public interface DrawScope {
 }
 
 internal open class TextCanvasDrawScope(
-	private val canvas: TextCanvas,
+	private val canvas: TextSurface,
 	override val width: Int,
 	override val height: Int,
 ) : DrawScope {
