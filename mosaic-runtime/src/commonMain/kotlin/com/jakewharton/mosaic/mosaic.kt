@@ -1,5 +1,6 @@
 package com.jakewharton.mosaic
 
+import androidx.collection.MutableObjectList
 import androidx.collection.mutableScatterSetOf
 import androidx.compose.runtime.AbstractApplier
 import androidx.compose.runtime.BroadcastFrameClock
@@ -44,18 +45,19 @@ import kotlinx.coroutines.runBlocking
  */
 private const val debugOutput = false
 
-internal fun renderMosaicNode(content: @Composable () -> Unit): MosaicNode {
+// TODO Replace with the testing API using a snapshot strategy which uses Rendering.
+internal fun renderMosaicOnce(content: @Composable () -> Unit): MosaicComposition {
 	val mosaicComposition = MosaicComposition(
 		coroutineContext = BroadcastFrameClock(),
 		onDraw = {},
 	)
 	mosaicComposition.setContent(content)
 	mosaicComposition.cancel()
-	return mosaicComposition.rootNode
+	return mosaicComposition
 }
 
 public fun renderMosaic(content: @Composable () -> Unit): String {
-	return createRendering().render(renderMosaicNode(content)).toString()
+	return createRendering().render(renderMosaicOnce(content)).toString()
 }
 
 public fun runMosaicBlocking(content: @Composable () -> Unit) {
@@ -157,13 +159,19 @@ private fun CoroutineScope.readRawModeKeys(rawMode: RawModeScope, mosaic: Mosaic
 	}
 }
 
+internal interface Mosaic {
+	fun paint(): TextSurface
+	fun paintStaticsTo(list: MutableObjectList<TextSurface>)
+	fun dump(): String
+}
+
 // https://en.wikipedia.org/wiki/VT52
 private val DefaultTestTerminalSize = IntSize(width = 80, height = 24)
 
 internal class MosaicComposition(
 	coroutineContext: CoroutineContext,
-	private val onDraw: (MosaicNode) -> Unit,
-) {
+	private val onDraw: (Mosaic) -> Unit,
+) : Mosaic {
 	private val externalClock = checkNotNull(coroutineContext[MonotonicFrameClock]) {
 		"Mosaic requires an external MonotonicFrameClock in its coroutine context"
 	}
@@ -212,9 +220,21 @@ internal class MosaicComposition(
 
 	private fun performDraw() {
 		needDraw = false
-		Snapshot.observe(readObserver = drawBlockStateReadObserver) {
-			onDraw(rootNode)
+		onDraw(this)
+	}
+
+	override fun paint(): TextSurface {
+		return Snapshot.observe(readObserver = drawBlockStateReadObserver) {
+			rootNode.paint()
 		}
+	}
+
+	override fun paintStaticsTo(list: MutableObjectList<TextSurface>) {
+		rootNode.paintStaticsTo(list)
+	}
+
+	override fun dump(): String {
+		return rootNode.toString()
 	}
 
 	private fun registerSnapshotApplyObserver(): ObserverHandle {

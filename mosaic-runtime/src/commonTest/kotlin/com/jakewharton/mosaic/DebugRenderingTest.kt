@@ -22,7 +22,7 @@ class DebugRenderingTest {
 	private val rendering = DebugRendering(timeSource)
 
 	@Test fun drawFailureStillRendersMeasuredAndPlacedNodes() {
-		val rootNode = renderMosaicNode {
+		val mosaic = renderMosaicOnce {
 			Row {
 				Text("Hello ")
 				Layout(modifier = Modifier.drawBehind { throw UnsupportedOperationException() }) {
@@ -32,7 +32,7 @@ class DebugRenderingTest {
 		}
 
 		assertFailure {
-			rendering.render(rootNode)
+			rendering.render(mosaic)
 		}.isInstanceOf<RuntimeException>()
 			.message()
 			.isNotNull()
@@ -52,14 +52,14 @@ class DebugRenderingTest {
 	}
 
 	@Test fun framesIncludeStatics() {
-		val rootNode = renderMosaicNode {
+		val mosaic = renderMosaicOnce {
 			Text("Hello")
 			Static(snapshotStateListOf("Static")) {
 				Text(it)
 			}
 		}
 
-		assertThat(rendering.render(rootNode)).isEqualTo(
+		assertThat(rendering.render(mosaic)).isEqualTo(
 			"""
 			|NODES:
 			|Text("Hello") x=0 y=0 w=5 h=1 DrawBehind
@@ -77,11 +77,11 @@ class DebugRenderingTest {
 	}
 
 	@Test fun framesAfterFirstHaveTimeHeader() {
-		val rootNode = renderMosaicNode {
+		val mosaic = renderMosaicOnce {
 			Text("Hello")
 		}
 
-		assertThat(rendering.render(rootNode)).isEqualTo(
+		assertThat(rendering.render(mosaic)).isEqualTo(
 			"""
 			|NODES:
 			|Text("Hello") x=0 y=0 w=5 h=1 DrawBehind
@@ -93,7 +93,7 @@ class DebugRenderingTest {
 		)
 
 		timeSource += 100.milliseconds
-		assertThat(rendering.render(rootNode)).isEqualTo(
+		assertThat(rendering.render(mosaic)).isEqualTo(
 			"""
 			|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ +100ms
 			|NODES:

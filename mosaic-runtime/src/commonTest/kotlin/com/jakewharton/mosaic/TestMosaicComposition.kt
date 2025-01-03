@@ -10,8 +10,6 @@ import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeout
@@ -48,7 +46,7 @@ internal interface TestMosaicComposition {
 
 private class RealTestMosaicComposition(
 	coroutineContext: CoroutineContext,
-	withAnsi: Boolean,
+	private val withAnsi: Boolean,
 ) : TestMosaicComposition {
 
 	private var timeNanos = 0L
@@ -56,18 +54,10 @@ private class RealTestMosaicComposition(
 	private var contentSet = false
 	private var hasChanges = false
 
-	/** Channel with the most recent snapshot, if any. */
-	private val snapshots = Channel<NodeRenderSnapshot>(CONFLATED)
-
 	private val clock = BroadcastFrameClock()
 	val mosaicComposition = MosaicComposition(
 		coroutineContext = coroutineContext + clock,
-		onDraw = { rootNode ->
-			val ansiLevel = if (withAnsi) AnsiLevel.TRUECOLOR else AnsiLevel.NONE
-			val stringRender = rootNode.paint().render(ansiLevel)
-			snapshots.trySend(NodeRenderSnapshot(rootNode, stringRender))
-			hasChanges = true
-		},
+		onDraw = { hasChanges = true },
 	)
 
 	override fun setContent(content: @Composable () -> Unit) {
@@ -106,6 +96,9 @@ private class RealTestMosaicComposition(
 		}
 
 		hasChanges = false
-		return snapshots.receive()
+
+		val ansiLevel = if (withAnsi) AnsiLevel.TRUECOLOR else AnsiLevel.NONE
+		val render = mosaicComposition.paint().render(ansiLevel)
+		return NodeRenderSnapshot(mosaicComposition.rootNode, render)
 	}
 }

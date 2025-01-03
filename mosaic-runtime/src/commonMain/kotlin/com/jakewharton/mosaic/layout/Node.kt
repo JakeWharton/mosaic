@@ -149,13 +149,13 @@ internal class MosaicNode(
 	 * Append any static [TextSurfaces][TextSurface] to [statics].
 	 * A call to [measureAndPlace] must precede calls to this function.
 	 */
-	fun paintStatics(statics: MutableObjectList<TextSurface>) {
+	fun paintStaticsTo(statics: MutableObjectList<TextSurface>) {
 		for (index in children.indices) {
 			val child = children[index]
 			if (isStatic) {
 				statics += child.paint()
 			}
-			child.paintStatics(statics)
+			child.paintStaticsTo(statics)
 		}
 		onStaticDraw?.invoke()
 	}

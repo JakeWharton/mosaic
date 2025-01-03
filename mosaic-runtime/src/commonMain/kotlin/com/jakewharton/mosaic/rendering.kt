@@ -1,7 +1,6 @@
 package com.jakewharton.mosaic
 
 import androidx.collection.mutableObjectListOf
-import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.ui.AnsiLevel
 import kotlin.time.TimeMark
 import kotlin.time.TimeSource
@@ -13,7 +12,7 @@ internal interface Rendering {
 	 * Note: The returned [CharSequence] is only valid until the next call to this function,
 	 * as implementations are free to reuse buffers across invocations.
 	 */
-	fun render(node: MosaicNode): CharSequence
+	fun render(mosaic: Mosaic): CharSequence
 }
 
 internal class DebugRendering(
@@ -22,7 +21,7 @@ internal class DebugRendering(
 ) : Rendering {
 	private var lastRender: TimeMark? = null
 
-	override fun render(node: MosaicNode): CharSequence {
+	override fun render(mosaic: Mosaic): CharSequence {
 		var failed = false
 		val output = buildString {
 			lastRender?.let { lastRender ->
@@ -33,12 +32,12 @@ internal class DebugRendering(
 			lastRender = systemClock.markNow()
 
 			appendLine("NODES:")
-			appendLine(node)
+			appendLine(mosaic.dump())
 			appendLine()
 
 			val statics = mutableObjectListOf<TextSurface>()
 			try {
-				node.paintStatics(statics)
+				mosaic.paintStaticsTo(statics)
 				if (statics.isNotEmpty()) {
 					appendLine("STATIC:")
 					statics.forEach { static ->
@@ -53,7 +52,7 @@ internal class DebugRendering(
 
 			appendLine("OUTPUT:")
 			try {
-				appendLine(node.paint().render(ansiLevel))
+				appendLine(mosaic.paint().render(ansiLevel))
 			} catch (t: Throwable) {
 				failed = true
 				append(t.stackTraceToString())
@@ -73,7 +72,7 @@ internal class AnsiRendering(
 	private val staticSurfaces = mutableObjectListOf<TextSurface>()
 	private var lastHeight = 0
 
-	override fun render(node: MosaicNode): CharSequence {
+	override fun render(mosaic: Mosaic): CharSequence {
 		return stringBuilder.apply {
 			clear()
 
@@ -96,7 +95,7 @@ internal class AnsiRendering(
 			}
 
 			staticSurfaces.let { staticSurfaces ->
-				node.paintStatics(staticSurfaces)
+				mosaic.paintStaticsTo(staticSurfaces)
 				if (staticSurfaces.isNotEmpty()) {
 					staticSurfaces.forEach { staticSurface ->
 						appendSurface(staticSurface)
@@ -105,7 +104,7 @@ internal class AnsiRendering(
 				}
 			}
 
-			val surface = node.paint()
+			val surface = mosaic.paint()
 			appendSurface(surface)
 
 			// If the new output contains fewer lines than the last output, clear those old lines.

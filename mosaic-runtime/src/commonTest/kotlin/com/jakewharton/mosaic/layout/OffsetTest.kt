@@ -35,25 +35,27 @@ class OffsetTest {
 	}
 
 	@Test fun offsetHorizontalFixedBeyondBorders() = runTest {
-		assertFails {
-			runMosaicTest {
-				setContent {
-					Box(modifier = Modifier.size(6).offset(30, 0)) {
-						TestFiller(modifier = Modifier.size(1))
-					}
+		runMosaicTest {
+			setContent {
+				Box(modifier = Modifier.size(6).offset(30, 0)) {
+					TestFiller(modifier = Modifier.size(1))
 				}
+			}
+			assertFails {
+				awaitRenderSnapshot()
 			}
 		}
 	}
 
 	@Test fun offsetHorizontalFixedNegativeBeyondBorders() = runTest {
-		assertFails {
-			runMosaicTest {
-				setContent {
-					Box(modifier = Modifier.size(6).offset(-3, 0)) {
-						TestFiller(modifier = Modifier.size(1))
-					}
+		runMosaicTest {
+			setContent {
+				Box(modifier = Modifier.size(6).offset(-3, 0)) {
+					TestFiller(modifier = Modifier.size(1))
 				}
+			}
+			assertFails {
+				awaitRenderSnapshot()
 			}
 		}
 	}
@@ -79,25 +81,27 @@ class OffsetTest {
 	}
 
 	@Test fun offsetVerticalFixedBeyondBorders() = runTest {
-		assertFails {
-			runMosaicTest {
-				setContent {
-					Box(modifier = Modifier.size(6).offset(0, 40)) {
-						TestFiller(modifier = Modifier.size(1))
-					}
+		runMosaicTest {
+			setContent {
+				Box(modifier = Modifier.size(6).offset(0, 40)) {
+					TestFiller(modifier = Modifier.size(1))
 				}
+			}
+			assertFails {
+				awaitRenderSnapshot()
 			}
 		}
 	}
 
 	@Test fun offsetVerticalFixedNegativeBeyondBorders() = runTest {
-		assertFails {
-			runMosaicTest {
-				setContent {
-					Box(modifier = Modifier.size(6).offset(0, -4)) {
-						TestFiller(modifier = Modifier.size(1))
-					}
+		runMosaicTest {
+			setContent {
+				Box(modifier = Modifier.size(6).offset(0, -4)) {
+					TestFiller(modifier = Modifier.size(1))
 				}
+			}
+			assertFails {
+				awaitRenderSnapshot()
 			}
 		}
 	}
@@ -123,25 +127,27 @@ class OffsetTest {
 	}
 
 	@Test fun offsetFixedBeyondBorders() = runTest {
-		assertFails {
-			runMosaicTest {
-				setContent {
-					Box(modifier = Modifier.size(6).offset(30, 40)) {
-						TestFiller(modifier = Modifier.size(1))
-					}
+		runMosaicTest {
+			setContent {
+				Box(modifier = Modifier.size(6).offset(30, 40)) {
+					TestFiller(modifier = Modifier.size(1))
 				}
+			}
+			assertFails {
+				awaitRenderSnapshot()
 			}
 		}
 	}
 
 	@Test fun offsetFixedNegativeBeyondBorders() = runTest {
-		assertFails {
-			runMosaicTest {
-				setContent {
-					Box(modifier = Modifier.size(6).offset(-3, -4)) {
-						TestFiller(modifier = Modifier.size(1))
-					}
+		runMosaicTest {
+			setContent {
+				Box(modifier = Modifier.size(6).offset(-3, -4)) {
+					TestFiller(modifier = Modifier.size(1))
 				}
+			}
+			assertFails {
+				awaitRenderSnapshot()
 			}
 		}
 	}
@@ -172,25 +178,27 @@ class OffsetTest {
 	}
 
 	@Test fun offsetHorizontalModifiableBeyondBorders() = runTest {
-		assertFails {
-			runMosaicTest {
-				setContent {
-					Box(modifier = Modifier.size(6).offset { IntOffset(30, 0) }) {
-						TestFiller(modifier = Modifier.size(1))
-					}
+		runMosaicTest {
+			setContent {
+				Box(modifier = Modifier.size(6).offset { IntOffset(30, 0) }) {
+					TestFiller(modifier = Modifier.size(1))
 				}
+			}
+			assertFails {
+				awaitNodeSnapshot()
 			}
 		}
 	}
 
 	@Test fun offsetHorizontalModifiableNegativeBeyondBorders() = runTest {
-		assertFails {
-			runMosaicTest {
-				setContent {
-					Box(modifier = Modifier.size(6).offset { IntOffset(-3, 0) }) {
-						TestFiller(modifier = Modifier.size(1))
-					}
+		runMosaicTest {
+			setContent {
+				Box(modifier = Modifier.size(6).offset { IntOffset(-3, 0) }) {
+					TestFiller(modifier = Modifier.size(1))
 				}
+			}
+			assertFails {
+				awaitRenderSnapshot()
 			}
 		}
 	}
@@ -216,25 +224,27 @@ class OffsetTest {
 	}
 
 	@Test fun offsetVerticalModifiableBeyondBorders() = runTest {
-		assertFails {
-			runMosaicTest {
-				setContent {
-					Box(modifier = Modifier.size(6).offset { IntOffset(0, 40) }) {
-						TestFiller(modifier = Modifier.size(1))
-					}
+		runMosaicTest {
+			setContent {
+				Box(modifier = Modifier.size(6).offset { IntOffset(0, 40) }) {
+					TestFiller(modifier = Modifier.size(1))
 				}
+			}
+			assertFails {
+				awaitRenderSnapshot()
 			}
 		}
 	}
 
 	@Test fun offsetVerticalModifiableNegativeBeyondBorders() = runTest {
-		assertFails {
-			runMosaicTest {
-				setContent {
-					Box(modifier = Modifier.size(6).offset { IntOffset(0, -4) }) {
-						TestFiller(modifier = Modifier.size(1))
-					}
+		runMosaicTest {
+			setContent {
+				Box(modifier = Modifier.size(6).offset { IntOffset(0, -4) }) {
+					TestFiller(modifier = Modifier.size(1))
 				}
+			}
+			assertFails {
+				awaitRenderSnapshot()
 			}
 		}
 	}
@@ -260,25 +270,27 @@ class OffsetTest {
 	}
 
 	@Test fun offsetModifiableBeyondBorders() = runTest {
-		assertFails {
-			runMosaicTest {
-				setContent {
-					Box(modifier = Modifier.size(6).offset { IntOffset(30, 40) }) {
-						TestFiller(modifier = Modifier.size(1))
-					}
+		runMosaicTest {
+			setContent {
+				Box(modifier = Modifier.size(6).offset { IntOffset(30, 40) }) {
+					TestFiller(modifier = Modifier.size(1))
 				}
+			}
+			assertFails {
+				awaitRenderSnapshot()
 			}
 		}
 	}
 
 	@Test fun offsetModifiableNegativeBeyondBorders() = runTest {
-		assertFails {
-			runMosaicTest {
-				setContent {
-					Box(modifier = Modifier.size(6).offset { IntOffset(-3, -4) }) {
-						TestFiller(modifier = Modifier.size(1))
-					}
+		runMosaicTest {
+			setContent {
+				Box(modifier = Modifier.size(6).offset { IntOffset(-3, -4) }) {
+					TestFiller(modifier = Modifier.size(1))
 				}
+			}
+			assertFails {
+				awaitRenderSnapshot()
 			}
 		}
 	}
