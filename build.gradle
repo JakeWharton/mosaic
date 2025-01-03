@@ -1,7 +1,5 @@
-import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
-import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 buildscript {
@@ -22,8 +20,6 @@ buildscript {
 		gradlePluginPortal()
 	}
 }
-
-apply plugin: 'org.jetbrains.dokka'
 
 allprojects {
 	group = GROUP

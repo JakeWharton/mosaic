@@ -21,6 +21,8 @@ include ':mosaic-runtime'
 include ':mosaic-terminal'
 include ':mosaic-testing'
 
+include ':docs'
+
 include ':samples:counter'
 include ':samples:demo'
 include ':samples:jest'
