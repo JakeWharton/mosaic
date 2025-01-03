@@ -73,12 +73,27 @@ public final class com/jakewharton/mosaic/layout/DrawStyle$Stroke : com/jakewhar
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class com/jakewharton/mosaic/layout/IntrinsicKt {
+	public static final fun height (Lcom/jakewharton/mosaic/modifier/Modifier;Lcom/jakewharton/mosaic/layout/IntrinsicSize;)Lcom/jakewharton/mosaic/modifier/Modifier;
+	public static final fun requiredHeight (Lcom/jakewharton/mosaic/modifier/Modifier;Lcom/jakewharton/mosaic/layout/IntrinsicSize;)Lcom/jakewharton/mosaic/modifier/Modifier;
+	public static final fun requiredWidth (Lcom/jakewharton/mosaic/modifier/Modifier;Lcom/jakewharton/mosaic/layout/IntrinsicSize;)Lcom/jakewharton/mosaic/modifier/Modifier;
+	public static final fun width (Lcom/jakewharton/mosaic/modifier/Modifier;Lcom/jakewharton/mosaic/layout/IntrinsicSize;)Lcom/jakewharton/mosaic/modifier/Modifier;
+}
+
 public abstract interface class com/jakewharton/mosaic/layout/IntrinsicMeasurable {
 	public abstract fun getParentData ()Ljava/lang/Object;
 	public abstract fun maxIntrinsicHeight (I)I
 	public abstract fun maxIntrinsicWidth (I)I
 	public abstract fun minIntrinsicHeight (I)I
 	public abstract fun minIntrinsicWidth (I)I
+}
+
+public final class com/jakewharton/mosaic/layout/IntrinsicSize : java/lang/Enum {
+	public static final field Max Lcom/jakewharton/mosaic/layout/IntrinsicSize;
+	public static final field Min Lcom/jakewharton/mosaic/layout/IntrinsicSize;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/jakewharton/mosaic/layout/IntrinsicSize;
+	public static fun values ()[Lcom/jakewharton/mosaic/layout/IntrinsicSize;
 }
 
 public final class com/jakewharton/mosaic/layout/KeyEvent {
