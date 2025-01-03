@@ -13,3 +13,5 @@ com.jakewharton.mosaic.ui.unit
 module:mosaic-terminal
 com.jakewharton.mosaic.terminal
 com.jakewharton.mosaic.terminal.event
+module:mosaic-testing
+com.jakewharton.mosaic.testing
