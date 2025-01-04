@@ -5,10 +5,13 @@ import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.Container
 import com.jakewharton.mosaic.DumpSnapshots
 import com.jakewharton.mosaic.NodeSnapshots
+import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.layout.height
 import com.jakewharton.mosaic.layout.size
+import com.jakewharton.mosaic.layout.testTag
 import com.jakewharton.mosaic.layout.width
 import com.jakewharton.mosaic.modifier.Modifier
+import com.jakewharton.mosaic.nodeByTestTag
 import com.jakewharton.mosaic.s
 import com.jakewharton.mosaic.size
 import com.jakewharton.mosaic.testing.runMosaicTest
@@ -48,12 +51,11 @@ class SpacerTest {
 
 			setContent {
 				Container(constraints = bigConstraints) {
-					Spacer(Modifier.size(width = width, height = height))
+					Spacer(Modifier.size(width = width, height = height).spacerTestTag())
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val spacerNode = rootNode.children[0].children[0]
+			val spacerNode = awaitSnapshot().spacerByTestTag()
 			assertThat(spacerNode.size).isEqualTo(IntSize(width, height))
 		}
 	}
@@ -74,13 +76,12 @@ class SpacerTest {
 							maxHeight = containerHeight,
 						),
 					) {
-						Spacer(Modifier.size(width = width, height = height))
+						Spacer(Modifier.size(width = width, height = height).spacerTestTag())
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val spacerNode = rootNode.children[0].children[0].children[0]
+			val spacerNode = awaitSnapshot().spacerByTestTag()
 			assertThat(spacerNode.size).isEqualTo(IntSize(containerWidth, containerHeight))
 		}
 	}
@@ -91,12 +92,11 @@ class SpacerTest {
 
 			setContent {
 				Container(constraints = bigConstraints) {
-					Spacer(Modifier.width(width))
+					Spacer(Modifier.width(width).spacerTestTag())
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val spacerNode = rootNode.children[0].children[0]
+			val spacerNode = awaitSnapshot().spacerByTestTag()
 			assertThat(spacerNode.size).isEqualTo(IntSize(width, 0))
 		}
 	}
@@ -116,13 +116,12 @@ class SpacerTest {
 							maxHeight = containerHeight,
 						),
 					) {
-						Spacer(Modifier.width(width))
+						Spacer(Modifier.width(width).spacerTestTag())
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val spacerNode = rootNode.children[0].children[0].children[0]
+			val spacerNode = awaitSnapshot().spacerByTestTag()
 			assertThat(spacerNode.size).isEqualTo(IntSize(containerWidth, 0))
 		}
 	}
@@ -133,12 +132,11 @@ class SpacerTest {
 
 			setContent {
 				Container(constraints = bigConstraints) {
-					Spacer(Modifier.height(height))
+					Spacer(Modifier.height(height).spacerTestTag())
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val spacerNode = rootNode.children[0].children[0]
+			val spacerNode = awaitSnapshot().spacerByTestTag()
 			assertThat(spacerNode.size).isEqualTo(IntSize(0, height))
 		}
 	}
@@ -158,13 +156,12 @@ class SpacerTest {
 							maxHeight = containerHeight,
 						),
 					) {
-						Spacer(Modifier.height(height))
+						Spacer(Modifier.height(height).spacerTestTag())
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val spacerNode = rootNode.children[0].children[0].children[0]
+			val spacerNode = awaitSnapshot().spacerByTestTag()
 			assertThat(spacerNode.size).isEqualTo(IntSize(0, containerHeight))
 		}
 	}
@@ -182,3 +179,9 @@ class SpacerTest {
 		}
 	}
 }
+
+private const val SPACER_TEST_TAG = "spacer"
+
+private fun Modifier.spacerTestTag(): Modifier = testTag(SPACER_TEST_TAG)
+
+private fun MosaicNode.spacerByTestTag(): MosaicNode = nodeByTestTag(SPACER_TEST_TAG)

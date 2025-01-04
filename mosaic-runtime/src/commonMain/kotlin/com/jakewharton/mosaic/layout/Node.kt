@@ -104,6 +104,9 @@ internal class MosaicNode(
 	override var parentData: Any? = null
 		private set
 
+	var testTag: String? = null
+		private set
+
 	fun setModifier(modifier: Modifier) {
 		topLayer = modifier.foldOut(bottomLayer) { element, nextLayer ->
 			when (element) {
@@ -115,6 +118,11 @@ internal class MosaicNode(
 
 				is ParentDataModifier -> {
 					parentData = element.modifyParentData(parentData)
+					nextLayer
+				}
+
+				is TestTagModifier -> {
+					testTag = element.tag
 					nextLayer
 				}
 
