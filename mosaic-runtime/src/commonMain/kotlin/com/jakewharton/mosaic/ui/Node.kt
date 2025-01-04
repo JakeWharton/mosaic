@@ -3,6 +3,7 @@ package com.jakewharton.mosaic.ui
 import androidx.compose.runtime.Applier
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
+import androidx.compose.runtime.currentComposer
 import com.jakewharton.mosaic.layout.DebugPolicy
 import com.jakewharton.mosaic.layout.Measurable
 import com.jakewharton.mosaic.layout.MeasurePolicy
@@ -10,6 +11,7 @@ import com.jakewharton.mosaic.layout.MeasureResult
 import com.jakewharton.mosaic.layout.MeasureScope
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.modifier.Modifier
+import com.jakewharton.mosaic.modifier.materialize
 import com.jakewharton.mosaic.ui.unit.Constraints
 import kotlin.jvm.JvmField
 
@@ -25,11 +27,12 @@ internal inline fun Node(
 	() -> Unit = {},
 	noinline factory: () -> MosaicNode,
 ) {
+	val materializedModifier = currentComposer.materialize(modifier)
 	ComposeNode<MosaicNode, Applier<Any>>(
 		factory = factory,
 		update = {
 			set(measurePolicy, SetMeasurePolicy)
-			set(modifier, SetModifier)
+			set(materializedModifier, SetModifier)
 			set(debugPolicy, SetDebugPolicy)
 		},
 		content = content,

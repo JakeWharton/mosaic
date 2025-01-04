@@ -8,6 +8,7 @@ New:
 - Add `IntrinsicSize` and related `Modifier.width/height/requiredWidth/requiredHeight`.
 - New `mosaic-testing` artifact for testing Mosaic.
 - Add `Mosaic.layoutId` which allows identifying the element within its parent during layout.
+- Add `Modifier.composed` that allows creating custom reusable modifiers with access to Compose functionality inside.
 
 Changed:
 - Rendering now occurs as fast as possible, although still only when necessary. Previously the maximum FPS was capped to 20 which could cause minor visual delays when processing events.

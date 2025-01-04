@@ -262,6 +262,15 @@ public final class com/jakewharton/mosaic/modifier/CombinedModifier : com/jakewh
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class com/jakewharton/mosaic/modifier/ComposedModifierKt {
+	public static final fun composed (Lcom/jakewharton/mosaic/modifier/Modifier;Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Lkotlin/jvm/functions/Function3;)Lcom/jakewharton/mosaic/modifier/Modifier;
+	public static final fun composed (Lcom/jakewharton/mosaic/modifier/Modifier;Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;Lkotlin/jvm/functions/Function3;)Lcom/jakewharton/mosaic/modifier/Modifier;
+	public static final fun composed (Lcom/jakewharton/mosaic/modifier/Modifier;Ljava/lang/String;Ljava/lang/Object;Lkotlin/jvm/functions/Function3;)Lcom/jakewharton/mosaic/modifier/Modifier;
+	public static final fun composed (Lcom/jakewharton/mosaic/modifier/Modifier;Ljava/lang/String;[Ljava/lang/Object;Lkotlin/jvm/functions/Function3;)Lcom/jakewharton/mosaic/modifier/Modifier;
+	public static final fun composed (Lcom/jakewharton/mosaic/modifier/Modifier;Lkotlin/jvm/functions/Function3;)Lcom/jakewharton/mosaic/modifier/Modifier;
+	public static final fun materialize (Landroidx/compose/runtime/Composer;Lcom/jakewharton/mosaic/modifier/Modifier;)Lcom/jakewharton/mosaic/modifier/Modifier;
+}
+
 public abstract interface class com/jakewharton/mosaic/modifier/Modifier {
 	public static final field Companion Lcom/jakewharton/mosaic/modifier/Modifier$Companion;
 	public abstract fun all (Lkotlin/jvm/functions/Function1;)Z
