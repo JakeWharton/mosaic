@@ -10,7 +10,7 @@ import com.jakewharton.mosaic.ui.AnsiLevel
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeout
 
@@ -26,15 +26,13 @@ public suspend fun <T, R> runMosaicTest(
 	snapshotStrategy: SnapshotStrategy<T>,
 	block: suspend TestMosaic<T>.() -> R,
 ): R {
-	return coroutineScope {
-		val tester = RealTestMosaic<T>(
-			coroutineContext = coroutineContext,
-			snapshotStrategy = snapshotStrategy,
-		)
-		val result = block.invoke(tester)
-		tester.cancel()
-		result
-	}
+	val tester = RealTestMosaic(
+		coroutineContext = currentCoroutineContext(),
+		snapshotStrategy = snapshotStrategy,
+	)
+	val result = block.invoke(tester)
+	tester.cancel()
+	return result
 }
 
 public interface TestMosaic<T> : Mosaic {

@@ -138,6 +138,11 @@ public final class com/jakewharton/mosaic/layout/KeyModifierKt {
 	public static final fun onPreviewKeyEvent (Lcom/jakewharton/mosaic/modifier/Modifier;Lkotlin/jvm/functions/Function1;)Lcom/jakewharton/mosaic/modifier/Modifier;
 }
 
+public final class com/jakewharton/mosaic/layout/LayoutIdKt {
+	public static final fun getLayoutId (Lcom/jakewharton/mosaic/layout/Measurable;)Ljava/lang/Object;
+	public static final fun layoutId (Lcom/jakewharton/mosaic/modifier/Modifier;Ljava/lang/Object;)Lcom/jakewharton/mosaic/modifier/Modifier;
+}
+
 public abstract interface class com/jakewharton/mosaic/layout/LayoutModifier : com/jakewharton/mosaic/modifier/Modifier$Element {
 	public fun maxIntrinsicHeight (Lcom/jakewharton/mosaic/layout/IntrinsicMeasurable;I)I
 	public fun maxIntrinsicWidth (Lcom/jakewharton/mosaic/layout/IntrinsicMeasurable;I)I

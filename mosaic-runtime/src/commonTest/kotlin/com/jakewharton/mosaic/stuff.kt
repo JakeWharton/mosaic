@@ -219,3 +219,42 @@ fun ConstrainedBox(
 		measurePolicy = measurePolicy,
 	)
 }
+
+@Composable
+internal fun AtLeastSize(
+	size: Int,
+	modifier: Modifier = Modifier,
+	content: @Composable () -> Unit = {},
+) {
+	Layout(
+		measurePolicy = { measurables, constraints ->
+			val newConstraints =
+				Constraints(
+					minWidth = max(size, constraints.minWidth),
+					maxWidth =
+					if (constraints.hasBoundedWidth) {
+						max(size, constraints.maxWidth)
+					} else {
+						Constraints.Infinity
+					},
+					minHeight = max(size, constraints.minHeight),
+					maxHeight =
+					if (constraints.hasBoundedHeight) {
+						max(size, constraints.maxHeight)
+					} else {
+						Constraints.Infinity
+					},
+				)
+			val placeables = measurables.map { m -> m.measure(newConstraints) }
+			var maxWidth = size
+			var maxHeight = size
+			placeables.forEach { child ->
+				maxHeight = max(child.height, maxHeight)
+				maxWidth = max(child.width, maxWidth)
+			}
+			layout(maxWidth, maxHeight) { placeables.forEach { child -> child.place(0, 0) } }
+		},
+		modifier = modifier,
+		content = content,
+	)
+}

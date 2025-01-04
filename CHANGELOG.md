@@ -7,12 +7,13 @@ New:
 - Create `mosaic-animation` library, that provides various possibilities for animating Mosaic. An analog of [androidx.compose.animation-core](https://developer.android.com/reference/kotlin/androidx/compose/animation/core/package-summary).
 - Add `IntrinsicSize` and related `Modifier.width/height/requiredWidth/requiredHeight`.
 - New `mosaic-testing` artifact for testing Mosaic.
+- Add `Mosaic.layoutId`.
 
 Changed:
 - Rendering now occurs as fast as possible, although still only when necessary. Previously the maximum FPS was capped to 20 which could cause minor visual delays when processing events.
 
 Fixed:
-- Nothing yet!
+- Fix the handling of custom `Modifier`s that have multiple parents from `LayoutModifier`, `DrawModifier`, `KeyModifier`, `ParentDataModifier`.
 
 
 ## [0.14.0] - 2024-10-07
