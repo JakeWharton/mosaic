@@ -22,10 +22,9 @@ class AnsiRenderingTest {
 				}
 			}
 
-			// TODO We should not draw trailing whitespace.
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|Hello$s
+				|Hello
 				|World!
 				|
 				""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
@@ -44,7 +43,7 @@ class AnsiRenderingTest {
 
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|Hello$s
+				|Hello
 				|World!
 				|
 				""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
@@ -62,7 +61,7 @@ class AnsiRenderingTest {
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|$cursorUp${cursorUp}Hel$clearLine
-				|lo $clearLine
+				|lo$clearLine
 				|Wor
 				|ld!
 				|
@@ -85,7 +84,7 @@ class AnsiRenderingTest {
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|Hel
-				|lo$s
+				|lo
 				|Wor
 				|ld!
 				|
@@ -101,7 +100,7 @@ class AnsiRenderingTest {
 
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|$cursorUp$cursorUp$cursorUp${cursorUp}Hello $clearLine
+				|$cursorUp$cursorUp$cursorUp${cursorUp}Hello$clearLine
 				|World!$clearLine
 				|$clearLine
 				|$clearLine$cursorUp
@@ -220,7 +219,7 @@ class AnsiRenderingTest {
 				"""
 				|Static
 				|TopTopTop
-				|LeftLeft$s
+				|LeftLeft
 				|
 				""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 			)

@@ -24,8 +24,6 @@ import com.jakewharton.mosaic.ui.unit.constrainHeight
 import com.jakewharton.mosaic.ui.unit.constrainWidth
 import kotlin.math.max
 
-const val s = " "
-
 const val TestChar = 'X'
 
 fun String.replaceLineEndingsWithCRLF(): String {

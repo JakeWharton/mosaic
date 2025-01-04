@@ -15,6 +15,7 @@ import com.jakewharton.mosaic.ui.isNotEmptyTextStyle
 import com.jakewharton.mosaic.ui.isSpecifiedColor
 import com.jakewharton.mosaic.ui.isUnspecifiedColor
 import de.cketti.codepoints.appendCodePoint
+import kotlin.math.max
 
 private val blankPixel = TextPixel(' ')
 
@@ -34,12 +35,14 @@ internal class TextSurface(
 	var translationY = 0
 
 	private val cells = Array(width * height) { TextPixel(' ') }
+	private val lastColumn = IntArray(height)
 
 	operator fun get(row: Int, column: Int): TextPixel {
 		val x = translationX + column
 		val y = row + translationY
 		check(x in 0 until width)
 		check(y in 0 until height)
+		lastColumn[y] = max(lastColumn[y], x + 1)
 		return cells[y * width + x]
 	}
 
@@ -50,7 +53,7 @@ internal class TextSurface(
 		var lastPixel = blankPixel
 
 		val rowStart = row * width
-		val rowStop = rowStart + width
+		val rowStop = rowStart + lastColumn[row]
 		for (columnIndex in rowStart until rowStop) {
 			val pixel = cells[columnIndex]
 

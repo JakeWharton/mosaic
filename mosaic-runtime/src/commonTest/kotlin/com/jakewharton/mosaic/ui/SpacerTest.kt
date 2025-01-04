@@ -9,7 +9,6 @@ import com.jakewharton.mosaic.layout.height
 import com.jakewharton.mosaic.layout.size
 import com.jakewharton.mosaic.layout.width
 import com.jakewharton.mosaic.modifier.Modifier
-import com.jakewharton.mosaic.s
 import com.jakewharton.mosaic.size
 import com.jakewharton.mosaic.testing.runMosaicTest
 import com.jakewharton.mosaic.ui.unit.Constraints
@@ -30,12 +29,12 @@ class SpacerTest {
 			}
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|   $s
-				|   $s
-				|   $s
-				|   $s
-				|   $s
-				|   $s
+				|
+				|
+				|
+				|
+				|
+				|
 				""".trimMargin(),
 			)
 		}

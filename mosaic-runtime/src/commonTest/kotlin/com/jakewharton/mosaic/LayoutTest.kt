@@ -51,7 +51,7 @@ class LayoutTest {
 			}
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|  $s
+				|
 				""".trimMargin(),
 			)
 		}
@@ -99,8 +99,8 @@ class LayoutTest {
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|     CCC
-				|  BB   $s
-				|A      $s
+				|  BB
+				|A
 				""".trimMargin(),
 			)
 		}
