@@ -37,7 +37,7 @@
     <div class="root">
     <nav class="navigation theme-dark" id="navigation-wrapper">
 <a class="library-name--link" href="../../../index.html">
-                    mosaic
+                    docs
             </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
         </button>
         <div class="navigation-controls--break ui-kit_mobile-only"></div>
@@ -45,7 +45,7 @@
         </div>
         <div class="navigation-controls">
         <div class="filter-section filter-section_loading" id="filter-section">
-                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":mosaic-animation:dokkaHtmlPartial/commonMain">common</button>
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":mosaic-animation/commonMain">common</button>
             <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
                 <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
                 <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox">
@@ -56,7 +56,7 @@
                     </div>
                         <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
                             <label class="checkbox">
-                                <input type="checkbox" class="checkbox--input" id=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filter=":mosaic-animation:dokkaHtmlPartial/commonMain">
+                                <input type="checkbox" class="checkbox--input" id=":mosaic-animation/commonMain" data-filter=":mosaic-animation/commonMain">
                                 <span class="checkbox--icon"></span>
                                 common
                             </label>
@@ -78,7 +78,7 @@
                     <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox">
                         <div class="dropdown--header">
                             <span>
-                                    mosaic
+                                    docs
                             </span>
                             <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
                                 <i class="ui-kit-icon ui-kit-icon_cross"></i>
@@ -90,28 +90,28 @@
                 </div>
             </div>
             <div id="main">
-<div class="main-content" data-page-type="classlike" id="content" pageids="mosaic-animation::com.jakewharton.mosaic.animation/AnimationSpec///PointingToDeclaration//-1358993166">
+<div class="main-content" data-page-type="classlike" id="content" pageids="mosaic-animation::com.jakewharton.mosaic.animation/AnimationSpec///PointingToDeclaration//287348684">
   <div class="breadcrumbs"><a href="../../index.html">mosaic-animation</a><span class="delimiter">/</span><a href="../index.html">com.jakewharton.mosaic.animation</a><span class="delimiter">/</span><span class="current">AnimationSpec</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Animation</span><wbr><span><span>Spec</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">AnimationSpec</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></div><p class="paragraph"><a href="index.html">AnimationSpec</a> stores the specification of an animation, including 1) the data type to be animated, and 2) the animation configuration (i.e. <a href="../-vectorized-animation-spec/index.html">VectorizedAnimationSpec</a>) that will be used once the data (of type <a href="index.html">T</a>) has been converted to <a href="../-animation-vector/index.html">AnimationVector</a>.</p><p class="paragraph">Any type <a href="index.html">T</a> can be animated by the system as long as a <a href="../-two-way-converter/index.html">TwoWayConverter</a> is supplied to convert the data type <a href="index.html">T</a> from and to an <a href="../-animation-vector/index.html">AnimationVector</a>. There are a number of converters available out of the box. For example, to animate IntOffset the system uses IntOffset.Companion.VectorConverter to convert the object to <a href="../-animation-vector2-d/index.html">AnimationVector2D</a>, so that both x and y dimensions are animated independently with separate velocity tracking. This enables multidimensional objects to be animated in a true multi-dimensional way. It is particularly useful for smoothly handling animation interruptions (such as when the target changes during the animation).</p><h4 class="">Inheritors</h4><div class="table"><div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-finite-animation-spec/index.html">FiniteAnimationSpec</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-infinite-repeatable-spec/index.html">InfiniteRepeatableSpec</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-float-animation-spec/index.html">FloatAnimationSpec</a></div></span></div><div></div></div></div></div></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">AnimationSpec</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></div><p class="paragraph"><a href="index.html">AnimationSpec</a> stores the specification of an animation, including 1) the data type to be animated, and 2) the animation configuration (i.e. <a href="../-vectorized-animation-spec/index.html">VectorizedAnimationSpec</a>) that will be used once the data (of type <a href="index.html">T</a>) has been converted to <a href="../-animation-vector/index.html">AnimationVector</a>.</p><p class="paragraph">Any type <a href="index.html">T</a> can be animated by the system as long as a <a href="../-two-way-converter/index.html">TwoWayConverter</a> is supplied to convert the data type <a href="index.html">T</a> from and to an <a href="../-animation-vector/index.html">AnimationVector</a>. There are a number of converters available out of the box. For example, to animate IntOffset the system uses IntOffset.Companion.VectorConverter to convert the object to <a href="../-animation-vector2-d/index.html">AnimationVector2D</a>, so that both x and y dimensions are animated independently with separate velocity tracking. This enables multidimensional objects to be animated in a true multi-dimensional way. It is particularly useful for smoothly handling animation interruptions (such as when the target changes during the animation).</p><h4 class="">Inheritors</h4><div class="table"><div class="table-row" data-filterable-current=":mosaic-animation/commonMain" data-filterable-set=":mosaic-animation/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-finite-animation-spec/index.html">FiniteAnimationSpec</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":mosaic-animation/commonMain" data-filterable-set=":mosaic-animation/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-infinite-repeatable-spec/index.html">InfiniteRepeatableSpec</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":mosaic-animation/commonMain" data-filterable-set=":mosaic-animation/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-float-animation-spec/index.html">FloatAnimationSpec</a></div></span></div><div></div></div></div></div></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
     <div class="tabs-section-body">
       <div data-togglable="FUNCTION">
         <h2 class="">Functions</h2>
-        <div class="table"><a data-name="1810778996%2FFunctions%2F-1358993166" anchor-label="vectorize" id="1810778996%2FFunctions%2F-1358993166" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain">
+        <div class="table"><a data-name="1810778996%2FFunctions%2F287348684" anchor-label="vectorize" id="1810778996%2FFunctions%2F287348684" data-filterable-set=":mosaic-animation/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-animation/commonMain" data-filterable-set=":mosaic-animation/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="vectorize.html"><span><span>vectorize</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1810778996%2FFunctions%2F-1358993166"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1810778996%2FFunctions%2F287348684"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="vectorize.html">V</a><span class="token operator"> : </span><a href="../-animation-vector/index.html">AnimationVector</a><span class="token operator">&gt; </span><a href="vectorize.html"><span class="token function">vectorize</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">converter<span class="token operator">: </span><a href="../-two-way-converter/index.html">TwoWayConverter</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token punctuation">, </span><a href="vectorize.html">V</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-vectorized-animation-spec/index.html">VectorizedAnimationSpec</a><span class="token operator">&lt;</span><a href="vectorize.html">V</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Creates a <a href="../-vectorized-animation-spec/index.html">com.jakewharton.mosaic.animation.VectorizedAnimationSpec</a> with the given <a href="../-two-way-converter/index.html">com.jakewharton.mosaic.animation.TwoWayConverter</a>.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="vectorize.html">V</a><span class="token operator"> : </span><a href="../-animation-vector/index.html">AnimationVector</a><span class="token operator">&gt; </span><a href="vectorize.html"><span class="token function">vectorize</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">converter<span class="token operator">: </span><a href="../-two-way-converter/index.html">TwoWayConverter</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token punctuation">, </span><a href="vectorize.html">V</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-vectorized-animation-spec/index.html">VectorizedAnimationSpec</a><span class="token operator">&lt;</span><a href="vectorize.html">V</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Creates a <a href="../-vectorized-animation-spec/index.html">com.jakewharton.mosaic.animation.VectorizedAnimationSpec</a> with the given <a href="../-two-way-converter/index.html">com.jakewharton.mosaic.animation.TwoWayConverter</a>.</p></div></div></div>
                 </div>
               </div>
             </div>

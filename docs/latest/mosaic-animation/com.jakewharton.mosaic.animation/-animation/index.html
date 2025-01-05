@@ -37,7 +37,7 @@
     <div class="root">
     <nav class="navigation theme-dark" id="navigation-wrapper">
 <a class="library-name--link" href="../../../index.html">
-                    mosaic
+                    docs
             </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
         </button>
         <div class="navigation-controls--break ui-kit_mobile-only"></div>
@@ -45,7 +45,7 @@
         </div>
         <div class="navigation-controls">
         <div class="filter-section filter-section_loading" id="filter-section">
-                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":mosaic-animation:dokkaHtmlPartial/commonMain">common</button>
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":mosaic-animation/commonMain">common</button>
             <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
                 <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
                 <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox">
@@ -56,7 +56,7 @@
                     </div>
                         <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
                             <label class="checkbox">
-                                <input type="checkbox" class="checkbox--input" id=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filter=":mosaic-animation:dokkaHtmlPartial/commonMain">
+                                <input type="checkbox" class="checkbox--input" id=":mosaic-animation/commonMain" data-filter=":mosaic-animation/commonMain">
                                 <span class="checkbox--icon"></span>
                                 common
                             </label>
@@ -78,7 +78,7 @@
                     <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox">
                         <div class="dropdown--header">
                             <span>
-                                    mosaic
+                                    docs
                             </span>
                             <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
                                 <i class="ui-kit-icon ui-kit-icon_cross"></i>
@@ -90,73 +90,73 @@
                 </div>
             </div>
             <div id="main">
-<div class="main-content" data-page-type="classlike" id="content" pageids="mosaic-animation::com.jakewharton.mosaic.animation/Animation///PointingToDeclaration//-1358993166">
+<div class="main-content" data-page-type="classlike" id="content" pageids="mosaic-animation::com.jakewharton.mosaic.animation/Animation///PointingToDeclaration//287348684">
   <div class="breadcrumbs"><a href="../../index.html">mosaic-animation</a><span class="delimiter">/</span><a href="../index.html">com.jakewharton.mosaic.animation</a><span class="delimiter">/</span><span class="current">Animation</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Animation</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">Animation</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token punctuation">, </span><a href="index.html">V</a><span class="token operator"> : </span><a href="../-animation-vector/index.html">AnimationVector</a><span class="token operator">&gt;</span></div><p class="paragraph">This interface provides a convenient way to query from an <a href="../-vectorized-animation-spec/index.html">com.jakewharton.mosaic.animation.VectorizedAnimationSpec</a> or <a href="../-float-decay-animation-spec/index.html">com.jakewharton.mosaic.animation.FloatDecayAnimationSpec</a>: It spares the need to pass the starting conditions and in some cases ending condition for each value or velocity query, and instead only requires the play time to be passed for such queries.</p><p class="paragraph">The implementation of this interface should cache the starting conditions and ending conditions of animations as needed.</p><p class="paragraph"><strong>Note</strong>: <a href="index.html">Animation</a> does not track the lifecycle of an animation. It merely reacts to play time change and returns the new value/velocity as a result. It can be used as a building block for more lifecycle aware animations. In contrast, <a href="../-animatable/index.html">com.jakewharton.mosaic.animation.Animatable</a> and <a href="../-transition/index.html">com.jakewharton.mosaic.animation.Transition</a> are stateful and manage their own lifecycles.</p><h4 class="">See also</h4><div class="table"><div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-animatable/index.html"><span><span>Animatable</span></span></a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../remember-transition.html"><span>remember</span><wbr><span><span>Transition</span></span></a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../update-transition.html"><span>update</span><wbr><span><span>Transition</span></span></a></div></span></div><div></div></div></div></div><h4 class="">Inheritors</h4><div class="table"><div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-target-based-animation/index.html">TargetBasedAnimation</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-decay-animation/index.html">DecayAnimation</a></div></span></div><div></div></div></div></div></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">Animation</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token punctuation">, </span><a href="index.html">V</a><span class="token operator"> : </span><a href="../-animation-vector/index.html">AnimationVector</a><span class="token operator">&gt;</span></div><p class="paragraph">This interface provides a convenient way to query from an <a href="../-vectorized-animation-spec/index.html">com.jakewharton.mosaic.animation.VectorizedAnimationSpec</a> or <a href="../-float-decay-animation-spec/index.html">com.jakewharton.mosaic.animation.FloatDecayAnimationSpec</a>: It spares the need to pass the starting conditions and in some cases ending condition for each value or velocity query, and instead only requires the play time to be passed for such queries.</p><p class="paragraph">The implementation of this interface should cache the starting conditions and ending conditions of animations as needed.</p><p class="paragraph"><strong>Note</strong>: <a href="index.html">Animation</a> does not track the lifecycle of an animation. It merely reacts to play time change and returns the new value/velocity as a result. It can be used as a building block for more lifecycle aware animations. In contrast, <a href="../-animatable/index.html">com.jakewharton.mosaic.animation.Animatable</a> and <a href="../-transition/index.html">com.jakewharton.mosaic.animation.Transition</a> are stateful and manage their own lifecycles.</p><h4 class="">See also</h4><div class="table"><div class="table-row" data-filterable-current=":mosaic-animation/commonMain" data-filterable-set=":mosaic-animation/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-animatable/index.html"><span><span>Animatable</span></span></a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":mosaic-animation/commonMain" data-filterable-set=":mosaic-animation/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../remember-transition.html"><span>remember</span><wbr><span><span>Transition</span></span></a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":mosaic-animation/commonMain" data-filterable-set=":mosaic-animation/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../update-transition.html"><span>update</span><wbr><span><span>Transition</span></span></a></div></span></div><div></div></div></div></div><h4 class="">Inheritors</h4><div class="table"><div class="table-row" data-filterable-current=":mosaic-animation/commonMain" data-filterable-set=":mosaic-animation/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-target-based-animation/index.html">TargetBasedAnimation</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":mosaic-animation/commonMain" data-filterable-set=":mosaic-animation/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-decay-animation/index.html">DecayAnimation</a></div></span></div><div></div></div></div></div></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button><button class="section-tab" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION,EXTENSION_PROPERTY,EXTENSION_FUNCTION">Members &amp; Extensions</button></div>
     <div class="tabs-section-body">
       <div data-togglable="PROPERTY">
         <h2 class="">Properties</h2>
-        <div class="table"><a data-name="-762676111%2FProperties%2F-1358993166" anchor-label="durationNanos" id="-762676111%2FProperties%2F-1358993166" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain">
+        <div class="table"><a data-name="-762676111%2FProperties%2F287348684" anchor-label="durationNanos" id="-762676111%2FProperties%2F287348684" data-filterable-set=":mosaic-animation/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-animation/commonMain" data-filterable-set=":mosaic-animation/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="duration-nanos.html"><span>duration</span><wbr><span><span>Nanos</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-762676111%2FProperties%2F-1358993166"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-762676111%2FProperties%2F287348684"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="duration-nanos.html">durationNanos</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a></div><div class="brief "><p class="paragraph">This amount of time in nanoseconds that the animation will run before it finishes</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="duration-nanos.html">durationNanos</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a></div><div class="brief "><p class="paragraph">This amount of time in nanoseconds that the animation will run before it finishes</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1777920800%2FProperties%2F-1358993166" anchor-label="isInfinite" id="1777920800%2FProperties%2F-1358993166" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain">
+<a data-name="1777920800%2FProperties%2F287348684" anchor-label="isInfinite" id="1777920800%2FProperties%2F287348684" data-filterable-set=":mosaic-animation/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-animation/commonMain" data-filterable-set=":mosaic-animation/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="is-infinite.html"><span>is</span><wbr><span><span>Infinite</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1777920800%2FProperties%2F-1358993166"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1777920800%2FProperties%2F287348684"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="is-infinite.html">isInfinite</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Whether or not the <a href="index.html">Animation</a> represents an infinite animation. That is, one that will not finish by itself, one that needs an external action to stop. For examples, an indeterminate progress bar, which will only stop when it is removed from the composition.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="is-infinite.html">isInfinite</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Whether or not the <a href="index.html">Animation</a> represents an infinite animation. That is, one that will not finish by itself, one that needs an external action to stop. For examples, an indeterminate progress bar, which will only stop when it is removed from the composition.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1190214268%2FProperties%2F-1358993166" anchor-label="targetValue" id="1190214268%2FProperties%2F-1358993166" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain">
+<a data-name="1190214268%2FProperties%2F287348684" anchor-label="targetValue" id="1190214268%2FProperties%2F287348684" data-filterable-set=":mosaic-animation/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-animation/commonMain" data-filterable-set=":mosaic-animation/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="target-value.html"><span>target</span><wbr><span><span>Value</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1190214268%2FProperties%2F-1358993166"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1190214268%2FProperties%2F287348684"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="target-value.html">targetValue</a><span class="token operator">: </span><a href="index.html">T</a></div><div class="brief "><p class="paragraph">This is the value that the <a href="index.html">Animation</a> will reach when it finishes uninterrupted.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="target-value.html">targetValue</a><span class="token operator">: </span><a href="index.html">T</a></div><div class="brief "><p class="paragraph">This is the value that the <a href="index.html">Animation</a> will reach when it finishes uninterrupted.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="2080099414%2FProperties%2F-1358993166" anchor-label="typeConverter" id="2080099414%2FProperties%2F-1358993166" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain">
+<a data-name="2080099414%2FProperties%2F287348684" anchor-label="typeConverter" id="2080099414%2FProperties%2F287348684" data-filterable-set=":mosaic-animation/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-animation/commonMain" data-filterable-set=":mosaic-animation/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="type-converter.html"><span>type</span><wbr><span><span>Converter</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2080099414%2FProperties%2F-1358993166"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2080099414%2FProperties%2F287348684"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="type-converter.html">typeConverter</a><span class="token operator">: </span><a href="../-two-way-converter/index.html">TwoWayConverter</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token punctuation">, </span><a href="index.html">V</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">The <a href="../-two-way-converter/index.html">com.jakewharton.mosaic.animation.TwoWayConverter</a> that will be used to convert value/velocity from any arbitrary data type to <a href="../-animation-vector/index.html">AnimationVector</a>. This makes it possible to animate different dimensions of the data object independently (e.g. x/y dimensions of the position data).</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">val </span><a href="type-converter.html">typeConverter</a><span class="token operator">: </span><a href="../-two-way-converter/index.html">TwoWayConverter</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token punctuation">, </span><a href="index.html">V</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">The <a href="../-two-way-converter/index.html">com.jakewharton.mosaic.animation.TwoWayConverter</a> that will be used to convert value/velocity from any arbitrary data type to <a href="../-animation-vector/index.html">AnimationVector</a>. This makes it possible to animate different dimensions of the data object independently (e.g. x/y dimensions of the position data).</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -165,62 +165,62 @@
       </div>
       <div data-togglable="FUNCTION">
         <h2 class="">Functions</h2>
-        <div class="table"><a data-name="1876174935%2FFunctions%2F-1358993166" anchor-label="getValueFromNanos" id="1876174935%2FFunctions%2F-1358993166" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain">
+        <div class="table"><a data-name="1876174935%2FFunctions%2F287348684" anchor-label="getValueFromNanos" id="1876174935%2FFunctions%2F287348684" data-filterable-set=":mosaic-animation/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-animation/commonMain" data-filterable-set=":mosaic-animation/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="get-value-from-nanos.html"><span>get</span><wbr><span>Value</span><wbr><span>From</span><wbr><span><span>Nanos</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1876174935%2FFunctions%2F-1358993166"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1876174935%2FFunctions%2F287348684"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-value-from-nanos.html"><span class="token function">getValueFromNanos</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">playTimeNanos<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">T</a></div><div class="brief "><p class="paragraph">Returns the value of the animation at the given play time.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-value-from-nanos.html"><span class="token function">getValueFromNanos</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">playTimeNanos<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">T</a></div><div class="brief "><p class="paragraph">Returns the value of the animation at the given play time.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-327732298%2FFunctions%2F-1358993166" anchor-label="getVelocityFromNanos" id="-327732298%2FFunctions%2F-1358993166" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain">
+<a data-name="-327732298%2FFunctions%2F287348684" anchor-label="getVelocityFromNanos" id="-327732298%2FFunctions%2F287348684" data-filterable-set=":mosaic-animation/commonMain"></a>
+          <div class="table-row" data-togglable="EXTENSION_FUNCTION" data-filterable-current=":mosaic-animation/commonMain" data-filterable-set=":mosaic-animation/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="../get-velocity-from-nanos.html"><span>get</span><wbr><span>Velocity</span><wbr><span>From</span><wbr><span><span>Nanos</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-327732298%2FFunctions%2F-1358993166"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-327732298%2FFunctions%2F287348684"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="../get-velocity-from-nanos.html">T</a><span class="token punctuation">, </span><a href="../get-velocity-from-nanos.html">V</a><span class="token operator"> : </span><a href="../-animation-vector/index.html">AnimationVector</a><span class="token operator">&gt; </span><a href="index.html">Animation</a><span class="token operator">&lt;</span><a href="../get-velocity-from-nanos.html">T</a><span class="token punctuation">, </span><a href="../get-velocity-from-nanos.html">V</a><span class="token operator">&gt;</span><span class="token punctuation">.</span><a href="../get-velocity-from-nanos.html"><span class="token function">getVelocityFromNanos</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">playTimeNanos<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../get-velocity-from-nanos.html">T</a></div><div class="brief "><p class="paragraph">Returns the velocity of the animation at the given play time.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="../get-velocity-from-nanos.html">T</a><span class="token punctuation">, </span><a href="../get-velocity-from-nanos.html">V</a><span class="token operator"> : </span><a href="../-animation-vector/index.html">AnimationVector</a><span class="token operator">&gt; </span><a href="index.html">Animation</a><span class="token operator">&lt;</span><a href="../get-velocity-from-nanos.html">T</a><span class="token punctuation">, </span><a href="../get-velocity-from-nanos.html">V</a><span class="token operator">&gt;</span><span class="token punctuation">.</span><a href="../get-velocity-from-nanos.html"><span class="token function">getVelocityFromNanos</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">playTimeNanos<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../get-velocity-from-nanos.html">T</a></div><div class="brief "><p class="paragraph">Returns the velocity of the animation at the given play time.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1428166170%2FFunctions%2F-1358993166" anchor-label="getVelocityVectorFromNanos" id="1428166170%2FFunctions%2F-1358993166" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain">
+<a data-name="1428166170%2FFunctions%2F287348684" anchor-label="getVelocityVectorFromNanos" id="1428166170%2FFunctions%2F287348684" data-filterable-set=":mosaic-animation/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-animation/commonMain" data-filterable-set=":mosaic-animation/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="get-velocity-vector-from-nanos.html"><span>get</span><wbr><span>Velocity</span><wbr><span>Vector</span><wbr><span>From</span><wbr><span><span>Nanos</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1428166170%2FFunctions%2F-1358993166"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1428166170%2FFunctions%2F287348684"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-velocity-vector-from-nanos.html"><span class="token function">getVelocityVectorFromNanos</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">playTimeNanos<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">V</a></div><div class="brief "><p class="paragraph">Returns the velocity (in <a href="../-animation-vector/index.html">AnimationVector</a> form) of the animation at the given play time.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-velocity-vector-from-nanos.html"><span class="token function">getVelocityVectorFromNanos</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">playTimeNanos<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">V</a></div><div class="brief "><p class="paragraph">Returns the velocity (in <a href="../-animation-vector/index.html">AnimationVector</a> form) of the animation at the given play time.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1739499082%2FFunctions%2F-1358993166" anchor-label="isFinishedFromNanos" id="-1739499082%2FFunctions%2F-1358993166" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"></a>
-          <div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain">
+<a data-name="-1739499082%2FFunctions%2F287348684" anchor-label="isFinishedFromNanos" id="-1739499082%2FFunctions%2F287348684" data-filterable-set=":mosaic-animation/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-animation/commonMain" data-filterable-set=":mosaic-animation/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="is-finished-from-nanos.html"><span>is</span><wbr><span>Finished</span><wbr><span>From</span><wbr><span><span>Nanos</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1739499082%2FFunctions%2F-1358993166"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1739499082%2FFunctions%2F287348684"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="is-finished-from-nanos.html"><span class="token function">isFinishedFromNanos</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">playTimeNanos<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Returns whether the animation is finished at the given play time.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">fun </span><a href="is-finished-from-nanos.html"><span class="token function">isFinishedFromNanos</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">playTimeNanos<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Returns whether the animation is finished at the given play time.</p></div></div></div>
                 </div>
               </div>
             </div>
