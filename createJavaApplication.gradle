@@ -1,0 +1,30 @@
+tasks.register('installDist', Sync) {
+	def mainClass = "example.Main"
+
+	dependsOn 'jvmJar'
+
+	into layout.buildDirectory.dir("install/${project.name}")
+
+	from tasks.named('jvmJar')
+	from configurations.jvmRuntimeClasspath
+
+	doLast {
+		def binDir = layout.buildDirectory.file("install/${project.name}/bin").get().asFile
+		binDir.mkdirs()
+
+		def unixScript = new File(binDir, project.name)
+		unixScript.text = """
+            |#!/bin/sh
+            |DIR=`dirname "\$0"`
+            |java -cp "\$DIR/../*" ${mainClass} "\$@"
+        """.stripMargin('|').trim()
+		unixScript.setExecutable(true, false)
+
+		def windowsScript = new File(binDir, "${project.name}.bat")
+		windowsScript.text = """
+            |@echo off
+            |set DIR=%~dp0
+            |java -cp "%DIR%\\..\\*" ${mainClass} %*
+        """.stripMargin('|').trim()
+	}
+}

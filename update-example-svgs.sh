@@ -31,7 +31,7 @@ for sample in $REPO_DIR/samples/*; do
 		echo "Running $command..."
 		rm -f $sample/demo.cast
 		asciinema rec -c "$command" $sample/demo.cast
-		agg --cols 60 --rows 18 $sample/demo.cast $sample/demo.gif
+		agg --cols 60 --rows 18 $sample/demo.cast "$REPO_DIR/images/$sample_name.gif"
 		rm $sample/demo.cast
 	fi
 done

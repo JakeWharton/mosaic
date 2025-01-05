@@ -3,11 +3,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
 apply from: "$rootDir/addAllTargets.gradle"
-apply plugin: 'application'
-
-application {
-	mainClass = 'example.Main'
-}
+apply from: "$rootDir/createJavaApplication.gradle"
 
 kotlin {
 	// Needed for 'application' plugin.

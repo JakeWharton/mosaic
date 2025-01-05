@@ -6,3 +6,22 @@ dependencies {
 	dokka(projects.mosaicTerminal)
 	dokka(projects.mosaicTesting)
 }
+
+dokka {
+	def rootReadmeFile = new File(rootDir, "README.md")
+	dokkaPublications.html {
+		includes.from(rootReadmeFile.path)
+	}
+	pluginsConfiguration.html {
+		customAssets.from(extractImagePathsFromReadmeMd(rootReadmeFile, rootDir))
+	}
+}
+
+private static List<String> extractImagePathsFromReadmeMd(File readmeFile, File rootDir) {
+	readmeFile.readLines()
+			.grep(~/<img .*/)
+			.collect { line ->
+				def path = (line =~ /src="([^"]+)/)[0][1]
+				new File(rootDir, path).path
+			}
+}

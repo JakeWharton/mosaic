@@ -17,7 +17,8 @@ apiValidation {
 }
 
 dokka {
-	dokkaSourceSets.named('commonMain').configure {
+	dokkaSourceSets.configureEach {
+		includes.from("README.md")
 		sourceLink {
 			def ref = "$version".endsWith('-SNAPSHOT') ? 'trunk' : version
 			def dir = rootDir.relativePath(projectDir)

@@ -3,7 +3,7 @@
 An experimental tool for building console UI in Kotlin using the Jetpack Compose compiler/runtime.
 Inspired by [Ink](https://github.com/vadimdemedes/ink).
 
-<img src="samples/jest/demo.gif">
+<img src="images/jest.gif" width="523">
 
 Jump to:
 [Introduction](#Introduction) |
@@ -44,14 +44,14 @@ suspend fun main() = runMosaic {
 
 (Note: You may need to add imports for `androidx.compose.runtime.getValue` and `import androidx.compose.runtime.setValue` manually.)
 
-<img src="samples/counter/demo.gif">
+<img src="images/demo.gif" width="691">
 
 That is the most basic sample of Mosaic.
 From there, the limit is only your imagination.
 
-<img src="samples/jest/demo.gif">
+<img src="images/jest.gif" width="523">
 
-<img src="samples/rrtop/demo.gif">
+<img src="images/rrtop.gif" width="683">
 
 _(Note: graphs in the above have rendering problems due to asciinema/agg which do not appear in the real output)_
 

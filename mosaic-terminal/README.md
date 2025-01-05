@@ -1,4 +1,4 @@
-# Mosaic Terminal
+# Module mosaic-terminal
 
 Low-level TTY manipulation and parsing library.
 

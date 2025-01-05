@@ -1,4 +1,4 @@
-# Mosaic Animation
+# Module mosaic-animation
 
 This is a Mosaic-adapted copy of
 the [androidx.compose.animation-core](https://developer.android.com/reference/kotlin/androidx/compose/animation/core/package-summary)

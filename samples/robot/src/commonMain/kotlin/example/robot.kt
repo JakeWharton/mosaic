@@ -1,3 +1,5 @@
+@file:JvmName("Main")
+
 package example
 
 import androidx.compose.runtime.LaunchedEffect
@@ -21,6 +23,7 @@ import com.jakewharton.mosaic.ui.Column
 import com.jakewharton.mosaic.ui.Spacer
 import com.jakewharton.mosaic.ui.Text
 import com.jakewharton.mosaic.ui.unit.IntOffset
+import kotlin.jvm.JvmName
 import kotlinx.coroutines.awaitCancellation
 
 private const val worldWidth = 20
