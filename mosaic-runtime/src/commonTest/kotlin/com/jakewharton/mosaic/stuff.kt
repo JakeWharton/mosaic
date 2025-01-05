@@ -49,7 +49,7 @@ internal val MosaicNode.position: IntOffset
 class Holder<T>(var value: T)
 
 internal fun MosaicNode.nodeByTestTag(tag: String): MosaicNode {
-	val queue = ArrayDeque().also { it.add(this) }
+	val queue = ArrayDeque<MosaicNode>().also { it.add(this) }
 	while (queue.isNotEmpty()) {
 		val node = queue.removeFirst()
 		if (node.testTag == tag) {
