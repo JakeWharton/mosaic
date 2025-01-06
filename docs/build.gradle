@@ -1,8 +1,0 @@
-apply plugin: 'org.jetbrains.dokka'
-
-dependencies {
-	dokka(projects.mosaicAnimation)
-	dokka(projects.mosaicRuntime)
-	dokka(projects.mosaicTerminal)
-	dokka(projects.mosaicTesting)
-}

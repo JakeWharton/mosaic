@@ -15,13 +15,3 @@ apiValidation {
 			"com.jakewharton.mosaic.animation.InternalAnimationApi"
 	]
 }
-
-dokka {
-	dokkaSourceSets.named('commonMain').configure {
-		sourceLink {
-			def ref = "$version".endsWith('-SNAPSHOT') ? 'trunk' : version
-			def dir = rootDir.relativePath(projectDir)
-			remoteUrl("https://github.com/JakeWharton/mosaic/tree/$ref/$dir")
-		}
-	}
-}

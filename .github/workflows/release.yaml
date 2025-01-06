@@ -38,13 +38,13 @@ jobs:
           body: ${{ steps.release_notes.outputs.release_notes }}
           discussionCategory: Announcements
 
-      - run: ./gradlew :docs:dokkaGenerate
+      - run: ./gradlew dokkaHtmlMultiModule
 
       - name: Deploy docs to website
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: site
-          FOLDER: docs/build/dokka/html/
+          FOLDER: build/dokka/htmlMultiModule/
           TARGET_FOLDER: docs/0.x/
           CLEAN: true
