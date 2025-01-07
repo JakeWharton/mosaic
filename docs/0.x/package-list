@@ -1,0 +1,17 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+module:mosaic-animation
+com.jakewharton.mosaic.animation
+module:mosaic-runtime
+com.jakewharton.mosaic
+com.jakewharton.mosaic.layout
+com.jakewharton.mosaic.modifier
+com.jakewharton.mosaic.text
+com.jakewharton.mosaic.ui
+com.jakewharton.mosaic.ui.unit
+module:mosaic-terminal
+com.jakewharton.mosaic.terminal
+com.jakewharton.mosaic.terminal.event
+module:mosaic-testing
+com.jakewharton.mosaic.testing

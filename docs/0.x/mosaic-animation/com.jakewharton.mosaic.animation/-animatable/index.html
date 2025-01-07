@@ -1,0 +1,371 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>Animatable</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<link href="../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" defer></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+    <nav class="navigation theme-dark" id="navigation-wrapper">
+<a class="library-name--link" href="../../../index.html">
+                    mosaic
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.15.0
+        </div>
+        <div class="navigation-controls">
+        <div class="filter-section filter-section_loading" id="filter-section">
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":mosaic-animation:dokkaHtmlPartial/commonMain">common</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox">
+                    <div class="dropdown--header"><span>Platform filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close platform filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filter=":mosaic-animation:dokkaHtmlPartial/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </div>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                    <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox">
+                        <div class="dropdown--header">
+                            <span>
+                                    mosaic
+                            </span>
+                            <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                                <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                            </button>
+                        </div>
+                        <div class="sidebar--inner" id="sideMenu"></div>
+                    </ul>
+                    <div class="dropdown--overlay"></div>
+                </div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="mosaic-animation::com.jakewharton.mosaic.animation/Animatable///PointingToDeclaration//-1358993166">
+  <div class="breadcrumbs"><a href="../../index.html">mosaic-animation</a><span class="delimiter">/</span><a href="../index.html">com.jakewharton.mosaic.animation</a><span class="delimiter">/</span><span class="current">Animatable</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Animatable</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">Animatable</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token punctuation">, </span><a href="index.html">V</a><span class="token operator"> : </span><a href="../-animation-vector/index.html">AnimationVector</a><span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">initialValue<span class="token operator">: </span><a href="index.html">T</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>typeConverter<span class="token operator">: </span><a href="../-two-way-converter/index.html">TwoWayConverter</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token punctuation">, </span><a href="index.html">V</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">visibilityThreshold<span class="token operator">: </span><a href="index.html">T</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>label<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">"Animatable"</span></span></span><span class="token punctuation">)</span></div><p class="paragraph"><a href="index.html">Animatable</a> is a value holder that automatically animates its value when the value is changed via <a href="animate-to.html">animateTo</a>. If <a href="animate-to.html">animateTo</a> is invoked during an ongoing value change animation, a new animation will transition <a href="index.html">Animatable</a> from its current value (i.e. value at the point of interruption) to the new <a href="target-value.html">targetValue</a>. This ensures that the value change is <strong>always</strong> continuous using <a href="animate-to.html">animateTo</a>. If a <a href="../spring.html">spring</a> animation (e.g. default animation) is used with <a href="animate-to.html">animateTo</a>, the velocity change will guarantee to be continuous as well.</p><p class="paragraph">Unlike <a href="../-animation-state/index.html">AnimationState</a>, <a href="index.html">Animatable</a> ensures <i>mutual exclusiveness</i> on its animations. To achieve this, when a new animation is started via <a href="animate-to.html">animateTo</a> (or <a href="animate-decay.html">animateDecay</a>), any ongoing animation will be canceled via a <span data-unresolved-link="kotlinx.coroutines/CancellationException///PointingToDeclaration/">CancellationException</span>.</p><h4 class="">Parameters</h4><div class="table"><div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>initial</span><wbr><span><span>Value</span></span></u></div></span></div><div><div class="title"><p class="paragraph">initial value of the animatable value holder</p></div></div></div></div><div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>type</span><wbr><span><span>Converter</span></span></u></div></span></div><div><div class="title"><p class="paragraph">A two-way converter that converts the given type <a href="index.html">T</a> from and to <a href="../-animation-vector/index.html">AnimationVector</a></p></div></div></div></div><div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>visibility</span><wbr><span><span>Threshold</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Threshold at which the animation may round off to its target value.</p></div></div></div></div><div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>label</span></span></u></div></span></div><div><div class="title"><p class="paragraph">An optional label for differentiating this animation from others.</p></div></div></div></div></div><h4 class="">See also</h4><div class="table"><div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="animate-to.html"><span>Animatable.</span><wbr><span>animateTo</span></a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="animate-decay.html"><span>Animatable.</span><wbr><span>animate</span><wbr><span><span>Decay</span></span></a></div></span></div><div></div></div></div></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="491338818%2FConstructors%2F-1358993166" anchor-label="Animatable" id="491338818%2FConstructors%2F-1358993166" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-animatable.html"><span><span>Animatable</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="491338818%2FConstructors%2F-1358993166"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">initialValue<span class="token operator">: </span><a href="index.html">T</a><span class="token punctuation">, </span></span><span class="parameter ">typeConverter<span class="token operator">: </span><a href="../-two-way-converter/index.html">TwoWayConverter</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token punctuation">, </span><a href="index.html">V</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">visibilityThreshold<span class="token operator">: </span><a href="index.html">T</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">label<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator"> = </span><span class="token string">"Animatable"</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="-2024172923%2FProperties%2F-1358993166" anchor-label="isRunning" id="-2024172923%2FProperties%2F-1358993166" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-running.html"><span>is</span><wbr><span><span>Running</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2024172923%2FProperties%2F-1358993166"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="is-running.html">isRunning</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Indicates whether the animation is running.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="589450278%2FProperties%2F-1358993166" anchor-label="label" id="589450278%2FProperties%2F-1358993166" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="label.html"><span><span>label</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="589450278%2FProperties%2F-1358993166"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="label.html">label</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-412022621%2FProperties%2F-1358993166" anchor-label="lowerBound" id="-412022621%2FProperties%2F-1358993166" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="lower-bound.html"><span>lower</span><wbr><span><span>Bound</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-412022621%2FProperties%2F-1358993166"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="lower-bound.html">lowerBound</a><span class="token operator">: </span><a href="index.html">T</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Lower bound of the animation, null by default (meaning no lower bound). Bounds can be changed using <a href="update-bounds.html">updateBounds</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-486416262%2FProperties%2F-1358993166" anchor-label="targetValue" id="-486416262%2FProperties%2F-1358993166" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="target-value.html"><span>target</span><wbr><span><span>Value</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-486416262%2FProperties%2F-1358993166"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="target-value.html">targetValue</a><span class="token operator">: </span><a href="index.html">T</a></div><div class="brief "><p class="paragraph">The target of the current animation. If the animation finishes un-interrupted, it will reach this target value.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1450896084%2FProperties%2F-1358993166" anchor-label="typeConverter" id="1450896084%2FProperties%2F-1358993166" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="type-converter.html"><span>type</span><wbr><span><span>Converter</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1450896084%2FProperties%2F-1358993166"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="type-converter.html">typeConverter</a><span class="token operator">: </span><a href="../-two-way-converter/index.html">TwoWayConverter</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token punctuation">, </span><a href="index.html">V</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1363764868%2FProperties%2F-1358993166" anchor-label="upperBound" id="1363764868%2FProperties%2F-1358993166" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="upper-bound.html"><span>upper</span><wbr><span><span>Bound</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1363764868%2FProperties%2F-1358993166"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="upper-bound.html">upperBound</a><span class="token operator">: </span><a href="index.html">T</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Upper bound of the animation, null by default (meaning no upper bound). Bounds can be changed using <a href="update-bounds.html">updateBounds</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="439029833%2FProperties%2F-1358993166" anchor-label="value" id="439029833%2FProperties%2F-1358993166" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="value.html"><span><span>value</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="439029833%2FProperties%2F-1358993166"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="value.html">value</a><span class="token operator">: </span><a href="index.html">T</a></div><div class="brief "><p class="paragraph">Current value of the animation.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-29265021%2FProperties%2F-1358993166" anchor-label="velocity" id="-29265021%2FProperties%2F-1358993166" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="velocity.html"><span><span>velocity</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-29265021%2FProperties%2F-1358993166"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="velocity.html">velocity</a><span class="token operator">: </span><a href="index.html">T</a></div><div class="brief "><p class="paragraph">Returns the velocity, converted from <a href="velocity-vector.html">velocityVector</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1868103424%2FProperties%2F-1358993166" anchor-label="velocityVector" id="1868103424%2FProperties%2F-1358993166" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="velocity-vector.html"><span>velocity</span><wbr><span><span>Vector</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1868103424%2FProperties%2F-1358993166"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="velocity-vector.html">velocityVector</a><span class="token operator">: </span><a href="index.html">V</a></div><div class="brief "><p class="paragraph">Velocity vector of the animation (in the form of <a href="../-animation-vector/index.html">AnimationVector</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-1967873704%2FFunctions%2F-1358993166" anchor-label="animateDecay" id="-1967873704%2FFunctions%2F-1358993166" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="animate-decay.html"><span>animate</span><wbr><span><span>Decay</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1967873704%2FFunctions%2F-1358993166"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="animate-decay.html"><span class="token function">animateDecay</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">initialVelocity<span class="token operator">: </span><a href="index.html">T</a><span class="token punctuation">, </span></span><span class="parameter ">animationSpec<span class="token operator">: </span><a href="../-decay-animation-spec/index.html">DecayAnimationSpec</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">block<span class="token operator">: </span><a href="index.html">Animatable</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token punctuation">, </span><a href="index.html">V</a><span class="token operator">&gt;</span><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-animation-result/index.html">AnimationResult</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token punctuation">, </span><a href="index.html">V</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Start a decay animation (i.e. an animation that <i>slows down</i> from the given <a href="animate-decay.html">initialVelocity</a> starting at current <a href="value.html">Animatable.value</a> until the velocity reaches 0. If there's already an ongoing animation, the animation in-flight will be immediately cancelled. Decay animation is often used after a fling gesture.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1491400490%2FFunctions%2F-1358993166" anchor-label="animateTo" id="1491400490%2FFunctions%2F-1358993166" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="animate-to.html"><span>animate</span><wbr><span><span>To</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1491400490%2FFunctions%2F-1358993166"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="animate-to.html"><span class="token function">animateTo</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">targetValue<span class="token operator">: </span><a href="index.html">T</a><span class="token punctuation">, </span></span><span class="parameter ">animationSpec<span class="token operator">: </span><a href="../-animation-spec/index.html">AnimationSpec</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span><span class="token operator"> = </span>defaultSpringSpec<span class="token punctuation">, </span></span><span class="parameter ">initialVelocity<span class="token operator">: </span><a href="index.html">T</a><span class="token operator"> = </span>velocity<span class="token punctuation">, </span></span><span class="parameter ">block<span class="token operator">: </span><a href="index.html">Animatable</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token punctuation">, </span><a href="index.html">V</a><span class="token operator">&gt;</span><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-animation-result/index.html">AnimationResult</a><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token punctuation">, </span><a href="index.html">V</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Starts an animation to animate from <a href="value.html">value</a> to the provided <a href="animate-to.html">targetValue</a>. If there is already an animation in-flight, this method will cancel the ongoing animation before starting a new animation continuing the current <a href="value.html">value</a> and <a href="velocity.html">velocity</a>. It's recommended to set the optional <a href="animate-to.html">initialVelocity</a> only when <a href="animate-to.html">animateTo</a> is used immediately after a fling. In most of the other cases, altering velocity would result in visual discontinuity.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1433637563%2FFunctions%2F-1358993166" anchor-label="asState" id="1433637563%2FFunctions%2F-1358993166" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="as-state.html"><span>as</span><wbr><span><span>State</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1433637563%2FFunctions%2F-1358993166"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="as-state.html"><span class="token function">asState</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="androidx.compose.runtime/State///PointingToDeclaration/">State</span><span class="token operator">&lt;</span><a href="index.html">T</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Returns a <span data-unresolved-link="androidx.compose.runtime/State///PointingToDeclaration/">State</span> representing the current <a href="value.html">value</a> of this animation. This allows hoisting the animation's current value without causing unnecessary recompositions when the value changes.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="96139363%2FFunctions%2F-1358993166" anchor-label="snapTo" id="96139363%2FFunctions%2F-1358993166" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="snap-to.html"><span>snap</span><wbr><span><span>To</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="96139363%2FFunctions%2F-1358993166"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="snap-to.html"><span class="token function">snapTo</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">targetValue<span class="token operator">: </span><a href="index.html">T</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Sets the current value to the target value, without any animation. This will also cancel any on-going animation with a <span data-unresolved-link="kotlinx.coroutines/CancellationException///PointingToDeclaration/">CancellationException</span>. This function will return <i>after</i> canceling any on-going animation and updating the <a href="value.html">Animatable.value</a> and <a href="target-value.html">Animatable.targetValue</a> to the provided <a href="snap-to.html">targetValue</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1718057602%2FFunctions%2F-1358993166" anchor-label="stop" id="-1718057602%2FFunctions%2F-1358993166" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="stop.html"><span><span>stop</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1718057602%2FFunctions%2F-1358993166"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="stop.html"><span class="token function">stop</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Stops any on-going animation with a <span data-unresolved-link="kotlinx.coroutines/CancellationException///PointingToDeclaration/">CancellationException</span>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1726492221%2FFunctions%2F-1358993166" anchor-label="updateBounds" id="1726492221%2FFunctions%2F-1358993166" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-animation:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-animation:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-bounds.html"><span>update</span><wbr><span><span>Bounds</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1726492221%2FFunctions%2F-1358993166"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-animation:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="update-bounds.html"><span class="token function">updateBounds</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">lowerBound<span class="token operator">: </span><a href="index.html">T</a><span class="token operator">?</span><span class="token operator"> = </span>this.lowerBound<span class="token punctuation">, </span></span><span class="parameter ">upperBound<span class="token operator">: </span><a href="index.html">T</a><span class="token operator">?</span><span class="token operator"> = </span>this.upperBound</span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Updates either <a href="update-bounds.html">lowerBound</a> or <a href="update-bounds.html">upperBound</a>, or both. This will update <a href="lower-bound.html">Animatable.lowerBound</a> and/or <a href="upper-bound.html">Animatable.upperBound</a> accordingly after a check to ensure the provided <a href="update-bounds.html">lowerBound</a> is no greater than <a href="update-bounds.html">upperBound</a> in any dimension.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+        <span>© 2025 Copyright</span>
+        <span class="pull-right">
+            <span>Generated by </span>
+            <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                <span>dokka</span>
+            </a>
+        </span>
+    </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
