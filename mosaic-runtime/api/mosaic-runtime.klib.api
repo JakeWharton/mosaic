@@ -207,6 +207,7 @@ abstract interface com.jakewharton.mosaic/Mosaic { // com.jakewharton.mosaic/Mos
     abstract fun sendKeyEvent(com.jakewharton.mosaic.layout/KeyEvent) // com.jakewharton.mosaic/Mosaic.sendKeyEvent|sendKeyEvent(com.jakewharton.mosaic.layout.KeyEvent){}[0]
     abstract fun setContent(kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>) // com.jakewharton.mosaic/Mosaic.setContent|setContent(kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>){}[0]
     abstract suspend fun awaitComplete() // com.jakewharton.mosaic/Mosaic.awaitComplete|awaitComplete(){}[0]
+    open fun paintStatics(): kotlin.collections/List<com.jakewharton.mosaic/TextCanvas> // com.jakewharton.mosaic/Mosaic.paintStatics|paintStatics(){}[0]
 }
 
 abstract interface com.jakewharton.mosaic/TextCanvas { // com.jakewharton.mosaic/TextCanvas|null[0]

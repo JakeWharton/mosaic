@@ -4,6 +4,7 @@ public abstract interface class com/jakewharton/mosaic/Mosaic {
 	public abstract fun dump ()Ljava/lang/String;
 	public abstract fun getTerminalState ()Landroidx/compose/runtime/MutableState;
 	public abstract fun paint ()Lcom/jakewharton/mosaic/TextCanvas;
+	public fun paintStatics ()Ljava/util/List;
 	public abstract fun paintStaticsTo (Landroidx/collection/MutableObjectList;)V
 	public abstract fun sendKeyEvent (Lcom/jakewharton/mosaic/layout/KeyEvent;)V
 	public abstract fun setContent (Lkotlin/jvm/functions/Function2;)V

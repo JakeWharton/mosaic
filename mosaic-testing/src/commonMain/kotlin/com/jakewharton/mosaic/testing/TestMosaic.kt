@@ -14,12 +14,16 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeout
 
+public suspend fun runMosaicTest(block: suspend TestMosaic<String>.() -> Unit) {
+	runMosaicTest(PlainTextSnapshots, block)
+}
+
 public fun interface SnapshotStrategy<T> {
 	public fun create(mosaic: Mosaic): T
 }
 
-public suspend fun runMosaicTest(block: suspend TestMosaic<String>.() -> Unit) {
-	runMosaicTest(PlainTextSnapshots, block)
+public object MosaicSnapshots : SnapshotStrategy<Mosaic> {
+	override fun create(mosaic: Mosaic): Mosaic = mosaic
 }
 
 public suspend fun <T, R> runMosaicTest(

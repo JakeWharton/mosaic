@@ -1,6 +1,7 @@
 package com.jakewharton.mosaic
 
 import androidx.collection.MutableObjectList
+import androidx.collection.mutableObjectListOf
 import androidx.collection.mutableScatterSetOf
 import androidx.compose.runtime.AbstractApplier
 import androidx.compose.runtime.BroadcastFrameClock
@@ -163,6 +164,12 @@ public interface Mosaic {
 
 	public fun paint(): TextCanvas
 	public fun paintStaticsTo(list: MutableObjectList<TextCanvas>)
+	public fun paintStatics(): List<TextCanvas> {
+		return mutableObjectListOf<TextCanvas>()
+			.apply(::paintStaticsTo)
+			.asList()
+	}
+
 	public fun dump(): String
 
 	public suspend fun awaitComplete()

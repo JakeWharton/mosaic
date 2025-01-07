@@ -1,3 +1,10 @@
+public final class com/jakewharton/mosaic/testing/MosaicSnapshots : com/jakewharton/mosaic/testing/SnapshotStrategy {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/jakewharton/mosaic/testing/MosaicSnapshots;
+	public fun create (Lcom/jakewharton/mosaic/Mosaic;)Lcom/jakewharton/mosaic/Mosaic;
+	public synthetic fun create (Lcom/jakewharton/mosaic/Mosaic;)Ljava/lang/Object;
+}
+
 public abstract interface class com/jakewharton/mosaic/testing/SnapshotStrategy {
 	public abstract fun create (Lcom/jakewharton/mosaic/Mosaic;)Ljava/lang/Object;
 }
