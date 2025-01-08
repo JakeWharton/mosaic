@@ -11,6 +11,9 @@
 # Keep @Test, @Ignore annotations, etc.
 -keepattributes RuntimeVisibleAnnotations, AnnotationDefault
 
+# Temporarily work around a ProGuard bug. https://github.com/Guardsquare/proguard/issues/460
+-optimizations !method/specialization/parametertype
+
 # TODO These should be pulled from the jars, but for now this unblocks us.
 -dontwarn kotlinx.coroutines.debug.internal.AgentPremain*
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
@@ -29,5 +32,3 @@
 -keepclassmembers class kotlin.coroutines.SafeContinuation {
     volatile <fields>;
 }
-
--dontobfuscate
