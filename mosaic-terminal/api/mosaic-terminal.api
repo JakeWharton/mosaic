@@ -110,6 +110,25 @@ public final class com/jakewharton/mosaic/terminal/event/KittyKeyboardQueryEvent
 	public fun toString ()Ljava/lang/String;
 }
 
+public abstract interface class com/jakewharton/mosaic/terminal/event/KittyPointerQueryEvent : com/jakewharton/mosaic/terminal/event/Event {
+}
+
+public final class com/jakewharton/mosaic/terminal/event/KittyPointerQueryNameEvent : com/jakewharton/mosaic/terminal/event/KittyPointerQueryEvent {
+	public fun <init> (Ljava/lang/String;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/jakewharton/mosaic/terminal/event/KittyPointerQuerySupportEvent : com/jakewharton/mosaic/terminal/event/KittyPointerQueryEvent {
+	public fun <init> ([Z)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getValues ()[Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/jakewharton/mosaic/terminal/event/OperatingStatusResponseEvent : com/jakewharton/mosaic/terminal/event/Event {
 	public fun <init> (Z)V
 	public fun equals (Ljava/lang/Object;)Z

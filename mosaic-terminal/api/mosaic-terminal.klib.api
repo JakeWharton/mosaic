@@ -8,6 +8,8 @@
 // Library unique name: <com.jakewharton.mosaic:mosaic-terminal>
 sealed interface com.jakewharton.mosaic.terminal.event/Event // com.jakewharton.mosaic.terminal.event/Event|null[0]
 
+sealed interface com.jakewharton.mosaic.terminal.event/KittyPointerQueryEvent : com.jakewharton.mosaic.terminal.event/Event // com.jakewharton.mosaic.terminal.event/KittyPointerQueryEvent|null[0]
+
 final class com.jakewharton.mosaic.terminal.event/BracketedPasteEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/BracketedPasteEvent|null[0]
     constructor <init>(kotlin/Boolean) // com.jakewharton.mosaic.terminal.event/BracketedPasteEvent.<init>|<init>(kotlin.Boolean){}[0]
 
@@ -138,6 +140,28 @@ final class com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent : com.
     final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent.toString|toString(){}[0]
+}
+
+final class com.jakewharton.mosaic.terminal.event/KittyPointerQueryNameEvent : com.jakewharton.mosaic.terminal.event/KittyPointerQueryEvent { // com.jakewharton.mosaic.terminal.event/KittyPointerQueryNameEvent|null[0]
+    constructor <init>(kotlin/String) // com.jakewharton.mosaic.terminal.event/KittyPointerQueryNameEvent.<init>|<init>(kotlin.String){}[0]
+
+    final val name // com.jakewharton.mosaic.terminal.event/KittyPointerQueryNameEvent.name|{}name[0]
+        final fun <get-name>(): kotlin/String // com.jakewharton.mosaic.terminal.event/KittyPointerQueryNameEvent.name.<get-name>|<get-name>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/KittyPointerQueryNameEvent.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal.event/KittyPointerQueryNameEvent.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/KittyPointerQueryNameEvent.toString|toString(){}[0]
+}
+
+final class com.jakewharton.mosaic.terminal.event/KittyPointerQuerySupportEvent : com.jakewharton.mosaic.terminal.event/KittyPointerQueryEvent { // com.jakewharton.mosaic.terminal.event/KittyPointerQuerySupportEvent|null[0]
+    constructor <init>(kotlin/BooleanArray) // com.jakewharton.mosaic.terminal.event/KittyPointerQuerySupportEvent.<init>|<init>(kotlin.BooleanArray){}[0]
+
+    final val values // com.jakewharton.mosaic.terminal.event/KittyPointerQuerySupportEvent.values|{}values[0]
+        final fun <get-values>(): kotlin/BooleanArray // com.jakewharton.mosaic.terminal.event/KittyPointerQuerySupportEvent.values.<get-values>|<get-values>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/KittyPointerQuerySupportEvent.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal.event/KittyPointerQuerySupportEvent.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/KittyPointerQuerySupportEvent.toString|toString(){}[0]
 }
 
 final class com.jakewharton.mosaic.terminal.event/OperatingStatusResponseEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/OperatingStatusResponseEvent|null[0]

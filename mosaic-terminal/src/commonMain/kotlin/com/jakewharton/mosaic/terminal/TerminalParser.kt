@@ -7,6 +7,8 @@ import com.jakewharton.mosaic.terminal.event.FocusEvent
 import com.jakewharton.mosaic.terminal.event.KeyboardEvent
 import com.jakewharton.mosaic.terminal.event.KittyGraphicsEvent
 import com.jakewharton.mosaic.terminal.event.KittyKeyboardQueryEvent
+import com.jakewharton.mosaic.terminal.event.KittyPointerQueryNameEvent
+import com.jakewharton.mosaic.terminal.event.KittyPointerQuerySupportEvent
 import com.jakewharton.mosaic.terminal.event.MouseEvent
 import com.jakewharton.mosaic.terminal.event.OperatingStatusResponseEvent
 import com.jakewharton.mosaic.terminal.event.PaletteColorEvent
@@ -655,6 +657,45 @@ public class TerminalParser(
 								color = TerminalColorEvent.Color.Cursor,
 								value = buffer.decodeToString(ptIndex, stIndex),
 							)
+						}
+						22 -> {
+							name@ do {
+								var i = ptIndex
+								var values = BooleanArray(10)
+								var valuesIndex = 0
+								while (i < stIndex) {
+									val valuesSize = values.size
+									if (valuesIndex == valuesSize) {
+										values = values.copyOf(valuesSize * 2)
+									}
+									val b = buffer[i++].toInt()
+									values[valuesIndex++] = when (b) {
+										'0'.code -> false
+										'1'.code -> true
+										else -> break@name
+									}
+									if (i < stIndex) {
+										if (buffer[i++].toInt() == ','.code) {
+											continue
+										}
+										break@name
+									}
+									return@parseUntilStringTerminator KittyPointerQuerySupportEvent(
+										values.copyOf(valuesIndex),
+									)
+								}
+								break@error
+							} while (false)
+
+							val name = StringBuilder(stIndex - ptIndex)
+							for (i in ptIndex until stIndex) {
+								val b = buffer[i].toInt()
+								if (b !in '0'.code..'9'.code && b !in 'a'.code..'z'.code && b != '-'.code && b != '_'.code) {
+									break@error
+								}
+								name.append(b.toChar())
+							}
+							return@parseUntilStringTerminator KittyPointerQueryNameEvent(name.toString())
 						}
 					}
 				}
