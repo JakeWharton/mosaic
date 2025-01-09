@@ -156,6 +156,8 @@ platformError stdinWriter_write(stdinWriter *writer, void *buffer, int count) {
 		written -= wrote;
 	}
 
+	FlushConsoleInputBuffer(writer->handle);
+
 	free(records);
 	return result;
 }
