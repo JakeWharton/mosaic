@@ -14,6 +14,8 @@ typedef struct stdinWriterImpl {
 	stdinReader *reader;
 } stdinWriterImpl;
 
+HANDLE conin = NULL;
+
 stdinReaderResult stdinReader_initWithHandle(HANDLE stdinRead) {
 	stdinReaderResult result = {};
 
@@ -112,7 +114,22 @@ stdinWriterResult stdinWriter_init() {
 		goto ret;
 	}
 
-	HANDLE h = GetStdHandle(STD_INPUT_HANDLE);
+	HANDLE h = conin;
+	if (h == NULL) {
+		// When run as a test, GetStdHandle(STD_INPUT_HANDLE) returns a closed handle which does not
+		// work. Open a new console input handle for our non-display testing purposes.
+		h = CreateFile(TEXT("CONIN$"), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
+		if (unlikely(h == INVALID_HANDLE_VALUE)) {
+			result.error = GetLastError();
+			goto err;
+		}
+		if (unlikely(SetConsoleMode(h, ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT | ENABLE_EXTENDED_FLAGS) == 0)) {
+			result.error = GetLastError();
+			goto err;
+		}
+		conin = h;
+	}
+
 	stdinReaderResult readerResult = stdinReader_initWithHandle(h);
 	if (unlikely(readerResult.error)) {
 		result.error = readerResult.error;
@@ -155,7 +172,6 @@ platformError stdinWriter_write(stdinWriter *writer, void *buffer, int count) {
 		}
 		written -= wrote;
 	}
-
 	FlushConsoleInputBuffer(writer->handle);
 
 	free(records);
@@ -163,9 +179,8 @@ platformError stdinWriter_write(stdinWriter *writer, void *buffer, int count) {
 }
 
 platformError stdinWriter_free(stdinWriter *writer) {
-	DWORD result = 0;
 	free(writer);
-	return result;
+	return 0;
 }
 
 #endif
