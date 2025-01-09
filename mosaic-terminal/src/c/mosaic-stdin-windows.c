@@ -136,13 +136,28 @@ stdinReader *stdinWriter_getReader(stdinWriter *writer) {
 }
 
 platformError stdinWriter_write(stdinWriter *writer, void *buffer, int count) {
-	// Per https://learn.microsoft.com/en-us/windows/win32/api/namedpipeapi/nf-namedpipeapi-createpipe#remarks
-	// "When a process uses WriteFile to write to an anonymous pipe,
-	//  the write operation is not completed until all bytes are written."
-	if (likely(WriteFile(writer->handle, buffer, count, NULL, NULL))) {
-		return 0;
+	INPUT_RECORD *records = calloc(count, sizeof(INPUT_RECORD));
+
+	for (int i = 0; i < count; i++) {
+		records[i].EventType = KEY_EVENT;
+		records[i].Event.KeyEvent.bKeyDown = TRUE;
+		records[i].Event.KeyEvent.uChar.UnicodeChar = (WCHAR) ((CHAR *)buffer)[i];
 	}
-	return GetLastError();
+
+	platformError result = 0;
+	int written = 0;
+	while (written < count) {
+		DWORD wrote = 0;
+		INPUT_RECORD *ptr = records + (written * sizeof(INPUT_RECORD));
+		if (unlikely(WriteConsoleInput(writer->handle, ptr, count - written, &wrote) == 0)) {
+			result = GetLastError();
+			break;
+		}
+		written -= wrote;
+	}
+
+	free(records);
+	return result;
 }
 
 platformError stdinWriter_free(stdinWriter *writer) {
