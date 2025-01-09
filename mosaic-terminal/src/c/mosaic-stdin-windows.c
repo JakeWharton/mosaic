@@ -7,17 +7,14 @@
 
 typedef struct stdinReaderImpl {
 	HANDLE waitHandles[2];
-	HANDLE readHandle;
 } stdinReaderImpl;
 
 typedef struct stdinWriterImpl {
-	HANDLE readHandle;
-	HANDLE writeHandle;
-	HANDLE eventHandle;
+	HANDLE handle;
 	stdinReader *reader;
 } stdinWriterImpl;
 
-stdinReaderResult stdinReader_initWithHandle(HANDLE stdinRead, HANDLE stdinWait) {
+stdinReaderResult stdinReader_initWithHandle(HANDLE stdinRead) {
 	stdinReaderResult result = {};
 
 	stdinReaderImpl *reader = calloc(1, sizeof(stdinReaderImpl));
@@ -30,8 +27,7 @@ stdinReaderResult stdinReader_initWithHandle(HANDLE stdinRead, HANDLE stdinWait)
 		result.error = GetLastError();
 		goto err;
 	}
-	reader->readHandle = stdinRead;
-	reader->waitHandles[0] = stdinWait;
+	reader->waitHandles[0] = stdinRead;
 
 	HANDLE interruptEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 	if (unlikely(interruptEvent == NULL)) {
@@ -52,7 +48,7 @@ stdinReaderResult stdinReader_initWithHandle(HANDLE stdinRead, HANDLE stdinWait)
 
 stdinReaderResult stdinReader_init() {
 	HANDLE h = GetStdHandle(STD_INPUT_HANDLE);
-	return stdinReader_initWithHandle(h, h);
+	return stdinReader_initWithHandle(h);
 }
 
 stdinRead stdinReader_read(
@@ -73,7 +69,7 @@ stdinRead stdinReader_readWithTimeout(
 	DWORD waitResult = WaitForMultipleObjects(2, reader->waitHandles, FALSE, timeoutMillis);
 	if (likely(waitResult == WAIT_OBJECT_0)) {
 		DWORD read = 0;
-		if (likely(ReadFile(reader->readHandle, buffer, count, &read, NULL) != 0)) {
+		if (likely(ReadFile(reader->waitHandles[0], buffer, count, &read, NULL) != 0)) {
 			// TODO EOF?
 			result.count = read;
 		} else {
@@ -116,23 +112,13 @@ stdinWriterResult stdinWriter_init() {
 		goto ret;
 	}
 
-	if (unlikely(CreatePipe(&writer->readHandle, &writer->writeHandle, NULL, 0) == 0)) {
-		result.error = GetLastError();
-		goto err;
-	}
-
-	HANDLE writeEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-	if (unlikely(writeEvent == NULL)) {
-		result.error = GetLastError();
-		goto err;
-	}
-	writer->eventHandle = writeEvent;
-
-	stdinReaderResult readerResult = stdinReader_initWithHandle(writer->readHandle, writer->eventHandle);
+	HANDLE h = GetStdHandle(STD_INPUT_HANDLE);
+	stdinReaderResult readerResult = stdinReader_initWithHandle(h);
 	if (unlikely(readerResult.error)) {
 		result.error = readerResult.error;
 		goto err;
 	}
+	writer->handle = h;
 	writer->reader = readerResult.reader;
 
 	result.writer = writer;
@@ -153,8 +139,7 @@ platformError stdinWriter_write(stdinWriter *writer, void *buffer, int count) {
 	// Per https://learn.microsoft.com/en-us/windows/win32/api/namedpipeapi/nf-namedpipeapi-createpipe#remarks
 	// "When a process uses WriteFile to write to an anonymous pipe,
 	//  the write operation is not completed until all bytes are written."
-	if (likely(WriteFile(writer->writeHandle, buffer, count, NULL, NULL)
-			&& SetEvent(writer->eventHandle))) {
+	if (likely(WriteFile(writer->handle, buffer, count, NULL, NULL))) {
 		return 0;
 	}
 	return GetLastError();
@@ -162,15 +147,6 @@ platformError stdinWriter_write(stdinWriter *writer, void *buffer, int count) {
 
 platformError stdinWriter_free(stdinWriter *writer) {
 	DWORD result = 0;
-	if (unlikely(CloseHandle(writer->eventHandle) == 0)) {
-		result = GetLastError();
-	}
-	if (unlikely(CloseHandle(writer->writeHandle) == 0 && result == 0)) {
-		result = GetLastError();
-	}
-	if (unlikely(CloseHandle(writer->readHandle) == 0 && result == 0)) {
-		result = GetLastError();
-	}
 	free(writer);
 	return result;
 }
