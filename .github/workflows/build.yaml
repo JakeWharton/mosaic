@@ -71,7 +71,7 @@ jobs:
             21
             23
 
-      - run: ./gradlew allJvmTests ${{ matrix.platform.task }}
+      - run: ./gradlew --continue allJvmTests ${{ matrix.platform.task }}
 
   binaries:
     runs-on: macos-15
@@ -90,7 +90,7 @@ jobs:
           java-version: 23
       - uses: gradle/actions/setup-gradle@v4
 
-      - run: ./gradlew assemble
+      - run: ./gradlew --continue assemble
 
   checks:
     runs-on: macos-15
@@ -109,7 +109,7 @@ jobs:
           java-version: 23
       - uses: gradle/actions/setup-gradle@v4
 
-      - run: ./gradlew spotlessCheck apiCheck
+      - run: ./gradlew --continue spotlessCheck apiCheck
 
   publish:
     runs-on: macos-15
