@@ -25,7 +25,7 @@ void throwIse(JNIEnv *env, unsigned int error, const char *prefix) {
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_jakewharton_mosaic_terminal_Tty_enterRawMode(JNIEnv *env, jclass type) {
+Java_com_jakewharton_mosaic_terminal_Jni_enterRawMode(JNIEnv *env, jclass type) {
 	rawModeResult result = enterRawMode();
 	if (likely(!result.error)) {
 		return (jlong) result.saved;
@@ -38,7 +38,7 @@ Java_com_jakewharton_mosaic_terminal_Tty_enterRawMode(JNIEnv *env, jclass type) 
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Tty_exitRawMode(JNIEnv *env, jclass type, jlong ptr) {
+Java_com_jakewharton_mosaic_terminal_Jni_exitRawMode(JNIEnv *env, jclass type, jlong ptr) {
 	platformError error = exitRawMode((rawModeConfig *) ptr);
 	if (unlikely(error)) {
 		throwIse(env, error, "Unable to exit raw mode");
@@ -46,7 +46,7 @@ Java_com_jakewharton_mosaic_terminal_Tty_exitRawMode(JNIEnv *env, jclass type, j
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderInit(JNIEnv *env, jclass type) {
+Java_com_jakewharton_mosaic_terminal_Jni_stdinReaderInit(JNIEnv *env, jclass type) {
 	stdinReaderResult result = stdinReader_init();
 	if (likely(!result.error)) {
 		return (jlong) result.reader;
@@ -59,7 +59,7 @@ Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderInit(JNIEnv *env, jclass typ
 }
 
 JNIEXPORT jint JNICALL
-Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderRead(
+Java_com_jakewharton_mosaic_terminal_Jni_stdinReaderRead(
 	JNIEnv *env,
 	jclass type,
 	jlong ptr,
@@ -85,7 +85,7 @@ Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderRead(
 }
 
 JNIEXPORT jint JNICALL
-Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderReadWithTimeout(
+Java_com_jakewharton_mosaic_terminal_Jni_stdinReaderReadWithTimeout(
 	JNIEnv *env,
 	jclass type,
 	jlong ptr,
@@ -117,7 +117,7 @@ Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderReadWithTimeout(
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderInterrupt(JNIEnv *env, jclass type, jlong ptr) {
+Java_com_jakewharton_mosaic_terminal_Jni_stdinReaderInterrupt(JNIEnv *env, jclass type, jlong ptr) {
 	platformError error = stdinReader_interrupt((stdinReader *) ptr);
 	if (unlikely(error)) {
 		throwIse(env, error, "Unable to interrupt stdin reader");
@@ -125,7 +125,7 @@ Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderInterrupt(JNIEnv *env, jclas
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderFree(JNIEnv *env, jclass type, jlong ptr) {
+Java_com_jakewharton_mosaic_terminal_Jni_stdinReaderFree(JNIEnv *env, jclass type, jlong ptr) {
 	platformError error = stdinReader_free((stdinReader *) ptr);
 	if (unlikely(error)) {
 		throwIse(env, error, "Unable to free stdin reader");
@@ -133,7 +133,7 @@ Java_com_jakewharton_mosaic_terminal_Tty_stdinReaderFree(JNIEnv *env, jclass typ
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_jakewharton_mosaic_terminal_Tty_stdinWriterInit(JNIEnv *env, jclass type) {
+Java_com_jakewharton_mosaic_terminal_Jni_stdinWriterInit(JNIEnv *env, jclass type) {
 	stdinWriterResult result = stdinWriter_init();
 	if (likely(!result.error)) {
 		return (jlong) result.writer;
@@ -146,7 +146,7 @@ Java_com_jakewharton_mosaic_terminal_Tty_stdinWriterInit(JNIEnv *env, jclass typ
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Tty_stdinWriterWrite(
+Java_com_jakewharton_mosaic_terminal_Jni_stdinWriterWrite(
 	JNIEnv *env,
 	jclass type,
 	jlong ptr,
@@ -166,12 +166,12 @@ Java_com_jakewharton_mosaic_terminal_Tty_stdinWriterWrite(
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_jakewharton_mosaic_terminal_Tty_stdinWriterGetReader(JNIEnv *env, jclass type, jlong ptr) {
+Java_com_jakewharton_mosaic_terminal_Jni_stdinWriterGetReader(JNIEnv *env, jclass type, jlong ptr) {
 	return (jlong) stdinWriter_getReader((stdinWriter *) ptr);
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Tty_stdinWriterFree(JNIEnv *env, jclass type, jlong ptr) {
+Java_com_jakewharton_mosaic_terminal_Jni_stdinWriterFree(JNIEnv *env, jclass type, jlong ptr) {
 	platformError error = stdinWriter_free((stdinWriter *) ptr);
 	if (unlikely(error)) {
 		throwIse(env, error, "Unable to free stdin writer");
