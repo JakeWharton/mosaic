@@ -140,10 +140,10 @@ internal data class KittyGraphicsEvent(
 
 @Poko
 public class ResizeEvent(
-	public val rows: Int,
 	public val columns: Int,
-	public val height: Int,
+	public val rows: Int,
 	public val width: Int,
+	public val height: Int,
 ) : Event
 
 @Poko

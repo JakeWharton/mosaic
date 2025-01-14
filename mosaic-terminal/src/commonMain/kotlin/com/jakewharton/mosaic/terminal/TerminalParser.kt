@@ -461,7 +461,7 @@ public class TerminalParser(
 							val widthEnd = buffer.indexOfOrDefault(':'.code.toByte(), widthStart, finalIndex, finalIndex)
 							val width = buffer.parseIntDigits(widthStart, widthEnd, orElse = { break@error })
 
-							return ResizeEvent(rows, columns, height, width)
+							return ResizeEvent(columns, rows, width, height)
 						}
 					}
 				}

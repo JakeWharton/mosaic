@@ -18,22 +18,22 @@ class TerminalParserCsiResizeEventTest {
 
 	@Test fun basic() {
 		writer.writeHex("1b5b34383b313b323b333b3474")
-		assertThat(parser.next()).isEqualTo(ResizeEvent(1, 2, 3, 4))
+		assertThat(parser.next()).isEqualTo(ResizeEvent(2, 1, 4, 3))
 	}
 
 	@Test fun pixelSizeAsZero() {
 		writer.writeHex("1b5b34383b313b323b303b3074")
-		assertThat(parser.next()).isEqualTo(ResizeEvent(1, 2, 0, 0))
+		assertThat(parser.next()).isEqualTo(ResizeEvent(2, 1, 0, 0))
 	}
 
 	@Test fun subparametersIgnored() {
 		writer.writeHex("1b5b34383b313a39393b323a39383a39373b333a39393a3a39373b343a39393a74")
-		assertThat(parser.next()).isEqualTo(ResizeEvent(1, 2, 3, 4))
+		assertThat(parser.next()).isEqualTo(ResizeEvent(2, 1, 4, 3))
 	}
 
 	@Test fun emptySubparametersIgnored() {
 		writer.writeHex("1b5b34383b313a3b323a3b333a3b343a74")
-		assertThat(parser.next()).isEqualTo(ResizeEvent(1, 2, 3, 4))
+		assertThat(parser.next()).isEqualTo(ResizeEvent(2, 1, 4, 3))
 	}
 
 	@Test fun emptyModeFails() {
