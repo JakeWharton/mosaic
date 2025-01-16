@@ -5,6 +5,9 @@ on:
     tags:
       - '**'
 
+env:
+  GRADLE_OPTS: "-Dkotlin.incremental=false -Dorg.gradle.logging.stacktrace=full"
+
 jobs:
   release:
     runs-on: macos-latest
