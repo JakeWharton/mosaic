@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
@@ -21,6 +22,9 @@ buildscript {
 		mavenCentral()
 		google()
 		gradlePluginPortal()
+		maven {
+			url 'https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev'
+		}
 	}
 }
 
@@ -33,11 +37,22 @@ allprojects {
 	repositories {
 		mavenCentral()
 		google()
+		maven {
+			url 'https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev'
+		}
 	}
 
 	tasks.withType(JavaCompile).configureEach {
 		sourceCompatibility = JavaVersion.VERSION_1_8
 		targetCompatibility = JavaVersion.VERSION_1_8
+	}
+
+	// We use a KGP newer than the language and API version that we want to support externally.
+	tasks.withType(KotlinCompile).configureEach {
+		compilerOptions {
+			languageVersion = KotlinVersion.KOTLIN_2_1
+			apiVersion = KotlinVersion.KOTLIN_2_1
+		}
 	}
 
 	tasks.withType(KotlinJvmCompile).configureEach {
