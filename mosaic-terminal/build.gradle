@@ -13,6 +13,11 @@ apply from: "$rootDir/publish.gradle"
 apply plugin: 'co.touchlab.cklib'
 apply plugin: 'com.jakewharton.cite'
 apply plugin: 'dev.drewhamilton.poko'
+apply plugin: 'com.jakewharton.mosaic.build'
+
+mosaicBuild {
+	jvmTestDistribution()
+}
 
 configurations {
 	proGuard
@@ -135,12 +140,17 @@ kotlin {
 		}
 	}
 
+	def linkNativeDebugTests = tasks.register('linkNativeDebugTests')
+
 	targets.withType(KotlinNativeTarget).configureEach {
 		compilations.main.cinterops {
 			create('mosaic') {
 				header(file('src/c/mosaic.h'))
 				packageName('com.jakewharton.mosaic.terminal')
 			}
+		}
+		linkNativeDebugTests.configure {
+			it.dependsOn(compilations.test.binariesTaskName)
 		}
 	}
 

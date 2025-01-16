@@ -31,3 +31,9 @@ include ':samples:snake'
 include ':tools:raw-mode-echo'
 
 enableFeaturePreview('TYPESAFE_PROJECT_ACCESSORS')
+
+includeBuild('build-support') {
+	dependencySubstitution {
+		substitute module('com.jakewharton.mosaic.build:gradle-plugin') using project(':')
+	}
+}

@@ -1,0 +1,46 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
+buildscript {
+	dependencies {
+		classpath libs.kotlin.plugin.core
+	}
+	repositories {
+		mavenCentral()
+	}
+}
+
+apply plugin: 'org.jetbrains.kotlin.jvm'
+apply plugin: 'java-gradle-plugin'
+
+gradlePlugin {
+	plugins {
+		mosaicBuild {
+			id = 'com.jakewharton.mosaic.build'
+			displayName = "Mosaic Build plugin"
+			description = "Gradle plugin for Mosaic build things"
+			implementationClass = "com.jakewharton.mosaic.buildsupport.MosaicBuildPlugin"
+		}
+	}
+}
+
+dependencies {
+	compileOnly(libs.kotlin.plugin.core)
+}
+
+kotlin {
+	explicitApi()
+}
+
+repositories {
+	mavenCentral()
+}
+
+tasks.withType(JavaCompile).configureEach {
+	sourceCompatibility = JavaVersion.VERSION_1_8
+	targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType(KotlinJvmCompile).configureEach {
+	compilerOptions.jvmTarget = JvmTarget.JVM_1_8
+}
