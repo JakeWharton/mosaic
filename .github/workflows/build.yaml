@@ -101,7 +101,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: mosaic-terminal-native-tests
-          path: native-tests
+          path: mosaic-terminal-native-tests
 
       - run: ls -lhAR
       - run: mosaic-terminal-native-tests/${{ matrix.platform.target }}/debugTest/test.*
