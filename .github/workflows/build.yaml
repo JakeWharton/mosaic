@@ -78,6 +78,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github
+
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
@@ -98,6 +101,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: mosaic-terminal-native-tests
+          path: native-tests
 
       - run: ls -lhAR
       - run: mosaic-terminal-native-tests/${{ matrix.platform.target }}/debugTest/test.*
