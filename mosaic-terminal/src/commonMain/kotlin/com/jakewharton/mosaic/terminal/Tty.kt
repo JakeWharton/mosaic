@@ -1,5 +1,9 @@
 package com.jakewharton.mosaic.terminal
 
+import com.jakewharton.mosaic.terminal.Tty.enableRawMode
+import com.jakewharton.mosaic.terminal.Tty.stdinReader
+import com.jakewharton.mosaic.terminal.event.DebugEvent
+
 public expect object Tty {
 	/**
 	 * Save the current terminal settings and enter "raw" mode.
@@ -20,17 +24,21 @@ public expect object Tty {
 	public fun enableRawMode(): AutoCloseable
 
 	/**
-	 * Create a [StdinReader] which will read from this process' stdin stream while also
+	 * Create a [TerminalReader] which will read from this process' stdin stream while also
 	 * supporting interruption.
 	 *
 	 * Use with [enableRawMode] to read input byte-by-byte.
+	 *
+	 * @param emitDebugEvents When true, each event sent to [TerminalReader.events] will be followed
+	 * by a [DebugEvent] that contains the original event and the bytes which produced it.
 	 */
-	public fun stdinReader(): StdinReader
+	public fun stdinReader(emitDebugEvents: Boolean = false): TerminalReader
 
-	internal fun stdinWriter(): StdinWriter
+	@TestApi
+	internal fun stdinWriter(emitDebugEvents: Boolean = false): StdinWriter
 }
 
-public expect class StdinReader : AutoCloseable {
+internal expect class PlatformInput : AutoCloseable {
 	/**
 	 * Read up to [count] bytes into [buffer] at [offset]. The number of bytes read will be returned.
 	 * 0 will be returned if [interrupt] is called while waiting for input. -1 will be returned if
@@ -38,7 +46,7 @@ public expect class StdinReader : AutoCloseable {
 	 *
 	 * @see readWithTimeout
 	 */
-	public fun read(buffer: ByteArray, offset: Int, count: Int): Int
+	fun read(buffer: ByteArray, offset: Int, count: Int): Int
 
 	/**
 	 * Read up to [count] bytes into [buffer] at [offset]. The number of bytes read will be returned.
@@ -50,10 +58,10 @@ public expect class StdinReader : AutoCloseable {
 	 * value is not validated.
 	 * @see read
 	 */
-	public fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int
+	fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int
 
 	/** Signal blocking calls to [read] to wake up and return 0. */
-	public fun interrupt()
+	fun interrupt()
 
 	/**
 	 * Free the resources associated with this reader.
@@ -63,13 +71,19 @@ public expect class StdinReader : AutoCloseable {
 	override fun close()
 }
 
+@TestApi
 internal expect class StdinWriter : AutoCloseable {
-	val reader: StdinReader
+	val reader: TerminalReader
 
 	// TODO Take ByteString once it migrates to stdlib,
 	//  or if Sink/RawSink migrates expose that as a val.
 	//  https://github.com/Kotlin/kotlinx-io/issues/354
 	fun write(buffer: ByteArray)
+
+	fun focusEvent(focused: Boolean)
+	fun keyEvent()
+	fun mouseEvent()
+	fun resizeEvent(columns: Int, rows: Int, width: Int, height: Int)
 
 	override fun close()
 }

@@ -15,6 +15,7 @@ typedef struct stdinReaderImpl {
 	int pipe[2];
 	fd_set fds;
 	int nfds;
+	inputHandler *handler;
 } stdinReaderImpl;
 
 typedef struct stdinWriterImpl {
@@ -22,7 +23,7 @@ typedef struct stdinWriterImpl {
 	stdinReader *reader;
 } stdinWriterImpl;
 
-stdinReaderResult stdinReader_initWithFd(int stdinFd) {
+stdinReaderResult stdinReader_initWithFd(int stdinFd, inputHandler *handler) {
 	stdinReaderResult result = {};
 
 	stdinReaderImpl *reader = calloc(1, sizeof(stdinReaderImpl));
@@ -40,6 +41,7 @@ stdinReaderResult stdinReader_initWithFd(int stdinFd) {
 	// TODO Consider forcing the writer pipe to always be lower than this pipe.
 	//  If we did this, we could always assume pipe[0] + 1 is the value for nfds.
 	reader->nfds = ((stdinFd > reader->pipe[0]) ? stdinFd : reader->pipe[0]) + 1;
+	reader->handler = handler;
 
 	result.reader = reader;
 
@@ -51,8 +53,8 @@ stdinReaderResult stdinReader_initWithFd(int stdinFd) {
 	goto ret;
 }
 
-stdinReaderResult stdinReader_init() {
-	return stdinReader_initWithFd(STDIN_FILENO);
+stdinReaderResult stdinReader_init(inputHandler *handler) {
+	return stdinReader_initWithFd(STDIN_FILENO, handler);
 }
 
 stdinRead stdinReader_readInternal(
@@ -139,7 +141,7 @@ platformError stdinReader_free(stdinReader *reader) {
 	return result;
 }
 
-stdinWriterResult stdinWriter_init() {
+stdinWriterResult stdinWriter_init(inputHandler *handler) {
 	stdinWriterResult result = {};
 
 	stdinWriterImpl *writer = calloc(1, sizeof(stdinWriterImpl));
@@ -153,7 +155,7 @@ stdinWriterResult stdinWriter_init() {
 		goto err;
 	}
 
-	stdinReaderResult readerResult = stdinReader_initWithFd(writer->pipe[0]);
+	stdinReaderResult readerResult = stdinReader_initWithFd(writer->pipe[0], handler);
 	if (unlikely(readerResult.error)) {
 		result.error = readerResult.error;
 		goto err;
@@ -187,6 +189,23 @@ platformError stdinWriter_write(stdinWriter *writer, void *buffer, int count) {
 
 	err:
 	return errno;
+}
+
+void stdinWriter_focusEvent(stdinWriter *writer UNUSED, bool focused UNUSED) {
+	// Focus events are delivered through VT sequences.
+}
+
+void stdinWriter_keyEvent(stdinWriter *writer UNUSED) {
+	// Key events are delivered through VT sequences.
+}
+
+void stdinWriter_mouseEvent(stdinWriter *writer UNUSED) {
+	// Mouse events are delivered through VT sequences.
+}
+
+void stdinWriter_resizeEvent(stdinWriter *writer, int columns, int rows, int width, int height) {
+	inputHandler *handler = writer->reader->handler;
+	handler->onResize(handler->opaque, columns, rows, width, height);
 }
 
 platformError stdinWriter_free(stdinWriter *writer) {

@@ -1,6 +1,7 @@
 package com.jakewharton.mosaic.terminal
 
 import com.jakewharton.mosaic.terminal.event.BracketedPasteEvent
+import com.jakewharton.mosaic.terminal.event.DebugEvent
 import com.jakewharton.mosaic.terminal.event.DecModeReportEvent
 import com.jakewharton.mosaic.terminal.event.Event
 import com.jakewharton.mosaic.terminal.event.FocusEvent
@@ -20,16 +21,31 @@ import com.jakewharton.mosaic.terminal.event.TerminalVersionEvent
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
 import com.jakewharton.mosaic.terminal.event.XtermCharacterSizeEvent
 import com.jakewharton.mosaic.terminal.event.XtermPixelSizeEvent
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ReceiveChannel
 
 private const val BufferSize = 8 * 1024
 private const val BareEscapeDisambiguationReadTimeoutMillis = 100
 
-public class TerminalParser(
-	private val stdinReader: StdinReader,
-) {
+public class TerminalReader internal constructor(
+	private val platformInput: PlatformInput,
+	events: Channel<Event>,
+	private val emitDebugEvents: Boolean,
+) : AutoCloseable {
 	private val buffer = ByteArray(BufferSize)
 	private var offset = 0
 	private var limit = 0
+
+	@TestApi
+	internal fun copyBuffer() = buffer.copyOfRange(offset, limit)
+
+	@TestApi
+	internal fun platformInput() = platformInput
+
+	private val _events = events
+
+	/** Events read as a result of calls to [tryReadEvents]. */
+	public val events: ReceiveChannel<Event> get() = _events
 
 	/**
 	 * Indicate whether Kitty's
@@ -57,31 +73,41 @@ public class TerminalParser(
 	public var xtermExtendedUtf8Mouse: Boolean = false
 
 	/**
-	 * A version of [next] which also returns the bytes that produced the event.
+	 * Perform a blocking read from stdin to try and parse events. Calls to this function are not
+	 * guaranteed to read an event, nor are they guaranteed to read only one event. Events
+	 * which are read will be placed into [events].
 	 *
-	 * **WARNING** This function is expensive, and should only be used for debugging.
+	 * It is expected that this function will be called repeatedly in a loop.
+	 *
+	 * @return False if returning due to [interrupt] being called. True means some data was read,
+	 * but not necessarily that any events were put into the [events] channel. This could be because
+	 * not enough bytes were available to parse the entire event, for example.
 	 */
-	public fun debugNext(): Pair<Event, ByteArray> {
-		// Move any existing data to index 0 of the buffer. This will ensure we can capture all the
-		// bytes consumed (even across multiple reads) since the original offset will always be 0.
-		buffer.copyInto(buffer, 0, startIndex = offset, endIndex = limit)
-		limit = limit - offset
-		offset = 0
-
-		val event = next()
-		val bytes = buffer.copyOfRange(0, offset)
-		return event to bytes
-	}
-
-	public fun next(): Event {
+	public fun runParseLoop() {
 		val buffer = buffer
 		var offset = offset
 		var limit = limit
 
 		while (true) {
 			if (offset < limit) {
-				parse(buffer, offset, limit)?.let { event ->
-					return event
+				val event = tryParse(buffer, offset, limit)
+				if (event != null) {
+					_events.trySend(event)
+					if (!emitDebugEvents) continue
+
+					offset = this.offset
+
+					// Leverage the fact that parsing always occurs at the start of the buffer (see below)
+					// to capture its consumed bytes by looking at where the next parse would start.
+					val eventBytes = buffer.copyOfRange(0, offset)
+					_events.trySend(DebugEvent(event, eventBytes))
+
+					// Move remaining data to the start of the buffer to maintain invariant for next event.
+					buffer.copyInto(buffer, 0, startIndex = offset, endIndex = limit)
+					limit -= offset
+					offset = 0
+
+					continue
 				}
 			}
 
@@ -89,7 +115,7 @@ public class TerminalParser(
 			buffer.copyInto(buffer, 0, startIndex = offset, endIndex = limit)
 
 			// Do not write the new limit to the member property because the read code below will.
-			limit = limit - offset
+			limit -= offset
 
 			offset = 0
 			this.offset = 0
@@ -97,8 +123,10 @@ public class TerminalParser(
 			if (kittyDisambiguateEscapeCodes || limit != 1 || buffer[0] != 0x1B.toByte()) {
 				// Common case: we are using the Kitty keyboard protocol to disambiguate escape keys, or
 				// the buffer contains anything other than a bare escape. Do a normal read for more data.
-				val read = stdinReader.read(buffer, limit, BufferSize - limit)
-				if (read == -1) break
+				val read = platformInput.read(buffer, limit, BufferSize - limit)
+				if (read == 0) return // Interrupt
+				if (read == -1) break // EOF
+
 				limit += read
 				this.limit = limit
 				continue
@@ -107,27 +135,31 @@ public class TerminalParser(
 			// Otherwise, perform a quick read to see if we have any more bytes. This will allow us to
 			// determine whether the bare escape was truly a legacy keyboard escape event, or just the
 			// start of some other escape sequence.
-			val read = stdinReader.readWithTimeout(
+			val read = platformInput.readWithTimeout(
 				buffer,
 				1,
 				BufferSize - 1,
 				BareEscapeDisambiguationReadTimeoutMillis,
 			)
-			if (read == 0) {
+			if (read == -1) break
+
+			limit = if (read == 0) {
+				_events.trySend(KeyboardEvent(0x1B))
 				// We know the offset is 0, so resetting the limit effectively consumes the byte.
-				this.limit = 0
-				return KeyboardEvent(0x1B)
-			} else if (read == -1) {
-				break
+				0
+			} else {
+				read + 1
 			}
-			limit += read
 			this.limit = limit
 		}
 
-		throw RuntimeException("stdin eof")
+		if (limit > 0) {
+			_events.trySend(UnknownEvent(buffer.copyOfRange(0, limit)))
+		}
+		_events.close()
 	}
 
-	private fun parse(buffer: ByteArray, start: Int, limit: Int): Event? {
+	private fun tryParse(buffer: ByteArray, start: Int, limit: Int): Event? {
 		val b1 = buffer[start].toInt() and 0xff
 		if (b1 == 0x1B) {
 			val b2Index = start + 1
@@ -796,5 +828,18 @@ public class TerminalParser(
 		offset = end
 		return handler(b3Index, stIndex)
 			?: UnknownEvent(buffer.copyOfRange(start, end))
+	}
+
+	public fun interrupt() {
+		platformInput.interrupt()
+	}
+
+	/**
+	 * Free the resources associated with this reader.
+	 *
+	 * This call can be omitted if your process is exiting.
+	 */
+	override fun close() {
+		platformInput.close()
 	}
 }

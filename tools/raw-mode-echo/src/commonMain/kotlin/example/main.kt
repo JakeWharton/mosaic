@@ -9,19 +9,15 @@ import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.enum
 import com.jakewharton.finalization.withFinalizationHook
-import com.jakewharton.mosaic.terminal.TerminalParser
 import com.jakewharton.mosaic.terminal.Tty
+import com.jakewharton.mosaic.terminal.event.DebugEvent
 import com.jakewharton.mosaic.terminal.event.KeyboardEvent
 import com.jakewharton.mosaic.terminal.event.KeyboardEvent.Companion.ModifierCtrl
-import com.jakewharton.mosaic.terminal.event.UnknownEvent
 import kotlin.jvm.JvmName
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.awaitCancellation
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
-import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -89,7 +85,7 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 					print("\u001b]4;$i;?\u001b\\")
 				}
 
-				val reader = Tty.stdinReader()
+				val reader = Tty.stdinReader(emitDebugEvents = mode == Mode.Hex)
 
 				// Upon receiving a signal, this block's job will be canceled. Use that to wake up the
 				// blocking stdin read so it loops and checks if its job is still active or not.
@@ -101,52 +97,31 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 					}
 				}
 
-				val inputs = Channel<String>(UNLIMITED)
 				launch(Dispatchers.IO) {
-					val job = coroutineContext.job
+					reader.runParseLoop()
+				}
+
+				var first = true
+				val events = reader.events
+				while (true) {
+					val event = events.receive()
+
+					if (!first) print("\r\n")
+					first = false
+
 					when (mode) {
-						Mode.Hex -> {
-							val buffer = ByteArray(1024)
-							while (job.isActive) {
-								val read = reader.read(buffer, 0, 1024)
-								if (read > 0) {
-									val hex = buffer.toHexString(endIndex = read)
-									inputs.trySend(hex)
-									if (hex == "03" || hex == "1b5b39393b3575") {
-										break
-									}
-								}
-							}
-						}
-						Mode.Event -> {
-							val parser = TerminalParser(reader)
-							while (job.isActive) {
-								val (event, bytes) = parser.debugNext()
-								if (event is UnknownEvent) {
-									// The bytes are already displayed by this event.
-									inputs.trySend("$event\r\n")
-								} else {
-									val hex = bytes.toHexString()
-									inputs.trySend("$event\r\n  $hex\r\n")
-								}
-
-								if (event is KeyboardEvent &&
-									event.codepoint == 0x63 &&
-									event.modifiers == ModifierCtrl
-								) {
-									break
-								}
-							}
-						}
+						Mode.Hex -> print((events.receive() as DebugEvent).bytes.toHexString())
+						Mode.Event -> print(event.toString())
 					}
-					inputs.close()
+
+					if (event is KeyboardEvent &&
+						event.codepoint == 0x63 &&
+						event.modifiers == ModifierCtrl
+					) {
+						break
+					}
 				}
 
-				print(inputs.receive())
-				for (input in inputs) {
-					print("\r\n")
-					print(input)
-				}
 				print("\r\n")
 				readerInterruptJob.cancel()
 			},

@@ -10,9 +10,10 @@ import com.jakewharton.mosaic.terminal.event.DecModeReportEvent.Setting.Reset
 import com.jakewharton.mosaic.terminal.event.DecModeReportEvent.Setting.Set
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
 import kotlin.test.Test
+import kotlinx.coroutines.test.runTest
 
 class TerminalParserCsiDecModeReportEventTest : BaseTerminalParserTest() {
-	@Test fun settings() {
+	@Test fun settings() = runTest {
 		writer.writeHex("1b5b3f313030343b302479")
 		assertThat(parser.next()).isEqualTo(
 			DecModeReportEvent(
@@ -54,7 +55,7 @@ class TerminalParserCsiDecModeReportEventTest : BaseTerminalParserTest() {
 		)
 	}
 
-	@Test fun minimal() {
+	@Test fun minimal() = runTest {
 		writer.writeHex("1b5b3f313b302479")
 		assertThat(parser.next()).isEqualTo(
 			DecModeReportEvent(
@@ -64,56 +65,56 @@ class TerminalParserCsiDecModeReportEventTest : BaseTerminalParserTest() {
 		)
 	}
 
-	@Test fun unknownSetting() {
+	@Test fun unknownSetting() = runTest {
 		writer.writeHex("1b5b313030343b352479")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b313030343b352479".hexToByteArray()),
 		)
 	}
 
-	@Test fun noQuestion() {
+	@Test fun noQuestion() = runTest {
 		writer.writeHex("1b5b313030343b302479")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b313030343b302479".hexToByteArray()),
 		)
 	}
 
-	@Test fun noDollar() {
+	@Test fun noDollar() = runTest {
 		writer.writeHex("1b5b3f313030343b3079")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3f313030343b3079".hexToByteArray()),
 		)
 	}
 
-	@Test fun noMode() {
+	@Test fun noMode() = runTest {
 		writer.writeHex("1b5b3f3b3130302479")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3f3b3130302479".hexToByteArray()),
 		)
 	}
 
-	@Test fun nonDigitMode() {
+	@Test fun nonDigitMode() = runTest {
 		writer.writeHex("1b5b3f31302d32343b302479")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3f31302d32343b302479".hexToByteArray()),
 		)
 	}
 
-	@Test fun noSetting() {
+	@Test fun noSetting() = runTest {
 		writer.writeHex("1b5b3f313030343b2479")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3f313030343b2479".hexToByteArray()),
 		)
 	}
 
-	@Test fun nonDigitSetting() {
+	@Test fun nonDigitSetting() = runTest {
 		writer.writeHex("1b5b3f313030343b312d322479")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3f313030343b312d322479".hexToByteArray()),
 		)
 	}
 
-	@Test fun noSemicolon() {
+	@Test fun noSemicolon() = runTest {
 		writer.writeHex("1b5b3f313030342479")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3f313030342479".hexToByteArray()),

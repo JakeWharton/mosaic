@@ -5,31 +5,32 @@ import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.terminal.event.KittyKeyboardQueryEvent
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
 import kotlin.test.Test
+import kotlinx.coroutines.test.runTest
 
 class TerminalParserCsiKittyKeyboardQueryEventTest : BaseTerminalParserTest() {
-	@Test fun flagsNone() {
+	@Test fun flagsNone() = runTest {
 		writer.writeHex("1b5b3f3075")
 		assertThat(parser.next()).isEqualTo(KittyKeyboardQueryEvent(0))
 	}
 
-	@Test fun flagsAll() {
+	@Test fun flagsAll() = runTest {
 		writer.writeHex("1b5b3f333175")
 		assertThat(parser.next()).isEqualTo(KittyKeyboardQueryEvent(31))
 	}
 
-	@Test fun flagsUnknown() {
+	@Test fun flagsUnknown() = runTest {
 		writer.writeHex("1b5b3f31323875")
 		assertThat(parser.next()).isEqualTo(KittyKeyboardQueryEvent(128))
 	}
 
-	@Test fun flagsMissing() {
+	@Test fun flagsMissing() = runTest {
 		writer.writeHex("1b5b3f75")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3f75".hexToByteArray()),
 		)
 	}
 
-	@Test fun flagsNonDigit() {
+	@Test fun flagsNonDigit() = runTest {
 		writer.writeHex("1b5b3f312b2075")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3f312b2075".hexToByteArray()),

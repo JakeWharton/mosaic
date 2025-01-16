@@ -2,15 +2,24 @@ package com.jakewharton.mosaic.terminal
 
 import com.jakewharton.mosaic.terminal.Jni.enterRawMode
 import com.jakewharton.mosaic.terminal.Jni.exitRawMode
+import com.jakewharton.mosaic.terminal.Jni.inputHandlerFree
+import com.jakewharton.mosaic.terminal.Jni.inputHandlerInit
 import com.jakewharton.mosaic.terminal.Jni.stdinReaderFree
 import com.jakewharton.mosaic.terminal.Jni.stdinReaderInit
 import com.jakewharton.mosaic.terminal.Jni.stdinReaderInterrupt
 import com.jakewharton.mosaic.terminal.Jni.stdinReaderRead
 import com.jakewharton.mosaic.terminal.Jni.stdinReaderReadWithTimeout
+import com.jakewharton.mosaic.terminal.Jni.stdinWriterFocusEvent
 import com.jakewharton.mosaic.terminal.Jni.stdinWriterFree
 import com.jakewharton.mosaic.terminal.Jni.stdinWriterGetReader
 import com.jakewharton.mosaic.terminal.Jni.stdinWriterInit
+import com.jakewharton.mosaic.terminal.Jni.stdinWriterKeyEvent
+import com.jakewharton.mosaic.terminal.Jni.stdinWriterMouseEvent
+import com.jakewharton.mosaic.terminal.Jni.stdinWriterResizeEvent
 import com.jakewharton.mosaic.terminal.Jni.stdinWriterWrite
+import com.jakewharton.mosaic.terminal.event.Event
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 
 public actual object Tty {
 	@JvmStatic
@@ -29,53 +38,88 @@ public actual object Tty {
 	}
 
 	@JvmStatic
-	public actual fun stdinReader(): StdinReader {
-		val reader = stdinReaderInit()
-		if (reader == 0L) throw OutOfMemoryError()
-		return StdinReader(reader)
+	public actual fun stdinReader(emitDebugEvents: Boolean): TerminalReader {
+		val events = Channel<Event>(UNLIMITED)
+		val handlerPtr = inputHandlerInit(PlatformEventHandler(events))
+		if (handlerPtr != 0L) {
+			val readerPtr = stdinReaderInit(handlerPtr)
+			if (readerPtr != 0L) {
+				val platformInput = PlatformInput(readerPtr, handlerPtr)
+				return TerminalReader(platformInput, events, emitDebugEvents)
+			}
+			inputHandlerFree(handlerPtr)
+		}
+		throw OutOfMemoryError()
 	}
 
 	@JvmSynthetic // Hide from Java callers.
-	internal actual fun stdinWriter(): StdinWriter {
-		val writer = stdinWriterInit()
-		if (writer == 0L) throw OutOfMemoryError()
-		val reader = stdinWriterGetReader(writer)
-		return StdinWriter(writer, reader)
+	internal actual fun stdinWriter(emitDebugEvents: Boolean): StdinWriter {
+		val events = Channel<Event>(UNLIMITED)
+		val handlerPtr = inputHandlerInit(PlatformEventHandler(events))
+		if (handlerPtr != 0L) {
+			val writerPtr = stdinWriterInit(handlerPtr)
+			if (writerPtr != 0L) {
+				val readerPtr = stdinWriterGetReader(writerPtr)
+				val platformInput = PlatformInput(readerPtr, handlerPtr)
+				val terminalReader = TerminalReader(platformInput, events, emitDebugEvents)
+				return StdinWriter(writerPtr, terminalReader)
+			}
+			inputHandlerFree(handlerPtr)
+		}
+		throw OutOfMemoryError()
 	}
 }
 
-public actual class StdinReader internal constructor(
+// TODO @JvmSynthetic https://youtrack.jetbrains.com/issue/KT-24981
+internal actual class PlatformInput internal constructor(
 	private val readerPtr: Long,
+	private val handlerPtr: Long,
 ) : AutoCloseable {
-	public actual fun read(buffer: ByteArray, offset: Int, count: Int): Int {
+	actual fun read(buffer: ByteArray, offset: Int, count: Int): Int {
 		return stdinReaderRead(readerPtr, buffer, offset, count)
 	}
 
-	public actual fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
+	actual fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
 		return stdinReaderReadWithTimeout(readerPtr, buffer, offset, count, timeoutMillis)
 	}
 
-	public actual fun interrupt() {
+	actual fun interrupt() {
 		stdinReaderInterrupt(readerPtr)
 	}
 
-	public actual override fun close() {
+	actual override fun close() {
 		stdinReaderFree(readerPtr)
+		inputHandlerFree(handlerPtr)
 	}
 }
 
 // TODO @JvmSynthetic https://youtrack.jetbrains.com/issue/KT-24981
 internal actual class StdinWriter internal constructor(
 	private val writerPtr: Long,
-	readerPtr: Long,
+	actual val reader: TerminalReader,
 ) : AutoCloseable {
-	actual val reader: StdinReader = StdinReader(readerPtr)
-
 	actual fun write(buffer: ByteArray) {
 		stdinWriterWrite(writerPtr, buffer)
 	}
 
+	actual fun focusEvent(focused: Boolean) {
+		stdinWriterFocusEvent(writerPtr, focused)
+	}
+
+	actual fun keyEvent() {
+		stdinWriterKeyEvent(writerPtr)
+	}
+
+	actual fun mouseEvent() {
+		stdinWriterMouseEvent(writerPtr)
+	}
+
+	actual fun resizeEvent(columns: Int, rows: Int, width: Int, height: Int) {
+		stdinWriterResizeEvent(writerPtr, columns, rows, width, height)
+	}
+
 	actual override fun close() {
+		reader.close()
 		stdinWriterFree(writerPtr)
 	}
 }

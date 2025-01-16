@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 class StdinReaderTest {
 	private val writer = Tty.stdinWriter()
-	private val reader = writer.reader
+	private val reader = writer.reader.platformInput()
 
 	@AfterTest fun after() {
 		reader.close()

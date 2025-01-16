@@ -22,6 +22,13 @@ public class UnknownEvent(
 }
 
 @Poko
+public class DebugEvent(
+	public val event: Event,
+	// TODO ByteString once it moves into the stdlib.
+	@ReadArrayContent public val bytes: ByteArray,
+) : Event
+
+@Poko
 public class KeyboardEvent(
 	public val codepoint: Int,
 	public val shiftedCodepoint: Int = -1,

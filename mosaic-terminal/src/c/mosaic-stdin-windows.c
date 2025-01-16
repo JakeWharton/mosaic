@@ -8,6 +8,7 @@
 typedef struct stdinReaderImpl {
 	HANDLE waitHandles[2];
 	HANDLE readHandle;
+	inputHandler *handler;
 } stdinReaderImpl;
 
 typedef struct stdinWriterImpl {
@@ -17,7 +18,11 @@ typedef struct stdinWriterImpl {
 	stdinReader *reader;
 } stdinWriterImpl;
 
-stdinReaderResult stdinReader_initWithHandle(HANDLE stdinRead, HANDLE stdinWait) {
+stdinReaderResult stdinReader_initWithHandle(
+	HANDLE stdinRead,
+	HANDLE stdinWait,
+	inputHandler *handler
+) {
 	stdinReaderResult result = {};
 
 	stdinReaderImpl *reader = calloc(1, sizeof(stdinReaderImpl));
@@ -30,15 +35,17 @@ stdinReaderResult stdinReader_initWithHandle(HANDLE stdinRead, HANDLE stdinWait)
 		result.error = GetLastError();
 		goto err;
 	}
-	reader->readHandle = stdinRead;
-	reader->waitHandles[0] = stdinWait;
 
 	HANDLE interruptEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 	if (unlikely(interruptEvent == NULL)) {
 		result.error = GetLastError();
 		goto err;
 	}
+
+	reader->waitHandles[0] = stdinWait;
 	reader->waitHandles[1] = interruptEvent;
+	reader->readHandle = stdinRead;
+	reader->handler = handler;
 
 	result.reader = reader;
 
@@ -50,9 +57,9 @@ stdinReaderResult stdinReader_initWithHandle(HANDLE stdinRead, HANDLE stdinWait)
 	goto ret;
 }
 
-stdinReaderResult stdinReader_init() {
+stdinReaderResult stdinReader_init(inputHandler *handler) {
 	HANDLE h = GetStdHandle(STD_INPUT_HANDLE);
-	return stdinReader_initWithHandle(h, h);
+	return stdinReader_initWithHandle(h, h, handler);
 }
 
 stdinRead stdinReader_read(
@@ -107,7 +114,7 @@ platformError stdinReader_free(stdinReader *reader) {
 	return result;
 }
 
-stdinWriterResult stdinWriter_init() {
+stdinWriterResult stdinWriter_init(inputHandler *handler) {
 	stdinWriterResult result = {};
 
 	stdinWriterImpl *writer = calloc(1, sizeof(stdinWriterImpl));
@@ -128,7 +135,7 @@ stdinWriterResult stdinWriter_init() {
 	}
 	writer->eventHandle = writeEvent;
 
-	stdinReaderResult readerResult = stdinReader_initWithHandle(writer->readHandle, writer->eventHandle);
+	stdinReaderResult readerResult = stdinReader_initWithHandle(writer->readHandle, writer->eventHandle, handler);
 	if (unlikely(readerResult.error)) {
 		result.error = readerResult.error;
 		goto err;
@@ -159,6 +166,26 @@ platformError stdinWriter_write(stdinWriter *writer, void *buffer, int count) {
 	}
 	return GetLastError();
 }
+
+void stdinWriter_focusEvent(stdinWriter *writer, bool focused) {
+ 	inputHandler *handler = writer->reader->handler;
+ 	handler->onFocus(handler->opaque, focused);
+ }
+
+ void stdinWriter_keyEvent(stdinWriter *writer) {
+ 	inputHandler *handler = writer->reader->handler;
+ 	handler->onKey(handler->opaque);
+ }
+
+ void stdinWriter_mouseEvent(stdinWriter *writer) {
+ 	inputHandler *handler = writer->reader->handler;
+ 	handler->onMouse(handler->opaque);
+ }
+
+ void stdinWriter_resizeEvent(stdinWriter *writer, int columns, int rows, int width, int height) {
+ 	inputHandler *handler = writer->reader->handler;
+ 	handler->onResize(handler->opaque, columns, rows, width, height);
+ }
 
 platformError stdinWriter_free(stdinWriter *writer) {
 	DWORD result = 0;

@@ -19,7 +19,13 @@ internal object Jni {
 	external fun exitRawMode(savedConfig: Long)
 
 	@JvmStatic
-	external fun stdinReaderInit(): Long
+	external fun inputHandlerInit(handler: PlatformEventHandler): Long
+
+	@JvmStatic
+	external fun inputHandlerFree(handler: Long)
+
+	@JvmStatic
+	external fun stdinReaderInit(handler: Long): Long
 
 	@JvmStatic
 	external fun stdinReaderRead(
@@ -45,13 +51,31 @@ internal object Jni {
 	external fun stdinReaderFree(reader: Long)
 
 	@JvmStatic
-	external fun stdinWriterInit(): Long
+	external fun stdinWriterInit(handler: Long): Long
 
 	@JvmStatic
 	external fun stdinWriterGetReader(writer: Long): Long
 
 	@JvmStatic
 	external fun stdinWriterWrite(writer: Long, buffer: ByteArray)
+
+	@JvmStatic
+	external fun stdinWriterFocusEvent(writer: Long, focused: Boolean)
+
+	@JvmStatic
+	external fun stdinWriterKeyEvent(writer: Long)
+
+	@JvmStatic
+	external fun stdinWriterMouseEvent(writer: Long)
+
+	@JvmStatic
+	external fun stdinWriterResizeEvent(
+		writer: Long,
+		columns: Int,
+		rows: Int,
+		width: Int,
+		height: Int,
+	)
 
 	@JvmStatic
 	external fun stdinWriterFree(writer: Long)

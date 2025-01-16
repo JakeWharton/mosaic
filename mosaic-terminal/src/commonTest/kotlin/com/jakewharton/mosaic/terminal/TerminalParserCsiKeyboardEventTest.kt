@@ -20,98 +20,99 @@ import com.jakewharton.mosaic.terminal.event.KeyboardEvent.Companion.Right
 import com.jakewharton.mosaic.terminal.event.KeyboardEvent.Companion.Up
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
 import kotlin.test.Test
+import kotlinx.coroutines.test.runTest
 
 class TerminalParserCsiKeyboardEventTest : BaseTerminalParserTest() {
-	@Test fun up() {
+	@Test fun up() = runTest {
 		writer.writeHex("1b5b41")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up))
 	}
 
-	@Test fun down() {
+	@Test fun down() = runTest {
 		writer.writeHex("1b5b42")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Down))
 	}
 
-	@Test fun right() {
+	@Test fun right() = runTest {
 		writer.writeHex("1b5b43")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Right))
 	}
 
-	@Test fun left() {
+	@Test fun left() = runTest {
 		writer.writeHex("1b5b44")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Left))
 	}
 
-	@Test fun begin() {
+	@Test fun begin() = runTest {
 		writer.writeHex("1b5b45")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(KpBegin))
 	}
 
-	@Test fun end() {
+	@Test fun end() = runTest {
 		writer.writeHex("1b5b46")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(End))
 	}
 
-	@Test fun home() {
+	@Test fun home() = runTest {
 		writer.writeHex("1b5b48")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Home))
 	}
 
-	@Test fun modifierShiftUp() {
+	@Test fun modifierShiftUp() = runTest {
 		writer.writeHex("1b5b313b3241")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierShift))
 	}
 
-	@Test fun modifierAltUp() {
+	@Test fun modifierAltUp() = runTest {
 		writer.writeHex("1b5b313b3341")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierAlt))
 	}
 
-	@Test fun modifierCtrlUp() {
+	@Test fun modifierCtrlUp() = runTest {
 		writer.writeHex("1b5b313b3541")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierCtrl))
 	}
 
-	@Test fun modifierSuperUp() {
+	@Test fun modifierSuperUp() = runTest {
 		writer.writeHex("1b5b313b3941")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierSuper))
 	}
 
-	@Test fun modifierHyperUp() {
+	@Test fun modifierHyperUp() = runTest {
 		writer.writeHex("1b5b313b313741")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierHyper))
 	}
 
-	@Test fun modifierMetaUp() {
+	@Test fun modifierMetaUp() = runTest {
 		writer.writeHex("1b5b313b333341")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierMeta))
 	}
 
-	@Test fun modifierCapsLockUp() {
+	@Test fun modifierCapsLockUp() = runTest {
 		writer.writeHex("1b5b313b363541")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierCapsLock))
 	}
 
-	@Test fun modifierNumLockUp() {
+	@Test fun modifierNumLockUp() = runTest {
 		writer.writeHex("1b5b313b31323941")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierNumLock))
 	}
 
-	@Test fun non1p0() {
+	@Test fun non1p0() = runTest {
 		writer.writeHex("1b5b323b3248")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b323b3248".hexToByteArray()),
 		)
 	}
 
-	@Test fun emptyModifier() {
+	@Test fun emptyModifier() = runTest {
 		writer.writeHex("1b5b313b48")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b313b48".hexToByteArray()),
 		)
 	}
 
-	@Test fun nonDigitModifier() {
+	@Test fun nonDigitModifier() = runTest {
 		writer.writeHex("1b5b313b2f48")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b313b2f48".hexToByteArray()),

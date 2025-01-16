@@ -44,11 +44,21 @@ kotlin {
 			}
 		}
 
+		commonMain {
+			dependencies {
+				api libs.kotlinx.coroutines.core
+			}
+		}
 		commonTest {
+			languageSettings {
+				optIn('com.jakewharton.mosaic.terminal.TestApi')
+				optIn('kotlin.ExperimentalStdlibApi')
+				optIn('kotlinx.coroutines.DelicateCoroutinesApi')
+			}
 			dependencies {
 				implementation libs.kotlin.test
+				implementation libs.kotlinx.coroutines.test
 				implementation libs.kotlinx.io
-				implementation libs.kotlinx.coroutines.core
 				implementation libs.assertk
 			}
 		}

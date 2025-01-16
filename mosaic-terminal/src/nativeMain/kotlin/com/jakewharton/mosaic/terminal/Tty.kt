@@ -1,9 +1,20 @@
 package com.jakewharton.mosaic.terminal
 
+import com.jakewharton.mosaic.terminal.event.Event
+import kotlinx.cinterop.COpaquePointer
 import kotlinx.cinterop.CPointer
+import kotlinx.cinterop.StableRef
 import kotlinx.cinterop.addressOf
+import kotlinx.cinterop.alloc
+import kotlinx.cinterop.asStableRef
+import kotlinx.cinterop.free
+import kotlinx.cinterop.nativeHeap
+import kotlinx.cinterop.ptr
+import kotlinx.cinterop.staticCFunction
 import kotlinx.cinterop.useContents
 import kotlinx.cinterop.usePinned
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 
 public actual object Tty {
 	public actual fun enableRawMode(): AutoCloseable {
@@ -24,21 +35,61 @@ public actual object Tty {
 		}
 	}
 
-	public actual fun stdinReader(): StdinReader {
-		val reader = stdinReader_init().useContents {
+	public actual fun stdinReader(emitDebugEvents: Boolean): TerminalReader {
+		val events = Channel<Event>(UNLIMITED)
+
+		val handler = PlatformEventHandler(events)
+		val handlerRef = StableRef.create(handler)
+		val handlerPtr = nativeHeap.alloc<inputHandler> {
+			opaque = handlerRef.asCPointer()
+			onFocus = staticCFunction(::onFocusCallback)
+			onKey = staticCFunction(::onKeyCallback)
+			onMouse = staticCFunction(::onMouseCallback)
+			onResize = staticCFunction(::onResizeCallback)
+		}.ptr
+
+		val readerPtr = stdinReader_init(handlerPtr).useContents {
+			reader?.let { return@useContents it }
+
+			nativeHeap.free(handlerPtr)
+			handlerRef.dispose()
+
 			check(error == 0U) { "Unable to create stdin reader: $error" }
-			reader ?: throw OutOfMemoryError()
+			throw OutOfMemoryError()
 		}
-		return StdinReader(reader)
+
+		val reader = PlatformInput(readerPtr, handlerPtr, handlerRef)
+		return TerminalReader(reader, events, emitDebugEvents)
 	}
 
-	internal actual fun stdinWriter(): StdinWriter {
-		val writer = stdinWriter_init().useContents {
+	internal actual fun stdinWriter(emitDebugEvents: Boolean): StdinWriter {
+		val events = Channel<Event>(UNLIMITED)
+
+		// TODO Fix all this duplication, ownership
+		val handler = PlatformEventHandler(events)
+		val handlerRef = StableRef.create(handler)
+		val handlerPtr = nativeHeap.alloc<inputHandler> {
+			opaque = handlerRef.asCPointer()
+			onFocus = staticCFunction(::onFocusCallback)
+			onKey = staticCFunction(::onKeyCallback)
+			onMouse = staticCFunction(::onMouseCallback)
+			onResize = staticCFunction(::onResizeCallback)
+		}.ptr
+
+		val writerPtr = stdinWriter_init(handlerPtr).useContents {
+			writer?.let { return@useContents it }
+
+			nativeHeap.free(handlerPtr)
+			handlerRef.dispose()
+
 			check(error == 0U) { "Unable to create stdin writer: $error" }
-			writer ?: throw OutOfMemoryError()
+			throw OutOfMemoryError()
 		}
-		val reader = stdinWriter_getReader(writer)!!
-		return StdinWriter(writer, reader)
+
+		val readerPtr = stdinWriter_getReader(writerPtr)!!
+		val platformInput = PlatformInput(readerPtr, handlerPtr, handlerRef)
+		val terminalReader = TerminalReader(platformInput, events, emitDebugEvents)
+		return StdinWriter(writerPtr, terminalReader)
 	}
 
 	internal fun throwError(error: UInt): Nothing {
@@ -46,38 +97,45 @@ public actual object Tty {
 	}
 }
 
-public actual class StdinReader internal constructor(
-	private var ref: CPointer<stdinReader>?,
+internal actual class PlatformInput internal constructor(
+	ptr: CPointer<stdinReader>,
+	private val handlerPtr: CPointer<inputHandler>?,
+	private val handlerRef: StableRef<PlatformEventHandler>?,
 ) : AutoCloseable {
-	public actual fun read(buffer: ByteArray, offset: Int, count: Int): Int {
+	private var ptr: CPointer<stdinReader>? = ptr
+
+	actual fun read(buffer: ByteArray, offset: Int, count: Int): Int {
 		buffer.usePinned {
-			stdinReader_read(ref, it.addressOf(offset), count).useContents {
+			stdinReader_read(ptr, it.addressOf(offset), count).useContents {
 				if (error == 0U) return this.count
 				Tty.throwError(error)
 			}
 		}
 	}
 
-	public actual fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
+	actual fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
 		buffer.usePinned {
-			stdinReader_readWithTimeout(ref, it.addressOf(offset), count, timeoutMillis).useContents {
+			stdinReader_readWithTimeout(ptr, it.addressOf(offset), count, timeoutMillis).useContents {
 				if (error == 0U) return this.count
 				Tty.throwError(error)
 			}
 		}
 	}
 
-	public actual fun interrupt() {
-		val error = stdinReader_interrupt(ref)
+	actual fun interrupt() {
+		val error = stdinReader_interrupt(ptr)
 		if (error == 0U) return
 		Tty.throwError(error)
 	}
 
-	public actual override fun close() {
-		ref?.let { ref ->
-			this.ref = null
+	actual override fun close() {
+		ptr?.let { ptr ->
+			this.ptr = null
 
-			val error = stdinReader_free(ref)
+			val error = stdinReader_free(ptr)
+			handlerPtr?.let(nativeHeap::free)
+			handlerRef?.dispose()
+
 			if (error == 0U) return
 			Tty.throwError(error)
 		}
@@ -85,22 +143,36 @@ public actual class StdinReader internal constructor(
 }
 
 internal actual class StdinWriter internal constructor(
-	private var ref: CPointer<stdinWriter>?,
-	readerRef: CPointer<stdinReader>,
+	private var ptr: CPointer<stdinWriter>?,
+	actual val reader: TerminalReader,
 ) : AutoCloseable {
-	actual val reader: StdinReader = StdinReader(readerRef)
-
 	actual fun write(buffer: ByteArray) {
 		val error = buffer.usePinned {
-			stdinWriter_write(ref, it.addressOf(0), buffer.size)
+			stdinWriter_write(ptr, it.addressOf(0), buffer.size)
 		}
 		if (error == 0U) return
 		Tty.throwError(error)
 	}
 
+	actual fun focusEvent(focused: Boolean) {
+		stdinWriter_focusEvent(ptr, focused)
+	}
+
+	actual fun keyEvent() {
+		stdinWriter_keyEvent(ptr)
+	}
+
+	actual fun mouseEvent() {
+		stdinWriter_mouseEvent(ptr)
+	}
+
+	actual fun resizeEvent(columns: Int, rows: Int, width: Int, height: Int) {
+		stdinWriter_resizeEvent(ptr, columns, rows, width, height)
+	}
+
 	actual override fun close() {
-		ref?.let { ref ->
-			this.ref = null
+		ptr?.let { ref ->
+			this.ptr = null
 
 			reader.close()
 
@@ -110,4 +182,24 @@ internal actual class StdinWriter internal constructor(
 			Tty.throwError(error)
 		}
 	}
+}
+
+private fun onFocusCallback(opaque: COpaquePointer?, focused: Boolean) {
+	val handler = opaque!!.asStableRef<PlatformEventHandler>().get()
+	handler.onFocus(focused)
+}
+
+private fun onKeyCallback(opaque: COpaquePointer?) {
+	val handler = opaque!!.asStableRef<PlatformEventHandler>().get()
+	handler.onKey()
+}
+
+private fun onMouseCallback(opaque: COpaquePointer?) {
+	val handler = opaque!!.asStableRef<PlatformEventHandler>().get()
+	handler.onMouse()
+}
+
+private fun onResizeCallback(opaque: COpaquePointer?, columns: Int, rows: Int, width: Int, height: Int) {
+	val handler = opaque!!.asStableRef<PlatformEventHandler>().get()
+	handler.onResize(columns, rows, width, height)
 }
