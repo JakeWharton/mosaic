@@ -56,6 +56,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        tests:
+          - type: native
+          - type: java
+            version: 8
+          - type: java
+            version: 11
+          - type: java
+            version: 17
+          - type: java
+            version: 21
+          - type: java
+            version: latest
         platform:
           - os: macOS-13
             target: macosX64
@@ -77,66 +89,47 @@ jobs:
     runs-on: ${{ matrix.platform.os }}
 
     steps:
-      - uses: actions/checkout@v4
-        with:
-          sparse-checkout: .github
-          sparse-checkout-cone-mode: false
+      ### NATIVE
 
-      - uses: actions/setup-java@v4
+      - uses: actions/download-artifact@v4
+        if: matrix.tests.type == 'native'
         with:
-          distribution: 'zulu'
-          java-version: |
-            8
-            11
-            17
-            21
+          name: mosaic-terminal-native-tests
+
+      - name: Set executable bit
+        if: ${{ matrix.tests.type == 'native' && !startsWith(matrix.platform.os, 'windows-') }}
+        run: chmod +x ${{ matrix.platform.target }}/debugTest/test.*
+
+      - run: ${{ matrix.platform.target }}/debugTest/test.*
+        if: matrix.tests.type == 'native'
+
+      ### JAVA
+      - uses: actions/checkout@v4
+        if: ${{ matrix.tests.type == 'java' && matrix.tests.version == 'latest' }}
+        with:
+          sparse-checkout: .github/.java-version
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-java@v4
+        if: ${{ matrix.tests.type == 'java' && matrix.tests.version == 'latest' }}
         with:
           distribution: 'zulu'
           java-version-file: .github/.java-version
 
+      - uses: actions/setup-java@v4
+        if: ${{ matrix.tests.type == 'java' && matrix.tests.version != 'latest' }}
+        with:
+          distribution: 'zulu'
+          java-version: ${{ matrix.tests.version }}
+
       - uses: actions/download-artifact@v4
         with:
           name: mosaic-terminal-jvm-tests
-          path: mosaic-terminal-jvm-tests
 
-      - uses: actions/download-artifact@v4
-        with:
-          name: mosaic-terminal-native-tests
-          path: mosaic-terminal-native-tests
+      - name: Set executable bit
+        if: ${{ matrix.tests.type == 'java' && !startsWith(matrix.platform.os, 'windows-') }}
+        run: chmod +x bin/mosaic-terminal-test
 
-      - name: Set executable bits
-        if: ${{ !startsWith(matrix.platform.os, 'windows-') }}
-        run: |
-          chmod +x \
-            mosaic-terminal-native-tests/${{ matrix.platform.target }}/debugTest/test.* \
-            mosaic-terminal-jvm-tests/bin/mosaic-terminal-test
-
-      - name: Native tests
-        run: mosaic-terminal-native-tests/${{ matrix.platform.target }}/debugTest/test.*
-
-      - name: Latest JVM tests
-        run: mosaic-terminal-jvm-tests/bin/mosaic-terminal-test
-
-      - name: JVM 8 tests
-        run: mosaic-terminal-jvm-tests/bin/mosaic-terminal-test
-        env:
-          JAVA_HOME: "$JAVA_HOME_8_${{ runner.arch }}"
-
-      - name: JVM 11 tests
-        run: mosaic-terminal-jvm-tests/bin/mosaic-terminal-test
-        env:
-          JAVA_HOME: "$JAVA_HOME_11_${{ runner.arch }}"
-
-      - name: JVM 17 tests
-        run: mosaic-terminal-jvm-tests/bin/mosaic-terminal-test
-        env:
-          JAVA_HOME: "$JAVA_HOME_17_${{ runner.arch }}"
-
-      - name: JVM 21 tests
-        run: mosaic-terminal-jvm-tests/bin/mosaic-terminal-test
-        env:
-          JAVA_HOME: "$JAVA_HOME_21_${{ runner.arch }}"
+      - run: bin/mosaic-terminal-test
 
   binaries:
     runs-on: macos-15
