@@ -30,7 +30,7 @@ jobs:
       - run: zig build -p src/jvmMain/resources/jni
         working-directory: mosaic-terminal
 
-      - run: ./gradlew :mosaic-terminal:zipJvmTestDistribution :mosaic-terminal:linkNativeDebugTests
+      - run: ./gradlew :mosaic-terminal:installJvmTestDistribution :mosaic-terminal:linkNativeDebugTests
 
       - uses: actions/upload-artifact@v4
         with:
@@ -41,7 +41,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: mosaic-terminal-jvm-tests
-          path: mosaic-terminal/build/dist/mosaic-terminal-jvm-*-tests.zip
+          path: mosaic-terminal/build/install/jvmTest
           if-no-files-found: error
 
       - uses: actions/upload-artifact@v4
@@ -98,6 +98,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: mosaic-terminal-jvm-tests
+          path: mosaic-terminal-jvm-tests
 
       - uses: actions/download-artifact@v4
         with:
@@ -105,12 +106,16 @@ jobs:
           path: mosaic-terminal-native-tests
 
       - run: ls -lhAR
-      - name: Whevs
+      - name: Native tests
         run: |
           chmod +x mosaic-terminal-native-tests/${{ matrix.platform.target }}/debugTest/test.*
           mosaic-terminal-native-tests/${{ matrix.platform.target }}/debugTest/test.*
 
-      - run: mosaic-terminal-jvm-tests/bin/mosaic-terminal-test
+      - name: JVM tests
+        run: |
+          chmod +x mosaic-terminal-jvm-tests/bin/mosaic-terminal-test
+          mosaic-terminal-jvm-tests/bin/mosaic-terminal-test
+
       # TODO Run JVM 8 tests
       # TODO Run JVM 11 tests
       # TODO Run JVM 17 tests
