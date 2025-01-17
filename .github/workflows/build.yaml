@@ -178,7 +178,14 @@ jobs:
           -x :mosaic-terminal:macosX64Test \
           -x :mosaic-terminal:mingwX64Test
 
+      - uses: actions/upload-artifact@v4
+        with:
+          name: html-docs
+          path: build/dokka/htmlMultiModule/
+          if-no-files-found: error
+
   publish:
+    if: ${{ github.ref == 'refs/heads/trunk' && github.repository == 'JakeWharton/mosaic' }}
     runs-on: macos-15
     needs:
       - terminal-tests
@@ -190,6 +197,7 @@ jobs:
         with:
           name: mosaic-terminal-jni-libraries
           path: mosaic-terminal/src/jvmMain/resources/jni
+
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
@@ -197,24 +205,19 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
 
       - run: ./gradlew publish
-        if: ${{ github.ref == 'refs/heads/trunk' && github.repository == 'JakeWharton/mosaic' }}
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
 
-      - run: ./gradlew dokkaHtmlMultiModule
-
-      - uses: actions/upload-artifact@v4
+      - uses: actions/download-artifact@v4
         with:
           name: html-docs
-          path: build/dokka/htmlMultiModule/
-          if-no-files-found: error
+          path: html-docs
 
       - uses: JamesIves/github-pages-deploy-action@releases/v3
-        if: ${{ github.ref == 'refs/heads/trunk' && github.repository == 'JakeWharton/mosaic' }}
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: site
-          FOLDER: build/dokka/htmlMultiModule/
+          FOLDER: html-docs
           TARGET_FOLDER: docs/latest/
           CLEAN: true
