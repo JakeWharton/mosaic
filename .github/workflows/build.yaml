@@ -182,9 +182,6 @@ jobs:
 
   docs:
     runs-on: macos-15
-    needs:
-      - terminal-tests
-      - build
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -205,6 +202,7 @@ jobs:
     if: ${{ github.ref == 'refs/heads/trunk' && github.repository == 'JakeWharton/mosaic' }}
     runs-on: macos-15
     needs:
+      - docs
       - terminal-tests
       - build
 
