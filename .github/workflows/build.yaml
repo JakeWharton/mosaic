@@ -105,15 +105,18 @@ jobs:
           name: mosaic-terminal-native-tests
           path: mosaic-terminal-native-tests
 
+      - run: |
+          shopt -s globstar
+          chmod +x \
+            mosaic-terminal-native-tests/**/*.*exe \
+            mosaic-terminal-jvm-tests/bin/mosaic-terminal-test
+        if: !startsWith('windows-', matrix.os)
+
       - name: Native tests
-        run: |
-          chmod +x mosaic-terminal-native-tests/${{ matrix.platform.target }}/debugTest/test.*
-          mosaic-terminal-native-tests/${{ matrix.platform.target }}/debugTest/test.*
+        run: mosaic-terminal-native-tests/${{ matrix.platform.target }}/debugTest/test.*
 
       - name: JVM tests
-        run: |
-          chmod +x mosaic-terminal-jvm-tests/bin/mosaic-terminal-test
-          mosaic-terminal-jvm-tests/bin/mosaic-terminal-test
+        run: mosaic-terminal-jvm-tests/bin/mosaic-terminal-test
 
       # TODO Run JVM 8 tests
       # TODO Run JVM 11 tests
