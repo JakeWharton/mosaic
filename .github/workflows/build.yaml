@@ -105,7 +105,6 @@ jobs:
           name: mosaic-terminal-native-tests
           path: mosaic-terminal-native-tests
 
-      - run: ls -lhAR
       - name: Native tests
         run: |
           chmod +x mosaic-terminal-native-tests/${{ matrix.platform.target }}/debugTest/test.*
