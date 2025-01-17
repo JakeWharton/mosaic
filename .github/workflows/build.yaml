@@ -104,6 +104,7 @@ jobs:
         if: matrix.tests.type == 'native'
 
       ### JAVA
+
       - uses: actions/checkout@v4
         if: ${{ matrix.tests.type == 'java' && matrix.tests.version == 'latest' }}
         with:
@@ -122,6 +123,7 @@ jobs:
           java-version: ${{ matrix.tests.version }}
 
       - uses: actions/download-artifact@v4
+        if: matrix.tests.type == 'java'
         with:
           name: mosaic-terminal-jvm-tests
 
@@ -130,6 +132,7 @@ jobs:
         run: chmod +x bin/mosaic-terminal-test
 
       - run: bin/mosaic-terminal-test
+        if: matrix.tests.type == 'java'
 
   binaries:
     runs-on: macos-15
