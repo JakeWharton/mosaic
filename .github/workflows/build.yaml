@@ -106,7 +106,7 @@ jobs:
           path: mosaic-terminal-native-tests
 
       - name: Set executable bits
-        if: ${{ !startsWith(matrix.os, 'windows-') }}
+        if: ${{ !startsWith(matrix.platform.os, 'windows-') }}
         run: |
           chmod +x \
             mosaic-terminal-native-tests/${{ matrix.platform.target }}/debugTest/test.* \
@@ -115,13 +115,28 @@ jobs:
       - name: Native tests
         run: mosaic-terminal-native-tests/${{ matrix.platform.target }}/debugTest/test.*
 
-      - name: JVM tests
+      - name: Latest JVM tests
         run: mosaic-terminal-jvm-tests/bin/mosaic-terminal-test
 
-      # TODO Run JVM 8 tests
-      # TODO Run JVM 11 tests
-      # TODO Run JVM 17 tests
-      # TODO Run JVM 21 tests
+      - name: JVM 8 tests
+        run: mosaic-terminal-jvm-tests/bin/mosaic-terminal-test
+        env:
+          JAVA_HOME: "$JAVA_HOME_8_${{ runner.arch }}"
+
+      - name: JVM 11 tests
+        run: mosaic-terminal-jvm-tests/bin/mosaic-terminal-test
+        env:
+          JAVA_HOME: "$JAVA_HOME_11_${{ runner.arch }}"
+
+      - name: JVM 17 tests
+        run: mosaic-terminal-jvm-tests/bin/mosaic-terminal-test
+        env:
+          JAVA_HOME: "$JAVA_HOME_17_${{ runner.arch }}"
+
+      - name: JVM 21 tests
+        run: mosaic-terminal-jvm-tests/bin/mosaic-terminal-test
+        env:
+          JAVA_HOME: "$JAVA_HOME_21_${{ runner.arch }}"
 
   binaries:
     runs-on: macos-15
