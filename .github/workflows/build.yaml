@@ -80,6 +80,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           sparse-checkout: .github
+          sparse-checkout-cone-mode: false
 
       - uses: actions/setup-java@v4
         with:
@@ -104,7 +105,8 @@ jobs:
           path: mosaic-terminal-native-tests
 
       - run: ls -lhAR
-      - run: |
+      - name: Whevs
+        run: |
           chmod +x mosaic-terminal-native-tests/${{ matrix.platform.target }}/debugTest/test.*
           mosaic-terminal-native-tests/${{ matrix.platform.target }}/debugTest/test.*
 
