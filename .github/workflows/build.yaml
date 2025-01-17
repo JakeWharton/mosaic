@@ -164,19 +164,20 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
 
       # Disabling allTests should be enough, but https://youtrack.jetbrains.com/issue/KT-74509
-      - run: ./gradlew --continue build dokkaHtmlMultiModule \
-          -x :mosaic-terminal:allTests \
-          -x :mosaic-terminal:jvmJdk8Test \
-          -x :mosaic-terminal:jvmJdk11Test \
-          -x :mosaic-terminal:jvmJdk17Test \
-          -x :mosaic-terminal:jvmJdk21Test \
-          -x :mosaic-terminal:jvmJdk23Test \
-          -x :mosaic-terminal:jvmProGuardTest \
-          -x :mosaic-terminal:jvmTest \
-          -x :mosaic-terminal:linuxX64Test \
-          -x :mosaic-terminal:macosArm64Test \
-          -x :mosaic-terminal:macosX64Test \
-          -x :mosaic-terminal:mingwX64Test
+      - run: |
+          ./gradlew --continue build dokkaHtmlMultiModule \
+            -x :mosaic-terminal:allTests \
+            -x :mosaic-terminal:jvmJdk8Test \
+            -x :mosaic-terminal:jvmJdk11Test \
+            -x :mosaic-terminal:jvmJdk17Test \
+            -x :mosaic-terminal:jvmJdk21Test \
+            -x :mosaic-terminal:jvmJdk23Test \
+            -x :mosaic-terminal:jvmProGuardTest \
+            -x :mosaic-terminal:jvmTest \
+            -x :mosaic-terminal:linuxX64Test \
+            -x :mosaic-terminal:macosArm64Test \
+            -x :mosaic-terminal:macosX64Test \
+            -x :mosaic-terminal:mingwX64Test
 
       - uses: actions/upload-artifact@v4
         with:
