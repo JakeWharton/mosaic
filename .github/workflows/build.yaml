@@ -108,9 +108,8 @@ jobs:
       - name: Set executable bits
         if: ${{ !startsWith(matrix.os, 'windows-') }}
         run: |
-          shopt -s globstar
           chmod +x \
-            mosaic-terminal-native-tests/**/*.*exe \
+            mosaic-terminal-native-tests/${{ matrix.platform.target }}/debugTest/test.* \
             mosaic-terminal-jvm-tests/bin/mosaic-terminal-test
 
       - name: Native tests
