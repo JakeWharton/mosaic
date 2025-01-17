@@ -146,7 +146,7 @@ jobs:
       - run: bin/mosaic-terminal-test
         if: matrix.tests.type == 'java'
 
-  binaries:
+  build:
     runs-on: macos-15
     needs:
       - terminal-zig
@@ -163,33 +163,26 @@ jobs:
           java-version-file: .github/.java-version
       - uses: gradle/actions/setup-gradle@v4
 
-      - run: ./gradlew --continue assemble
-
-  checks:
-    runs-on: macos-15
-    needs:
-      - terminal-zig
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: mosaic-terminal-jni-libraries
-          path: mosaic-terminal/src/jvmMain/resources/jni
-
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version-file: .github/.java-version
-      - uses: gradle/actions/setup-gradle@v4
-
-      - run: ./gradlew --continue spotlessCheck apiCheck
+      # Disabling allTests should be enough, but https://youtrack.jetbrains.com/issue/KT-74509
+      - run: ./gradlew --continue build dokkaHtmlMultiModule \
+          -x :mosaic-terminal:allTests \
+          -x :mosaic-terminal:jvmJdk8Test \
+          -x :mosaic-terminal:jvmJdk11Test \
+          -x :mosaic-terminal:jvmJdk17Test \
+          -x :mosaic-terminal:jvmJdk21Test \
+          -x :mosaic-terminal:jvmJdk23Test \
+          -x :mosaic-terminal:jvmProGuardTest \
+          -x :mosaic-terminal:jvmTest \
+          -x :mosaic-terminal:linuxX64Test \
+          -x :mosaic-terminal:macosArm64Test \
+          -x :mosaic-terminal:macosX64Test \
+          -x :mosaic-terminal:mingwX64Test
 
   publish:
     runs-on: macos-15
     needs:
-      - binaries
-      - checks
       - terminal-tests
+      - build
 
     steps:
       - uses: actions/checkout@v4
