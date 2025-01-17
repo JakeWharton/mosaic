@@ -13,15 +13,10 @@ env:
   GRADLE_OPTS: "-Dkotlin.incremental=false -Dorg.gradle.logging.stacktrace=full"
 
 jobs:
-  terminal:
+  terminal-zig:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version-file: .github/.java-version
 
       - uses: goto-bus-stop/setup-zig@v2
         with:
@@ -30,13 +25,29 @@ jobs:
       - run: zig build -p src/jvmMain/resources/jni
         working-directory: mosaic-terminal
 
-      - run: ./gradlew :mosaic-terminal:installJvmTestDistribution :mosaic-terminal:linkNativeDebugTests
-
       - uses: actions/upload-artifact@v4
         with:
-          name: jni-binaries
+          name: mosaic-terminal-jni-libraries
           path: mosaic-terminal/src/jvmMain/resources/jni
           if-no-files-found: error
+
+  terminal-test-binaries:
+    needs:
+      - terminal-zig
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: mosaic-terminal-jni-libraries
+          path: mosaic-terminal/src/jvmMain/resources/jni
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version-file: .github/.java-version
+
+      - run: ./gradlew :mosaic-terminal:installJvmTestDistribution :mosaic-terminal:linkNativeDebugTests
 
       - uses: actions/upload-artifact@v4
         with:
@@ -50,9 +61,9 @@ jobs:
           path: mosaic-terminal/build/bin
           if-no-files-found: error
 
-  tests:
+  terminal-tests:
     needs:
-      - terminal
+      - terminal-test-binaries
     strategy:
       fail-fast: false
       matrix:
@@ -138,12 +149,12 @@ jobs:
   binaries:
     runs-on: macos-15
     needs:
-      - terminal
+      - terminal-zig
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: jni-binaries
+          name: mosaic-terminal-jni-libraries
           path: mosaic-terminal/src/jvmMain/resources/jni
 
       - uses: actions/setup-java@v4
@@ -157,12 +168,12 @@ jobs:
   checks:
     runs-on: macos-15
     needs:
-      - terminal
+      - terminal-zig
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: jni-binaries
+          name: mosaic-terminal-jni-libraries
           path: mosaic-terminal/src/jvmMain/resources/jni
 
       - uses: actions/setup-java@v4
@@ -178,13 +189,13 @@ jobs:
     needs:
       - binaries
       - checks
-      - tests
+      - terminal-tests
 
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: jni-binaries
+          name: mosaic-terminal-jni-libraries
           path: mosaic-terminal/src/jvmMain/resources/jni
       - uses: actions/setup-java@v4
         with:
