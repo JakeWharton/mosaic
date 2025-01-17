@@ -164,21 +164,23 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
 
       # Disabling allTests should be enough, but https://youtrack.jetbrains.com/issue/KT-74509
+      # mosaic-terminal runs its tests above. We only run jvmTest otherwise as code is all common.
       - run: >
           ./gradlew --continue
           build
-          -x :mosaic-terminal:allTests
-          -x :mosaic-terminal:jvmJdk8Test
-          -x :mosaic-terminal:jvmJdk11Test
-          -x :mosaic-terminal:jvmJdk17Test
-          -x :mosaic-terminal:jvmJdk21Test
-          -x :mosaic-terminal:jvmJdk23Test
-          -x :mosaic-terminal:jvmProGuardTest
+          -x allTests
+          -x jvmJdk8Test
+          -x jvmJdk11Test
+          -x jvmJdk17Test
+          -x jvmJdk21Test
+          -x jvmJdk23Test
+          -x jvmProGuardTest
+          -x linuxX64Test
+          -x macosArm64Test
+          -x macosX64Test
+          -x mingwX64Test
+          jvmTest
           -x :mosaic-terminal:jvmTest
-          -x :mosaic-terminal:linuxX64Test
-          -x :mosaic-terminal:macosArm64Test
-          -x :mosaic-terminal:macosX64Test
-          -x :mosaic-terminal:mingwX64Test
 
   docs:
     runs-on: macos-15
