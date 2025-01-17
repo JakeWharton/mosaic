@@ -56,18 +56,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tests:
-          - type: native
-          - type: java
-            version: 8
-          - type: java
-            version: 11
-          - type: java
-            version: 17
-          - type: java
-            version: 21
-          - type: java
-            version: latest
         platform:
           - os: macOS-13
             target: macosX64
@@ -85,6 +73,18 @@ jobs:
             target: mingwX64
           - os: windows-2022
             target: mingwX64
+        tests:
+          - type: native
+          - type: java
+            version: 8
+          - type: java
+            version: 11
+          - type: java
+            version: 17
+          - type: java
+            version: 21
+          - type: java
+            version: latest
 
     runs-on: ${{ matrix.platform.os }}
 
