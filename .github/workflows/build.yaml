@@ -79,11 +79,11 @@ jobs:
           - os: ubuntu-22.04
             target: linuxX64
           - os: ubuntu-22.04-arm
-            task: linuxArm64
+            target: linuxArm64
           - os: ubuntu-24.04
             target: linuxX64
           - os: ubuntu-24.04-arm
-            task: linuxArm64
+            target: linuxArm64
           - os: windows-2019
             target: mingwX64
           - os: windows-2022
