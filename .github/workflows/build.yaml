@@ -201,8 +201,6 @@ jobs:
           path: build/dokka/htmlMultiModule/
           if-no-files-found: error
 
-      - run: exit 1
-
   status:
     if: always()
     runs-on: ubuntu-latest
