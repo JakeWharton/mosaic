@@ -201,6 +201,8 @@ jobs:
           path: build/dokka/htmlMultiModule/
           if-no-files-found: error
 
+      - run: exit 1
+
   status:
     if: always()
     runs-on: ubuntu-latest
@@ -213,7 +215,7 @@ jobs:
         run: |
           results=$(tr -d '\n' <<< '${{ toJSON(needs.*.result) }}')
           if ! grep -q -v -E '(failure|cancelled)' <<< "$results"; then
-            echo "One or more jobs failed: $results"
+            echo "One or more required jobs failed"
             exit 1
           fi
 
