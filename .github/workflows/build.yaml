@@ -166,7 +166,8 @@ jobs:
       # Disabling allTests should be enough, but https://youtrack.jetbrains.com/issue/KT-74509
       # mosaic-terminal runs its tests above. We only run jvmTest otherwise as code is all common.
       - run: >
-          ./gradlew --continue
+          ./gradlew
+          --continue
           build
           -x allTests
           -x jvmJdk8Test
@@ -199,6 +200,22 @@ jobs:
           name: html-docs
           path: build/dokka/htmlMultiModule/
           if-no-files-found: error
+
+  status:
+    if: always()
+    runs-on: ubuntu-latest
+    needs:
+      - docs
+      - terminal-tests
+      - build
+    steps:
+      - name: Check
+        run: |
+          results=$(tr -d '\n' <<< '${{ toJSON(needs.*.result) }}')
+          if ! grep -q -v -E '(failure|cancelled)' <<< "$results"; then
+            echo "One or more jobs failed: $results"
+            exit 1
+          fi
 
   publish:
     if: ${{ github.ref == 'refs/heads/trunk' && github.repository == 'JakeWharton/mosaic' }}
