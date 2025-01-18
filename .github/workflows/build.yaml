@@ -221,9 +221,7 @@ jobs:
     if: ${{ github.ref == 'refs/heads/trunk' && github.repository == 'JakeWharton/mosaic' }}
     runs-on: macos-15
     needs:
-      - docs
-      - terminal-tests
-      - build
+      - final-status
 
     steps:
       - uses: actions/checkout@v4
