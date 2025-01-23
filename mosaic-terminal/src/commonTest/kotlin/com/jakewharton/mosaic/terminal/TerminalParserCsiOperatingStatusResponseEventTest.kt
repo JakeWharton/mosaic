@@ -4,18 +4,10 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.terminal.event.OperatingStatusResponseEvent
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
-import kotlin.test.AfterTest
 import kotlin.test.Test
 
 @OptIn(ExperimentalStdlibApi::class)
-class TerminalParserCsiOperatingStatusResponseEventTest {
-	private val writer = Tty.stdinWriter()
-	private val parser = TerminalParser(writer.reader)
-
-	@AfterTest fun after() {
-		writer.close()
-	}
-
+class TerminalParserCsiOperatingStatusResponseEventTest : BaseTerminalParserTest() {
 	@Test fun ok() {
 		writer.writeHex("1b5b306e")
 		assertThat(parser.next()).isEqualTo(OperatingStatusResponseEvent(ok = true))

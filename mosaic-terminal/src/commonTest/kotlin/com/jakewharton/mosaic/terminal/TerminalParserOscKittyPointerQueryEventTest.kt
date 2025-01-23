@@ -5,18 +5,10 @@ import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.terminal.event.KittyPointerQueryNameEvent
 import com.jakewharton.mosaic.terminal.event.KittyPointerQuerySupportEvent
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
-import kotlin.test.AfterTest
 import kotlin.test.Test
 
 @OptIn(ExperimentalStdlibApi::class)
-class TerminalParserOscKittyPointerQueryEventTest {
-	private val writer = Tty.stdinWriter()
-	private val parser = TerminalParser(writer.reader)
-
-	@AfterTest fun after() {
-		writer.close()
-	}
-
+class TerminalParserOscKittyPointerQueryEventTest : BaseTerminalParserTest() {
 	@Test fun emptyFails() {
 		writer.writeHex("1b5d32323b1b5c")
 		assertThat(parser.next()).isEqualTo(

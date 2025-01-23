@@ -6,18 +6,10 @@ import com.jakewharton.mosaic.terminal.event.MouseEvent
 import com.jakewharton.mosaic.terminal.event.MouseEvent.Button
 import com.jakewharton.mosaic.terminal.event.MouseEvent.Type
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
-import kotlin.test.AfterTest
 import kotlin.test.Test
 
 @OptIn(ExperimentalStdlibApi::class)
-class TerminalParserCsiMouseEventTest {
-	private val writer = Tty.stdinWriter()
-	private val parser = TerminalParser(writer.reader)
-
-	@AfterTest fun after() {
-		writer.close()
-	}
-
+class TerminalParserCsiMouseEventTest : BaseTerminalParserTest() {
 	@Test fun motion() {
 		writer.writeHex("1b5b4d434837")
 		assertThat(parser.next()).isEqualTo(

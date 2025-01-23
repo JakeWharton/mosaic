@@ -4,18 +4,10 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.terminal.event.KittyKeyboardQueryEvent
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
-import kotlin.test.AfterTest
 import kotlin.test.Test
 
 @OptIn(ExperimentalStdlibApi::class)
-class TerminalParserCsiKittyKeyboardQueryEventTest {
-	private val writer = Tty.stdinWriter()
-	private val parser = TerminalParser(writer.reader)
-
-	@AfterTest fun after() {
-		writer.close()
-	}
-
+class TerminalParserCsiKittyKeyboardQueryEventTest : BaseTerminalParserTest() {
 	@Test fun flagsNone() {
 		writer.writeHex("1b5b3f3075")
 		assertThat(parser.next()).isEqualTo(KittyKeyboardQueryEvent(0))

@@ -3,17 +3,9 @@ package com.jakewharton.mosaic.terminal
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.terminal.event.BracketedPasteEvent
-import kotlin.test.AfterTest
 import kotlin.test.Test
 
-class TerminalParserCsiBracketedPasteEventTest {
-	private val writer = Tty.stdinWriter()
-	private val parser = TerminalParser(writer.reader)
-
-	@AfterTest fun after() {
-		writer.close()
-	}
-
+class TerminalParserCsiBracketedPasteEventTest : BaseTerminalParserTest() {
 	@Test fun pasteStart() {
 		writer.writeHex("1b5b3230307e")
 		assertThat(parser.next()).isEqualTo(BracketedPasteEvent(start = true))

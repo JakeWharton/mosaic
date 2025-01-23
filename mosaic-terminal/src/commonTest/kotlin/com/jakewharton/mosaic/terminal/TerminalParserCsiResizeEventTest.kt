@@ -4,18 +4,10 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.terminal.event.ResizeEvent
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
-import kotlin.test.AfterTest
 import kotlin.test.Test
 
 @OptIn(ExperimentalStdlibApi::class)
-class TerminalParserCsiResizeEventTest {
-	private val writer = Tty.stdinWriter()
-	private val parser = TerminalParser(writer.reader)
-
-	@AfterTest fun after() {
-		writer.close()
-	}
-
+class TerminalParserCsiResizeEventTest : BaseTerminalParserTest() {
 	@Test fun basic() {
 		writer.writeHex("1b5b34383b313b323b333b3474")
 		assertThat(parser.next()).isEqualTo(ResizeEvent(2, 1, 4, 3))

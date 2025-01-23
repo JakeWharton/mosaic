@@ -9,18 +9,10 @@ import com.jakewharton.mosaic.terminal.event.DecModeReportEvent.Setting.Permanen
 import com.jakewharton.mosaic.terminal.event.DecModeReportEvent.Setting.Reset
 import com.jakewharton.mosaic.terminal.event.DecModeReportEvent.Setting.Set
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
-import kotlin.test.AfterTest
 import kotlin.test.Test
 
 @OptIn(ExperimentalStdlibApi::class)
-class TerminalParserCsiDecModeReportEventTest {
-	private val writer = Tty.stdinWriter()
-	private val parser = TerminalParser(writer.reader)
-
-	@AfterTest fun after() {
-		writer.close()
-	}
-
+class TerminalParserCsiDecModeReportEventTest : BaseTerminalParserTest() {
 	@Test fun settings() {
 		writer.writeHex("1b5b3f313030343b302479")
 		assertThat(parser.next()).isEqualTo(

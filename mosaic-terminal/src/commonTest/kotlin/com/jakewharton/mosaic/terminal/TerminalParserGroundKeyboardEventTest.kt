@@ -4,17 +4,9 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.terminal.event.KeyboardEvent
 import com.jakewharton.mosaic.terminal.event.KeyboardEvent.Companion.ModifierCtrl
-import kotlin.test.AfterTest
 import kotlin.test.Test
 
-class TerminalParserGroundKeyboardEventTest {
-	private val writer = Tty.stdinWriter()
-	private val parser = TerminalParser(writer.reader)
-
-	@AfterTest fun after() {
-		writer.close()
-	}
-
+class TerminalParserGroundKeyboardEventTest : BaseTerminalParserTest() {
 	@Test fun graphic() {
 		for (codepoint in 0x20..0x7f) {
 			val hex = codepoint.toString(16)

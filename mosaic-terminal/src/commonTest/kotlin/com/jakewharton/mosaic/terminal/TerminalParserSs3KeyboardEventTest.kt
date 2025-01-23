@@ -15,18 +15,10 @@ import com.jakewharton.mosaic.terminal.event.KeyboardEvent.Companion.Right
 import com.jakewharton.mosaic.terminal.event.KeyboardEvent.Companion.Up
 import com.jakewharton.mosaic.terminal.event.OperatingStatusResponseEvent
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
-import kotlin.test.AfterTest
 import kotlin.test.Test
 
 @OptIn(ExperimentalStdlibApi::class)
-class TerminalParserSs3KeyboardEventTest {
-	private val writer = Tty.stdinWriter()
-	private val parser = TerminalParser(writer.reader)
-
-	@AfterTest fun after() {
-		writer.close()
-	}
-
+class TerminalParserSs3KeyboardEventTest : BaseTerminalParserTest() {
 	@Test fun up() {
 		writer.writeHex("1b4f41")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up))

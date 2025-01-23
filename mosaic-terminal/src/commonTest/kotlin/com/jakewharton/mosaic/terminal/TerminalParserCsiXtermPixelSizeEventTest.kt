@@ -4,18 +4,10 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
 import com.jakewharton.mosaic.terminal.event.XtermPixelSizeEvent
-import kotlin.test.AfterTest
 import kotlin.test.Test
 
 @OptIn(ExperimentalStdlibApi::class)
-class TerminalParserCsiXtermPixelSizeEventTest {
-	private val writer = Tty.stdinWriter()
-	private val parser = TerminalParser(writer.reader)
-
-	@AfterTest fun after() {
-		writer.close()
-	}
-
+class TerminalParserCsiXtermPixelSizeEventTest : BaseTerminalParserTest() {
 	@Test fun basic() {
 		writer.writeHex("1b5b343b313b3274")
 		assertThat(parser.next()).isEqualTo(XtermPixelSizeEvent(1, 2))
