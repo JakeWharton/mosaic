@@ -21,7 +21,6 @@ import com.jakewharton.mosaic.terminal.event.KeyboardEvent.Companion.Up
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
 import kotlin.test.Test
 
-@OptIn(ExperimentalStdlibApi::class)
 class TerminalParserCsiKeyboardEventTest : BaseTerminalParserTest() {
 	@Test fun up() {
 		writer.writeHex("1b5b41")

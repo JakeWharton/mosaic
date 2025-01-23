@@ -6,7 +6,6 @@ import com.jakewharton.mosaic.terminal.event.KittyKeyboardQueryEvent
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
 import kotlin.test.Test
 
-@OptIn(ExperimentalStdlibApi::class)
 class TerminalParserCsiKittyKeyboardQueryEventTest : BaseTerminalParserTest() {
 	@Test fun flagsNone() {
 		writer.writeHex("1b5b3f3075")

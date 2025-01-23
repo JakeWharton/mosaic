@@ -17,7 +17,6 @@ import com.jakewharton.mosaic.terminal.event.OperatingStatusResponseEvent
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
 import kotlin.test.Test
 
-@OptIn(ExperimentalStdlibApi::class)
 class TerminalParserSs3KeyboardEventTest : BaseTerminalParserTest() {
 	@Test fun up() {
 		writer.writeHex("1b4f41")

@@ -1,12 +1,10 @@
 package com.jakewharton.mosaic.terminal
 
 import kotlinx.cinterop.CPointer
-import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.useContents
 import kotlinx.cinterop.usePinned
 
-@OptIn(ExperimentalForeignApi::class)
 public actual object Tty {
 	public actual fun enableRawMode(): AutoCloseable {
 		val savedConfig = enterRawMode().useContents {
@@ -48,7 +46,6 @@ public actual object Tty {
 	}
 }
 
-@OptIn(ExperimentalForeignApi::class)
 public actual class StdinReader internal constructor(
 	private var ref: CPointer<stdinReader>?,
 ) : AutoCloseable {
@@ -87,7 +84,6 @@ public actual class StdinReader internal constructor(
 	}
 }
 
-@OptIn(ExperimentalForeignApi::class)
 internal actual class StdinWriter internal constructor(
 	private var ref: CPointer<stdinWriter>?,
 	readerRef: CPointer<stdinReader>,

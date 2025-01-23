@@ -6,7 +6,6 @@ import com.jakewharton.mosaic.terminal.event.KeyboardEvent
 import com.jakewharton.mosaic.terminal.event.KeyboardEvent.Companion.ModifierShift
 import kotlin.test.Test
 
-@OptIn(ExperimentalStdlibApi::class)
 class TerminalParserCsiKittyKeyboardEventTest : BaseTerminalParserTest() {
 	@Test fun h() {
 		writer.writeHex("1b5b31303475")

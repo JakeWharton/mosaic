@@ -8,7 +8,6 @@ import com.jakewharton.mosaic.terminal.event.MouseEvent.Type
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
 import kotlin.test.Test
 
-@OptIn(ExperimentalStdlibApi::class)
 class TerminalParserCsiMouseEventTest : BaseTerminalParserTest() {
 	@Test fun motion() {
 		writer.writeHex("1b5b4d434837")

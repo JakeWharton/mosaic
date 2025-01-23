@@ -10,7 +10,6 @@ abstract class BaseTerminalParserTest {
 		writer.close()
 	}
 
-	@OptIn(ExperimentalStdlibApi::class)
 	internal fun StdinWriter.writeHex(hex: String) {
 		write(hex.hexToByteArray())
 	}

@@ -32,7 +32,16 @@ kotlin {
 
 	sourceSets {
 		configureEach {
-			languageSettings.optIn('kotlin.contracts.ExperimentalContracts')
+			languageSettings {
+				optIn('kotlin.contracts.ExperimentalContracts')
+				optIn('kotlinx.cinterop.ExperimentalForeignApi')
+			}
+			if (it.name.endsWith("Test")) {
+				languageSettings {
+					optIn('kotlin.ExperimentalStdlibApi')
+					optIn('kotlinx.coroutines.DelicateCoroutinesApi')
+				}
+			}
 		}
 
 		commonTest {

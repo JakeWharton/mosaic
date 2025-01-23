@@ -6,7 +6,6 @@ import com.jakewharton.mosaic.terminal.event.SystemThemeEvent
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
 import kotlin.test.Test
 
-@OptIn(ExperimentalStdlibApi::class)
 class TerminalParserCsiSystemThemeEventTest : BaseTerminalParserTest() {
 	@Test fun dark() {
 		writer.writeHex("1b5b3f3939373b316e")

@@ -19,6 +19,10 @@ kotlin {
 	explicitApi()
 
 	sourceSets {
+		configureEach {
+			languageSettings.optIn('kotlinx.cinterop.ExperimentalForeignApi')
+		}
+
 		commonMain {
 			dependencies {
 				api libs.compose.runtime

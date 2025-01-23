@@ -7,7 +7,6 @@ import com.jakewharton.mosaic.terminal.event.KittyPointerQuerySupportEvent
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
 import kotlin.test.Test
 
-@OptIn(ExperimentalStdlibApi::class)
 class TerminalParserOscKittyPointerQueryEventTest : BaseTerminalParserTest() {
 	@Test fun emptyFails() {
 		writer.writeHex("1b5d32323b1b5c")

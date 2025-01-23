@@ -11,7 +11,6 @@ import com.jakewharton.mosaic.terminal.event.DecModeReportEvent.Setting.Set
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
 import kotlin.test.Test
 
-@OptIn(ExperimentalStdlibApi::class)
 class TerminalParserCsiDecModeReportEventTest : BaseTerminalParserTest() {
 	@Test fun settings() {
 		writer.writeHex("1b5b3f313030343b302479")

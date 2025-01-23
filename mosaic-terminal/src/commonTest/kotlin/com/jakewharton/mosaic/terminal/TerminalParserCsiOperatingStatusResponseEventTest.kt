@@ -6,7 +6,6 @@ import com.jakewharton.mosaic.terminal.event.OperatingStatusResponseEvent
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
 import kotlin.test.Test
 
-@OptIn(ExperimentalStdlibApi::class)
 class TerminalParserCsiOperatingStatusResponseEventTest : BaseTerminalParserTest() {
 	@Test fun ok() {
 		writer.writeHex("1b5b306e")

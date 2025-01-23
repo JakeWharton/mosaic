@@ -6,7 +6,6 @@ import com.jakewharton.mosaic.terminal.event.UnknownEvent
 import com.jakewharton.mosaic.terminal.event.XtermPixelSizeEvent
 import kotlin.test.Test
 
-@OptIn(ExperimentalStdlibApi::class)
 class TerminalParserCsiXtermPixelSizeEventTest : BaseTerminalParserTest() {
 	@Test fun basic() {
 		writer.writeHex("1b5b343b313b3274")

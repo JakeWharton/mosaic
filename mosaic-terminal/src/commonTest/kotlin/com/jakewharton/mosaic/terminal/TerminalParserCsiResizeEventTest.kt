@@ -6,7 +6,6 @@ import com.jakewharton.mosaic.terminal.event.ResizeEvent
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
 import kotlin.test.Test
 
-@OptIn(ExperimentalStdlibApi::class)
 class TerminalParserCsiResizeEventTest : BaseTerminalParserTest() {
 	@Test fun basic() {
 		writer.writeHex("1b5b34383b313b323b333b3474")
