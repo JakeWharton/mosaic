@@ -174,11 +174,6 @@ jobs:
           --continue
           build
           -x allTests
-          -x jvmJdk8Test
-          -x jvmJdk11Test
-          -x jvmJdk17Test
-          -x jvmJdk21Test
-          -x jvmJdk23Test
           -x jvmProGuardTest
           -x linuxX64Test
           -x macosArm64Test

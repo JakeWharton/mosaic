@@ -66,27 +66,6 @@ kotlin {
 			}
 		}
 
-		def allJvmTests = tasks.register("all${target.name.capitalize()}Tests") {
-			group = VERIFICATION_GROUP
-			description = "Run all of the tests for the ${target.name} target."
-		}
-
-		// Create dedicated compilation tasks for each LTS JDK as well as the latest JDK. One of these
-		// may be redundant with the normal test task, but that depends on the user's JDK version,
-		// and we don't really care about the duplication because these run very quickly.
-		for (testJdk in [8, 11, 17, 21, 23]) {
-			target.testRuns.create("Jdk$testJdk") { run ->
-				allJvmTests.configure {
-					it.dependsOn(run.executionTask)
-				}
-				run.executionTask.configure { test->
-					test.javaLauncher = javaToolchains.launcherFor {
-						it.languageVersion = JavaLanguageVersion.of(testJdk)
-					}
-				}
-			}
-		}
-
 		def dependencyFiles = testCompilation.map { it.runtimeDependencyFiles }
 		def proGuardJar = base.archivesName.flatMap { archivesName ->
 			layout.buildDirectory.file("libs/$archivesName-tests-${target.name}-$version-ProGuard.jar")
@@ -119,9 +98,6 @@ kotlin {
 		}
 
 		target.testRuns.create("ProGuard") { run ->
-			allJvmTests.configure {
-				it.dependsOn(run.executionTask)
-			}
 			run.executionTask.configure {
 				dependsOn(proGuardTask)
 			}
