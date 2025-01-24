@@ -85,8 +85,6 @@ public class TerminalReader internal constructor(
 	 */
 	public fun runParseLoop() {
 		val buffer = buffer
-		var offset = offset
-		var limit = limit
 
 		while (true) {
 			if (offset < limit) {
@@ -95,14 +93,12 @@ public class TerminalReader internal constructor(
 					_events.trySend(event)
 					if (!emitDebugEvents) continue
 
-					offset = this.offset
-
-					// Leverage the fact that parsing always occurs at the start of the buffer (see below)
-					// to capture its consumed bytes by looking at where the next parse would start.
+					// In debug event mode, parsing starts at index 0 of the buffer (see below). Leverage
+					// this to capture the consumed bytes by looking at where the next parse would start.
 					val eventBytes = buffer.copyOfRange(0, offset)
 					_events.trySend(DebugEvent(event, eventBytes))
 
-					// Move remaining data to the start of the buffer to maintain invariant for next event.
+					// Move remaining data to the start of the buffer to maintain the parse from 0 invariant.
 					buffer.copyInto(buffer, 0, startIndex = offset, endIndex = limit)
 					limit -= offset
 					offset = 0
@@ -113,22 +109,17 @@ public class TerminalReader internal constructor(
 
 			// Underflow! Copy any data to start of buffer in preparation for a read.
 			buffer.copyInto(buffer, 0, startIndex = offset, endIndex = limit)
-
-			// Do not write the new limit to the member property because the read code below will.
 			limit -= offset
-
 			offset = 0
-			this.offset = 0
 
 			if (kittyDisambiguateEscapeCodes || limit != 1 || buffer[0] != 0x1B.toByte()) {
 				// Common case: we are using the Kitty keyboard protocol to disambiguate escape keys, or
 				// the buffer contains anything other than a bare escape. Do a normal read for more data.
 				val read = platformInput.read(buffer, limit, BufferSize - limit)
-				if (read == 0) return // Interrupt
 				if (read == -1) break // EOF
+				if (read == 0) return // Interrupt
 
 				limit += read
-				this.limit = limit
 				continue
 			}
 
@@ -150,7 +141,6 @@ public class TerminalReader internal constructor(
 			} else {
 				read + 1
 			}
-			this.limit = limit
 		}
 
 		if (limit > 0) {

@@ -38,6 +38,7 @@ kotlin {
 			}
 			if (it.name.endsWith("Test")) {
 				languageSettings {
+					optIn('com.jakewharton.mosaic.terminal.TestApi')
 					optIn('kotlin.ExperimentalStdlibApi')
 					optIn('kotlinx.coroutines.DelicateCoroutinesApi')
 				}
@@ -50,11 +51,6 @@ kotlin {
 			}
 		}
 		commonTest {
-			languageSettings {
-				optIn('com.jakewharton.mosaic.terminal.TestApi')
-				optIn('kotlin.ExperimentalStdlibApi')
-				optIn('kotlinx.coroutines.DelicateCoroutinesApi')
-			}
 			dependencies {
 				implementation libs.kotlin.test
 				implementation libs.kotlinx.coroutines.test
