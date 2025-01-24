@@ -14,21 +14,14 @@ abstract class BaseTerminalParserTest {
 	internal val writer = Tty.stdinWriter()
 	internal val parser = writer.reader
 	private val runLoop = GlobalScope.launch(Dispatchers.IO) {
-		println('a')
 		parser.runParseLoop()
-		println('b')
 	}
 
 	@AfterTest fun after() = runTest {
-		println('A')
 		parser.interrupt()
-		println('B')
 		runLoop.join()
-		println('C')
 		writer.close()
-		println('D')
 		assertThat(parser.copyBuffer().toHexString()).isEqualTo("")
-		println('E')
 	}
 
 	internal fun StdinWriter.writeHex(hex: String) {

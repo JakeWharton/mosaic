@@ -157,9 +157,9 @@ Java_com_jakewharton_mosaic_terminal_Jni_inputHandlerFree(JNIEnv *env, jclass ty
 	inputHandler *handler = (inputHandler *) handlerOpaque;
 	jniPlatformEventHandler *jniHandler = handler->opaque;
 	jobject instance = jniHandler->instance;
-	(*env)->DeleteGlobalRef(env, instance);
 	free(handler);
 	free(jniHandler);
+	(*env)->DeleteGlobalRef(env, instance);
 }
 
 JNIEXPORT jlong JNICALL

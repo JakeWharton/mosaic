@@ -72,7 +72,7 @@ public actual object Tty {
 
 // TODO @JvmSynthetic https://youtrack.jetbrains.com/issue/KT-24981
 internal actual class PlatformInput internal constructor(
-	private val readerPtr: Long,
+	private var readerPtr: Long,
 	private val handlerPtr: Long,
 ) : AutoCloseable {
 	actual fun read(buffer: ByteArray, offset: Int, count: Int): Int {
@@ -88,14 +88,17 @@ internal actual class PlatformInput internal constructor(
 	}
 
 	actual override fun close() {
-		stdinReaderFree(readerPtr)
-		inputHandlerFree(handlerPtr)
+		if (readerPtr != 0L) {
+			stdinReaderFree(readerPtr)
+			readerPtr = 0
+			inputHandlerFree(handlerPtr)
+		}
 	}
 }
 
 // TODO @JvmSynthetic https://youtrack.jetbrains.com/issue/KT-24981
 internal actual class StdinWriter internal constructor(
-	private val writerPtr: Long,
+	private var writerPtr: Long,
 	actual val reader: TerminalReader,
 ) : AutoCloseable {
 	actual fun write(buffer: ByteArray) {
@@ -120,6 +123,9 @@ internal actual class StdinWriter internal constructor(
 
 	actual override fun close() {
 		reader.close()
-		stdinWriterFree(writerPtr)
+		if (writerPtr != 0L) {
+			stdinWriterFree(writerPtr)
+			writerPtr = 0
+		}
 	}
 }
