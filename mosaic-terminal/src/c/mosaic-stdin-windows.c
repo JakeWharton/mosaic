@@ -5,27 +5,27 @@
 #include "cutils.h"
 #include <windows.h>
 
-typedef struct stdinReaderImpl {
+typedef struct platformInputImpl {
 	HANDLE waitHandles[2];
 	HANDLE readHandle;
 	platformEventHandler *handler;
-} stdinReaderImpl;
+} platformInputImpl;
 
-typedef struct stdinWriterImpl {
+typedef struct platformInputWriterImpl {
 	HANDLE readHandle;
 	HANDLE writeHandle;
 	HANDLE eventHandle;
-	stdinReader *reader;
-} stdinWriterImpl;
+	platformInput *reader;
+} platformInputWriterImpl;
 
-stdinReaderResult platformInput_initWithHandle(
+platformInputResult platformInput_initWithHandle(
 	HANDLE stdinRead,
 	HANDLE stdinWait,
 	platformEventHandler *handler
 ) {
-	stdinReaderResult result = {};
+	platformInputResult result = {};
 
-	stdinReaderImpl *reader = calloc(1, sizeof(stdinReaderImpl));
+	platformInputImpl *reader = calloc(1, sizeof(platformInputImpl));
 	if (unlikely(reader == NULL)) {
 		// result.reader is set to 0 which will trigger OOM.
 		goto ret;
@@ -57,13 +57,13 @@ stdinReaderResult platformInput_initWithHandle(
 	goto ret;
 }
 
-stdinReaderResult platformInput_init(platformEventHandler *handler) {
+platformInputResult platformInput_init(platformEventHandler *handler) {
 	HANDLE h = GetStdHandle(STD_INPUT_HANDLE);
 	return platformInput_initWithHandle(h, h, handler);
 }
 
 stdinRead platformInput_read(
-	stdinReader *reader,
+	platformInput *reader,
 	void *buffer,
 	int count
 ) {
@@ -71,7 +71,7 @@ stdinRead platformInput_read(
 }
 
 stdinRead platformInput_readWithTimeout(
-	stdinReader *reader,
+	platformInput *reader,
 	void *buffer,
 	int count,
 	int timeoutMillis
@@ -99,13 +99,13 @@ stdinRead platformInput_readWithTimeout(
 	goto ret;
 }
 
-platformError platformInput_interrupt(stdinReader *reader) {
+platformError platformInput_interrupt(platformInput *reader) {
 	return likely(SetEvent(reader->waitHandles[1]) != 0)
 		? 0
 		: GetLastError();
 }
 
-platformError platformInput_free(stdinReader *reader) {
+platformError platformInput_free(platformInput *reader) {
 	DWORD result = 0;
 	if (unlikely(CloseHandle(reader->waitHandles[1]) == 0)) {
 		result = GetLastError();
@@ -114,10 +114,10 @@ platformError platformInput_free(stdinReader *reader) {
 	return result;
 }
 
-stdinWriterResult platformInputWriter_init(platformEventHandler *handler) {
-	stdinWriterResult result = {};
+platformInputWriterResult platformInputWriter_init(platformEventHandler *handler) {
+	platformInputWriterResult result = {};
 
-	stdinWriterImpl *writer = calloc(1, sizeof(stdinWriterImpl));
+	platformInputWriterImpl *writer = calloc(1, sizeof(platformInputWriterImpl));
 	if (unlikely(writer == NULL)) {
 		// result.writer is set to 0 which will trigger OOM.
 		goto ret;
@@ -135,7 +135,7 @@ stdinWriterResult platformInputWriter_init(platformEventHandler *handler) {
 	}
 	writer->eventHandle = writeEvent;
 
-	stdinReaderResult readerResult = platformInput_initWithHandle(writer->readHandle, writer->eventHandle, handler);
+	platformInputResult readerResult = platformInput_initWithHandle(writer->readHandle, writer->eventHandle, handler);
 	if (unlikely(readerResult.error)) {
 		result.error = readerResult.error;
 		goto err;
@@ -152,11 +152,11 @@ stdinWriterResult platformInputWriter_init(platformEventHandler *handler) {
 	goto ret;
 }
 
-stdinReader *platformInputWriter_getReader(stdinWriter *writer) {
+platformInput *platformInputWriter_getReader(platformInputWriter *writer) {
 	return writer->reader;
 }
 
-platformError platformInputWriter_write(stdinWriter *writer, void *buffer, int count) {
+platformError platformInputWriter_write(platformInputWriter *writer, void *buffer, int count) {
 	// Per https://learn.microsoft.com/en-us/windows/win32/api/namedpipeapi/nf-namedpipeapi-createpipe#remarks
 	// "When a process uses WriteFile to write to an anonymous pipe,
 	//  the write operation is not completed until all bytes are written."
@@ -167,27 +167,27 @@ platformError platformInputWriter_write(stdinWriter *writer, void *buffer, int c
 	return GetLastError();
 }
 
-void platformInputWriter_focusEvent(stdinWriter *writer, bool focused) {
+void platformInputWriter_focusEvent(platformInputWriter *writer, bool focused) {
  	platformEventHandler *handler = writer->reader->handler;
  	handler->onFocus(handler->opaque, focused);
  }
 
- void platformInputWriter_keyEvent(stdinWriter *writer) {
+ void platformInputWriter_keyEvent(platformInputWriter *writer) {
  	platformEventHandler *handler = writer->reader->handler;
  	handler->onKey(handler->opaque);
  }
 
- void platformInputWriter_mouseEvent(stdinWriter *writer) {
+ void platformInputWriter_mouseEvent(platformInputWriter *writer) {
  	platformEventHandler *handler = writer->reader->handler;
  	handler->onMouse(handler->opaque);
  }
 
- void platformInputWriter_resizeEvent(stdinWriter *writer, int columns, int rows, int width, int height) {
+ void platformInputWriter_resizeEvent(platformInputWriter *writer, int columns, int rows, int width, int height) {
  	platformEventHandler *handler = writer->reader->handler;
  	handler->onResize(handler->opaque, columns, rows, width, height);
  }
 
-platformError platformInputWriter_free(stdinWriter *writer) {
+platformError platformInputWriter_free(platformInputWriter *writer) {
 	DWORD result = 0;
 	if (unlikely(CloseHandle(writer->eventHandle) == 0)) {
 		result = GetLastError();

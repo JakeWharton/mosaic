@@ -10,23 +10,23 @@
 #include <time.h>
 #include <unistd.h>
 
-typedef struct stdinReaderImpl {
+typedef struct platformInputImpl {
 	int stdinFd;
 	int pipe[2];
 	fd_set fds;
 	int nfds;
 	platformEventHandler *handler;
-} stdinReaderImpl;
+} platformInputImpl;
 
-typedef struct stdinWriterImpl {
+typedef struct platformInputWriterImpl {
 	int pipe[2];
-	stdinReader *reader;
-} stdinWriterImpl;
+	platformInput *reader;
+} platformInputWriterImpl;
 
-stdinReaderResult platformInput_initWithFd(int stdinFd, platformEventHandler *handler) {
-	stdinReaderResult result = {};
+platformInputResult platformInput_initWithFd(int stdinFd, platformEventHandler *handler) {
+	platformInputResult result = {};
 
-	stdinReaderImpl *reader = calloc(1, sizeof(stdinReaderImpl));
+	platformInputImpl *reader = calloc(1, sizeof(platformInputImpl));
 	if (unlikely(reader == NULL)) {
 		// result.reader is set to 0 which will trigger OOM.
 		goto ret;
@@ -53,12 +53,12 @@ stdinReaderResult platformInput_initWithFd(int stdinFd, platformEventHandler *ha
 	goto ret;
 }
 
-stdinReaderResult platformInput_init(platformEventHandler *handler) {
+platformInputResult platformInput_init(platformEventHandler *handler) {
 	return platformInput_initWithFd(STDIN_FILENO, handler);
 }
 
 stdinRead platformInput_readInternal(
-	stdinReader *reader,
+	platformInput *reader,
 	void *buffer,
 	int count,
 	struct timeval *timeout
@@ -102,12 +102,12 @@ stdinRead platformInput_readInternal(
 	goto ret;
 }
 
-stdinRead platformInput_read(stdinReader *reader, void *buffer, int count) {
+stdinRead platformInput_read(platformInput *reader, void *buffer, int count) {
 	return platformInput_readInternal(reader, buffer, count, NULL);
 }
 
 stdinRead platformInput_readWithTimeout(
-	stdinReader *reader,
+	platformInput *reader,
 	void *buffer,
 	int count,
 	int timeoutMillis
@@ -119,7 +119,7 @@ stdinRead platformInput_readWithTimeout(
 	return platformInput_readInternal(reader, buffer, count, &timeout);
 }
 
-platformError platformInput_interrupt(stdinReader *reader) {
+platformError platformInput_interrupt(platformInput *reader) {
 	int pipeOut = reader->pipe[1];
 	int result = write(pipeOut, " ", 1);
 	return unlikely(result == -1)
@@ -127,7 +127,7 @@ platformError platformInput_interrupt(stdinReader *reader) {
 		: 0;
 }
 
-platformError platformInput_free(stdinReader *reader) {
+platformError platformInput_free(platformInput *reader) {
 	int *pipe = reader->pipe;
 
 	int result = 0;
@@ -141,10 +141,10 @@ platformError platformInput_free(stdinReader *reader) {
 	return result;
 }
 
-stdinWriterResult platformInputWriter_init(platformEventHandler *handler) {
-	stdinWriterResult result = {};
+platformInputWriterResult platformInputWriter_init(platformEventHandler *handler) {
+	platformInputWriterResult result = {};
 
-	stdinWriterImpl *writer = calloc(1, sizeof(stdinWriterImpl));
+	platformInputWriterImpl *writer = calloc(1, sizeof(platformInputWriterImpl));
 	if (unlikely(writer == NULL)) {
 		// result.writer is set to 0 which will trigger OOM.
 		goto ret;
@@ -155,7 +155,7 @@ stdinWriterResult platformInputWriter_init(platformEventHandler *handler) {
 		goto err;
 	}
 
-	stdinReaderResult readerResult = platformInput_initWithFd(writer->pipe[0], handler);
+	platformInputResult readerResult = platformInput_initWithFd(writer->pipe[0], handler);
 	if (unlikely(readerResult.error)) {
 		result.error = readerResult.error;
 		goto err;
@@ -172,11 +172,11 @@ stdinWriterResult platformInputWriter_init(platformEventHandler *handler) {
 	goto ret;
 }
 
-stdinReader *platformInputWriter_getReader(stdinWriter *writer) {
+platformInput *platformInputWriter_getReader(platformInputWriter *writer) {
 	return writer->reader;
 }
 
-platformError platformInputWriter_write(stdinWriter *writer, void *buffer, int count) {
+platformError platformInputWriter_write(platformInputWriter *writer, void *buffer, int count) {
 	int pipeOut = writer->pipe[1];
 	while (count > 0) {
 		int result = write(pipeOut, buffer, count);
@@ -191,24 +191,24 @@ platformError platformInputWriter_write(stdinWriter *writer, void *buffer, int c
 	return errno;
 }
 
-void platformInputWriter_focusEvent(stdinWriter *writer UNUSED, bool focused UNUSED) {
+void platformInputWriter_focusEvent(platformInputWriter *writer UNUSED, bool focused UNUSED) {
 	// Focus events are delivered through VT sequences.
 }
 
-void platformInputWriter_keyEvent(stdinWriter *writer UNUSED) {
+void platformInputWriter_keyEvent(platformInputWriter *writer UNUSED) {
 	// Key events are delivered through VT sequences.
 }
 
-void platformInputWriter_mouseEvent(stdinWriter *writer UNUSED) {
+void platformInputWriter_mouseEvent(platformInputWriter *writer UNUSED) {
 	// Mouse events are delivered through VT sequences.
 }
 
-void platformInputWriter_resizeEvent(stdinWriter *writer, int columns, int rows, int width, int height) {
+void platformInputWriter_resizeEvent(platformInputWriter *writer, int columns, int rows, int width, int height) {
 	platformEventHandler *handler = writer->reader->handler;
 	handler->onResize(handler->opaque, columns, rows, width, height);
 }
 
-platformError platformInputWriter_free(stdinWriter *writer) {
+platformError platformInputWriter_free(platformInputWriter *writer) {
 	int *pipe = writer->pipe;
 
 	int result = 0;

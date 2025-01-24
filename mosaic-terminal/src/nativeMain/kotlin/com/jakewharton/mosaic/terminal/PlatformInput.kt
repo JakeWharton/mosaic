@@ -14,11 +14,11 @@ import kotlinx.cinterop.useContents
 import kotlinx.cinterop.usePinned
 
 internal actual class PlatformInput internal constructor(
-	ptr: CPointer<stdinReader>,
+	ptr: CPointer<platformInput>,
 	private val handlerPtr: CPointer<platformEventHandler>?,
 	private val handlerRef: StableRef<PlatformEventHandler>?,
 ) : AutoCloseable {
-	private var ptr: CPointer<stdinReader>? = ptr
+	private var ptr: CPointer<platformInput>? = ptr
 
 	actual fun read(buffer: ByteArray, offset: Int, count: Int): Int {
 		buffer.usePinned {

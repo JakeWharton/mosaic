@@ -35,7 +35,7 @@ internal actual fun PlatformInputWriter(): PlatformInputWriter {
 }
 
 internal actual class PlatformInputWriter(
-	private var ptr: CPointer<stdinWriter>?,
+	private var ptr: CPointer<platformInputWriter>?,
 	private val events: Channel<Event>,
 	actual val input: PlatformInput,
 ) : AutoCloseable {
