@@ -31,7 +31,4 @@ public expect object Tty {
 	 * by a [DebugEvent] that contains the original event and the bytes which produced it.
 	 */
 	public fun terminalReader(emitDebugEvents: Boolean = false): TerminalReader
-
-	@TestApi
-	internal fun platformInputWriter(): PlatformInputWriter
 }

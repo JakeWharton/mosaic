@@ -2,11 +2,39 @@ package com.jakewharton.mosaic.terminal
 
 import com.jakewharton.mosaic.terminal.event.Event
 import kotlinx.cinterop.CPointer
+import kotlinx.cinterop.StableRef
 import kotlinx.cinterop.addressOf
+import kotlinx.cinterop.free
+import kotlinx.cinterop.nativeHeap
+import kotlinx.cinterop.ptr
+import kotlinx.cinterop.useContents
 import kotlinx.cinterop.usePinned
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 
-internal actual class PlatformInputWriter internal constructor(
+internal actual fun PlatformInputWriter(): PlatformInputWriter {
+	val events = Channel<Event>(UNLIMITED)
+
+	val handler = PlatformEventHandler(events)
+	val handlerRef = StableRef.create(handler)
+	val handlerPtr = handlerRef.toNativeAllocationIn(nativeHeap).ptr
+
+	val writerPtr = stdinWriter_init(handlerPtr).useContents {
+		writer?.let { return@useContents it }
+
+		nativeHeap.free(handlerPtr)
+		handlerRef.dispose()
+
+		check(error == 0U) { "Unable to create stdin writer: $error" }
+		throw OutOfMemoryError()
+	}
+
+	val readerPtr = stdinWriter_getReader(writerPtr)!!
+	val platformInput = PlatformInput(readerPtr, handlerPtr, handlerRef)
+	return PlatformInputWriter(writerPtr, events, platformInput)
+}
+
+internal actual class PlatformInputWriter(
 	private var ptr: CPointer<stdinWriter>?,
 	private val events: Channel<Event>,
 	actual val input: PlatformInput,

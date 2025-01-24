@@ -14,7 +14,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class StdinReaderTest {
-	private val writer = Tty.platformInputWriter()
+	private val writer = PlatformInputWriter()
 	private val input = writer.input
 
 	@AfterTest fun after() {

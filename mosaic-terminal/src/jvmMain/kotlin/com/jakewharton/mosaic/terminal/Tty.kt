@@ -5,8 +5,6 @@ import com.jakewharton.mosaic.terminal.Jni.exitRawMode
 import com.jakewharton.mosaic.terminal.Jni.platformEventHandlerFree
 import com.jakewharton.mosaic.terminal.Jni.platformEventHandlerInit
 import com.jakewharton.mosaic.terminal.Jni.stdinReaderInit
-import com.jakewharton.mosaic.terminal.Jni.stdinWriterGetReader
-import com.jakewharton.mosaic.terminal.Jni.stdinWriterInit
 import com.jakewharton.mosaic.terminal.event.Event
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
@@ -36,22 +34,6 @@ public actual object Tty {
 			if (readerPtr != 0L) {
 				val platformInput = PlatformInput(readerPtr, handlerPtr)
 				return TerminalReader(platformInput, events, emitDebugEvents)
-			}
-			platformEventHandlerFree(handlerPtr)
-		}
-		throw OutOfMemoryError()
-	}
-
-	@JvmSynthetic // Hide from Java callers.
-	internal actual fun platformInputWriter(): PlatformInputWriter {
-		val events = Channel<Event>(UNLIMITED)
-		val handlerPtr = platformEventHandlerInit(PlatformEventHandler(events))
-		if (handlerPtr != 0L) {
-			val writerPtr = stdinWriterInit(handlerPtr)
-			if (writerPtr != 0L) {
-				val readerPtr = stdinWriterGetReader(writerPtr)
-				val platformInput = PlatformInput(readerPtr, handlerPtr)
-				return PlatformInputWriter(writerPtr, events, platformInput)
 			}
 			platformEventHandlerFree(handlerPtr)
 		}

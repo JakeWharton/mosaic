@@ -1,6 +1,7 @@
 package com.jakewharton.mosaic.terminal
 
-@TestApi
+internal expect fun PlatformInputWriter(): PlatformInputWriter
+
 internal expect class PlatformInputWriter : AutoCloseable {
 	val input: PlatformInput
 
