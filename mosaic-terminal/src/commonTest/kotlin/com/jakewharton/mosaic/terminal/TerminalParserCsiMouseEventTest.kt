@@ -12,114 +12,114 @@ import kotlinx.coroutines.test.runTest
 class TerminalParserCsiMouseEventTest : BaseTerminalParserTest() {
 	@Test fun motion() = runTest {
 		writer.writeHex("1b5b4d434837")
-		assertThat(parser.next()).isEqualTo(
+		assertThat(reader.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Motion, Button.None),
 		)
 	}
 
 	@Test fun click() = runTest {
 		writer.writeHex("1b5b4d204837")
-		assertThat(parser.next()).isEqualTo(
+		assertThat(reader.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Press, Button.Left),
 		)
 	}
 
 	@Test fun drag() = runTest {
 		writer.writeHex("1b5b4d404837")
-		assertThat(parser.next()).isEqualTo(
+		assertThat(reader.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Drag, Button.Left),
 		)
 	}
 
 	@Test fun clickMouseUp() = runTest {
 		writer.writeHex("1b5b4d234837")
-		assertThat(parser.next()).isEqualTo(
+		assertThat(reader.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Press, Button.None),
 		)
 	}
 
 	@Test fun shiftClick() = runTest {
 		writer.writeHex("1b5b4d244837")
-		assertThat(parser.next()).isEqualTo(
+		assertThat(reader.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Press, Button.Left, shift = true),
 		)
 	}
 
 	@Test fun altClick() = runTest {
 		writer.writeHex("1b5b4d284837")
-		assertThat(parser.next()).isEqualTo(
+		assertThat(reader.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Press, Button.Left, alt = true),
 		)
 	}
 
 	@Test fun ctrlClick() = runTest {
 		writer.writeHex("1b5b4d304837")
-		assertThat(parser.next()).isEqualTo(
+		assertThat(reader.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Press, Button.Left, ctrl = true),
 		)
 	}
 
 	@Test fun clickRight() = runTest {
 		writer.writeHex("1b5b4d224837")
-		assertThat(parser.next()).isEqualTo(
+		assertThat(reader.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Press, Button.Right),
 		)
 	}
 
 	@Test fun clickMiddle() = runTest {
 		writer.writeHex("1b5b4d214837")
-		assertThat(parser.next()).isEqualTo(
+		assertThat(reader.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Press, Button.Middle),
 		)
 	}
 
 	@Test fun clickWheelUp() = runTest {
 		writer.writeHex("1b5b4d604837")
-		assertThat(parser.next()).isEqualTo(
+		assertThat(reader.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Press, Button.WheelUp),
 		)
 	}
 
 	@Test fun clickWheelDown() = runTest {
 		writer.writeHex("1b5b4d614837")
-		assertThat(parser.next()).isEqualTo(
+		assertThat(reader.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Press, Button.WheelDown),
 		)
 	}
 
 	@Test fun clickButton8() = runTest {
 		writer.writeHex("1b5b4da04837")
-		assertThat(parser.next()).isEqualTo(
+		assertThat(reader.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Press, Button.Button8),
 		)
 	}
 
 	@Test fun clickButton9() = runTest {
 		writer.writeHex("1b5b4da14837")
-		assertThat(parser.next()).isEqualTo(
+		assertThat(reader.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Press, Button.Button9),
 		)
 	}
 
 	@Test fun clickButton10() = runTest {
 		writer.writeHex("1b5b4da24837")
-		assertThat(parser.next()).isEqualTo(
+		assertThat(reader.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Press, Button.Button10),
 		)
 	}
 
 	@Test fun clickButton11() = runTest {
 		writer.writeHex("1b5b4da34837")
-		assertThat(parser.next()).isEqualTo(
+		assertThat(reader.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Press, Button.Button11),
 		)
 	}
 
 	@Test fun clickUtf8() = runTest {
-		parser.xtermExtendedUtf8Mouse = true
+		reader.xtermExtendedUtf8Mouse = true
 
 		writer.writeHex("1b5b4d20c28037")
-		assertThat(parser.next()).isEqualTo(
+		assertThat(reader.next()).isEqualTo(
 			MouseEvent(95, 22, Type.Press, Button.Left),
 		)
 	}
@@ -128,7 +128,7 @@ class TerminalParserCsiMouseEventTest : BaseTerminalParserTest() {
 
 	@Test fun lowercaseMDelimiterInvalid() = runTest {
 		writer.writeHex("1b5b6d204837")
-		assertThat(parser.next()).isEqualTo(
+		assertThat(reader.next()).isEqualTo(
 			UnknownEvent("1b5b6d".hexToByteArray()),
 		)
 	}

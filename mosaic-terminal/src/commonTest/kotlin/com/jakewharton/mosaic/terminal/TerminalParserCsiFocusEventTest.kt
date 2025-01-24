@@ -9,11 +9,11 @@ import kotlinx.coroutines.test.runTest
 class TerminalParserCsiFocusEventTest : BaseTerminalParserTest() {
 	@Test fun focusedTrue() = runTest {
 		writer.writeHex("1b5b49")
-		assertThat(parser.next()).isEqualTo(FocusEvent(focused = true))
+		assertThat(reader.next()).isEqualTo(FocusEvent(focused = true))
 	}
 
 	@Test fun focusedFalse() = runTest {
 		writer.writeHex("1b5b4f")
-		assertThat(parser.next()).isEqualTo(FocusEvent(focused = false))
+		assertThat(reader.next()).isEqualTo(FocusEvent(focused = false))
 	}
 }
