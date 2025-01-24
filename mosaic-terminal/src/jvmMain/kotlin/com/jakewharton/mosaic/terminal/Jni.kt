@@ -19,10 +19,10 @@ internal object Jni {
 	external fun exitRawMode(savedConfig: Long)
 
 	@JvmStatic
-	external fun inputHandlerInit(handler: PlatformEventHandler): Long
+	external fun platformEventHandlerInit(handler: PlatformEventHandler): Long
 
 	@JvmStatic
-	external fun inputHandlerFree(handler: Long)
+	external fun platformEventHandlerFree(handler: Long)
 
 	@JvmStatic
 	external fun stdinReaderInit(handler: Long): Long

@@ -15,7 +15,7 @@ typedef struct stdinReaderImpl {
 	int pipe[2];
 	fd_set fds;
 	int nfds;
-	inputHandler *handler;
+	platformEventHandler *handler;
 } stdinReaderImpl;
 
 typedef struct stdinWriterImpl {
@@ -23,7 +23,7 @@ typedef struct stdinWriterImpl {
 	stdinReader *reader;
 } stdinWriterImpl;
 
-stdinReaderResult stdinReader_initWithFd(int stdinFd, inputHandler *handler) {
+stdinReaderResult stdinReader_initWithFd(int stdinFd, platformEventHandler *handler) {
 	stdinReaderResult result = {};
 
 	stdinReaderImpl *reader = calloc(1, sizeof(stdinReaderImpl));
@@ -53,7 +53,7 @@ stdinReaderResult stdinReader_initWithFd(int stdinFd, inputHandler *handler) {
 	goto ret;
 }
 
-stdinReaderResult stdinReader_init(inputHandler *handler) {
+stdinReaderResult stdinReader_init(platformEventHandler *handler) {
 	return stdinReader_initWithFd(STDIN_FILENO, handler);
 }
 
@@ -141,7 +141,7 @@ platformError stdinReader_free(stdinReader *reader) {
 	return result;
 }
 
-stdinWriterResult stdinWriter_init(inputHandler *handler) {
+stdinWriterResult stdinWriter_init(platformEventHandler *handler) {
 	stdinWriterResult result = {};
 
 	stdinWriterImpl *writer = calloc(1, sizeof(stdinWriterImpl));
@@ -204,7 +204,7 @@ void stdinWriter_mouseEvent(stdinWriter *writer UNUSED) {
 }
 
 void stdinWriter_resizeEvent(stdinWriter *writer, int columns, int rows, int width, int height) {
-	inputHandler *handler = writer->reader->handler;
+	platformEventHandler *handler = writer->reader->handler;
 	handler->onResize(handler->opaque, columns, rows, width, height);
 }
 

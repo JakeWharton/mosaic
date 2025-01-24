@@ -85,7 +85,7 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 					print("\u001b]4;$i;?\u001b\\")
 				}
 
-				val reader = Tty.stdinReader(emitDebugEvents = mode == Mode.Hex)
+				val reader = Tty.terminalReader(emitDebugEvents = mode == Mode.Hex)
 
 				// Upon receiving a signal, this block's job will be canceled. Use that to wake up the
 				// blocking stdin read so it loops and checks if its job is still active or not.

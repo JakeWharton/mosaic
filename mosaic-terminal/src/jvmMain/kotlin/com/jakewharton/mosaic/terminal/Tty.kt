@@ -2,8 +2,8 @@ package com.jakewharton.mosaic.terminal
 
 import com.jakewharton.mosaic.terminal.Jni.enterRawMode
 import com.jakewharton.mosaic.terminal.Jni.exitRawMode
-import com.jakewharton.mosaic.terminal.Jni.inputHandlerFree
-import com.jakewharton.mosaic.terminal.Jni.inputHandlerInit
+import com.jakewharton.mosaic.terminal.Jni.platformEventHandlerFree
+import com.jakewharton.mosaic.terminal.Jni.platformEventHandlerInit
 import com.jakewharton.mosaic.terminal.Jni.stdinReaderFree
 import com.jakewharton.mosaic.terminal.Jni.stdinReaderInit
 import com.jakewharton.mosaic.terminal.Jni.stdinReaderInterrupt
@@ -38,16 +38,16 @@ public actual object Tty {
 	}
 
 	@JvmStatic
-	public actual fun stdinReader(emitDebugEvents: Boolean): TerminalReader {
+	public actual fun terminalReader(emitDebugEvents: Boolean): TerminalReader {
 		val events = Channel<Event>(UNLIMITED)
-		val handlerPtr = inputHandlerInit(PlatformEventHandler(events))
+		val handlerPtr = platformEventHandlerInit(PlatformEventHandler(events))
 		if (handlerPtr != 0L) {
 			val readerPtr = stdinReaderInit(handlerPtr)
 			if (readerPtr != 0L) {
 				val platformInput = PlatformInput(readerPtr, handlerPtr)
 				return TerminalReader(platformInput, events, emitDebugEvents)
 			}
-			inputHandlerFree(handlerPtr)
+			platformEventHandlerFree(handlerPtr)
 		}
 		throw OutOfMemoryError()
 	}
@@ -55,7 +55,7 @@ public actual object Tty {
 	@JvmSynthetic // Hide from Java callers.
 	internal actual fun stdinWriter(emitDebugEvents: Boolean): StdinWriter {
 		val events = Channel<Event>(UNLIMITED)
-		val handlerPtr = inputHandlerInit(PlatformEventHandler(events))
+		val handlerPtr = platformEventHandlerInit(PlatformEventHandler(events))
 		if (handlerPtr != 0L) {
 			val writerPtr = stdinWriterInit(handlerPtr)
 			if (writerPtr != 0L) {
@@ -64,7 +64,7 @@ public actual object Tty {
 				val terminalReader = TerminalReader(platformInput, events, emitDebugEvents)
 				return StdinWriter(writerPtr, terminalReader)
 			}
-			inputHandlerFree(handlerPtr)
+			platformEventHandlerFree(handlerPtr)
 		}
 		throw OutOfMemoryError()
 	}
@@ -91,7 +91,7 @@ internal actual class PlatformInput internal constructor(
 		if (readerPtr != 0L) {
 			stdinReaderFree(readerPtr)
 			readerPtr = 0
-			inputHandlerFree(handlerPtr)
+			platformEventHandlerFree(handlerPtr)
 		}
 	}
 }

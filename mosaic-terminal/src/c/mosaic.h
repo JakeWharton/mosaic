@@ -46,27 +46,27 @@ typedef struct stdinRead {
 	platformError error;
 } stdinRead;
 
-typedef void InputHandlerOnRead(void *opaque);
-typedef void InputHandlerOnFocus(void *opaque, bool focused);
-typedef void InputHandlerOnKey(void *opaque); // TODO params
-typedef void InputHandlerOnMouse(void *opaque); // TODO params
-typedef void InputHandlerOnResize(void *opaque, int columns, int rows, int width, int height);
+typedef void PlatformEventHandlerOnRead(void *opaque);
+typedef void PlatformEventHandlerOnFocus(void *opaque, bool focused);
+typedef void PlatformEventHandlerOnKey(void *opaque); // TODO params
+typedef void PlatformEventHandlerOnMouse(void *opaque); // TODO params
+typedef void PlatformEventHandlerOnResize(void *opaque, int columns, int rows, int width, int height);
 
-typedef struct inputHandler {
+typedef struct platformEventHandler {
 	void *opaque;
-	InputHandlerOnFocus *onFocus;
-	InputHandlerOnKey *onKey;
-	InputHandlerOnMouse *onMouse;
-	InputHandlerOnResize *onResize;
-} inputHandler;
+	PlatformEventHandlerOnFocus *onFocus;
+	PlatformEventHandlerOnKey *onKey;
+	PlatformEventHandlerOnMouse *onMouse;
+	PlatformEventHandlerOnResize *onResize;
+} platformEventHandler;
 
-stdinReaderResult stdinReader_init(inputHandler *handler);
+stdinReaderResult stdinReader_init(platformEventHandler *handler);
 stdinRead stdinReader_read(stdinReader *reader, void *buffer, int count);
 stdinRead stdinReader_readWithTimeout(stdinReader *reader, void *buffer, int count, int timeoutMillis);
 platformError stdinReader_interrupt(stdinReader* reader);
 platformError stdinReader_free(stdinReader *reader);
 
-stdinWriterResult stdinWriter_init(inputHandler *handler);
+stdinWriterResult stdinWriter_init(platformEventHandler *handler);
 stdinReader *stdinWriter_getReader(stdinWriter *writer);
 platformError stdinWriter_write(stdinWriter *writer, void *buffer, int count);
 void stdinWriter_focusEvent(stdinWriter *writer, bool focused);

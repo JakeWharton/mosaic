@@ -35,12 +35,12 @@ public actual object Tty {
 		}
 	}
 
-	public actual fun stdinReader(emitDebugEvents: Boolean): TerminalReader {
+	public actual fun terminalReader(emitDebugEvents: Boolean): TerminalReader {
 		val events = Channel<Event>(UNLIMITED)
 
 		val handler = PlatformEventHandler(events)
 		val handlerRef = StableRef.create(handler)
-		val handlerPtr = nativeHeap.alloc<inputHandler> {
+		val handlerPtr = nativeHeap.alloc<platformEventHandler> {
 			opaque = handlerRef.asCPointer()
 			onFocus = staticCFunction(::onFocusCallback)
 			onKey = staticCFunction(::onKeyCallback)
@@ -68,7 +68,7 @@ public actual object Tty {
 		// TODO Fix all this duplication, ownership
 		val handler = PlatformEventHandler(events)
 		val handlerRef = StableRef.create(handler)
-		val handlerPtr = nativeHeap.alloc<inputHandler> {
+		val handlerPtr = nativeHeap.alloc<platformEventHandler> {
 			opaque = handlerRef.asCPointer()
 			onFocus = staticCFunction(::onFocusCallback)
 			onKey = staticCFunction(::onKeyCallback)
@@ -99,7 +99,7 @@ public actual object Tty {
 
 internal actual class PlatformInput internal constructor(
 	ptr: CPointer<stdinReader>,
-	private val handlerPtr: CPointer<inputHandler>?,
+	private val handlerPtr: CPointer<platformEventHandler>?,
 	private val handlerRef: StableRef<PlatformEventHandler>?,
 ) : AutoCloseable {
 	private var ptr: CPointer<stdinReader>? = ptr

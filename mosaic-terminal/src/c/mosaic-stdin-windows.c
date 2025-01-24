@@ -8,7 +8,7 @@
 typedef struct stdinReaderImpl {
 	HANDLE waitHandles[2];
 	HANDLE readHandle;
-	inputHandler *handler;
+	platformEventHandler *handler;
 } stdinReaderImpl;
 
 typedef struct stdinWriterImpl {
@@ -21,7 +21,7 @@ typedef struct stdinWriterImpl {
 stdinReaderResult stdinReader_initWithHandle(
 	HANDLE stdinRead,
 	HANDLE stdinWait,
-	inputHandler *handler
+	platformEventHandler *handler
 ) {
 	stdinReaderResult result = {};
 
@@ -57,7 +57,7 @@ stdinReaderResult stdinReader_initWithHandle(
 	goto ret;
 }
 
-stdinReaderResult stdinReader_init(inputHandler *handler) {
+stdinReaderResult stdinReader_init(platformEventHandler *handler) {
 	HANDLE h = GetStdHandle(STD_INPUT_HANDLE);
 	return stdinReader_initWithHandle(h, h, handler);
 }
@@ -114,7 +114,7 @@ platformError stdinReader_free(stdinReader *reader) {
 	return result;
 }
 
-stdinWriterResult stdinWriter_init(inputHandler *handler) {
+stdinWriterResult stdinWriter_init(platformEventHandler *handler) {
 	stdinWriterResult result = {};
 
 	stdinWriterImpl *writer = calloc(1, sizeof(stdinWriterImpl));
@@ -168,22 +168,22 @@ platformError stdinWriter_write(stdinWriter *writer, void *buffer, int count) {
 }
 
 void stdinWriter_focusEvent(stdinWriter *writer, bool focused) {
- 	inputHandler *handler = writer->reader->handler;
+ 	platformEventHandler *handler = writer->reader->handler;
  	handler->onFocus(handler->opaque, focused);
  }
 
  void stdinWriter_keyEvent(stdinWriter *writer) {
- 	inputHandler *handler = writer->reader->handler;
+ 	platformEventHandler *handler = writer->reader->handler;
  	handler->onKey(handler->opaque);
  }
 
  void stdinWriter_mouseEvent(stdinWriter *writer) {
- 	inputHandler *handler = writer->reader->handler;
+ 	platformEventHandler *handler = writer->reader->handler;
  	handler->onMouse(handler->opaque);
  }
 
  void stdinWriter_resizeEvent(stdinWriter *writer, int columns, int rows, int width, int height) {
- 	inputHandler *handler = writer->reader->handler;
+ 	platformEventHandler *handler = writer->reader->handler;
  	handler->onResize(handler->opaque, columns, rows, width, height);
  }
 

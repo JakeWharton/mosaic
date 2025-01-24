@@ -331,5 +331,5 @@ final class com.jakewharton.mosaic.terminal/TerminalReader : kotlin/AutoCloseabl
 
 final object com.jakewharton.mosaic.terminal/Tty { // com.jakewharton.mosaic.terminal/Tty|null[0]
     final fun enableRawMode(): kotlin/AutoCloseable // com.jakewharton.mosaic.terminal/Tty.enableRawMode|enableRawMode(){}[0]
-    final fun stdinReader(kotlin/Boolean = ...): com.jakewharton.mosaic.terminal/TerminalReader // com.jakewharton.mosaic.terminal/Tty.stdinReader|stdinReader(kotlin.Boolean){}[0]
+    final fun terminalReader(kotlin/Boolean = ...): com.jakewharton.mosaic.terminal/TerminalReader // com.jakewharton.mosaic.terminal/Tty.terminalReader|terminalReader(kotlin.Boolean){}[0]
 }

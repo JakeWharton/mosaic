@@ -101,7 +101,11 @@ void invokeOnResizeHandler(void *opaque, int columns, int rows, int width, int h
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_inputHandlerInit(JNIEnv *env, jclass type, jobject instance) {
+Java_com_jakewharton_mosaic_terminal_Jni_platformEventHandlerInit(
+	JNIEnv *env,
+	jclass type,
+	jobject instance
+) {
 	jobject globalInstance = (*env)->NewGlobalRef(env, instance);
 	if (unlikely(globalInstance == NULL)) {
 		return 0;
@@ -139,7 +143,7 @@ Java_com_jakewharton_mosaic_terminal_Jni_inputHandlerInit(JNIEnv *env, jclass ty
 	jniHandler->onMouse = onMouse;
 	jniHandler->onResize = onResize;
 
-	inputHandler *handler = malloc(sizeof(inputHandler));
+	platformEventHandler *handler = malloc(sizeof(platformEventHandler));
 	if (unlikely(!handler)) {
 		return 0;
 	}
@@ -153,8 +157,12 @@ Java_com_jakewharton_mosaic_terminal_Jni_inputHandlerInit(JNIEnv *env, jclass ty
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_inputHandlerFree(JNIEnv *env, jclass type, jlong handlerOpaque) {
-	inputHandler *handler = (inputHandler *) handlerOpaque;
+Java_com_jakewharton_mosaic_terminal_Jni_platformEventHandlerFree(
+	JNIEnv *env,
+	jclass type,
+	jlong handlerOpaque
+) {
+	platformEventHandler *handler = (platformEventHandler *) handlerOpaque;
 	jniPlatformEventHandler *jniHandler = handler->opaque;
 	jobject instance = jniHandler->instance;
 	free(handler);
@@ -164,7 +172,7 @@ Java_com_jakewharton_mosaic_terminal_Jni_inputHandlerFree(JNIEnv *env, jclass ty
 
 JNIEXPORT jlong JNICALL
 Java_com_jakewharton_mosaic_terminal_Jni_stdinReaderInit(JNIEnv *env, jclass type, jlong handlerOpaque) {
-	inputHandler *handler = (inputHandler *) handlerOpaque;
+	platformEventHandler *handler = (platformEventHandler *) handlerOpaque;
 	stdinReaderResult result = stdinReader_init(handler);
 	if (likely(!result.error)) {
 		return (jlong) result.reader;
@@ -256,7 +264,7 @@ Java_com_jakewharton_mosaic_terminal_Jni_stdinReaderFree(JNIEnv *env, jclass typ
 
 JNIEXPORT jlong JNICALL
 Java_com_jakewharton_mosaic_terminal_Jni_stdinWriterInit(JNIEnv *env, jclass type, jlong handlerOpaque) {
-	inputHandler *handler = (inputHandler *) handlerOpaque;
+	platformEventHandler *handler = (platformEventHandler *) handlerOpaque;
 	stdinWriterResult result = stdinWriter_init(handler);
 	if (likely(!result.error)) {
 		return (jlong) result.writer;

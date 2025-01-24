@@ -1,7 +1,7 @@
 package com.jakewharton.mosaic.terminal
 
 import com.jakewharton.mosaic.terminal.Tty.enableRawMode
-import com.jakewharton.mosaic.terminal.Tty.stdinReader
+import com.jakewharton.mosaic.terminal.Tty.terminalReader
 import com.jakewharton.mosaic.terminal.event.DebugEvent
 
 public expect object Tty {
@@ -19,7 +19,7 @@ public expect object Tty {
 	 * In addition to the flags required for entering "raw" mode, on POSIX-compliant platforms,
 	 * this function will change the standard input stream to block indefinitely until a minimum
 	 * of 1 byte is available to read. This allows the reader thread to fully be suspended rather
-	 * than consuming CPU. Use [stdinReader] to read in a manner that can still be interrupted.
+	 * than consuming CPU. Use [terminalReader] to read in a manner that can still be interrupted.
 	 */
 	public fun enableRawMode(): AutoCloseable
 
@@ -32,7 +32,7 @@ public expect object Tty {
 	 * @param emitDebugEvents When true, each event sent to [TerminalReader.events] will be followed
 	 * by a [DebugEvent] that contains the original event and the bytes which produced it.
 	 */
-	public fun stdinReader(emitDebugEvents: Boolean = false): TerminalReader
+	public fun terminalReader(emitDebugEvents: Boolean = false): TerminalReader
 
 	@TestApi
 	internal fun stdinWriter(emitDebugEvents: Boolean = false): StdinWriter
