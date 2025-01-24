@@ -13,7 +13,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class StdinReaderTest {
+class PlatformInputTest {
 	private val writer = PlatformInputWriter()
 	private val input = writer.input
 

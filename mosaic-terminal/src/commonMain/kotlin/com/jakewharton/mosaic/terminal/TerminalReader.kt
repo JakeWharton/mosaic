@@ -52,7 +52,7 @@ public class TerminalReader internal constructor(
 	 * [escape code disambiguation](https://sw.kovidgoyal.net/kitty/keyboard-protocol/#disambiguate-escape-codes)
 	 * progressive-enhancement is enabled.
 	 *
-	 * Normally, when a bare escape (`0x1b`) is encountered as the final byte read from `stdinReader`,
+	 * Normally, when a bare escape (`0x1b`) is encountered as the final byte read from the input,
 	 * it is not possible to disambiguate this as the start of an escape sequence or as a bare
 	 * <kbd>Esc</kbd> key press. The parser will perform a fast disambiguation read to look for
 	 * additional bytes to try and guess. Setting this property to true eliminates the disambiguation
