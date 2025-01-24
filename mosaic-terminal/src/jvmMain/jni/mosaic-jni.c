@@ -171,9 +171,9 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformEventHandlerFree(
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_stdinReaderInit(JNIEnv *env, jclass type, jlong handlerOpaque) {
+Java_com_jakewharton_mosaic_terminal_Jni_platformInputInit(JNIEnv *env, jclass type, jlong handlerOpaque) {
 	platformEventHandler *handler = (platformEventHandler *) handlerOpaque;
-	stdinReaderResult result = stdinReader_init(handler);
+	stdinReaderResult result = platformInput_init(handler);
 	if (likely(!result.error)) {
 		return (jlong) result.reader;
 	}
@@ -185,7 +185,7 @@ Java_com_jakewharton_mosaic_terminal_Jni_stdinReaderInit(JNIEnv *env, jclass typ
 }
 
 JNIEXPORT jint JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_stdinReaderRead(
+Java_com_jakewharton_mosaic_terminal_Jni_platformInputRead(
 	JNIEnv *env,
 	jclass type,
 	jlong readerOpaque,
@@ -197,7 +197,7 @@ Java_com_jakewharton_mosaic_terminal_Jni_stdinReaderRead(
 	jbyte *nativeBufferAtOffset = nativeBuffer + offset;
 
 	stdinReader *reader = (stdinReader *) readerOpaque;
-	stdinRead read = stdinReader_read(reader, nativeBufferAtOffset, count);
+	stdinRead read = platformInput_read(reader, nativeBufferAtOffset, count);
 
 	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
 
@@ -212,7 +212,7 @@ Java_com_jakewharton_mosaic_terminal_Jni_stdinReaderRead(
 }
 
 JNIEXPORT jint JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_stdinReaderReadWithTimeout(
+Java_com_jakewharton_mosaic_terminal_Jni_platformInputReadWithTimeout(
 	JNIEnv *env,
 	jclass type,
 	jlong readerOpaque,
@@ -225,7 +225,7 @@ Java_com_jakewharton_mosaic_terminal_Jni_stdinReaderReadWithTimeout(
 	jbyte *nativeBufferAtOffset = nativeBuffer + offset;
 
 	stdinReader *reader = (stdinReader *) readerOpaque;
-	stdinRead read = stdinReader_readWithTimeout(
+	stdinRead read = platformInput_readWithTimeout(
 		reader,
 		nativeBufferAtOffset,
 		count,
@@ -245,27 +245,27 @@ Java_com_jakewharton_mosaic_terminal_Jni_stdinReaderReadWithTimeout(
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_stdinReaderInterrupt(JNIEnv *env, jclass type, jlong readerOpaque) {
+Java_com_jakewharton_mosaic_terminal_Jni_platformInputInterrupt(JNIEnv *env, jclass type, jlong readerOpaque) {
 	stdinReader *reader = (stdinReader *) readerOpaque;
-	platformError error = stdinReader_interrupt(reader);
+	platformError error = platformInput_interrupt(reader);
 	if (unlikely(error)) {
 		throwIse(env, error, "Unable to interrupt stdin reader");
 	}
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_stdinReaderFree(JNIEnv *env, jclass type, jlong readerOpaque) {
+Java_com_jakewharton_mosaic_terminal_Jni_platformInputFree(JNIEnv *env, jclass type, jlong readerOpaque) {
 	stdinReader *reader = (stdinReader *) readerOpaque;
-	platformError error = stdinReader_free(reader);
+	platformError error = platformInput_free(reader);
 	if (unlikely(error)) {
 		throwIse(env, error, "Unable to free stdin reader");
 	}
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_stdinWriterInit(JNIEnv *env, jclass type, jlong handlerOpaque) {
+Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterInit(JNIEnv *env, jclass type, jlong handlerOpaque) {
 	platformEventHandler *handler = (platformEventHandler *) handlerOpaque;
-	stdinWriterResult result = stdinWriter_init(handler);
+	stdinWriterResult result = platformInputWriter_init(handler);
 	if (likely(!result.error)) {
 		return (jlong) result.writer;
 	}
@@ -277,7 +277,7 @@ Java_com_jakewharton_mosaic_terminal_Jni_stdinWriterInit(JNIEnv *env, jclass typ
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_stdinWriterWrite(
+Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterWrite(
 	JNIEnv *env,
 	jclass type,
 	jlong writerOpaque,
@@ -287,7 +287,7 @@ Java_com_jakewharton_mosaic_terminal_Jni_stdinWriterWrite(
 	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
 
 	stdinWriter *writer = (stdinWriter *) writerOpaque;
-	platformError error = stdinWriter_write(writer, nativeBuffer, count);
+	platformError error = platformInputWriter_write(writer, nativeBuffer, count);
 
 	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
 
@@ -298,38 +298,38 @@ Java_com_jakewharton_mosaic_terminal_Jni_stdinWriterWrite(
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_stdinWriterFocusEvent(
+Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterFocusEvent(
 	JNIEnv *env,
 	jclass type,
 	jlong writerOpaque,
 	bool focused
 ) {
 	stdinWriter *writer = (stdinWriter *) writerOpaque;
-	stdinWriter_focusEvent(writer, focused);
+	platformInputWriter_focusEvent(writer, focused);
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_stdinWriterKeyEvent(
+Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterKeyEvent(
 	JNIEnv *env,
 	jclass type,
 	jlong writerOpaque
 ) {
 	stdinWriter *writer = (stdinWriter *) writerOpaque;
-	stdinWriter_keyEvent(writer);
+	platformInputWriter_keyEvent(writer);
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_stdinWriterMouseEvent(
+Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterMouseEvent(
 	JNIEnv *env,
 	jclass type,
 	jlong writerOpaque
 ) {
 	stdinWriter *writer = (stdinWriter *) writerOpaque;
-	stdinWriter_mouseEvent(writer);
+	platformInputWriter_mouseEvent(writer);
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_stdinWriterResizeEvent(
+Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterResizeEvent(
 	JNIEnv *env,
 	jclass type,
 	jlong writerOpaque,
@@ -339,17 +339,17 @@ Java_com_jakewharton_mosaic_terminal_Jni_stdinWriterResizeEvent(
 	jint height
 ) {
 	stdinWriter *writer = (stdinWriter *) writerOpaque;
-	stdinWriter_resizeEvent(writer, columns, rows, width, height);
+	platformInputWriter_resizeEvent(writer, columns, rows, width, height);
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_stdinWriterGetReader(JNIEnv *env, jclass type, jlong ptr) {
-	return (jlong) stdinWriter_getReader((stdinWriter *) ptr);
+Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterGetReader(JNIEnv *env, jclass type, jlong ptr) {
+	return (jlong) platformInputWriter_getReader((stdinWriter *) ptr);
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_stdinWriterFree(JNIEnv *env, jclass type, jlong ptr) {
-	platformError error = stdinWriter_free((stdinWriter *) ptr);
+Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterFree(JNIEnv *env, jclass type, jlong ptr) {
+	platformError error = platformInputWriter_free((stdinWriter *) ptr);
 	if (unlikely(error)) {
 		throwIse(env, error, "Unable to free stdin writer");
 	}

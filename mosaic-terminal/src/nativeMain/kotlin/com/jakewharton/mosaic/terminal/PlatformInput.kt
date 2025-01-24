@@ -22,7 +22,7 @@ internal actual class PlatformInput internal constructor(
 
 	actual fun read(buffer: ByteArray, offset: Int, count: Int): Int {
 		buffer.usePinned {
-			stdinReader_read(ptr, it.addressOf(offset), count).useContents {
+			platformInput_read(ptr, it.addressOf(offset), count).useContents {
 				if (error == 0U) return this.count
 				Tty.throwError(error)
 			}
@@ -31,7 +31,7 @@ internal actual class PlatformInput internal constructor(
 
 	actual fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
 		buffer.usePinned {
-			stdinReader_readWithTimeout(ptr, it.addressOf(offset), count, timeoutMillis).useContents {
+			platformInput_readWithTimeout(ptr, it.addressOf(offset), count, timeoutMillis).useContents {
 				if (error == 0U) return this.count
 				Tty.throwError(error)
 			}
@@ -39,7 +39,7 @@ internal actual class PlatformInput internal constructor(
 	}
 
 	actual fun interrupt() {
-		val error = stdinReader_interrupt(ptr)
+		val error = platformInput_interrupt(ptr)
 		if (error == 0U) return
 		Tty.throwError(error)
 	}
@@ -48,7 +48,7 @@ internal actual class PlatformInput internal constructor(
 		ptr?.let { ptr ->
 			this.ptr = null
 
-			val error = stdinReader_free(ptr)
+			val error = platformInput_free(ptr)
 			handlerPtr?.let(nativeHeap::free)
 			handlerRef?.dispose()
 

@@ -19,7 +19,7 @@ internal actual fun PlatformInputWriter(): PlatformInputWriter {
 	val handlerRef = StableRef.create(handler)
 	val handlerPtr = handlerRef.toNativeAllocationIn(nativeHeap).ptr
 
-	val writerPtr = stdinWriter_init(handlerPtr).useContents {
+	val writerPtr = platformInputWriter_init(handlerPtr).useContents {
 		writer?.let { return@useContents it }
 
 		nativeHeap.free(handlerPtr)
@@ -29,7 +29,7 @@ internal actual fun PlatformInputWriter(): PlatformInputWriter {
 		throw OutOfMemoryError()
 	}
 
-	val readerPtr = stdinWriter_getReader(writerPtr)!!
+	val readerPtr = platformInputWriter_getReader(writerPtr)!!
 	val platformInput = PlatformInput(readerPtr, handlerPtr, handlerRef)
 	return PlatformInputWriter(writerPtr, events, platformInput)
 }
@@ -45,26 +45,26 @@ internal actual class PlatformInputWriter(
 
 	actual fun write(buffer: ByteArray) {
 		val error = buffer.usePinned {
-			stdinWriter_write(ptr, it.addressOf(0), buffer.size)
+			platformInputWriter_write(ptr, it.addressOf(0), buffer.size)
 		}
 		if (error == 0U) return
 		Tty.throwError(error)
 	}
 
 	actual fun focusEvent(focused: Boolean) {
-		stdinWriter_focusEvent(ptr, focused)
+		platformInputWriter_focusEvent(ptr, focused)
 	}
 
 	actual fun keyEvent() {
-		stdinWriter_keyEvent(ptr)
+		platformInputWriter_keyEvent(ptr)
 	}
 
 	actual fun mouseEvent() {
-		stdinWriter_mouseEvent(ptr)
+		platformInputWriter_mouseEvent(ptr)
 	}
 
 	actual fun resizeEvent(columns: Int, rows: Int, width: Int, height: Int) {
-		stdinWriter_resizeEvent(ptr, columns, rows, width, height)
+		platformInputWriter_resizeEvent(ptr, columns, rows, width, height)
 	}
 
 	actual override fun close() {
@@ -73,7 +73,7 @@ internal actual class PlatformInputWriter(
 
 			input.close()
 
-			val error = stdinWriter_free(ref)
+			val error = platformInputWriter_free(ref)
 
 			if (error == 0U) return
 			Tty.throwError(error)

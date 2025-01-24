@@ -4,7 +4,7 @@ import com.jakewharton.mosaic.terminal.Jni.enterRawMode
 import com.jakewharton.mosaic.terminal.Jni.exitRawMode
 import com.jakewharton.mosaic.terminal.Jni.platformEventHandlerFree
 import com.jakewharton.mosaic.terminal.Jni.platformEventHandlerInit
-import com.jakewharton.mosaic.terminal.Jni.stdinReaderInit
+import com.jakewharton.mosaic.terminal.Jni.platformInputInit
 import com.jakewharton.mosaic.terminal.event.Event
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
@@ -30,7 +30,7 @@ public actual object Tty {
 		val events = Channel<Event>(UNLIMITED)
 		val handlerPtr = platformEventHandlerInit(PlatformEventHandler(events))
 		if (handlerPtr != 0L) {
-			val readerPtr = stdinReaderInit(handlerPtr)
+			val readerPtr = platformInputInit(handlerPtr)
 			if (readerPtr != 0L) {
 				val platformInput = PlatformInput(readerPtr, handlerPtr)
 				return TerminalReader(platformInput, events, emitDebugEvents)

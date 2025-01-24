@@ -18,7 +18,7 @@ typedef struct stdinWriterImpl {
 	stdinReader *reader;
 } stdinWriterImpl;
 
-stdinReaderResult stdinReader_initWithHandle(
+stdinReaderResult platformInput_initWithHandle(
 	HANDLE stdinRead,
 	HANDLE stdinWait,
 	platformEventHandler *handler
@@ -57,20 +57,20 @@ stdinReaderResult stdinReader_initWithHandle(
 	goto ret;
 }
 
-stdinReaderResult stdinReader_init(platformEventHandler *handler) {
+stdinReaderResult platformInput_init(platformEventHandler *handler) {
 	HANDLE h = GetStdHandle(STD_INPUT_HANDLE);
-	return stdinReader_initWithHandle(h, h, handler);
+	return platformInput_initWithHandle(h, h, handler);
 }
 
-stdinRead stdinReader_read(
+stdinRead platformInput_read(
 	stdinReader *reader,
 	void *buffer,
 	int count
 ) {
-	return stdinReader_readWithTimeout(reader, buffer, count, INFINITE);
+	return platformInput_readWithTimeout(reader, buffer, count, INFINITE);
 }
 
-stdinRead stdinReader_readWithTimeout(
+stdinRead platformInput_readWithTimeout(
 	stdinReader *reader,
 	void *buffer,
 	int count,
@@ -99,13 +99,13 @@ stdinRead stdinReader_readWithTimeout(
 	goto ret;
 }
 
-platformError stdinReader_interrupt(stdinReader *reader) {
+platformError platformInput_interrupt(stdinReader *reader) {
 	return likely(SetEvent(reader->waitHandles[1]) != 0)
 		? 0
 		: GetLastError();
 }
 
-platformError stdinReader_free(stdinReader *reader) {
+platformError platformInput_free(stdinReader *reader) {
 	DWORD result = 0;
 	if (unlikely(CloseHandle(reader->waitHandles[1]) == 0)) {
 		result = GetLastError();
@@ -114,7 +114,7 @@ platformError stdinReader_free(stdinReader *reader) {
 	return result;
 }
 
-stdinWriterResult stdinWriter_init(platformEventHandler *handler) {
+stdinWriterResult platformInputWriter_init(platformEventHandler *handler) {
 	stdinWriterResult result = {};
 
 	stdinWriterImpl *writer = calloc(1, sizeof(stdinWriterImpl));
@@ -135,7 +135,7 @@ stdinWriterResult stdinWriter_init(platformEventHandler *handler) {
 	}
 	writer->eventHandle = writeEvent;
 
-	stdinReaderResult readerResult = stdinReader_initWithHandle(writer->readHandle, writer->eventHandle, handler);
+	stdinReaderResult readerResult = platformInput_initWithHandle(writer->readHandle, writer->eventHandle, handler);
 	if (unlikely(readerResult.error)) {
 		result.error = readerResult.error;
 		goto err;
@@ -152,11 +152,11 @@ stdinWriterResult stdinWriter_init(platformEventHandler *handler) {
 	goto ret;
 }
 
-stdinReader *stdinWriter_getReader(stdinWriter *writer) {
+stdinReader *platformInputWriter_getReader(stdinWriter *writer) {
 	return writer->reader;
 }
 
-platformError stdinWriter_write(stdinWriter *writer, void *buffer, int count) {
+platformError platformInputWriter_write(stdinWriter *writer, void *buffer, int count) {
 	// Per https://learn.microsoft.com/en-us/windows/win32/api/namedpipeapi/nf-namedpipeapi-createpipe#remarks
 	// "When a process uses WriteFile to write to an anonymous pipe,
 	//  the write operation is not completed until all bytes are written."
@@ -167,27 +167,27 @@ platformError stdinWriter_write(stdinWriter *writer, void *buffer, int count) {
 	return GetLastError();
 }
 
-void stdinWriter_focusEvent(stdinWriter *writer, bool focused) {
+void platformInputWriter_focusEvent(stdinWriter *writer, bool focused) {
  	platformEventHandler *handler = writer->reader->handler;
  	handler->onFocus(handler->opaque, focused);
  }
 
- void stdinWriter_keyEvent(stdinWriter *writer) {
+ void platformInputWriter_keyEvent(stdinWriter *writer) {
  	platformEventHandler *handler = writer->reader->handler;
  	handler->onKey(handler->opaque);
  }
 
- void stdinWriter_mouseEvent(stdinWriter *writer) {
+ void platformInputWriter_mouseEvent(stdinWriter *writer) {
  	platformEventHandler *handler = writer->reader->handler;
  	handler->onMouse(handler->opaque);
  }
 
- void stdinWriter_resizeEvent(stdinWriter *writer, int columns, int rows, int width, int height) {
+ void platformInputWriter_resizeEvent(stdinWriter *writer, int columns, int rows, int width, int height) {
  	platformEventHandler *handler = writer->reader->handler;
  	handler->onResize(handler->opaque, columns, rows, width, height);
  }
 
-platformError stdinWriter_free(stdinWriter *writer) {
+platformError platformInputWriter_free(stdinWriter *writer) {
 	DWORD result = 0;
 	if (unlikely(CloseHandle(writer->eventHandle) == 0)) {
 		result = GetLastError();

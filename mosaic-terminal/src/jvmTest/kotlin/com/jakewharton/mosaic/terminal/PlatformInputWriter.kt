@@ -2,8 +2,8 @@ package com.jakewharton.mosaic.terminal
 
 import com.jakewharton.mosaic.terminal.Jni.platformEventHandlerFree
 import com.jakewharton.mosaic.terminal.Jni.platformEventHandlerInit
-import com.jakewharton.mosaic.terminal.Jni.stdinWriterGetReader
-import com.jakewharton.mosaic.terminal.Jni.stdinWriterInit
+import com.jakewharton.mosaic.terminal.Jni.platformInputWriterGetReader
+import com.jakewharton.mosaic.terminal.Jni.platformInputWriterInit
 import com.jakewharton.mosaic.terminal.event.Event
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
@@ -12,9 +12,9 @@ internal actual fun PlatformInputWriter(): PlatformInputWriter {
 	val events = Channel<Event>(UNLIMITED)
 	val handlerPtr = platformEventHandlerInit(PlatformEventHandler(events))
 	if (handlerPtr != 0L) {
-		val writerPtr = stdinWriterInit(handlerPtr)
+		val writerPtr = platformInputWriterInit(handlerPtr)
 		if (writerPtr != 0L) {
-			val readerPtr = stdinWriterGetReader(writerPtr)
+			val readerPtr = platformInputWriterGetReader(writerPtr)
 			val platformInput = PlatformInput(readerPtr, handlerPtr)
 			return PlatformInputWriter(writerPtr, events, platformInput)
 		}
@@ -33,29 +33,29 @@ internal actual class PlatformInputWriter(
 	}
 
 	actual fun write(buffer: ByteArray) {
-		Jni.stdinWriterWrite(writerPtr, buffer)
+		Jni.platformInputWriterWrite(writerPtr, buffer)
 	}
 
 	actual fun focusEvent(focused: Boolean) {
-		Jni.stdinWriterFocusEvent(writerPtr, focused)
+		Jni.platformInputWriterFocusEvent(writerPtr, focused)
 	}
 
 	actual fun keyEvent() {
-		Jni.stdinWriterKeyEvent(writerPtr)
+		Jni.platformInputWriterKeyEvent(writerPtr)
 	}
 
 	actual fun mouseEvent() {
-		Jni.stdinWriterMouseEvent(writerPtr)
+		Jni.platformInputWriterMouseEvent(writerPtr)
 	}
 
 	actual fun resizeEvent(columns: Int, rows: Int, width: Int, height: Int) {
-		Jni.stdinWriterResizeEvent(writerPtr, columns, rows, width, height)
+		Jni.platformInputWriterResizeEvent(writerPtr, columns, rows, width, height)
 	}
 
 	actual override fun close() {
 		if (writerPtr != 0L) {
 			input.close()
-			Jni.stdinWriterFree(writerPtr)
+			Jni.platformInputWriterFree(writerPtr)
 			writerPtr = 0
 		}
 	}

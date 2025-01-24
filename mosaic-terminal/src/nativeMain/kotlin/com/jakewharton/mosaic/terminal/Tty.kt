@@ -36,7 +36,7 @@ public actual object Tty {
 		val handlerRef = StableRef.create(handler)
 		val handlerPtr = handlerRef.toNativeAllocationIn(nativeHeap).ptr
 
-		val readerPtr = stdinReader_init(handlerPtr).useContents {
+		val readerPtr = platformInput_init(handlerPtr).useContents {
 			reader?.let { return@useContents it }
 
 			nativeHeap.free(handlerPtr)

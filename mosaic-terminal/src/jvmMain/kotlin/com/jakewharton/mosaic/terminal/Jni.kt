@@ -25,10 +25,10 @@ internal object Jni {
 	external fun platformEventHandlerFree(handler: Long)
 
 	@JvmStatic
-	external fun stdinReaderInit(handler: Long): Long
+	external fun platformInputInit(handler: Long): Long
 
 	@JvmStatic
-	external fun stdinReaderRead(
+	external fun platformInputRead(
 		reader: Long,
 		buffer: ByteArray,
 		offset: Int,
@@ -36,7 +36,7 @@ internal object Jni {
 	): Int
 
 	@JvmStatic
-	external fun stdinReaderReadWithTimeout(
+	external fun platformInputReadWithTimeout(
 		reader: Long,
 		buffer: ByteArray,
 		offset: Int,
@@ -45,31 +45,31 @@ internal object Jni {
 	): Int
 
 	@JvmStatic
-	external fun stdinReaderInterrupt(reader: Long)
+	external fun platformInputInterrupt(reader: Long)
 
 	@JvmStatic
-	external fun stdinReaderFree(reader: Long)
+	external fun platformInputFree(reader: Long)
 
 	@JvmStatic
-	external fun stdinWriterInit(handler: Long): Long
+	external fun platformInputWriterInit(handler: Long): Long
 
 	@JvmStatic
-	external fun stdinWriterGetReader(writer: Long): Long
+	external fun platformInputWriterGetReader(writer: Long): Long
 
 	@JvmStatic
-	external fun stdinWriterWrite(writer: Long, buffer: ByteArray)
+	external fun platformInputWriterWrite(writer: Long, buffer: ByteArray)
 
 	@JvmStatic
-	external fun stdinWriterFocusEvent(writer: Long, focused: Boolean)
+	external fun platformInputWriterFocusEvent(writer: Long, focused: Boolean)
 
 	@JvmStatic
-	external fun stdinWriterKeyEvent(writer: Long)
+	external fun platformInputWriterKeyEvent(writer: Long)
 
 	@JvmStatic
-	external fun stdinWriterMouseEvent(writer: Long)
+	external fun platformInputWriterMouseEvent(writer: Long)
 
 	@JvmStatic
-	external fun stdinWriterResizeEvent(
+	external fun platformInputWriterResizeEvent(
 		writer: Long,
 		columns: Int,
 		rows: Int,
@@ -78,7 +78,7 @@ internal object Jni {
 	)
 
 	@JvmStatic
-	external fun stdinWriterFree(writer: Long)
+	external fun platformInputWriterFree(writer: Long)
 
 	@Suppress(
 		// Only loading from our own JAR contents.

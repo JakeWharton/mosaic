@@ -23,7 +23,7 @@ typedef struct stdinWriterImpl {
 	stdinReader *reader;
 } stdinWriterImpl;
 
-stdinReaderResult stdinReader_initWithFd(int stdinFd, platformEventHandler *handler) {
+stdinReaderResult platformInput_initWithFd(int stdinFd, platformEventHandler *handler) {
 	stdinReaderResult result = {};
 
 	stdinReaderImpl *reader = calloc(1, sizeof(stdinReaderImpl));
@@ -53,11 +53,11 @@ stdinReaderResult stdinReader_initWithFd(int stdinFd, platformEventHandler *hand
 	goto ret;
 }
 
-stdinReaderResult stdinReader_init(platformEventHandler *handler) {
-	return stdinReader_initWithFd(STDIN_FILENO, handler);
+stdinReaderResult platformInput_init(platformEventHandler *handler) {
+	return platformInput_initWithFd(STDIN_FILENO, handler);
 }
 
-stdinRead stdinReader_readInternal(
+stdinRead platformInput_readInternal(
 	stdinReader *reader,
 	void *buffer,
 	int count,
@@ -102,11 +102,11 @@ stdinRead stdinReader_readInternal(
 	goto ret;
 }
 
-stdinRead stdinReader_read(stdinReader *reader, void *buffer, int count) {
-	return stdinReader_readInternal(reader, buffer, count, NULL);
+stdinRead platformInput_read(stdinReader *reader, void *buffer, int count) {
+	return platformInput_readInternal(reader, buffer, count, NULL);
 }
 
-stdinRead stdinReader_readWithTimeout(
+stdinRead platformInput_readWithTimeout(
 	stdinReader *reader,
 	void *buffer,
 	int count,
@@ -116,10 +116,10 @@ stdinRead stdinReader_readWithTimeout(
 	timeout.tv_sec = 0;
 	timeout.tv_usec = timeoutMillis * 1000;
 
-	return stdinReader_readInternal(reader, buffer, count, &timeout);
+	return platformInput_readInternal(reader, buffer, count, &timeout);
 }
 
-platformError stdinReader_interrupt(stdinReader *reader) {
+platformError platformInput_interrupt(stdinReader *reader) {
 	int pipeOut = reader->pipe[1];
 	int result = write(pipeOut, " ", 1);
 	return unlikely(result == -1)
@@ -127,7 +127,7 @@ platformError stdinReader_interrupt(stdinReader *reader) {
 		: 0;
 }
 
-platformError stdinReader_free(stdinReader *reader) {
+platformError platformInput_free(stdinReader *reader) {
 	int *pipe = reader->pipe;
 
 	int result = 0;
@@ -141,7 +141,7 @@ platformError stdinReader_free(stdinReader *reader) {
 	return result;
 }
 
-stdinWriterResult stdinWriter_init(platformEventHandler *handler) {
+stdinWriterResult platformInputWriter_init(platformEventHandler *handler) {
 	stdinWriterResult result = {};
 
 	stdinWriterImpl *writer = calloc(1, sizeof(stdinWriterImpl));
@@ -155,7 +155,7 @@ stdinWriterResult stdinWriter_init(platformEventHandler *handler) {
 		goto err;
 	}
 
-	stdinReaderResult readerResult = stdinReader_initWithFd(writer->pipe[0], handler);
+	stdinReaderResult readerResult = platformInput_initWithFd(writer->pipe[0], handler);
 	if (unlikely(readerResult.error)) {
 		result.error = readerResult.error;
 		goto err;
@@ -172,11 +172,11 @@ stdinWriterResult stdinWriter_init(platformEventHandler *handler) {
 	goto ret;
 }
 
-stdinReader *stdinWriter_getReader(stdinWriter *writer) {
+stdinReader *platformInputWriter_getReader(stdinWriter *writer) {
 	return writer->reader;
 }
 
-platformError stdinWriter_write(stdinWriter *writer, void *buffer, int count) {
+platformError platformInputWriter_write(stdinWriter *writer, void *buffer, int count) {
 	int pipeOut = writer->pipe[1];
 	while (count > 0) {
 		int result = write(pipeOut, buffer, count);
@@ -191,24 +191,24 @@ platformError stdinWriter_write(stdinWriter *writer, void *buffer, int count) {
 	return errno;
 }
 
-void stdinWriter_focusEvent(stdinWriter *writer UNUSED, bool focused UNUSED) {
+void platformInputWriter_focusEvent(stdinWriter *writer UNUSED, bool focused UNUSED) {
 	// Focus events are delivered through VT sequences.
 }
 
-void stdinWriter_keyEvent(stdinWriter *writer UNUSED) {
+void platformInputWriter_keyEvent(stdinWriter *writer UNUSED) {
 	// Key events are delivered through VT sequences.
 }
 
-void stdinWriter_mouseEvent(stdinWriter *writer UNUSED) {
+void platformInputWriter_mouseEvent(stdinWriter *writer UNUSED) {
 	// Mouse events are delivered through VT sequences.
 }
 
-void stdinWriter_resizeEvent(stdinWriter *writer, int columns, int rows, int width, int height) {
+void platformInputWriter_resizeEvent(stdinWriter *writer, int columns, int rows, int width, int height) {
 	platformEventHandler *handler = writer->reader->handler;
 	handler->onResize(handler->opaque, columns, rows, width, height);
 }
 
-platformError stdinWriter_free(stdinWriter *writer) {
+platformError platformInputWriter_free(stdinWriter *writer) {
 	int *pipe = writer->pipe;
 
 	int result = 0;
