@@ -1,7 +1,5 @@
 package com.jakewharton.mosaic.terminal
 
-import com.jakewharton.mosaic.terminal.Tty.enableRawMode
-import com.jakewharton.mosaic.terminal.Tty.terminalReader
 import com.jakewharton.mosaic.terminal.event.DebugEvent
 
 public expect object Tty {
