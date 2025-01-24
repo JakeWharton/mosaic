@@ -1,16 +1,10 @@
-public final class com/jakewharton/mosaic/terminal/StdinReader : java/lang/AutoCloseable {
+public final class com/jakewharton/mosaic/terminal/TerminalReader : java/lang/AutoCloseable {
 	public fun close ()V
-	public final fun interrupt ()V
-	public final fun read ([BII)I
-	public final fun readWithTimeout ([BIII)I
-}
-
-public final class com/jakewharton/mosaic/terminal/TerminalParser {
-	public fun <init> (Lcom/jakewharton/mosaic/terminal/StdinReader;)V
-	public final fun debugNext ()Lkotlin/Pair;
+	public final fun getEvents ()Lkotlinx/coroutines/channels/ReceiveChannel;
 	public final fun getKittyDisambiguateEscapeCodes ()Z
 	public final fun getXtermExtendedUtf8Mouse ()Z
-	public final fun next ()Lcom/jakewharton/mosaic/terminal/event/Event;
+	public final fun interrupt ()V
+	public final fun runParseLoop ()V
 	public final fun setKittyDisambiguateEscapeCodes (Z)V
 	public final fun setXtermExtendedUtf8Mouse (Z)V
 }
@@ -18,13 +12,23 @@ public final class com/jakewharton/mosaic/terminal/TerminalParser {
 public final class com/jakewharton/mosaic/terminal/Tty {
 	public static final field INSTANCE Lcom/jakewharton/mosaic/terminal/Tty;
 	public static final fun enableRawMode ()Ljava/lang/AutoCloseable;
-	public static final fun stdinReader ()Lcom/jakewharton/mosaic/terminal/StdinReader;
+	public static final fun stdinReader (Z)Lcom/jakewharton/mosaic/terminal/TerminalReader;
+	public static synthetic fun stdinReader$default (ZILjava/lang/Object;)Lcom/jakewharton/mosaic/terminal/TerminalReader;
 }
 
 public final class com/jakewharton/mosaic/terminal/event/BracketedPasteEvent : com/jakewharton/mosaic/terminal/event/Event {
 	public fun <init> (Z)V
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getStart ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/jakewharton/mosaic/terminal/event/DebugEvent : com/jakewharton/mosaic/terminal/event/Event {
+	public fun <init> (Lcom/jakewharton/mosaic/terminal/event/Event;[B)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBytes ()[B
+	public final fun getEvent ()Lcom/jakewharton/mosaic/terminal/event/Event;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
