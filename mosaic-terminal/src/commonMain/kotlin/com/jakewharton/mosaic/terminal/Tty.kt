@@ -33,55 +33,5 @@ public expect object Tty {
 	public fun terminalReader(emitDebugEvents: Boolean = false): TerminalReader
 
 	@TestApi
-	internal fun stdinWriter(emitDebugEvents: Boolean = false): StdinWriter
-}
-
-internal expect class PlatformInput : AutoCloseable {
-	/**
-	 * Read up to [count] bytes into [buffer] at [offset]. The number of bytes read will be returned.
-	 * 0 will be returned if [interrupt] is called while waiting for input. -1 will be returned if
-	 * the input stream is closed.
-	 *
-	 * @see readWithTimeout
-	 */
-	fun read(buffer: ByteArray, offset: Int, count: Int): Int
-
-	/**
-	 * Read up to [count] bytes into [buffer] at [offset]. The number of bytes read will be returned.
-	 * 0 will be returned if [interrupt] is called while waiting for input, or if at least
-	 * [timeoutMillis] have passed without data. -1 will be returned if the input stream is closed.
-	 *
-	 * @param timeoutMillis A value of 0 will perform a non-blocking read. Otherwise, valid values
-	 * are 1 to 999 which represent a maximum time (in milliseconds) to wait for data. Note: This
-	 * value is not validated.
-	 * @see read
-	 */
-	fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int
-
-	/** Signal blocking calls to [read] to wake up and return 0. */
-	fun interrupt()
-
-	/**
-	 * Free the resources associated with this reader.
-	 *
-	 * This call can be omitted if your process is exiting.
-	 */
-	override fun close()
-}
-
-@TestApi
-internal expect class StdinWriter : AutoCloseable {
-	val reader: TerminalReader
-
-	// TODO Take ByteString once it migrates to stdlib,
-	//  or if Sink/RawSink migrates expose that as a val.
-	//  https://github.com/Kotlin/kotlinx-io/issues/354
-	fun write(buffer: ByteArray)
-
-	fun focusEvent(focused: Boolean)
-	fun keyEvent()
-	fun mouseEvent()
-	fun resizeEvent(columns: Int, rows: Int, width: Int, height: Int)
-
-	override fun close()
+	internal fun platformInputWriter(): PlatformInputWriter
 }

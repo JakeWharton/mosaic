@@ -11,8 +11,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 
 abstract class BaseTerminalParserTest {
-	internal val writer = Tty.stdinWriter()
-	internal val parser = writer.reader
+	internal val writer = Tty.platformInputWriter()
+	internal val parser = writer.terminalReader()
 	private val runLoop = GlobalScope.launch(Dispatchers.IO) {
 		parser.runParseLoop()
 	}
@@ -24,7 +24,7 @@ abstract class BaseTerminalParserTest {
 		assertThat(parser.copyBuffer().toHexString()).isEqualTo("")
 	}
 
-	internal fun StdinWriter.writeHex(hex: String) {
+	internal fun PlatformInputWriter.writeHex(hex: String) {
 		write(hex.hexToByteArray())
 	}
 

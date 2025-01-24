@@ -14,11 +14,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class StdinReaderTest {
-	private val writer = Tty.stdinWriter()
-	private val reader = writer.reader.platformInput()
+	private val writer = Tty.platformInputWriter()
+	private val input = writer.input
 
 	@AfterTest fun after() {
-		reader.close()
+		input.close()
 		writer.close()
 	}
 
@@ -26,27 +26,27 @@ class StdinReaderTest {
 		val buffer = ByteArray(100)
 
 		writer.write("hello".encodeToByteArray())
-		val readA = reader.read(buffer, 0, buffer.size)
+		val readA = input.read(buffer, 0, buffer.size)
 		assertThat(buffer.decodeToString(endIndex = readA)).isEqualTo("hello")
 
 		writer.write("world".encodeToByteArray())
-		val readB = reader.read(buffer, 0, buffer.size)
+		val readB = input.read(buffer, 0, buffer.size)
 		assertThat(buffer.decodeToString(endIndex = readB)).isEqualTo("world")
 	}
 
 	@Test fun readCanBeInterrupted() {
 		GlobalScope.launch(Dispatchers.Default) {
 			delay(150.milliseconds)
-			reader.interrupt()
+			input.interrupt()
 		}
-		val readA = reader.read(ByteArray(10), 0, 10)
+		val readA = input.read(ByteArray(10), 0, 10)
 		assertThat(readA).isZero()
 
 		GlobalScope.launch(Dispatchers.Default) {
 			delay(150.milliseconds)
-			reader.interrupt()
+			input.interrupt()
 		}
-		val readB = reader.read(ByteArray(10), 0, 10)
+		val readB = input.read(ByteArray(10), 0, 10)
 		assertThat(readB).isZero()
 	}
 
@@ -56,14 +56,14 @@ class StdinReaderTest {
 
 		val readA: Int
 		val tookA = measureTime {
-			readA = reader.readWithTimeout(ByteArray(10), 0, 10, 110)
+			readA = input.readWithTimeout(ByteArray(10), 0, 10, 110)
 		}
 		assertThat(readA).isZero()
 		assertThat(tookA).isGreaterThan(100.milliseconds)
 
 		val readB: Int
 		val tookB = measureTime {
-			readB = reader.readWithTimeout(ByteArray(10), 0, 10, 110)
+			readB = input.readWithTimeout(ByteArray(10), 0, 10, 110)
 		}
 		assertThat(readB).isZero()
 		assertThat(tookB).isGreaterThan(100.milliseconds)
