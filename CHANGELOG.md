@@ -7,7 +7,7 @@ New:
 - Add `setContentAndSnapshot` to 'mosaic-testing' which returns the initial composition snapshot. This avoids a potential problem with calling `setContent` and then `awaitSnapshot` since the latter will trigger a subsequent recomposition (if needed), preventing observation of the initial state.
 
 Changed:
-- Nothing yet!
+- `Static` composable no longer takes a list. Instead, it behaves like a normal composable which only renders its function once.
 
 Fixed:
 - Nothing yet!

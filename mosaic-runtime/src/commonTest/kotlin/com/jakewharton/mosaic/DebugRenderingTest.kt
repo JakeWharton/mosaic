@@ -59,8 +59,8 @@ class DebugRenderingTest {
 		runMosaicTest(RenderingSnapshots(rendering)) {
 			setContent {
 				Text("Hello")
-				Static(snapshotStateListOf("Static")) {
-					Text(it)
+				Static {
+					Text("Static")
 				}
 			}
 

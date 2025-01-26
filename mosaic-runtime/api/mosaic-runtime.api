@@ -599,6 +599,7 @@ public final class com/jakewharton/mosaic/ui/SpacerKt {
 
 public final class com/jakewharton/mosaic/ui/Static {
 	public static final fun Static (Landroidx/compose/runtime/snapshots/SnapshotStateList;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;I)V
+	public static final fun Static (Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
 }
 
 public final class com/jakewharton/mosaic/ui/Text {

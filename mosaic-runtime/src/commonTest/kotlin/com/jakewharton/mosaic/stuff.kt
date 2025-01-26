@@ -14,6 +14,7 @@ import com.jakewharton.mosaic.layout.Placeable
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.testing.runMosaicTest
 import com.jakewharton.mosaic.ui.Alignment
+import com.jakewharton.mosaic.ui.AnsiLevel.NONE
 import com.jakewharton.mosaic.ui.Filler
 import com.jakewharton.mosaic.ui.Layout
 import com.jakewharton.mosaic.ui.unit.Constraints
@@ -270,3 +271,6 @@ internal fun AtLeastSize(
 		content = content,
 	)
 }
+
+fun TextCanvas.render() = render(NONE)
+fun List<TextCanvas>.render() = map { it.render() }

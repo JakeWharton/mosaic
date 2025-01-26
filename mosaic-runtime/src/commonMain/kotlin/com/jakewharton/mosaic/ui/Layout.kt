@@ -46,7 +46,6 @@ internal fun Layout(
 		measurePolicy = NoContentMeasurePolicyMeasurePolicy(measurePolicy),
 		debugPolicy = { debugInfo() + " x=$x y=$y w=$width h=$height${modifier.toDebugString()}" },
 		modifier = modifier,
-		factory = NodeFactory,
 	)
 }
 
@@ -83,7 +82,6 @@ public fun Layout(
 		},
 		modifier = modifier,
 		content = content,
-		factory = NodeFactory,
 	)
 }
 

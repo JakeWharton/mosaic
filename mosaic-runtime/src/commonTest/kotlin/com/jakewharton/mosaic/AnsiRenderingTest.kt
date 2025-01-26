@@ -114,8 +114,8 @@ class AnsiRenderingTest {
 		runMosaicTest(RenderingSnapshots(rendering)) {
 			setContent {
 				Text("Hello")
-				Static(snapshotStateListOf("World!")) {
-					Text(it)
+				Static {
+					Text("World!")
 				}
 			}
 
@@ -132,8 +132,8 @@ class AnsiRenderingTest {
 	@Test fun staticLinesNotErased() = runTest {
 		runMosaicTest(RenderingSnapshots(rendering)) {
 			setContent {
-				Static(snapshotStateListOf("One")) {
-					Text(it)
+				Static {
+					Text("One")
 				}
 				Text("Two")
 			}
@@ -147,8 +147,8 @@ class AnsiRenderingTest {
 			)
 
 			setContent {
-				Static(snapshotStateListOf("Three")) {
-					Text(it)
+				Static {
+					Text("Three")
 				}
 				Text("Four")
 			}
@@ -166,25 +166,25 @@ class AnsiRenderingTest {
 	@Test fun staticOrderingIsDfs() = runTest {
 		runMosaicTest(RenderingSnapshots(rendering)) {
 			setContent {
-				Static(snapshotStateListOf("One")) {
-					Text(it)
+				Static {
+					Text("One")
 				}
 				Column {
-					Static(snapshotStateListOf("Two")) {
-						Text(it)
+					Static {
+						Text("Two")
 					}
 					Row {
-						Static(snapshotStateListOf("Three")) {
-							Text(it)
+						Static {
+							Text("Three")
 						}
 						Text("Sup")
 					}
-					Static(snapshotStateListOf("Four")) {
-						Text(it)
+					Static {
+						Text("Four")
 					}
 				}
-				Static(snapshotStateListOf("Five")) {
-					Text(it)
+				Static {
+					Text("Five")
 				}
 			}
 
@@ -209,8 +209,8 @@ class AnsiRenderingTest {
 					Text("TopTopTop")
 					Row {
 						Text("LeftLeft")
-						Static(snapshotStateListOf("Static")) {
-							Text(it)
+						Static {
+							Text("Static")
 						}
 					}
 				}

@@ -363,7 +363,7 @@ internal class MosaicNodeApplier(
 	root = MosaicNode(
 		measurePolicy = BoxMeasurePolicy(),
 		debugPolicy = { children.joinToString(separator = "\n") },
-		onStaticDraw = null,
+		isStatic = false,
 	),
 ) {
 	override fun onBeginChanges() {

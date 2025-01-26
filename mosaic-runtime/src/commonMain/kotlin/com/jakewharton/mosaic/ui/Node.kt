@@ -25,11 +25,11 @@ internal inline fun Node(
 	content:
 	@Composable @MosaicComposable
 	() -> Unit = {},
-	noinline factory: () -> MosaicNode,
+	isStatic: Boolean = false,
 ) {
 	val materializedModifier = currentComposer.materialize(modifier)
 	ComposeNode<MosaicNode, Applier<Any>>(
-		factory = factory,
+		factory = if (isStatic) StaticFactory else NodeFactory,
 		update = {
 			set(measurePolicy, SetMeasurePolicy)
 			set(materializedModifier, SetModifier)
@@ -48,19 +48,20 @@ internal val SetMeasurePolicy: MosaicNode.(MeasurePolicy) -> Unit = { measurePol
 @JvmField
 internal val SetDebugPolicy: MosaicNode.(DebugPolicy) -> Unit = { debugPolicy = it }
 
+@JvmField
 internal val NodeFactory: () -> MosaicNode = {
 	MosaicNode(
 		measurePolicy = ThrowingPolicy,
 		debugPolicy = ThrowingPolicy,
-		onStaticDraw = null,
+		isStatic = false,
 	)
 }
 
-internal fun staticNodeFactory(onDraw: () -> Unit): () -> MosaicNode = {
+private val StaticFactory: () -> MosaicNode = {
 	MosaicNode(
 		measurePolicy = ThrowingPolicy,
 		debugPolicy = ThrowingPolicy,
-		onStaticDraw = onDraw,
+		isStatic = true,
 	)
 }
 

@@ -92,10 +92,10 @@ internal object NotMeasured : MeasureResult {
 internal class MosaicNode(
 	var measurePolicy: MeasurePolicy,
 	var debugPolicy: DebugPolicy,
-	val onStaticDraw: (() -> Unit)?,
+	val isStatic: Boolean,
 ) : Measurable {
-	val isStatic get() = onStaticDraw != null
 	val children = ArrayList<MosaicNode>()
+	private var staticPaint = true
 
 	private val bottomLayer: MosaicNodeLayer = BottomLayer(this)
 	var topLayer: MosaicNodeLayer = bottomLayer
@@ -159,14 +159,20 @@ internal class MosaicNode(
 	 * A call to [measureAndPlace] must precede calls to this function.
 	 */
 	fun paintStaticsTo(statics: MutableObjectList<TextCanvas>) {
-		for (index in children.indices) {
-			val child = children[index]
-			if (isStatic) {
-				statics += child.paint()
+		if (!isStatic) {
+			for (index in children.indices) {
+				children[index].paintStaticsTo(statics)
 			}
-			child.paintStaticsTo(statics)
+			return
 		}
-		onStaticDraw?.invoke()
+		if (staticPaint) {
+			for (index in children.indices) {
+				val child = children[index]
+				statics += child.paint()
+				child.paintStaticsTo(statics)
+			}
+			staticPaint = false
+		}
 	}
 
 	fun sendKeyEvent(keyEvent: KeyEvent): Boolean {

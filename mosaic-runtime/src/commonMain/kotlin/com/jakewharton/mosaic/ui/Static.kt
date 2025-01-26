@@ -3,26 +3,34 @@
 package com.jakewharton.mosaic.ui
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.jakewharton.mosaic.modifier.Modifier
 import kotlin.jvm.JvmName
+
+@Deprecated(
+	"Loop over items list yourself and call Static on each item",
+	ReplaceWith("items.forEach { Static { content(it) } }"),
+)
+@Composable
+public fun <T> Static(
+	items: SnapshotStateList<T>,
+	content: @Composable (item: T) -> Unit,
+) {
+	items.forEach {
+		Static {
+			content(it)
+		}
+	}
+}
 
 /**
  * Will render each value emitted by [items] as permanent output above the
  * regular display.
  */
 @Composable
-public fun <T> Static(
-	items: SnapshotStateList<T>,
-	content: @Composable (T) -> Unit,
+public fun Static(
+	content: @Composable () -> Unit,
 ) {
-	var lastDrawn by remember { mutableIntStateOf(0) }
-	var lastRendered by remember { mutableIntStateOf(0) }
-
 	Node(
 		measurePolicy = { measurables, constraints ->
 			val placeables = measurables.map { measurable ->
@@ -41,15 +49,7 @@ public fun <T> Static(
 			children.joinToString(prefix = "Static()") { "\n" + it.toString().prependIndent("  ") }
 		},
 		modifier = Modifier,
-		content = {
-			for (i in lastDrawn until items.size) {
-				val item = items[i]
-				content(item)
-			}
-			lastRendered = items.size
-		},
-		factory = staticNodeFactory {
-			lastDrawn = lastRendered
-		},
+		content = content,
+		isStatic = true,
 	)
 }

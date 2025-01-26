@@ -137,8 +137,8 @@ fun TestRow(test: Test) {
 // Should be placed as first composable in display.
 @Composable
 fun Log(complete: SnapshotStateList<Test>) {
-	Static(complete) { test ->
-		Column {
+	complete.forEach { test ->
+		Static {
 			TestRow(test)
 			if (test.failures.isNotEmpty()) {
 				for (failure in test.failures) {
