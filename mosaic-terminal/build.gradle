@@ -81,6 +81,11 @@ kotlin {
 			}
 		}
 
+		def allJvmTests = tasks.register("all${target.name.capitalize()}Tests") {
+			group = VERIFICATION_GROUP
+			description = "Run all of the tests for the ${target.name} target."
+		}
+
 		def dependencyFiles = testCompilation.map { it.runtimeDependencyFiles }
 		def proGuardJar = base.archivesName.flatMap { archivesName ->
 			layout.buildDirectory.file("libs/$archivesName-tests-${target.name}-$version-ProGuard.jar")
@@ -112,7 +117,10 @@ kotlin {
 			}
 		}
 
-		target.testRuns.create("ProGuard") { run ->
+		target.testRuns.create("proGuard") { run ->
+			allJvmTests.configure {
+				it.dependsOn(run.executionTask)
+			}
 			run.executionTask.configure {
 				dependsOn(proGuardTask)
 			}

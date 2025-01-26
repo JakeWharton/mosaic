@@ -3,7 +3,6 @@ package com.jakewharton.mosaic.buildsupport
 import java.io.File
 import org.gradle.api.Project
 import org.gradle.api.file.FileTree
-import org.gradle.api.internal.file.FileCollectionFactory
 import org.gradle.api.internal.tasks.testing.TestClassProcessor
 import org.gradle.api.internal.tasks.testing.TestClassRunInfo
 import org.gradle.api.internal.tasks.testing.TestResultProcessor
@@ -13,12 +12,10 @@ import org.gradle.api.internal.tasks.testing.junit.JUnitDetector
 import org.gradle.api.plugins.BasePluginExtension
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.application.CreateStartScripts
-import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.bundling.Zip
 import org.gradle.internal.Factory
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation.Companion.TEST_COMPILATION_NAME
-import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
+import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 
 internal class MosaicBuildExtensionImpl(
 	private val project: Project,
@@ -35,81 +32,95 @@ internal class MosaicBuildExtensionImpl(
 
 			val gradleSupport: GradleSupport = Gradle_8_10_Support()
 
+			val installDistributions = project.tasks.register("installTestDistributions") {
+				it.group = "distribution"
+				it.description = "Installs all test distributions."
+			}
+			val zipDistributions = project.tasks.register("zipTestDistributions") {
+				it.group = "distribution"
+				it.description = "Bundles all test distributions."
+			}
+
 			val base = project.extensions.getByType(BasePluginExtension::class.java)
 			val kotlin = project.extensions.getByType(KotlinMultiplatformExtension::class.java)
-			kotlin.targets.configureEach { target ->
-				if (target.platformType != KotlinPlatformType.jvm) return@configureEach
+			kotlin.targets.withType(KotlinJvmTarget::class.java) { target ->
+				target.testRuns.configureEach { testRun ->
+					val name = testRun.name
+					val nameUpper = name.replaceFirstChar(Char::uppercase)
 
-				val name = target.name + "Test"
-				val nameUpper = name.replaceFirstChar(Char::uppercase)
+//					val testJarProvider = project.tasks.register("jarTest$nameUpper", Jar::class.java) {
+//						it.from(testClassesDirs)
+//						it.archiveAppendix.set(target.name)
+//						it.archiveClassifier.set(if (name == "test") "tests" else "tests$nameUpper")
+//					}
 
-				val mainJarProvider = project.tasks.named(target.artifactsTaskName)
+					val testScriptsProvider = project.tasks.register("scriptsTest$nameUpper", CreateStartScripts::class.java) { task ->
+						task.outputDir = project.layout.buildDirectory.dir("scripts/$name").get().asFile
+						task.applicationName = base.archivesName.get() + "-test"
 
-				val testCompilation = target.compilations.named(TEST_COMPILATION_NAME)
-				val testClassesProvider = testCompilation.map { it.output.allOutputs }
-				val testDependenciesProvider = testCompilation.map {
-					it.runtimeDependencyFiles?.filter { it.isFile }
-						?: FileCollectionFactory.empty()
-				}
+						val executionSource = testRun.executionSource
+						val testClasspath = executionSource.classpath
+						val testClassesDirs = executionSource.testClassesDirs
 
-				val testJarProvider = project.tasks.register("jar$nameUpper", Jar::class.java) {
-					it.from(testClassesProvider)
-					it.archiveAppendix.set(target.name)
-					it.archiveClassifier.set("tests")
-				}
+						// The classpath property is not lazy, so we need explicit dependencies here.
+						task.dependsOn(testClasspath)
+//						it.dependsOn(testJarProvider)
 
-				val testScriptsProvider = project.tasks.register("scripts$nameUpper", CreateStartScripts::class.java) {
-					it.outputDir = project.layout.buildDirectory.dir("scripts/$name").get().asFile
-					it.applicationName = base.archivesName.get() + "-test"
-
-					// The classpath property is not lazy, so we need explicit dependencies here.
-					it.dependsOn(mainJarProvider)
-					it.dependsOn(testJarProvider)
-					it.dependsOn(testDependenciesProvider)
-					// However, this 'plus' result will be live, and can still be set at configuration time.
-					val classpath = mainJarProvider.get().outputs.files
-						.plus(testJarProvider.get().outputs.files)
-						.plus(testDependenciesProvider.get())
-					it.classpath = classpath
-
-					it.mainClass.set(
-						testClassesProvider.zip(testDependenciesProvider) { testClasses, testDependencies ->
-							val testFqcns = gradleSupport.detectTestClassNames(
-								testClasses.asFileTree,
-								testClasses.files.toList(),
-								testDependencies.files.toList()
-							)
-							"org.junit.runner.JUnitCore ${testFqcns.joinToString(" ") { """"$it"""" }}"
+						// However, this 'plus' result will be live, and can still be set at configuration time.
+//						val classpath = testJarProvider.get().outputs.files
+//							.plus(testClasspath)
+						task.doFirst {
+							task.classpath = testClasspath
 						}
-					)
-				}
 
-				val installProvider = project.tasks.register("install${nameUpper}Distribution", Copy::class.java) {
-					it.group = "distribution"
-					it.description = "Installs $name as a distribution as-is."
-
-					it.into("bin") {
-						it.from(testScriptsProvider)
+						task.mainClass.set(
+							project.provider {
+								println("XXXXX $name\n  ${testClasspath.files}\n  ${testClassesDirs.files}")
+								val testFqcns = gradleSupport.detectTestClassNames(
+									testClassesDirs.asFileTree,
+									testClassesDirs.files.toList(),
+									testClasspath.files.toList()
+								)
+								"org.junit.runner.JUnitCore ${testFqcns.joinToString(" ") { """"$it"""" }}"
+							}
+						)
 					}
-					it.into("lib") {
-						it.from(testJarProvider)
-						it.from(mainJarProvider)
-						it.from(testDependenciesProvider)
+
+					val installProvider = project.tasks.register("installTest${nameUpper}Distribution", Copy::class.java) {
+						it.group = "distribution"
+						it.description = "Installs test $name as a distribution as-is."
+
+						it.dependsOn(testRun.executionTask.get().inputs.files)
+						val classpath = testRun.executionTask.get().classpath
+
+						it.into("bin") {
+							it.from(testScriptsProvider)
+						}
+						it.into("lib") {
+//							it.from(mainJarProvider)
+//							it.from(testJarProvider)
+							println("YYYYY $name\n  $classpath")
+							it.from(classpath)
+						}
+						it.destinationDir = project.layout.buildDirectory.dir("tests-install/$name").get().asFile
 					}
-					it.destinationDir = project.layout.buildDirectory.dir("install/$name").get().asFile
+					installDistributions.configure {
+						it.dependsOn(installProvider)
+					}
+
+					val zipProvider = project.tasks.register("zipTest${nameUpper}Distribution", Zip::class.java) {
+						it.group = "distribution"
+						it.description = "Bundles test $name as a distribution."
+
+						it.from(installProvider)
+						it.destinationDirectory.set(project.layout.buildDirectory.dir("tests-distribution"))
+						it.archiveAppendix.set(target.name)
+						it.archiveClassifier.set(if (name == "test") "tests" else "tests$nameUpper")
+					}
+					zipDistributions.configure {
+						it.dependsOn(zipProvider)
+					}
 				}
-
-				project.tasks.register("zip${nameUpper}Distribution", Zip::class.java) {
-					it.group = "distribution"
-					it.description = "Bundles $name as a distribution."
-
-					it.from(installProvider)
-					it.destinationDirectory.set(project.layout.buildDirectory.dir("dist"))
-					it.archiveAppendix.set(target.name)
-					it.archiveClassifier.set("tests")
-				}
-
-				// TODO add to archives?
 			}
 		}
 	}

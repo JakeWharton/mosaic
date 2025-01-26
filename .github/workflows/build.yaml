@@ -181,6 +181,7 @@ jobs:
           -x mingwX64Test
           jvmTest
           -x :mosaic-terminal:jvmTest
+          :mosaic-terminal:jvmProGuardTest
 
   docs:
     runs-on: macos-15
