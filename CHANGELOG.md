@@ -4,7 +4,7 @@
 [Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.15.0...HEAD
 
 New:
-- Nothing yet!
+- Add `setContentAndSnapshot` to 'mosaic-testing' which returns the initial composition snapshot. This avoids a potential problem with calling `setContent` and then `awaitSnapshot` since the latter will trigger a subsequent recomposition (if needed), preventing observation of the initial state.
 
 Changed:
 - Nothing yet!

@@ -40,6 +40,7 @@ public suspend fun <T, R> runMosaicTest(
 }
 
 public interface TestMosaic<T> : Mosaic {
+	public fun setContentAndSnapshot(content: @Composable () -> Unit): T
 	public suspend fun awaitSnapshot(duration: Duration = 1.seconds): T
 }
 
@@ -62,6 +63,13 @@ private class RealTestMosaic<T>(
 	override fun setContent(content: @Composable () -> Unit) {
 		contentSet = true
 		mosaic.setContent(content)
+	}
+
+	override fun setContentAndSnapshot(content: @Composable (() -> Unit)): T {
+		setContent(content)
+		check(hasChanges)
+		hasChanges = false
+		return snapshotStrategy.create(mosaic)
 	}
 
 	override suspend fun awaitSnapshot(duration: Duration): T {

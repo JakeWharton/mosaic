@@ -11,6 +11,7 @@ abstract fun interface <#A: kotlin/Any?> com.jakewharton.mosaic.testing/Snapshot
 }
 
 abstract interface <#A: kotlin/Any?> com.jakewharton.mosaic.testing/TestMosaic : com.jakewharton.mosaic/Mosaic { // com.jakewharton.mosaic.testing/TestMosaic|null[0]
+    abstract fun setContentAndSnapshot(kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>): #A // com.jakewharton.mosaic.testing/TestMosaic.setContentAndSnapshot|setContentAndSnapshot(kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>){}[0]
     abstract suspend fun awaitSnapshot(kotlin.time/Duration = ...): #A // com.jakewharton.mosaic.testing/TestMosaic.awaitSnapshot|awaitSnapshot(kotlin.time.Duration){}[0]
 }
 
