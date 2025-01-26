@@ -10,7 +10,7 @@ Changed:
 - Nothing yet!
 
 Fixed:
-- Nothing yet!
+- Rendering `Static` data no longer causes one additional subsequent recomposition due to internal state updates.
 
 
 ## [0.15.0] - 2025-01-07
