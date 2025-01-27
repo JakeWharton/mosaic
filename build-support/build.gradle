@@ -7,6 +7,9 @@ buildscript {
 	}
 	repositories {
 		mavenCentral()
+		maven {
+			url 'https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev'
+		}
 	}
 }
 
@@ -34,6 +37,9 @@ kotlin {
 
 repositories {
 	mavenCentral()
+	maven {
+		url 'https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev'
+	}
 }
 
 tasks.withType(JavaCompile).configureEach {

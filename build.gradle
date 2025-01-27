@@ -55,6 +55,14 @@ allprojects {
 		}
 	}
 
+	configurations.configureEach {
+		resolutionStrategy.eachDependency {
+			if (requested.group == "org.jetbrains.kotlin" && requested.name.startsWith("kotlin-stdlib")) {
+				useVersion(libs.versions.kotlin.get())
+			}
+		}
+	}
+
 	tasks.withType(KotlinJvmCompile).configureEach {
 		compilerOptions.jvmTarget = JvmTarget.JVM_1_8
 	}
