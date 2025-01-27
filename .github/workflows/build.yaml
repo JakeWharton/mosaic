@@ -150,6 +150,29 @@ jobs:
       - run: bin/mosaic-terminal-test
         if: matrix.tests.type == 'java'
 
+  # Due to https://youtrack.jetbrains.com/issue/KT-74731, we don't have a good way of packaging
+  # up the additional test runs for use in the above matrix-based runner. For now, run them through
+  # Gradle on a single OS and single JDK just to get some coverage.
+  terminal-shrinker-tests:
+    needs:
+      - terminal-zig
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: mosaic-terminal-jni-libraries
+          path: mosaic-terminal/src/jvmMain/resources/jni
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version-file: .github/.java-version
+
+      - run: >
+          ./gradlew
+          :mosaic-terminal:jvmProGuardTest
+
   build:
     runs-on: macos-15
     needs:

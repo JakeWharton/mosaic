@@ -60,6 +60,10 @@ kotlin {
 		}
 	}
 
+	tasks.withType(Test).configureEach {
+		systemProperty('kotlinx.coroutines.test.default_timeout', '2s')
+	}
+
 	targets.withType(KotlinJvmTarget).configureEach { target ->
 		def mainCompilation = target.compilations.named(MAIN_COMPILATION_NAME)
 		def testCompilation = target.compilations.named(TEST_COMPILATION_NAME)
