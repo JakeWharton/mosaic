@@ -10,6 +10,7 @@ kotlin {
 	sourceSets {
 		commonMain {
 			dependencies {
+				api libs.kotlin.stdlib
 				api projects.mosaicRuntime
 				api libs.kotlinx.coroutines.core
 				implementation libs.compose.collection

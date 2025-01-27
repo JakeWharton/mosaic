@@ -47,6 +47,7 @@ kotlin {
 
 		commonMain {
 			dependencies {
+				api libs.kotlin.stdlib
 				api libs.kotlinx.coroutines.core
 			}
 		}

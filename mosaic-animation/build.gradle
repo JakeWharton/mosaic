@@ -21,6 +21,7 @@ kotlin {
 	sourceSets {
 		commonMain {
 			dependencies {
+				api libs.kotlin.stdlib
 				implementation projects.mosaicRuntime
 				implementation libs.compose.collection
 				implementation libs.androidx.annotation
