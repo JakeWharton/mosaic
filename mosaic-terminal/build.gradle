@@ -21,10 +21,18 @@ mosaicBuild {
 
 configurations {
 	proGuard
+	r8
+}
+
+repositories {
+	maven {
+		url 'https://storage.googleapis.com/r8-releases/raw/'
+	}
 }
 
 dependencies {
 	proGuard 'com.guardsquare:proguard-base:7.6.1'
+	r8 'com.android.tools:r8:8.9.21'
 }
 
 kotlin {
@@ -85,16 +93,89 @@ kotlin {
 			}
 		}
 
-		def dependencyFiles = testCompilation.map { it.runtimeDependencyFiles }
+		def mainJar = tasks.named(target.artifactsTaskName, Jar).flatMap { it.archiveFile }
+		def testJar = tasks.register("${target.name}TestJar", Jar) {
+			from(testCompilation.map { it.output.allOutputs })
+			archiveBaseName = base.archivesName.map { it + '-' + target.name }
+			archiveClassifier = 'tests'
+		}.flatMap { it.archiveFile }
+
+		def testDependencyFiles = testCompilation.map { it.runtimeDependencyFiles }
+
+		def r8Rules = layout.buildDirectory.file('shrinker/r8.txt')
+		def r8RulesExtract = tasks.register("${target.name}ExtractR8Rules", JavaExec) {
+			inputs.files(mainJar)
+			inputs.files(testJar)
+			inputs.files(configurations.r8)
+			inputs.files(testDependencyFiles)
+			outputs.file(r8Rules.get())
+
+			classpath(configurations.r8)
+			mainClass = 'com.android.tools.r8.ExtractR8Rules'
+			args = [
+				'--rules-output', r8Rules.get().asFile.absolutePath,
+				'--include-origin-comments',
+			]
+
+			doFirst {
+				// Defer resolving this until execution time since JavaExec lacks provider-based args.
+				testDependencyFiles.get().files.findAll {it.isFile() }.forEach {
+					args += it.absolutePath
+				}
+				args += mainJar.get().asFile.absolutePath
+				args += testJar.get().asFile.absolutePath
+			}
+		}
+
+		def r8Jar = base.archivesName.flatMap { archivesName ->
+			layout.buildDirectory.file("libs/$archivesName-${target.name}-$version-testsR8.jar")
+		}
+		def r8Task = tasks.register("${target.name}TestJarR8", JavaExec) {
+			group = BUILD_GROUP
+			description = 'Assembles an archive containing the test classes run through ProGuard.'
+
+			inputs.files(configurations.r8)
+			inputs.files(testDependencyFiles)
+			inputs.files(r8RulesExtract)
+			outputs.file(r8Jar.get())
+
+			classpath(configurations.r8)
+			mainClass = 'com.android.tools.r8.R8'
+			args = [
+				'--classfile',
+				'--output', r8Jar.get().asFile.absolutePath,
+				'--pg-conf', r8Rules.get().asFile.absolutePath,
+				'--lib', System.properties['java.home'].toString(),
+			]
+			doFirst {
+				// Defer resolving this until execution time since JavaExec lacks provider-based args.
+				testDependencyFiles.get().files.findAll {it.isFile() }.forEach {
+					args += it.absolutePath
+				}
+				args += mainJar.get().asFile.absolutePath
+				args += testJar.get().asFile.absolutePath
+			}
+		}
+
+		target.testRuns.create("r8") { run ->
+			run.executionTask.configure {
+				dependsOn(r8Task)
+			}
+			run.setExecutionSourceFrom(
+				project.files(r8Jar.get()),
+				testDependencyFiles.get().filter { it.isDirectory() },
+			)
+		}
+
 		def proGuardJar = base.archivesName.flatMap { archivesName ->
-			layout.buildDirectory.file("libs/$archivesName-tests-${target.name}-$version-ProGuard.jar")
+			layout.buildDirectory.file("libs/$archivesName-${target.name}-$version-testsProGuard.jar")
 		}
 		def proGuardTask = tasks.register("${target.name}TestJarProGuard", JavaExec) {
 			group = BUILD_GROUP
 			description = 'Assembles an archive containing the test classes run through ProGuard.'
 
 			inputs.files(configurations.proGuard)
-			inputs.files(dependencyFiles)
+			inputs.files(testDependencyFiles)
 			outputs.file(proGuardJar.get())
 
 			classpath(configurations.proGuard)
@@ -109,20 +190,20 @@ kotlin {
 			doFirst {
 				// Defer resolving this until execution time since JavaExec lacks provider-based args.
 				args += '-injars'
-				args += dependencyFiles.get().files.join(File.pathSeparator)
+				args += testDependencyFiles.get().files.join(File.pathSeparator)
 				// These do not need deferred, but since it must come after -injars it has to go here.
 				args += '-outjars'
 				args += proGuardJar.get().asFile.toString()
 			}
 		}
 
-		target.testRuns.create("ProGuard") { run ->
+		target.testRuns.create("proGuard") { run ->
 			run.executionTask.configure {
 				dependsOn(proGuardTask)
 			}
 			run.setExecutionSourceFrom(
 				project.files(proGuardJar.get()),
-				dependencyFiles.get().filter { it.isDirectory() },
+				testDependencyFiles.get().filter { it.isDirectory() },
 			)
 		}
 

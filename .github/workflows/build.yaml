@@ -171,7 +171,9 @@ jobs:
 
       - run: >
           ./gradlew
+          --continue
           :mosaic-terminal:jvmProGuardTest
+          :mosaic-terminal:jvmR8Test
 
   build:
     runs-on: macos-15
@@ -198,6 +200,7 @@ jobs:
           build
           -x allTests
           -x jvmProGuardTest
+          -x jvmR8Test
           -x linuxX64Test
           -x macosArm64Test
           -x macosX64Test
