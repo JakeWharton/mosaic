@@ -86,7 +86,7 @@ stdinRead platformInput_readWithTimeout(
 
 	if (likely(waitResult == WAIT_OBJECT_0)) {
 		DWORD recordsRead = 0;
-		if (unlikely(!ReadConsoleInput(reader->waitHandles[0], records, recordsCount, &recordsRead))) {
+		if (unlikely(!ReadConsoleInput(reader->waitHandles[0], reader->records, recordsCount, &recordsRead))) {
 			goto err;
 		}
 
@@ -95,7 +95,7 @@ stdinRead platformInput_readWithTimeout(
 		platformEventHandler *handler = reader->handler;
 		int nextBufferIndex = 0;
 		for (int i = 0; i < (int) recordsRead; i++) {
-			INPUT_RECORD record = records[i];
+			INPUT_RECORD record = reader->records[i];
 			if (record.EventType == KEY_EVENT) {
 				if (record.Event.KeyEvent.wVirtualKeyCode == 0) {
 					buffer[nextBufferIndex++] = record.Event.KeyEvent.uChar.AsciiChar;
