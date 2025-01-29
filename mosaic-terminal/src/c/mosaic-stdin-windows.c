@@ -207,7 +207,7 @@ platformError platformInputWriter_write(platformInputWriter *writer UNUSED, char
 
 	DWORD result = 0;
 	INPUT_RECORD *records = calloc(count, sizeof(INPUT_RECORD));
-	if (unlikely(!records)) {
+	if (!records) {
 		result = ERROR_NOT_ENOUGH_MEMORY;
 		goto ret;
 	}
@@ -216,9 +216,14 @@ platformError platformInputWriter_write(platformInputWriter *writer UNUSED, char
 		records[i].Event.KeyEvent.uChar.AsciiChar = buffer[i];
 	}
 
-	DWORD written;
-	if (unlikely(!WriteConsoleInput(writerConin, records, count, &written))) {
-		goto err;
+	DWORD remaining = count;
+	while (remaining > 0) {
+		DWORD written;
+		if (!WriteConsoleInput(writerConin, records, count, &written)) {
+			goto err;
+		}
+		remaining -= written;
+		records += written;
 	}
 
 	ret:
@@ -235,10 +240,10 @@ platformError platformInputWriter_write(platformInputWriter *writer UNUSED, char
 platformError writeRecord(INPUT_RECORD *record) {
 	DWORD written;
 	if (likely(WriteConsoleInput(writerConin, record, 1, &written))) {
-		if (written == 1) {
+		if (likely(written == 1)) {
 			return 0;
 		}
-		return -1; // Becomes UInt.MAX_VALUE.
+		return ERROR_WRITE_FAULT;
 	}
 	return GetLastError();
 }
