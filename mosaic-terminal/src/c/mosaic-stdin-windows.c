@@ -86,8 +86,9 @@ stdinRead platformInput_readWithTimeout(
 	printf("INPUT NOTIFY %lu\n", waitResult);
 
 	if (likely(waitResult == WAIT_OBJECT_0)) {
+		INPUT_RECORD *records = reader->records;
 		DWORD recordsRead = 0;
-		if (unlikely(!ReadConsoleInput(reader->waitHandles[0], reader->records, recordsCount, &recordsRead))) {
+		if (unlikely(!ReadConsoleInput(reader->waitHandles[0], records, recordsCount, &recordsRead))) {
 			goto err;
 		}
 
@@ -96,7 +97,7 @@ stdinRead platformInput_readWithTimeout(
 		platformEventHandler *handler = reader->handler;
 		int nextBufferIndex = 0;
 		for (int i = 0; i < (int) recordsRead; i++) {
-			INPUT_RECORD record = reader->records[i];
+			INPUT_RECORD record = records[i];
 			if (record.EventType == KEY_EVENT) {
 				if (record.Event.KeyEvent.wVirtualKeyCode == 0) {
 					buffer[nextBufferIndex++] = record.Event.KeyEvent.uChar.AsciiChar;
@@ -123,11 +124,10 @@ stdinRead platformInput_readWithTimeout(
 		result.count = nextBufferIndex;
 	} else if (unlikely(waitResult == WAIT_FAILED)) {
 		goto err;
-	} else {
-		// Else if the interrupt event was selected or we timed out, return a count of 0.
-		// TODO Check if we need to read the interrupt event to clear it. And document if not.
-		printf("INPUT INTERRUPT\n");
 	}
+	// Else return a count of 0 because either:
+	// - The interrupt event was selected (which auto resets its state).
+	// - The user-supplied, non-infinite timeout ran out.
 
 	ret:
 	printf("INPUT DONE error=%lu, count=%i\n", result.error, result.count);
