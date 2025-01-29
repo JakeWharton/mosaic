@@ -59,7 +59,7 @@ platformInputResult platformInput_init(platformEventHandler *handler) {
 
 stdinRead platformInput_readInternal(
 	platformInput *reader,
-	void *buffer,
+	char *buffer,
 	int count,
 	struct timeval *timeout
 ) {
@@ -102,13 +102,13 @@ stdinRead platformInput_readInternal(
 	goto ret;
 }
 
-stdinRead platformInput_read(platformInput *reader, void *buffer, int count) {
+stdinRead platformInput_read(platformInput *reader, char *buffer, int count) {
 	return platformInput_readInternal(reader, buffer, count, NULL);
 }
 
 stdinRead platformInput_readWithTimeout(
 	platformInput *reader,
-	void *buffer,
+	char *buffer,
 	int count,
 	int timeoutMillis
 ) {
@@ -176,7 +176,7 @@ platformInput *platformInputWriter_getReader(platformInputWriter *writer) {
 	return writer->reader;
 }
 
-platformError platformInputWriter_write(platformInputWriter *writer, void *buffer, int count) {
+platformError platformInputWriter_write(platformInputWriter *writer, char *buffer, int count) {
 	int pipeOut = writer->pipe[1];
 	while (count > 0) {
 		int result = write(pipeOut, buffer, count);
@@ -191,21 +191,25 @@ platformError platformInputWriter_write(platformInputWriter *writer, void *buffe
 	return errno;
 }
 
-void platformInputWriter_focusEvent(platformInputWriter *writer UNUSED, bool focused UNUSED) {
+platformError platformInputWriter_focusEvent(platformInputWriter *writer UNUSED, bool focused UNUSED) {
 	// Focus events are delivered through VT sequences.
+	return 0;
 }
 
-void platformInputWriter_keyEvent(platformInputWriter *writer UNUSED) {
+platformError platformInputWriter_keyEvent(platformInputWriter *writer UNUSED) {
 	// Key events are delivered through VT sequences.
+	return 0;
 }
 
-void platformInputWriter_mouseEvent(platformInputWriter *writer UNUSED) {
+platformError platformInputWriter_mouseEvent(platformInputWriter *writer UNUSED) {
 	// Mouse events are delivered through VT sequences.
+	return 0;
 }
 
-void platformInputWriter_resizeEvent(platformInputWriter *writer, int columns, int rows, int width, int height) {
+platformError platformInputWriter_resizeEvent(platformInputWriter *writer, int columns, int rows, int width, int height) {
 	platformEventHandler *handler = writer->reader->handler;
 	handler->onResize(handler->opaque, columns, rows, width, height);
+	return 0;
 }
 
 platformError platformInputWriter_free(platformInputWriter *writer) {

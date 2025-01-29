@@ -61,18 +61,18 @@ typedef struct platformEventHandler {
 } platformEventHandler;
 
 platformInputResult platformInput_init(platformEventHandler *handler);
-stdinRead platformInput_read(platformInput *reader, void *buffer, int count);
-stdinRead platformInput_readWithTimeout(platformInput *reader, void *buffer, int count, int timeoutMillis);
+stdinRead platformInput_read(platformInput *reader, char *buffer, int count);
+stdinRead platformInput_readWithTimeout(platformInput *reader, char *buffer, int count, int timeoutMillis);
 platformError platformInput_interrupt(platformInput* reader);
 platformError platformInput_free(platformInput *reader);
 
 platformInputWriterResult platformInputWriter_init(platformEventHandler *handler);
 platformInput *platformInputWriter_getReader(platformInputWriter *writer);
-platformError platformInputWriter_write(platformInputWriter *writer, void *buffer, int count);
-void platformInputWriter_focusEvent(platformInputWriter *writer, bool focused);
-void platformInputWriter_keyEvent(platformInputWriter *writer);
-void platformInputWriter_mouseEvent(platformInputWriter *writer);
-void platformInputWriter_resizeEvent(platformInputWriter *writer, int columns, int rows, int width, int height);
+platformError platformInputWriter_write(platformInputWriter *writer, char *buffer, int count);
+platformError platformInputWriter_focusEvent(platformInputWriter *writer, bool focused);
+platformError platformInputWriter_keyEvent(platformInputWriter *writer);
+platformError platformInputWriter_mouseEvent(platformInputWriter *writer);
+platformError platformInputWriter_resizeEvent(platformInputWriter *writer, int columns, int rows, int width, int height);
 platformError platformInputWriter_free(platformInputWriter *writer);
 
 #endif // MOSAIC_H
