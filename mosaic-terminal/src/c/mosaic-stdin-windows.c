@@ -3,6 +3,7 @@
 #if defined(_WIN32)
 
 #include "cutils.h"
+#include <assert.h>
 #include <stdio.h>
 #include <windows.h>
 
@@ -216,15 +217,11 @@ platformError platformInputWriter_write(platformInputWriter *writer UNUSED, char
 		records[i].Event.KeyEvent.uChar.AsciiChar = buffer[i];
 	}
 
-	DWORD remaining = count;
-	while (remaining > 0) {
-		DWORD written;
-		if (!WriteConsoleInput(writerConin, records, count, &written)) {
-			goto err;
-		}
-		remaining -= written;
-		records += written;
+	DWORD written;
+	if (!WriteConsoleInput(writerConin, records, count, &written)) {
+		goto err;
 	}
+	assert(count == (int) written);
 
 	ret:
 	free(records);
