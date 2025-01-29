@@ -9,7 +9,7 @@ pub fn build(b: *std.Build) !void {
 	setupMosaicTarget(b, &deleteLib.step, .linux, .x86_64, "amd64");
 	setupMosaicTarget(b, &deleteLib.step, .macos, .aarch64, "aarch64");
 	setupMosaicTarget(b, &deleteLib.step, .macos, .x86_64, "x86_64");
-	setupMosaicTarget(b, &deleteLib.step, .windows, .aarch64, "arm64");
+	setupMosaicTarget(b, &deleteLib.step, .windows, .aarch64, "aarch64");
 	setupMosaicTarget(b, &deleteLib.step, .windows, .x86_64, "amd64");
 }
 
