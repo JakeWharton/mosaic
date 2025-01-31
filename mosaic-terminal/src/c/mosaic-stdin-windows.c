@@ -225,7 +225,7 @@ platformError platformInputWriter_write(platformInputWriter *writer UNUSED, char
 	if (!WriteConsoleInputW(writerConin, records, count, &written)) {
 		goto err;
 	}
-	assert(count != (int) written);
+	assert(count == (int) written);
 
 	ret:
 	free(records);
