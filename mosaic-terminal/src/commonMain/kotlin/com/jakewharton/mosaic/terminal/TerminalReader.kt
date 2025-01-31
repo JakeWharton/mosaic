@@ -21,6 +21,7 @@ import com.jakewharton.mosaic.terminal.event.TerminalVersionEvent
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
 import com.jakewharton.mosaic.terminal.event.XtermCharacterSizeEvent
 import com.jakewharton.mosaic.terminal.event.XtermPixelSizeEvent
+import kotlin.concurrent.Volatile
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 
@@ -59,6 +60,7 @@ public class TerminalReader internal constructor(
 	 * read under the assumption that any <kbd>Esc</kbd> key press will be encoded using the Kitty
 	 * keyboard protocol.
 	 */
+	@Volatile
 	public var kittyDisambiguateEscapeCodes: Boolean = false
 
 	/**
@@ -70,6 +72,7 @@ public class TerminalReader internal constructor(
 	 * mode, the number of bytes switches to be variable-length as the values are now UTF-8 encoded,
 	 * and setting this property to true correctly changes the parser to consume the values as UTF-8.
 	 */
+	@Volatile
 	public var xtermExtendedUtf8Mouse: Boolean = false
 
 	/**
