@@ -13,8 +13,16 @@ import kotlinx.coroutines.test.runTest
 abstract class BaseTerminalParserTest {
 	internal val writer = PlatformInputWriter()
 	internal val reader = writer.terminalReader()
-	private val runLoop = GlobalScope.launch(Dispatchers.IO) {
+	private var runLoop = GlobalScope.launch(Dispatchers.IO) {
 		reader.runParseLoop()
+	}
+
+	protected suspend fun restartReader() {
+		reader.interrupt()
+		runLoop.join()
+		runLoop = GlobalScope.launch(Dispatchers.IO) {
+			reader.runParseLoop()
+		}
 	}
 
 	@AfterTest fun after() = runTest {

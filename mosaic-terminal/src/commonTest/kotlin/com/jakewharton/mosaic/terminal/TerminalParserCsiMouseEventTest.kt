@@ -117,6 +117,7 @@ class TerminalParserCsiMouseEventTest : BaseTerminalParserTest() {
 
 	@Test fun clickUtf8() = runTest {
 		reader.xtermExtendedUtf8Mouse = true
+		restartReader()
 
 		writer.writeHex("1b5b4d20c28037")
 		assertThat(reader.next()).isEqualTo(
