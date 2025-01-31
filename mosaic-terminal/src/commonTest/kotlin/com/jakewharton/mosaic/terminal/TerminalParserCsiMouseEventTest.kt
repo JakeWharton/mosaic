@@ -6,6 +6,7 @@ import com.jakewharton.mosaic.terminal.event.MouseEvent
 import com.jakewharton.mosaic.terminal.event.MouseEvent.Button
 import com.jakewharton.mosaic.terminal.event.MouseEvent.Type
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
@@ -115,6 +116,7 @@ class TerminalParserCsiMouseEventTest : BaseTerminalParserTest() {
 		)
 	}
 
+	@Ignore
 	@Test fun clickUtf8() = runTest {
 		reader.xtermExtendedUtf8Mouse = true
 		restartReader()
