@@ -80,11 +80,7 @@ stdinRead platformInput_readWithTimeout(
 	DWORD waitResult;
 
 	loop:
-	printf("INPUT WAIT\n");
-
 	waitResult = WaitForMultipleObjects(2, reader->waitHandles, FALSE, timeoutMillis);
-	printf("INPUT NOTIFY %lu\n", waitResult);
-
 	if (likely(waitResult == WAIT_OBJECT_0)) {
 		INPUT_RECORD *records = reader->records;
 		DWORD recordsRead = 0;
@@ -92,17 +88,13 @@ stdinRead platformInput_readWithTimeout(
 			goto err;
 		}
 
-		printf("INPUT READ count=%lu\n", recordsRead);
-
 		platformEventHandler *handler = reader->handler;
 		int nextBufferIndex = 0;
 		for (int i = 0; i < (int) recordsRead; i++) {
 			INPUT_RECORD record = records[i];
 			if (record.EventType == KEY_EVENT) {
 				if (record.Event.KeyEvent.wVirtualKeyCode == 0) {
-					char c = record.Event.KeyEvent.uChar.AsciiChar;
-					printf("INPUT READ %i %c\n", (int) c, c);
-					buffer[nextBufferIndex++] = c;
+					buffer[nextBufferIndex++] = record.Event.KeyEvent.uChar.AsciiChar;
 				}
 				// TODO else other key shit
 			} else if (record.EventType == MOUSE_EVENT) {
@@ -132,7 +124,6 @@ stdinRead platformInput_readWithTimeout(
 	// - The user-supplied, non-infinite timeout ran out.
 
 	ret:
-	printf("INPUT DONE error=%lu, count=%i\n", result.error, result.count);
 	return result;
 
 	err:
@@ -206,8 +197,6 @@ platformInput *platformInputWriter_getReader(platformInputWriter *writer) {
 }
 
 platformError platformInputWriter_write(platformInputWriter *writer UNUSED, char *buffer, int count) {
-	printf("WRITER WRITE %i bytes\n", count);
-
 	DWORD result = 0;
 	INPUT_RECORD *records = calloc(count, sizeof(INPUT_RECORD));
 	if (!records) {
@@ -216,21 +205,19 @@ platformError platformInputWriter_write(platformInputWriter *writer UNUSED, char
 	}
 	for (int i = 0; i < count; i++) {
 		records[i].EventType = KEY_EVENT;
-		char c = buffer[i];
-		printf("WRITER WRITE %i %c\n", (int) c, c);
-		records[i].Event.KeyEvent.uChar.AsciiChar = c;
+		records[i].Event.KeyEvent.uChar.AsciiChar = buffer[i];
 	}
 
 	DWORD written;
 	if (!WriteConsoleInputW(writerConin, records, count, &written)) {
 		goto err;
 	}
+	// TODO Loop instead.
 	assert(count == (int) written);
 
 	ret:
 	free(records);
 
-	printf("WRITER WRITE DONE %lu\n", result);
 	return result;
 
 	err:
