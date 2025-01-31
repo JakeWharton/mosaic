@@ -214,7 +214,9 @@ platformError platformInputWriter_write(platformInputWriter *writer UNUSED, char
 	}
 	for (int i = 0; i < count; i++) {
 		records[i].EventType = KEY_EVENT;
-		records[i].Event.KeyEvent.uChar.AsciiChar = buffer[i];
+		char c = buffer[i];
+		printf("WRITER WRITE %i %c\n", (int) c, c);
+		records[i].Event.KeyEvent.uChar.AsciiChar = c;
 	}
 
 	DWORD written;
