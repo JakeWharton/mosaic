@@ -88,7 +88,7 @@ stdinRead platformInput_readWithTimeout(
 	if (likely(waitResult == WAIT_OBJECT_0)) {
 		INPUT_RECORD *records = reader->records;
 		DWORD recordsRead = 0;
-		if (unlikely(!ReadConsoleInput(reader->waitHandles[0], records, recordsCount, &recordsRead))) {
+		if (unlikely(!ReadConsoleInputW(reader->waitHandles[0], records, recordsCount, &recordsRead))) {
 			goto err;
 		}
 
@@ -222,12 +222,10 @@ platformError platformInputWriter_write(platformInputWriter *writer UNUSED, char
 	}
 
 	DWORD written;
-	if (!WriteConsoleInput(writerConin, records, count, &written)) {
+	if (!WriteConsoleInputW(writerConin, records, count, &written)) {
 		goto err;
 	}
-	if (count != (int) written) {
-		result = ERROR_NEGATIVE_SEEK;
-	}
+	assert(count != (int) written);
 
 	ret:
 	free(records);
@@ -242,7 +240,7 @@ platformError platformInputWriter_write(platformInputWriter *writer UNUSED, char
 
 platformError writeRecord(INPUT_RECORD *record) {
 	DWORD written;
-	if (likely(WriteConsoleInput(writerConin, record, 1, &written))) {
+	if (likely(WriteConsoleInputW(writerConin, record, 1, &written))) {
 		if (likely(written == 1)) {
 			return 0;
 		}
