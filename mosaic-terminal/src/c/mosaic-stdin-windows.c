@@ -100,7 +100,9 @@ stdinRead platformInput_readWithTimeout(
 			INPUT_RECORD record = records[i];
 			if (record.EventType == KEY_EVENT) {
 				if (record.Event.KeyEvent.wVirtualKeyCode == 0) {
-					buffer[nextBufferIndex++] = record.Event.KeyEvent.uChar.AsciiChar;
+					char c = record.Event.KeyEvent.uChar.AsciiChar;
+					printf("INPUT READ %i %c\n", (int) c, c);
+					buffer[nextBufferIndex++] = c;
 				}
 				// TODO else other key shit
 			} else if (record.EventType == MOUSE_EVENT) {
@@ -214,7 +216,7 @@ platformError platformInputWriter_write(platformInputWriter *writer UNUSED, char
 	}
 	for (int i = 0; i < count; i++) {
 		records[i].EventType = KEY_EVENT;
-		char c = buffer[i] & 0xff;
+		char c = buffer[i];
 		printf("WRITER WRITE %i %c\n", (int) c, c);
 		records[i].Event.KeyEvent.uChar.AsciiChar = c;
 	}
