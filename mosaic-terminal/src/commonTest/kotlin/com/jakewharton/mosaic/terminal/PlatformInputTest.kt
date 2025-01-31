@@ -34,6 +34,24 @@ class PlatformInputTest {
 		assertThat(buffer.decodeToString(endIndex = readB)).isEqualTo("world")
 	}
 
+	@Test fun readOnlyUpToCount() {
+		val buffer = ByteArray(100) { 'x'.code.toByte() }
+
+		writer.write("hello".encodeToByteArray())
+		val readA = input.read(buffer, 0, 4)
+		assertThat(readA).isEqualTo(4)
+		assertThat(buffer.decodeToString(endIndex = 5)).isEqualTo("hellx")
+	}
+
+	@Test fun readUnderflow() {
+		val buffer = ByteArray(100) { 'x'.code.toByte() }
+
+		writer.write("hello".encodeToByteArray())
+		val readA = input.read(buffer, 0, 10)
+		assertThat(readA).isEqualTo(5)
+		assertThat(buffer.decodeToString(endIndex = 5)).isEqualTo("hello")
+	}
+
 	@Test fun readCanBeInterrupted() {
 		GlobalScope.launch(Dispatchers.Default) {
 			delay(150.milliseconds)

@@ -71,8 +71,8 @@ stdinRead platformInput_read(
 
 stdinRead platformInput_readWithTimeout(
 	platformInput *reader,
-	char *buffer UNUSED,
-	int count UNUSED,
+	char *buffer,
+	int count,
 	int timeoutMillis
 ) {
 	stdinRead result = {};
@@ -83,8 +83,9 @@ stdinRead platformInput_readWithTimeout(
 	waitResult = WaitForMultipleObjects(2, reader->waitHandles, FALSE, timeoutMillis);
 	if (likely(waitResult == WAIT_OBJECT_0)) {
 		INPUT_RECORD *records = reader->records;
+		int recordRequest = recordsCount > count ? count : recordsCount;
 		DWORD recordsRead = 0;
-		if (unlikely(!ReadConsoleInputW(reader->waitHandles[0], records, recordsCount, &recordsRead))) {
+		if (unlikely(!ReadConsoleInputW(reader->waitHandles[0], records, recordRequest, &recordsRead))) {
 			goto err;
 		}
 
