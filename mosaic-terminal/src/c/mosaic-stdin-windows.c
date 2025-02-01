@@ -4,7 +4,6 @@
 
 #include "cutils.h"
 #include <assert.h>
-#include <stdio.h>
 #include <windows.h>
 
 const int recordsCount = 64;
@@ -212,12 +211,15 @@ platformError platformInputWriter_write(platformInputWriter *writer UNUSED, char
 		records[i].Event.KeyEvent.uChar.AsciiChar = buffer[i];
 	}
 
-	DWORD written;
-	if (!WriteConsoleInputW(writerConin, records, count, &written)) {
-		goto err;
+	INPUT_RECORD *writeRecord = records;
+	while (count > 0) {
+		DWORD written;
+		if (!WriteConsoleInputW(writerConin, writeRecord, count, &written)) {
+			goto err;
+		}
+		count -= (int) written;
+		writeRecord += (int) written;
 	}
-	// TODO Loop instead.
-	assert(count == (int) written);
 
 	ret:
 	free(records);
