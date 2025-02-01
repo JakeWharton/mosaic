@@ -176,6 +176,9 @@ platformInputWriterResult platformInputWriter_init(platformEventHandler *handler
 		writerConin = h;
 	}
 
+	// Ensure we don't start with existing records in the buffer.
+	FlushConsoleInputBuffer(writerConin);
+
 	platformInputResult readerResult = platformInput_initWithHandle(writerConin, handler);
 	if (unlikely(readerResult.error)) {
 		result.error = readerResult.error;
@@ -264,7 +267,6 @@ platformError platformInputWriter_resizeEvent(platformInputWriter *writer UNUSED
 
 platformError platformInputWriter_free(platformInputWriter *writer) {
 	free(writer);
-	FlushConsoleInputBuffer(writerConin);
 	return 0;
 }
 
