@@ -12,18 +12,18 @@ import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 
 public actual object Tty {
 	public actual fun enableRawMode(): AutoCloseable {
-		val savedConfig = enterRawMode().useContents {
+		val saved = enterRawMode().useContents {
 			check(error == 0U) { "Unable to enable raw mode: $error" }
 			saved ?: throw OutOfMemoryError()
 		}
-		return RawMode(savedConfig)
+		return RawMode(saved)
 	}
 
 	private class RawMode(
-		private val savedConfig: CPointer<rawModeConfig>,
+		private val saved: CPointer<rawModeConfig>,
 	) : AutoCloseable {
 		override fun close() {
-			val error = exitRawMode(savedConfig)
+			val error = exitRawMode(saved)
 			if (error == 0U) return
 			throwError(error)
 		}
@@ -36,8 +36,8 @@ public actual object Tty {
 		val handlerRef = StableRef.create(handler)
 		val handlerPtr = handlerRef.toNativeAllocationIn(nativeHeap).ptr
 
-		val readerPtr = platformInput_init(handlerPtr).useContents {
-			reader?.let { return@useContents it }
+		val inputPtr = platformInput_init(handlerPtr).useContents {
+			input?.let { return@useContents it }
 
 			nativeHeap.free(handlerPtr)
 			handlerRef.dispose()
@@ -46,8 +46,8 @@ public actual object Tty {
 			throw OutOfMemoryError()
 		}
 
-		val reader = PlatformInput(readerPtr, handlerPtr, handlerRef)
-		return TerminalReader(reader, events, emitDebugEvents)
+		val input = PlatformInput(inputPtr, handlerPtr, handlerRef)
+		return TerminalReader(input, events, emitDebugEvents)
 	}
 
 	internal fun throwError(error: UInt): Nothing {

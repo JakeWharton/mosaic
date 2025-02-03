@@ -29,8 +29,8 @@ internal actual fun PlatformInputWriter(): PlatformInputWriter {
 		throw OutOfMemoryError()
 	}
 
-	val readerPtr = platformInputWriter_getReader(writerPtr)!!
-	val platformInput = PlatformInput(readerPtr, handlerPtr, handlerRef)
+	val inputPtr = platformInputWriter_getPlatformInput(writerPtr)!!
+	val platformInput = PlatformInput(inputPtr, handlerPtr, handlerRef)
 	return PlatformInputWriter(writerPtr, events, platformInput)
 }
 

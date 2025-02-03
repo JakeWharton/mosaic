@@ -15,7 +15,7 @@ typedef struct platformInputImpl {
 } platformInputImpl;
 
 typedef struct platformInputWriterImpl {
-	platformInput *reader;
+	platformInput *input;
 } platformInputWriterImpl;
 
 platformInputResult platformInput_initWithHandle(
@@ -24,9 +24,9 @@ platformInputResult platformInput_initWithHandle(
 ) {
 	platformInputResult result = {};
 
-	platformInputImpl *reader = calloc(1, sizeof(platformInputImpl));
-	if (unlikely(reader == NULL)) {
-		// result.reader is set to 0 which will trigger OOM.
+	platformInputImpl *input = calloc(1, sizeof(platformInputImpl));
+	if (unlikely(input == NULL)) {
+		// result.input is set to 0 which will trigger OOM.
 		goto ret;
 	}
 
@@ -41,17 +41,17 @@ platformInputResult platformInput_initWithHandle(
 		goto err;
 	}
 
-	reader->waitHandles[0] = stdinRead;
-	reader->waitHandles[1] = interruptEvent;
-	reader->handler = handler;
+	input->waitHandles[0] = stdinRead;
+	input->waitHandles[1] = interruptEvent;
+	input->handler = handler;
 
-	result.reader = reader;
+	result.input = input;
 
 	ret:
 	return result;
 
 	err:
-	free(reader);
+	free(input);
 	goto ret;
 }
 
@@ -61,15 +61,15 @@ platformInputResult platformInput_init(platformEventHandler *handler) {
 }
 
 stdinRead platformInput_read(
-	platformInput *reader,
+	platformInput *input,
 	char *buffer,
 	int count
 ) {
-	return platformInput_readWithTimeout(reader, buffer, count, INFINITE);
+	return platformInput_readWithTimeout(input, buffer, count, INFINITE);
 }
 
 stdinRead platformInput_readWithTimeout(
-	platformInput *reader,
+	platformInput *input,
 	char *buffer,
 	int count,
 	int timeoutMillis
@@ -79,16 +79,16 @@ stdinRead platformInput_readWithTimeout(
 	DWORD waitResult;
 
 	loop:
-	waitResult = WaitForMultipleObjects(2, reader->waitHandles, FALSE, timeoutMillis);
+	waitResult = WaitForMultipleObjects(2, input->waitHandles, FALSE, timeoutMillis);
 	if (likely(waitResult == WAIT_OBJECT_0)) {
-		INPUT_RECORD *records = reader->records;
+		INPUT_RECORD *records = input->records;
 		int recordRequest = recordsCount > count ? count : recordsCount;
 		DWORD recordsRead = 0;
-		if (unlikely(!ReadConsoleInputW(reader->waitHandles[0], records, recordRequest, &recordsRead))) {
+		if (unlikely(!ReadConsoleInputW(input->waitHandles[0], records, recordRequest, &recordsRead))) {
 			goto err;
 		}
 
-		platformEventHandler *handler = reader->handler;
+		platformEventHandler *handler = input->handler;
 		int nextBufferIndex = 0;
 		for (int i = 0; i < (int) recordsRead; i++) {
 			INPUT_RECORD record = records[i];
@@ -131,18 +131,18 @@ stdinRead platformInput_readWithTimeout(
 	goto ret;
 }
 
-platformError platformInput_interrupt(platformInput *reader) {
-	return likely(SetEvent(reader->waitHandles[1]) != 0)
+platformError platformInput_interrupt(platformInput *input) {
+	return likely(SetEvent(input->waitHandles[1]) != 0)
 		? 0
 		: GetLastError();
 }
 
-platformError platformInput_free(platformInput *reader) {
+platformError platformInput_free(platformInput *input) {
 	DWORD result = 0;
-	if (unlikely(CloseHandle(reader->waitHandles[1]) == 0)) {
+	if (unlikely(CloseHandle(input->waitHandles[1]) == 0)) {
 		result = GetLastError();
 	}
-	free(reader);
+	free(input);
 	return result;
 }
 
@@ -178,12 +178,12 @@ platformInputWriterResult platformInputWriter_init(platformEventHandler *handler
 	// Ensure we don't start with existing records in the buffer.
 	FlushConsoleInputBuffer(writerConin);
 
-	platformInputResult readerResult = platformInput_initWithHandle(writerConin, handler);
-	if (unlikely(readerResult.error)) {
-		result.error = readerResult.error;
+	platformInputResult inputResult = platformInput_initWithHandle(writerConin, handler);
+	if (unlikely(inputResult.error)) {
+		result.error = inputResult.error;
 		goto err;
 	}
-	writer->reader = readerResult.reader;
+	writer->input = inputResult.input;
 
 	result.writer = writer;
 
@@ -195,8 +195,8 @@ platformInputWriterResult platformInputWriter_init(platformEventHandler *handler
 	goto ret;
 }
 
-platformInput *platformInputWriter_getReader(platformInputWriter *writer) {
-	return writer->reader;
+platformInput *platformInputWriter_getPlatformInput(platformInputWriter *writer) {
+	return writer->input;
 }
 
 platformError platformInputWriter_write(platformInputWriter *writer UNUSED, char *buffer, int count) {

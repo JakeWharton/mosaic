@@ -25,7 +25,10 @@ void throwIse(JNIEnv *env, unsigned int error, const char *prefix) {
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_enterRawMode(JNIEnv *env, jclass type) {
+Java_com_jakewharton_mosaic_terminal_Jni_enterRawMode(
+	JNIEnv *env,
+	jclass type
+) {
 	rawModeResult result = enterRawMode();
 	if (likely(!result.error)) {
 		return (jlong) result.saved;
@@ -38,8 +41,13 @@ Java_com_jakewharton_mosaic_terminal_Jni_enterRawMode(JNIEnv *env, jclass type) 
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_exitRawMode(JNIEnv *env, jclass type, jlong ptr) {
-	platformError error = exitRawMode((rawModeConfig *) ptr);
+Java_com_jakewharton_mosaic_terminal_Jni_exitRawMode(
+	JNIEnv *env,
+	jclass type,
+	jlong rawModeOpaque
+) {
+	rawModeConfig *rawMode = (rawModeConfig *) rawModeOpaque;
+	platformError error = exitRawMode(rawMode);
 	if (unlikely(error)) {
 		throwIse(env, error, "Unable to exit raw mode");
 	}
@@ -171,16 +179,20 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformEventHandlerFree(
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformInputInit(JNIEnv *env, jclass type, jlong handlerOpaque) {
+Java_com_jakewharton_mosaic_terminal_Jni_platformInputInit(
+	JNIEnv *env,
+	jclass type,
+	jlong handlerOpaque
+) {
 	platformEventHandler *handler = (platformEventHandler *) handlerOpaque;
 	platformInputResult result = platformInput_init(handler);
 	if (likely(!result.error)) {
-		return (jlong) result.reader;
+		return (jlong) result.input;
 	}
 
 	// This throw can fail, but the only condition that should cause that is OOM which
 	// will occur from returning 0 (which is otherwise ignored if the throw succeeds).
-	throwIse(env, result.error, "Unable to create stdin reader");
+	throwIse(env, result.error, "Unable to create");
 	return 0;
 }
 
@@ -188,7 +200,7 @@ JNIEXPORT jint JNICALL
 Java_com_jakewharton_mosaic_terminal_Jni_platformInputRead(
 	JNIEnv *env,
 	jclass type,
-	jlong readerOpaque,
+	jlong inputOpaque,
 	jbyteArray buffer,
 	jint offset,
 	jint count
@@ -196,8 +208,8 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputRead(
 	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
 	jbyte *nativeBufferAtOffset = nativeBuffer + offset;
 
-	platformInput *reader = (platformInput *) readerOpaque;
-	stdinRead read = platformInput_read(reader, nativeBufferAtOffset, count);
+	platformInput *input = (platformInput *) inputOpaque;
+	stdinRead read = platformInput_read(input, nativeBufferAtOffset, count);
 
 	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
 
@@ -215,7 +227,7 @@ JNIEXPORT jint JNICALL
 Java_com_jakewharton_mosaic_terminal_Jni_platformInputReadWithTimeout(
 	JNIEnv *env,
 	jclass type,
-	jlong readerOpaque,
+	jlong inputOpaque,
 	jbyteArray buffer,
 	jint offset,
 	jint count,
@@ -224,9 +236,9 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputReadWithTimeout(
 	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
 	jbyte *nativeBufferAtOffset = nativeBuffer + offset;
 
-	platformInput *reader = (platformInput *) readerOpaque;
+	platformInput *input = (platformInput *) inputOpaque;
 	stdinRead read = platformInput_readWithTimeout(
-		reader,
+		input,
 		nativeBufferAtOffset,
 		count,
 		timeoutMillis
@@ -245,25 +257,37 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputReadWithTimeout(
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformInputInterrupt(JNIEnv *env, jclass type, jlong readerOpaque) {
-	platformInput *reader = (platformInput *) readerOpaque;
-	platformError error = platformInput_interrupt(reader);
+Java_com_jakewharton_mosaic_terminal_Jni_platformInputInterrupt(
+	JNIEnv *env,
+	jclass type,
+	jlong inputOpaque
+) {
+	platformInput *input = (platformInput *) inputOpaque;
+	platformError error = platformInput_interrupt(input);
 	if (unlikely(error)) {
-		throwIse(env, error, "Unable to interrupt stdin reader");
+		throwIse(env, error, "Unable to interrupt");
 	}
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformInputFree(JNIEnv *env, jclass type, jlong readerOpaque) {
-	platformInput *reader = (platformInput *) readerOpaque;
-	platformError error = platformInput_free(reader);
+Java_com_jakewharton_mosaic_terminal_Jni_platformInputFree(
+	JNIEnv *env,
+	jclass type,
+	jlong inputOpaque
+) {
+	platformInput *input = (platformInput *) inputOpaque;
+	platformError error = platformInput_free(input);
 	if (unlikely(error)) {
-		throwIse(env, error, "Unable to free stdin reader");
+		throwIse(env, error, "Unable to free");
 	}
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterInit(JNIEnv *env, jclass type, jlong handlerOpaque) {
+Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterInit(
+	JNIEnv *env,
+	jclass type,
+	jlong handlerOpaque
+) {
 	platformEventHandler *handler = (platformEventHandler *) handlerOpaque;
 	platformInputWriterResult result = platformInputWriter_init(handler);
 	if (likely(!result.error)) {
@@ -343,13 +367,23 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterResizeEvent(
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterGetReader(JNIEnv *env, jclass type, jlong ptr) {
-	return (jlong) platformInputWriter_getReader((platformInputWriter *) ptr);
+Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterGetPlatformInput(
+	JNIEnv *env,
+	jclass type,
+	jlong writerOpaque
+) {
+	platformInputWriter *writer = (platformInputWriter *) writerOpaque;
+	return (jlong) platformInputWriter_getPlatformInput(writer);
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterFree(JNIEnv *env, jclass type, jlong ptr) {
-	platformError error = platformInputWriter_free((platformInputWriter *) ptr);
+Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterFree(
+	JNIEnv *env,
+	jclass type,
+	jlong writerOpaque
+) {
+	platformInputWriter *writer = (platformInputWriter *) writerOpaque;
+	platformError error = platformInputWriter_free(writer);
 	if (unlikely(error)) {
 		throwIse(env, error, "Unable to free stdin writer");
 	}

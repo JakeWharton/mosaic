@@ -2,7 +2,7 @@ package com.jakewharton.mosaic.terminal
 
 import com.jakewharton.mosaic.terminal.Jni.platformEventHandlerFree
 import com.jakewharton.mosaic.terminal.Jni.platformEventHandlerInit
-import com.jakewharton.mosaic.terminal.Jni.platformInputWriterGetReader
+import com.jakewharton.mosaic.terminal.Jni.platformInputWriterGetPlatformInput
 import com.jakewharton.mosaic.terminal.Jni.platformInputWriterInit
 import com.jakewharton.mosaic.terminal.event.Event
 import kotlinx.coroutines.channels.Channel
@@ -14,8 +14,8 @@ internal actual fun PlatformInputWriter(): PlatformInputWriter {
 	if (handlerPtr != 0L) {
 		val writerPtr = platformInputWriterInit(handlerPtr)
 		if (writerPtr != 0L) {
-			val readerPtr = platformInputWriterGetReader(writerPtr)
-			val platformInput = PlatformInput(readerPtr, handlerPtr)
+			val inputPtr = platformInputWriterGetPlatformInput(writerPtr)
+			val platformInput = PlatformInput(inputPtr, handlerPtr)
 			return PlatformInputWriter(writerPtr, events, platformInput)
 		}
 		platformEventHandlerFree(handlerPtr)

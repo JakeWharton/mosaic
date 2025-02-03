@@ -20,36 +20,36 @@ typedef struct platformInputImpl {
 
 typedef struct platformInputWriterImpl {
 	int pipe[2];
-	platformInput *reader;
+	platformInput *input;
 } platformInputWriterImpl;
 
 platformInputResult platformInput_initWithFd(int stdinFd, platformEventHandler *handler) {
 	platformInputResult result = {};
 
-	platformInputImpl *reader = calloc(1, sizeof(platformInputImpl));
-	if (unlikely(reader == NULL)) {
-		// result.reader is set to 0 which will trigger OOM.
+	platformInputImpl *input = calloc(1, sizeof(platformInputImpl));
+	if (unlikely(input == NULL)) {
+		// result.input is set to 0 which will trigger OOM.
 		goto ret;
 	}
 
-	if (unlikely(pipe(reader->pipe)) != 0) {
+	if (unlikely(pipe(input->pipe)) != 0) {
 		result.error = errno;
 		goto err;
 	}
 
-	reader->stdinFd = stdinFd;
+	input->stdinFd = stdinFd;
 	// TODO Consider forcing the writer pipe to always be lower than this pipe.
 	//  If we did this, we could always assume pipe[0] + 1 is the value for nfds.
-	reader->nfds = ((stdinFd > reader->pipe[0]) ? stdinFd : reader->pipe[0]) + 1;
-	reader->handler = handler;
+	input->nfds = ((stdinFd > input->pipe[0]) ? stdinFd : input->pipe[0]) + 1;
+	input->handler = handler;
 
-	result.reader = reader;
+	result.input = input;
 
 	ret:
 	return result;
 
 	err:
-	free(reader);
+	free(input);
 	goto ret;
 }
 
@@ -58,22 +58,22 @@ platformInputResult platformInput_init(platformEventHandler *handler) {
 }
 
 stdinRead platformInput_readInternal(
-	platformInput *reader,
+	platformInput *input,
 	char *buffer,
 	int count,
 	struct timeval *timeout
 ) {
-	int stdinFd = reader->stdinFd;
-	FD_SET(stdinFd, &reader->fds);
+	int stdinFd = input->stdinFd;
+	FD_SET(stdinFd, &input->fds);
 
-	int pipeIn = reader->pipe[0];
-	FD_SET(pipeIn, &reader->fds);
+	int pipeIn = input->pipe[0];
+	FD_SET(pipeIn, &input->fds);
 
 	stdinRead result = {};
 
 	// TODO Consider setting up fd_set once in the struct and doing a stack copy here.
-	if (likely(select(reader->nfds, &reader->fds, NULL, NULL, timeout) >= 0)) {
-		if (likely(FD_ISSET(stdinFd, &reader->fds) != 0)) {
+	if (likely(select(input->nfds, &input->fds, NULL, NULL, timeout) >= 0)) {
+		if (likely(FD_ISSET(stdinFd, &input->fds) != 0)) {
 			int c = read(stdinFd, buffer, count);
 			if (likely(c > 0)) {
 				result.count = c;
@@ -82,7 +82,7 @@ stdinRead platformInput_readInternal(
 			} else {
 				goto err;
 			}
-		} else if (unlikely(FD_ISSET(pipeIn, &reader->fds) != 0)) {
+		} else if (unlikely(FD_ISSET(pipeIn, &input->fds) != 0)) {
 			// Consume the single notification byte to clear the ready state for the next call.
 			int c = read(pipeIn, buffer, 1);
 			if (unlikely(c < 0)) {
@@ -102,12 +102,12 @@ stdinRead platformInput_readInternal(
 	goto ret;
 }
 
-stdinRead platformInput_read(platformInput *reader, char *buffer, int count) {
-	return platformInput_readInternal(reader, buffer, count, NULL);
+stdinRead platformInput_read(platformInput *input, char *buffer, int count) {
+	return platformInput_readInternal(input, buffer, count, NULL);
 }
 
 stdinRead platformInput_readWithTimeout(
-	platformInput *reader,
+	platformInput *input,
 	char *buffer,
 	int count,
 	int timeoutMillis
@@ -116,19 +116,19 @@ stdinRead platformInput_readWithTimeout(
 	timeout.tv_sec = 0;
 	timeout.tv_usec = timeoutMillis * 1000;
 
-	return platformInput_readInternal(reader, buffer, count, &timeout);
+	return platformInput_readInternal(input, buffer, count, &timeout);
 }
 
-platformError platformInput_interrupt(platformInput *reader) {
-	int pipeOut = reader->pipe[1];
+platformError platformInput_interrupt(platformInput *input) {
+	int pipeOut = input->pipe[1];
 	int result = write(pipeOut, " ", 1);
 	return unlikely(result == -1)
 		? errno
 		: 0;
 }
 
-platformError platformInput_free(platformInput *reader) {
-	int *pipe = reader->pipe;
+platformError platformInput_free(platformInput *input) {
+	int *pipe = input->pipe;
 
 	int result = 0;
 	if (unlikely(close(pipe[0]) != 0)) {
@@ -137,7 +137,7 @@ platformError platformInput_free(platformInput *reader) {
 	if (unlikely(close(pipe[1]) != 0 && result != 0)) {
 		result = errno;
 	}
-	free(reader);
+	free(input);
 	return result;
 }
 
@@ -155,12 +155,12 @@ platformInputWriterResult platformInputWriter_init(platformEventHandler *handler
 		goto err;
 	}
 
-	platformInputResult readerResult = platformInput_initWithFd(writer->pipe[0], handler);
-	if (unlikely(readerResult.error)) {
-		result.error = readerResult.error;
+	platformInputResult inputResult = platformInput_initWithFd(writer->pipe[0], handler);
+	if (unlikely(inputResult.error)) {
+		result.error = inputResult.error;
 		goto err;
 	}
-	writer->reader = readerResult.reader;
+	writer->input = inputResult.input;
 
 	result.writer = writer;
 
@@ -172,8 +172,8 @@ platformInputWriterResult platformInputWriter_init(platformEventHandler *handler
 	goto ret;
 }
 
-platformInput *platformInputWriter_getReader(platformInputWriter *writer) {
-	return writer->reader;
+platformInput *platformInputWriter_getPlatformInput(platformInputWriter *writer) {
+	return writer->input;
 }
 
 platformError platformInputWriter_write(platformInputWriter *writer, char *buffer, int count) {
@@ -207,7 +207,7 @@ platformError platformInputWriter_mouseEvent(platformInputWriter *writer UNUSED)
 }
 
 platformError platformInputWriter_resizeEvent(platformInputWriter *writer, int columns, int rows, int width, int height) {
-	platformEventHandler *handler = writer->reader->handler;
+	platformEventHandler *handler = writer->input->handler;
 	handler->onResize(handler->opaque, columns, rows, width, height);
 	return 0;
 }

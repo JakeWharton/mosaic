@@ -32,7 +32,7 @@ typedef struct platformInputImpl platformInput;
 typedef struct platformInputWriterImpl platformInputWriter;
 
 typedef struct platformInputResult {
-	platformInput *reader;
+	platformInput *input;
 	platformError error;
 } platformInputResult;
 
@@ -61,13 +61,13 @@ typedef struct platformEventHandler {
 } platformEventHandler;
 
 platformInputResult platformInput_init(platformEventHandler *handler);
-stdinRead platformInput_read(platformInput *reader, char *buffer, int count);
-stdinRead platformInput_readWithTimeout(platformInput *reader, char *buffer, int count, int timeoutMillis);
-platformError platformInput_interrupt(platformInput* reader);
-platformError platformInput_free(platformInput *reader);
+stdinRead platformInput_read(platformInput *input, char *buffer, int count);
+stdinRead platformInput_readWithTimeout(platformInput *input, char *buffer, int count, int timeoutMillis);
+platformError platformInput_interrupt(platformInput *input);
+platformError platformInput_free(platformInput *input);
 
 platformInputWriterResult platformInputWriter_init(platformEventHandler *handler);
-platformInput *platformInputWriter_getReader(platformInputWriter *writer);
+platformInput *platformInputWriter_getPlatformInput(platformInputWriter *writer);
 platformError platformInputWriter_write(platformInputWriter *writer, char *buffer, int count);
 platformError platformInputWriter_focusEvent(platformInputWriter *writer, bool focused);
 platformError platformInputWriter_keyEvent(platformInputWriter *writer);

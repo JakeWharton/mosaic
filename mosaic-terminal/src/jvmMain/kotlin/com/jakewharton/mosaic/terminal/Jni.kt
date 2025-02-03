@@ -16,20 +16,20 @@ internal object Jni {
 	external fun enterRawMode(): Long
 
 	@JvmStatic
-	external fun exitRawMode(savedConfig: Long)
+	external fun exitRawMode(savedPtr: Long)
 
 	@JvmStatic
 	external fun platformEventHandlerInit(handler: PlatformEventHandler): Long
 
 	@JvmStatic
-	external fun platformEventHandlerFree(handler: Long)
+	external fun platformEventHandlerFree(handlerPtr: Long)
 
 	@JvmStatic
-	external fun platformInputInit(handler: Long): Long
+	external fun platformInputInit(handlerPtr: Long): Long
 
 	@JvmStatic
 	external fun platformInputRead(
-		reader: Long,
+		inputPtr: Long,
 		buffer: ByteArray,
 		offset: Int,
 		count: Int,
@@ -37,7 +37,7 @@ internal object Jni {
 
 	@JvmStatic
 	external fun platformInputReadWithTimeout(
-		reader: Long,
+		inputPtr: Long,
 		buffer: ByteArray,
 		offset: Int,
 		count: Int,
@@ -45,32 +45,32 @@ internal object Jni {
 	): Int
 
 	@JvmStatic
-	external fun platformInputInterrupt(reader: Long)
+	external fun platformInputInterrupt(inputPtr: Long)
 
 	@JvmStatic
-	external fun platformInputFree(reader: Long)
+	external fun platformInputFree(inputPtr: Long)
 
 	@JvmStatic
-	external fun platformInputWriterInit(handler: Long): Long
+	external fun platformInputWriterInit(handlerPtr: Long): Long
 
 	@JvmStatic
-	external fun platformInputWriterGetReader(writer: Long): Long
+	external fun platformInputWriterGetPlatformInput(writerPtr: Long): Long
 
 	@JvmStatic
-	external fun platformInputWriterWrite(writer: Long, buffer: ByteArray)
+	external fun platformInputWriterWrite(writerPtr: Long, buffer: ByteArray)
 
 	@JvmStatic
-	external fun platformInputWriterFocusEvent(writer: Long, focused: Boolean)
+	external fun platformInputWriterFocusEvent(writerPtr: Long, focused: Boolean)
 
 	@JvmStatic
-	external fun platformInputWriterKeyEvent(writer: Long)
+	external fun platformInputWriterKeyEvent(writerPtr: Long)
 
 	@JvmStatic
-	external fun platformInputWriterMouseEvent(writer: Long)
+	external fun platformInputWriterMouseEvent(writerPtr: Long)
 
 	@JvmStatic
 	external fun platformInputWriterResizeEvent(
-		writer: Long,
+		writerPtr: Long,
 		columns: Int,
 		rows: Int,
 		width: Int,
@@ -78,7 +78,7 @@ internal object Jni {
 	)
 
 	@JvmStatic
-	external fun platformInputWriterFree(writer: Long)
+	external fun platformInputWriterFree(writerPtr: Long)
 
 	@Suppress(
 		// Only loading from our own JAR contents.
