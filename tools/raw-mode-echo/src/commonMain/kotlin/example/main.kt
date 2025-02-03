@@ -25,10 +25,10 @@ fun main(vararg args: String) = RawModeEchoCommand().main(args)
 
 @OptIn(ExperimentalStdlibApi::class)
 private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
-	private enum class Mode { Hex, Event }
+	private enum class Mode { Hex, Event, Both }
 	private val mode by option()
 		.enum<Mode> { it.name.lowercase() }
-		.default(Mode.Hex)
+		.default(Mode.Both)
 
 	private val all by option().flag()
 	private val focusEvents by option().flag()
@@ -85,7 +85,7 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 					print("\u001b]4;$i;?\u001b\\")
 				}
 
-				val reader = Tty.terminalReader(emitDebugEvents = mode == Mode.Hex)
+				val reader = Tty.terminalReader(emitDebugEvents = mode != Mode.Event)
 
 				// Upon receiving a signal, this block's job will be canceled. Use that to wake up the
 				// blocking stdin read so it loops and checks if its job is still active or not.
@@ -102,16 +102,35 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 				}
 
 				var first = true
+				fun printNewline() {
+					if (!first) print("\r\n")
+					first = false
+				}
+
 				val events = reader.events
 				while (true) {
 					val event = events.receive()
 
-					if (!first) print("\r\n")
-					first = false
+					fun printDebug() {
+						printNewline()
+						print(event.toString())
+					}
+					suspend fun printHex() {
+						val string = (events.receive() as DebugEvent).bytes.toHexString()
+						if (string.isNotEmpty()) {
+							printNewline()
+							print(string)
+						}
+					}
 
 					when (mode) {
-						Mode.Hex -> print((events.receive() as DebugEvent).bytes.toHexString())
-						Mode.Event -> print(event.toString())
+						Mode.Hex -> printHex()
+						Mode.Event -> printDebug()
+						Mode.Both -> {
+							printNewline()
+							printHex()
+							printDebug()
+						}
 					}
 
 					if (event is KeyboardEvent &&

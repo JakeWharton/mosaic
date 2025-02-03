@@ -15,7 +15,7 @@ import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 internal actual fun PlatformInputWriter(): PlatformInputWriter {
 	val events = Channel<Event>(UNLIMITED)
 
-	val handler = PlatformEventHandler(events)
+	val handler = PlatformEventHandler(events, emitDebugEvents = false)
 	val handlerRef = StableRef.create(handler)
 	val handlerPtr = handlerRef.toNativeAllocationIn(nativeHeap).ptr
 

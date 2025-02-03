@@ -32,7 +32,7 @@ public actual object Tty {
 	public actual fun terminalReader(emitDebugEvents: Boolean): TerminalReader {
 		val events = Channel<Event>(UNLIMITED)
 
-		val handler = PlatformEventHandler(events)
+		val handler = PlatformEventHandler(events, emitDebugEvents)
 		val handlerRef = StableRef.create(handler)
 		val handlerPtr = handlerRef.toNativeAllocationIn(nativeHeap).ptr
 

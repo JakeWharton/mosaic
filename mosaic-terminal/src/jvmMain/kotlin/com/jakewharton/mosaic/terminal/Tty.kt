@@ -28,7 +28,7 @@ public actual object Tty {
 	@JvmStatic
 	public actual fun terminalReader(emitDebugEvents: Boolean): TerminalReader {
 		val events = Channel<Event>(UNLIMITED)
-		val handlerPtr = platformEventHandlerInit(PlatformEventHandler(events))
+		val handlerPtr = platformEventHandlerInit(PlatformEventHandler(events, emitDebugEvents))
 		if (handlerPtr != 0L) {
 			val readerPtr = platformInputInit(handlerPtr)
 			if (readerPtr != 0L) {

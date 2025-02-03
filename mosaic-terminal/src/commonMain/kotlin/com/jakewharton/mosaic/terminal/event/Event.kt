@@ -25,6 +25,10 @@ public class UnknownEvent(
 public class DebugEvent(
 	public val event: Event,
 	// TODO ByteString once it moves into the stdlib.
+	/**
+	 * The bytes which produced [event]. This will be empty if the event was produced from something
+	 * other than bytes, such as direct platform integration.
+	 */
 	@ReadArrayContent public val bytes: ByteArray,
 ) : Event
 

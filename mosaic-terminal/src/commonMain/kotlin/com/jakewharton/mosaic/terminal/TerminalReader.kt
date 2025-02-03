@@ -40,9 +40,6 @@ public class TerminalReader internal constructor(
 	@TestApi
 	internal fun copyBuffer() = buffer.copyOfRange(offset, limit)
 
-	@TestApi
-	internal fun platformInput() = platformInput
-
 	private val _events = events
 
 	/** Events read as a result of calls to [tryReadEvents]. */
