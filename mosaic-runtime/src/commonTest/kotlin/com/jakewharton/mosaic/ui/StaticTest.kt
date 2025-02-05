@@ -22,7 +22,9 @@ import com.jakewharton.mosaic.testing.MosaicSnapshots
 import com.jakewharton.mosaic.testing.runMosaicTest
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 
 class StaticTest {
@@ -120,6 +122,10 @@ class StaticTest {
 					}
 				}
 			}
+
+			// Allow the effect to run, if it were going to.
+			delay(10.milliseconds)
+
 			assertThat(ran).isFalse()
 		}
 	}
