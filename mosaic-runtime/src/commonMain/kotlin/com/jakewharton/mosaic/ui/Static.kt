@@ -2,11 +2,20 @@
 
 package com.jakewharton.mosaic.ui
 
+import androidx.compose.runtime.Applier
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ComposeNode
+import androidx.compose.runtime.Composition
+import androidx.compose.runtime.CompositionContext
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCompositionContext
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import com.jakewharton.mosaic.modifier.Modifier
+import com.jakewharton.mosaic.MosaicNodeApplier
+import com.jakewharton.mosaic.layout.MosaicNode
 import kotlin.jvm.JvmName
 
+/** Render each value emitted by [items] as permanent output above the regular display. */
 @Deprecated(
 	"Loop over items list yourself and call Static on each item",
 	ReplaceWith("items.forEach { Static { content(it) } }"),
@@ -24,14 +33,32 @@ public fun <T> Static(
 }
 
 /**
- * Will render each value emitted by [items] as permanent output above the
- * regular display.
+ * Render [content] once as permanent output above the regular display.
  */
 @Composable
 public fun Static(
 	content: @Composable () -> Unit,
 ) {
-	Node(
+	val compositionContext = rememberCompositionContext()
+	val state = remember {
+		StaticState(compositionContext, content)
+	}
+
+	ComposeNode<MosaicNode, Applier<Any>>(
+		factory = StaticFactory,
+		update = {
+			set(state, BindStateToNode)
+		},
+	)
+}
+
+private val BindStateToNode: MosaicNode.(StaticState) -> Unit = {
+	staticState = it
+	it.setNode(this)
+}
+
+private val StaticFactory: () -> MosaicNode = {
+	MosaicNode(
 		measurePolicy = { measurables, constraints ->
 			val placeables = measurables.map { measurable ->
 				measurable.measure(constraints)
@@ -48,8 +75,29 @@ public fun Static(
 		debugPolicy = {
 			children.joinToString(prefix = "Static()") { "\n" + it.toString().prependIndent("  ") }
 		},
-		modifier = Modifier,
-		content = content,
 		isStatic = true,
 	)
+}
+
+@Stable
+internal class StaticState(
+	private val compositionContext: CompositionContext,
+	private val content: @Composable () -> Unit,
+) {
+	private var composition: Composition? = null
+
+	fun setNode(parent: MosaicNode) {
+		val applier = MosaicNodeApplier(parent)
+		composition = Composition(applier, compositionContext).apply {
+			setContent(content)
+		}
+	}
+
+	fun dispose() {
+		composition?.let {
+			// This will remove all children from the parent node.
+			it.dispose()
+			composition = null
+		}
+	}
 }

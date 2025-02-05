@@ -194,7 +194,7 @@ internal class MosaicComposition(
 	private val internalClock = BroadcastFrameClock()
 
 	private val job = Job(coroutineContext[Job])
-	private val composeContext: CoroutineContext = coroutineContext + job + internalClock
+	private val composeContext = coroutineContext + job + internalClock
 	val scope = CoroutineScope(composeContext)
 
 	private val keyEvents = Channel<KeyEvent>(UNLIMITED)
@@ -358,9 +358,10 @@ internal class MosaicComposition(
 private val DefaultTestTerminalSize = IntSize(width = 80, height = 24)
 
 internal class MosaicNodeApplier(
+	root: MosaicNode? = null,
 	private val onChanges: () -> Unit = {},
 ) : AbstractApplier<MosaicNode>(
-	root = MosaicNode(
+	root = root ?: MosaicNode(
 		measurePolicy = BoxMeasurePolicy(),
 		debugPolicy = { children.joinToString(separator = "\n") },
 		isStatic = false,
@@ -389,7 +390,9 @@ internal class MosaicNodeApplier(
 		current.children.move(from, to, count)
 	}
 
-	override fun onClear() {}
+	override fun onClear() {
+		current.children.clear()
+	}
 }
 
 internal class GlobalSnapshotManager {

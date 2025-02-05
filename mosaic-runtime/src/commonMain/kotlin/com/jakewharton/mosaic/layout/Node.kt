@@ -5,6 +5,7 @@ import com.jakewharton.mosaic.TextCanvas
 import com.jakewharton.mosaic.TextSurface
 import com.jakewharton.mosaic.layout.Placeable.PlacementScope
 import com.jakewharton.mosaic.modifier.Modifier
+import com.jakewharton.mosaic.ui.StaticState
 import com.jakewharton.mosaic.ui.unit.Constraints
 
 internal fun interface DebugPolicy {
@@ -95,7 +96,7 @@ internal class MosaicNode(
 	val isStatic: Boolean,
 ) : Measurable {
 	val children = ArrayList<MosaicNode>()
-	private var staticPaint = true
+	var staticState: StaticState? = null
 
 	private val bottomLayer: MosaicNodeLayer = BottomLayer(this)
 	var topLayer: MosaicNodeLayer = bottomLayer
@@ -165,13 +166,14 @@ internal class MosaicNode(
 			}
 			return
 		}
-		if (staticPaint) {
+		staticState?.let { staticState ->
 			for (index in children.indices) {
 				val child = children[index]
 				statics += child.paint()
 				child.paintStaticsTo(statics)
 			}
-			staticPaint = false
+			staticState.dispose()
+			this.staticState = null
 		}
 	}
 
