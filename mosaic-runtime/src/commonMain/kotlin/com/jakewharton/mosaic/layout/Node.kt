@@ -172,7 +172,7 @@ internal class MosaicNode(
 				statics += child.paint()
 				child.paintStaticsTo(statics)
 			}
-			staticState.dispose()
+			children.clear()
 			this.staticState = null
 		}
 	}

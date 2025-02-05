@@ -7,6 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeNode
 import androidx.compose.runtime.Composition
 import androidx.compose.runtime.CompositionContext
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCompositionContext
@@ -34,6 +37,10 @@ public fun <T> Static(
 
 /**
  * Render [content] once as permanent output above the regular display.
+ *
+ * The [content] function will be recomposed once and then never again.
+ * Any contained [SideEffect]s or [DisposableEffect]s will run (and be disposed),
+ * but [LaunchedEffect]s will not launch.
  */
 @Composable
 public fun Static(
@@ -84,20 +91,10 @@ internal class StaticState(
 	private val compositionContext: CompositionContext,
 	private val content: @Composable () -> Unit,
 ) {
-	private var composition: Composition? = null
-
 	fun setNode(parent: MosaicNode) {
 		val applier = MosaicNodeApplier(parent)
-		composition = Composition(applier, compositionContext).apply {
-			setContent(content)
-		}
-	}
-
-	fun dispose() {
-		composition?.let {
-			// This will remove all children from the parent node.
-			it.dispose()
-			composition = null
-		}
+		val composition = Composition(applier, compositionContext)
+		composition.setContent(content)
+		composition.dispose()
 	}
 }

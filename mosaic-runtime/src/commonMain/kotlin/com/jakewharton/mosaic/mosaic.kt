@@ -391,7 +391,6 @@ internal class MosaicNodeApplier(
 	}
 
 	override fun onClear() {
-		current.children.clear()
 	}
 }
 
