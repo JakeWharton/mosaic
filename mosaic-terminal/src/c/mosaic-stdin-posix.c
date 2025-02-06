@@ -5,7 +5,9 @@
 #include "cutils.h"
 #include <errno.h>
 #include <fcntl.h>
+#include <signal.h>
 #include <stdlib.h>
+#include <sys/ioctl.h>
 #include <sys/select.h>
 #include <time.h>
 #include <unistd.h>
@@ -16,6 +18,7 @@ typedef struct platformInputImpl {
 	fd_set fds;
 	int nfds;
 	platformEventHandler *handler;
+	bool sigwinch;
 } platformInputImpl;
 
 typedef struct platformInputWriterImpl {
@@ -127,6 +130,37 @@ platformError platformInput_interrupt(platformInput *input) {
 		: 0;
 }
 
+// TODO Make sure this is only written once. Probably just one instance per process at a time.
+platformInput *globalInput = NULL;
+
+void sigwinchHandler(int value UNUSED) {
+	struct winsize size;
+	if (ioctl(0, TIOCGWINSZ, &size) != -1) {
+		platformEventHandler *handler = globalInput->handler;
+		handler->onResize(handler->opaque, size.ws_col, size.ws_row, size.ws_xpixel, size.ws_ypixel);
+	}
+	// TODO Send errno somewhere? Maybe once we get debug logs working.
+}
+
+platformError platformInput_enableWindowResizeEvents(platformInput *input) {
+	if (input->sigwinch) {
+		return 0; // Already installed.
+	}
+
+	struct sigaction action;
+	action.sa_handler = sigwinchHandler;
+	sigemptyset(&action.sa_mask);
+	action.sa_flags = 0;
+
+	globalInput = input;
+	if (likely(sigaction(SIGWINCH, &action, NULL) == 0)) {
+		input->sigwinch = true;
+		return 0;
+	}
+	globalInput = NULL;
+	return errno;
+}
+
 platformError platformInput_free(platformInput *input) {
 	int *pipe = input->pipe;
 
@@ -135,6 +169,9 @@ platformError platformInput_free(platformInput *input) {
 		result = errno;
 	}
 	if (unlikely(close(pipe[1]) != 0 && result != 0)) {
+		result = errno;
+	}
+	if (input->sigwinch && signal(SIGWINCH, SIG_DFL) == SIG_ERR && result != 0) {
 		result = errno;
 	}
 	free(input);

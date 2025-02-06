@@ -38,6 +38,8 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 	private val bracketedPaste by option().flag()
 	private val colorQuery by option().flag()
 
+	private val windowResize by option().flag()
+
 	override fun run() = runBlocking {
 		val rawMode = Tty.enableRawMode()
 		withFinalizationHook(
@@ -86,6 +88,9 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 				}
 
 				val reader = Tty.terminalReader(emitDebugEvents = mode != Mode.Event)
+				if (windowResize) {
+					reader.enableWindowResizeEvents()
+				}
 
 				// Upon receiving a signal, this block's job will be canceled. Use that to wake up the
 				// blocking stdin read so it loops and checks if its job is still active or not.

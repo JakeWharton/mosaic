@@ -325,6 +325,7 @@ final class com.jakewharton.mosaic.terminal/TerminalReader : kotlin/AutoCloseabl
         final fun <set-xtermExtendedUtf8Mouse>(kotlin/Boolean) // com.jakewharton.mosaic.terminal/TerminalReader.xtermExtendedUtf8Mouse.<set-xtermExtendedUtf8Mouse>|<set-xtermExtendedUtf8Mouse>(kotlin.Boolean){}[0]
 
     final fun close() // com.jakewharton.mosaic.terminal/TerminalReader.close|close(){}[0]
+    final fun enableWindowResizeEvents() // com.jakewharton.mosaic.terminal/TerminalReader.enableWindowResizeEvents|enableWindowResizeEvents(){}[0]
     final fun interrupt() // com.jakewharton.mosaic.terminal/TerminalReader.interrupt|interrupt(){}[0]
     final fun runParseLoop() // com.jakewharton.mosaic.terminal/TerminalReader.runParseLoop|runParseLoop(){}[0]
 }

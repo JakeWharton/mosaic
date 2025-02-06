@@ -17,6 +17,10 @@ internal actual class PlatformInput(
 		Jni.platformInputInterrupt(inputPtr)
 	}
 
+	actual fun enableWindowResizeEvents() {
+		Jni.platformInputEnableWindowResizeEvents(inputPtr)
+	}
+
 	actual override fun close() {
 		if (inputPtr != 0L) {
 			Jni.platformInputFree(inputPtr)

@@ -48,6 +48,9 @@ internal object Jni {
 	external fun platformInputInterrupt(inputPtr: Long)
 
 	@JvmStatic
+	external fun platformInputEnableWindowResizeEvents(inputPtr: Long)
+
+	@JvmStatic
 	external fun platformInputFree(inputPtr: Long)
 
 	@JvmStatic

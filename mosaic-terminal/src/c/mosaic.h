@@ -64,6 +64,7 @@ platformInputResult platformInput_init(platformEventHandler *handler);
 stdinRead platformInput_read(platformInput *input, char *buffer, int count);
 stdinRead platformInput_readWithTimeout(platformInput *input, char *buffer, int count, int timeoutMillis);
 platformError platformInput_interrupt(platformInput *input);
+platformError platformInput_enableWindowResizeEvents(platformInput *input);
 platformError platformInput_free(platformInput *input);
 
 platformInputWriterResult platformInputWriter_init(platformEventHandler *handler);

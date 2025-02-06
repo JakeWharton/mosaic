@@ -270,6 +270,19 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputInterrupt(
 }
 
 JNIEXPORT void JNICALL
+Java_com_jakewharton_mosaic_terminal_Jni_platformInputEnableWindowResizeEvents(
+	JNIEnv *env,
+	jclass type,
+	jlong inputOpaque
+) {
+	platformInput *input = (platformInput *) inputOpaque;
+	platformError error = platformInput_enableWindowResizeEvents(input);
+	if (unlikely(error)) {
+		throwIse(env, error, "Unable to enable window resize events");
+	}
+}
+
+JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_terminal_Jni_platformInputFree(
 	JNIEnv *env,
 	jclass type,

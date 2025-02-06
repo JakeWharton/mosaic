@@ -73,6 +73,29 @@ public class TerminalReader internal constructor(
 	public var xtermExtendedUtf8Mouse: Boolean = false
 
 	/**
+	 * Write [ResizeEvent]s into [events] using platform-specific window monitoring.
+	 *
+	 * Note: Before enabling this, consider querying the terminal for support of
+	 * [mode 2048 in-band resize events](https://gist.github.com/rockorager/e695fb2924d36b2bcf1fff4a3704bd83)
+	 * which are more reliable. Mode 2048 events are also parsed and sent as [ResizeEvent]s.
+	 *
+	 * On Windows this enables receiving
+	 * [`WINDOW_BUFFER_SIZE_RECORD`](https://learn.microsoft.com/en-us/windows/console/window-buffer-size-record-str)
+	 * records from the console. Only the row and column values of the [ResizeEvent] will be present.
+	 * The width and height will always be 0.
+	 *
+	 * On Linux and macOS this installs a `SIGWINCH` signal handler which then queries `TIOCGWINSZ`
+	 * using `ioctl`.
+	 *
+	 * Note: You can also respond to [ResizeEvent]s which lack necessary data by sending `XTWINOPS`
+	 * to query row/col counts and/or window or cell size in pixels. More details
+	 * [here](https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h4-Functions-using-CSI-_-ordered-by-the-final-character-lparen-s-rparen:CSI-Ps;Ps;Ps-t:Ps-=-1-4.2064).
+	 */
+	public fun enableWindowResizeEvents() {
+		platformInput.enableWindowResizeEvents()
+	}
+
+	/**
 	 * Perform a blocking read from stdin to try and parse events. Calls to this function are not
 	 * guaranteed to read an event, nor are they guaranteed to read only one event. Events
 	 * which are read will be placed into [events].

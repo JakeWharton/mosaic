@@ -12,6 +12,7 @@ typedef struct platformInputImpl {
 	HANDLE waitHandles[2];
 	INPUT_RECORD records[recordsCount];
 	platformEventHandler *handler;
+	bool windowResizeEvents;
 } platformInputImpl;
 
 typedef struct platformInputWriterImpl {
@@ -101,7 +102,7 @@ stdinRead platformInput_readWithTimeout(
 				// TODO mouse shit
 			} else if (record.EventType == FOCUS_EVENT) {
 				handler->onFocus(handler->opaque, record.Event.FocusEvent.bSetFocus);
-			} else if (record.EventType == WINDOW_BUFFER_SIZE_EVENT) {
+			} else if (record.EventType == WINDOW_BUFFER_SIZE_EVENT && input->windowResizeEvents) {
 				handler->onResize(
 					handler->opaque,
 					record.Event.WindowBufferSizeEvent.dwSize.X,
@@ -135,6 +136,11 @@ platformError platformInput_interrupt(platformInput *input) {
 	return likely(SetEvent(input->waitHandles[1]) != 0)
 		? 0
 		: GetLastError();
+}
+
+platformError platformInput_enableWindowResizeEvents(platformInput *input) {
+	input->windowResizeEvents = true;
+	return 0;
 }
 
 platformError platformInput_free(platformInput *input) {

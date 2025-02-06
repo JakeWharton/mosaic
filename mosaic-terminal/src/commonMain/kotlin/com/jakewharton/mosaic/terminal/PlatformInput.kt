@@ -25,6 +25,8 @@ internal expect class PlatformInput : AutoCloseable {
 	/** Signal blocking calls to [read] to wake up and return 0. */
 	fun interrupt()
 
+	fun enableWindowResizeEvents()
+
 	/**
 	 * Free the resources associated with this reader.
 	 *
