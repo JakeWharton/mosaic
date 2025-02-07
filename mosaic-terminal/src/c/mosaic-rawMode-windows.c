@@ -44,16 +44,40 @@ rawModeResult enterRawMode() {
 		goto err;
 	}
 
-	if (unlikely(SetConsoleMode(stdin, ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT | ENABLE_EXTENDED_FLAGS) == 0)) {
+	// https://learn.microsoft.com/en-us/windows/console/setconsolemode
+	const int stdinMode = 0
+		// Disable quick edit mode.
+		| ENABLE_EXTENDED_FLAGS
+		// Report changes to the mouse position.
+		| ENABLE_MOUSE_INPUT
+		// Encode key and mouse events as VT sequences rather than input records.
+		| ENABLE_VIRTUAL_TERMINAL_INPUT
+		// Report changes to the buffer size.
+		| ENABLE_WINDOW_INPUT
+		;
+	const int stdoutMode = 0
+		// Do not wrap cursor to next line automatically when writing final column.
+		| DISABLE_NEWLINE_AUTO_RETURN
+		// Allow color sequences to affect characters in all locales.
+		| ENABLE_LVB_GRID_WORLDWIDE
+		// Process outgoing VT sequences for colors, etc.
+		| ENABLE_PROCESSED_OUTPUT
+		// Process outgoing VT sequences for cursor movement, etc.
+		| ENABLE_VIRTUAL_TERMINAL_PROCESSING
+		;
+	// UTF-8 per https://learn.microsoft.com/en-us/windows/win32/intl/code-page-identifiers.
+	const int stdoutCp = 65001;
+
+	if (unlikely(SetConsoleMode(stdin, stdinMode) == 0)) {
 		result.error = GetLastError();
 		goto err;
 	}
-	if (unlikely(SetConsoleMode(stdout, ENABLE_PROCESSED_OUTPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING | DISABLE_NEWLINE_AUTO_RETURN | ENABLE_LVB_GRID_WORLDWIDE) == 0)) {
+	if (unlikely(SetConsoleMode(stdout, stdoutMode) == 0)) {
 		result.error = GetLastError();
 		SetConsoleMode(stdin, saved->input_mode);
 		goto err;
 	}
-	if (unlikely(SetConsoleOutputCP(65001 /* UTF-8 */) == 0)) {
+	if (unlikely(SetConsoleOutputCP(stdoutCp) == 0)) {
 		result.error = GetLastError();
 		SetConsoleMode(stdin, saved->input_mode);
 		SetConsoleMode(stdout, saved->input_mode);
