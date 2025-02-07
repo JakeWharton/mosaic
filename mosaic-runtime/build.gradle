@@ -5,16 +5,7 @@ apply from: "$rootDir/publish.gradle"
 apply plugin: 'dev.drewhamilton.poko'
 
 kotlin {
-	applyDefaultHierarchyTemplate {
-		it.common {
-			it.group("native") {
-				it.group("posix") {
-					it.group("linux") {}
-					it.group("macos") {}
-				}
-			}
-		}
-	}
+	applyDefaultHierarchyTemplate()
 
 	explicitApi()
 

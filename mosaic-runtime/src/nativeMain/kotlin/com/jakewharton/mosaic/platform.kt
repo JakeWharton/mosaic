@@ -1,6 +1,12 @@
 package com.jakewharton.mosaic
 
 import kotlin.concurrent.AtomicInt
+import kotlinx.cinterop.toKString
+import platform.posix.getenv
+
+internal actual fun env(name: String): String? {
+	return getenv(name)?.toKString()
+}
 
 internal actual fun platformDisplay(chars: CharSequence) {
 	print(chars.toString())

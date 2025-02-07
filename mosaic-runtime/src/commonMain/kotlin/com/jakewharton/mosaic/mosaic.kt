@@ -17,7 +17,6 @@ import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.runtime.withFrameNanos
 import com.github.ajalt.mordant.input.RawModeScope
 import com.github.ajalt.mordant.input.enterRawMode
-import com.github.ajalt.mordant.platform.MultiplatformSystem
 import com.github.ajalt.mordant.terminal.Terminal as MordantTerminal
 import com.jakewharton.finalization.withFinalizationHook
 import com.jakewharton.mosaic.layout.KeyEvent
@@ -71,7 +70,7 @@ internal suspend fun runMosaic(enterRawMode: Boolean, content: @Composable () ->
 	val mordantTerminal = MordantTerminal()
 	val rendering = createRendering(mordantTerminal.terminalInfo.ansiLevel.toMosaicAnsiLevel())
 
-	val rawMode = if (enterRawMode && MultiplatformSystem.readEnvironmentVariable("MOSAIC_RAW_MODE") != "false") {
+	val rawMode = if (enterRawMode && env("MOSAIC_RAW_MODE") != "false") {
 		// In theory this call could fail, so perform it before any additional control sequences.
 		mordantTerminal.enterRawMode()
 	} else {

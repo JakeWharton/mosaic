@@ -4,6 +4,10 @@ import java.nio.CharBuffer
 import java.nio.charset.StandardCharsets.UTF_8
 import org.fusesource.jansi.AnsiConsole
 
+internal actual fun env(name: String): String? {
+	return System.getenv(name)
+}
+
 private val out = AnsiConsole.out()!!.also { AnsiConsole.systemInstall() }
 private val encoder = UTF_8.newEncoder()!!
 
