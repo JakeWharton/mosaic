@@ -50,11 +50,39 @@ internal inline fun ByteArray.parseIntDigits(start: Int, end: Int, orElse: () ->
 		if (end > start) {
 			var value = 0
 			for (i in start until end) {
+				value *= 10
+
 				val digit = this[i].toInt()
 				if (digit !in '0'.code..'9'.code) break@error
+				// '0' is 0b110000, so the low 4 bits give us the digit value.
+				value += digit and 0b1111
+			}
+			return value
+		}
+	} while (false)
 
-				value *= 10
-				value += digit - '0'.code
+	return orElse()
+}
+
+internal inline fun ByteArray.parseHexDigits(start: Int, end: Int, orElse: () -> Int): Int {
+	error@ do {
+		if (end > start) {
+			var value = 0
+			for (i in start until end) {
+				value = value shl 4
+
+				val digit = this[i].toInt()
+				if (digit in '0'.code..'9'.code) {
+					// '0' is 0b110000, so the low 4 bits give us the digit value.
+					// We can do a logical OR because we know these bits are empty from the shift above.
+					value = value or (digit and 0b1111)
+				} else if (digit in 'a'.code..'f'.code) {
+					value += digit - 'a'.code + 10
+				} else if (digit in 'A'.code..'F'.code) {
+					value += digit - 'A'.code + 10
+				} else {
+					break@error
+				}
 			}
 			return value
 		}

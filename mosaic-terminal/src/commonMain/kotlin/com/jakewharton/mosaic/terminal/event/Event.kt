@@ -107,6 +107,12 @@ public class PrimaryDeviceAttributesEvent(
 ) : Event
 
 @Poko
+public class TertiaryDeviceAttributesEvent(
+	public val manufacturingSite: Int,
+	public val terminalId: Int,
+) : Event
+
+@Poko
 public class OperatingStatusResponseEvent(
 	public val ok: Boolean,
 ) : Event

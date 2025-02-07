@@ -18,6 +18,7 @@ import com.jakewharton.mosaic.terminal.event.ResizeEvent
 import com.jakewharton.mosaic.terminal.event.SystemThemeEvent
 import com.jakewharton.mosaic.terminal.event.TerminalColorEvent
 import com.jakewharton.mosaic.terminal.event.TerminalVersionEvent
+import com.jakewharton.mosaic.terminal.event.TertiaryDeviceAttributesEvent
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
 import com.jakewharton.mosaic.terminal.event.XtermCharacterSizeEvent
 import com.jakewharton.mosaic.terminal.event.XtermPixelSizeEvent
@@ -652,11 +653,20 @@ public class TerminalReader internal constructor(
 	private fun parseDcs(buffer: ByteArray, start: Int, limit: Int): Event? {
 		return parseUntilStringTerminator(buffer, start, limit) { b3Index, stIndex ->
 			val b4Index = start + 3
+			val b5Index = start + 4
 			if (stIndex > b4Index &&
 				buffer[b3Index].toInt() == '>'.code &&
 				buffer[b4Index].toInt() == '|'.code
 			) {
-				TerminalVersionEvent(buffer.decodeToString(start + 4, stIndex))
+				TerminalVersionEvent(buffer.decodeToString(b5Index, stIndex))
+			} else if (stIndex == start + 12 &&
+				buffer[b3Index].toInt() == '!'.code &&
+				buffer[b4Index].toInt() == '|'.code
+			) {
+				val b7Index = start + 6
+				val manufacturingSite = buffer.parseHexDigits(b5Index, b7Index) { return@parseUntilStringTerminator null }
+				val terminalId = buffer.parseHexDigits(b7Index, stIndex) { return@parseUntilStringTerminator null }
+				TertiaryDeviceAttributesEvent(manufacturingSite, terminalId)
 			} else {
 				null
 			}

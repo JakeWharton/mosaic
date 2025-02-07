@@ -204,6 +204,15 @@ public final class com/jakewharton/mosaic/terminal/event/TerminalVersionEvent : 
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class com/jakewharton/mosaic/terminal/event/TertiaryDeviceAttributesEvent : com/jakewharton/mosaic/terminal/event/Event {
+	public fun <init> (II)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getManufacturingSite ()I
+	public final fun getTerminalId ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/jakewharton/mosaic/terminal/event/UnknownEvent : com/jakewharton/mosaic/terminal/event/Event {
 	public fun <init> ([B)V
 	public fun equals (Ljava/lang/Object;)Z

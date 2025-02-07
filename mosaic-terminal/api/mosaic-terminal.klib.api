@@ -276,6 +276,19 @@ final class com.jakewharton.mosaic.terminal.event/TerminalVersionEvent : com.jak
     final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/TerminalVersionEvent.toString|toString(){}[0]
 }
 
+final class com.jakewharton.mosaic.terminal.event/TertiaryDeviceAttributesEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/TertiaryDeviceAttributesEvent|null[0]
+    constructor <init>(kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.terminal.event/TertiaryDeviceAttributesEvent.<init>|<init>(kotlin.Int;kotlin.Int){}[0]
+
+    final val manufacturingSite // com.jakewharton.mosaic.terminal.event/TertiaryDeviceAttributesEvent.manufacturingSite|{}manufacturingSite[0]
+        final fun <get-manufacturingSite>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/TertiaryDeviceAttributesEvent.manufacturingSite.<get-manufacturingSite>|<get-manufacturingSite>(){}[0]
+    final val terminalId // com.jakewharton.mosaic.terminal.event/TertiaryDeviceAttributesEvent.terminalId|{}terminalId[0]
+        final fun <get-terminalId>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/TertiaryDeviceAttributesEvent.terminalId.<get-terminalId>|<get-terminalId>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/TertiaryDeviceAttributesEvent.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal.event/TertiaryDeviceAttributesEvent.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/TertiaryDeviceAttributesEvent.toString|toString(){}[0]
+}
+
 final class com.jakewharton.mosaic.terminal.event/UnknownEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/UnknownEvent|null[0]
     constructor <init>(kotlin/ByteArray) // com.jakewharton.mosaic.terminal.event/UnknownEvent.<init>|<init>(kotlin.ByteArray){}[0]
 
