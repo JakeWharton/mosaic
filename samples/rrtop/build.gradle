@@ -8,5 +8,5 @@ application {
 
 dependencies {
 	implementation projects.mosaicRuntime
-	implementation 'org.jetbrains.kotlinx:kotlinx-datetime:0.6.1'
+	implementation 'org.jetbrains.kotlinx:kotlinx-datetime:0.6.2'
 }
