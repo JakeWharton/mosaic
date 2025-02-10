@@ -1,5 +1,7 @@
 package com.jakewharton.mosaic.terminal
 
+import com.jakewharton.mosaic.terminal.event.ResizeEvent
+
 // TODO @JvmSynthetic https://youtrack.jetbrains.com/issue/KT-24981
 internal actual class PlatformInput(
 	private var inputPtr: Long,
@@ -19,6 +21,16 @@ internal actual class PlatformInput(
 
 	actual fun enableWindowResizeEvents() {
 		Jni.platformInputEnableWindowResizeEvents(inputPtr)
+	}
+
+	actual fun currentSize(): ResizeEvent {
+		val (columns, rows, width, height) = Jni.platformInputCurrentSize(inputPtr)
+		return ResizeEvent(
+			columns = columns,
+			rows = rows,
+			width = width,
+			height = height,
+		)
 	}
 
 	actual override fun close() {

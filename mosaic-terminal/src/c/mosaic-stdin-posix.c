@@ -135,7 +135,7 @@ platformInput *globalInput = NULL;
 
 void sigwinchHandler(int value UNUSED) {
 	struct winsize size;
-	if (ioctl(0, TIOCGWINSZ, &size) != -1) {
+	if (ioctl(globalInput->stdinFd, TIOCGWINSZ, &size) != -1) {
 		platformEventHandler *handler = globalInput->handler;
 		handler->onResize(handler->opaque, size.ws_col, size.ws_row, size.ws_xpixel, size.ws_ypixel);
 	}
@@ -159,6 +159,22 @@ platformError platformInput_enableWindowResizeEvents(platformInput *input) {
 	}
 	globalInput = NULL;
 	return errno;
+}
+
+terminalSizeResult platformInput_currentTerminalSize(platformInput *input) {
+	terminalSizeResult result = {};
+
+	struct winsize size;
+	if (ioctl(input->stdinFd, TIOCGWINSZ, &size) != -1) {
+		result.size.columns = size.ws_col;
+		result.size.rows = size.ws_row;
+		result.size.width = size.ws_xpixel;
+		result.size.height = size.ws_ypixel;
+	} else {
+		result.error = errno;
+	}
+
+	return result;
 }
 
 platformError platformInput_free(platformInput *input) {

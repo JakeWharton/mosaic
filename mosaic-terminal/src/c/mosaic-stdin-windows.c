@@ -143,6 +143,20 @@ platformError platformInput_enableWindowResizeEvents(platformInput *input) {
 	return 0;
 }
 
+terminalSizeResult platformInput_currentTerminalSize(platformInput *input UNUSED) {
+	terminalSizeResult result = {};
+
+	CONSOLE_SCREEN_BUFFER_INFO info;
+	if (likely(GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &info))) {
+		result.size.columns = info.dwSize.X;
+		result.size.rows = info.dwSize.Y;
+	} else {
+		result.error = GetLastError();
+	}
+
+	return result;
+}
+
 platformError platformInput_free(platformInput *input) {
 	DWORD result = 0;
 	if (unlikely(CloseHandle(input->waitHandles[1]) == 0)) {

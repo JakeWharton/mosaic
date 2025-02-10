@@ -1,5 +1,6 @@
 package com.jakewharton.mosaic.terminal
 
+import com.jakewharton.mosaic.terminal.event.ResizeEvent
 import kotlinx.cinterop.COpaquePointer
 import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.NativePlacement
@@ -48,6 +49,20 @@ internal actual class PlatformInput internal constructor(
 		val error = platformInput_enableWindowResizeEvents(ptr)
 		if (error == 0U) return
 		Tty.throwError(error)
+	}
+
+	actual fun currentSize(): ResizeEvent {
+		platformInput_currentTerminalSize(ptr).useContents {
+			if (error == 0U) {
+				return ResizeEvent(
+					columns = size.columns,
+					rows = size.rows,
+					width = size.width,
+					height = size.height,
+				)
+			}
+			Tty.throwError(error)
+		}
 	}
 
 	actual override fun close() {

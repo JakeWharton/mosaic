@@ -28,6 +28,21 @@ rawModeResult enterRawMode();
 platformError exitRawMode(rawModeConfig *saved);
 
 
+typedef void PlatformEventHandlerOnRead(void *opaque);
+typedef void PlatformEventHandlerOnFocus(void *opaque, bool focused);
+typedef void PlatformEventHandlerOnKey(void *opaque); // TODO params
+typedef void PlatformEventHandlerOnMouse(void *opaque); // TODO params
+typedef void PlatformEventHandlerOnResize(void *opaque, int columns, int rows, int width, int height);
+
+typedef struct platformEventHandler {
+	void *opaque;
+	PlatformEventHandlerOnFocus *onFocus;
+	PlatformEventHandlerOnKey *onKey;
+	PlatformEventHandlerOnMouse *onMouse;
+	PlatformEventHandlerOnResize *onResize;
+} platformEventHandler;
+
+
 typedef struct platformInputImpl platformInput;
 typedef struct platformInputWriterImpl platformInputWriter;
 
@@ -46,25 +61,24 @@ typedef struct stdinRead {
 	platformError error;
 } stdinRead;
 
-typedef void PlatformEventHandlerOnRead(void *opaque);
-typedef void PlatformEventHandlerOnFocus(void *opaque, bool focused);
-typedef void PlatformEventHandlerOnKey(void *opaque); // TODO params
-typedef void PlatformEventHandlerOnMouse(void *opaque); // TODO params
-typedef void PlatformEventHandlerOnResize(void *opaque, int columns, int rows, int width, int height);
+typedef struct terminalSize {
+	int columns;
+	int rows;
+	int width;
+	int height;
+} terminalSize;
 
-typedef struct platformEventHandler {
-	void *opaque;
-	PlatformEventHandlerOnFocus *onFocus;
-	PlatformEventHandlerOnKey *onKey;
-	PlatformEventHandlerOnMouse *onMouse;
-	PlatformEventHandlerOnResize *onResize;
-} platformEventHandler;
+typedef struct terminalSizeResult {
+	terminalSize size;
+	platformError error;
+} terminalSizeResult;
 
 platformInputResult platformInput_init(platformEventHandler *handler);
 stdinRead platformInput_read(platformInput *input, char *buffer, int count);
 stdinRead platformInput_readWithTimeout(platformInput *input, char *buffer, int count, int timeoutMillis);
 platformError platformInput_interrupt(platformInput *input);
 platformError platformInput_enableWindowResizeEvents(platformInput *input);
+terminalSizeResult platformInput_currentTerminalSize(platformInput *input);
 platformError platformInput_free(platformInput *input);
 
 platformInputWriterResult platformInputWriter_init(platformEventHandler *handler);

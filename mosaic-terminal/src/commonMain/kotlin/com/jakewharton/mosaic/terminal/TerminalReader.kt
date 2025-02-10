@@ -96,6 +96,11 @@ public class TerminalReader internal constructor(
 		platformInput.enableWindowResizeEvents()
 	}
 
+	/** Synchronously query for the current terminal size. */
+	public fun currentSize(): ResizeEvent {
+		return platformInput.currentSize()
+	}
+
 	/**
 	 * Perform a blocking read from stdin to try and parse events. Calls to this function are not
 	 * guaranteed to read an event, nor are they guaranteed to read only one event. Events

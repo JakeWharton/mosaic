@@ -282,6 +282,28 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputEnableWindowResizeEvents(
 	}
 }
 
+JNIEXPORT jintArray JNICALL
+Java_com_jakewharton_mosaic_terminal_Jni_platformInputCurrentSize(
+	JNIEnv *env,
+	jclass type,
+	jlong inputOpaque
+) {
+	platformInput *input = (platformInput *) inputOpaque;
+	terminalSizeResult result = platformInput_currentTerminalSize(input);
+	if (likely(!result.error)) {
+		jintArray ints = (*env)->NewIntArray(env, 4);
+		jint *intsPtr = (*env)->GetIntArrayElements(env, ints, NULL);
+		intsPtr[0] = result.size.columns;
+		intsPtr[1] = result.size.rows;
+		intsPtr[2] = result.size.width;
+		intsPtr[3] = result.size.height;
+		(*env)->ReleaseIntArrayElements(env, ints, intsPtr, 0);
+		return ints;
+	}
+
+	throwIse(env, result.error, "Unable to get terminal size");
+}
+
 JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_terminal_Jni_platformInputFree(
 	JNIEnv *env,

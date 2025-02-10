@@ -50,6 +50,13 @@ internal object Jni {
 	@JvmStatic
 	external fun platformInputEnableWindowResizeEvents(inputPtr: Long)
 
+	/**
+	 * @return Array of `[columns, rows, width, height]`. Using an array saves us from having to
+	 * pass a complex object across the JNI boundary.
+	 */
+	@JvmStatic
+	external fun platformInputCurrentSize(inputPtr: Long): IntArray
+
 	@JvmStatic
 	external fun platformInputFree(inputPtr: Long)
 
