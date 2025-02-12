@@ -428,9 +428,15 @@ public class TerminalReader internal constructor(
 
 				'c'.code -> {
 					if (buffer[b3Index].toInt() == '?'.code) {
-						val data = buffer.decodeToString(start + 3, finalIndex)
-						// TODO Parse parameters from data
-						return PrimaryDeviceAttributesEvent(data)
+						val b4Index = start + 3
+						val delimiter = buffer.indexOfOrDefault(';'.code.toByte(), b4Index, finalIndex, finalIndex)
+						val id = buffer.parseIntDigits(b4Index, delimiter, orElse = { break@error })
+						val data = if (delimiter < finalIndex) {
+							buffer.decodeToString(delimiter + 1, finalIndex)
+						} else {
+							""
+						}
+						return PrimaryDeviceAttributesEvent(id, data)
 					}
 				}
 

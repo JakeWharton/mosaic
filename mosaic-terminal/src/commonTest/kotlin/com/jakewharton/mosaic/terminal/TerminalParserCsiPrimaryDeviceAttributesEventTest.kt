@@ -15,13 +15,25 @@ class TerminalParserCsiPrimaryDeviceAttributesEventTest : BaseTerminalParserTest
 		)
 	}
 
-	@Test fun emptyData() = runTest {
+	@Test fun emptyDataFails() = runTest {
 		writer.writeHex("1b5b3f63")
-		assertThat(reader.next()).isEqualTo(PrimaryDeviceAttributesEvent(data = ""))
+		assertThat(reader.next()).isEqualTo(
+			UnknownEvent("1b5b3f63".hexToByteArray()),
+		)
 	}
 
-	@Test fun data() = runTest {
+	@Test fun idNoData() = runTest {
+		writer.writeHex("1b5b3f3263")
+		assertThat(reader.next()).isEqualTo(PrimaryDeviceAttributesEvent(id = 2, data = ""))
+	}
+
+	@Test fun idWithSemicolonNoData() = runTest {
+		writer.writeHex("1b5b3f323b63")
+		assertThat(reader.next()).isEqualTo(PrimaryDeviceAttributesEvent(id = 2, data = ""))
+	}
+
+	@Test fun idAndData() = runTest {
 		writer.writeHex("1b5b3f323b3263")
-		assertThat(reader.next()).isEqualTo(PrimaryDeviceAttributesEvent(data = "2;2"))
+		assertThat(reader.next()).isEqualTo(PrimaryDeviceAttributesEvent(id = 2, data = "2"))
 	}
 }

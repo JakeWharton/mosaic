@@ -202,10 +202,12 @@ final class com.jakewharton.mosaic.terminal.event/PaletteColorEvent : com.jakewh
 }
 
 final class com.jakewharton.mosaic.terminal.event/PrimaryDeviceAttributesEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/PrimaryDeviceAttributesEvent|null[0]
-    constructor <init>(kotlin/String) // com.jakewharton.mosaic.terminal.event/PrimaryDeviceAttributesEvent.<init>|<init>(kotlin.String){}[0]
+    constructor <init>(kotlin/Int, kotlin/String) // com.jakewharton.mosaic.terminal.event/PrimaryDeviceAttributesEvent.<init>|<init>(kotlin.Int;kotlin.String){}[0]
 
     final val data // com.jakewharton.mosaic.terminal.event/PrimaryDeviceAttributesEvent.data|{}data[0]
         final fun <get-data>(): kotlin/String // com.jakewharton.mosaic.terminal.event/PrimaryDeviceAttributesEvent.data.<get-data>|<get-data>(){}[0]
+    final val id // com.jakewharton.mosaic.terminal.event/PrimaryDeviceAttributesEvent.id|{}id[0]
+        final fun <get-id>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/PrimaryDeviceAttributesEvent.id.<get-id>|<get-id>(){}[0]
 
     final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/PrimaryDeviceAttributesEvent.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal.event/PrimaryDeviceAttributesEvent.hashCode|hashCode(){}[0]

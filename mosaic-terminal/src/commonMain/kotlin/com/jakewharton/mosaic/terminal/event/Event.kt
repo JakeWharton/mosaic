@@ -103,6 +103,7 @@ public class BracketedPasteEvent(
 
 @Poko
 public class PrimaryDeviceAttributesEvent(
+	public val id: Int,
 	public val data: String,
 ) : Event
 
