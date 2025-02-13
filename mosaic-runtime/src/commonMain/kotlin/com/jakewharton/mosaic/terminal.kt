@@ -13,4 +13,11 @@ public val LocalTerminal: ProvidableCompositionLocal<Terminal> = compositionLoca
 @[Immutable Poko]
 public class Terminal(
 	public val size: IntSize,
-)
+) {
+	public companion object {
+		public val Default: Terminal = Terminal(
+			// https://en.wikipedia.org/wiki/VT52
+			size = IntSize(width = 80, height = 24),
+		)
+	}
+}

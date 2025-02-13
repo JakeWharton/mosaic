@@ -2,16 +2,14 @@ public abstract interface class com/jakewharton/mosaic/Mosaic {
 	public abstract fun awaitComplete (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun cancel ()V
 	public abstract fun dump ()Ljava/lang/String;
-	public abstract fun getTerminalState ()Landroidx/compose/runtime/MutableState;
 	public abstract fun paint ()Lcom/jakewharton/mosaic/TextCanvas;
 	public fun paintStatics ()Ljava/util/List;
 	public abstract fun paintStaticsTo (Landroidx/collection/MutableObjectList;)V
-	public abstract fun sendKeyEvent (Lcom/jakewharton/mosaic/layout/KeyEvent;)V
 	public abstract fun setContent (Lkotlin/jvm/functions/Function2;)V
 }
 
 public final class com/jakewharton/mosaic/MosaicKt {
-	public static final fun Mosaic (Lkotlin/coroutines/CoroutineContext;Lkotlin/jvm/functions/Function1;)Lcom/jakewharton/mosaic/Mosaic;
+	public static final fun Mosaic (Lkotlin/coroutines/CoroutineContext;Lkotlin/jvm/functions/Function1;Lkotlinx/coroutines/channels/Channel;Landroidx/compose/runtime/State;)Lcom/jakewharton/mosaic/Mosaic;
 	public static final fun renderMosaic (Lkotlin/jvm/functions/Function2;)Ljava/lang/String;
 	public static final fun runMosaic (Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static final fun runMosaicBlocking (Lkotlin/jvm/functions/Function2;)V
@@ -19,11 +17,16 @@ public final class com/jakewharton/mosaic/MosaicKt {
 
 public final class com/jakewharton/mosaic/Terminal {
 	public static final field $stable I
+	public static final field Companion Lcom/jakewharton/mosaic/Terminal$Companion;
 	public synthetic fun <init> (JLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getSize-Usd9Mdw ()J
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/jakewharton/mosaic/Terminal$Companion {
+	public final fun getDefault ()Lcom/jakewharton/mosaic/Terminal;
 }
 
 public final class com/jakewharton/mosaic/TerminalKt {

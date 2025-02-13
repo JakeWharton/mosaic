@@ -3,13 +3,18 @@ package com.jakewharton.mosaic.testing
 import androidx.collection.MutableObjectList
 import androidx.compose.runtime.BroadcastFrameClock
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import com.jakewharton.mosaic.Mosaic
+import com.jakewharton.mosaic.Terminal
 import com.jakewharton.mosaic.TextCanvas
 import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.ui.AnsiLevel
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeout
@@ -42,12 +47,17 @@ public suspend fun <T, R> runMosaicTest(
 public interface TestMosaic<T> : Mosaic {
 	public fun setContentAndSnapshot(content: @Composable () -> Unit): T
 	public suspend fun awaitSnapshot(duration: Duration = 1.seconds): T
+
+	public fun sendKeyEvent(keyEvent: KeyEvent)
+	public val terminalState: MutableState<Terminal>
 }
 
 private class RealTestMosaic<T>(
 	coroutineContext: CoroutineContext,
 	private val snapshotStrategy: SnapshotStrategy<T>,
 ) : TestMosaic<T> {
+	private val keyEvents = Channel<KeyEvent>(UNLIMITED)
+	override val terminalState = mutableStateOf(Terminal.Default)
 
 	private var timeNanos = 0L
 	private val frameDelay = 1.seconds / 60
@@ -58,6 +68,8 @@ private class RealTestMosaic<T>(
 	val mosaic = Mosaic(
 		coroutineContext = coroutineContext + clock,
 		onDraw = { hasChanges = true },
+		keyEvents = keyEvents,
+		terminalState = terminalState,
 	)
 
 	override fun setContent(content: @Composable () -> Unit) {
@@ -91,10 +103,8 @@ private class RealTestMosaic<T>(
 	}
 
 	override fun sendKeyEvent(keyEvent: KeyEvent) {
-		mosaic.sendKeyEvent(keyEvent)
+		keyEvents.trySend(keyEvent)
 	}
-
-	override val terminalState get() = mosaic.terminalState
 
 	override fun paint() = mosaic.paint()
 

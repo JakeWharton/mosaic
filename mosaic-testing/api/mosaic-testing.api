@@ -12,6 +12,8 @@ public abstract interface class com/jakewharton/mosaic/testing/SnapshotStrategy 
 public abstract interface class com/jakewharton/mosaic/testing/TestMosaic : com/jakewharton/mosaic/Mosaic {
 	public abstract fun awaitSnapshot-VtjQ1oo (JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun awaitSnapshot-VtjQ1oo$default (Lcom/jakewharton/mosaic/testing/TestMosaic;JLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public abstract fun getTerminalState ()Landroidx/compose/runtime/MutableState;
+	public abstract fun sendKeyEvent (Lcom/jakewharton/mosaic/layout/KeyEvent;)V
 	public abstract fun setContentAndSnapshot (Lkotlin/jvm/functions/Function2;)Ljava/lang/Object;
 }
 
