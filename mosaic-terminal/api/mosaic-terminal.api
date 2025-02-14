@@ -51,6 +51,7 @@ public final class com/jakewharton/mosaic/terminal/event/DecModeReportEvent$Sett
 	public static final field Reset Lcom/jakewharton/mosaic/terminal/event/DecModeReportEvent$Setting;
 	public static final field Set Lcom/jakewharton/mosaic/terminal/event/DecModeReportEvent$Setting;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun isSupported ()Z
 	public static fun valueOf (Ljava/lang/String;)Lcom/jakewharton/mosaic/terminal/event/DecModeReportEvent$Setting;
 	public static fun values ()[Lcom/jakewharton/mosaic/terminal/event/DecModeReportEvent$Setting;
 }
@@ -101,6 +102,15 @@ public final class com/jakewharton/mosaic/terminal/event/KeyboardEvent : com/jak
 }
 
 public final class com/jakewharton/mosaic/terminal/event/KeyboardEvent$Companion {
+}
+
+public final class com/jakewharton/mosaic/terminal/event/KittyGraphicsEvent : com/jakewharton/mosaic/terminal/event/Event {
+	public fun <init> (ILjava/lang/String;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()I
+	public final fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/jakewharton/mosaic/terminal/event/KittyKeyboardQueryEvent : com/jakewharton/mosaic/terminal/event/Event {

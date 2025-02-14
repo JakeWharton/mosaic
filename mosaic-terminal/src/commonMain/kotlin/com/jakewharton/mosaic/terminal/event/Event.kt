@@ -151,9 +151,10 @@ public class SystemThemeEvent(
 	public val isDark: Boolean,
 ) : Event
 
-internal data class KittyGraphicsEvent(
-	val id: Int,
-	val message: String,
+@Poko
+public class KittyGraphicsEvent(
+	public val id: Int,
+	public val message: String,
 ) : Event
 
 @Poko
@@ -181,12 +182,15 @@ public class DecModeReportEvent(
 	public val mode: Int,
 	public val setting: Setting,
 ) : Event {
-	public enum class Setting {
-		NotRecognized,
-		Set,
-		Reset,
-		PermanentlySet,
-		PermanentlyReset,
+	public enum class Setting(
+		/** False if not recognized or permanently reset. */
+		public val isSupported: Boolean,
+	) {
+		NotRecognized(false),
+		Set(true),
+		Reset(true),
+		PermanentlySet(true),
+		PermanentlyReset(false),
 	}
 }
 

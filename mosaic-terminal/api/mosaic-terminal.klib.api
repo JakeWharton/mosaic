@@ -55,6 +55,8 @@ final class com.jakewharton.mosaic.terminal.event/DecModeReportEvent : com.jakew
 
         final val entries // com.jakewharton.mosaic.terminal.event/DecModeReportEvent.Setting.entries|#static{}entries[0]
             final fun <get-entries>(): kotlin.enums/EnumEntries<com.jakewharton.mosaic.terminal.event/DecModeReportEvent.Setting> // com.jakewharton.mosaic.terminal.event/DecModeReportEvent.Setting.entries.<get-entries>|<get-entries>#static(){}[0]
+        final val isSupported // com.jakewharton.mosaic.terminal.event/DecModeReportEvent.Setting.isSupported|{}isSupported[0]
+            final fun <get-isSupported>(): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/DecModeReportEvent.Setting.isSupported.<get-isSupported>|<get-isSupported>(){}[0]
 
         final fun valueOf(kotlin/String): com.jakewharton.mosaic.terminal.event/DecModeReportEvent.Setting // com.jakewharton.mosaic.terminal.event/DecModeReportEvent.Setting.valueOf|valueOf#static(kotlin.String){}[0]
         final fun values(): kotlin/Array<com.jakewharton.mosaic.terminal.event/DecModeReportEvent.Setting> // com.jakewharton.mosaic.terminal.event/DecModeReportEvent.Setting.values|values#static(){}[0]
@@ -132,6 +134,19 @@ final class com.jakewharton.mosaic.terminal.event/KeyboardEvent : com.jakewharto
         final const val ModifierSuper // com.jakewharton.mosaic.terminal.event/KeyboardEvent.Companion.ModifierSuper|{}ModifierSuper[0]
             final fun <get-ModifierSuper>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/KeyboardEvent.Companion.ModifierSuper.<get-ModifierSuper>|<get-ModifierSuper>(){}[0]
     }
+}
+
+final class com.jakewharton.mosaic.terminal.event/KittyGraphicsEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/KittyGraphicsEvent|null[0]
+    constructor <init>(kotlin/Int, kotlin/String) // com.jakewharton.mosaic.terminal.event/KittyGraphicsEvent.<init>|<init>(kotlin.Int;kotlin.String){}[0]
+
+    final val id // com.jakewharton.mosaic.terminal.event/KittyGraphicsEvent.id|{}id[0]
+        final fun <get-id>(): kotlin/Int // com.jakewharton.mosaic.terminal.event/KittyGraphicsEvent.id.<get-id>|<get-id>(){}[0]
+    final val message // com.jakewharton.mosaic.terminal.event/KittyGraphicsEvent.message|{}message[0]
+        final fun <get-message>(): kotlin/String // com.jakewharton.mosaic.terminal.event/KittyGraphicsEvent.message.<get-message>|<get-message>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/KittyGraphicsEvent.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal.event/KittyGraphicsEvent.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/KittyGraphicsEvent.toString|toString(){}[0]
 }
 
 final class com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent|null[0]

@@ -5,11 +5,19 @@ import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.Color
 import kotlin.math.roundToInt
 
-private const val ESC = "\u001B"
+internal const val ESC = "\u001B"
+internal const val ST = "${ESC}\\"
 internal const val CSI = "$ESC["
+internal const val OSC = "$ESC]"
+internal const val APC = "${ESC}_"
 
-internal const val ansiBeginSynchronizedUpdate = "$CSI?2026h"
-internal const val ansiEndSynchronizedUpdate = "$CSI?2026l"
+internal const val modeFocus = 1004
+internal const val modeSynchronizedRendering = 2026
+internal const val modeSystemTheme = 2031
+internal const val modeInBandResize = 2048
+
+internal const val ansiBeginSynchronizedUpdate = "$CSI?${modeSynchronizedRendering}h"
+internal const val ansiEndSynchronizedUpdate = "$CSI?${modeSynchronizedRendering}l"
 
 internal const val ansiReset = "${CSI}0"
 internal const val clearLine = "${CSI}K"

@@ -18,6 +18,7 @@ kotlin {
 			dependencies {
 				api libs.compose.runtime
 				api libs.kotlinx.coroutines.core
+				implementation projects.mosaicTerminal
 				implementation libs.compose.collection
 				implementation libs.finalizationHook
 				implementation libs.mordant.core

@@ -9,36 +9,34 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Composition
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.MonotonicFrameClock
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Recomposer
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.ObserverHandle
 import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.runtime.withFrameNanos
-import com.github.ajalt.mordant.input.RawModeScope
-import com.github.ajalt.mordant.input.enterRawMode
 import com.github.ajalt.mordant.terminal.Terminal as MordantTerminal
 import com.jakewharton.finalization.withFinalizationHook
 import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.layout.MosaicNode
+import com.jakewharton.mosaic.terminal.Tty
+import com.jakewharton.mosaic.terminal.event.KeyboardEvent
+import com.jakewharton.mosaic.terminal.event.ResizeEvent
 import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.BoxMeasurePolicy
 import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.concurrent.Volatile
 import kotlin.coroutines.CoroutineContext
-import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
-import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -72,11 +70,11 @@ public suspend fun runMosaic(content: @Composable () -> Unit) {
 
 internal suspend fun runMosaic(enterRawMode: Boolean, content: @Composable () -> Unit) {
 	val mordantTerminal = MordantTerminal()
-	val rendering = createRendering(mordantTerminal.terminalInfo.ansiLevel.toMosaicAnsiLevel())
 
+	// Entering raw mode can fail, so perform it before any additional control sequences which change
+	// settings. We also need to be in character mode to query capabilities with control sequences.
 	val rawMode = if (enterRawMode && env("MOSAIC_RAW_MODE") != "false") {
-		// In theory this call could fail, so perform it before any additional control sequences.
-		mordantTerminal.enterRawMode()
+		Tty.enableRawMode()
 	} else {
 		null
 	}
@@ -89,10 +87,18 @@ internal suspend fun runMosaic(enterRawMode: Boolean, content: @Composable () ->
 			rawMode?.close()
 		},
 		block = {
-			val clock = BroadcastFrameClock()
-			val keyEvents = Channel<KeyEvent>(UNLIMITED)
-			val terminalState = mutableStateOf(Terminal.Default)
+			val reader = Tty.terminalReader()
 
+			val clock = BroadcastFrameClock()
+			val rendering = createRendering(mordantTerminal.terminalInfo.ansiLevel.toMosaicAnsiLevel())
+			val keyEvents = Channel<KeyEvent>(UNLIMITED)
+			val terminalState = mutableStateOf(
+				Terminal(
+					size = reader.currentSize().let { initialSize ->
+						IntSize(initialSize.width, initialSize.height)
+					},
+				),
+			)
 			val mosaicComposition = MosaicComposition(
 				coroutineContext = coroutineContext + clock,
 				onDraw = { rootNode ->
@@ -102,9 +108,39 @@ internal suspend fun runMosaic(enterRawMode: Boolean, content: @Composable () ->
 				terminalState = terminalState,
 			)
 
-			mosaicComposition.scope.updateTerminalInfo(mordantTerminal, terminalState)
-			rawMode?.let { rawMode ->
-				mosaicComposition.scope.readRawModeKeys(rawMode, keyEvents)
+			mosaicComposition.scope.launch(start = UNDISPATCHED) {
+				try {
+					awaitCancellation()
+				} finally {
+					// When cancelled (from signal or normally), wake up the reader parse loop so it can exit.
+					reader.interrupt()
+				}
+			}
+			mosaicComposition.scope.launch(Dispatchers.IO) {
+				reader.runParseLoop()
+			}
+
+			val capabilities = reader.queryCapabilities()
+			if (capabilities.inBandResize?.isSupported != true) {
+				reader.enableWindowResizeEvents()
+			}
+
+			mosaicComposition.scope.launch {
+				for (event in reader.events) {
+					when (event) {
+						is KeyboardEvent -> {
+							event.toKeyEventOrNull()?.let {
+								keyEvents.trySend(it)
+							}
+						}
+						is ResizeEvent -> {
+							terminalState.value = Terminal(
+								size = IntSize(event.width, event.height),
+							)
+						}
+						else -> {}
+					}
+				}
 			}
 
 			mosaicComposition.setContent(content)
@@ -131,36 +167,6 @@ private fun createRendering(ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR): Renderi
 		DebugRendering(ansiLevel = ansiLevel)
 	} else {
 		AnsiRendering(ansiLevel = ansiLevel)
-	}
-}
-
-private fun CoroutineScope.updateTerminalInfo(terminal: MordantTerminal, terminalState: MutableState<Terminal>) {
-	launch(start = UNDISPATCHED) {
-		while (true) {
-			val currentTerminalInfo = terminalState.value
-			val newSize = terminal.updateSize()
-			if (currentTerminalInfo.size.width != newSize.width ||
-				currentTerminalInfo.size.height != newSize.height
-			) {
-				terminalState.value = Terminal(size = IntSize(newSize.width, newSize.height))
-			}
-			delay(50L)
-		}
-	}
-}
-
-private fun CoroutineScope.readRawModeKeys(rawMode: RawModeScope, keyEvents: SendChannel<KeyEvent>) {
-	launch(Dispatchers.IO) {
-		while (isActive) {
-			val keyboardEvent = rawMode.readKeyOrNull(10.milliseconds) ?: continue
-			val keyEvent = KeyEvent(
-				key = keyboardEvent.key,
-				alt = keyboardEvent.alt,
-				ctrl = keyboardEvent.ctrl,
-				shift = keyboardEvent.shift,
-			)
-			keyEvents.trySend(keyEvent)
-		}
 	}
 }
 

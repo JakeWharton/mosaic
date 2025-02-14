@@ -7,7 +7,7 @@ New:
 - Nothing yet!
 
 Changed:
-- Nothing yet!
+- Switched to our own terminal integration library. Report any issues with keyboard input, incorrect size reporting, or garbled output.
 
 Fixed:
 - Nothing yet!
