@@ -99,7 +99,7 @@ internal suspend fun runMosaic(isTest: Boolean, content: @Composable () -> Unit)
 					Terminal(
 						size = reader.currentSize().let { initialSize ->
 							IntSize(initialSize.width, initialSize.height)
-						}
+						},
 					)
 				},
 			)
