@@ -2,7 +2,7 @@
 <html class="no-js">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-    <title>kittyDisambiguateEscapeCodes</title>
+    <title>setContentAndSnapshot</title>
 <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
     <script>document.documentElement.classList.replace("no-js","js");</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
@@ -41,11 +41,11 @@
             </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
         </button>
         <div class="navigation-controls--break ui-kit_mobile-only"></div>
-        <div class="library-version" id="library-version">0.15.0
+        <div class="library-version" id="library-version">0.16.0
         </div>
         <div class="navigation-controls">
         <div class="filter-section filter-section_loading" id="filter-section">
-                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":mosaic-terminal:dokkaHtmlPartial/commonMain">common</button>
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":mosaic-testing:dokkaHtmlPartial/commonMain">common</button>
             <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
                 <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
                 <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox">
@@ -56,7 +56,7 @@
                     </div>
                         <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
                             <label class="checkbox">
-                                <input type="checkbox" class="checkbox--input" id=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filter=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+                                <input type="checkbox" class="checkbox--input" id=":mosaic-testing:dokkaHtmlPartial/commonMain" data-filter=":mosaic-testing:dokkaHtmlPartial/commonMain">
                                 <span class="checkbox--icon"></span>
                                 common
                             </label>
@@ -90,12 +90,12 @@
                 </div>
             </div>
             <div id="main">
-<div class="main-content" data-page-type="member" id="content" pageids="mosaic-terminal::com.jakewharton.mosaic.terminal/TerminalParser/kittyDisambiguateEscapeCodes/#/PointingToDeclaration//1057001830">
-  <div class="breadcrumbs"><a href="../../index.html">mosaic-terminal</a><span class="delimiter">/</span><a href="../index.html">com.jakewharton.mosaic.terminal</a><span class="delimiter">/</span><a href="index.html">TerminalParser</a><span class="delimiter">/</span><span class="current">kittyDisambiguateEscapeCodes</span></div>
+<div class="main-content" data-page-type="member" id="content" pageids="mosaic-testing::com.jakewharton.mosaic.testing/TestMosaic/setContentAndSnapshot/#kotlin.Function0[kotlin.Unit]/PointingToDeclaration//-569319322">
+  <div class="breadcrumbs"><a href="../../index.html">mosaic-testing</a><span class="delimiter">/</span><a href="../index.html">com.jakewharton.mosaic.testing</a><span class="delimiter">/</span><a href="index.html">TestMosaic</a><span class="delimiter">/</span><span class="current">setContentAndSnapshot</span></div>
   <div class="cover ">
-    <h1 class="cover"><span>kitty</span><wbr><span>Disambiguate</span><wbr><span>Escape</span><wbr><span><span>Codes</span></span></h1>
+    <h1 class="cover"><span>set</span><wbr><span>Content</span><wbr><span>And</span><wbr><span><span>Snapshot</span></span></h1>
   </div>
-  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="kitty-disambiguate-escape-codes.html">kittyDisambiguateEscapeCodes</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><p class="paragraph">Indicate whether Kitty's <a href="https://sw.kovidgoyal.net/kitty/keyboard-protocol/#disambiguate-escape-codes">escape code disambiguation</a> progressive-enhancement is enabled.</p><p class="paragraph">Normally, when a bare escape (<code class="lang-kotlin">0x1b</code>) is encountered as the final byte read from <code class="lang-kotlin">stdinReader</code>, it is not possible to disambiguate this as the start of an escape sequence or as a bare <kbd>Esc</kbd> key press. The parser will perform a fast disambiguation read to look for additional bytes to try and guess. Setting this property to true eliminates the disambiguation read under the assumption that any <kbd>Esc</kbd> key press will be encoded using the Kitty keyboard protocol.</p></div></div>
+  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-testing:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="set-content-and-snapshot.html"><span class="token function">setContentAndSnapshot</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">content<span class="token operator">: </span><span><span class="token annotation builtin">@</span><span data-unresolved-link="androidx.compose.runtime/Composable///PointingToDeclaration/"><span class="token annotation builtin">Composable</span></span>&nbsp;</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">T</a></div></div></div>
 </div>
     <div class="footer">
         <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>

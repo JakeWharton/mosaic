@@ -2,7 +2,7 @@
 <html class="no-js">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-    <title>TerminalParser</title>
+    <title>runParseLoop</title>
 <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
     <script>document.documentElement.classList.replace("no-js","js");</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
@@ -41,7 +41,7 @@
             </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
         </button>
         <div class="navigation-controls--break ui-kit_mobile-only"></div>
-        <div class="library-version" id="library-version">0.15.0
+        <div class="library-version" id="library-version">0.16.0
         </div>
         <div class="navigation-controls">
         <div class="filter-section filter-section_loading" id="filter-section">
@@ -90,12 +90,12 @@
                 </div>
             </div>
             <div id="main">
-<div class="main-content" data-page-type="member" id="content" pageids="mosaic-terminal::com.jakewharton.mosaic.terminal/TerminalParser/TerminalParser/#com.jakewharton.mosaic.terminal.StdinReader/PointingToDeclaration//1057001830">
-  <div class="breadcrumbs"><a href="../../index.html">mosaic-terminal</a><span class="delimiter">/</span><a href="../index.html">com.jakewharton.mosaic.terminal</a><span class="delimiter">/</span><a href="index.html">TerminalParser</a><span class="delimiter">/</span><span class="current">TerminalParser</span></div>
+<div class="main-content" data-page-type="member" id="content" pageids="mosaic-terminal::com.jakewharton.mosaic.terminal/TerminalReader/runParseLoop/#/PointingToDeclaration//1057001830">
+  <div class="breadcrumbs"><a href="../../index.html">mosaic-terminal</a><span class="delimiter">/</span><a href="../index.html">com.jakewharton.mosaic.terminal</a><span class="delimiter">/</span><a href="index.html">TerminalReader</a><span class="delimiter">/</span><span class="current">runParseLoop</span></div>
   <div class="cover ">
-    <h1 class="cover"><span>Terminal</span><wbr><span><span>Parser</span></span></h1>
+    <h1 class="cover"><span>run</span><wbr><span>Parse</span><wbr><span><span>Loop</span></span></h1>
   </div>
-  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">stdinReader<span class="token operator">: </span><a href="../-stdin-reader/index.html">StdinReader</a></span></span><span class="token punctuation">)</span></div></div></div>
+  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="run-parse-loop.html"><span class="token function">runParseLoop</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><p class="paragraph">Perform a blocking read from stdin to try and parse events. Calls to this function are not guaranteed to read an event, nor are they guaranteed to read only one event. Events which are read will be placed into <a href="events.html">events</a>.</p><p class="paragraph">It is expected that this function will be called repeatedly in a loop.</p><span class="kdoc-tag"><h4 class="">Return</h4><p class="paragraph">False if returning due to <a href="interrupt.html">interrupt</a> being called. True means some data was read, but not necessarily that any events were put into the <a href="events.html">events</a> channel. This could be because not enough bytes were available to parse the entire event, for example.</p></span></div></div>
 </div>
     <div class="footer">
         <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
