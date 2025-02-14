@@ -35,7 +35,6 @@ kotlin {
 
 		jvmMain {
 			dependencies {
-				implementation libs.jansi
 				implementation libs.mordant.jvmJna
 			}
 		}

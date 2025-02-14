@@ -8,10 +8,6 @@ internal actual fun env(name: String): String? {
 	return getenv(name)?.toKString()
 }
 
-internal actual fun platformDisplay(chars: CharSequence) {
-	print(chars.toString())
-}
-
 internal actual typealias AtomicBoolean = AtomicInt
 
 @Suppress("NOTHING_TO_INLINE")

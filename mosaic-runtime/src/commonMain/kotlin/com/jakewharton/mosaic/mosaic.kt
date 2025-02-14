@@ -81,11 +81,11 @@ internal suspend fun runMosaic(enterRawMode: Boolean, content: @Composable () ->
 		null
 	}
 
-	platformDisplay(cursorHide)
+	mordantTerminal.rawPrint(cursorHide)
 
 	withFinalizationHook(
 		hook = {
-			platformDisplay(cursorShow)
+			mordantTerminal.rawPrint(cursorShow)
 			rawMode?.close()
 		},
 		block = {
@@ -96,7 +96,7 @@ internal suspend fun runMosaic(enterRawMode: Boolean, content: @Composable () ->
 			val mosaicComposition = MosaicComposition(
 				coroutineContext = coroutineContext + clock,
 				onDraw = { rootNode ->
-					platformDisplay(rendering.render(rootNode))
+					mordantTerminal.rawPrint(rendering.render(rootNode).toString())
 				},
 				keyEvents = keyEvents,
 				terminalState = terminalState,

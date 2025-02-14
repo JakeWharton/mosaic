@@ -2,8 +2,6 @@ package com.jakewharton.mosaic
 
 internal expect fun env(name: String): String?
 
-internal expect fun platformDisplay(chars: CharSequence)
-
 internal expect class AtomicBoolean
 
 internal expect inline fun AtomicBoolean.set(value: Boolean)
