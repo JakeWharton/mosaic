@@ -275,7 +275,7 @@ class MosaicTest {
 		var frameTimeA = 0L
 		var frameTimeB = 0L
 
-		runMosaic(enterRawMode = false) {
+		runMosaic(isTest = true) {
 			LaunchedEffect(Unit) {
 				withFrameNanos { frameTimeNanos ->
 					frameTimeA = frameTimeNanos

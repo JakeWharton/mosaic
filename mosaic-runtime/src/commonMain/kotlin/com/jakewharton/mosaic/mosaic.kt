@@ -65,15 +65,15 @@ public fun runMosaicBlocking(content: @Composable () -> Unit) {
 }
 
 public suspend fun runMosaic(content: @Composable () -> Unit) {
-	runMosaic(enterRawMode = true, content)
+	runMosaic(isTest = false, content)
 }
 
-internal suspend fun runMosaic(enterRawMode: Boolean, content: @Composable () -> Unit) {
+internal suspend fun runMosaic(isTest: Boolean, content: @Composable () -> Unit) {
 	val mordantTerminal = MordantTerminal()
 
 	// Entering raw mode can fail, so perform it before any additional control sequences which change
 	// settings. We also need to be in character mode to query capabilities with control sequences.
-	val rawMode = if (enterRawMode && env("MOSAIC_RAW_MODE") != "false") {
+	val rawMode = if (!isTest && env("MOSAIC_RAW_MODE") != "false") {
 		Tty.enableRawMode()
 	} else {
 		null
@@ -93,11 +93,15 @@ internal suspend fun runMosaic(enterRawMode: Boolean, content: @Composable () ->
 			val rendering = createRendering(mordantTerminal.terminalInfo.ansiLevel.toMosaicAnsiLevel())
 			val keyEvents = Channel<KeyEvent>(UNLIMITED)
 			val terminalState = mutableStateOf(
-				Terminal(
-					size = reader.currentSize().let { initialSize ->
-						IntSize(initialSize.width, initialSize.height)
-					},
-				),
+				if (isTest) {
+					Terminal.Default
+				} else {
+					Terminal(
+						size = reader.currentSize().let { initialSize ->
+							IntSize(initialSize.width, initialSize.height)
+						}
+					)
+				},
 			)
 			val mosaicComposition = MosaicComposition(
 				coroutineContext = coroutineContext + clock,
