@@ -2,7 +2,7 @@
 jetbrains-compose = "1.7.3"
 kotlin = "2.1.10"
 kotlinx-coroutines = "1.10.1"
-mordant = "3.0.1"
+mordant = "3.0.2"
 
 [libraries]
 kotlin-plugin-core = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
