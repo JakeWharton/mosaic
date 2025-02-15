@@ -20,7 +20,7 @@ internal fun KeyboardEvent.toKeyEventOrNull(): KeyEvent? {
 			57353 -> "ArrowDown"
 			57348 -> "Insert"
 			57349 -> "Delete"
-			in 57364..57364 -> "F" + (codepoint - 57363)
+			in 57364..57398 -> "F" + (codepoint - 57363)
 			else -> throw UnsupportedOperationException(toString())
 		},
 		alt = alt,
