@@ -11,7 +11,7 @@ import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
 class AnsiRenderingTest {
-	private val rendering = AnsiRendering()
+	private val rendering = AnsiRendering(synchronizedRendering = true)
 
 	@Test fun firstRender() = runTest {
 		runMosaicTest(RenderingSnapshots(rendering)) {

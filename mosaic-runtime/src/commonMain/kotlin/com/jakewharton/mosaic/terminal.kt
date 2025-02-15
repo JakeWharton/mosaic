@@ -20,17 +20,29 @@ public val LocalTerminal: ProvidableCompositionLocal<Terminal> = compositionLoca
 
 @[Immutable Poko]
 public class Terminal(
+	public val focused: Boolean,
+	public val darkTheme: Boolean,
 	public val size: IntSize,
 ) {
 	public companion object {
 		public val Default: Terminal = Terminal(
+			focused = true,
+			darkTheme = false,
 			// https://en.wikipedia.org/wiki/VT52
 			size = IntSize(width = 80, height = 24),
 		)
 	}
 }
 
+@Suppress("NOTHING_TO_INLINE")
+internal inline fun Terminal.copy(
+	focused: Boolean = this.focused,
+	darkTheme: Boolean = this.darkTheme,
+	size: IntSize = this.size,
+) = Terminal(focused, darkTheme, size)
+
 internal suspend fun TerminalReader.queryCapabilities(): Capabilities {
+	var cursor: DecModeReportEvent.Setting? = null
 	var focus: DecModeReportEvent.Setting? = null
 	var synchronizedRendering: DecModeReportEvent.Setting? = null
 	var systemTheme: DecModeReportEvent.Setting? = null
@@ -58,10 +70,11 @@ internal suspend fun TerminalReader.queryCapabilities(): Capabilities {
 
 					// Step 2: individual feature queries.
 					print(
-						"$CSI?${modeFocus}\$p" +
-							"$CSI?${modeSynchronizedRendering}\$p" +
-							"$CSI?${modeSystemTheme}\$p" +
-							"$CSI?${modeInBandResize}\$p" +
+						"$CSI?${cursorMode}\$p" +
+							"$CSI?${focusMode}\$p" +
+							"$CSI?${synchronizedRenderingMode}\$p" +
+							"$CSI?${systemThemeMode}\$p" +
+							"$CSI?${inBandResizeMode}\$p" +
 							"$CSI?u" + // Kitty keyboard
 							"${APC}Gi=31,s=1,v=1,a=q,t=d,f=24;AAAA$ST" + // Kitty graphics
 							// TODO "${OSC}99;i=1:p=?$ST" + // Kitty notifications
@@ -72,10 +85,11 @@ internal suspend fun TerminalReader.queryCapabilities(): Capabilities {
 
 				is DecModeReportEvent -> {
 					when (event.mode) {
-						modeFocus -> focus = event.setting
-						modeSynchronizedRendering -> synchronizedRendering = event.setting
-						modeSystemTheme -> systemTheme = event.setting
-						modeInBandResize -> inBandResize = event.setting
+						cursorMode -> cursor = event.setting
+						focusMode -> focus = event.setting
+						synchronizedRenderingMode -> synchronizedRendering = event.setting
+						systemThemeMode -> systemTheme = event.setting
+						inBandResizeMode -> inBandResize = event.setting
 					}
 				}
 
@@ -94,6 +108,7 @@ internal suspend fun TerminalReader.queryCapabilities(): Capabilities {
 	}
 
 	return Capabilities(
+		cursor = cursor,
 		focus = focus,
 		synchronizedRendering = synchronizedRendering,
 		systemTheme = systemTheme,
@@ -104,6 +119,7 @@ internal suspend fun TerminalReader.queryCapabilities(): Capabilities {
 }
 
 internal class Capabilities(
+	var cursor: DecModeReportEvent.Setting?,
 	var focus: DecModeReportEvent.Setting?,
 	var synchronizedRendering: DecModeReportEvent.Setting?,
 	var systemTheme: DecModeReportEvent.Setting?,
@@ -113,6 +129,7 @@ internal class Capabilities(
 ) {
 	companion object {
 		val Default = Capabilities(
+			cursor = null,
 			focus = null,
 			synchronizedRendering = null,
 			systemTheme = null,

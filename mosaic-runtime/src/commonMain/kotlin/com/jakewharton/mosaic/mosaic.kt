@@ -9,19 +9,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Composition
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.MonotonicFrameClock
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Recomposer
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.ObserverHandle
 import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.runtime.withFrameNanos
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.github.ajalt.mordant.terminal.Terminal as MordantTerminal
 import com.jakewharton.finalization.withFinalizationHook
 import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.terminal.Tty
+import com.jakewharton.mosaic.terminal.event.DecModeReportEvent.Setting
+import com.jakewharton.mosaic.terminal.event.FocusEvent
 import com.jakewharton.mosaic.terminal.event.KeyboardEvent
 import com.jakewharton.mosaic.terminal.event.ResizeEvent
+import com.jakewharton.mosaic.terminal.event.SystemThemeEvent
 import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.BoxMeasurePolicy
 import com.jakewharton.mosaic.ui.unit.IntSize
@@ -79,26 +88,72 @@ internal suspend fun runMosaic(isTest: Boolean, content: @Composable () -> Unit)
 		null
 	}
 
-	mordantTerminal.rawPrint(cursorHide)
+	// Each of these will become true when their respective feature is recognized by the terminal
+	// and was not already configured to our desired setting. Revert each toggled setting on exit.
+	var toggleCursor = false
+	var toggleFocus = false
+	var toggleInBandResize = false
+	var toggleSystemTheme = false
 
 	withFinalizationHook(
 		hook = {
-			mordantTerminal.rawPrint(cursorShow)
+			if (toggleSystemTheme) print(systemThemeDisable)
+			if (toggleInBandResize) print(inBandResizeDisable)
+			if (toggleFocus) print(focusDisable)
+			if (toggleCursor) print(cursorEnable)
 			rawMode?.close()
 		},
 		block = {
 			val reader = Tty.terminalReader()
 
+			val interruptJob = launch(start = UNDISPATCHED) {
+				try {
+					awaitCancellation()
+				} finally {
+					// When cancelled (from signal or normally), wake up the reader parse loop so it can exit.
+					reader.interrupt()
+				}
+			}
+			launch(Dispatchers.IO) {
+				reader.runParseLoop()
+			}
+
+			val capabilities = reader.queryCapabilities()
+			if (capabilities.cursor == Setting.Set) {
+				toggleCursor = true
+				print(cursorDisable)
+			}
+			if (capabilities.focus == Setting.Reset) {
+				toggleFocus = true
+				print(focusEnable)
+			}
+			if (capabilities.inBandResize == Setting.Reset) {
+				toggleInBandResize = true
+				print(inBandResizeEnable)
+			} else {
+				reader.enableWindowResizeEvents()
+			}
+			if (capabilities.systemTheme == Setting.Reset) {
+				toggleSystemTheme = true
+				print(systemThemeEnable)
+			}
+			// TODO Should we send another DSR here and wait for it?
+			//  That would give us in-band resize and possibly default focus and theme.
+
+			val rendering = createRendering(
+				ansiLevel = mordantTerminal.terminalInfo.ansiLevel.toMosaicAnsiLevel(),
+				synchronizedRendering = capabilities.synchronizedRendering == Setting.Reset,
+			)
+
 			val clock = BroadcastFrameClock()
-			val rendering = createRendering(mordantTerminal.terminalInfo.ansiLevel.toMosaicAnsiLevel())
 			val keyEvents = Channel<KeyEvent>(UNLIMITED)
 			val terminalState = mutableStateOf(
 				if (isTest) {
 					Terminal.Default
 				} else {
-					Terminal(
+					Terminal.Default.copy(
 						size = reader.currentSize().let { initialSize ->
-							IntSize(initialSize.width, initialSize.height)
+							IntSize(initialSize.columns, initialSize.rows)
 						},
 					)
 				},
@@ -112,35 +167,22 @@ internal suspend fun runMosaic(isTest: Boolean, content: @Composable () -> Unit)
 				terminalState = terminalState,
 			)
 
-			mosaicComposition.scope.launch(start = UNDISPATCHED) {
-				try {
-					awaitCancellation()
-				} finally {
-					// When cancelled (from signal or normally), wake up the reader parse loop so it can exit.
-					reader.interrupt()
-				}
-			}
-			mosaicComposition.scope.launch(Dispatchers.IO) {
-				reader.runParseLoop()
-			}
-
-			val capabilities = reader.queryCapabilities()
-			if (capabilities.inBandResize?.isSupported != true) {
-				reader.enableWindowResizeEvents()
-			}
-
 			mosaicComposition.scope.launch {
 				for (event in reader.events) {
 					when (event) {
+						is FocusEvent -> {
+							terminalState.update { copy(focused = event.focused) }
+						}
 						is KeyboardEvent -> {
 							event.toKeyEventOrNull()?.let {
 								keyEvents.trySend(it)
 							}
 						}
 						is ResizeEvent -> {
-							terminalState.value = Terminal(
-								size = IntSize(event.width, event.height),
-							)
+							terminalState.update { copy(size = IntSize(event.columns, event.rows)) }
+						}
+						is SystemThemeEvent -> {
+							terminalState.update { copy(darkTheme = event.isDark) }
 						}
 						else -> {}
 					}
@@ -162,15 +204,23 @@ internal suspend fun runMosaic(isTest: Boolean, content: @Composable () -> Unit)
 			}
 
 			mosaicComposition.awaitComplete()
+			interruptJob.cancel()
 		},
 	)
 }
 
-private fun createRendering(ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR): Rendering {
+internal inline fun <T> MutableState<T>.update(updater: T.() -> T) {
+	value = value.updater()
+}
+
+private fun createRendering(
+	ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR,
+	synchronizedRendering: Boolean = false,
+): Rendering {
 	return if (debugOutput) {
 		DebugRendering(ansiLevel = ansiLevel)
 	} else {
-		AnsiRendering(ansiLevel = ansiLevel)
+		AnsiRendering(ansiLevel, synchronizedRendering)
 	}
 }
 
@@ -206,7 +256,8 @@ internal class MosaicComposition(
 	private val onDraw: (Mosaic) -> Unit,
 	private val keyEvents: Channel<KeyEvent>,
 	private val terminalState: State<Terminal>,
-) : Mosaic {
+) : Mosaic,
+	LifecycleOwner {
 	private val externalClock = checkNotNull(coroutineContext[MonotonicFrameClock]) {
 		"Mosaic requires an external MonotonicFrameClock in its coroutine context"
 	}
@@ -220,6 +271,16 @@ internal class MosaicComposition(
 	val rootNode = applier.root
 	private val recomposer = Recomposer(composeContext)
 	private val composition = Composition(applier, recomposer)
+
+	override val lifecycle = LifecycleRegistry(this).also { lifecycle ->
+		scope.launch(start = UNDISPATCHED) {
+			snapshotFlow { terminalState.value.focused }.collect { focused ->
+				lifecycle.handleLifecycleEvent(
+					if (focused) Lifecycle.Event.ON_RESUME else Lifecycle.Event.ON_PAUSE,
+				)
+			}
+		}
+	}
 
 	private val applyObserverHandle: ObserverHandle
 
@@ -328,7 +389,8 @@ internal class MosaicComposition(
 		composition.setContent {
 			CompositionLocalProvider(
 				LocalTerminal provides terminalState.value,
-				content,
+				LocalLifecycleOwner provides this,
+				content = content,
 			)
 		}
 		performLayout()

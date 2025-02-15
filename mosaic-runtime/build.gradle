@@ -16,10 +16,11 @@ kotlin {
 
 		commonMain {
 			dependencies {
-				api libs.compose.runtime
+				api libs.androidx.compose.runtime
+				api libs.androidx.lifecycle.compose
 				api libs.kotlinx.coroutines.core
 				implementation projects.mosaicTerminal
-				implementation libs.compose.collection
+				implementation libs.androidx.collection
 				implementation libs.finalizationHook
 				implementation libs.mordant.core
 				implementation libs.codepoints

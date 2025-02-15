@@ -18,8 +18,10 @@ public final class com/jakewharton/mosaic/MosaicKt {
 public final class com/jakewharton/mosaic/Terminal {
 	public static final field $stable I
 	public static final field Companion Lcom/jakewharton/mosaic/Terminal$Companion;
-	public synthetic fun <init> (JLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (ZZJLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDarkTheme ()Z
+	public final fun getFocused ()Z
 	public final fun getSize-Usd9Mdw ()J
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;

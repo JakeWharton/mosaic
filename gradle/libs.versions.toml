@@ -1,5 +1,5 @@
 [versions]
-compose = "1.7.3"
+jetbrains-compose = "1.7.3"
 kotlin = "2.1.10"
 kotlinx-coroutines = "1.10.1"
 mordant = "3.0.1"
@@ -13,10 +13,10 @@ kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 
-compose-collection = { module = "org.jetbrains.compose.collection-internal:collection", version.ref = "compose" }
-compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose" }
-
 androidx-annotation = "androidx.annotation:annotation:1.9.1"
+androidx-collection = { module = "org.jetbrains.compose.collection-internal:collection", version.ref = "jetbrains-compose" }
+androidx-compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "jetbrains-compose" }
+androidx-lifecycle-compose = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose:2.8.4"
 
 maven-publish-gradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.30.0"
 dokka-gradlePlugin = "org.jetbrains.dokka:dokka-gradle-plugin:2.0.0"

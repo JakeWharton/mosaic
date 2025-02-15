@@ -12,7 +12,7 @@ kotlin {
 			dependencies {
 				api projects.mosaicRuntime
 				api libs.kotlinx.coroutines.core
-				implementation libs.compose.collection
+				implementation libs.androidx.collection
 			}
 		}
 		commonTest {

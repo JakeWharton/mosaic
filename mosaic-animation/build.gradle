@@ -22,7 +22,7 @@ kotlin {
 		commonMain {
 			dependencies {
 				implementation projects.mosaicRuntime
-				implementation libs.compose.collection
+				implementation libs.androidx.collection
 				implementation libs.androidx.annotation
 			}
 		}

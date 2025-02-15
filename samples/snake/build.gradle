@@ -8,5 +8,5 @@ application {
 
 dependencies {
 	implementation projects.mosaicRuntime
-	implementation libs.compose.collection
+	implementation libs.androidx.collection
 }

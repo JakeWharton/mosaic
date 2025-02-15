@@ -4,10 +4,12 @@
 [Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.16.0...HEAD
 
 New:
-- Nothing yet!
+- Add `focused` and `darkTheme` booleans to `Terminal` (available through `LocalTerminal`). These default to true and false, respectively, but will be updated if the terminal supports sending change notifications.
+- Bind `Terminal.focused` to a `Lifecycle` and expose into the composition as `LocalLifecycleOwner`. This allows using Compose lifecycle helpers such as `LifecycleResumeEffect` and others.
 
 Changed:
 - Switched to our own terminal integration library. Report any issues with keyboard input, incorrect size reporting, or garbled output.
+- Only disable the cursor and emit synchronized rendering markers if the terminal reports support for those features.
 
 Fixed:
 - Nothing yet!

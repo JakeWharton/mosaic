@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameNanos
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import assertk.all
 import assertk.assertThat
 import assertk.assertions.isEqualTo
@@ -50,7 +51,7 @@ class MosaicTest {
 			|Two $s
 			|Three
 			|
-			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
+			""".trimMargin().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -80,7 +81,7 @@ class MosaicTest {
 			|Two $s
 			|Three
 			|
-			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
+			""".trimMargin().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -110,7 +111,7 @@ class MosaicTest {
 			|Two $s
 			|Three
 			|
-			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
+			""".trimMargin().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -152,7 +153,7 @@ class MosaicTest {
 			|Two $s
 			|Three
 			|
-			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
+			""".trimMargin().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -172,7 +173,7 @@ class MosaicTest {
 			|Two $s
 			|Three
 			|
-			""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
+			""".trimMargin().replaceLineEndingsWithCRLF(),
 		)
 	}
 
@@ -196,7 +197,7 @@ class MosaicTest {
 				|Two $s
 				|Three
 				|
-				""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
+				""".trimMargin().replaceLineEndingsWithCRLF(),
 			)
 		}
 	}
@@ -289,6 +290,20 @@ class MosaicTest {
 		assertThat(frameTimeA).all {
 			isPositive()
 			isLessThan(frameTimeB)
+		}
+	}
+
+	@Test fun lifecycleUpdatesWithTerminal() = runTest {
+		runMosaicTest {
+			setContent {
+				val terminal = LocalTerminal.current
+				val lifecycle = LocalLifecycleOwner.current.lifecycle
+				Text("${terminal.focused} ${lifecycle.currentState}")
+			}
+			assertThat(awaitSnapshot()).isEqualTo("true RESUMED")
+
+			terminalState.update { copy(focused = false) }
+			assertThat(awaitSnapshot()).isEqualTo("false STARTED")
 		}
 	}
 }

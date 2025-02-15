@@ -67,6 +67,7 @@ internal class DebugRendering(
 
 internal class AnsiRendering(
 	private val ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR,
+	private val synchronizedRendering: Boolean = false,
 ) : Rendering {
 	private val stringBuilder = StringBuilder(100)
 	private val staticSurfaces = mutableObjectListOf<TextCanvas>()
@@ -76,7 +77,9 @@ internal class AnsiRendering(
 		return stringBuilder.apply {
 			clear()
 
-			append(ansiBeginSynchronizedUpdate)
+			if (synchronizedRendering) {
+				append(synchronizedRenderingEnable)
+			}
 
 			var staleLines = lastHeight
 			repeat(staleLines) {
@@ -120,7 +123,9 @@ internal class AnsiRendering(
 				append(cursorUp)
 			}
 
-			append(ansiEndSynchronizedUpdate)
+			if (synchronizedRendering) {
+				append(synchronizedRenderingDisable)
+			}
 
 			lastHeight = surface.height
 		}

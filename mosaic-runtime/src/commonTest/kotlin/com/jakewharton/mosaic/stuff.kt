@@ -3,7 +3,6 @@
 package com.jakewharton.mosaic
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.jakewharton.mosaic.layout.IntrinsicMeasurable
 import com.jakewharton.mosaic.layout.Measurable
 import com.jakewharton.mosaic.layout.MeasurePolicy
@@ -34,11 +33,7 @@ fun String.replaceLineEndingsWithCRLF(): String {
 }
 
 fun String.wrapWithAnsiSynchronizedUpdate(): String {
-	return "$ansiBeginSynchronizedUpdate$this$ansiEndSynchronizedUpdate"
-}
-
-fun <T> snapshotStateListOf(vararg values: T): SnapshotStateList<T> {
-	return SnapshotStateList<T>().apply { addAll(values) }
+	return "$synchronizedRenderingEnable$this$synchronizedRenderingDisable"
 }
 
 internal val MosaicNode.size: IntSize

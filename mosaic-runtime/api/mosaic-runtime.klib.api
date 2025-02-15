@@ -391,8 +391,12 @@ final class com.jakewharton.mosaic.ui/BiasAlignment : com.jakewharton.mosaic.ui/
 }
 
 final class com.jakewharton.mosaic/Terminal { // com.jakewharton.mosaic/Terminal|null[0]
-    constructor <init>(com.jakewharton.mosaic.ui.unit/IntSize) // com.jakewharton.mosaic/Terminal.<init>|<init>(com.jakewharton.mosaic.ui.unit.IntSize){}[0]
+    constructor <init>(kotlin/Boolean, kotlin/Boolean, com.jakewharton.mosaic.ui.unit/IntSize) // com.jakewharton.mosaic/Terminal.<init>|<init>(kotlin.Boolean;kotlin.Boolean;com.jakewharton.mosaic.ui.unit.IntSize){}[0]
 
+    final val darkTheme // com.jakewharton.mosaic/Terminal.darkTheme|{}darkTheme[0]
+        final fun <get-darkTheme>(): kotlin/Boolean // com.jakewharton.mosaic/Terminal.darkTheme.<get-darkTheme>|<get-darkTheme>(){}[0]
+    final val focused // com.jakewharton.mosaic/Terminal.focused|{}focused[0]
+        final fun <get-focused>(): kotlin/Boolean // com.jakewharton.mosaic/Terminal.focused.<get-focused>|<get-focused>(){}[0]
     final val size // com.jakewharton.mosaic/Terminal.size|{}size[0]
         final fun <get-size>(): com.jakewharton.mosaic.ui.unit/IntSize // com.jakewharton.mosaic/Terminal.size.<get-size>|<get-size>(){}[0]
 
