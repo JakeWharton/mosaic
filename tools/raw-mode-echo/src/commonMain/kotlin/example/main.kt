@@ -36,7 +36,8 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 	private val mouseEvents by option().flag()
 	private val inBandResize by option().flag()
 	private val bracketedPaste by option().flag()
-	private val colorQuery by option().flag()
+	private val systemThemeQuery by option().flag()
+	private val colorsQuery by option().flag()
 
 	private val windowResize by option().flag()
 
@@ -75,17 +76,20 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 				if (all || bracketedPaste) {
 					print("\u001b[?2004h") // Bracketed paste enable
 				}
-				if (all || colorQuery) {
+				if (all || systemThemeQuery) {
 					print("\u001b[?996n") // Color scheme request
 					print("\u001b[?2031h") // Color scheme enable
 				}
-
-				print("\u001b]10;?\u001b\\")
-				print("\u001b]11;?\u001b\\")
-				print("\u001b]12;?\u001b\\")
-				for (i in 0 until 256) {
-					print("\u001b]4;$i;?\u001b\\")
+				if (all || colorsQuery) {
+					print("\u001b]10;?\u001b\\")
+					print("\u001b]11;?\u001b\\")
+					print("\u001b]12;?\u001b\\")
+					for (i in 0 until 256) {
+						print("\u001b]4;$i;?\u001b\\")
+					}
 				}
+
+				print("\u001b[5n") // Device status report
 
 				val reader = Tty.terminalReader(emitDebugEvents = mode != Mode.Event)
 				if (windowResize) {

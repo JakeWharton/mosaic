@@ -26,9 +26,12 @@ import com.jakewharton.finalization.withFinalizationHook
 import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.terminal.Tty
+import com.jakewharton.mosaic.terminal.event.DecModeReportEvent
 import com.jakewharton.mosaic.terminal.event.DecModeReportEvent.Setting
 import com.jakewharton.mosaic.terminal.event.FocusEvent
 import com.jakewharton.mosaic.terminal.event.KeyboardEvent
+import com.jakewharton.mosaic.terminal.event.OperatingStatusResponseEvent
+import com.jakewharton.mosaic.terminal.event.PrimaryDeviceAttributesEvent
 import com.jakewharton.mosaic.terminal.event.ResizeEvent
 import com.jakewharton.mosaic.terminal.event.SystemThemeEvent
 import com.jakewharton.mosaic.ui.AnsiLevel
@@ -36,18 +39,20 @@ import com.jakewharton.mosaic.ui.BoxMeasurePolicy
 import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.concurrent.Volatile
 import kotlin.coroutines.CoroutineContext
+import kotlin.time.Duration.Companion.seconds
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeoutOrNull
 
 /**
  * True for a debug-like output that renders each "frame" on its own with a timestamp delta.
@@ -77,6 +82,11 @@ public suspend fun runMosaic(content: @Composable () -> Unit) {
 	runMosaic(isTest = false, content)
 }
 
+private const val StageDeviceAttributes = 3
+private const val StageCapabilityQueries = 2
+private const val StageDefaultQueries = 1
+private const val StageNormalOperation = 0
+
 internal suspend fun runMosaic(isTest: Boolean, content: @Composable () -> Unit) {
 	val mordantTerminal = MordantTerminal()
 
@@ -105,59 +115,157 @@ internal suspend fun runMosaic(isTest: Boolean, content: @Composable () -> Unit)
 		},
 		block = {
 			val reader = Tty.terminalReader()
+			launch(Dispatchers.IO) {
+				reader.runParseLoop()
+			}
 
-			val interruptJob = launch(start = UNDISPATCHED) {
+			val keyEvents = Channel<KeyEvent>(UNLIMITED)
+			val terminalState = mutableStateOf(Terminal.Default)
+
+			print("${CSI}0c")
+			var stage = StageDeviceAttributes
+
+			var supportsSynchronizedRendering = false
+			val bootstrapDone = CompletableDeferred<Unit>()
+			val eventJob = launch(start = UNDISPATCHED) {
 				try {
-					awaitCancellation()
+					for (event in reader.events) {
+						if (stage != StageNormalOperation) {
+							print("$event\r\n")
+						}
+						when (event) {
+							is PrimaryDeviceAttributesEvent -> {
+								if (stage == StageNormalOperation) continue
+
+								if (event.id == 1) {
+									// VT100 terminals can't handle most of the other queries so just bail.
+									stage = StageNormalOperation
+									bootstrapDone.complete(Unit)
+									continue
+								}
+
+								stage = StageCapabilityQueries
+								print(
+									"$CSI?${cursorMode}\$p" +
+										"$CSI?${focusMode}\$p" +
+										"$CSI?${synchronizedRenderingMode}\$p" +
+										"$CSI?${systemThemeMode}\$p" +
+										"$CSI?${inBandResizeMode}\$p" +
+										"$CSI?u" + // Kitty keyboard
+										"${APC}Gi=31,s=1,v=1,a=q,t=d,f=24;AAAA$ST" + // Kitty graphics
+										// TODO "${OSC}99;i=1:p=?$ST" + // Kitty notifications
+										// TODO "${OSC}22;?__current__$ST" + // Kitty pointer shape
+										"${CSI}5n", // DSR (end marker)
+								)
+							}
+							is DecModeReportEvent -> {
+								if (stage != StageCapabilityQueries) continue
+
+								when (event.mode) {
+									cursorMode -> {
+										if (event.setting == Setting.Set) {
+											toggleCursor = true
+											print(cursorDisable)
+										}
+									}
+									focusMode -> {
+										if (event.setting == Setting.Reset) {
+											toggleFocus = true
+											// Enabling focus notification _might_ trigger an initial event. There is
+											// otherwise no explicit way to request the initial value.
+											print(focusEnable)
+										}
+									}
+									synchronizedRenderingMode -> {
+										if (event.setting == Setting.Reset) {
+											supportsSynchronizedRendering = true
+										}
+									}
+									systemThemeMode -> {
+										if (event.setting == Setting.Reset) {
+											toggleSystemTheme = true
+											print(
+												systemThemeEnable +
+													"$CSI?996n", // Current system theme query.
+											)
+										}
+									}
+									inBandResizeMode -> {
+										if (event.setting == Setting.Reset) {
+											toggleInBandResize = true
+											// Enabling in-band resize will trigger an initial event.
+											print(inBandResizeEnable)
+										}
+									}
+								}
+							}
+							is OperatingStatusResponseEvent -> {
+								if (stage == StageCapabilityQueries) {
+									if (toggleFocus or toggleInBandResize or toggleSystemTheme) {
+										// By enabling these modes (or by sending an explicit default value query after
+										// enabling the mode) wait for a reply about the default with a second DSR.
+										stage = StageDefaultQueries
+										print("${CSI}5n")
+									} else {
+										stage = StageNormalOperation
+										bootstrapDone.complete(Unit)
+									}
+								} else if (stage == StageDefaultQueries) {
+									stage = StageNormalOperation
+									bootstrapDone.complete(Unit)
+								}
+							}
+
+							is FocusEvent -> {
+								terminalState.update { copy(focused = event.focused) }
+							}
+							is KeyboardEvent -> {
+								event.toKeyEventOrNull()?.let {
+									keyEvents.trySend(it)
+								}
+							}
+							is ResizeEvent -> {
+								terminalState.update { copy(size = IntSize(event.columns, event.rows)) }
+							}
+							is SystemThemeEvent -> {
+								terminalState.update { copy(darkTheme = event.isDark) }
+							}
+
+							else -> {}
+						}
+					}
 				} finally {
 					// When cancelled (from signal or normally), wake up the reader parse loop so it can exit.
 					reader.interrupt()
 				}
 			}
-			launch(Dispatchers.IO) {
-				reader.runParseLoop()
-			}
 
-			val capabilities = reader.queryCapabilities()
-			if (capabilities.cursor == Setting.Set) {
-				toggleCursor = true
-				print(cursorDisable)
+			// Spend at most 1 second bootstrapping capabilities and defaults. In theory, there could
+			// exist a terminal which does not respond to DA1 or DSR. Does that terminal actually work?
+			// Who knows, but we don't want to hang forever waiting. Take whatever we got so far
+			// (if anything) and move on with rendering.
+			withTimeoutOrNull(1.seconds) {
+				bootstrapDone.await()
 			}
-			if (capabilities.focus == Setting.Reset) {
-				toggleFocus = true
-				print(focusEnable)
-			}
-			if (capabilities.inBandResize == Setting.Reset) {
-				toggleInBandResize = true
-				print(inBandResizeEnable)
-			} else {
+			print("\r\n")
+
+			if (!toggleInBandResize && !isTest) {
+				terminalState.update {
+					copy(
+						size = reader.currentSize().let { size ->
+							IntSize(size.columns, size.rows)
+						},
+					)
+				}
 				reader.enableWindowResizeEvents()
 			}
-			if (capabilities.systemTheme == Setting.Reset) {
-				toggleSystemTheme = true
-				print(systemThemeEnable)
-			}
-			// TODO Should we send another DSR here and wait for it?
-			//  That would give us in-band resize and possibly default focus and theme.
 
 			val rendering = createRendering(
 				ansiLevel = mordantTerminal.terminalInfo.ansiLevel.toMosaicAnsiLevel(),
-				synchronizedRendering = capabilities.synchronizedRendering == Setting.Reset,
+				synchronizedRendering = supportsSynchronizedRendering,
 			)
 
 			val clock = BroadcastFrameClock()
-			val keyEvents = Channel<KeyEvent>(UNLIMITED)
-			val terminalState = mutableStateOf(
-				if (isTest) {
-					Terminal.Default
-				} else {
-					Terminal.Default.copy(
-						size = reader.currentSize().let { initialSize ->
-							IntSize(initialSize.columns, initialSize.rows)
-						},
-					)
-				},
-			)
 			val mosaicComposition = MosaicComposition(
 				coroutineContext = coroutineContext + clock,
 				onDraw = { rootNode ->
@@ -166,28 +274,6 @@ internal suspend fun runMosaic(isTest: Boolean, content: @Composable () -> Unit)
 				keyEvents = keyEvents,
 				terminalState = terminalState,
 			)
-
-			mosaicComposition.scope.launch {
-				for (event in reader.events) {
-					when (event) {
-						is FocusEvent -> {
-							terminalState.update { copy(focused = event.focused) }
-						}
-						is KeyboardEvent -> {
-							event.toKeyEventOrNull()?.let {
-								keyEvents.trySend(it)
-							}
-						}
-						is ResizeEvent -> {
-							terminalState.update { copy(size = IntSize(event.columns, event.rows)) }
-						}
-						is SystemThemeEvent -> {
-							terminalState.update { copy(darkTheme = event.isDark) }
-						}
-						else -> {}
-					}
-				}
-			}
 
 			mosaicComposition.setContent(content)
 
@@ -204,7 +290,7 @@ internal suspend fun runMosaic(isTest: Boolean, content: @Composable () -> Unit)
 			}
 
 			mosaicComposition.awaitComplete()
-			interruptJob.cancel()
+			eventJob.cancel()
 		},
 	)
 }
