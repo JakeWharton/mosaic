@@ -8,6 +8,7 @@ import com.jakewharton.mosaic.terminal.event.FocusEvent
 import com.jakewharton.mosaic.terminal.event.KeyboardEvent
 import com.jakewharton.mosaic.terminal.event.KittyGraphicsEvent
 import com.jakewharton.mosaic.terminal.event.KittyKeyboardQueryEvent
+import com.jakewharton.mosaic.terminal.event.KittyNotificationEvent
 import com.jakewharton.mosaic.terminal.event.KittyPointerQueryNameEvent
 import com.jakewharton.mosaic.terminal.event.KittyPointerQuerySupportEvent
 import com.jakewharton.mosaic.terminal.event.MouseEvent
@@ -762,6 +763,12 @@ public class TerminalReader internal constructor(
 								name.append(b.toChar())
 							}
 							return@parseUntilStringTerminator KittyPointerQueryNameEvent(name.toString())
+						}
+						99 -> {
+							// TODO Actually decode notification spec.
+							return@parseUntilStringTerminator KittyNotificationEvent(
+								raw = buffer.decodeToString(b3Index, stIndex),
+							)
 						}
 					}
 				}

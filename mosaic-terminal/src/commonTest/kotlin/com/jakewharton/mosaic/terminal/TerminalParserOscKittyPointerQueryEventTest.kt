@@ -89,4 +89,12 @@ class TerminalParserOscKittyPointerQueryEventTest : BaseTerminalParserTest() {
 			UnknownEvent("1b5d32323b6162633132334142431b5c".hexToByteArray()),
 		)
 	}
+
+	@Test fun brokenOldKitty() = runTest {
+		// Kitty 0.39.1 and older sent 'OSC 22 :' instead of 'OSC 22 ;'. We don't bother parsing it.
+		writer.writeHex("1b5d32323a311b5c")
+		assertThat(reader.next()).isEqualTo(
+			UnknownEvent("1b5d32323a311b5c".hexToByteArray()),
+		)
+	}
 }

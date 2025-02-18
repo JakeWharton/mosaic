@@ -30,6 +30,10 @@ import com.jakewharton.mosaic.terminal.event.DecModeReportEvent
 import com.jakewharton.mosaic.terminal.event.DecModeReportEvent.Setting
 import com.jakewharton.mosaic.terminal.event.FocusEvent
 import com.jakewharton.mosaic.terminal.event.KeyboardEvent
+import com.jakewharton.mosaic.terminal.event.KittyGraphicsEvent
+import com.jakewharton.mosaic.terminal.event.KittyKeyboardQueryEvent
+import com.jakewharton.mosaic.terminal.event.KittyNotificationEvent
+import com.jakewharton.mosaic.terminal.event.KittyPointerQueryEvent
 import com.jakewharton.mosaic.terminal.event.OperatingStatusResponseEvent
 import com.jakewharton.mosaic.terminal.event.PrimaryDeviceAttributesEvent
 import com.jakewharton.mosaic.terminal.event.ResizeEvent
@@ -126,13 +130,19 @@ internal suspend fun runMosaic(isTest: Boolean, content: @Composable () -> Unit)
 			var stage = StageDeviceAttributes
 
 			var supportsSynchronizedRendering = false
+			// TODO Use these to alter the capabilities of the corresponding nodes.
+			var supportsKittyKeyboard = false
+			var supportsKittyGraphics = false
+			var supportsKittyNotifications = false
+			var supportsKittyPointerShape = false
+
 			val bootstrapDone = CompletableDeferred<Unit>()
 			val eventJob = launch(start = UNDISPATCHED) {
 				try {
 					for (event in reader.events) {
-						if (stage != StageNormalOperation) {
-							print("$event\r\n")
-						}
+						// if (stage != StageNormalOperation) {
+						// 	print("$event\r\n")
+						// }
 						when (event) {
 							is PrimaryDeviceAttributesEvent -> {
 								if (stage == StageNormalOperation) continue
@@ -153,8 +163,8 @@ internal suspend fun runMosaic(isTest: Boolean, content: @Composable () -> Unit)
 										"$CSI?${inBandResizeMode}\$p" +
 										"$CSI?u" + // Kitty keyboard
 										"${APC}Gi=31,s=1,v=1,a=q,t=d,f=24;AAAA$ST" + // Kitty graphics
-										// TODO "${OSC}99;i=1:p=?$ST" + // Kitty notifications
-										// TODO "${OSC}22;?__current__$ST" + // Kitty pointer shape
+										"${OSC}99;i=1:p=?$ST" + // Kitty notifications
+										"${OSC}22;?__current__$ST" + // Kitty pointer shape
 										"${CSI}5n", // DSR (end marker)
 								)
 							}
@@ -213,6 +223,26 @@ internal suspend fun runMosaic(isTest: Boolean, content: @Composable () -> Unit)
 								} else if (stage == StageDefaultQueries) {
 									stage = StageNormalOperation
 									bootstrapDone.complete(Unit)
+								}
+							}
+							is KittyKeyboardQueryEvent -> {
+								if (stage == StageCapabilityQueries) {
+									supportsKittyKeyboard = true
+								}
+							}
+							is KittyGraphicsEvent -> {
+								if (stage == StageCapabilityQueries) {
+									supportsKittyGraphics = true
+								}
+							}
+							is KittyPointerQueryEvent -> {
+								if (stage == StageCapabilityQueries) {
+									supportsKittyPointerShape = true
+								}
+							}
+							is KittyNotificationEvent -> {
+								if (stage == StageCapabilityQueries) {
+									supportsKittyNotifications = true
 								}
 							}
 

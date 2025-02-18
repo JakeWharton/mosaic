@@ -170,6 +170,17 @@ final class com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent : com.
     final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/KittyKeyboardQueryEvent.toString|toString(){}[0]
 }
 
+final class com.jakewharton.mosaic.terminal.event/KittyNotificationEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/KittyNotificationEvent|null[0]
+    constructor <init>(kotlin/String) // com.jakewharton.mosaic.terminal.event/KittyNotificationEvent.<init>|<init>(kotlin.String){}[0]
+
+    final val raw // com.jakewharton.mosaic.terminal.event/KittyNotificationEvent.raw|{}raw[0]
+        final fun <get-raw>(): kotlin/String // com.jakewharton.mosaic.terminal.event/KittyNotificationEvent.raw.<get-raw>|<get-raw>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/KittyNotificationEvent.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal.event/KittyNotificationEvent.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/KittyNotificationEvent.toString|toString(){}[0]
+}
+
 final class com.jakewharton.mosaic.terminal.event/KittyPointerQueryNameEvent : com.jakewharton.mosaic.terminal.event/KittyPointerQueryEvent { // com.jakewharton.mosaic.terminal.event/KittyPointerQueryNameEvent|null[0]
     constructor <init>(kotlin/String) // com.jakewharton.mosaic.terminal.event/KittyPointerQueryNameEvent.<init>|<init>(kotlin.String){}[0]
 

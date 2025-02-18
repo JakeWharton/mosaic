@@ -129,6 +129,11 @@ public class KittyKeyboardQueryEvent(
 	public val reportAssociatedText: Boolean get() = (flags and 0b10000) != 0
 }
 
+@Poko
+public class KittyNotificationEvent(
+	public val raw: String,
+) : Event
+
 public sealed interface KittyPointerQueryEvent : Event
 
 @Poko
