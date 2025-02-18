@@ -36,6 +36,8 @@ fun String.wrapWithAnsiSynchronizedUpdate(): String {
 	return "$synchronizedRenderingEnable$this$synchronizedRenderingDisable"
 }
 
+fun cursorUp(lines: Int): String = "${CSI}${lines}F"
+
 internal val MosaicNode.size: IntSize
 	get() = IntSize(width, height)
 

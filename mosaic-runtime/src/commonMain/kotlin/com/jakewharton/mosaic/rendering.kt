@@ -82,17 +82,21 @@ internal class AnsiRendering(
 			}
 
 			var staleLines = lastHeight
-			repeat(staleLines) {
-				append(cursorUp)
+			if (staleLines > 0) {
+				// Move to start of previous output.
+				append(CSI)
+				append(staleLines)
+				append('F')
 			}
 
 			fun appendSurface(canvas: TextCanvas) {
 				for (row in 0 until canvas.height) {
-					canvas.appendRowTo(this, row, ansiLevel)
 					if (staleLines-- > 0) {
-						// We have previously drawn on this line. Clear the rest to be safe.
+						// We have previously drawn on this line. Clear first to be safe. For terminals which
+						// do not support synchronized rendering, this may allow seeing a partial row render.
 						append(clearLine)
 					}
+					canvas.appendRowTo(this, row, ansiLevel)
 					append("\r\n")
 				}
 			}
@@ -111,16 +115,8 @@ internal class AnsiRendering(
 			appendSurface(surface)
 
 			// If the new output contains fewer lines than the last output, clear those old lines.
-			for (i in 0 until staleLines) {
-				if (i > 0) {
-					append("\r\n")
-				}
-				append(clearLine)
-			}
-
-			// Move cursor back up to end of the new output.
-			repeat(staleLines - 1) {
-				append(cursorUp)
+			if (staleLines > 0) {
+				append(clearDisplay)
 			}
 
 			if (synchronizedRendering) {

@@ -61,8 +61,8 @@ class AnsiRenderingTest {
 
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|$cursorUp${cursorUp}Hel$clearLine
-				|lo $clearLine
+				|${cursorUp(2)}${clearLine}Hel
+				|${clearLine}lo$s
 				|Wor
 				|ld!
 				|
@@ -101,10 +101,9 @@ class AnsiRenderingTest {
 
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|$cursorUp$cursorUp$cursorUp${cursorUp}Hello $clearLine
-				|World!$clearLine
-				|$clearLine
-				|$clearLine$cursorUp
+				|${cursorUp(4)}${clearLine}Hello$s
+				|${clearLine}World!
+				|${clearDisplay}
 				""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 			)
 		}
@@ -155,7 +154,7 @@ class AnsiRenderingTest {
 
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|${cursorUp}Three$clearLine
+				|${cursorUp(1)}${clearLine}Three
 				|Four
 				|
 				""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),

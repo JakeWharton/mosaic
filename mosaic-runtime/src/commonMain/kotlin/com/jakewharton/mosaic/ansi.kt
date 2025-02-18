@@ -33,7 +33,7 @@ internal const val inBandResizeDisable = "$CSI?${inBandResizeMode}l"
 
 internal const val ansiReset = "${CSI}0"
 internal const val clearLine = "${CSI}K"
-internal const val cursorUp = "${CSI}F"
+internal const val clearDisplay = "${CSI}J"
 
 internal const val ansiSeparator = ";"
 internal const val ansiClosingCharacter = "m"

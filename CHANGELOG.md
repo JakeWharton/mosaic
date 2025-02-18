@@ -12,7 +12,7 @@ Changed:
 - Only disable the cursor and emit synchronized rendering markers if the terminal reports support for those features.
 
 Fixed:
-- Nothing yet!
+- Prevent final character from being erased when a row writes into the last column of the terminal.
 
 
 ## [0.16.0] - 2025-02-14
