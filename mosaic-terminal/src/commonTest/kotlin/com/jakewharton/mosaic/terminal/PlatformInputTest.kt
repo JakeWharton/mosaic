@@ -80,21 +80,21 @@ class PlatformInputTest {
 	}
 
 	@Test fun readWithTimeoutReturnsZeroOnTimeout() {
-		// The timeouts passed are slightly higher than those validated thanks to Windows which
-		// can return _slightly_ early. Usually it's around .1ms, but we go 10ms to be sure.
+		// Windows appears to be happy to return a few milliseconds early, so we just validate a
+		// conservative lower bound which indicates that there was at least _some_ waiting.
 
 		val readA: Int
 		val tookA = measureTime {
-			readA = input.readWithTimeout(ByteArray(10), 0, 10, 110)
+			readA = input.readWithTimeout(ByteArray(10), 0, 10, 100)
 		}
 		assertThat(readA).isZero()
-		assertThat(tookA).isGreaterThan(100.milliseconds)
+		assertThat(tookA).isGreaterThan(50.milliseconds)
 
 		val readB: Int
 		val tookB = measureTime {
-			readB = input.readWithTimeout(ByteArray(10), 0, 10, 110)
+			readB = input.readWithTimeout(ByteArray(10), 0, 10, 100)
 		}
 		assertThat(readB).isZero()
-		assertThat(tookB).isGreaterThan(100.milliseconds)
+		assertThat(tookB).isGreaterThan(50.milliseconds)
 	}
 }
