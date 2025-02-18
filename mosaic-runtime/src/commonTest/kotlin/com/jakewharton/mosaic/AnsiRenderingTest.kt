@@ -103,7 +103,7 @@ class AnsiRenderingTest {
 				"""
 				|${cursorUp(4)}${clearLine}Hello$s
 				|${clearLine}World!
-				|${clearDisplay}
+				|$clearDisplay
 				""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
 			)
 		}
