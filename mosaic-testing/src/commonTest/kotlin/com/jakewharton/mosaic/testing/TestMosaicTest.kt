@@ -6,7 +6,12 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import com.jakewharton.mosaic.text.SpanStyle
+import com.jakewharton.mosaic.text.buildAnnotatedString
+import com.jakewharton.mosaic.text.withStyle
+import com.jakewharton.mosaic.ui.Color
 import com.jakewharton.mosaic.ui.Text
+import com.jakewharton.mosaic.ui.TextStyle.Companion.Underline
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
@@ -45,6 +50,32 @@ class TestMosaicTest {
 			delay(10.milliseconds)
 
 			assertThat(awaitSnapshot()).isEqualTo("The number is: 1")
+		}
+	}
+
+	@Test fun noAnsiEscapesByDefault() = runTest {
+		runMosaicTest {
+			val one = setContentAndSnapshot {
+				Text(
+					buildAnnotatedString {
+						withStyle(
+							SpanStyle(
+								textStyle = Underline,
+								color = Color.Red,
+								background = Color.Green,
+							),
+						) {
+							append("hello")
+						}
+					},
+				)
+			}
+			assertThat(one).isEqualTo("hello")
+
+			val two = setContentAndSnapshot {
+				Text("world")
+			}
+			assertThat(two).isEqualTo("world")
 		}
 	}
 }

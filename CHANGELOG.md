@@ -13,6 +13,7 @@ Changed:
 
 Fixed:
 - Prevent final character from being erased when a row writes into the last column of the terminal.
+- Do not emit ANSI style reset escape sequence when colors are disabled (such as in testing).
 
 
 ## [0.16.0] - 2025-02-14

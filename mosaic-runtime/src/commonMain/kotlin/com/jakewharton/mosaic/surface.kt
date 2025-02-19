@@ -108,9 +108,13 @@ internal class TextSurface(
 			lastPixel = pixel
 		}
 
-		if (lastPixel.background.isSpecifiedColor ||
-			lastPixel.foreground.isSpecifiedColor ||
-			lastPixel.textStyle.isNotEmptyTextStyle
+		if (
+			ansiLevel != AnsiLevel.NONE &&
+			(
+				lastPixel.background.isSpecifiedColor ||
+					lastPixel.foreground.isSpecifiedColor ||
+					lastPixel.textStyle.isNotEmptyTextStyle
+				)
 		) {
 			appendable.append(ansiReset)
 			appendable.append(ansiClosingCharacter)
