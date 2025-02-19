@@ -1,7 +1,5 @@
 package com.jakewharton.mosaic
 
-import com.github.ajalt.mordant.rendering.AnsiLevel as MordantAnsiLevel
-import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.Color
 import kotlin.math.roundToInt
 
@@ -48,15 +46,6 @@ internal const val ansiBgColorOffset = 10
 
 internal const val ansiSelectorColor256 = 5
 internal const val ansiSelectorColorRgb = 2
-
-internal fun MordantAnsiLevel.toMosaicAnsiLevel(): AnsiLevel {
-	return when (this) {
-		MordantAnsiLevel.NONE -> AnsiLevel.NONE
-		MordantAnsiLevel.ANSI16 -> AnsiLevel.ANSI16
-		MordantAnsiLevel.ANSI256 -> AnsiLevel.ANSI256
-		MordantAnsiLevel.TRUECOLOR -> AnsiLevel.TRUECOLOR
-	}
-}
 
 // simpler version without full conversion to HSV
 // https://github.com/ajalt/colormath/blob/4a0cc9796c743cb4965407204ee63b40aaf22fca/colormath/src/commonMain/kotlin/com/github/ajalt/colormath/model/RGB.kt#L301

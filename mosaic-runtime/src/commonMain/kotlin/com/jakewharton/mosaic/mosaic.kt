@@ -21,7 +21,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import com.github.ajalt.mordant.terminal.Terminal as MordantTerminal
 import com.jakewharton.finalization.withFinalizationHook
 import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.layout.MosaicNode
@@ -92,8 +91,6 @@ private const val StageDefaultQueries = 1
 private const val StageNormalOperation = 0
 
 internal suspend fun runMosaic(isTest: Boolean, content: @Composable () -> Unit) {
-	val mordantTerminal = MordantTerminal()
-
 	// Entering raw mode can fail, so perform it before any additional control sequences which change
 	// settings. We also need to be in character mode to query capabilities with control sequences.
 	val rawMode = if (!isTest && env("MOSAIC_RAW_MODE") != "false") {
@@ -291,7 +288,7 @@ internal suspend fun runMosaic(isTest: Boolean, content: @Composable () -> Unit)
 			}
 
 			val rendering = createRendering(
-				ansiLevel = mordantTerminal.terminalInfo.ansiLevel.toMosaicAnsiLevel(),
+				ansiLevel = detectAnsiLevel(),
 				synchronizedRendering = supportsSynchronizedRendering,
 			)
 
@@ -299,7 +296,7 @@ internal suspend fun runMosaic(isTest: Boolean, content: @Composable () -> Unit)
 			val mosaicComposition = MosaicComposition(
 				coroutineContext = coroutineContext + clock,
 				onDraw = { rootNode ->
-					mordantTerminal.rawPrint(rendering.render(rootNode).toString())
+					print(rendering.render(rootNode).toString())
 				},
 				keyEvents = keyEvents,
 				terminalState = terminalState,
