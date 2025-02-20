@@ -119,6 +119,12 @@ public class OperatingStatusResponseEvent(
 ) : Event
 
 @Poko
+public class CapabilityQueryEvent(
+	public val success: Boolean,
+	public val data: Map<String, String?>,
+) : Event
+
+@Poko
 public class KittyKeyboardQueryEvent(
 	public val flags: Int,
 ) : Event {

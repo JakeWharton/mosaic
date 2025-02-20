@@ -25,6 +25,7 @@ import com.jakewharton.finalization.withFinalizationHook
 import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.terminal.Tty
+import com.jakewharton.mosaic.terminal.event.CapabilityQueryEvent
 import com.jakewharton.mosaic.terminal.event.DecModeReportEvent
 import com.jakewharton.mosaic.terminal.event.DecModeReportEvent.Setting
 import com.jakewharton.mosaic.terminal.event.FocusEvent
@@ -126,6 +127,7 @@ internal suspend fun runMosaic(isTest: Boolean, content: @Composable () -> Unit)
 			var supportsKittyGraphics = false
 			var supportsKittyNotifications = false
 			var supportsKittyPointerShape = false
+			var supportsKittyUnderlines = false
 
 			val bootstrapDone = CompletableDeferred<Unit>()
 			val eventJob = launch(start = UNDISPATCHED) {
@@ -156,6 +158,7 @@ internal suspend fun runMosaic(isTest: Boolean, content: @Composable () -> Unit)
 										"${APC}Gi=31,s=1,v=1,a=q,t=d,f=24;AAAA$ST" + // Kitty graphics
 										"${OSC}99;i=1:p=?$ST" + // Kitty notifications
 										"${OSC}22;?__current__$ST" + // Kitty pointer shape
+										"$DCS+q5375$ST" + // Kitty underline ("Su")
 										"${CSI}5n", // DSR (end marker)
 								)
 							}
@@ -234,6 +237,13 @@ internal suspend fun runMosaic(isTest: Boolean, content: @Composable () -> Unit)
 							is KittyNotificationEvent -> {
 								if (stage == StageCapabilityQueries) {
 									supportsKittyNotifications = true
+								}
+							}
+							is CapabilityQueryEvent -> {
+								if (stage == StageCapabilityQueries && event.success) {
+									if ("Su" in event.data) {
+										supportsKittyUnderlines = true
+									}
 								}
 							}
 

@@ -21,6 +21,19 @@ final class com.jakewharton.mosaic.terminal.event/BracketedPasteEvent : com.jake
     final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/BracketedPasteEvent.toString|toString(){}[0]
 }
 
+final class com.jakewharton.mosaic.terminal.event/CapabilityQueryEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/CapabilityQueryEvent|null[0]
+    constructor <init>(kotlin/Boolean, kotlin.collections/Map<kotlin/String, kotlin/String?>) // com.jakewharton.mosaic.terminal.event/CapabilityQueryEvent.<init>|<init>(kotlin.Boolean;kotlin.collections.Map<kotlin.String,kotlin.String?>){}[0]
+
+    final val data // com.jakewharton.mosaic.terminal.event/CapabilityQueryEvent.data|{}data[0]
+        final fun <get-data>(): kotlin.collections/Map<kotlin/String, kotlin/String?> // com.jakewharton.mosaic.terminal.event/CapabilityQueryEvent.data.<get-data>|<get-data>(){}[0]
+    final val success // com.jakewharton.mosaic.terminal.event/CapabilityQueryEvent.success|{}success[0]
+        final fun <get-success>(): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/CapabilityQueryEvent.success.<get-success>|<get-success>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal.event/CapabilityQueryEvent.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal.event/CapabilityQueryEvent.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/CapabilityQueryEvent.toString|toString(){}[0]
+}
+
 final class com.jakewharton.mosaic.terminal.event/DebugEvent : com.jakewharton.mosaic.terminal.event/Event { // com.jakewharton.mosaic.terminal.event/DebugEvent|null[0]
     constructor <init>(com.jakewharton.mosaic.terminal.event/Event, kotlin/ByteArray) // com.jakewharton.mosaic.terminal.event/DebugEvent.<init>|<init>(com.jakewharton.mosaic.terminal.event.Event;kotlin.ByteArray){}[0]
 

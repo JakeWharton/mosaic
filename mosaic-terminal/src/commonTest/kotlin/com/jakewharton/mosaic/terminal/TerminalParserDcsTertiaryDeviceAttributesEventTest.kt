@@ -31,4 +31,11 @@ class TerminalParserDcsTertiaryDeviceAttributesEventTest : BaseTerminalParserTes
 			UnknownEvent("1b50217c3030303030303030301b5c".hexToByteArray()),
 		)
 	}
+
+	@Test fun idOddHex() = runTest {
+		writer.writeHex("1b50217c374230364638351b5c")
+		assertThat(reader.next()).isEqualTo(
+			UnknownEvent("1b50217c374230364638351b5c".hexToByteArray()),
+		)
+	}
 }

@@ -26,6 +26,15 @@ public final class com/jakewharton/mosaic/terminal/event/BracketedPasteEvent : c
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class com/jakewharton/mosaic/terminal/event/CapabilityQueryEvent : com/jakewharton/mosaic/terminal/event/Event {
+	public fun <init> (ZLjava/util/Map;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getData ()Ljava/util/Map;
+	public final fun getSuccess ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/jakewharton/mosaic/terminal/event/DebugEvent : com/jakewharton/mosaic/terminal/event/Event {
 	public fun <init> (Lcom/jakewharton/mosaic/terminal/event/Event;[B)V
 	public fun equals (Ljava/lang/Object;)Z

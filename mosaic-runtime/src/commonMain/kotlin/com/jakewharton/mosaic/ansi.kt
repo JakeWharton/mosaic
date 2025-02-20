@@ -5,9 +5,11 @@ import kotlin.math.roundToInt
 
 internal const val ESC = "\u001B"
 internal const val ST = "${ESC}\\"
-internal const val CSI = "$ESC["
-internal const val OSC = "$ESC]"
+
 internal const val APC = "${ESC}_"
+internal const val CSI = "$ESC["
+internal const val DCS = "${ESC}P"
+internal const val OSC = "$ESC]"
 
 internal const val cursorMode = 25
 internal const val cursorEnable = "$CSI?${cursorMode}h"

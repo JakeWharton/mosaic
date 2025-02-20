@@ -66,7 +66,9 @@ internal inline fun ByteArray.parseIntDigits(start: Int, end: Int, orElse: () ->
 
 internal inline fun ByteArray.parseHexDigits(start: Int, end: Int, orElse: () -> Int): Int {
 	error@ do {
-		if (end > start) {
+		val size = end - start
+		// Negative or odd size is invalid.
+		if ((size and 0x80000001.toInt()) == 0) {
 			var value = 0
 			for (i in start until end) {
 				value = value shl 4
@@ -74,7 +76,7 @@ internal inline fun ByteArray.parseHexDigits(start: Int, end: Int, orElse: () ->
 				val digit = this[i].toInt()
 				if (digit in '0'.code..'9'.code) {
 					// '0' is 0b110000, so the low 4 bits give us the digit value.
-					// We can do a logical OR because we know these bits are empty from the shift above.
+					// We can do a bitwise OR because we know these bits are empty from the shift above.
 					value = value or (digit and 0b1111)
 				} else if (digit in 'a'.code..'f'.code) {
 					value += digit - 'a'.code + 10
@@ -85,6 +87,47 @@ internal inline fun ByteArray.parseHexDigits(start: Int, end: Int, orElse: () ->
 				}
 			}
 			return value
+		}
+	} while (false)
+
+	return orElse()
+}
+
+internal inline fun ByteArray.parseHexString(start: Int, end: Int, orElse: () -> String): String {
+	error@ do {
+		val size = end - start
+		// Negative or odd size is invalid.
+		if ((size and 0x80000001.toInt()) == 0) {
+			return buildString(size / 2) {
+				for (i in start until end step 2) {
+					val digit1 = this@parseHexString[i].toInt()
+					val digit2 = this@parseHexString[i + 1].toInt()
+
+					val value1 = if (digit1 in '0'.code..'9'.code) {
+						// '0' is 0b110000, so the low 4 bits give us the digit value.
+						digit1 and 0b1111
+					} else if (digit1 in 'a'.code..'f'.code) {
+						digit1 - 'a'.code + 10
+					} else if (digit1 in 'A'.code..'F'.code) {
+						digit1 - 'A'.code + 10
+					} else {
+						break@error
+					}
+					val value2 = if (digit2 in '0'.code..'9'.code) {
+						// '0' is 0b110000, so the low 4 bits give us the digit value.
+						digit2 and 0b1111
+					} else if (digit2 in 'a'.code..'f'.code) {
+						digit2 - 'a'.code + 10
+					} else if (digit2 in 'A'.code..'F'.code) {
+						digit2 - 'A'.code + 10
+					} else {
+						break@error
+					}
+
+					// We can do a bitwise OR because we know each value is at most 0b1111.
+					append(((value1 shl 4) or value2).toChar())
+				}
+			}
 		}
 	} while (false)
 

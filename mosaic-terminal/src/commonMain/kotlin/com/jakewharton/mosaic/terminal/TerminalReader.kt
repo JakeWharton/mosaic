@@ -1,6 +1,7 @@
 package com.jakewharton.mosaic.terminal
 
 import com.jakewharton.mosaic.terminal.event.BracketedPasteEvent
+import com.jakewharton.mosaic.terminal.event.CapabilityQueryEvent
 import com.jakewharton.mosaic.terminal.event.DebugEvent
 import com.jakewharton.mosaic.terminal.event.DecModeReportEvent
 import com.jakewharton.mosaic.terminal.event.Event
@@ -679,6 +680,42 @@ public class TerminalReader internal constructor(
 				val manufacturingSite = buffer.parseHexDigits(b5Index, b7Index) { return@parseUntilStringTerminator null }
 				val terminalId = buffer.parseHexDigits(b7Index, stIndex) { return@parseUntilStringTerminator null }
 				TertiaryDeviceAttributesEvent(manufacturingSite, terminalId)
+			} else if (stIndex > b5Index &&
+				buffer[b4Index].toInt() == '+'.code &&
+				buffer[b5Index].toInt() == 'r'.code
+			) {
+				val b6Index = start + 5
+				val success = when (buffer[b3Index].toInt()) {
+					'1'.code -> {
+						if (stIndex == b6Index) {
+							// Success case requires the Pt parameter.
+							return@parseUntilStringTerminator null
+						}
+						true
+					}
+					'0'.code -> false
+					else -> return@parseUntilStringTerminator null
+				}
+				val data = buildMap {
+					var entryStart = b6Index
+					while (entryStart < stIndex) {
+						val entryEnd = buffer.indexOfOrDefault(';'.code.toByte(), entryStart, stIndex, stIndex)
+						val keyEnd = buffer.indexOfOrDefault('='.code.toByte(), entryStart, entryEnd, entryEnd)
+						val key = buffer.parseHexString(entryStart, keyEnd) { return@parseUntilStringTerminator null }
+						val value = if (keyEnd < entryEnd) {
+							if (success) {
+								buffer.parseHexString(keyEnd + 1, entryEnd) { return@parseUntilStringTerminator null }
+							} else {
+								return@parseUntilStringTerminator null
+							}
+						} else {
+							null
+						}
+						put(key, value)
+						entryStart = entryEnd + 1
+					}
+				}
+				CapabilityQueryEvent(success, data)
 			} else {
 				null
 			}
