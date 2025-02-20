@@ -49,8 +49,8 @@ class DebugRenderingTest {
 					|  Layout\(\) x=6 y=0 w=5 h=1 DrawBehind
 					|
 					|OUTPUT:
-					|(kotlin\.|java\.lang\.)?UnsupportedOperationException:?
-					""".trimMargin().toRegex(),
+					|(kotlin\.|java\.lang\.)?UnsupportedOperationException
+					""".trimMargin().replaceLineEndingsWithCRLF().toRegex(),
 				)
 		}
 	}
@@ -77,7 +77,7 @@ class DebugRenderingTest {
 				|OUTPUT:
 				|Hello
 				|
-				""".trimMargin(),
+				""".trimMargin().replaceLineEndingsWithCRLF(),
 			)
 		}
 	}
@@ -96,7 +96,7 @@ class DebugRenderingTest {
 				|OUTPUT:
 				|Hello
 				|
-				""".trimMargin(),
+				""".trimMargin().replaceLineEndingsWithCRLF(),
 			)
 
 			timeSource += 100.milliseconds
@@ -113,7 +113,7 @@ class DebugRenderingTest {
 				|OUTPUT:
 				|Hey!
 				|
-				""".trimMargin(),
+				""".trimMargin().replaceLineEndingsWithCRLF(),
 			)
 		}
 	}

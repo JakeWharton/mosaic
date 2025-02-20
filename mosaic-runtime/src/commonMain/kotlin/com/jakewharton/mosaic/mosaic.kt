@@ -57,12 +57,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeoutOrNull
 
-/**
- * True for a debug-like output that renders each "frame" on its own with a timestamp delta.
- * False when using ANSI control sequences to overwrite output.
- */
-private const val debugOutput = false
-
 public fun renderMosaic(content: @Composable () -> Unit): String {
 	val mosaicComposition = MosaicComposition(
 		coroutineContext = BroadcastFrameClock(),
@@ -330,7 +324,7 @@ private fun createRendering(
 	ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR,
 	synchronizedRendering: Boolean = false,
 ): Rendering {
-	return if (debugOutput) {
+	return if (env("MOSAIC_DEBUG_RENDERING") == "true") {
 		DebugRendering(ansiLevel = ansiLevel)
 	} else {
 		AnsiRendering(ansiLevel, synchronizedRendering)

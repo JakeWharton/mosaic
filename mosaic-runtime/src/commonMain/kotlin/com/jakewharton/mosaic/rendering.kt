@@ -21,45 +21,54 @@ internal class DebugRendering(
 ) : Rendering {
 	private var lastRender: TimeMark? = null
 
+	fun StringBuilder.appendSurface(canvas: TextCanvas) {
+		for (row in 0 until canvas.height) {
+			canvas.appendRowTo(this, row, ansiLevel)
+			append("\r\n")
+		}
+	}
+
 	override fun render(mosaic: Mosaic): CharSequence {
 		var failed = false
 		val output = buildString {
 			lastRender?.let { lastRender ->
 				repeat(50) { append('~') }
 				append(" +")
-				appendLine(lastRender.elapsedNow())
+				append(lastRender.elapsedNow())
+				append("\r\n")
 			}
 			lastRender = systemClock.markNow()
 
-			appendLine("NODES:")
-			appendLine(mosaic.dump())
-			appendLine()
+			append("NODES:\r\n")
+			append(mosaic.dump().replace("\n", "\r\n"))
+			append("\r\n\r\n")
 
 			val statics = mutableObjectListOf<TextCanvas>()
 			try {
 				mosaic.paintStaticsTo(statics)
 				if (statics.isNotEmpty()) {
-					appendLine("STATIC:")
+					append("STATIC:\r\n")
 					statics.forEach { static ->
-						appendLine(static.render(ansiLevel))
+						appendSurface(static)
 					}
-					appendLine()
+					append("\r\n")
 				}
 			} catch (t: Throwable) {
 				failed = true
-				appendLine(t.stackTraceToString())
+				append(t.stackTraceToString().replace("\n", "\r\n"))
+				append("\r\n")
 			}
 
-			appendLine("OUTPUT:")
+			append("OUTPUT:\r\n")
 			try {
-				appendLine(mosaic.paint().render(ansiLevel))
+				appendSurface(mosaic.paint())
 			} catch (t: Throwable) {
 				failed = true
-				append(t.stackTraceToString())
+				append(t.stackTraceToString().replace("\n", "\r\n"))
 			}
 		}
 		if (failed) {
-			throw RuntimeException("Failed\n\n$output")
+			throw RuntimeException("Failed\r\n\r\n$output")
 		}
 		return output
 	}
