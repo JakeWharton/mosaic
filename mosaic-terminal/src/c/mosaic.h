@@ -28,7 +28,6 @@ rawModeResult enterRawMode();
 platformError exitRawMode(rawModeConfig *saved);
 
 
-typedef void PlatformEventHandlerOnRead(void *opaque);
 typedef void PlatformEventHandlerOnFocus(void *opaque, bool focused);
 typedef void PlatformEventHandlerOnKey(void *opaque); // TODO params
 typedef void PlatformEventHandlerOnMouse(void *opaque); // TODO params
