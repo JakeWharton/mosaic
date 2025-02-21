@@ -125,6 +125,6 @@ private class RealTestMosaic<T>(
 
 internal object PlainTextSnapshots : SnapshotStrategy<String> {
 	override fun create(mosaic: Mosaic): String {
-		return mosaic.paint().render(AnsiLevel.NONE)
+		return mosaic.paint().render(AnsiLevel.NONE, false)
 	}
 }

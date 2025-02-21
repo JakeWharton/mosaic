@@ -1,7 +1,5 @@
 package com.jakewharton.mosaic
 
-import androidx.collection.MutableIntList
-import androidx.collection.mutableIntListOf
 import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.Color
 import com.jakewharton.mosaic.ui.TextStyle
@@ -10,7 +8,7 @@ import com.jakewharton.mosaic.ui.TextStyle.Companion.Dim
 import com.jakewharton.mosaic.ui.TextStyle.Companion.Invert
 import com.jakewharton.mosaic.ui.TextStyle.Companion.Italic
 import com.jakewharton.mosaic.ui.TextStyle.Companion.Strikethrough
-import com.jakewharton.mosaic.ui.TextStyle.Companion.Underline
+import com.jakewharton.mosaic.ui.UnderlineStyle
 import com.jakewharton.mosaic.ui.isNotEmptyTextStyle
 import com.jakewharton.mosaic.ui.isSpecifiedColor
 import com.jakewharton.mosaic.ui.isUnspecifiedColor
@@ -22,8 +20,9 @@ public interface TextCanvas {
 	public val height: Int
 	public val width: Int
 
-	public fun render(ansiLevel: AnsiLevel): String
-	public fun appendRowTo(appendable: Appendable, row: Int, ansiLevel: AnsiLevel)
+	// TODO Hey! These don't go here...
+	public fun render(ansiLevel: AnsiLevel, supportsKittyUnderlines: Boolean): String
+	public fun appendRowTo(appendable: Appendable, row: Int, ansiLevel: AnsiLevel, supportsKittyUnderlines: Boolean)
 }
 
 internal class TextSurface(
@@ -43,9 +42,9 @@ internal class TextSurface(
 		return cells[y * width + x]
 	}
 
-	override fun appendRowTo(appendable: Appendable, row: Int, ansiLevel: AnsiLevel) {
+	override fun appendRowTo(appendable: Appendable, row: Int, ansiLevel: AnsiLevel, supportsKittyUnderlines: Boolean) {
 		// Reused heap allocation for building ANSI attributes inside the loop.
-		val attributes = mutableIntListOf()
+		val attributes = mutableListOf<String>()
 
 		var lastPixel = blankPixel
 
@@ -74,7 +73,7 @@ internal class TextSurface(
 					)
 				}
 
-				fun maybeToggleStyle(style: TextStyle, on: Int, off: Int) {
+				fun maybeToggleStyle(style: TextStyle, on: String, off: String) {
 					if (style in pixel.textStyle) {
 						if (style !in lastPixel.textStyle) {
 							attributes += on
@@ -84,12 +83,30 @@ internal class TextSurface(
 					}
 				}
 				if (pixel.textStyle != lastPixel.textStyle) {
-					maybeToggleStyle(Bold, 1, 22)
-					maybeToggleStyle(Dim, 2, 22)
-					maybeToggleStyle(Italic, 3, 23)
-					maybeToggleStyle(Underline, 4, 24)
-					maybeToggleStyle(Invert, 7, 27)
-					maybeToggleStyle(Strikethrough, 9, 29)
+					maybeToggleStyle(Bold, "1", "22")
+					maybeToggleStyle(Dim, "2", "22")
+					maybeToggleStyle(Italic, "3", "23")
+					maybeToggleStyle(Invert, "7", "27")
+					maybeToggleStyle(Strikethrough, "9", "29")
+				}
+				if (pixel.underlineStyle != lastPixel.underlineStyle) {
+					attributes += when (pixel.underlineStyle) {
+						UnderlineStyle.Unspecified, UnderlineStyle.None -> "24"
+						UnderlineStyle.Double if (supportsKittyUnderlines) -> "4:2"
+						UnderlineStyle.Curly if (supportsKittyUnderlines) -> "4:3"
+						UnderlineStyle.Dotted if (supportsKittyUnderlines) -> "4:4"
+						UnderlineStyle.Dashed if (supportsKittyUnderlines) -> "4:5"
+						else -> "4"
+					}
+				}
+				if (pixel.underlineColor != lastPixel.underlineColor) {
+					attributes.addColor(
+						pixel.underlineColor,
+						ansiLevel,
+						ansiUnderlineColorSelector,
+						ansiUnderlineColorReset,
+						ansiUnderlineColorOffset,
+					)
 				}
 				if (attributes.isNotEmpty()) {
 					appendable.append(CSI)
@@ -97,7 +114,7 @@ internal class TextSurface(
 						if (index > 0) {
 							appendable.append(ansiSeparator)
 						}
-						appendable.append(element.toString())
+						appendable.append(element)
 					}
 					appendable.append(ansiClosingCharacter)
 					attributes.clear() // This list is reused!
@@ -121,7 +138,7 @@ internal class TextSurface(
 		}
 	}
 
-	private fun MutableIntList.addColor(
+	private fun MutableList<String>.addColor(
 		color: Color,
 		ansiLevel: AnsiLevel,
 		select: Int,
@@ -129,38 +146,38 @@ internal class TextSurface(
 		offset: Int,
 	) {
 		if (color.isUnspecifiedColor) {
-			add(reset)
+			add(reset.toString())
 			return
 		}
 		when (ansiLevel) {
-			AnsiLevel.NONE -> add(reset)
+			AnsiLevel.NONE -> add(reset.toString())
 			AnsiLevel.ANSI16 -> {
 				val ansi16Code = color.toAnsi16Code()
 				if (ansi16Code == ansiFgColorReset || ansi16Code == ansiBgColorReset) {
-					add(reset)
+					add(reset.toString())
 				} else {
-					add(ansi16Code + offset)
+					add((ansi16Code + offset).toString())
 				}
 			}
 			AnsiLevel.ANSI256 -> {
-				add(select)
+				add(select.toString())
 				add(ansiSelectorColor256)
-				add(color.toAnsi256Code())
+				add(color.toAnsi256Code().toString())
 			}
 			AnsiLevel.TRUECOLOR -> {
-				add(select)
+				add(select.toString())
 				add(ansiSelectorColorRgb)
-				add(color.redInt)
-				add(color.greenInt)
-				add(color.blueInt)
+				add(color.redInt.toString())
+				add(color.greenInt.toString())
+				add(color.blueInt.toString())
 			}
 		}
 	}
 
-	override fun render(ansiLevel: AnsiLevel): String = buildString {
+	override fun render(ansiLevel: AnsiLevel, supportsKittyUnderlines: Boolean): String = buildString {
 		if (height > 0) {
 			for (rowIndex in 0 until height) {
-				appendRowTo(this, rowIndex, ansiLevel)
+				appendRowTo(this, rowIndex, ansiLevel, supportsKittyUnderlines)
 				append("\n")
 			}
 			// Remove trailing newline.
@@ -173,6 +190,8 @@ internal class TextPixel(var codePoint: Int) {
 	var background: Color = Color.Unspecified
 	var foreground: Color = Color.Unspecified
 	var textStyle: TextStyle = TextStyle.Empty
+	var underlineStyle: UnderlineStyle = UnderlineStyle.None
+	var underlineColor: Color = Color.Unspecified
 
 	constructor(char: Char) : this(char.code)
 

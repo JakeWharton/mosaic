@@ -16,14 +16,15 @@ internal interface Rendering {
 }
 
 internal class DebugRendering(
-	private val ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR,
-	private val systemClock: TimeSource = TimeSource.Monotonic,
+	private val ansiLevel: AnsiLevel,
+	private val supportsKittyUnderlines: Boolean,
+	private val systemClock: TimeSource,
 ) : Rendering {
 	private var lastRender: TimeMark? = null
 
 	fun StringBuilder.appendSurface(canvas: TextCanvas) {
 		for (row in 0 until canvas.height) {
-			canvas.appendRowTo(this, row, ansiLevel)
+			canvas.appendRowTo(this, row, ansiLevel, supportsKittyUnderlines)
 			append("\r\n")
 		}
 	}
@@ -75,8 +76,9 @@ internal class DebugRendering(
 }
 
 internal class AnsiRendering(
-	private val ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR,
-	private val synchronizedRendering: Boolean = false,
+	private val ansiLevel: AnsiLevel,
+	private val synchronizedRendering: Boolean,
+	private val supportsKittyUnderlines: Boolean,
 ) : Rendering {
 	private val stringBuilder = StringBuilder(100)
 	private val staticSurfaces = mutableObjectListOf<TextCanvas>()
@@ -105,7 +107,7 @@ internal class AnsiRendering(
 						// do not support synchronized rendering, this may allow seeing a partial row render.
 						append(clearLine)
 					}
-					canvas.appendRowTo(this, row, ansiLevel)
+					canvas.appendRowTo(this, row, ansiLevel, supportsKittyUnderlines)
 					append("\r\n")
 				}
 			}

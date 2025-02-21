@@ -19,6 +19,7 @@ import com.jakewharton.mosaic.layout.size
 import com.jakewharton.mosaic.layout.width
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.testing.runMosaicTest
+import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.Box
 import com.jakewharton.mosaic.ui.Filler
 import com.jakewharton.mosaic.ui.Spacer
@@ -105,7 +106,11 @@ class MosaicTest {
 		var frameTimeB = 0L
 
 		runMosaicComposition(
-			rendering = AnsiRendering(),
+			rendering = AnsiRendering(
+				ansiLevel = AnsiLevel.NONE,
+				synchronizedRendering = false,
+				supportsKittyUnderlines = false,
+			),
 			keyEvents = Channel(),
 			terminalState = mutableStateOf(Terminal.Default),
 		) {

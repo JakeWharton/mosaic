@@ -250,7 +250,7 @@ class AnnotatedStringBuilderTest {
 		val styles = arrayOf(
 			SpanStyle(color = Color.Red),
 			SpanStyle(background = Color.Blue),
-			SpanStyle(textStyle = TextStyle.Underline),
+			SpanStyle(textStyle = TextStyle.Strikethrough),
 		)
 
 		val buildResult = with(AnnotatedString.Builder()) {
@@ -305,7 +305,7 @@ class AnnotatedStringBuilderTest {
 		val styles = arrayOf(
 			SpanStyle(color = Color.Red),
 			SpanStyle(background = Color.Blue),
-			SpanStyle(textStyle = TextStyle.Underline),
+			SpanStyle(textStyle = TextStyle.Strikethrough),
 		)
 
 		val buildResult = with(AnnotatedString.Builder()) {
@@ -329,7 +329,7 @@ class AnnotatedStringBuilderTest {
 		val styles = arrayOf(
 			SpanStyle(color = Color.Red),
 			SpanStyle(background = Color.Blue),
-			SpanStyle(textStyle = TextStyle.Underline),
+			SpanStyle(textStyle = TextStyle.Strikethrough),
 			SpanStyle(color = Color.Green),
 		)
 
@@ -360,7 +360,7 @@ class AnnotatedStringBuilderTest {
 		val styles = arrayOf(
 			SpanStyle(color = Color.Red),
 			SpanStyle(background = Color.Blue),
-			SpanStyle(textStyle = TextStyle.Underline),
+			SpanStyle(textStyle = TextStyle.Strikethrough),
 			SpanStyle(color = Color.Green),
 		)
 

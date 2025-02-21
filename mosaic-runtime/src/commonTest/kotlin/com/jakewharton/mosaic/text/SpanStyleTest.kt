@@ -25,7 +25,7 @@ class SpanStyleTest {
 	}
 
 	@Test fun constructorWithCustomizedTextStyle() {
-		val textStyle = TextStyle.Underline
+		val textStyle = TextStyle.Strikethrough
 
 		val style = SpanStyle(textStyle = textStyle)
 
@@ -66,7 +66,7 @@ class SpanStyleTest {
 	}
 
 	@Test fun mergeWithOthersTextStyleIsNullShouldUseThisTextStyle() {
-		val style = SpanStyle(textStyle = TextStyle.Underline)
+		val style = SpanStyle(textStyle = TextStyle.Strikethrough)
 
 		val newSpanStyle = style.merge(SpanStyle(textStyle = TextStyle.Unspecified))
 
@@ -74,7 +74,7 @@ class SpanStyleTest {
 	}
 
 	@Test fun mergeWithOthersTextStyleIsSetShouldUseOthersTextStyle() {
-		val style = SpanStyle(textStyle = TextStyle.Underline)
+		val style = SpanStyle(textStyle = TextStyle.Bold)
 		val otherStyle = SpanStyle(textStyle = TextStyle.Strikethrough)
 
 		val newSpanStyle = style.merge(otherStyle)

@@ -35,10 +35,10 @@ public final class com/jakewharton/mosaic/TerminalKt {
 }
 
 public abstract interface class com/jakewharton/mosaic/TextCanvas {
-	public abstract fun appendRowTo (Ljava/lang/Appendable;ILcom/jakewharton/mosaic/ui/AnsiLevel;)V
+	public abstract fun appendRowTo (Ljava/lang/Appendable;ILcom/jakewharton/mosaic/ui/AnsiLevel;Z)V
 	public abstract fun getHeight ()I
 	public abstract fun getWidth ()I
-	public abstract fun render (Lcom/jakewharton/mosaic/ui/AnsiLevel;)Ljava/lang/String;
+	public abstract fun render (Lcom/jakewharton/mosaic/ui/AnsiLevel;Z)Ljava/lang/String;
 }
 
 public final class com/jakewharton/mosaic/layout/AspectRatioKt {
@@ -68,10 +68,10 @@ public abstract interface class com/jakewharton/mosaic/layout/DrawScope {
 	public abstract fun drawRect-K-Y9Gx4 (IIIIJJLcom/jakewharton/mosaic/layout/DrawStyle;)V
 	public static synthetic fun drawRect-K-Y9Gx4$default (Lcom/jakewharton/mosaic/layout/DrawScope;CIIIJJLcom/jakewharton/mosaic/layout/DrawStyle;ILjava/lang/Object;)V
 	public static synthetic fun drawRect-K-Y9Gx4$default (Lcom/jakewharton/mosaic/layout/DrawScope;IIIIJJLcom/jakewharton/mosaic/layout/DrawStyle;ILjava/lang/Object;)V
-	public abstract fun drawText-8Xo7vWM (IILcom/jakewharton/mosaic/text/AnnotatedString;III)V
-	public abstract fun drawText-8Xo7vWM (IILjava/lang/String;III)V
-	public static synthetic fun drawText-8Xo7vWM$default (Lcom/jakewharton/mosaic/layout/DrawScope;IILcom/jakewharton/mosaic/text/AnnotatedString;IIIILjava/lang/Object;)V
-	public static synthetic fun drawText-8Xo7vWM$default (Lcom/jakewharton/mosaic/layout/DrawScope;IILjava/lang/String;IIIILjava/lang/Object;)V
+	public abstract fun drawText-DIarRE8 (IILcom/jakewharton/mosaic/text/AnnotatedString;IIIII)V
+	public abstract fun drawText-DIarRE8 (IILjava/lang/String;IIIII)V
+	public static synthetic fun drawText-DIarRE8$default (Lcom/jakewharton/mosaic/layout/DrawScope;IILcom/jakewharton/mosaic/text/AnnotatedString;IIIIIILjava/lang/Object;)V
+	public static synthetic fun drawText-DIarRE8$default (Lcom/jakewharton/mosaic/layout/DrawScope;IILjava/lang/String;IIIIIILjava/lang/Object;)V
 	public abstract fun getHeight ()I
 	public abstract fun getWidth ()I
 }
@@ -360,14 +360,16 @@ public final class com/jakewharton/mosaic/text/AnnotatedStringKt {
 
 public final class com/jakewharton/mosaic/text/SpanStyle {
 	public static final field $stable I
-	public synthetic fun <init> (IIIILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun copy-64_Jk1s (III)Lcom/jakewharton/mosaic/text/SpanStyle;
-	public static synthetic fun copy-64_Jk1s$default (Lcom/jakewharton/mosaic/text/SpanStyle;IIIILjava/lang/Object;)Lcom/jakewharton/mosaic/text/SpanStyle;
+	public synthetic fun <init> (IIIIIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (IIIIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun copy-5kpQ8cY (IIIII)Lcom/jakewharton/mosaic/text/SpanStyle;
+	public static synthetic fun copy-5kpQ8cY$default (Lcom/jakewharton/mosaic/text/SpanStyle;IIIIIILjava/lang/Object;)Lcom/jakewharton/mosaic/text/SpanStyle;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBackground-OrXnJU4 ()I
 	public final fun getColor-OrXnJU4 ()I
 	public final fun getTextStyle-4EWmQI8 ()I
+	public final fun getUnderlineColor-OrXnJU4 ()I
+	public final fun getUnderlineStyle-4rOp0I0 ()I
 	public fun hashCode ()I
 	public final fun merge (Lcom/jakewharton/mosaic/text/SpanStyle;)Lcom/jakewharton/mosaic/text/SpanStyle;
 	public static synthetic fun merge$default (Lcom/jakewharton/mosaic/text/SpanStyle;Lcom/jakewharton/mosaic/text/SpanStyle;ILjava/lang/Object;)Lcom/jakewharton/mosaic/text/SpanStyle;
@@ -607,8 +609,8 @@ public final class com/jakewharton/mosaic/ui/Static {
 }
 
 public final class com/jakewharton/mosaic/ui/Text {
-	public static final fun Text-GddN7rU (Lcom/jakewharton/mosaic/text/AnnotatedString;Lcom/jakewharton/mosaic/modifier/Modifier;IIILandroidx/compose/runtime/Composer;II)V
-	public static final fun Text-GddN7rU (Ljava/lang/String;Lcom/jakewharton/mosaic/modifier/Modifier;IIILandroidx/compose/runtime/Composer;II)V
+	public static final fun Text-cbmis8g (Lcom/jakewharton/mosaic/text/AnnotatedString;Lcom/jakewharton/mosaic/modifier/Modifier;IIIIILandroidx/compose/runtime/Composer;II)V
+	public static final fun Text-cbmis8g (Ljava/lang/String;Lcom/jakewharton/mosaic/modifier/Modifier;IIIIILandroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/jakewharton/mosaic/ui/TextStyle {
@@ -633,7 +635,6 @@ public final class com/jakewharton/mosaic/ui/TextStyle$Companion {
 	public final fun getInvert-4EWmQI8 ()I
 	public final fun getItalic-4EWmQI8 ()I
 	public final fun getStrikethrough-4EWmQI8 ()I
-	public final fun getUnderline-4EWmQI8 ()I
 	public final fun getUnspecified-4EWmQI8 ()I
 }
 
@@ -645,6 +646,37 @@ public final class com/jakewharton/mosaic/ui/TextStyleKt {
 	public static final fun isSpecifiedTextStyle-kLqBjOQ (I)Z
 	public static final fun isUnspecifiedTextStyle-kLqBjOQ (I)Z
 	public static final fun takeOrElse-XIQd4Uw (ILkotlin/jvm/functions/Function0;)I
+}
+
+public final class com/jakewharton/mosaic/ui/UnderlineStyle {
+	public static final field Companion Lcom/jakewharton/mosaic/ui/UnderlineStyle$Companion;
+	public static final synthetic fun box-impl (I)Lcom/jakewharton/mosaic/ui/UnderlineStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (ILjava/lang/Object;)Z
+	public static final fun equals-impl0 (II)Z
+	public fun hashCode ()I
+	public static fun hashCode-impl (I)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (I)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()I
+}
+
+public final class com/jakewharton/mosaic/ui/UnderlineStyle$Companion {
+	public final fun getCurly-4rOp0I0 ()I
+	public final fun getDashed-4rOp0I0 ()I
+	public final fun getDotted-4rOp0I0 ()I
+	public final fun getDouble-4rOp0I0 ()I
+	public final fun getNone-4rOp0I0 ()I
+	public final fun getStraight-4rOp0I0 ()I
+	public final fun getUnspecified-4rOp0I0 ()I
+}
+
+public final class com/jakewharton/mosaic/ui/UnderlineStyleKt {
+	public static final field NoUnderlineStyle I
+	public static final field UnspecifiedUnderlineStyle I
+	public static final fun isSpecifiedUnderlineStyle-0vVbRVg (I)Z
+	public static final fun isUnspecifiedUnderlineStyle-0vVbRVg (I)Z
+	public static final fun takeOrElse-Eh-XDHA (ILkotlin/jvm/functions/Function0;)I
 }
 
 public final class com/jakewharton/mosaic/ui/unit/Constraints {

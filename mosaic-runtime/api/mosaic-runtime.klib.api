@@ -108,8 +108,8 @@ abstract interface com.jakewharton.mosaic.layout/DrawScope { // com.jakewharton.
 
     abstract fun drawRect(kotlin/Char, com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/TextStyle = ..., com.jakewharton.mosaic.ui.unit/IntOffset = ..., com.jakewharton.mosaic.ui.unit/IntSize = ..., com.jakewharton.mosaic.layout/DrawStyle = ...) // com.jakewharton.mosaic.layout/DrawScope.drawRect|drawRect(kotlin.Char;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle;com.jakewharton.mosaic.ui.unit.IntOffset;com.jakewharton.mosaic.ui.unit.IntSize;com.jakewharton.mosaic.layout.DrawStyle){}[0]
     abstract fun drawRect(kotlin/Int = ..., com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/TextStyle = ..., com.jakewharton.mosaic.ui.unit/IntOffset = ..., com.jakewharton.mosaic.ui.unit/IntSize = ..., com.jakewharton.mosaic.layout/DrawStyle = ...) // com.jakewharton.mosaic.layout/DrawScope.drawRect|drawRect(kotlin.Int;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle;com.jakewharton.mosaic.ui.unit.IntOffset;com.jakewharton.mosaic.ui.unit.IntSize;com.jakewharton.mosaic.layout.DrawStyle){}[0]
-    abstract fun drawText(kotlin/Int, kotlin/Int, com.jakewharton.mosaic.text/AnnotatedString, com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/TextStyle = ...) // com.jakewharton.mosaic.layout/DrawScope.drawText|drawText(kotlin.Int;kotlin.Int;com.jakewharton.mosaic.text.AnnotatedString;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle){}[0]
-    abstract fun drawText(kotlin/Int, kotlin/Int, kotlin/String, com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/TextStyle = ...) // com.jakewharton.mosaic.layout/DrawScope.drawText|drawText(kotlin.Int;kotlin.Int;kotlin.String;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle){}[0]
+    abstract fun drawText(kotlin/Int, kotlin/Int, com.jakewharton.mosaic.text/AnnotatedString, com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/TextStyle = ..., com.jakewharton.mosaic.ui/UnderlineStyle = ..., com.jakewharton.mosaic.ui/Color = ...) // com.jakewharton.mosaic.layout/DrawScope.drawText|drawText(kotlin.Int;kotlin.Int;com.jakewharton.mosaic.text.AnnotatedString;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle;com.jakewharton.mosaic.ui.UnderlineStyle;com.jakewharton.mosaic.ui.Color){}[0]
+    abstract fun drawText(kotlin/Int, kotlin/Int, kotlin/String, com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/TextStyle = ..., com.jakewharton.mosaic.ui/UnderlineStyle = ..., com.jakewharton.mosaic.ui/Color = ...) // com.jakewharton.mosaic.layout/DrawScope.drawText|drawText(kotlin.Int;kotlin.Int;kotlin.String;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle;com.jakewharton.mosaic.ui.UnderlineStyle;com.jakewharton.mosaic.ui.Color){}[0]
 }
 
 abstract interface com.jakewharton.mosaic.layout/IntrinsicMeasurable { // com.jakewharton.mosaic.layout/IntrinsicMeasurable|null[0]
@@ -212,8 +212,8 @@ abstract interface com.jakewharton.mosaic/TextCanvas { // com.jakewharton.mosaic
     abstract val width // com.jakewharton.mosaic/TextCanvas.width|{}width[0]
         abstract fun <get-width>(): kotlin/Int // com.jakewharton.mosaic/TextCanvas.width.<get-width>|<get-width>(){}[0]
 
-    abstract fun appendRowTo(kotlin.text/Appendable, kotlin/Int, com.jakewharton.mosaic.ui/AnsiLevel) // com.jakewharton.mosaic/TextCanvas.appendRowTo|appendRowTo(kotlin.text.Appendable;kotlin.Int;com.jakewharton.mosaic.ui.AnsiLevel){}[0]
-    abstract fun render(com.jakewharton.mosaic.ui/AnsiLevel): kotlin/String // com.jakewharton.mosaic/TextCanvas.render|render(com.jakewharton.mosaic.ui.AnsiLevel){}[0]
+    abstract fun appendRowTo(kotlin.text/Appendable, kotlin/Int, com.jakewharton.mosaic.ui/AnsiLevel, kotlin/Boolean) // com.jakewharton.mosaic/TextCanvas.appendRowTo|appendRowTo(kotlin.text.Appendable;kotlin.Int;com.jakewharton.mosaic.ui.AnsiLevel;kotlin.Boolean){}[0]
+    abstract fun render(com.jakewharton.mosaic.ui/AnsiLevel, kotlin/Boolean): kotlin/String // com.jakewharton.mosaic/TextCanvas.render|render(com.jakewharton.mosaic.ui.AnsiLevel;kotlin.Boolean){}[0]
 }
 
 sealed interface com.jakewharton.mosaic.layout/DrawStyle { // com.jakewharton.mosaic.layout/DrawStyle|null[0]
@@ -335,7 +335,7 @@ final class com.jakewharton.mosaic.text/AnnotatedString : kotlin/CharSequence { 
 }
 
 final class com.jakewharton.mosaic.text/SpanStyle { // com.jakewharton.mosaic.text/SpanStyle|null[0]
-    constructor <init>(com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/TextStyle = ..., com.jakewharton.mosaic.ui/Color = ...) // com.jakewharton.mosaic.text/SpanStyle.<init>|<init>(com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle;com.jakewharton.mosaic.ui.Color){}[0]
+    constructor <init>(com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/TextStyle = ..., com.jakewharton.mosaic.ui/UnderlineStyle = ..., com.jakewharton.mosaic.ui/Color = ...) // com.jakewharton.mosaic.text/SpanStyle.<init>|<init>(com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle;com.jakewharton.mosaic.ui.UnderlineStyle;com.jakewharton.mosaic.ui.Color){}[0]
 
     final val background // com.jakewharton.mosaic.text/SpanStyle.background|{}background[0]
         final fun <get-background>(): com.jakewharton.mosaic.ui/Color // com.jakewharton.mosaic.text/SpanStyle.background.<get-background>|<get-background>(){}[0]
@@ -343,8 +343,12 @@ final class com.jakewharton.mosaic.text/SpanStyle { // com.jakewharton.mosaic.te
         final fun <get-color>(): com.jakewharton.mosaic.ui/Color // com.jakewharton.mosaic.text/SpanStyle.color.<get-color>|<get-color>(){}[0]
     final val textStyle // com.jakewharton.mosaic.text/SpanStyle.textStyle|{}textStyle[0]
         final fun <get-textStyle>(): com.jakewharton.mosaic.ui/TextStyle // com.jakewharton.mosaic.text/SpanStyle.textStyle.<get-textStyle>|<get-textStyle>(){}[0]
+    final val underlineColor // com.jakewharton.mosaic.text/SpanStyle.underlineColor|{}underlineColor[0]
+        final fun <get-underlineColor>(): com.jakewharton.mosaic.ui/Color // com.jakewharton.mosaic.text/SpanStyle.underlineColor.<get-underlineColor>|<get-underlineColor>(){}[0]
+    final val underlineStyle // com.jakewharton.mosaic.text/SpanStyle.underlineStyle|{}underlineStyle[0]
+        final fun <get-underlineStyle>(): com.jakewharton.mosaic.ui/UnderlineStyle // com.jakewharton.mosaic.text/SpanStyle.underlineStyle.<get-underlineStyle>|<get-underlineStyle>(){}[0]
 
-    final fun copy(com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/TextStyle = ..., com.jakewharton.mosaic.ui/Color = ...): com.jakewharton.mosaic.text/SpanStyle // com.jakewharton.mosaic.text/SpanStyle.copy|copy(com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle;com.jakewharton.mosaic.ui.Color){}[0]
+    final fun copy(com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/TextStyle = ..., com.jakewharton.mosaic.ui/UnderlineStyle = ..., com.jakewharton.mosaic.ui/Color = ...): com.jakewharton.mosaic.text/SpanStyle // com.jakewharton.mosaic.text/SpanStyle.copy|copy(com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle;com.jakewharton.mosaic.ui.UnderlineStyle;com.jakewharton.mosaic.ui.Color){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.text/SpanStyle.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.text/SpanStyle.hashCode|hashCode(){}[0]
     final fun merge(com.jakewharton.mosaic.text/SpanStyle? = ...): com.jakewharton.mosaic.text/SpanStyle // com.jakewharton.mosaic.text/SpanStyle.merge|merge(com.jakewharton.mosaic.text.SpanStyle?){}[0]
@@ -560,10 +564,34 @@ final value class com.jakewharton.mosaic.ui/TextStyle { // com.jakewharton.mosai
             final fun <get-Italic>(): com.jakewharton.mosaic.ui/TextStyle // com.jakewharton.mosaic.ui/TextStyle.Companion.Italic.<get-Italic>|<get-Italic>(){}[0]
         final val Strikethrough // com.jakewharton.mosaic.ui/TextStyle.Companion.Strikethrough|{}Strikethrough[0]
             final fun <get-Strikethrough>(): com.jakewharton.mosaic.ui/TextStyle // com.jakewharton.mosaic.ui/TextStyle.Companion.Strikethrough.<get-Strikethrough>|<get-Strikethrough>(){}[0]
-        final val Underline // com.jakewharton.mosaic.ui/TextStyle.Companion.Underline|{}Underline[0]
-            final fun <get-Underline>(): com.jakewharton.mosaic.ui/TextStyle // com.jakewharton.mosaic.ui/TextStyle.Companion.Underline.<get-Underline>|<get-Underline>(){}[0]
         final val Unspecified // com.jakewharton.mosaic.ui/TextStyle.Companion.Unspecified|{}Unspecified[0]
             final fun <get-Unspecified>(): com.jakewharton.mosaic.ui/TextStyle // com.jakewharton.mosaic.ui/TextStyle.Companion.Unspecified.<get-Unspecified>|<get-Unspecified>(){}[0]
+    }
+}
+
+final value class com.jakewharton.mosaic.ui/UnderlineStyle { // com.jakewharton.mosaic.ui/UnderlineStyle|null[0]
+    final val value // com.jakewharton.mosaic.ui/UnderlineStyle.value|{}value[0]
+        final fun <get-value>(): kotlin/Int // com.jakewharton.mosaic.ui/UnderlineStyle.value.<get-value>|<get-value>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.ui/UnderlineStyle.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.ui/UnderlineStyle.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.ui/UnderlineStyle.toString|toString(){}[0]
+
+    final object Companion { // com.jakewharton.mosaic.ui/UnderlineStyle.Companion|null[0]
+        final val Curly // com.jakewharton.mosaic.ui/UnderlineStyle.Companion.Curly|{}Curly[0]
+            final fun <get-Curly>(): com.jakewharton.mosaic.ui/UnderlineStyle // com.jakewharton.mosaic.ui/UnderlineStyle.Companion.Curly.<get-Curly>|<get-Curly>(){}[0]
+        final val Dashed // com.jakewharton.mosaic.ui/UnderlineStyle.Companion.Dashed|{}Dashed[0]
+            final fun <get-Dashed>(): com.jakewharton.mosaic.ui/UnderlineStyle // com.jakewharton.mosaic.ui/UnderlineStyle.Companion.Dashed.<get-Dashed>|<get-Dashed>(){}[0]
+        final val Dotted // com.jakewharton.mosaic.ui/UnderlineStyle.Companion.Dotted|{}Dotted[0]
+            final fun <get-Dotted>(): com.jakewharton.mosaic.ui/UnderlineStyle // com.jakewharton.mosaic.ui/UnderlineStyle.Companion.Dotted.<get-Dotted>|<get-Dotted>(){}[0]
+        final val Double // com.jakewharton.mosaic.ui/UnderlineStyle.Companion.Double|{}Double[0]
+            final fun <get-Double>(): com.jakewharton.mosaic.ui/UnderlineStyle // com.jakewharton.mosaic.ui/UnderlineStyle.Companion.Double.<get-Double>|<get-Double>(){}[0]
+        final val None // com.jakewharton.mosaic.ui/UnderlineStyle.Companion.None|{}None[0]
+            final fun <get-None>(): com.jakewharton.mosaic.ui/UnderlineStyle // com.jakewharton.mosaic.ui/UnderlineStyle.Companion.None.<get-None>|<get-None>(){}[0]
+        final val Straight // com.jakewharton.mosaic.ui/UnderlineStyle.Companion.Straight|{}Straight[0]
+            final fun <get-Straight>(): com.jakewharton.mosaic.ui/UnderlineStyle // com.jakewharton.mosaic.ui/UnderlineStyle.Companion.Straight.<get-Straight>|<get-Straight>(){}[0]
+        final val Unspecified // com.jakewharton.mosaic.ui/UnderlineStyle.Companion.Unspecified|{}Unspecified[0]
+            final fun <get-Unspecified>(): com.jakewharton.mosaic.ui/UnderlineStyle // com.jakewharton.mosaic.ui/UnderlineStyle.Companion.Unspecified.<get-Unspecified>|<get-Unspecified>(){}[0]
     }
 }
 
@@ -633,10 +661,14 @@ final object com.jakewharton.mosaic.ui/Arrangement { // com.jakewharton.mosaic.u
 
 final const val com.jakewharton.mosaic.ui/EmptyTextStyle // com.jakewharton.mosaic.ui/EmptyTextStyle|{}EmptyTextStyle[0]
     final fun <get-EmptyTextStyle>(): kotlin/Int // com.jakewharton.mosaic.ui/EmptyTextStyle.<get-EmptyTextStyle>|<get-EmptyTextStyle>(){}[0]
+final const val com.jakewharton.mosaic.ui/NoUnderlineStyle // com.jakewharton.mosaic.ui/NoUnderlineStyle|{}NoUnderlineStyle[0]
+    final fun <get-NoUnderlineStyle>(): kotlin/Int // com.jakewharton.mosaic.ui/NoUnderlineStyle.<get-NoUnderlineStyle>|<get-NoUnderlineStyle>(){}[0]
 final const val com.jakewharton.mosaic.ui/UnspecifiedColor // com.jakewharton.mosaic.ui/UnspecifiedColor|{}UnspecifiedColor[0]
     final fun <get-UnspecifiedColor>(): kotlin/Int // com.jakewharton.mosaic.ui/UnspecifiedColor.<get-UnspecifiedColor>|<get-UnspecifiedColor>(){}[0]
 final const val com.jakewharton.mosaic.ui/UnspecifiedTextStyle // com.jakewharton.mosaic.ui/UnspecifiedTextStyle|{}UnspecifiedTextStyle[0]
     final fun <get-UnspecifiedTextStyle>(): kotlin/Int // com.jakewharton.mosaic.ui/UnspecifiedTextStyle.<get-UnspecifiedTextStyle>|<get-UnspecifiedTextStyle>(){}[0]
+final const val com.jakewharton.mosaic.ui/UnspecifiedUnderlineStyle // com.jakewharton.mosaic.ui/UnspecifiedUnderlineStyle|{}UnspecifiedUnderlineStyle[0]
+    final fun <get-UnspecifiedUnderlineStyle>(): kotlin/Int // com.jakewharton.mosaic.ui/UnspecifiedUnderlineStyle.<get-UnspecifiedUnderlineStyle>|<get-UnspecifiedUnderlineStyle>(){}[0]
 
 final val com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_DrawStyle_Fill$stableprop // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_DrawStyle_Fill$stableprop|#static{}com_jakewharton_mosaic_layout_DrawStyle_Fill$stableprop[0]
 final val com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_DrawStyle_Stroke$stableprop // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_DrawStyle_Stroke$stableprop|#static{}com_jakewharton_mosaic_layout_DrawStyle_Stroke$stableprop[0]
@@ -686,10 +718,14 @@ final val com.jakewharton.mosaic.ui/isSpecifiedColor // com.jakewharton.mosaic.u
     final inline fun (com.jakewharton.mosaic.ui/Color).<get-isSpecifiedColor>(): kotlin/Boolean // com.jakewharton.mosaic.ui/isSpecifiedColor.<get-isSpecifiedColor>|<get-isSpecifiedColor>@com.jakewharton.mosaic.ui.Color(){}[0]
 final val com.jakewharton.mosaic.ui/isSpecifiedTextStyle // com.jakewharton.mosaic.ui/isSpecifiedTextStyle|@com.jakewharton.mosaic.ui.TextStyle{}isSpecifiedTextStyle[0]
     final inline fun (com.jakewharton.mosaic.ui/TextStyle).<get-isSpecifiedTextStyle>(): kotlin/Boolean // com.jakewharton.mosaic.ui/isSpecifiedTextStyle.<get-isSpecifiedTextStyle>|<get-isSpecifiedTextStyle>@com.jakewharton.mosaic.ui.TextStyle(){}[0]
+final val com.jakewharton.mosaic.ui/isSpecifiedUnderlineStyle // com.jakewharton.mosaic.ui/isSpecifiedUnderlineStyle|@com.jakewharton.mosaic.ui.UnderlineStyle{}isSpecifiedUnderlineStyle[0]
+    final inline fun (com.jakewharton.mosaic.ui/UnderlineStyle).<get-isSpecifiedUnderlineStyle>(): kotlin/Boolean // com.jakewharton.mosaic.ui/isSpecifiedUnderlineStyle.<get-isSpecifiedUnderlineStyle>|<get-isSpecifiedUnderlineStyle>@com.jakewharton.mosaic.ui.UnderlineStyle(){}[0]
 final val com.jakewharton.mosaic.ui/isUnspecifiedColor // com.jakewharton.mosaic.ui/isUnspecifiedColor|@com.jakewharton.mosaic.ui.Color{}isUnspecifiedColor[0]
     final inline fun (com.jakewharton.mosaic.ui/Color).<get-isUnspecifiedColor>(): kotlin/Boolean // com.jakewharton.mosaic.ui/isUnspecifiedColor.<get-isUnspecifiedColor>|<get-isUnspecifiedColor>@com.jakewharton.mosaic.ui.Color(){}[0]
 final val com.jakewharton.mosaic.ui/isUnspecifiedTextStyle // com.jakewharton.mosaic.ui/isUnspecifiedTextStyle|@com.jakewharton.mosaic.ui.TextStyle{}isUnspecifiedTextStyle[0]
     final inline fun (com.jakewharton.mosaic.ui/TextStyle).<get-isUnspecifiedTextStyle>(): kotlin/Boolean // com.jakewharton.mosaic.ui/isUnspecifiedTextStyle.<get-isUnspecifiedTextStyle>|<get-isUnspecifiedTextStyle>@com.jakewharton.mosaic.ui.TextStyle(){}[0]
+final val com.jakewharton.mosaic.ui/isUnspecifiedUnderlineStyle // com.jakewharton.mosaic.ui/isUnspecifiedUnderlineStyle|@com.jakewharton.mosaic.ui.UnderlineStyle{}isUnspecifiedUnderlineStyle[0]
+    final inline fun (com.jakewharton.mosaic.ui/UnderlineStyle).<get-isUnspecifiedUnderlineStyle>(): kotlin/Boolean // com.jakewharton.mosaic.ui/isUnspecifiedUnderlineStyle.<get-isUnspecifiedUnderlineStyle>|<get-isUnspecifiedUnderlineStyle>@com.jakewharton.mosaic.ui.UnderlineStyle(){}[0]
 final val com.jakewharton.mosaic/LocalTerminal // com.jakewharton.mosaic/LocalTerminal|{}LocalTerminal[0]
     final fun <get-LocalTerminal>(): androidx.compose.runtime/ProvidableCompositionLocal<com.jakewharton.mosaic/Terminal> // com.jakewharton.mosaic/LocalTerminal.<get-LocalTerminal>|<get-LocalTerminal>(){}[0]
 final val com.jakewharton.mosaic/com_jakewharton_mosaic_AnsiRendering$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_AnsiRendering$stableprop|#static{}com_jakewharton_mosaic_AnsiRendering$stableprop[0]
@@ -785,8 +821,8 @@ final fun com.jakewharton.mosaic.ui/Layout(kotlin/Function2<androidx.compose.run
 final fun com.jakewharton.mosaic.ui/Row(com.jakewharton.mosaic.modifier/Modifier?, com.jakewharton.mosaic.ui/Arrangement.Horizontal?, com.jakewharton.mosaic.ui/Alignment.Vertical?, kotlin/Function3<com.jakewharton.mosaic.ui/RowScope, androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.ui/Row|Row(com.jakewharton.mosaic.modifier.Modifier?;com.jakewharton.mosaic.ui.Arrangement.Horizontal?;com.jakewharton.mosaic.ui.Alignment.Vertical?;kotlin.Function3<com.jakewharton.mosaic.ui.RowScope,androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
 final fun com.jakewharton.mosaic.ui/Spacer(com.jakewharton.mosaic.modifier/Modifier?, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.ui/Spacer|Spacer(com.jakewharton.mosaic.modifier.Modifier?;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
 final fun com.jakewharton.mosaic.ui/Static(kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int) // com.jakewharton.mosaic.ui/Static|Static(kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int){}[0]
-final fun com.jakewharton.mosaic.ui/Text(com.jakewharton.mosaic.text/AnnotatedString, com.jakewharton.mosaic.modifier/Modifier?, com.jakewharton.mosaic.ui/Color, com.jakewharton.mosaic.ui/Color, com.jakewharton.mosaic.ui/TextStyle, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.ui/Text|Text(com.jakewharton.mosaic.text.AnnotatedString;com.jakewharton.mosaic.modifier.Modifier?;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
-final fun com.jakewharton.mosaic.ui/Text(kotlin/String, com.jakewharton.mosaic.modifier/Modifier?, com.jakewharton.mosaic.ui/Color, com.jakewharton.mosaic.ui/Color, com.jakewharton.mosaic.ui/TextStyle, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.ui/Text|Text(kotlin.String;com.jakewharton.mosaic.modifier.Modifier?;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun com.jakewharton.mosaic.ui/Text(com.jakewharton.mosaic.text/AnnotatedString, com.jakewharton.mosaic.modifier/Modifier?, com.jakewharton.mosaic.ui/Color, com.jakewharton.mosaic.ui/Color, com.jakewharton.mosaic.ui/TextStyle, com.jakewharton.mosaic.ui/UnderlineStyle, com.jakewharton.mosaic.ui/Color, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.ui/Text|Text(com.jakewharton.mosaic.text.AnnotatedString;com.jakewharton.mosaic.modifier.Modifier?;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle;com.jakewharton.mosaic.ui.UnderlineStyle;com.jakewharton.mosaic.ui.Color;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
+final fun com.jakewharton.mosaic.ui/Text(kotlin/String, com.jakewharton.mosaic.modifier/Modifier?, com.jakewharton.mosaic.ui/Color, com.jakewharton.mosaic.ui/Color, com.jakewharton.mosaic.ui/TextStyle, com.jakewharton.mosaic.ui/UnderlineStyle, com.jakewharton.mosaic.ui/Color, androidx.compose.runtime/Composer?, kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.ui/Text|Text(kotlin.String;com.jakewharton.mosaic.modifier.Modifier?;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle;com.jakewharton.mosaic.ui.UnderlineStyle;com.jakewharton.mosaic.ui.Color;androidx.compose.runtime.Composer?;kotlin.Int;kotlin.Int){}[0]
 final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_Arrangement$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_Arrangement$stableprop_getter|com_jakewharton_mosaic_ui_Arrangement$stableprop_getter(){}[0]
 final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_Arrangement_Absolute$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_Arrangement_Absolute$stableprop_getter|com_jakewharton_mosaic_ui_Arrangement_Absolute$stableprop_getter(){}[0]
 final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_Arrangement_SpacedAligned$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_Arrangement_SpacedAligned$stableprop_getter|com_jakewharton_mosaic_ui_Arrangement_SpacedAligned$stableprop_getter(){}[0]
@@ -820,6 +856,7 @@ final fun com.jakewharton.mosaic/com_jakewharton_mosaic_TextSurface$stableprop_g
 final fun com.jakewharton.mosaic/runMosaicBlocking(kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>) // com.jakewharton.mosaic/runMosaicBlocking|runMosaicBlocking(kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>){}[0]
 final inline fun (com.jakewharton.mosaic.ui/Color).com.jakewharton.mosaic.ui/takeOrElse(kotlin/Function0<com.jakewharton.mosaic.ui/Color>): com.jakewharton.mosaic.ui/Color // com.jakewharton.mosaic.ui/takeOrElse|takeOrElse@com.jakewharton.mosaic.ui.Color(kotlin.Function0<com.jakewharton.mosaic.ui.Color>){}[0]
 final inline fun (com.jakewharton.mosaic.ui/TextStyle).com.jakewharton.mosaic.ui/takeOrElse(kotlin/Function0<com.jakewharton.mosaic.ui/TextStyle>): com.jakewharton.mosaic.ui/TextStyle // com.jakewharton.mosaic.ui/takeOrElse|takeOrElse@com.jakewharton.mosaic.ui.TextStyle(kotlin.Function0<com.jakewharton.mosaic.ui.TextStyle>){}[0]
+final inline fun (com.jakewharton.mosaic.ui/UnderlineStyle).com.jakewharton.mosaic.ui/takeOrElse(kotlin/Function0<com.jakewharton.mosaic.ui/UnderlineStyle>): com.jakewharton.mosaic.ui/UnderlineStyle // com.jakewharton.mosaic.ui/takeOrElse|takeOrElse@com.jakewharton.mosaic.ui.UnderlineStyle(kotlin.Function0<com.jakewharton.mosaic.ui.UnderlineStyle>){}[0]
 final inline fun <#A: kotlin/Any> (com.jakewharton.mosaic.text/AnnotatedString.Builder).com.jakewharton.mosaic.text/withStyle(com.jakewharton.mosaic.text/SpanStyle, kotlin/Function1<com.jakewharton.mosaic.text/AnnotatedString.Builder, #A>): #A // com.jakewharton.mosaic.text/withStyle|withStyle@com.jakewharton.mosaic.text.AnnotatedString.Builder(com.jakewharton.mosaic.text.SpanStyle;kotlin.Function1<com.jakewharton.mosaic.text.AnnotatedString.Builder,0:0>){0§<kotlin.Any>}[0]
 final inline fun com.jakewharton.mosaic.text/buildAnnotatedString(kotlin/Function1<com.jakewharton.mosaic.text/AnnotatedString.Builder, kotlin/Unit>): com.jakewharton.mosaic.text/AnnotatedString // com.jakewharton.mosaic.text/buildAnnotatedString|buildAnnotatedString(kotlin.Function1<com.jakewharton.mosaic.text.AnnotatedString.Builder,kotlin.Unit>){}[0]
 final suspend fun com.jakewharton.mosaic/runMosaic(kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>) // com.jakewharton.mosaic/runMosaic|runMosaic(kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>){}[0]

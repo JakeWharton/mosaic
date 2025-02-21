@@ -4,13 +4,17 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import com.jakewharton.mosaic.ui.Color
 import com.jakewharton.mosaic.ui.TextStyle
+import com.jakewharton.mosaic.ui.UnderlineStyle
 import com.jakewharton.mosaic.ui.takeOrElse
 
+// TODO Poko
 @Immutable
 public class SpanStyle(
 	public val color: Color = Color.Unspecified,
-	public val textStyle: TextStyle = TextStyle.Unspecified,
 	public val background: Color = Color.Unspecified,
+	public val textStyle: TextStyle = TextStyle.Unspecified,
+	public val underlineStyle: UnderlineStyle = UnderlineStyle.Unspecified,
+	public val underlineColor: Color = Color.Unspecified,
 ) {
 
 	/**
@@ -27,8 +31,10 @@ public class SpanStyle(
 		if (other == null) return this
 		return SpanStyle(
 			color = other.color.takeOrElse { this.color },
-			textStyle = other.textStyle.takeOrElse { this.textStyle },
 			background = other.background.takeOrElse { this.background },
+			textStyle = other.textStyle.takeOrElse { this.textStyle },
+			underlineStyle = other.underlineStyle.takeOrElse { this.underlineStyle },
+			underlineColor = other.underlineColor.takeOrElse { this.underlineColor },
 		)
 	}
 
@@ -40,13 +46,17 @@ public class SpanStyle(
 
 	public fun copy(
 		color: Color = this.color,
-		textStyle: TextStyle = this.textStyle,
 		background: Color = this.background,
+		textStyle: TextStyle = this.textStyle,
+		underlineStyle: UnderlineStyle = this.underlineStyle,
+		underlineColor: Color = this.underlineColor,
 	): SpanStyle {
 		return SpanStyle(
 			color = color,
-			textStyle = textStyle,
 			background = background,
+			textStyle = textStyle,
+			underlineStyle = underlineStyle,
+			underlineColor = underlineColor,
 		)
 	}
 
@@ -57,24 +67,30 @@ public class SpanStyle(
 		other as SpanStyle
 
 		if (color != other.color) return false
-		if (textStyle != other.textStyle) return false
 		if (background != other.background) return false
+		if (textStyle != other.textStyle) return false
+		if (underlineStyle != other.underlineStyle) return false
+		if (underlineColor != other.underlineColor) return false
 
 		return true
 	}
 
 	override fun hashCode(): Int {
 		var result = color.hashCode()
-		result = 31 * result + textStyle.hashCode()
 		result = 31 * result + background.hashCode()
+		result = 31 * result + textStyle.hashCode()
+		result = 31 * result + underlineStyle.hashCode()
+		result = 31 * result + underlineColor.hashCode()
 		return result
 	}
 
 	override fun toString(): String {
 		return "SpanStyle(" +
 			"color=$color, " +
-			"textStyle=$textStyle, " +
 			"background=$background, " +
+			"textStyle=$textStyle, " +
+			"underlineStyle=$underlineStyle, " +
+			"underlineColor=$underlineColor, " +
 			")"
 	}
 }

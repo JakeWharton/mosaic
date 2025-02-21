@@ -36,6 +36,7 @@ import com.jakewharton.mosaic.ui.Row
 import com.jakewharton.mosaic.ui.Spacer
 import com.jakewharton.mosaic.ui.Text
 import com.jakewharton.mosaic.ui.TextStyle
+import com.jakewharton.mosaic.ui.UnderlineStyle
 import kotlin.math.abs
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.collectLatest
@@ -79,7 +80,8 @@ private fun TerminalInfo() {
 			withStyle(
 				SpanStyle(
 					color = widthValueColor,
-					textStyle = TextStyle.Bold + TextStyle.Underline,
+					textStyle = TextStyle.Bold,
+					underlineStyle = UnderlineStyle.Straight,
 				),
 			) {
 				append(screenWidth.toString())
@@ -91,7 +93,8 @@ private fun TerminalInfo() {
 			withStyle(
 				SpanStyle(
 					color = heightValueColor,
-					textStyle = TextStyle.Bold + TextStyle.Underline,
+					textStyle = TextStyle.Bold,
+					underlineStyle = UnderlineStyle.Straight,
 				),
 			) {
 				append(screenHeight.toString())

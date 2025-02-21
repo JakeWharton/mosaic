@@ -44,6 +44,7 @@ import kotlin.concurrent.Volatile
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.TimeSource
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
@@ -106,7 +107,6 @@ public suspend fun runMosaic(content: @Composable () -> Unit) {
 			var stage = StageDeviceAttributes
 
 			var supportsSynchronizedRendering = false
-			// TODO Use these to alter the capabilities of the corresponding nodes.
 			var supportsKittyKeyboard = false
 			var supportsKittyGraphics = false
 			var supportsKittyNotifications = false
@@ -281,9 +281,9 @@ public suspend fun runMosaic(content: @Composable () -> Unit) {
 
 			val ansiLevel = detectAnsiLevel()
 			val rendering = if (env("MOSAIC_DEBUG_RENDERING") == "true") {
-				DebugRendering(ansiLevel)
+				DebugRendering(ansiLevel, supportsKittyUnderlines, TimeSource.Monotonic)
 			} else {
-				AnsiRendering(ansiLevel, supportsSynchronizedRendering)
+				AnsiRendering(ansiLevel, supportsSynchronizedRendering, supportsKittyUnderlines)
 			}
 
 			runMosaicComposition(rendering, keyEvents, terminalState, content)

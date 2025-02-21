@@ -61,7 +61,7 @@ class BoxTest {
 			assertThat(positionedChildContainerNode.size).isEqualTo(IntSize(size, size))
 			assertThat(positionedChildContainerNode.position).isEqualTo(IntOffset.Zero)
 
-			assertThat(rootNode.paint().render(AnsiLevel.NONE)).isEqualTo(
+			assertThat(rootNode.paint().render(AnsiLevel.NONE, false)).isEqualTo(
 				"""
 				|     $s
 				|     $s
@@ -143,7 +143,7 @@ class BoxTest {
 			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(size, size))
 			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset.Zero)
 
-			assertThat(rootNode.paint().render(AnsiLevel.NONE)).isEqualTo(
+			assertThat(rootNode.paint().render(AnsiLevel.NONE, false)).isEqualTo(
 				"""
 				|     $s
 				| $TestChar$TestChar$TestChar$TestChar$TestChar
@@ -190,7 +190,7 @@ class BoxTest {
 			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(size, size))
 			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset.Zero)
 
-			assertThat(rootNode.paint().render(AnsiLevel.NONE)).isEqualTo(
+			assertThat(rootNode.paint().render(AnsiLevel.NONE, false)).isEqualTo(
 				"""
 				|$TestChar$TestChar$TestChar$TestChar$TestChar$s
 				|$TestChar$TestChar$TestChar$TestChar$TestChar$s
@@ -237,7 +237,7 @@ class BoxTest {
 			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(size, size))
 			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset.Zero)
 
-			assertThat(rootNode.paint().render(AnsiLevel.NONE)).isEqualTo(
+			assertThat(rootNode.paint().render(AnsiLevel.NONE, false)).isEqualTo(
 				"""
 				| $TestChar$TestChar$TestChar$TestChar$s
 				| $TestChar$TestChar$TestChar$TestChar$s
@@ -284,7 +284,7 @@ class BoxTest {
 			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(size, size))
 			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset.Zero)
 
-			assertThat(rootNode.paint().render(AnsiLevel.NONE)).isEqualTo(
+			assertThat(rootNode.paint().render(AnsiLevel.NONE, false)).isEqualTo(
 				"""
 				|     $s
 				|$TestChar$TestChar$TestChar$TestChar$TestChar$TestChar

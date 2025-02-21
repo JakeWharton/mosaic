@@ -4,6 +4,7 @@ package com.jakewharton.mosaic.ui
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import com.jakewharton.mosaic.ui.TextStyle.Companion.Empty
 import kotlin.jvm.JvmInline
 
 @Immutable
@@ -82,9 +83,6 @@ public value class TextStyle internal constructor(
 		 */
 		@Stable
 		public val Empty: TextStyle = TextStyle(EmptyTextStyle)
-
-		@Stable
-		public val Underline: TextStyle = TextStyle(2)
 
 		@Stable
 		public val Strikethrough: TextStyle = TextStyle(4)

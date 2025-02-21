@@ -46,8 +46,12 @@ internal const val ansiBgColorSelector = 48
 internal const val ansiBgColorReset = 49
 internal const val ansiBgColorOffset = 10
 
-internal const val ansiSelectorColor256 = 5
-internal const val ansiSelectorColorRgb = 2
+internal const val ansiSelectorColor256 = "5"
+internal const val ansiSelectorColorRgb = "2"
+
+internal const val ansiUnderlineColorSelector = 58
+internal const val ansiUnderlineColorReset = 59
+internal const val ansiUnderlineColorOffset = 0
 
 // simpler version without full conversion to HSV
 // https://github.com/ajalt/colormath/blob/4a0cc9796c743cb4965407204ee63b40aaf22fca/colormath/src/commonMain/kotlin/com/github/ajalt/colormath/model/RGB.kt#L301

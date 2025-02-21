@@ -28,8 +28,10 @@ import com.jakewharton.mosaic.text.SpanStyle
 import com.jakewharton.mosaic.text.getLocalRawSpanStyles
 import com.jakewharton.mosaic.ui.Color
 import com.jakewharton.mosaic.ui.TextStyle
+import com.jakewharton.mosaic.ui.UnderlineStyle
 import com.jakewharton.mosaic.ui.isSpecifiedColor
 import com.jakewharton.mosaic.ui.isSpecifiedTextStyle
+import com.jakewharton.mosaic.ui.isSpecifiedUnderlineStyle
 import com.jakewharton.mosaic.ui.isUnspecifiedColor
 import com.jakewharton.mosaic.ui.isUnspecifiedTextStyle
 import com.jakewharton.mosaic.ui.unit.IntOffset
@@ -96,6 +98,8 @@ public interface DrawScope {
 		foreground: Color = Color.Unspecified,
 		background: Color = Color.Unspecified,
 		textStyle: TextStyle = TextStyle.Unspecified,
+		underlineStyle: UnderlineStyle = UnderlineStyle.Unspecified,
+		underlineColor: Color = Color.Unspecified,
 	)
 
 	public fun drawText(
@@ -105,6 +109,8 @@ public interface DrawScope {
 		foreground: Color = Color.Unspecified,
 		background: Color = Color.Unspecified,
 		textStyle: TextStyle = TextStyle.Unspecified,
+		underlineStyle: UnderlineStyle = UnderlineStyle.Unspecified,
+		underlineColor: Color = Color.Unspecified,
 	)
 
 	/**
@@ -227,8 +233,10 @@ internal open class TextCanvasDrawScope(
 		foreground: Color,
 		background: Color,
 		textStyle: TextStyle,
+		underlineStyle: UnderlineStyle,
+		underlineColor: Color,
 	) {
-		drawText(row, column, string, foreground, background, textStyle, null)
+		drawText(row, column, string, foreground, background, textStyle, underlineStyle, underlineColor, null)
 	}
 
 	override fun drawText(
@@ -238,8 +246,10 @@ internal open class TextCanvasDrawScope(
 		foreground: Color,
 		background: Color,
 		textStyle: TextStyle,
+		underlineStyle: UnderlineStyle,
+		underlineColor: Color,
 	) {
-		drawText(row, column, string.text, foreground, background, textStyle) { start, end ->
+		drawText(row, column, string.text, foreground, background, textStyle, underlineStyle, underlineColor) { start, end ->
 			string.getLocalRawSpanStyles(start, end)
 		}
 	}
@@ -251,6 +261,8 @@ internal open class TextCanvasDrawScope(
 		foreground: Color,
 		background: Color,
 		textStyle: TextStyle,
+		underlineStyle: UnderlineStyle,
+		underlineColor: Color,
 		spanStylesProvider: ((start: Int, end: Int) -> List<SpanStyle>)?,
 	) {
 		var pixelIndex = 0
@@ -264,9 +276,9 @@ internal open class TextCanvasDrawScope(
 				pixelIndex + 1
 			}
 
-			character.updateTextPixel(text.codePointAt(pixelIndex), foreground, background, textStyle)
+			character.updateTextPixel(text.codePointAt(pixelIndex), foreground, background, textStyle, underlineStyle, underlineColor)
 			spanStylesProvider?.invoke(pixelIndex, pixelEnd)?.forEach {
-				character.updateTextPixel(UnspecifiedCodePoint, it.color, it.background, it.textStyle)
+				character.updateTextPixel(UnspecifiedCodePoint, it.color, it.background, it.textStyle, it.underlineStyle, it.underlineColor)
 			}
 
 			pixelIndex = pixelEnd
@@ -280,8 +292,10 @@ internal open class TextCanvasDrawScope(
 		foreground: Color = Color.Unspecified,
 		background: Color = Color.Unspecified,
 		textStyle: TextStyle = TextStyle.Unspecified,
+		underlineStyle: UnderlineStyle = UnderlineStyle.Unspecified,
+		underlineColor: Color = Color.Unspecified,
 	) {
-		canvas[y, x].updateTextPixel(codePoint, foreground, background, textStyle)
+		canvas[y, x].updateTextPixel(codePoint, foreground, background, textStyle, underlineStyle, underlineColor)
 	}
 
 	private inline fun TextPixel.updateTextPixel(
@@ -289,6 +303,8 @@ internal open class TextCanvasDrawScope(
 		foreground: Color,
 		background: Color,
 		textStyle: TextStyle,
+		underlineStyle: UnderlineStyle,
+		underlineColor: Color,
 	) {
 		if (codePoint.isSpecifiedCodePoint) {
 			this.codePoint = codePoint
@@ -301,6 +317,12 @@ internal open class TextCanvasDrawScope(
 		}
 		if (textStyle.isSpecifiedTextStyle) {
 			this.textStyle = textStyle
+		}
+		if (underlineStyle.isSpecifiedUnderlineStyle) {
+			this.underlineStyle = underlineStyle
+		}
+		if (underlineColor.isSpecifiedColor) {
+			this.underlineColor = underlineColor
 		}
 	}
 }

@@ -3,6 +3,7 @@ package com.jakewharton.mosaic
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.testing.runMosaicTest
+import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.Column
 import com.jakewharton.mosaic.ui.Row
 import com.jakewharton.mosaic.ui.Static
@@ -11,7 +12,11 @@ import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
 class AnsiRenderingTest {
-	private val rendering = AnsiRendering(synchronizedRendering = true)
+	private val rendering = AnsiRendering(
+		ansiLevel = AnsiLevel.TRUECOLOR,
+		synchronizedRendering = true,
+		supportsKittyUnderlines = false,
+	)
 
 	@Test fun firstRender() = runTest {
 		runMosaicTest(RenderingSnapshots(rendering)) {

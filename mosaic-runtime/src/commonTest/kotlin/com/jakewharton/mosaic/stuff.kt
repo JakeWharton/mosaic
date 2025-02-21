@@ -269,5 +269,5 @@ internal fun AtLeastSize(
 	)
 }
 
-fun TextCanvas.render() = render(NONE)
+fun TextCanvas.render() = render(NONE, false)
 fun List<TextCanvas>.render() = map { it.render() }

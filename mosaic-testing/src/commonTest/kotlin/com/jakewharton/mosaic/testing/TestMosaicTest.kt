@@ -11,7 +11,7 @@ import com.jakewharton.mosaic.text.buildAnnotatedString
 import com.jakewharton.mosaic.text.withStyle
 import com.jakewharton.mosaic.ui.Color
 import com.jakewharton.mosaic.ui.Text
-import com.jakewharton.mosaic.ui.TextStyle.Companion.Underline
+import com.jakewharton.mosaic.ui.TextStyle.Companion.Strikethrough
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
@@ -60,7 +60,7 @@ class TestMosaicTest {
 					buildAnnotatedString {
 						withStyle(
 							SpanStyle(
-								textStyle = Underline,
+								textStyle = Strikethrough,
 								color = Color.Red,
 								background = Color.Green,
 							),

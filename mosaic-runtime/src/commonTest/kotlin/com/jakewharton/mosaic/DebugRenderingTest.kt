@@ -10,6 +10,7 @@ import assertk.assertions.message
 import com.jakewharton.mosaic.layout.drawBehind
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.testing.runMosaicTest
+import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.Layout
 import com.jakewharton.mosaic.ui.Row
 import com.jakewharton.mosaic.ui.Static
@@ -21,7 +22,11 @@ import kotlinx.coroutines.test.runTest
 
 class DebugRenderingTest {
 	private val timeSource = TestTimeSource()
-	private val rendering = DebugRendering(systemClock = timeSource)
+	private val rendering = DebugRendering(
+		ansiLevel = AnsiLevel.TRUECOLOR,
+		supportsKittyUnderlines = false,
+		systemClock = timeSource,
+	)
 
 	@Test fun drawFailureStillRendersMeasuredAndPlacedNodes() = runTest {
 		runMosaicTest(RenderingSnapshots(rendering)) {
