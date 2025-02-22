@@ -27,6 +27,6 @@ public expect class RawTerminal : AutoCloseable {
 	}
 
 	public companion object {
-		public fun install(callback: EventCallback): RawTerminal
+		public fun initialize(callback: EventCallback): RawTerminal
 	}
 }

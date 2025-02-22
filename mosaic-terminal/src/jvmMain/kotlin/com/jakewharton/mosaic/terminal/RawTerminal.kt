@@ -30,6 +30,6 @@ public actual class RawTerminal(
 
 	public actual companion object {
 		@JvmStatic
-		public actual fun install(callback: EventCallback): RawTerminal = TODO()
+		public actual fun initialize(callback: EventCallback): RawTerminal = TODO()
 	}
 }

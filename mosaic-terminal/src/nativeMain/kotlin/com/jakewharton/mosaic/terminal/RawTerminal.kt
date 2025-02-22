@@ -2,6 +2,7 @@ package com.jakewharton.mosaic.terminal
 
 import kotlinx.cinterop.COpaquePointer
 import kotlinx.cinterop.CPointer
+import kotlinx.cinterop.NativePlacement
 import kotlinx.cinterop.StableRef
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.alloc
@@ -13,7 +14,7 @@ import kotlinx.cinterop.staticCFunction
 import kotlinx.cinterop.useContents
 import kotlinx.cinterop.usePinned
 
-public actual class RawTerminal(
+public actual class RawTerminal internal constructor(
 	private var ptr: CPointer<MosaicTerminal>?,
 	private var callbackPtr: CPointer<*>?,
 	private var callbackRef: StableRef<*>?,
@@ -115,18 +116,14 @@ public actual class RawTerminal(
 	}
 
 	public actual companion object {
-		public actual fun install(callback: EventCallback): RawTerminal {
+		public actual fun initialize(callback: EventCallback): RawTerminal {
 			val callbackRef = StableRef.create(callback)
-			val callbackPtr = nativeHeap.alloc<MosaicTerminalEventCallback> {
-				opaque = callbackRef.asCPointer()
-				onFocus = staticCFunction(::onFocusCallback)
-				onKey = staticCFunction(::onKeyCallback)
-				onMouse = staticCFunction(::onMouseCallback)
-				onResize = staticCFunction(::onResizeCallback)
-			}.ptr
+			val callbackPtr = callbackRef.toAllocation(nativeHeap)
 
 			val error = MosaicTerminalInit(callbackPtr).useContents {
-				terminal?.let { return RawTerminal(it, callbackPtr, callbackRef) }
+				terminal?.let { ptr ->
+					return RawTerminal(ptr, callbackPtr, callbackRef)
+				}
 				error
 			}
 
@@ -137,6 +134,16 @@ public actual class RawTerminal(
 				Tty.throwError(error)
 			}
 			throw OutOfMemoryError()
+		}
+
+		internal fun StableRef<EventCallback>.toAllocation(placement: NativePlacement): CPointer<MosaicTerminalEventCallback> {
+			return placement.alloc<MosaicTerminalEventCallback> {
+				opaque = asCPointer()
+				onFocus = staticCFunction(::onFocusCallback)
+				onKey = staticCFunction(::onKeyCallback)
+				onMouse = staticCFunction(::onMouseCallback)
+				onResize = staticCFunction(::onResizeCallback)
+			}.ptr
 		}
 	}
 }

@@ -32,7 +32,7 @@ private const val BufferSize = 8 * 1024
 private const val BareEscapeDisambiguationReadTimeoutMillis = 100
 
 public class TerminalReader internal constructor(
-	private val platformInput: PlatformInput,
+	private val rawTerminal: RawTerminal,
 	events: Channel<Event>,
 	private val emitDebugEvents: Boolean,
 ) : AutoCloseable {
@@ -95,12 +95,13 @@ public class TerminalReader internal constructor(
 	 * [here](https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h4-Functions-using-CSI-_-ordered-by-the-final-character-lparen-s-rparen:CSI-Ps;Ps;Ps-t:Ps-=-1-4.2064).
 	 */
 	public fun enableWindowResizeEvents() {
-		platformInput.enableWindowResizeEvents()
+		rawTerminal.enableNativeResizeEvents()
 	}
 
 	/** Synchronously query for the current terminal size. */
 	public fun currentSize(): ResizeEvent {
-		return platformInput.currentSize()
+		val (columns, rows, width, height) = rawTerminal.currentSize()
+		return ResizeEvent(columns, rows, width, height)
 	}
 
 	/**
@@ -146,7 +147,7 @@ public class TerminalReader internal constructor(
 			if (kittyDisambiguateEscapeCodes || limit != 1 || buffer[0] != 0x1B.toByte()) {
 				// Common case: we are using the Kitty keyboard protocol to disambiguate escape keys, or
 				// the buffer contains anything other than a bare escape. Do a normal read for more data.
-				val read = platformInput.read(buffer, limit, BufferSize - limit)
+				val read = rawTerminal.read(buffer, limit, BufferSize - limit)
 				if (read == -1) break // EOF
 				if (read == 0) return // Interrupt
 
@@ -157,7 +158,7 @@ public class TerminalReader internal constructor(
 			// Otherwise, perform a quick read to see if we have any more bytes. This will allow us to
 			// determine whether the bare escape was truly a legacy keyboard escape event, or just the
 			// start of some other escape sequence.
-			val read = platformInput.readWithTimeout(
+			val read = rawTerminal.read(
 				buffer,
 				1,
 				BufferSize - 1,
@@ -909,7 +910,7 @@ public class TerminalReader internal constructor(
 	}
 
 	public fun interrupt() {
-		platformInput.interrupt()
+		rawTerminal.interruptRead()
 	}
 
 	/**
@@ -918,6 +919,12 @@ public class TerminalReader internal constructor(
 	 * This call can be omitted if your process is exiting.
 	 */
 	override fun close() {
-		platformInput.close()
+		rawTerminal.close()
+	}
+
+	public companion object {
+		public fun create(): TerminalReader {
+
+		}
 	}
 }
