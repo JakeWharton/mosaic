@@ -15,6 +15,7 @@ import com.jakewharton.mosaic.ui.isNotEmptyTextStyle
 import com.jakewharton.mosaic.ui.isSpecifiedColor
 import com.jakewharton.mosaic.ui.isUnspecifiedColor
 import de.cketti.codepoints.appendCodePoint
+import kotlin.jvm.JvmField
 
 private val blankPixel = TextPixel(' ')
 
@@ -30,10 +31,13 @@ internal class TextSurface(
 	override val width: Int,
 	override val height: Int,
 ) : TextCanvas {
+	@JvmField
 	var translationX = 0
+	@JvmField
 	var translationY = 0
 
-	private val cells = Array(width * height) { TextPixel(' ') }
+	@JvmField
+	internal val cells = Array(width * height) { TextPixel(' ') }
 
 	operator fun get(row: Int, column: Int): TextPixel {
 		val x = translationX + column
