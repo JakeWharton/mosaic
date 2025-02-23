@@ -14,6 +14,7 @@ import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 
 internal actual class TestTerminal private constructor(
 	private var ptr: CPointer<MosaicTestTerminal>?,
+	actual val rawTerminal: RawTerminal,
 	actual val reader: TerminalReader,
 ) : AutoCloseable {
 
@@ -40,16 +41,16 @@ internal actual class TestTerminal private constructor(
 	actual companion object {
 		actual fun create(): TestTerminal {
 			val events = Channel<Event>(UNLIMITED)
-			val callback = PlatformEventHandler(events, false)
+			val callback = ChannelSendingEventCallback(events, false)
 			val callbackRef = StableRef.create(callback)
 			val callbackPtr = callbackRef.toAllocation(nativeHeap)
 
 			val error = MosaicTestTerminalInit(callbackPtr).useContents {
 				testTerminal?.let { ptr ->
 					val terminalPtr = MosaicTestTerminalGetTerminal(ptr)
-					val terminal = RawTerminal(terminalPtr, callbackPtr, callbackRef)
-					val reader = TerminalReader(terminal, events, false)
-					return TestTerminal(ptr, reader)
+					val rawTerminal = RawTerminal(terminalPtr, callbackPtr, callbackRef)
+					val reader = TerminalReader(rawTerminal, events, false)
+					return TestTerminal(ptr, rawTerminal, reader)
 				}
 				error
 			}

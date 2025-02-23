@@ -13,9 +13,9 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class PlatformInputTest {
-	private val writer = PlatformInputWriter()
-	private val input = writer.input
+class RawTerminalTest {
+	private val writer = TestTerminal.create()
+	private val input = writer.rawTerminal
 
 	@AfterTest fun after() {
 		input.close()
@@ -66,14 +66,14 @@ class PlatformInputTest {
 	@Test fun readCanBeInterrupted() {
 		GlobalScope.launch(Dispatchers.Default) {
 			delay(150.milliseconds)
-			input.interrupt()
+			input.interruptRead()
 		}
 		val readA = input.read(ByteArray(10), 0, 10)
 		assertThat(readA).isZero()
 
 		GlobalScope.launch(Dispatchers.Default) {
 			delay(150.milliseconds)
-			input.interrupt()
+			input.interruptRead()
 		}
 		val readB = input.read(ByteArray(10), 0, 10)
 		assertThat(readB).isZero()
@@ -85,14 +85,14 @@ class PlatformInputTest {
 
 		val readA: Int
 		val tookA = measureTime {
-			readA = input.readWithTimeout(ByteArray(10), 0, 10, 100)
+			readA = input.read(ByteArray(10), 0, 10, 100)
 		}
 		assertThat(readA).isZero()
 		assertThat(tookA).isGreaterThan(50.milliseconds)
 
 		val readB: Int
 		val tookB = measureTime {
-			readB = input.readWithTimeout(ByteArray(10), 0, 10, 100)
+			readB = input.read(ByteArray(10), 0, 10, 100)
 		}
 		assertThat(readB).isZero()
 		assertThat(tookB).isGreaterThan(50.milliseconds)

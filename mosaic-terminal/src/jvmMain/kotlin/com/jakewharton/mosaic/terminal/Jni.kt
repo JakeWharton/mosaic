@@ -13,31 +13,25 @@ internal object Jni {
 	}
 
 	@JvmStatic
-	external fun enterRawMode(): Long
+	external fun terminalEventCallbackInit(callback: RawTerminal.EventCallback): Long
 
 	@JvmStatic
-	external fun exitRawMode(savedPtr: Long)
+	external fun terminalEventCallbackFree(callbackPtr: Long)
 
 	@JvmStatic
-	external fun platformEventHandlerInit(handler: PlatformEventHandler): Long
+	external fun terminalInit(callbackPtr: Long): Long
 
 	@JvmStatic
-	external fun platformEventHandlerFree(handlerPtr: Long)
-
-	@JvmStatic
-	external fun platformInputInit(handlerPtr: Long): Long
-
-	@JvmStatic
-	external fun platformInputRead(
-		inputPtr: Long,
+	external fun terminalRead(
+		terminalPtr: Long,
 		buffer: ByteArray,
 		offset: Int,
 		count: Int,
 	): Int
 
 	@JvmStatic
-	external fun platformInputReadWithTimeout(
-		inputPtr: Long,
+	external fun terminalReadWithTimeout(
+		terminalPtr: Long,
 		buffer: ByteArray,
 		offset: Int,
 		count: Int,
@@ -45,42 +39,45 @@ internal object Jni {
 	): Int
 
 	@JvmStatic
-	external fun platformInputInterrupt(inputPtr: Long)
+	external fun terminalInterruptRead(terminalPtr: Long)
 
 	@JvmStatic
-	external fun platformInputEnableWindowResizeEvents(inputPtr: Long)
+	external fun terminalEnableRawMode(terminalPtr: Long)
+
+	@JvmStatic
+	external fun terminalEnableWindowResizeEvents(terminalPtr: Long)
 
 	/**
 	 * @return Array of `[columns, rows, width, height]`. Using an array saves us from having to
 	 * pass a complex object across the JNI boundary.
 	 */
 	@JvmStatic
-	external fun platformInputCurrentSize(inputPtr: Long): IntArray
+	external fun terminalCurrentSize(terminalPtr: Long): IntArray
 
 	@JvmStatic
-	external fun platformInputFree(inputPtr: Long)
+	external fun terminalFree(terminalPtr: Long)
 
 	@JvmStatic
-	external fun platformInputWriterInit(handlerPtr: Long): Long
+	external fun testTerminalInit(callbackPtr: Long): Long
 
 	@JvmStatic
-	external fun platformInputWriterGetPlatformInput(writerPtr: Long): Long
+	external fun testTerminalGetTerminal(testTerminalPtr: Long): Long
 
 	@JvmStatic
-	external fun platformInputWriterWrite(writerPtr: Long, buffer: ByteArray)
+	external fun testTerminalWrite(testTerminalPtr: Long, buffer: ByteArray)
 
 	@JvmStatic
-	external fun platformInputWriterFocusEvent(writerPtr: Long, focused: Boolean)
+	external fun testTerminalFocusEvent(testTerminalPtr: Long, focused: Boolean)
 
 	@JvmStatic
-	external fun platformInputWriterKeyEvent(writerPtr: Long)
+	external fun testTerminalKeyEvent(testTerminalPtr: Long)
 
 	@JvmStatic
-	external fun platformInputWriterMouseEvent(writerPtr: Long)
+	external fun testTerminalMouseEvent(testTerminalPtr: Long)
 
 	@JvmStatic
-	external fun platformInputWriterResizeEvent(
-		writerPtr: Long,
+	external fun testTerminalResizeEvent(
+		testTerminalPtr: Long,
 		columns: Int,
 		rows: Int,
 		width: Int,
@@ -88,7 +85,7 @@ internal object Jni {
 	)
 
 	@JvmStatic
-	external fun platformInputWriterFree(writerPtr: Long)
+	external fun testTerminalFree(testTerminalPtr: Long)
 
 	@Suppress(
 		// Only loading from our own JAR contents.

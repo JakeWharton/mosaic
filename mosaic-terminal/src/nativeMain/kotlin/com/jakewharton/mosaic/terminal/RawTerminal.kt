@@ -19,8 +19,8 @@ public actual class RawTerminal internal constructor(
 	private var callbackPtr: CPointer<*>?,
 	private var callbackRef: StableRef<*>?,
 ) : AutoCloseable {
-	public actual fun read(bytes: ByteArray, offset: Int, count: Int): Int {
-		bytes.asUByteArray().usePinned {
+	public actual fun read(buffer: ByteArray, offset: Int, count: Int): Int {
+		buffer.asUByteArray().usePinned {
 			MosaicTerminalRead(ptr, it.addressOf(offset), count).useContents {
 				if (error == 0U) return this.count
 				Tty.throwError(error)
@@ -28,8 +28,8 @@ public actual class RawTerminal internal constructor(
 		}
 	}
 
-	public actual fun read(bytes: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
-		bytes.asUByteArray().usePinned {
+	public actual fun read(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
+		buffer.asUByteArray().usePinned {
 			MosaicTerminalReadWithTimeout(ptr, it.addressOf(offset), count, timeoutMillis.toUInt()).useContents {
 				if (error == 0U) return this.count
 				Tty.throwError(error)
@@ -44,23 +44,23 @@ public actual class RawTerminal internal constructor(
 		}
 	}
 
-	public actual fun writeOutput(bytes: ByteArray, offset: Int, count: Int): Int {
-		bytes.asUByteArray().usePinned {
-			MosaicTerminalWriteOutput(ptr, it.addressOf(offset), count).useContents {
-				if (error == 0U) return this.count
-				Tty.throwError(error)
-			}
-		}
-	}
-
-	public actual fun writeError(bytes: ByteArray, offset: Int, count: Int): Int {
-		bytes.asUByteArray().usePinned {
-			MosaicTerminalWriteError(ptr, it.addressOf(offset), count).useContents {
-				if (error == 0U) return this.count
-				Tty.throwError(error)
-			}
-		}
-	}
+//	public actual fun writeOutput(bytes: ByteArray, offset: Int, count: Int): Int {
+//		bytes.asUByteArray().usePinned {
+//			MosaicTerminalWriteOutput(ptr, it.addressOf(offset), count).useContents {
+//				if (error == 0U) return this.count
+//				Tty.throwError(error)
+//			}
+//		}
+//	}
+//
+//	public actual fun writeError(bytes: ByteArray, offset: Int, count: Int): Int {
+//		bytes.asUByteArray().usePinned {
+//			MosaicTerminalWriteError(ptr, it.addressOf(offset), count).useContents {
+//				if (error == 0U) return this.count
+//				Tty.throwError(error)
+//			}
+//		}
+//	}
 
 	public actual fun enableRawMode() {
 		val error = MosaicTerminalEnableRawMode(ptr)

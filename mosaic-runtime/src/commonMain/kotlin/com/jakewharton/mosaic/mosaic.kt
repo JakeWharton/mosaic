@@ -86,12 +86,12 @@ private const val StageDefaultQueries = 1
 private const val StageNormalOperation = 0
 
 internal suspend fun runMosaic(isTest: Boolean, content: @Composable () -> Unit) {
+	val reader = Tty.terminalReader()
+
 	// Entering raw mode can fail, so perform it before any additional control sequences which change
 	// settings. We also need to be in character mode to query capabilities with control sequences.
-	val rawMode = if (!isTest && env("MOSAIC_RAW_MODE") != "false") {
-		Tty.enableRawMode()
-	} else {
-		null
+	if (!isTest && env("MOSAIC_RAW_MODE") != "false") {
+		reader.enableRawMode()
 	}
 
 	// Each of these will become true when their respective feature is recognized by the terminal
@@ -107,10 +107,9 @@ internal suspend fun runMosaic(isTest: Boolean, content: @Composable () -> Unit)
 			if (toggleInBandResize) print(inBandResizeDisable)
 			if (toggleFocus) print(focusDisable)
 			if (toggleCursor) print(cursorEnable)
-			rawMode?.close()
+			reader.close()
 		},
 		block = {
-			val reader = Tty.terminalReader()
 			launch(Dispatchers.IO) {
 				reader.runParseLoop()
 			}

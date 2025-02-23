@@ -98,6 +98,10 @@ public class TerminalReader internal constructor(
 		rawTerminal.enableNativeResizeEvents()
 	}
 
+	public fun enableRawMode() {
+		rawTerminal.enableRawMode()
+	}
+
 	/** Synchronously query for the current terminal size. */
 	public fun currentSize(): ResizeEvent {
 		val (columns, rows, width, height) = rawTerminal.currentSize()
@@ -920,11 +924,5 @@ public class TerminalReader internal constructor(
 	 */
 	override fun close() {
 		rawTerminal.close()
-	}
-
-	public companion object {
-		public fun create(): TerminalReader {
-
-		}
 	}
 }

@@ -6,7 +6,7 @@ import com.jakewharton.mosaic.terminal.event.FocusEvent
 import com.jakewharton.mosaic.terminal.event.ResizeEvent
 import kotlinx.coroutines.channels.SendChannel
 
-internal class PlatformEventHandler(
+internal class ChannelSendingEventCallback(
 	private val events: SendChannel<Event>,
 	private val emitDebugEvents: Boolean,
 ) : RawTerminal.EventCallback {

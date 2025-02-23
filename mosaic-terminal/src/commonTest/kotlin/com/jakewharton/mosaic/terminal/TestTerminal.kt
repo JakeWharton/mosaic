@@ -1,6 +1,7 @@
 package com.jakewharton.mosaic.terminal
 
 internal expect class TestTerminal : AutoCloseable {
+	val rawTerminal: RawTerminal
 	val reader: TerminalReader
 
 	fun write(buffer: ByteArray)

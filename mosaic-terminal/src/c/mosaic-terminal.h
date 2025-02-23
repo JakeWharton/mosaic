@@ -44,8 +44,8 @@ MosaicTerminalInitResult MosaicTerminalInit(MosaicTerminalEventCallback *callbac
 MosaicTerminalResult MosaicTerminalRead(MosaicTerminal *terminal, uint8_t *buffer, int32_t count);
 MosaicTerminalResult MosaicTerminalReadWithTimeout(MosaicTerminal *terminal, uint8_t *buffer, int32_t count, uint32_t timeoutMillis);
 uint32_t MosaicTerminalInterrupt(MosaicTerminal *terminal);
-MosaicTerminalResult MosaicTerminalWriteOutput(MosaicTerminal *terminal, uint8_t *buffer, int32_t count);
-MosaicTerminalResult MosaicTerminalWriteError(MosaicTerminal *terminal, uint8_t *buffer, int32_t count);
+//MosaicTerminalResult MosaicTerminalWriteOutput(MosaicTerminal *terminal, uint8_t *buffer, int32_t count);
+//MosaicTerminalResult MosaicTerminalWriteError(MosaicTerminal *terminal, uint8_t *buffer, int32_t count);
 uint32_t MosaicTerminalEnableRawMode(MosaicTerminal *terminal);
 //uint32_t MosaicTerminalEnableOutputRedirection(MosaicTerminal *terminal);
 uint32_t MosaicTerminalEnableResizeEvents(MosaicTerminal *terminal);
