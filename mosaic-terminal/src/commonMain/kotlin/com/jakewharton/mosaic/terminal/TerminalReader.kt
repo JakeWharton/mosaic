@@ -121,7 +121,13 @@ public class TerminalReader internal constructor(
 
 	/** Synchronously query for the current terminal size. */
 	public fun currentSize(): ResizeEvent {
-		return platformInput.currentSize()
+		val (columns, rows, width, height) = platformInput.currentSize()
+		return ResizeEvent(
+			columns = columns,
+			rows = rows,
+			width = width,
+			height = height,
+		)
 	}
 
 	/**

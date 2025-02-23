@@ -1,7 +1,5 @@
 package com.jakewharton.mosaic.terminal
 
-import com.jakewharton.mosaic.terminal.event.ResizeEvent
-
 internal expect class PlatformInput : AutoCloseable {
 	/**
 	 * Read up to [count] bytes into [buffer] at [offset]. The number of bytes read will be returned.
@@ -31,7 +29,8 @@ internal expect class PlatformInput : AutoCloseable {
 
 	fun enableWindowResizeEvents()
 
-	fun currentSize(): ResizeEvent
+	/** @return Array of `[columns, rows, width, height]` */
+	fun currentSize(): IntArray
 
 	/**
 	 * Free the resources associated with this reader.
