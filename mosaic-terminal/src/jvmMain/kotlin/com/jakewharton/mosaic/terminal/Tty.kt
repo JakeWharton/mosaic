@@ -15,7 +15,7 @@ public actual object Tty {
 		if (callbackPtr != 0L) {
 			val inputPtr = terminalInit(callbackPtr)
 			if (inputPtr != 0L) {
-				val platformInput = RawTerminal(inputPtr, callbackPtr,)
+				val platformInput = RawTerminal(inputPtr, callbackPtr)
 				return TerminalReader(platformInput, events, emitDebugEvents)
 			}
 			terminalEventCallbackFree(callbackPtr)

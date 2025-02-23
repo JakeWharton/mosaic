@@ -27,8 +27,8 @@ public actual class RawTerminal internal constructor(
 		terminalInterruptRead(terminalPtr)
 	}
 
-//	public actual fun writeOutput(bytes: ByteArray, offset: Int, count: Int): Int = TODO()
-//	public actual fun writeError(bytes: ByteArray, offset: Int, count: Int): Int = TODO()
+// 	public actual fun writeOutput(bytes: ByteArray, offset: Int, count: Int): Int = TODO()
+// 	public actual fun writeError(bytes: ByteArray, offset: Int, count: Int): Int = TODO()
 
 	public actual fun enableRawMode() {
 		terminalEnableRawMode(terminalPtr)

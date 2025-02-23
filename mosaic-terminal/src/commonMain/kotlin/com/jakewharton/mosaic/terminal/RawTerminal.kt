@@ -7,8 +7,8 @@ public expect class RawTerminal : AutoCloseable {
 	public fun read(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int
 	public fun interruptRead()
 
-//	public fun writeOutput(bytes: ByteArray, offset: Int, count: Int): Int
-//	public fun writeError(bytes: ByteArray, offset: Int, count: Int): Int
+// 	public fun writeOutput(bytes: ByteArray, offset: Int, count: Int): Int
+// 	public fun writeError(bytes: ByteArray, offset: Int, count: Int): Int
 
 	/**
 	 * Save the current terminal settings and enter "raw" mode.

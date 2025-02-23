@@ -33,6 +33,7 @@ internal class TextSurface(
 ) : TextCanvas {
 	@JvmField
 	var translationX = 0
+
 	@JvmField
 	var translationY = 0
 
