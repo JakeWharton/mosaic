@@ -40,8 +40,10 @@ fn setupMosaicTarget(b: *std.Build, step: *std.Build.Step, tag: std.Target.Os.Ta
 	// TODO Tree-walk these two dirs for all C files.
 	lib.addCSourceFiles(.{
 		.files = &.{
-			"src/commonMain/c/mosaic-stdin-posix.c",
-			"src/commonMain/c/mosaic-stdin-windows.c",
+			"src/commonMain/c/mosaic-tty-posix.c",
+			"src/commonMain/c/mosaic-tty-windows.c",
+			"src/commonMain/c/mosaic-test-tty-posix.c",
+			"src/commonMain/c/mosaic-test-tty-windows.c",
 			"src/jvmMain/c/mosaic-jni.c",
 		},
 		.flags = &.{
