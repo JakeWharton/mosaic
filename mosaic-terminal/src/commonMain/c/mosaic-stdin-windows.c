@@ -144,14 +144,14 @@ stdinRead platformInput_readWithTimeout(
 	goto ret;
 }
 
-platformError platformInput_interrupt(platformInput *input) {
+uint32_t platformInput_interrupt(platformInput *input) {
 	return likely(SetEvent(input->waitHandles[1]) != 0)
 		? 0
 		: GetLastError();
 }
 
-platformError platformInput_enableRawMode(platformInput *input) {
-	platformError result = 0;
+uint32_t platformInput_enableRawMode(platformInput *input) {
+	uint32_t result = 0;
 
 	if (input->saved_input_mode) {
 		goto ret; // Already enabled!
@@ -221,7 +221,7 @@ platformError platformInput_enableRawMode(platformInput *input) {
 	return result;
 }
 
-platformError platformInput_enableWindowResizeEvents(platformInput *input) {
+uint32_t platformInput_enableWindowResizeEvents(platformInput *input) {
 	input->windowResizeEvents = true;
 	return 0;
 }
@@ -240,8 +240,8 @@ terminalSizeResult platformInput_currentTerminalSize(platformInput *input) {
 	return result;
 }
 
-platformError platformInput_free(platformInput *input) {
-	platformError result = 0;
+uint32_t platformInput_free(platformInput *input) {
+	uint32_t result = 0;
 
 	if (unlikely(CloseHandle(input->waitHandles[1]) == 0)) {
 		result = GetLastError();
@@ -316,8 +316,8 @@ platformInput *platformInputWriter_getPlatformInput(platformInputWriter *writer)
 	return writer->input;
 }
 
-platformError platformInputWriter_write(platformInputWriter *writer UNUSED, char *buffer, int count) {
-	DWORD result = 0;
+uint32_t platformInputWriter_write(platformInputWriter *writer UNUSED, char *buffer, int count) {
+	uint32_t result = 0;
 	INPUT_RECORD *records = calloc(count, sizeof(INPUT_RECORD));
 	if (!records) {
 		result = ERROR_NOT_ENOUGH_MEMORY;
@@ -348,7 +348,7 @@ platformError platformInputWriter_write(platformInputWriter *writer UNUSED, char
 	goto ret;
 }
 
-platformError writeRecord(INPUT_RECORD *record) {
+uint32_t writeRecord(INPUT_RECORD *record) {
 	DWORD written;
 	if (likely(WriteConsoleInputW(writerConin, record, 1, &written))) {
 		if (likely(written == 1)) {
@@ -359,24 +359,24 @@ platformError writeRecord(INPUT_RECORD *record) {
 	return GetLastError();
 }
 
-platformError platformInputWriter_focusEvent(platformInputWriter *writer UNUSED, bool focused) {
+uint32_t platformInputWriter_focusEvent(platformInputWriter *writer UNUSED, bool focused) {
 	INPUT_RECORD record;
 	record.EventType = FOCUS_EVENT;
 	record.Event.FocusEvent.bSetFocus = focused;
 	return writeRecord(&record);
 }
 
-platformError platformInputWriter_keyEvent(platformInputWriter *writer UNUSED) {
+uint32_t platformInputWriter_keyEvent(platformInputWriter *writer UNUSED) {
 	// TODO
 	return 0;
 }
 
-platformError platformInputWriter_mouseEvent(platformInputWriter *writer UNUSED) {
+uint32_t platformInputWriter_mouseEvent(platformInputWriter *writer UNUSED) {
 	// TODO
 	return 0;
 }
 
-platformError platformInputWriter_resizeEvent(platformInputWriter *writer UNUSED, int columns, int rows, int width UNUSED, int height UNUSED) {
+uint32_t platformInputWriter_resizeEvent(platformInputWriter *writer UNUSED, int columns, int rows, int width UNUSED, int height UNUSED) {
 	INPUT_RECORD record;
 	record.EventType = WINDOW_BUFFER_SIZE_EVENT;
 	record.Event.WindowBufferSizeEvent.dwSize.X = columns;
@@ -384,7 +384,7 @@ platformError platformInputWriter_resizeEvent(platformInputWriter *writer UNUSED
 	return writeRecord(&record);
 }
 
-platformError platformInputWriter_free(platformInputWriter *writer) {
+uint32_t platformInputWriter_free(platformInputWriter *writer) {
 	free(writer);
 	return 0;
 }

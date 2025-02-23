@@ -124,7 +124,7 @@ stdinRead platformInput_readWithTimeout(
 	return platformInput_readInternal(input, buffer, count, &timeout);
 }
 
-platformError platformInput_interrupt(platformInput *input) {
+uint32_t platformInput_interrupt(platformInput *input) {
 	int pipeOut = input->pipe[1];
 	int result = write(pipeOut, " ", 1);
 	return unlikely(result == -1)
@@ -144,8 +144,8 @@ void sigwinchHandler(int value UNUSED) {
 	// TODO Send errno somewhere? Maybe once we get debug logs working.
 }
 
-platformError platformInput_enableRawMode(platformInput *input) {
-	platformError result = 0;
+uint32_t platformInput_enableRawMode(platformInput *input) {
+	uint32_t result = 0;
 
 	if (unlikely(!input->saved)) {
 		goto ret; // Already enabled!
@@ -192,7 +192,7 @@ platformError platformInput_enableRawMode(platformInput *input) {
 	goto ret;
 }
 
-platformError platformInput_enableWindowResizeEvents(platformInput *input) {
+uint32_t platformInput_enableWindowResizeEvents(platformInput *input) {
 	if (input->sigwinch) {
 		return 0; // Already installed.
 	}
@@ -227,7 +227,7 @@ terminalSizeResult platformInput_currentTerminalSize(platformInput *input) {
 	return result;
 }
 
-platformError platformInput_free(platformInput *input) {
+uint32_t platformInput_free(platformInput *input) {
 	int *pipe = input->pipe;
 
 	int result = 0;
@@ -285,7 +285,7 @@ platformInput *platformInputWriter_getPlatformInput(platformInputWriter *writer)
 	return writer->input;
 }
 
-platformError platformInputWriter_write(platformInputWriter *writer, char *buffer, int count) {
+uint32_t platformInputWriter_write(platformInputWriter *writer, char *buffer, int count) {
 	int pipeOut = writer->pipe[1];
 	while (count > 0) {
 		int result = write(pipeOut, buffer, count);
@@ -300,28 +300,28 @@ platformError platformInputWriter_write(platformInputWriter *writer, char *buffe
 	return errno;
 }
 
-platformError platformInputWriter_focusEvent(platformInputWriter *writer UNUSED, bool focused UNUSED) {
+uint32_t platformInputWriter_focusEvent(platformInputWriter *writer UNUSED, bool focused UNUSED) {
 	// Focus events are delivered through VT sequences.
 	return 0;
 }
 
-platformError platformInputWriter_keyEvent(platformInputWriter *writer UNUSED) {
+uint32_t platformInputWriter_keyEvent(platformInputWriter *writer UNUSED) {
 	// Key events are delivered through VT sequences.
 	return 0;
 }
 
-platformError platformInputWriter_mouseEvent(platformInputWriter *writer UNUSED) {
+uint32_t platformInputWriter_mouseEvent(platformInputWriter *writer UNUSED) {
 	// Mouse events are delivered through VT sequences.
 	return 0;
 }
 
-platformError platformInputWriter_resizeEvent(platformInputWriter *writer, int columns, int rows, int width, int height) {
+uint32_t platformInputWriter_resizeEvent(platformInputWriter *writer, int columns, int rows, int width, int height) {
 	platformEventHandler *handler = writer->input->handler;
 	handler->onResize(handler->opaque, columns, rows, width, height);
 	return 0;
 }
 
-platformError platformInputWriter_free(platformInputWriter *writer) {
+uint32_t platformInputWriter_free(platformInputWriter *writer) {
 	int *pipe = writer->pipe;
 
 	int result = 0;

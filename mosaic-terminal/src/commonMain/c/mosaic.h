@@ -2,18 +2,7 @@
 #define MOSAIC_H
 
 #include <stdbool.h>
-
-#if defined(__APPLE__) || defined(__linux__)
-
-typedef unsigned int platformError;
-
-#elif defined(_WIN32)
-
-#include <windows.h>
-
-typedef DWORD platformError;
-
-#endif
+#include <stdint.h>
 
 typedef void PlatformEventHandlerOnFocus(void *opaque, bool focused);
 typedef void PlatformEventHandlerOnKey(void *opaque); // TODO params
@@ -34,17 +23,17 @@ typedef struct platformInputWriterImpl platformInputWriter;
 
 typedef struct platformInputResult {
 	platformInput *input;
-	platformError error;
+	uint32_t error;
 } platformInputResult;
 
 typedef struct platformInputWriterResult {
 	platformInputWriter *writer;
-	platformError error;
+	uint32_t error;
 } platformInputWriterResult;
 
 typedef struct stdinRead {
 	int count;
-	platformError error;
+	uint32_t error;
 } stdinRead;
 
 typedef struct terminalSize {
@@ -56,25 +45,25 @@ typedef struct terminalSize {
 
 typedef struct terminalSizeResult {
 	terminalSize size;
-	platformError error;
+	uint32_t error;
 } terminalSizeResult;
 
 platformInputResult platformInput_init(platformEventHandler *handler);
 stdinRead platformInput_read(platformInput *input, char *buffer, int count);
 stdinRead platformInput_readWithTimeout(platformInput *input, char *buffer, int count, int timeoutMillis);
-platformError platformInput_interrupt(platformInput *input);
-platformError platformInput_enableRawMode(platformInput *input);
-platformError platformInput_enableWindowResizeEvents(platformInput *input);
+uint32_t platformInput_interrupt(platformInput *input);
+uint32_t platformInput_enableRawMode(platformInput *input);
+uint32_t platformInput_enableWindowResizeEvents(platformInput *input);
 terminalSizeResult platformInput_currentTerminalSize(platformInput *input);
-platformError platformInput_free(platformInput *input);
+uint32_t platformInput_free(platformInput *input);
 
 platformInputWriterResult platformInputWriter_init(platformEventHandler *handler);
 platformInput *platformInputWriter_getPlatformInput(platformInputWriter *writer);
-platformError platformInputWriter_write(platformInputWriter *writer, char *buffer, int count);
-platformError platformInputWriter_focusEvent(platformInputWriter *writer, bool focused);
-platformError platformInputWriter_keyEvent(platformInputWriter *writer);
-platformError platformInputWriter_mouseEvent(platformInputWriter *writer);
-platformError platformInputWriter_resizeEvent(platformInputWriter *writer, int columns, int rows, int width, int height);
-platformError platformInputWriter_free(platformInputWriter *writer);
+uint32_t platformInputWriter_write(platformInputWriter *writer, char *buffer, int count);
+uint32_t platformInputWriter_focusEvent(platformInputWriter *writer, bool focused);
+uint32_t platformInputWriter_keyEvent(platformInputWriter *writer);
+uint32_t platformInputWriter_mouseEvent(platformInputWriter *writer);
+uint32_t platformInputWriter_resizeEvent(platformInputWriter *writer, int columns, int rows, int width, int height);
+uint32_t platformInputWriter_free(platformInputWriter *writer);
 
 #endif // MOSAIC_H

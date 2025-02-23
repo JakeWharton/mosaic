@@ -234,7 +234,7 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputInterrupt(
 	jlong inputOpaque
 ) {
 	platformInput *input = (platformInput *) inputOpaque;
-	platformError error = platformInput_interrupt(input);
+	uint32_t error = platformInput_interrupt(input);
 	if (unlikely(error)) {
 		throwIse(env, error, "Unable to interrupt");
 	}
@@ -247,7 +247,7 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputEnableRawMode(
 	jlong inputOpaque
 ) {
 	platformInput *input = (platformInput *) inputOpaque;
-	platformError error = platformInput_enableRawMode(input);
+	uint32_t error = platformInput_enableRawMode(input);
 	if (unlikely(error)) {
 		throwIse(env, error, "Unable to enable raw mode");
 	}
@@ -260,7 +260,7 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputEnableWindowResizeEvents(
 	jlong inputOpaque
 ) {
 	platformInput *input = (platformInput *) inputOpaque;
-	platformError error = platformInput_enableWindowResizeEvents(input);
+	uint32_t error = platformInput_enableWindowResizeEvents(input);
 	if (unlikely(error)) {
 		throwIse(env, error, "Unable to enable window resize events");
 	}
@@ -295,7 +295,7 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputFree(
 	jlong inputOpaque
 ) {
 	platformInput *input = (platformInput *) inputOpaque;
-	platformError error = platformInput_free(input);
+	uint32_t error = platformInput_free(input);
 	if (unlikely(error)) {
 		throwIse(env, error, "Unable to free");
 	}
@@ -330,7 +330,7 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterWrite(
 	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
 
 	platformInputWriter *writer = (platformInputWriter *) writerOpaque;
-	platformError error = platformInputWriter_write(writer, nativeBuffer, count);
+	uint32_t error = platformInputWriter_write(writer, nativeBuffer, count);
 
 	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
 
@@ -402,7 +402,7 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterFree(
 	jlong writerOpaque
 ) {
 	platformInputWriter *writer = (platformInputWriter *) writerOpaque;
-	platformError error = platformInputWriter_free(writer);
+	uint32_t error = platformInputWriter_free(writer);
 	if (unlikely(error)) {
 		throwIse(env, error, "Unable to free stdin writer");
 	}
