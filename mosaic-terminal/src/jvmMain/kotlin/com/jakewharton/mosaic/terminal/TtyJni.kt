@@ -7,9 +7,9 @@ import java.nio.file.StandardCopyOption.REPLACE_EXISTING
 import java.util.Locale.US
 
 // TODO @JvmSynthetic https://youtrack.jetbrains.com/issue/KT-24981
-internal object Jni {
+internal object TtyJni {
 	init {
-		loadNativeLibrary("mosaic")
+		loadNativeLibrary("mosaic-tty")
 	}
 
 	@JvmStatic
@@ -57,43 +57,11 @@ internal object Jni {
 	@JvmStatic
 	external fun platformInputFree(inputPtr: Long)
 
-	@JvmStatic
-	external fun platformInputWriterInit(handlerPtr: Long): Long
-
-	@JvmStatic
-	external fun platformInputWriterGetPlatformInput(writerPtr: Long): Long
-
-	@JvmStatic
-	external fun platformInputWriterWrite(writerPtr: Long, buffer: ByteArray)
-
-	@JvmStatic
-	external fun platformInputWriterFocusEvent(writerPtr: Long, focused: Boolean)
-
-	@JvmStatic
-	external fun platformInputWriterKeyEvent(writerPtr: Long)
-
-	@JvmStatic
-	external fun platformInputWriterMouseEvent(writerPtr: Long)
-
-	@JvmStatic
-	external fun platformInputWriterResizeEvent(
-		writerPtr: Long,
-		columns: Int,
-		rows: Int,
-		width: Int,
-		height: Int,
-	)
-
-	@JvmStatic
-	external fun platformInputWriterFree(writerPtr: Long)
-
 	@Suppress(
 		// Only loading from our own JAR contents.
 		"UnsafeDynamicallyLoadedCode",
-		// Preserving copy/paste!
-		"SameParameterValue",
 	)
-	private fun loadNativeLibrary(name: String) {
+	internal fun loadNativeLibrary(name: String) {
 		val osName = System.getProperty("os.name").lowercase(US)
 		val osArch = System.getProperty("os.arch").lowercase(US)
 		val nativeLibraryJarPath = "/jni/$osArch/" + when {

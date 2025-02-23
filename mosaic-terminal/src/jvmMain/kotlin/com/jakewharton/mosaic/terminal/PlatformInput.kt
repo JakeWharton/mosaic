@@ -6,34 +6,45 @@ internal actual class PlatformInput(
 	private val handlerPtr: Long,
 ) : AutoCloseable {
 	actual fun read(buffer: ByteArray, offset: Int, count: Int): Int {
-		return Jni.platformInputRead(inputPtr, buffer, offset, count)
+		return TtyJni.platformInputRead(inputPtr, buffer, offset, count)
 	}
 
 	actual fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
-		return Jni.platformInputReadWithTimeout(inputPtr, buffer, offset, count, timeoutMillis)
+		return TtyJni.platformInputReadWithTimeout(inputPtr, buffer, offset, count, timeoutMillis)
 	}
 
 	actual fun interrupt() {
-		Jni.platformInputInterrupt(inputPtr)
+		TtyJni.platformInputInterrupt(inputPtr)
 	}
 
 	actual fun enableRawMode() {
-		Jni.platformInputEnableRawMode(inputPtr)
+		TtyJni.platformInputEnableRawMode(inputPtr)
 	}
 
 	actual fun enableWindowResizeEvents() {
-		Jni.platformInputEnableWindowResizeEvents(inputPtr)
+		TtyJni.platformInputEnableWindowResizeEvents(inputPtr)
 	}
 
+<<<<<<< Updated upstream
 	actual fun currentSize(): IntArray {
 		return Jni.platformInputCurrentSize(inputPtr)
+=======
+	actual fun currentSize(): ResizeEvent {
+		val (columns, rows, width, height) = TtyJni.platformInputCurrentSize(inputPtr)
+		return ResizeEvent(
+			columns = columns,
+			rows = rows,
+			width = width,
+			height = height,
+		)
+>>>>>>> Stashed changes
 	}
 
 	actual override fun close() {
 		if (inputPtr != 0L) {
-			Jni.platformInputFree(inputPtr)
+			TtyJni.platformInputFree(inputPtr)
 			inputPtr = 0
-			Jni.platformEventHandlerFree(handlerPtr)
+			TtyJni.platformEventHandlerFree(handlerPtr)
 		}
 	}
 }

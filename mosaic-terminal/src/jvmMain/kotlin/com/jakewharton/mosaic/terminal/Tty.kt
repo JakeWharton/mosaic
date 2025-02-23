@@ -1,8 +1,8 @@
 package com.jakewharton.mosaic.terminal
 
-import com.jakewharton.mosaic.terminal.Jni.platformEventHandlerFree
-import com.jakewharton.mosaic.terminal.Jni.platformEventHandlerInit
-import com.jakewharton.mosaic.terminal.Jni.platformInputInit
+import com.jakewharton.mosaic.terminal.TtyJni.platformEventHandlerFree
+import com.jakewharton.mosaic.terminal.TtyJni.platformEventHandlerInit
+import com.jakewharton.mosaic.terminal.TtyJni.platformInputInit
 import com.jakewharton.mosaic.terminal.event.Event
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED

@@ -1,5 +1,5 @@
 # Note: Our JNI code only creates JDK types and only uses Java built-in types across the boundary.
--keep class com.jakewharton.mosaic.terminal.Jni {
+-keep class com.jakewharton.mosaic.terminal.TtyJni {
   native <methods>;
 }
 

@@ -1,3 +1,8 @@
+# Note: Our JNI code only creates JDK types and only uses Java built-in types across the boundary.
+-keep class com.jakewharton.mosaic.terminal.TestTtyJni {
+  native <methods>;
+}
+
 -keep class **.*Test {
 	public <init>();
 	@org.junit.Test public void *(...);

@@ -1,9 +1,9 @@
 package com.jakewharton.mosaic.terminal
 
-import com.jakewharton.mosaic.terminal.Jni.platformEventHandlerFree
-import com.jakewharton.mosaic.terminal.Jni.platformEventHandlerInit
-import com.jakewharton.mosaic.terminal.Jni.platformInputWriterGetPlatformInput
-import com.jakewharton.mosaic.terminal.Jni.platformInputWriterInit
+import com.jakewharton.mosaic.terminal.TtyJni.platformEventHandlerFree
+import com.jakewharton.mosaic.terminal.TtyJni.platformEventHandlerInit
+import com.jakewharton.mosaic.terminal.TtyJni.platformInputWriterGetPlatformInput
+import com.jakewharton.mosaic.terminal.TtyJni.platformInputWriterInit
 import com.jakewharton.mosaic.terminal.event.Event
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
@@ -33,29 +33,29 @@ internal actual class PlatformInputWriter(
 	}
 
 	actual fun write(buffer: ByteArray) {
-		Jni.platformInputWriterWrite(writerPtr, buffer)
+		TtyJni.platformInputWriterWrite(writerPtr, buffer)
 	}
 
 	actual fun focusEvent(focused: Boolean) {
-		Jni.platformInputWriterFocusEvent(writerPtr, focused)
+		TtyJni.platformInputWriterFocusEvent(writerPtr, focused)
 	}
 
 	actual fun keyEvent() {
-		Jni.platformInputWriterKeyEvent(writerPtr)
+		TtyJni.platformInputWriterKeyEvent(writerPtr)
 	}
 
 	actual fun mouseEvent() {
-		Jni.platformInputWriterMouseEvent(writerPtr)
+		TtyJni.platformInputWriterMouseEvent(writerPtr)
 	}
 
 	actual fun resizeEvent(columns: Int, rows: Int, width: Int, height: Int) {
-		Jni.platformInputWriterResizeEvent(writerPtr, columns, rows, width, height)
+		TtyJni.platformInputWriterResizeEvent(writerPtr, columns, rows, width, height)
 	}
 
 	actual override fun close() {
 		if (writerPtr != 0L) {
 			input.close()
-			Jni.platformInputWriterFree(writerPtr)
+			TtyJni.platformInputWriterFree(writerPtr)
 			writerPtr = 0
 		}
 	}
