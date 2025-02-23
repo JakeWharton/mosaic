@@ -42,15 +42,16 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 	private val windowResize by option().flag()
 
 	override fun run() = runBlocking {
-		val rawMode = Tty.enableRawMode()
+		val reader = Tty.terminalReader(emitDebugEvents = mode != Mode.Event)
+		reader.enableRawMode()
 		withFinalizationHook(
 			hook = {
-				rawMode.close()
 				print("\u001b[?1003l") // Any-event disable
 				print("\u001b[?1004l") // Focus disable
 				print("\u001b[?2004l") // Bracketed paste disable
 				print("\u001b[?2048l") // In-band resize disable
 				print("\u001b[?25h") // Cursor enable
+				reader.close()
 			},
 			block = {
 				print("\u001b[?25l") // Cursor disable
@@ -91,7 +92,6 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 
 				print("\u001b[5n") // Device status report
 
-				val reader = Tty.terminalReader(emitDebugEvents = mode != Mode.Event)
 				if (windowResize) {
 					reader.enableWindowResizeEvents()
 				}

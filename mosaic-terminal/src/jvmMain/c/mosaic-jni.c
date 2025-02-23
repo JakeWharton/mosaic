@@ -24,35 +24,6 @@ void throwIse(JNIEnv *env, unsigned int error, const char *prefix) {
 	}
 }
 
-JNIEXPORT jlong JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_enterRawMode(
-	JNIEnv *env,
-	jclass type
-) {
-	rawModeResult result = enterRawMode();
-	if (likely(!result.error)) {
-		return (jlong) result.saved;
-	}
-
-	// This throw can fail, but the only condition that should cause that is OOM which
-	// will occur from returning 0 (which is otherwise ignored if the throw succeeds).
-	throwIse(env, result.error, "Unable to enable raw mode");
-	return 0;
-}
-
-JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_exitRawMode(
-	JNIEnv *env,
-	jclass type,
-	jlong rawModeOpaque
-) {
-	rawModeConfig *rawMode = (rawModeConfig *) rawModeOpaque;
-	platformError error = exitRawMode(rawMode);
-	if (unlikely(error)) {
-		throwIse(env, error, "Unable to exit raw mode");
-	}
-}
-
 typedef struct jniPlatformEventHandler {
 	JNIEnv *env;
 	jobject instance;
@@ -266,6 +237,19 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputInterrupt(
 	platformError error = platformInput_interrupt(input);
 	if (unlikely(error)) {
 		throwIse(env, error, "Unable to interrupt");
+	}
+}
+
+JNIEXPORT void JNICALL
+Java_com_jakewharton_mosaic_terminal_Jni_platformInputEnableRawMode(
+	JNIEnv *env,
+	jclass type,
+	jlong inputOpaque
+) {
+	platformInput *input = (platformInput *) inputOpaque;
+	platformError error = platformInput_enableRawMode(input);
+	if (unlikely(error)) {
+		throwIse(env, error, "Unable to enable raw mode");
 	}
 }
 

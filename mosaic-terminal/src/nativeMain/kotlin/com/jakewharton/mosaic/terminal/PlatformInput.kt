@@ -45,6 +45,12 @@ internal actual class PlatformInput internal constructor(
 		Tty.throwError(error)
 	}
 
+	actual fun enableRawMode() {
+		val error = platformInput_enableRawMode(ptr)
+		if (error == 0U) return
+		Tty.throwError(error)
+	}
+
 	actual fun enableWindowResizeEvents() {
 		val error = platformInput_enableWindowResizeEvents(ptr)
 		if (error == 0U) return

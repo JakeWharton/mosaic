@@ -19,6 +19,10 @@ internal actual class PlatformInput(
 		Jni.platformInputInterrupt(inputPtr)
 	}
 
+	actual fun enableRawMode() {
+		Jni.platformInputEnableRawMode(inputPtr)
+	}
+
 	actual fun enableWindowResizeEvents() {
 		Jni.platformInputEnableWindowResizeEvents(inputPtr)
 	}

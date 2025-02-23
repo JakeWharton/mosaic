@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <sys/ioctl.h>
 #include <sys/select.h>
+#include <termios.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -19,6 +20,7 @@ typedef struct platformInputImpl {
 	int nfds;
 	platformEventHandler *handler;
 	bool sigwinch;
+	struct termios *saved;
 } platformInputImpl;
 
 typedef struct platformInputWriterImpl {
@@ -142,6 +144,54 @@ void sigwinchHandler(int value UNUSED) {
 	// TODO Send errno somewhere? Maybe once we get debug logs working.
 }
 
+platformError platformInput_enableRawMode(platformInput *input) {
+	platformError result = 0;
+
+	if (unlikely(!input->saved)) {
+		goto ret; // Already enabled!
+	}
+
+	struct termios *saved = calloc(1, sizeof(struct termios));
+	if (unlikely(saved == NULL)) {
+		result = ENOMEM;
+		goto ret;
+	}
+
+	if (unlikely(tcgetattr(STDIN_FILENO, saved) != 0)) {
+		result = errno;
+		goto err;
+	}
+
+	struct termios current = (*saved);
+
+	// Flags as defined by "Raw mode" section of https://linux.die.net/man/3/termios
+	current.c_iflag &= ~(BRKINT | ICRNL | IGNBRK | IGNCR | INLCR | ISTRIP | IXON | PARMRK);
+	current.c_oflag &= ~(OPOST);
+	// Setting ECHONL should be useless here, but it is what is documented for cfmakeraw.
+	current.c_lflag &= ~(ECHO | ECHONL | ICANON | IEXTEN | ISIG);
+	current.c_cflag &= ~(CSIZE | PARENB);
+	current.c_cflag |= (CS8);
+
+	current.c_cc[VMIN] = 1;
+	current.c_cc[VTIME] = 0;
+
+	if (unlikely(tcsetattr(STDIN_FILENO, TCSAFLUSH, &current) != 0)) {
+		result = errno;
+		// Try to restore the saved config.
+		tcsetattr(STDIN_FILENO, TCSAFLUSH, saved);
+		goto err;
+	}
+
+	input->saved = saved;
+
+	ret:
+	return result;
+
+	err:
+	free(saved);
+	goto ret;
+}
+
 platformError platformInput_enableWindowResizeEvents(platformInput *input) {
 	if (input->sigwinch) {
 		return 0; // Already installed.
@@ -189,6 +239,12 @@ platformError platformInput_free(platformInput *input) {
 	}
 	if (input->sigwinch && signal(SIGWINCH, SIG_DFL) == SIG_ERR && result != 0) {
 		result = errno;
+	}
+	if (input->saved) {
+		if (tcsetattr(STDIN_FILENO, TCSAFLUSH, input->saved) && result != 0) {
+			result = errno;
+		}
+		free(input->saved);
 	}
 	free(input);
 	return result;

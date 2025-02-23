@@ -5,28 +5,15 @@
 
 #if defined(__APPLE__) || defined(__linux__)
 
-#include <termios.h>
-
-typedef struct termios rawModeConfig;
 typedef unsigned int platformError;
 
 #elif defined(_WIN32)
 
 #include <windows.h>
 
-typedef struct rawModeConfigWindows rawModeConfig;
 typedef DWORD platformError;
 
 #endif
-
-typedef struct rawModeResult {
-	rawModeConfig* saved;
-	platformError error;
-} rawModeResult;
-
-rawModeResult enterRawMode();
-platformError exitRawMode(rawModeConfig *saved);
-
 
 typedef void PlatformEventHandlerOnFocus(void *opaque, bool focused);
 typedef void PlatformEventHandlerOnKey(void *opaque); // TODO params
@@ -76,6 +63,7 @@ platformInputResult platformInput_init(platformEventHandler *handler);
 stdinRead platformInput_read(platformInput *input, char *buffer, int count);
 stdinRead platformInput_readWithTimeout(platformInput *input, char *buffer, int count, int timeoutMillis);
 platformError platformInput_interrupt(platformInput *input);
+platformError platformInput_enableRawMode(platformInput *input);
 platformError platformInput_enableWindowResizeEvents(platformInput *input);
 terminalSizeResult platformInput_currentTerminalSize(platformInput *input);
 platformError platformInput_free(platformInput *input);

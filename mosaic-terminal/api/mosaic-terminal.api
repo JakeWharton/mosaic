@@ -1,6 +1,7 @@
 public final class com/jakewharton/mosaic/terminal/TerminalReader : java/lang/AutoCloseable {
 	public fun close ()V
 	public final fun currentSize ()Lcom/jakewharton/mosaic/terminal/event/ResizeEvent;
+	public final fun enableRawMode ()V
 	public final fun enableWindowResizeEvents ()V
 	public final fun getEvents ()Lkotlinx/coroutines/channels/ReceiveChannel;
 	public final fun getKittyDisambiguateEscapeCodes ()Z
@@ -13,7 +14,6 @@ public final class com/jakewharton/mosaic/terminal/TerminalReader : java/lang/Au
 
 public final class com/jakewharton/mosaic/terminal/Tty {
 	public static final field INSTANCE Lcom/jakewharton/mosaic/terminal/Tty;
-	public static final fun enableRawMode ()Ljava/lang/AutoCloseable;
 	public static final fun terminalReader (Z)Lcom/jakewharton/mosaic/terminal/TerminalReader;
 	public static synthetic fun terminalReader$default (ZILjava/lang/Object;)Lcom/jakewharton/mosaic/terminal/TerminalReader;
 }

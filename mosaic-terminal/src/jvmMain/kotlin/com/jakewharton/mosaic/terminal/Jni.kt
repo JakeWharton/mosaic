@@ -13,12 +13,6 @@ internal object Jni {
 	}
 
 	@JvmStatic
-	external fun enterRawMode(): Long
-
-	@JvmStatic
-	external fun exitRawMode(savedPtr: Long)
-
-	@JvmStatic
 	external fun platformEventHandlerInit(handler: PlatformEventHandler): Long
 
 	@JvmStatic
@@ -46,6 +40,9 @@ internal object Jni {
 
 	@JvmStatic
 	external fun platformInputInterrupt(inputPtr: Long)
+
+	@JvmStatic
+	external fun platformInputEnableRawMode(inputPtr: Long)
 
 	@JvmStatic
 	external fun platformInputEnableWindowResizeEvents(inputPtr: Long)

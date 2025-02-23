@@ -380,12 +380,12 @@ final class com.jakewharton.mosaic.terminal/TerminalReader : kotlin/AutoCloseabl
 
     final fun close() // com.jakewharton.mosaic.terminal/TerminalReader.close|close(){}[0]
     final fun currentSize(): com.jakewharton.mosaic.terminal.event/ResizeEvent // com.jakewharton.mosaic.terminal/TerminalReader.currentSize|currentSize(){}[0]
+    final fun enableRawMode() // com.jakewharton.mosaic.terminal/TerminalReader.enableRawMode|enableRawMode(){}[0]
     final fun enableWindowResizeEvents() // com.jakewharton.mosaic.terminal/TerminalReader.enableWindowResizeEvents|enableWindowResizeEvents(){}[0]
     final fun interrupt() // com.jakewharton.mosaic.terminal/TerminalReader.interrupt|interrupt(){}[0]
     final fun runParseLoop() // com.jakewharton.mosaic.terminal/TerminalReader.runParseLoop|runParseLoop(){}[0]
 }
 
 final object com.jakewharton.mosaic.terminal/Tty { // com.jakewharton.mosaic.terminal/Tty|null[0]
-    final fun enableRawMode(): kotlin/AutoCloseable // com.jakewharton.mosaic.terminal/Tty.enableRawMode|enableRawMode(){}[0]
     final fun terminalReader(kotlin/Boolean = ...): com.jakewharton.mosaic.terminal/TerminalReader // com.jakewharton.mosaic.terminal/Tty.terminalReader|terminalReader(kotlin.Boolean){}[0]
 }

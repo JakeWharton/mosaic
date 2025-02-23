@@ -9,10 +9,15 @@
 const int recordsCount = 64;
 
 typedef struct platformInputImpl {
+	HANDLE stdin;
+	HANDLE stdout;
 	HANDLE waitHandles[2];
 	INPUT_RECORD records[recordsCount];
 	platformEventHandler *handler;
 	bool windowResizeEvents;
+	DWORD saved_input_mode;
+	DWORD saved_output_mode;
+	UINT saved_output_code_page;
 } platformInputImpl;
 
 typedef struct platformInputWriterImpl {
@@ -35,6 +40,11 @@ platformInputResult platformInput_initWithHandle(
 		result.error = GetLastError();
 		goto err;
 	}
+	HANDLE stdoutWrite = GetStdHandle(STD_OUTPUT_HANDLE);
+	if (unlikely(stdoutWrite == INVALID_HANDLE_VALUE)) {
+		result.error = GetLastError();
+		goto err;
+	}
 
 	HANDLE interruptEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 	if (unlikely(interruptEvent == NULL)) {
@@ -42,6 +52,8 @@ platformInputResult platformInput_initWithHandle(
 		goto err;
 	}
 
+	input->stdin = stdinRead;
+	input->stdout = stdoutWrite;
 	input->waitHandles[0] = stdinRead;
 	input->waitHandles[1] = interruptEvent;
 	input->handler = handler;
@@ -138,16 +150,87 @@ platformError platformInput_interrupt(platformInput *input) {
 		: GetLastError();
 }
 
+platformError platformInput_enableRawMode(platformInput *input) {
+	platformError result = 0;
+
+	if (input->saved_input_mode) {
+		goto ret; // Already enabled!
+	}
+
+	DWORD input_mode;
+	DWORD output_mode;
+	UINT output_code_page;
+	if (unlikely(GetConsoleMode(input->stdin, &input_mode) == 0)) {
+		result = GetLastError();
+		goto ret;
+	}
+	if (unlikely(GetConsoleMode(input->stdout, &output_mode) == 0)) {
+		result = GetLastError();
+		goto ret;
+	}
+	if (unlikely((output_code_page = GetConsoleOutputCP()) == 0)) {
+		result = GetLastError();
+		goto ret;
+	}
+
+	// https://learn.microsoft.com/en-us/windows/console/setconsolemode
+	const int stdinMode = 0
+		// Disable quick edit mode.
+		| ENABLE_EXTENDED_FLAGS
+		// Report changes to the mouse position.
+		| ENABLE_MOUSE_INPUT
+		// Encode key and mouse events as VT sequences rather than input records.
+		| ENABLE_VIRTUAL_TERMINAL_INPUT
+		// Report changes to the buffer size.
+		| ENABLE_WINDOW_INPUT
+		;
+	const int stdoutMode = 0
+		// Do not wrap cursor to next line automatically when writing final column.
+		| DISABLE_NEWLINE_AUTO_RETURN
+		// Allow color sequences to affect characters in all locales.
+		| ENABLE_LVB_GRID_WORLDWIDE
+		// Process outgoing VT sequences for colors, etc.
+		| ENABLE_PROCESSED_OUTPUT
+		// Process outgoing VT sequences for cursor movement, etc.
+		| ENABLE_VIRTUAL_TERMINAL_PROCESSING
+		;
+	// UTF-8 per https://learn.microsoft.com/en-us/windows/win32/intl/code-page-identifiers.
+	const int stdoutCp = 65001;
+
+	if (unlikely(SetConsoleMode(input->stdin, stdinMode) == 0)) {
+		result = GetLastError();
+		goto ret;
+	}
+	if (unlikely(SetConsoleMode(input->stdout, stdoutMode) == 0)) {
+		result = GetLastError();
+		SetConsoleMode(input->stdin, input_mode);
+		goto ret;
+	}
+	if (unlikely(SetConsoleOutputCP(stdoutCp) == 0)) {
+		result = GetLastError();
+		SetConsoleMode(input->stdin, input_mode);
+		SetConsoleMode(input->stdout, input_mode);
+		goto ret;
+	}
+
+	input->saved_input_mode = input_mode;
+	input->saved_output_mode = output_mode;
+	input->saved_output_code_page = output_code_page;
+
+	ret:
+	return result;
+}
+
 platformError platformInput_enableWindowResizeEvents(platformInput *input) {
 	input->windowResizeEvents = true;
 	return 0;
 }
 
-terminalSizeResult platformInput_currentTerminalSize(platformInput *input UNUSED) {
+terminalSizeResult platformInput_currentTerminalSize(platformInput *input) {
 	terminalSizeResult result = {};
 
 	CONSOLE_SCREEN_BUFFER_INFO info;
-	if (likely(GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &info))) {
+	if (likely(GetConsoleScreenBufferInfo(input->stdout, &info))) {
 		result.size.columns = info.dwSize.X;
 		result.size.rows = info.dwSize.Y;
 	} else {
@@ -158,10 +241,24 @@ terminalSizeResult platformInput_currentTerminalSize(platformInput *input UNUSED
 }
 
 platformError platformInput_free(platformInput *input) {
-	DWORD result = 0;
+	platformError result = 0;
+
 	if (unlikely(CloseHandle(input->waitHandles[1]) == 0)) {
 		result = GetLastError();
 	}
+
+	if (input->saved_input_mode) {
+		if (unlikely(!SetConsoleMode(input->stdin, input->saved_input_mode) && result == 0)) {
+			result = GetLastError();
+		}
+		if (unlikely(!SetConsoleMode(input->stdout, input->saved_output_mode) && result == 0)) {
+			result = GetLastError();
+		}
+		if (unlikely(!SetConsoleOutputCP(input->saved_output_code_page) && result == 0)) {
+			result = GetLastError();
+		}
+	}
+
 	free(input);
 	return result;
 }
