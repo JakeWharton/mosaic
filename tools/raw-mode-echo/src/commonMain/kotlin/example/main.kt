@@ -9,7 +9,7 @@ import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.enum
 import com.jakewharton.finalization.withFinalizationHook
-import com.jakewharton.mosaic.terminal.Tty
+import com.jakewharton.mosaic.terminal.TerminalReader
 import com.jakewharton.mosaic.terminal.event.DebugEvent
 import com.jakewharton.mosaic.terminal.event.KeyboardEvent
 import com.jakewharton.mosaic.terminal.event.KeyboardEvent.Companion.ModifierCtrl
@@ -42,7 +42,7 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 	private val windowResize by option().flag()
 
 	override fun run() = runBlocking {
-		val reader = Tty.terminalReader(emitDebugEvents = mode != Mode.Event)
+		val reader = TerminalReader(emitDebugEvents = mode != Mode.Event)
 		reader.enableRawMode()
 		withFinalizationHook(
 			hook = {

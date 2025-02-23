@@ -1,6 +1,5 @@
 package com.jakewharton.mosaic.terminal
 
-import com.jakewharton.mosaic.terminal.Tty.terminalReader
 import com.jakewharton.mosaic.terminal.event.BracketedPasteEvent
 import com.jakewharton.mosaic.terminal.event.CapabilityQueryEvent
 import com.jakewharton.mosaic.terminal.event.DebugEvent
@@ -29,14 +28,27 @@ import kotlin.concurrent.Volatile
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 
-private const val BufferSize = 8 * 1024
-private const val BareEscapeDisambiguationReadTimeoutMillis = 100
+/**
+ * Create a [TerminalReader] which will read from this process' stdin stream while also
+ * supporting interruption.
+ *
+ * Use with [enableRawMode] to read input byte-by-byte.
+ *
+ * @param emitDebugEvents When true, each event sent to [TerminalReader.events] will be followed
+ * by a [DebugEvent] that contains the original event and the bytes which produced it.
+ */
+public expect fun TerminalReader(emitDebugEvents: Boolean = false): TerminalReader
 
 public class TerminalReader internal constructor(
 	private val platformInput: PlatformInput,
 	events: Channel<Event>,
 	private val emitDebugEvents: Boolean,
 ) : AutoCloseable {
+	private companion object {
+		private const val BufferSize = 8 * 1024
+		private const val BareEscapeDisambiguationReadTimeoutMillis = 100
+	}
+
 	private val buffer = ByteArray(BufferSize)
 	private var offset = 0
 	private var limit = 0
@@ -90,7 +102,7 @@ public class TerminalReader internal constructor(
 	 * In addition to the flags required for entering "raw" mode, on POSIX-compliant platforms,
 	 * this function will change the standard input stream to block indefinitely until a minimum
 	 * of 1 byte is available to read. This allows the reader thread to fully be suspended rather
-	 * than consuming CPU. Use [terminalReader] to read in a manner that can still be interrupted.
+	 * than consuming CPU. Use [create] to read in a manner that can still be interrupted.
 	 */
 	public fun enableRawMode() {
 		platformInput.enableRawMode()

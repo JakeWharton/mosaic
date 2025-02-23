@@ -48,7 +48,7 @@ internal actual class PlatformInputWriter(
 			platformInputWriter_write(ptr, it.addressOf(0), buffer.size)
 		}
 		if (error == 0U) return
-		Tty.throwError(error)
+		throwError(error)
 	}
 
 	actual fun focusEvent(focused: Boolean) {
@@ -76,7 +76,7 @@ internal actual class PlatformInputWriter(
 			val error = platformInputWriter_free(ref)
 
 			if (error == 0U) return
-			Tty.throwError(error)
+			throwError(error)
 		}
 	}
 }

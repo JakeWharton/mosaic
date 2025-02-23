@@ -12,10 +12,9 @@ public final class com/jakewharton/mosaic/terminal/TerminalReader : java/lang/Au
 	public final fun setXtermExtendedUtf8Mouse (Z)V
 }
 
-public final class com/jakewharton/mosaic/terminal/Tty {
-	public static final field INSTANCE Lcom/jakewharton/mosaic/terminal/Tty;
-	public static final fun terminalReader (Z)Lcom/jakewharton/mosaic/terminal/TerminalReader;
-	public static synthetic fun terminalReader$default (ZILjava/lang/Object;)Lcom/jakewharton/mosaic/terminal/TerminalReader;
+public final class com/jakewharton/mosaic/terminal/TerminalReaderKt {
+	public static final fun TerminalReader (Z)Lcom/jakewharton/mosaic/terminal/TerminalReader;
+	public static synthetic fun TerminalReader$default (ZILjava/lang/Object;)Lcom/jakewharton/mosaic/terminal/TerminalReader;
 }
 
 public final class com/jakewharton/mosaic/terminal/event/BracketedPasteEvent : com/jakewharton/mosaic/terminal/event/Event {

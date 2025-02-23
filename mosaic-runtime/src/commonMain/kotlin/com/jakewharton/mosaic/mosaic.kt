@@ -24,7 +24,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.jakewharton.finalization.withFinalizationHook
 import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.layout.MosaicNode
-import com.jakewharton.mosaic.terminal.Tty
+import com.jakewharton.mosaic.terminal.TerminalReader
 import com.jakewharton.mosaic.terminal.event.CapabilityQueryEvent
 import com.jakewharton.mosaic.terminal.event.DecModeReportEvent
 import com.jakewharton.mosaic.terminal.event.DecModeReportEvent.Setting
@@ -86,7 +86,7 @@ private const val StageDefaultQueries = 1
 private const val StageNormalOperation = 0
 
 internal suspend fun runMosaic(isTest: Boolean, content: @Composable () -> Unit) {
-	val reader = Tty.terminalReader()
+	val reader = TerminalReader()
 
 	// Entering raw mode can fail, so perform it before any additional control sequences which change
 	// settings. We also need to be in character mode to query capabilities with control sequences.

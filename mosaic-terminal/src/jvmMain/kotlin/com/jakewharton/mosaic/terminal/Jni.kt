@@ -102,7 +102,7 @@ internal object Jni {
 			"windows" in osName -> "$name.dll"
 			else -> throw IllegalStateException("Unsupported OS: $osName $osArch")
 		}
-		val nativeLibraryUrl = Tty::class.java.getResource(nativeLibraryJarPath)
+		val nativeLibraryUrl = Jni::class.java.getResource(nativeLibraryJarPath)
 			?: throw IllegalStateException("Unable to read $nativeLibraryJarPath from JAR")
 		val nativeLibraryFile: Path
 		try {

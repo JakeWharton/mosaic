@@ -24,7 +24,7 @@ internal actual class PlatformInput internal constructor(
 		buffer.usePinned {
 			platformInput_read(ptr, it.addressOf(offset), count).useContents {
 				if (error == 0U) return this.count
-				Tty.throwError(error)
+				throwError(error)
 			}
 		}
 	}
@@ -33,7 +33,7 @@ internal actual class PlatformInput internal constructor(
 		buffer.usePinned {
 			platformInput_readWithTimeout(ptr, it.addressOf(offset), count, timeoutMillis).useContents {
 				if (error == 0U) return this.count
-				Tty.throwError(error)
+				throwError(error)
 			}
 		}
 	}
@@ -41,19 +41,19 @@ internal actual class PlatformInput internal constructor(
 	actual fun interrupt() {
 		val error = platformInput_interrupt(ptr)
 		if (error == 0U) return
-		Tty.throwError(error)
+		throwError(error)
 	}
 
 	actual fun enableRawMode() {
 		val error = platformInput_enableRawMode(ptr)
 		if (error == 0U) return
-		Tty.throwError(error)
+		throwError(error)
 	}
 
 	actual fun enableWindowResizeEvents() {
 		val error = platformInput_enableWindowResizeEvents(ptr)
 		if (error == 0U) return
-		Tty.throwError(error)
+		throwError(error)
 	}
 
 	actual fun currentSize(): IntArray {
@@ -61,7 +61,7 @@ internal actual class PlatformInput internal constructor(
 			if (error == 0U) {
 				return intArrayOf(columns, rows, width, height)
 			}
-			Tty.throwError(error)
+			throwError(error)
 		}
 	}
 
@@ -74,7 +74,7 @@ internal actual class PlatformInput internal constructor(
 			handlerRef?.dispose()
 
 			if (error == 0U) return
-			Tty.throwError(error)
+			throwError(error)
 		}
 	}
 }

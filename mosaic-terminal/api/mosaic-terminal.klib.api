@@ -386,6 +386,4 @@ final class com.jakewharton.mosaic.terminal/TerminalReader : kotlin/AutoCloseabl
     final fun runParseLoop() // com.jakewharton.mosaic.terminal/TerminalReader.runParseLoop|runParseLoop(){}[0]
 }
 
-final object com.jakewharton.mosaic.terminal/Tty { // com.jakewharton.mosaic.terminal/Tty|null[0]
-    final fun terminalReader(kotlin/Boolean = ...): com.jakewharton.mosaic.terminal/TerminalReader // com.jakewharton.mosaic.terminal/Tty.terminalReader|terminalReader(kotlin.Boolean){}[0]
-}
+final fun com.jakewharton.mosaic.terminal/TerminalReader(kotlin/Boolean = ...): com.jakewharton.mosaic.terminal/TerminalReader // com.jakewharton.mosaic.terminal/TerminalReader|TerminalReader(kotlin.Boolean){}[0]
