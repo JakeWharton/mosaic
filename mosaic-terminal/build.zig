@@ -28,7 +28,7 @@ fn setupMosaicTarget(b: *std.Build, step: *std.Build.Step, tag: std.Target.Os.Ta
 
 	lib.linkLibC();
 
-	lib.addIncludePath(b.path("src/c"));
+	lib.addIncludePath(b.path("src/commonMain/c"));
 	lib.addIncludePath(b.path("src/jvmMain/include/share"));
 	lib.addIncludePath(
 		switch (tag) {
@@ -40,11 +40,11 @@ fn setupMosaicTarget(b: *std.Build, step: *std.Build.Step, tag: std.Target.Os.Ta
 	// TODO Tree-walk these two dirs for all C files.
 	lib.addCSourceFiles(.{
 		.files = &.{
-			"src/c/mosaic-rawMode-posix.c",
-			"src/c/mosaic-rawMode-windows.c",
-			"src/c/mosaic-stdin-posix.c",
-			"src/c/mosaic-stdin-windows.c",
-			"src/jvmMain/jni/mosaic-jni.c",
+			"src/commonMain/c/mosaic-rawMode-posix.c",
+			"src/commonMain/c/mosaic-rawMode-windows.c",
+			"src/commonMain/c/mosaic-stdin-posix.c",
+			"src/commonMain/c/mosaic-stdin-windows.c",
+			"src/jvmMain/c/mosaic-jni.c",
 		},
 		.flags = &.{
 			"-std=gnu99",

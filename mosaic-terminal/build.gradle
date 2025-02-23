@@ -220,7 +220,7 @@ kotlin {
 	targets.withType(KotlinNativeTarget).configureEach {
 		compilations.main.cinterops {
 			create('mosaic') {
-				header(file('src/c/mosaic.h'))
+				header(file('src/commonMain/c/mosaic.h'))
 				packageName('com.jakewharton.mosaic.terminal')
 			}
 		}
@@ -235,8 +235,8 @@ kotlin {
 
 cklib {
 	config.kotlinVersion = libs.versions.kotlin.get()
-	create('mosaic', file('src/c'), ['main']) {
-		it.srcDirs = files('src/c')
+	create('mosaic', file('src/commonMain/c'), ['main']) {
+		it.srcDirs = files('src/commonMain/c')
 		it.language = C
 	}
 }
