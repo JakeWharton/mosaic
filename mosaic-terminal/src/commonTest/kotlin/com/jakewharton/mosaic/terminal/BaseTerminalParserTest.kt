@@ -12,7 +12,7 @@ import kotlinx.coroutines.test.runTest
 
 abstract class BaseTerminalParserTest {
 	internal val writer = TestTerminal.create()
-	val reader = writer.reader
+	internal val reader = writer.reader
 
 	private val runLoop = GlobalScope.launch(Dispatchers.IO) {
 		reader.runParseLoop()

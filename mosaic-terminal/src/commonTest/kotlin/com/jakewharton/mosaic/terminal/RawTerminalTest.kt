@@ -14,24 +14,23 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class RawTerminalTest {
-	private val writer = TestTerminal.create()
-	private val input = writer.rawTerminal
+	private val testTerminal = TestTerminal.create()
+	private val rawTerminal = testTerminal.rawTerminal
 
 	@AfterTest fun after() {
-		input.close()
-		writer.close()
+		testTerminal.close()
 	}
 
 	@Test fun readWhatWasWritten() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		writer.write("hello".encodeToByteArray())
-		val readA = input.read(buffer, 0, 10)
+		testTerminal.write("hello".encodeToByteArray())
+		val readA = rawTerminal.read(buffer, 0, 10)
 		assertThat(readA, "readA").isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("helloxxxxx")
 
-		writer.write("world".encodeToByteArray())
-		val readB = input.read(buffer, 0, 10)
+		testTerminal.write("world".encodeToByteArray())
+		val readB = rawTerminal.read(buffer, 0, 10)
 		assertThat(readB, "readB").isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("worldxxxxx")
 	}
@@ -39,8 +38,8 @@ class RawTerminalTest {
 	@Test fun readOnlyUpToCount() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		writer.write("hello".encodeToByteArray())
-		val read = input.read(buffer, 0, 4)
+		testTerminal.write("hello".encodeToByteArray())
+		val read = rawTerminal.read(buffer, 0, 4)
 		assertThat(read).isEqualTo(4)
 		assertThat(buffer.decodeToString()).isEqualTo("hellxxxxxx")
 	}
@@ -48,8 +47,8 @@ class RawTerminalTest {
 	@Test fun readUnderflow() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		writer.write("hello".encodeToByteArray())
-		val read = input.read(buffer, 0, 10)
+		testTerminal.write("hello".encodeToByteArray())
+		val read = rawTerminal.read(buffer, 0, 10)
 		assertThat(read).isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("helloxxxxx")
 	}
@@ -57,8 +56,8 @@ class RawTerminalTest {
 	@Test fun readAtOffset() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		writer.write("hello".encodeToByteArray())
-		val read = input.read(buffer, 5, 5)
+		testTerminal.write("hello".encodeToByteArray())
+		val read = rawTerminal.read(buffer, 5, 5)
 		assertThat(read).isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("xxxxxhello")
 	}
@@ -66,16 +65,16 @@ class RawTerminalTest {
 	@Test fun readCanBeInterrupted() {
 		GlobalScope.launch(Dispatchers.Default) {
 			delay(150.milliseconds)
-			input.interruptRead()
+			rawTerminal.interruptRead()
 		}
-		val readA = input.read(ByteArray(10), 0, 10)
+		val readA = rawTerminal.read(ByteArray(10), 0, 10)
 		assertThat(readA).isZero()
 
 		GlobalScope.launch(Dispatchers.Default) {
 			delay(150.milliseconds)
-			input.interruptRead()
+			rawTerminal.interruptRead()
 		}
-		val readB = input.read(ByteArray(10), 0, 10)
+		val readB = rawTerminal.read(ByteArray(10), 0, 10)
 		assertThat(readB).isZero()
 	}
 
@@ -85,14 +84,14 @@ class RawTerminalTest {
 
 		val readA: Int
 		val tookA = measureTime {
-			readA = input.read(ByteArray(10), 0, 10, 100)
+			readA = rawTerminal.read(ByteArray(10), 0, 10, 100)
 		}
 		assertThat(readA).isZero()
 		assertThat(tookA).isGreaterThan(50.milliseconds)
 
 		val readB: Int
 		val tookB = measureTime {
-			readB = input.read(ByteArray(10), 0, 10, 100)
+			readB = rawTerminal.read(ByteArray(10), 0, 10, 100)
 		}
 		assertThat(readB).isZero()
 		assertThat(tookB).isGreaterThan(50.milliseconds)
