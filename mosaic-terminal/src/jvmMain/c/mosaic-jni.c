@@ -277,10 +277,10 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputCurrentSize(
 	if (likely(!result.error)) {
 		jintArray ints = (*env)->NewIntArray(env, 4);
 		jint *intsPtr = (*env)->GetIntArrayElements(env, ints, NULL);
-		intsPtr[0] = result.size.columns;
-		intsPtr[1] = result.size.rows;
-		intsPtr[2] = result.size.width;
-		intsPtr[3] = result.size.height;
+		intsPtr[0] = result.columns;
+		intsPtr[1] = result.rows;
+		intsPtr[2] = result.width;
+		intsPtr[3] = result.height;
 		(*env)->ReleaseIntArrayElements(env, ints, intsPtr, 0);
 		return ints;
 	}

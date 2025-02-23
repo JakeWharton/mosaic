@@ -61,10 +61,10 @@ internal actual class PlatformInput internal constructor(
 		platformInput_currentTerminalSize(ptr).useContents {
 			if (error == 0U) {
 				return ResizeEvent(
-					columns = size.columns,
-					rows = size.rows,
-					width = size.width,
-					height = size.height,
+					columns = columns,
+					rows = rows,
+					width = width,
+					height = height,
 				)
 			}
 			Tty.throwError(error)

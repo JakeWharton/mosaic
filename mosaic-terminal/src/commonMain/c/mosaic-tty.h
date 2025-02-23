@@ -30,15 +30,11 @@ typedef struct stdinRead {
 	uint32_t error;
 } stdinRead;
 
-typedef struct terminalSize {
+typedef struct terminalSizeResult {
 	int columns;
 	int rows;
 	int width;
 	int height;
-} terminalSize;
-
-typedef struct terminalSizeResult {
-	terminalSize size;
 	uint32_t error;
 } terminalSizeResult;
 

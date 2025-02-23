@@ -213,8 +213,8 @@ terminalSizeResult platformInput_currentTerminalSize(platformInput *input) {
 
 	CONSOLE_SCREEN_BUFFER_INFO info;
 	if (likely(GetConsoleScreenBufferInfo(input->stdout, &info))) {
-		result.size.columns = info.dwSize.X;
-		result.size.rows = info.dwSize.Y;
+		result.columns = info.dwSize.X;
+		result.rows = info.dwSize.Y;
 	} else {
 		result.error = GetLastError();
 	}

@@ -201,10 +201,10 @@ terminalSizeResult platformInput_currentTerminalSize(platformInput *input) {
 
 	struct winsize size;
 	if (ioctl(input->stdinFd, TIOCGWINSZ, &size) != -1) {
-		result.size.columns = size.ws_col;
-		result.size.rows = size.ws_row;
-		result.size.width = size.ws_xpixel;
-		result.size.height = size.ws_ypixel;
+		result.columns = size.ws_col;
+		result.rows = size.ws_row;
+		result.width = size.ws_xpixel;
+		result.height = size.ws_ypixel;
 	} else {
 		result.error = errno;
 	}
