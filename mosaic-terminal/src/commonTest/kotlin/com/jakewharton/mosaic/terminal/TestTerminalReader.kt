@@ -1,6 +1,7 @@
 package com.jakewharton.mosaic.terminal
 
 import com.jakewharton.mosaic.terminal.event.Event
+import com.jakewharton.mosaic.tty.TestTty
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 

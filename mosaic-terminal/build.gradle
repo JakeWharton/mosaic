@@ -1,39 +1,8 @@
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
-
-import static co.touchlab.cklib.gradle.CompileToBitcode.Language.C
-import static org.gradle.language.base.plugins.LifecycleBasePlugin.BUILD_GROUP
-import static org.gradle.language.base.plugins.LifecycleBasePlugin.VERIFICATION_GROUP
-import static org.jetbrains.kotlin.gradle.plugin.KotlinCompilation.MAIN_COMPILATION_NAME
-import static org.jetbrains.kotlin.gradle.plugin.KotlinCompilation.TEST_COMPILATION_NAME
-
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
 apply from: "$rootDir/addAllTargets.gradle"
 apply from: "$rootDir/publish.gradle"
-apply plugin: 'co.touchlab.cklib'
 apply plugin: 'com.jakewharton.cite'
 apply plugin: 'dev.drewhamilton.poko'
-apply plugin: 'com.jakewharton.mosaic.build'
-
-mosaicBuild {
-	jvmTestDistribution()
-}
-
-configurations {
-	proGuard
-	r8
-}
-
-repositories {
-	maven {
-		url 'https://storage.googleapis.com/r8-releases/raw/'
-	}
-}
-
-dependencies {
-	proGuard 'com.guardsquare:proguard-base:7.6.1'
-	r8 'com.android.tools:r8:8.9.21'
-}
 
 kotlin {
 	explicitApi()
@@ -42,13 +11,11 @@ kotlin {
 		configureEach {
 			languageSettings {
 				optIn('kotlin.contracts.ExperimentalContracts')
-				optIn('kotlinx.cinterop.ExperimentalForeignApi')
 			}
 			if (it.name.endsWith("Test")) {
 				languageSettings {
 					optIn('com.jakewharton.mosaic.terminal.TestApi')
 					optIn('kotlin.ExperimentalStdlibApi')
-					optIn('kotlinx.coroutines.DelicateCoroutinesApi')
 				}
 			}
 		}
@@ -56,6 +23,7 @@ kotlin {
 		commonMain {
 			dependencies {
 				api libs.kotlinx.coroutines.core
+				implementation projects.mosaicTty
 			}
 		}
 		commonTest {
@@ -71,172 +39,5 @@ kotlin {
 		systemProperty('kotlinx.coroutines.test.default_timeout', '2s')
 	}
 
-	targets.withType(KotlinJvmTarget).configureEach { target ->
-		def mainCompilation = target.compilations.named(MAIN_COMPILATION_NAME)
-		def testCompilation = target.compilations.named(TEST_COMPILATION_NAME)
-
-		mainCompilation.configure { main ->
-			tasks.named(main.processResourcesTaskName).configure {
-				doFirst {
-					def jniDir = file("src/${target.name}Main/resources/jni")
-					def files = project.fileTree(jniDir).files
-					if (files.size() != 6) {
-						throw new RuntimeException("""Native library mismatch!
-							|
-							|Run `zig build -p $jniDir`.
-							|
-							|Expected 6 files, found:
-							|- """.stripMargin() + files.collect { jniDir.relativePath(it) }.sort().join('\n -'))
-					}
-				}
-			}
-		}
-
-		def mainJar = tasks.named(target.artifactsTaskName, Jar).flatMap { it.archiveFile }
-		def testJar = tasks.register("${target.name}TestJar", Jar) {
-			from(testCompilation.map { it.output.allOutputs })
-			archiveBaseName = base.archivesName.map { it + '-' + target.name }
-			archiveClassifier = 'tests'
-		}.flatMap { it.archiveFile }
-
-		def testDependencyFiles = testCompilation.map { it.runtimeDependencyFiles }
-
-		def r8Rules = layout.buildDirectory.file('shrinker/r8.txt')
-		def r8RulesExtract = tasks.register("${target.name}ExtractR8Rules", JavaExec) {
-			inputs.files(mainJar)
-			inputs.files(testJar)
-			inputs.files(configurations.r8)
-			inputs.files(testDependencyFiles)
-			outputs.file(r8Rules.get())
-
-			classpath(configurations.r8)
-			mainClass = 'com.android.tools.r8.ExtractR8Rules'
-			args = [
-				'--rules-output', r8Rules.get().asFile.absolutePath,
-				'--include-origin-comments',
-			]
-
-			doFirst {
-				// Defer resolving this until execution time since JavaExec lacks provider-based args.
-				testDependencyFiles.get().files.findAll {it.isFile() }.forEach {
-					args += it.absolutePath
-				}
-				args += mainJar.get().asFile.absolutePath
-				args += testJar.get().asFile.absolutePath
-			}
-		}
-
-		def r8Jar = base.archivesName.flatMap { archivesName ->
-			layout.buildDirectory.file("libs/$archivesName-${target.name}-$version-testsR8.jar")
-		}
-		def r8Task = tasks.register("${target.name}TestJarR8", JavaExec) {
-			group = BUILD_GROUP
-			description = 'Assembles an archive containing the test classes run through ProGuard.'
-
-			inputs.files(configurations.r8)
-			inputs.files(testDependencyFiles)
-			inputs.files(r8RulesExtract)
-			outputs.file(r8Jar.get())
-
-			classpath(configurations.r8)
-			mainClass = 'com.android.tools.r8.R8'
-			args = [
-				'--classfile',
-				'--output', r8Jar.get().asFile.absolutePath,
-				'--pg-conf', r8Rules.get().asFile.absolutePath,
-				'--lib', System.properties['java.home'].toString(),
-			]
-			doFirst {
-				// Defer resolving this until execution time since JavaExec lacks provider-based args.
-				testDependencyFiles.get().files.findAll {it.isFile() }.forEach {
-					args += it.absolutePath
-				}
-				args += mainJar.get().asFile.absolutePath
-				args += testJar.get().asFile.absolutePath
-			}
-		}
-
-		target.testRuns.create("r8") { run ->
-			run.executionTask.configure {
-				dependsOn(r8Task)
-			}
-			run.setExecutionSourceFrom(
-				project.files(r8Jar.get()),
-				testDependencyFiles.get().filter { it.isDirectory() },
-			)
-		}
-
-		def proGuardJar = base.archivesName.flatMap { archivesName ->
-			layout.buildDirectory.file("libs/$archivesName-${target.name}-$version-testsProGuard.jar")
-		}
-		def proGuardTask = tasks.register("${target.name}TestJarProGuard", JavaExec) {
-			group = BUILD_GROUP
-			description = 'Assembles an archive containing the test classes run through ProGuard.'
-
-			inputs.files(configurations.proGuard)
-			inputs.files(testDependencyFiles)
-			outputs.file(proGuardJar.get())
-
-			classpath(configurations.proGuard)
-			mainClass = 'proguard.ProGuard'
-			args = [
-				'-libraryjars', '<java.home>/jmods/java.base.jmod(!**.jar;!module-info.class)',
-				// TODO These should be pulled from the jars, but for now this unblocks us.
-				'@src/jvmMain/resources/META-INF/proguard/com.jakewharton.mosaic-terminal.pro',
-				'@src/jvmTest/resources/META-INF/proguard/com.jakewharton.mosaic-terminal-test.pro',
-			]
-
-			doFirst {
-				// Defer resolving this until execution time since JavaExec lacks provider-based args.
-				args += '-injars'
-				args += testDependencyFiles.get().files.join(File.pathSeparator)
-				// These do not need deferred, but since it must come after -injars it has to go here.
-				args += '-outjars'
-				args += proGuardJar.get().asFile.toString()
-			}
-		}
-
-		target.testRuns.create("proGuard") { run ->
-			run.executionTask.configure {
-				dependsOn(proGuardTask)
-			}
-			run.setExecutionSourceFrom(
-				project.files(proGuardJar.get()),
-				testDependencyFiles.get().filter { it.isDirectory() },
-			)
-		}
-
-		// Adding additional test runs somehow removes the configuration capabilities which allow
-		// automatic resolution of the junit test dependency. Add it explicitly instead.
-		testCompilation.configure {
-			dependencies {
-				implementation(libs.kotlin.test.junit)
-			}
-		}
-	}
-
-	def linkNativeDebugTests = tasks.register('linkNativeDebugTests')
-
-	targets.withType(KotlinNativeTarget).configureEach {
-		compilations.main.cinterops {
-			create('mosaic') {
-				header(file('src/commonMain/c/mosaic.h'))
-				packageName('com.jakewharton.mosaic.terminal')
-			}
-		}
-		linkNativeDebugTests.configure {
-			it.dependsOn(compilations.test.binariesTaskName)
-		}
-	}
-
-	compilerOptions.freeCompilerArgs.add('-Xexpect-actual-classes')
 	compilerOptions.freeCompilerArgs.add('-Xnon-local-break-continue')
-}
-
-cklib {
-	config.kotlinVersion = libs.versions.kotlin.get()
-	create('mosaic', file('src/commonMain/c'), ['main']) {
-		it.srcDirs = files('src/commonMain/c')
-		it.language = C
-	}
 }

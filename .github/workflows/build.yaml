@@ -13,7 +13,7 @@ env:
   GRADLE_OPTS: "-Dkotlin.incremental=false -Dorg.gradle.logging.stacktrace=full"
 
 jobs:
-  terminal-zig:
+  tty-zig:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
@@ -23,47 +23,47 @@ jobs:
           version: 0.13.0
 
       - run: zig build -p src/jvmMain/resources/jni
-        working-directory: mosaic-terminal
+        working-directory: mosaic-tty
 
       - uses: actions/upload-artifact@v4
         with:
-          name: mosaic-terminal-jni-libraries
-          path: mosaic-terminal/src/jvmMain/resources/jni
+          name: mosaic-tty-jni-libraries
+          path: mosaic-tty/src/jvmMain/resources/jni
           if-no-files-found: error
 
-  terminal-test-binaries:
+  tty-test-binaries:
     needs:
-      - terminal-zig
+      - tty-zig
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: mosaic-terminal-jni-libraries
-          path: mosaic-terminal/src/jvmMain/resources/jni
+          name: mosaic-tty-jni-libraries
+          path: mosaic-tty/src/jvmMain/resources/jni
 
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version-file: .github/.java-version
 
-      - run: ./gradlew :mosaic-terminal:installJvmTestDistribution :mosaic-terminal:linkNativeDebugTests
+      - run: ./gradlew :mosaic-tty:installJvmTestDistribution :mosaic-tty:linkNativeDebugTests
 
       - uses: actions/upload-artifact@v4
         with:
-          name: mosaic-terminal-jvm-tests
-          path: mosaic-terminal/build/install/jvmTest
+          name: mosaic-tty-jvm-tests
+          path: mosaic-tty/build/install/jvmTest
           if-no-files-found: error
 
       - uses: actions/upload-artifact@v4
         with:
-          name: mosaic-terminal-native-tests
-          path: mosaic-terminal/build/bin
+          name: mosaic-tty-native-tests
+          path: mosaic-tty/build/bin
           if-no-files-found: error
 
-  terminal-tests:
+  tty-tests:
     needs:
-      - terminal-test-binaries
+      - tty-test-binaries
     strategy:
       fail-fast: false
       matrix:
@@ -109,7 +109,7 @@ jobs:
       - uses: actions/download-artifact@v4
         if: matrix.tests.type == 'native'
         with:
-          name: mosaic-terminal-native-tests
+          name: mosaic-tty-native-tests
 
       - name: Set executable bit
         if: ${{ matrix.tests.type == 'native' && !startsWith(matrix.platform.os, 'windows-') }}
@@ -141,29 +141,29 @@ jobs:
       - uses: actions/download-artifact@v4
         if: matrix.tests.type == 'java'
         with:
-          name: mosaic-terminal-jvm-tests
+          name: mosaic-tty-jvm-tests
 
       - name: Set executable bit
         if: ${{ matrix.tests.type == 'java' && !startsWith(matrix.platform.os, 'windows-') }}
-        run: chmod +x bin/mosaic-terminal-test
+        run: chmod +x bin/mosaic-tty-test
 
-      - run: bin/mosaic-terminal-test
+      - run: bin/mosaic-tty-test
         if: matrix.tests.type == 'java'
 
   # Due to https://youtrack.jetbrains.com/issue/KT-74731, we don't have a good way of packaging
   # up the additional test runs for use in the above matrix-based runner. For now, run them through
   # Gradle on a single OS and single JDK just to get some coverage.
-  terminal-shrinker-tests:
+  tty-shrinker-tests:
     if: ${{ github.ref != 'refs/heads/trunk' }}
     needs:
-      - terminal-zig
+      - tty-zig
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: mosaic-terminal-jni-libraries
-          path: mosaic-terminal/src/jvmMain/resources/jni
+          name: mosaic-tty-jni-libraries
+          path: mosaic-tty/src/jvmMain/resources/jni
 
       - uses: actions/setup-java@v4
         with:
@@ -173,19 +173,19 @@ jobs:
       - run: >
           ./gradlew
           --continue
-          :mosaic-terminal:jvmProGuardTest
-          :mosaic-terminal:jvmR8Test
+          :mosaic-tty:jvmProGuardTest
+          :mosaic-tty:jvmR8Test
 
   build:
     runs-on: macos-15
     needs:
-      - terminal-zig
+      - tty-zig
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: mosaic-terminal-jni-libraries
-          path: mosaic-terminal/src/jvmMain/resources/jni
+          name: mosaic-tty-jni-libraries
+          path: mosaic-tty/src/jvmMain/resources/jni
 
       - uses: actions/setup-java@v4
         with:
@@ -194,7 +194,7 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
 
       # Disabling allTests should be enough, but https://youtrack.jetbrains.com/issue/KT-74509
-      # mosaic-terminal runs its tests above. We only run jvmTest otherwise as code is all common.
+      # mosaic-tty runs its tests above. We only run jvmTest otherwise as code is all common.
       - run: >
           ./gradlew
           --continue
@@ -207,18 +207,18 @@ jobs:
           -x macosX64Test
           -x mingwX64Test
           jvmTest
-          -x :mosaic-terminal:jvmTest
+          -x :mosaic-tty:jvmTest
 
   docs:
     runs-on: macos-15
     needs:
-      - terminal-zig
+      - tty-zig
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: mosaic-terminal-jni-libraries
-          path: mosaic-terminal/src/jvmMain/resources/jni
+          name: mosaic-tty-jni-libraries
+          path: mosaic-tty/src/jvmMain/resources/jni
 
       - uses: actions/setup-java@v4
         with:
@@ -239,7 +239,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - docs
-      - terminal-tests
+      - tty-tests
       - build
     steps:
       - name: Check
@@ -260,8 +260,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: mosaic-terminal-jni-libraries
-          path: mosaic-terminal/src/jvmMain/resources/jni
+          name: mosaic-tty-jni-libraries
+          path: mosaic-tty/src/jvmMain/resources/jni
 
       - uses: actions/setup-java@v4
         with:

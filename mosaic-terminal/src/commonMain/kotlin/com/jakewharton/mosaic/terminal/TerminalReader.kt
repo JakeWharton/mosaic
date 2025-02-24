@@ -24,6 +24,7 @@ import com.jakewharton.mosaic.terminal.event.TertiaryDeviceAttributesEvent
 import com.jakewharton.mosaic.terminal.event.UnknownEvent
 import com.jakewharton.mosaic.terminal.event.XtermCharacterSizeEvent
 import com.jakewharton.mosaic.terminal.event.XtermPixelSizeEvent
+import com.jakewharton.mosaic.tty.Tty
 import kotlin.concurrent.Volatile
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED

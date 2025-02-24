@@ -23,7 +23,7 @@ jobs:
         with:
           version: 0.13.0
       - run: zig build -p src/jvmMain/resources/jni
-        working-directory: mosaic-terminal
+        working-directory: mosaic-tty
 
       - run: ./gradlew publish
         env:

@@ -20,6 +20,7 @@ include ':mosaic-animation'
 include ':mosaic-runtime'
 include ':mosaic-terminal'
 include ':mosaic-testing'
+include ':mosaic-tty'
 
 include ':samples:counter'
 include ':samples:demo'

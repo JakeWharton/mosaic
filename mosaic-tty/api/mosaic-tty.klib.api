@@ -1,0 +1,48 @@
+// Klib ABI Dump
+// Targets: [linuxArm64, linuxX64, macosArm64, macosX64, mingwX64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <com.jakewharton.mosaic:mosaic-tty>
+final class com.jakewharton.mosaic.tty/TestTty : kotlin/AutoCloseable { // com.jakewharton.mosaic.tty/TestTty|null[0]
+    constructor <init>(kotlinx.cinterop/CPointer<cnames.structs/MosaicTestTtyImpl>?, com.jakewharton.mosaic.tty/Tty) // com.jakewharton.mosaic.tty/TestTty.<init>|<init>(kotlinx.cinterop.CPointer<cnames.structs.MosaicTestTtyImpl>?;com.jakewharton.mosaic.tty.Tty){}[0]
+
+    final val tty // com.jakewharton.mosaic.tty/TestTty.tty|{}tty[0]
+        final fun <get-tty>(): com.jakewharton.mosaic.tty/Tty // com.jakewharton.mosaic.tty/TestTty.tty.<get-tty>|<get-tty>(){}[0]
+
+    final fun close() // com.jakewharton.mosaic.tty/TestTty.close|close(){}[0]
+    final fun focusEvent(kotlin/Boolean) // com.jakewharton.mosaic.tty/TestTty.focusEvent|focusEvent(kotlin.Boolean){}[0]
+    final fun keyEvent() // com.jakewharton.mosaic.tty/TestTty.keyEvent|keyEvent(){}[0]
+    final fun mouseEvent() // com.jakewharton.mosaic.tty/TestTty.mouseEvent|mouseEvent(){}[0]
+    final fun resizeEvent(kotlin/Int, kotlin/Int, kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.tty/TestTty.resizeEvent|resizeEvent(kotlin.Int;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+    final fun write(kotlin/ByteArray) // com.jakewharton.mosaic.tty/TestTty.write|write(kotlin.ByteArray){}[0]
+
+    final object Companion { // com.jakewharton.mosaic.tty/TestTty.Companion|null[0]
+        final fun create(com.jakewharton.mosaic.tty/Tty.Callback): com.jakewharton.mosaic.tty/TestTty // com.jakewharton.mosaic.tty/TestTty.Companion.create|create(com.jakewharton.mosaic.tty.Tty.Callback){}[0]
+    }
+}
+
+final class com.jakewharton.mosaic.tty/Tty : kotlin/AutoCloseable { // com.jakewharton.mosaic.tty/Tty|null[0]
+    constructor <init>(kotlinx.cinterop/CPointer<cnames.structs/MosaicTtyImpl>, kotlinx.cinterop/CPointer<com.jakewharton.mosaic.tty/MosaicTtyCallback>, kotlinx.cinterop/StableRef<com.jakewharton.mosaic.tty/Tty.Callback>) // com.jakewharton.mosaic.tty/Tty.<init>|<init>(kotlinx.cinterop.CPointer<cnames.structs.MosaicTtyImpl>;kotlinx.cinterop.CPointer<com.jakewharton.mosaic.tty.MosaicTtyCallback>;kotlinx.cinterop.StableRef<com.jakewharton.mosaic.tty.Tty.Callback>){}[0]
+
+    final fun close() // com.jakewharton.mosaic.tty/Tty.close|close(){}[0]
+    final fun currentSize(): kotlin/IntArray // com.jakewharton.mosaic.tty/Tty.currentSize|currentSize(){}[0]
+    final fun enableRawMode() // com.jakewharton.mosaic.tty/Tty.enableRawMode|enableRawMode(){}[0]
+    final fun enableWindowResizeEvents() // com.jakewharton.mosaic.tty/Tty.enableWindowResizeEvents|enableWindowResizeEvents(){}[0]
+    final fun interrupt() // com.jakewharton.mosaic.tty/Tty.interrupt|interrupt(){}[0]
+    final fun read(kotlin/ByteArray, kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.tty/Tty.read|read(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
+    final fun readWithTimeout(kotlin/ByteArray, kotlin/Int, kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.tty/Tty.readWithTimeout|readWithTimeout(kotlin.ByteArray;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+
+    abstract interface Callback { // com.jakewharton.mosaic.tty/Tty.Callback|null[0]
+        abstract fun onFocus(kotlin/Boolean) // com.jakewharton.mosaic.tty/Tty.Callback.onFocus|onFocus(kotlin.Boolean){}[0]
+        abstract fun onKey() // com.jakewharton.mosaic.tty/Tty.Callback.onKey|onKey(){}[0]
+        abstract fun onMouse() // com.jakewharton.mosaic.tty/Tty.Callback.onMouse|onMouse(){}[0]
+        abstract fun onResize(kotlin/Int, kotlin/Int, kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.tty/Tty.Callback.onResize|onResize(kotlin.Int;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+    }
+
+    final object Companion { // com.jakewharton.mosaic.tty/Tty.Companion|null[0]
+        final fun create(com.jakewharton.mosaic.tty/Tty.Callback): com.jakewharton.mosaic.tty/Tty // com.jakewharton.mosaic.tty/Tty.Companion.create|create(com.jakewharton.mosaic.tty.Tty.Callback){}[0]
+    }
+}

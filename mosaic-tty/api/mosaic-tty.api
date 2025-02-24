@@ -1,0 +1,39 @@
+public final class com/jakewharton/mosaic/tty/TestTty : java/lang/AutoCloseable {
+	public static final field Companion Lcom/jakewharton/mosaic/tty/TestTty$Companion;
+	public fun <init> (JLcom/jakewharton/mosaic/tty/Tty;)V
+	public fun close ()V
+	public final fun focusEvent (Z)V
+	public final fun getTty ()Lcom/jakewharton/mosaic/tty/Tty;
+	public final fun keyEvent ()V
+	public final fun mouseEvent ()V
+	public final fun resizeEvent (IIII)V
+	public final fun write ([B)V
+}
+
+public final class com/jakewharton/mosaic/tty/TestTty$Companion {
+	public final fun create (Lcom/jakewharton/mosaic/tty/Tty$Callback;)Lcom/jakewharton/mosaic/tty/TestTty;
+}
+
+public final class com/jakewharton/mosaic/tty/Tty : java/lang/AutoCloseable {
+	public static final field Companion Lcom/jakewharton/mosaic/tty/Tty$Companion;
+	public fun <init> (JJ)V
+	public fun close ()V
+	public final fun currentSize ()[I
+	public final fun enableRawMode ()V
+	public final fun enableWindowResizeEvents ()V
+	public final fun interrupt ()V
+	public final fun read ([BII)I
+	public final fun readWithTimeout ([BIII)I
+}
+
+public abstract interface class com/jakewharton/mosaic/tty/Tty$Callback {
+	public abstract fun onFocus (Z)V
+	public abstract fun onKey ()V
+	public abstract fun onMouse ()V
+	public abstract fun onResize (IIII)V
+}
+
+public final class com/jakewharton/mosaic/tty/Tty$Companion {
+	public final fun create (Lcom/jakewharton/mosaic/tty/Tty$Callback;)Lcom/jakewharton/mosaic/tty/Tty;
+}
+

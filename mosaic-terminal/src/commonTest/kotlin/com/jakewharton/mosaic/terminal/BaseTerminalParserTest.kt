@@ -3,6 +3,7 @@ package com.jakewharton.mosaic.terminal
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.terminal.event.Event
+import com.jakewharton.mosaic.tty.TestTty
 import kotlin.test.AfterTest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
