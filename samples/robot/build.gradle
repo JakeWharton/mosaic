@@ -5,17 +5,20 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
 apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 apply from: "$rootDir/addAllTargets.gradle"
-apply plugin: 'application'
-
-application {
-	mainClass = 'example.RobotKt'
-}
 
 kotlin {
 	sourceSets {
 		commonMain {
 			dependencies {
 				implementation projects.mosaicRuntime
+			}
+		}
+	}
+
+	jvm {
+		binaries {
+			executable {
+				mainClass = 'example.RobotKt'
 			}
 		}
 	}
@@ -29,11 +32,5 @@ kotlin {
 				}
 			}
 		}
-	}
-
-	//noinspection ConfigurationAvoidance Cannot mutate this after buildscript evaluation.
-	targets.withType(KotlinJvmTarget) {
-		// Needed for 'application' plugin.
-		withJava()
 	}
 }

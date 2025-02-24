@@ -5,11 +5,6 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
 apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 apply from: "$rootDir/addAllTargets.gradle"
-apply plugin: 'application'
-
-application {
-	mainClass = 'example.Main'
-}
 
 kotlin {
 	sourceSets {
@@ -28,6 +23,14 @@ kotlin {
 		}
 	}
 
+	jvm {
+		binaries {
+			executable {
+				mainClass = 'example.Main'
+			}
+		}
+	}
+
 	targets.withType(KotlinNativeTarget).configureEach { target ->
 		target.binaries.executable {
 			entryPoint = 'example.main'
@@ -37,11 +40,5 @@ kotlin {
 				}
 			}
 		}
-	}
-
-	//noinspection ConfigurationAvoidance Cannot mutate this after buildscript evaluation.
-	targets.withType(KotlinJvmTarget) {
-		// Needed for 'application' plugin.
-		withJava()
 	}
 }

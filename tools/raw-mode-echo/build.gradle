@@ -3,22 +3,22 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
 apply from: "$rootDir/addAllTargets.gradle"
-apply plugin: 'application'
-
-application {
-	mainClass = 'example.Main'
-}
 
 kotlin {
-	// Needed for 'application' plugin.
-	jvm().withJava()
-
 	sourceSets {
 		commonMain {
 			dependencies {
 				implementation projects.mosaicTerminal
 				implementation libs.clikt
 				implementation libs.finalizationHook
+			}
+		}
+	}
+
+	jvm {
+		binaries {
+			executable {
+				mainClass = 'example.Main'
 			}
 		}
 	}
