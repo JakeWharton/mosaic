@@ -9,20 +9,20 @@ import kotlinx.coroutines.channels.SendChannel
 internal class PlatformEventHandler(
 	private val events: SendChannel<Event>,
 	private val emitDebugEvents: Boolean,
-) {
-	fun onFocus(focused: Boolean) {
+) : PlatformInput.Callback {
+	override fun onFocus(focused: Boolean) {
 		sendEvent(FocusEvent(focused))
 	}
 
-	fun onKey() {
+	override fun onKey() {
 		return
 	}
 
-	fun onMouse() {
+	override fun onMouse() {
 		return
 	}
 
-	fun onResize(columns: Int, rows: Int, width: Int, height: Int) {
+	override fun onResize(columns: Int, rows: Int, width: Int, height: Int) {
 		sendEvent(ResizeEvent(columns, rows, width, height))
 	}
 

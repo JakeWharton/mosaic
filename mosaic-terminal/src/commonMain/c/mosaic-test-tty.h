@@ -12,7 +12,7 @@ typedef struct platformInputWriterResult {
 	uint32_t error;
 } platformInputWriterResult;
 
-platformInputWriterResult platformInputWriter_init(platformEventHandler *handler);
+platformInputWriterResult platformInputWriter_init(platformInputCallback *callback);
 platformInput *platformInputWriter_getPlatformInput(platformInputWriter *writer);
 uint32_t platformInputWriter_write(platformInputWriter *writer, char *buffer, int count);
 uint32_t platformInputWriter_focusEvent(platformInputWriter *writer, bool focused);

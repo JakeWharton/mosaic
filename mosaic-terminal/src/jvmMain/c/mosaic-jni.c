@@ -24,54 +24,49 @@ void throwIse(JNIEnv *env, unsigned int error, const char *prefix) {
 	}
 }
 
-typedef struct jniPlatformEventHandler {
+typedef struct jniPlatformInputCallback {
 	JNIEnv *env;
 	jobject instance;
-	jclass clazz;
 	jmethodID onFocus;
 	jmethodID onKey;
 	jmethodID onMouse;
 	jmethodID onResize;
-} jniPlatformEventHandler;
+} jniPlatformInputCallback;
 
-void invokeOnFocusHandler(void *opaque, bool focused) {
-	jniPlatformEventHandler *handler = (jniPlatformEventHandler *) opaque;
-	(*handler->env)->CallNonvirtualVoidMethod(
-		handler->env,
-		handler->instance,
-		handler->clazz,
-		handler->onFocus,
+void invokeOnFocusCallback(void *opaque, bool focused) {
+	jniPlatformInputCallback *callback = (jniPlatformInputCallback *) opaque;
+	(*callback->env)->CallVoidMethod(
+		callback->env,
+		callback->instance,
+		callback->onFocus,
 		focused
 	);
 }
 
-void invokeOnKeyHandler(void *opaque) {
-	jniPlatformEventHandler *handler = (jniPlatformEventHandler *) opaque;
-	(*handler->env)->CallNonvirtualVoidMethod(
-		handler->env,
-		handler->instance,
-		handler->clazz,
-		handler->onKey
+void invokeOnKeyCallback(void *opaque) {
+	jniPlatformInputCallback *callback = (jniPlatformInputCallback *) opaque;
+	(*callback->env)->CallVoidMethod(
+		callback->env,
+		callback->instance,
+		callback->onKey
 	);
 }
 
-void invokeOnMouseHandler(void *opaque) {
-	jniPlatformEventHandler *handler = (jniPlatformEventHandler *) opaque;
-	(*handler->env)->CallNonvirtualVoidMethod(
-		handler->env,
-		handler->instance,
-		handler->clazz,
-		handler->onMouse
+void invokeOnMouseCallback(void *opaque) {
+	jniPlatformInputCallback *callback = (jniPlatformInputCallback *) opaque;
+	(*callback->env)->CallVoidMethod(
+		callback->env,
+		callback->instance,
+		callback->onMouse
 	);
 }
 
-void invokeOnResizeHandler(void *opaque, int columns, int rows, int width, int height) {
-	jniPlatformEventHandler *handler = (jniPlatformEventHandler *) opaque;
-	(*handler->env)->CallNonvirtualVoidMethod(
-		handler->env,
-		handler->instance,
-		handler->clazz,
-		handler->onResize,
+void invokeOnResizeCallback(void *opaque, int columns, int rows, int width, int height) {
+	jniPlatformInputCallback *callback = (jniPlatformInputCallback *) opaque;
+	(*callback->env)->CallVoidMethod(
+		callback->env,
+		callback->instance,
+		callback->onResize,
 		columns,
 		rows,
 		width,
@@ -80,7 +75,7 @@ void invokeOnResizeHandler(void *opaque, int columns, int rows, int width, int h
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformEventHandlerInit(
+Java_com_jakewharton_mosaic_terminal_Jni_platformInputCallbackInit(
 	JNIEnv *env,
 	jclass type,
 	jobject instance
@@ -89,7 +84,7 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformEventHandlerInit(
 	if (unlikely(globalInstance == NULL)) {
 		return 0;
 	}
-	jclass clazz = (*env)->FindClass(env, "com/jakewharton/mosaic/terminal/PlatformEventHandler");
+	jclass clazz = (*env)->FindClass(env, "com/jakewharton/mosaic/terminal/PlatformInput$Callback");
 	if (unlikely(clazz == NULL)) {
 		return 0;
 	}
@@ -110,42 +105,41 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformEventHandlerInit(
 		return 0;
 	}
 
-	jniPlatformEventHandler *jniHandler = malloc(sizeof(jniPlatformEventHandler));
-	if (unlikely(!jniHandler)) {
+	jniPlatformInputCallback *jniCallback = malloc(sizeof(jniPlatformInputCallback));
+	if (unlikely(!jniCallback)) {
 		return 0;
 	}
-	jniHandler->env = env;
-	jniHandler->instance = globalInstance;
-	jniHandler->clazz = clazz;
-	jniHandler->onFocus = onFocus;
-	jniHandler->onKey = onKey;
-	jniHandler->onMouse = onMouse;
-	jniHandler->onResize = onResize;
+	jniCallback->env = env;
+	jniCallback->instance = globalInstance;
+	jniCallback->onFocus = onFocus;
+	jniCallback->onKey = onKey;
+	jniCallback->onMouse = onMouse;
+	jniCallback->onResize = onResize;
 
-	platformEventHandler *handler = malloc(sizeof(platformEventHandler));
-	if (unlikely(!handler)) {
+	platformInputCallback *callback = malloc(sizeof(platformInputCallback));
+	if (unlikely(!callback)) {
 		return 0;
 	}
-	handler->opaque = jniHandler;
-	handler->onFocus = invokeOnFocusHandler;
-	handler->onKey = invokeOnKeyHandler;
-	handler->onMouse = invokeOnMouseHandler;
-	handler->onResize = invokeOnResizeHandler;
+	callback->opaque = jniCallback;
+	callback->onFocus = invokeOnFocusCallback;
+	callback->onKey = invokeOnKeyCallback;
+	callback->onMouse = invokeOnMouseCallback;
+	callback->onResize = invokeOnResizeCallback;
 
-	return (jlong) handler;
+	return (jlong) callback;
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformEventHandlerFree(
+Java_com_jakewharton_mosaic_terminal_Jni_platformInputCallbackFree(
 	JNIEnv *env,
 	jclass type,
-	jlong handlerOpaque
+	jlong callbackOpaque
 ) {
-	platformEventHandler *handler = (platformEventHandler *) handlerOpaque;
-	jniPlatformEventHandler *jniHandler = handler->opaque;
-	jobject instance = jniHandler->instance;
-	free(handler);
-	free(jniHandler);
+	platformInputCallback *callback = (platformInputCallback *) callbackOpaque;
+	jniPlatformInputCallback *jniCallback = callback->opaque;
+	jobject instance = jniCallback->instance;
+	free(callback);
+	free(jniCallback);
 	(*env)->DeleteGlobalRef(env, instance);
 }
 
@@ -153,10 +147,10 @@ JNIEXPORT jlong JNICALL
 Java_com_jakewharton_mosaic_terminal_Jni_platformInputInit(
 	JNIEnv *env,
 	jclass type,
-	jlong handlerOpaque
+	jlong callbackOpaque
 ) {
-	platformEventHandler *handler = (platformEventHandler *) handlerOpaque;
-	platformInputResult result = platformInput_init(handler);
+	platformInputCallback *callback = (platformInputCallback *) callbackOpaque;
+	platformInputResult result = platformInput_init(callback);
 	if (likely(!result.error)) {
 		return (jlong) result.input;
 	}
@@ -305,10 +299,10 @@ JNIEXPORT jlong JNICALL
 Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterInit(
 	JNIEnv *env,
 	jclass type,
-	jlong handlerOpaque
+	jlong callbackOpaque
 ) {
-	platformEventHandler *handler = (platformEventHandler *) handlerOpaque;
-	platformInputWriterResult result = platformInputWriter_init(handler);
+	platformInputCallback *callback = (platformInputCallback *) callbackOpaque;
+	platformInputWriterResult result = platformInputWriter_init(callback);
 	if (likely(!result.error)) {
 		return (jlong) result.writer;
 	}

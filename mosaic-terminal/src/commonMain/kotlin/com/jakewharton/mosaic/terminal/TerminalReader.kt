@@ -26,6 +26,7 @@ import com.jakewharton.mosaic.terminal.event.XtermCharacterSizeEvent
 import com.jakewharton.mosaic.terminal.event.XtermPixelSizeEvent
 import kotlin.concurrent.Volatile
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.channels.ReceiveChannel
 
 /**
@@ -37,7 +38,12 @@ import kotlinx.coroutines.channels.ReceiveChannel
  * @param emitDebugEvents When true, each event sent to [TerminalReader.events] will be followed
  * by a [DebugEvent] that contains the original event and the bytes which produced it.
  */
-public expect fun TerminalReader(emitDebugEvents: Boolean = false): TerminalReader
+public fun TerminalReader(emitDebugEvents: Boolean = false): TerminalReader {
+	val events = Channel<Event>(UNLIMITED)
+	val callback = PlatformEventHandler(events, emitDebugEvents)
+	val platformInput = PlatformInput.create(callback)
+	return TerminalReader(platformInput, events, emitDebugEvents)
+}
 
 public class TerminalReader internal constructor(
 	private val platformInput: PlatformInput,

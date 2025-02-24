@@ -11,7 +11,7 @@ typedef struct platformInputImpl {
 	HANDLE stdout;
 	HANDLE waitHandles[2];
 	INPUT_RECORD records[recordsCount];
-	platformEventHandler *handler;
+	platformInputCallback *callback;
 	bool windowResizeEvents;
 	DWORD saved_input_mode;
 	DWORD saved_output_mode;
@@ -20,7 +20,7 @@ typedef struct platformInputImpl {
 
 platformInputResult platformInput_initWithHandle(
 	HANDLE stdinRead,
-	platformEventHandler *handler
+	platformInputCallback *callback
 );
 
 #endif // MOSAIC_TTY_WINDOWS_H

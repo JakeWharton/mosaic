@@ -9,15 +9,35 @@ import kotlinx.cinterop.alloc
 import kotlinx.cinterop.asStableRef
 import kotlinx.cinterop.free
 import kotlinx.cinterop.nativeHeap
+import kotlinx.cinterop.ptr
 import kotlinx.cinterop.staticCFunction
 import kotlinx.cinterop.useContents
 import kotlinx.cinterop.usePinned
 
-internal actual class PlatformInput internal constructor(
+internal actual class PlatformInput(
 	ptr: CPointer<platformInput>,
-	private val handlerPtr: CPointer<platformEventHandler>?,
-	private val handlerRef: StableRef<PlatformEventHandler>?,
+	private val handlerPtr: CPointer<platformInputCallback>,
+	private val handlerRef: StableRef<Callback>,
 ) : AutoCloseable {
+	actual companion object {
+		actual fun create(callback: Callback): PlatformInput {
+			val callbackRef = StableRef.create(callback)
+			val callbackPtr = callbackRef.toNativeAllocationIn(nativeHeap).ptr
+
+			platformInput_init(callbackPtr).useContents {
+				input?.let { inputPtr ->
+					return PlatformInput(inputPtr, callbackPtr, callbackRef)
+				}
+
+				nativeHeap.free(callbackPtr)
+				callbackRef.dispose()
+
+				check(error == 0U) { "Unable to create stdin reader: $error" }
+				throw OutOfMemoryError()
+			}
+		}
+	}
+
 	private var ptr: CPointer<platformInput>? = ptr
 
 	actual fun read(buffer: ByteArray, offset: Int, count: Int): Int {
@@ -70,17 +90,28 @@ internal actual class PlatformInput internal constructor(
 			this.ptr = null
 
 			val error = platformInput_free(ptr)
-			handlerPtr?.let(nativeHeap::free)
-			handlerRef?.dispose()
+			nativeHeap.free(handlerPtr)
+			handlerRef.dispose()
 
 			if (error == 0U) return
 			throwError(error)
 		}
 	}
+
+	actual interface Callback {
+		actual fun onFocus(focused: Boolean)
+		actual fun onKey()
+		actual fun onMouse()
+		actual fun onResize(columns: Int, rows: Int, width: Int, height: Int)
+	}
 }
 
-internal fun StableRef<PlatformEventHandler>.toNativeAllocationIn(memory: NativePlacement): platformEventHandler {
-	return memory.alloc<platformEventHandler> {
+internal fun throwError(error: UInt): Nothing {
+	throw RuntimeException(error.toString())
+}
+
+internal fun StableRef<PlatformInput.Callback>.toNativeAllocationIn(memory: NativePlacement): platformInputCallback {
+	return memory.alloc<platformInputCallback> {
 		opaque = asCPointer()
 		onFocus = staticCFunction(::onFocusCallback)
 		onKey = staticCFunction(::onKeyCallback)
@@ -90,21 +121,21 @@ internal fun StableRef<PlatformEventHandler>.toNativeAllocationIn(memory: Native
 }
 
 private fun onFocusCallback(opaque: COpaquePointer?, focused: Boolean) {
-	val handler = opaque!!.asStableRef<PlatformEventHandler>().get()
+	val handler = opaque!!.asStableRef<PlatformInput.Callback>().get()
 	handler.onFocus(focused)
 }
 
 private fun onKeyCallback(opaque: COpaquePointer?) {
-	val handler = opaque!!.asStableRef<PlatformEventHandler>().get()
+	val handler = opaque!!.asStableRef<PlatformInput.Callback>().get()
 	handler.onKey()
 }
 
 private fun onMouseCallback(opaque: COpaquePointer?) {
-	val handler = opaque!!.asStableRef<PlatformEventHandler>().get()
+	val handler = opaque!!.asStableRef<PlatformInput.Callback>().get()
 	handler.onMouse()
 }
 
 private fun onResizeCallback(opaque: COpaquePointer?, columns: Int, rows: Int, width: Int, height: Int) {
-	val handler = opaque!!.asStableRef<PlatformEventHandler>().get()
+	val handler = opaque!!.asStableRef<PlatformInput.Callback>().get()
 	handler.onResize(columns, rows, width, height)
 }

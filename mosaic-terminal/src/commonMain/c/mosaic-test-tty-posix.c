@@ -14,7 +14,7 @@ typedef struct platformInputWriterImpl {
 	platformInput *input;
 } platformInputWriterImpl;
 
-platformInputWriterResult platformInputWriter_init(platformEventHandler *handler) {
+platformInputWriterResult platformInputWriter_init(platformInputCallback *callback) {
 	platformInputWriterResult result = {};
 
 	platformInputWriterImpl *writer = calloc(1, sizeof(platformInputWriterImpl));
@@ -28,7 +28,7 @@ platformInputWriterResult platformInputWriter_init(platformEventHandler *handler
 		goto err;
 	}
 
-	platformInputResult inputResult = platformInput_initWithFd(writer->pipe[0], handler);
+	platformInputResult inputResult = platformInput_initWithFd(writer->pipe[0], callback);
 	if (unlikely(inputResult.error)) {
 		result.error = inputResult.error;
 		goto err;
@@ -80,8 +80,8 @@ uint32_t platformInputWriter_mouseEvent(platformInputWriter *writer UNUSED) {
 }
 
 uint32_t platformInputWriter_resizeEvent(platformInputWriter *writer, int columns, int rows, int width, int height) {
-	platformEventHandler *handler = writer->input->handler;
-	handler->onResize(handler->opaque, columns, rows, width, height);
+	platformInputCallback *callback = writer->input->callback;
+	callback->onResize(callback->opaque, columns, rows, width, height);
 	return 0;
 }
 

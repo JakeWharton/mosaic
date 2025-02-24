@@ -4,18 +4,18 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-typedef void PlatformEventHandlerOnFocus(void *opaque, bool focused);
-typedef void PlatformEventHandlerOnKey(void *opaque); // TODO params
-typedef void PlatformEventHandlerOnMouse(void *opaque); // TODO params
-typedef void PlatformEventHandlerOnResize(void *opaque, int columns, int rows, int width, int height);
+typedef void PlatformInputCallbackOnFocus(void *opaque, bool focused);
+typedef void PlatformInputCallbackOnKey(void *opaque); // TODO params
+typedef void PlatformInputCallbackOnMouse(void *opaque); // TODO params
+typedef void PlatformInputCallbackOnResize(void *opaque, int columns, int rows, int width, int height);
 
-typedef struct platformEventHandler {
+typedef struct platformInputCallback {
 	void *opaque;
-	PlatformEventHandlerOnFocus *onFocus;
-	PlatformEventHandlerOnKey *onKey;
-	PlatformEventHandlerOnMouse *onMouse;
-	PlatformEventHandlerOnResize *onResize;
-} platformEventHandler;
+	PlatformInputCallbackOnFocus *onFocus;
+	PlatformInputCallbackOnKey *onKey;
+	PlatformInputCallbackOnMouse *onMouse;
+	PlatformInputCallbackOnResize *onResize;
+} platformInputCallback;
 
 
 typedef struct platformInputImpl platformInput;
@@ -38,7 +38,7 @@ typedef struct terminalSizeResult {
 	uint32_t error;
 } terminalSizeResult;
 
-platformInputResult platformInput_init(platformEventHandler *handler);
+platformInputResult platformInput_init(platformInputCallback *callback);
 stdinRead platformInput_read(platformInput *input, char *buffer, int count);
 stdinRead platformInput_readWithTimeout(platformInput *input, char *buffer, int count, int timeoutMillis);
 uint32_t platformInput_interrupt(platformInput *input);

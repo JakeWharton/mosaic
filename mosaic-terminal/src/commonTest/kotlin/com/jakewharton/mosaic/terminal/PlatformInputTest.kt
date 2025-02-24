@@ -97,4 +97,24 @@ class PlatformInputTest {
 		assertThat(readB).isZero()
 		assertThat(tookB).isGreaterThan(50.milliseconds)
 	}
+
+	@Test fun callbackFocusWorks() {
+		writer.focusEvent(true)
+		// TODO read event
+	}
+
+	@Test fun callbackKeyWorks() {
+		writer.keyEvent()
+		// TODO read event
+	}
+
+	@Test fun callbackMouseWorks() {
+		writer.mouseEvent()
+		// TODO read event
+	}
+
+	@Test fun callbackResizeEvent() {
+		writer.resizeEvent(1, 2, 3, 4)
+		// TODO read event
+	}
 }

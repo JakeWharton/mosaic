@@ -13,13 +13,13 @@ internal object Jni {
 	}
 
 	@JvmStatic
-	external fun platformEventHandlerInit(handler: PlatformEventHandler): Long
+	external fun platformInputCallbackInit(callback: PlatformInput.Callback): Long
 
 	@JvmStatic
-	external fun platformEventHandlerFree(handlerPtr: Long)
+	external fun platformInputCallbackFree(callbackPtr: Long)
 
 	@JvmStatic
-	external fun platformInputInit(handlerPtr: Long): Long
+	external fun platformInputInit(callbackPtr: Long): Long
 
 	@JvmStatic
 	external fun platformInputRead(

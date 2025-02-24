@@ -8,7 +8,7 @@
 
 platformInputResult platformInput_initWithHandle(
 	HANDLE stdinRead,
-	platformEventHandler *handler
+	platformInputCallback *callback
 ) {
 	platformInputResult result = {};
 
@@ -38,7 +38,7 @@ platformInputResult platformInput_initWithHandle(
 	input->stdout = stdoutWrite;
 	input->waitHandles[0] = stdinRead;
 	input->waitHandles[1] = interruptEvent;
-	input->handler = handler;
+	input->callback = callback;
 
 	result.input = input;
 
@@ -50,9 +50,9 @@ platformInputResult platformInput_initWithHandle(
 	goto ret;
 }
 
-platformInputResult platformInput_init(platformEventHandler *handler) {
+platformInputResult platformInput_init(platformInputCallback *callback) {
 	HANDLE h = GetStdHandle(STD_INPUT_HANDLE);
-	return platformInput_initWithHandle(h, handler);
+	return platformInput_initWithHandle(h, callback);
 }
 
 stdinRead platformInput_read(
@@ -83,7 +83,7 @@ stdinRead platformInput_readWithTimeout(
 			goto err;
 		}
 
-		platformEventHandler *handler = input->handler;
+		platformInputCallback *callback = input->callback;
 		int nextBufferIndex = 0;
 		for (int i = 0; i < (int) recordsRead; i++) {
 			INPUT_RECORD record = records[i];
@@ -95,10 +95,10 @@ stdinRead platformInput_readWithTimeout(
 			} else if (record.EventType == MOUSE_EVENT) {
 				// TODO mouse shit
 			} else if (record.EventType == FOCUS_EVENT) {
-				handler->onFocus(handler->opaque, record.Event.FocusEvent.bSetFocus);
+				callback->onFocus(callback->opaque, record.Event.FocusEvent.bSetFocus);
 			} else if (record.EventType == WINDOW_BUFFER_SIZE_EVENT && input->windowResizeEvents) {
-				handler->onResize(
-					handler->opaque,
+				callback->onResize(
+					callback->opaque,
 					record.Event.WindowBufferSizeEvent.dwSize.X,
 					record.Event.WindowBufferSizeEvent.dwSize.Y,
 					0, 0

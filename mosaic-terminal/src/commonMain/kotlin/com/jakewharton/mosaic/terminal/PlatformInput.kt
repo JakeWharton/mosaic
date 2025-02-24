@@ -1,6 +1,10 @@
 package com.jakewharton.mosaic.terminal
 
 internal expect class PlatformInput : AutoCloseable {
+	companion object {
+		fun create(callback: Callback): PlatformInput
+	}
+
 	/**
 	 * Read up to [count] bytes into [buffer] at [offset]. The number of bytes read will be returned.
 	 * 0 will be returned if [interrupt] is called while waiting for input. -1 will be returned if
@@ -38,4 +42,11 @@ internal expect class PlatformInput : AutoCloseable {
 	 * This call can be omitted if your process is exiting.
 	 */
 	override fun close()
+
+	interface Callback {
+		fun onFocus(focused: Boolean)
+		fun onKey()
+		fun onMouse()
+		fun onResize(columns: Int, rows: Int, width: Int, height: Int)
+	}
 }

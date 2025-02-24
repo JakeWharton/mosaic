@@ -1,7 +1,7 @@
 package com.jakewharton.mosaic.terminal
 
-import com.jakewharton.mosaic.terminal.Jni.platformEventHandlerFree
-import com.jakewharton.mosaic.terminal.Jni.platformEventHandlerInit
+import com.jakewharton.mosaic.terminal.Jni.platformInputCallbackFree
+import com.jakewharton.mosaic.terminal.Jni.platformInputCallbackInit
 import com.jakewharton.mosaic.terminal.Jni.platformInputWriterGetPlatformInput
 import com.jakewharton.mosaic.terminal.Jni.platformInputWriterInit
 import com.jakewharton.mosaic.terminal.event.Event
@@ -10,7 +10,7 @@ import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 
 internal actual fun PlatformInputWriter(): PlatformInputWriter {
 	val events = Channel<Event>(UNLIMITED)
-	val handlerPtr = platformEventHandlerInit(PlatformEventHandler(events, emitDebugEvents = false))
+	val handlerPtr = platformInputCallbackInit(PlatformEventHandler(events, emitDebugEvents = false))
 	if (handlerPtr != 0L) {
 		val writerPtr = platformInputWriterInit(handlerPtr)
 		if (writerPtr != 0L) {
@@ -18,7 +18,7 @@ internal actual fun PlatformInputWriter(): PlatformInputWriter {
 			val platformInput = PlatformInput(inputPtr, handlerPtr)
 			return PlatformInputWriter(writerPtr, events, platformInput)
 		}
-		platformEventHandlerFree(handlerPtr)
+		platformInputCallbackFree(handlerPtr)
 	}
 	throw OutOfMemoryError()
 }

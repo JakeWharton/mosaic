@@ -388,7 +388,7 @@ internal class MosaicComposition(
 	private val recomposer = Recomposer(composeContext)
 	private val composition = Composition(applier, recomposer)
 
-	override val lifecycle = LifecycleRegistry(this).also { lifecycle ->
+	override val lifecycle = LifecycleRegistry.createUnsafe(this).also { lifecycle ->
 		scope.launch(start = UNDISPATCHED) {
 			snapshotFlow { terminalState.value.focused }.collect { focused ->
 				lifecycle.handleLifecycleEvent(

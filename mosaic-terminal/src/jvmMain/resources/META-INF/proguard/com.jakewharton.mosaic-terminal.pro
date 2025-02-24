@@ -4,7 +4,7 @@
 }
 
 # These members are interacted with through native code.
--keep class com.jakewharton.mosaic.terminal.PlatformEventHandler {
+-keep class com.jakewharton.mosaic.terminal.PlatformInput$Callback {
 	void onFocus(...);
 	void onKey(...);
 	void onMouse(...);

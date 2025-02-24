@@ -13,7 +13,7 @@
 #include <time.h>
 #include <unistd.h>
 
-platformInputResult platformInput_initWithFd(int stdinFd, platformEventHandler *handler) {
+platformInputResult platformInput_initWithFd(int stdinFd, platformInputCallback *callback) {
 	platformInputResult result = {};
 
 	platformInputImpl *input = calloc(1, sizeof(platformInputImpl));
@@ -31,7 +31,7 @@ platformInputResult platformInput_initWithFd(int stdinFd, platformEventHandler *
 	// TODO Consider forcing the writer pipe to always be lower than this pipe.
 	//  If we did this, we could always assume pipe[0] + 1 is the value for nfds.
 	input->nfds = ((stdinFd > input->pipe[0]) ? stdinFd : input->pipe[0]) + 1;
-	input->handler = handler;
+	input->callback = callback;
 
 	result.input = input;
 
@@ -43,8 +43,8 @@ platformInputResult platformInput_initWithFd(int stdinFd, platformEventHandler *
 	goto ret;
 }
 
-platformInputResult platformInput_init(platformEventHandler *handler) {
-	return platformInput_initWithFd(STDIN_FILENO, handler);
+platformInputResult platformInput_init(platformInputCallback *callback) {
+	return platformInput_initWithFd(STDIN_FILENO, callback);
 }
 
 stdinRead platformInput_readInternal(
@@ -123,8 +123,8 @@ platformInput *globalInput = NULL;
 void sigwinchHandler(int value UNUSED) {
 	struct winsize size;
 	if (ioctl(globalInput->stdinFd, TIOCGWINSZ, &size) != -1) {
-		platformEventHandler *handler = globalInput->handler;
-		handler->onResize(handler->opaque, size.ws_col, size.ws_row, size.ws_xpixel, size.ws_ypixel);
+		platformInputCallback *callback = globalInput->callback;
+		callback->onResize(callback->opaque, size.ws_col, size.ws_row, size.ws_xpixel, size.ws_ypixel);
 	}
 	// TODO Send errno somewhere? Maybe once we get debug logs working.
 }

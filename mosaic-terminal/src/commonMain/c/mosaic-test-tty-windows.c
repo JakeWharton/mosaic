@@ -14,7 +14,7 @@ typedef struct platformInputWriterImpl {
 // and over eventually produces a failure, so we only do it once per process (since it's test only).
 HANDLE writerConin = NULL;
 
-platformInputWriterResult platformInputWriter_init(platformEventHandler *handler) {
+platformInputWriterResult platformInputWriter_init(platformInputCallback *callback) {
 	platformInputWriterResult result = {};
 
 	platformInputWriterImpl *writer = calloc(1, sizeof(platformInputWriterImpl));
@@ -42,7 +42,7 @@ platformInputWriterResult platformInputWriter_init(platformEventHandler *handler
 	// Ensure we don't start with existing records in the buffer.
 	FlushConsoleInputBuffer(writerConin);
 
-	platformInputResult inputResult = platformInput_initWithHandle(writerConin, handler);
+	platformInputResult inputResult = platformInput_initWithHandle(writerConin, callback);
 	if (unlikely(inputResult.error)) {
 		result.error = inputResult.error;
 		goto err;
