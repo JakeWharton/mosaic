@@ -1,0 +1,319 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>Tty</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<link href="../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" defer></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+    <nav class="navigation theme-dark" id="navigation-wrapper">
+<a class="library-name--link" href="../../../index.html">
+                    mosaic
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.17.0-SNAPSHOT
+        </div>
+        <div class="navigation-controls">
+        <div class="filter-section filter-section_loading" id="filter-section">
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":mosaic-tty:dokkaHtmlPartial/commonMain">common</button>
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":mosaic-tty:dokkaHtmlPartial/jvmMain">jvm</button>
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":mosaic-tty:dokkaHtmlPartial/nativeMain">native</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox">
+                    <div class="dropdown--header"><span>Platform filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close platform filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":mosaic-tty:dokkaHtmlPartial/commonMain" data-filter=":mosaic-tty:dokkaHtmlPartial/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-filter=":mosaic-tty:dokkaHtmlPartial/jvmMain">
+                                <span class="checkbox--icon"></span>
+                                jvm
+                            </label>
+                        </li>
+                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-filter=":mosaic-tty:dokkaHtmlPartial/nativeMain">
+                                <span class="checkbox--icon"></span>
+                                native
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </div>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                    <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox">
+                        <div class="dropdown--header">
+                            <span>
+                                    mosaic
+                            </span>
+                            <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                                <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                            </button>
+                        </div>
+                        <div class="sidebar--inner" id="sideMenu"></div>
+                    </ul>
+                    <div class="dropdown--overlay"></div>
+                </div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="mosaic-tty::com.jakewharton.mosaic.tty/Tty///PointingToDeclaration//-742055585">
+  <div class="breadcrumbs"><a href="../../index.html">mosaic-tty</a><span class="delimiter">/</span><a href="../index.html">com.jakewharton.mosaic.tty</a><span class="delimiter">/</span><span class="current">Tty</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Tty</span></span></h1>
+    <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+      <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":mosaic-tty:dokkaHtmlPartial/commonMain">common</button><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-toggle=":mosaic-tty:dokkaHtmlPartial/jvmMain">jvm</button><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-toggle=":mosaic-tty:dokkaHtmlPartial/nativeMain">native</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-tty:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">expect </span><span class="token keyword">class </span><a href="index.html">Tty</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-auto-closeable/index.html">AutoCloseable</a></div></div><div class="content sourceset-dependent-content" data-togglable=":mosaic-tty:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">class </span><a href="index.html">Tty</a> : <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/AutoCloseable.html">AutoCloseable</a></div></div><div class="content sourceset-dependent-content" data-togglable=":mosaic-tty:dokkaHtmlPartial/nativeMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">class </span><a href="index.html">Tty</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-auto-closeable/index.html">AutoCloseable</a></div></div>    </div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="-2022855054%2FConstructors%2F-1554329776" anchor-label="Tty" id="-2022855054%2FConstructors%2F-1554329776" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-tty.html"><span><span>Tty</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2022855054%2FConstructors%2F-1554329776"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-active="" data-toggle=":mosaic-tty:dokkaHtmlPartial/jvmMain">jvm</button><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-toggle=":mosaic-tty:dokkaHtmlPartial/nativeMain">native</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-tty:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">ttyPtr<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">, </span></span><span class="parameter ">callbackPtr<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span></div></div><div class="content sourceset-dependent-content" data-togglable=":mosaic-tty:dokkaHtmlPartial/nativeMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">ptr<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlinx.cinterop/-c-pointer/index.html">CPointer</a><span class="token operator">&lt;</span><a href="../../../mosaic-tty/com.jakewharton.mosaic.tty/-mosaic-tty/index.html">MosaicTty</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">handlerPtr<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlinx.cinterop/-c-pointer/index.html">CPointer</a><span class="token operator">&lt;</span><a href="../../../mosaic-tty/com.jakewharton.mosaic.tty/-mosaic-tty-callback/index.html">MosaicTtyCallback</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">handlerRef<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlinx.cinterop/-stable-ref/index.html">StableRef</a><span class="token operator">&lt;</span><a href="-callback/index.html">Tty.Callback</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="-1640634696%2FClasslikes%2F-742055585" anchor-label="Callback" id="-1640634696%2FClasslikes%2F-742055585" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-callback/index.html"><span><span>Callback</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1640634696%2FClasslikes%2F-742055585"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":mosaic-tty:dokkaHtmlPartial/commonMain">common</button><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-toggle=":mosaic-tty:dokkaHtmlPartial/jvmMain">jvm</button><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-toggle=":mosaic-tty:dokkaHtmlPartial/nativeMain">native</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-tty:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">expect </span><span class="token keyword">interface </span><a href="-callback/index.html">Callback</a></div></div><div class="content sourceset-dependent-content" data-togglable=":mosaic-tty:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">interface </span><a href="-callback/index.html">Callback</a></div></div><div class="content sourceset-dependent-content" data-togglable=":mosaic-tty:dokkaHtmlPartial/nativeMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">interface </span><a href="-callback/index.html">Callback</a></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2057213177%2FClasslikes%2F-742055585" anchor-label="Companion" id="2057213177%2FClasslikes%2F-742055585" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-companion/index.html"><span><span>Companion</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2057213177%2FClasslikes%2F-742055585"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":mosaic-tty:dokkaHtmlPartial/commonMain">common</button><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-toggle=":mosaic-tty:dokkaHtmlPartial/jvmMain">jvm</button><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-toggle=":mosaic-tty:dokkaHtmlPartial/nativeMain">native</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-tty:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">expect </span><span class="token keyword">object </span><a href="-companion/index.html">Companion</a></div></div><div class="content sourceset-dependent-content" data-togglable=":mosaic-tty:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">object </span><a href="-companion/index.html">Companion</a></div></div><div class="content sourceset-dependent-content" data-togglable=":mosaic-tty:dokkaHtmlPartial/nativeMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">object </span><a href="-companion/index.html">Companion</a></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-1728622790%2FFunctions%2F-742055585" anchor-label="close" id="-1728622790%2FFunctions%2F-742055585" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="close.html"><span><span>close</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1728622790%2FFunctions%2F-742055585"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":mosaic-tty:dokkaHtmlPartial/commonMain">common</button><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-toggle=":mosaic-tty:dokkaHtmlPartial/jvmMain">jvm</button><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-toggle=":mosaic-tty:dokkaHtmlPartial/nativeMain">native</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-tty:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">expect </span><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="close.html"><span class="token function">close</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Free the resources associated with this reader.</p></div></div><div class="content sourceset-dependent-content" data-togglable=":mosaic-tty:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="close.html"><span class="token function">close</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div><div class="content sourceset-dependent-content" data-togglable=":mosaic-tty:dokkaHtmlPartial/nativeMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="close.html"><span class="token function">close</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2065890968%2FFunctions%2F-742055585" anchor-label="currentSize" id="2065890968%2FFunctions%2F-742055585" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="current-size.html"><span>current</span><wbr><span><span>Size</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2065890968%2FFunctions%2F-742055585"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":mosaic-tty:dokkaHtmlPartial/commonMain">common</button><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-toggle=":mosaic-tty:dokkaHtmlPartial/jvmMain">jvm</button><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-toggle=":mosaic-tty:dokkaHtmlPartial/nativeMain">native</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-tty:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">expect </span><span class="token keyword">fun </span><a href="current-size.html"><span class="token function">currentSize</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int-array/index.html">IntArray</a></div></div><div class="content sourceset-dependent-content" data-togglable=":mosaic-tty:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">fun </span><a href="current-size.html"><span class="token function">currentSize</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int-array/index.html">IntArray</a></div></div><div class="content sourceset-dependent-content" data-togglable=":mosaic-tty:dokkaHtmlPartial/nativeMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">fun </span><a href="current-size.html"><span class="token function">currentSize</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int-array/index.html">IntArray</a></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="60521290%2FFunctions%2F-742055585" anchor-label="enableRawMode" id="60521290%2FFunctions%2F-742055585" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="enable-raw-mode.html"><span>enable</span><wbr><span>Raw</span><wbr><span><span>Mode</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="60521290%2FFunctions%2F-742055585"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":mosaic-tty:dokkaHtmlPartial/commonMain">common</button><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-toggle=":mosaic-tty:dokkaHtmlPartial/jvmMain">jvm</button><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-toggle=":mosaic-tty:dokkaHtmlPartial/nativeMain">native</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-tty:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">expect </span><span class="token keyword">fun </span><a href="enable-raw-mode.html"><span class="token function">enableRawMode</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div><div class="content sourceset-dependent-content" data-togglable=":mosaic-tty:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">fun </span><a href="enable-raw-mode.html"><span class="token function">enableRawMode</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div><div class="content sourceset-dependent-content" data-togglable=":mosaic-tty:dokkaHtmlPartial/nativeMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">fun </span><a href="enable-raw-mode.html"><span class="token function">enableRawMode</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1045648712%2FFunctions%2F-742055585" anchor-label="enableWindowResizeEvents" id="1045648712%2FFunctions%2F-742055585" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="enable-window-resize-events.html"><span>enable</span><wbr><span>Window</span><wbr><span>Resize</span><wbr><span><span>Events</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1045648712%2FFunctions%2F-742055585"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":mosaic-tty:dokkaHtmlPartial/commonMain">common</button><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-toggle=":mosaic-tty:dokkaHtmlPartial/jvmMain">jvm</button><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-toggle=":mosaic-tty:dokkaHtmlPartial/nativeMain">native</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-tty:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">expect </span><span class="token keyword">fun </span><a href="enable-window-resize-events.html"><span class="token function">enableWindowResizeEvents</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div><div class="content sourceset-dependent-content" data-togglable=":mosaic-tty:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">fun </span><a href="enable-window-resize-events.html"><span class="token function">enableWindowResizeEvents</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div><div class="content sourceset-dependent-content" data-togglable=":mosaic-tty:dokkaHtmlPartial/nativeMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">fun </span><a href="enable-window-resize-events.html"><span class="token function">enableWindowResizeEvents</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1199474001%2FFunctions%2F-742055585" anchor-label="interrupt" id="-1199474001%2FFunctions%2F-742055585" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="interrupt.html"><span><span>interrupt</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1199474001%2FFunctions%2F-742055585"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":mosaic-tty:dokkaHtmlPartial/commonMain">common</button><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-toggle=":mosaic-tty:dokkaHtmlPartial/jvmMain">jvm</button><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-toggle=":mosaic-tty:dokkaHtmlPartial/nativeMain">native</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-tty:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">expect </span><span class="token keyword">fun </span><a href="interrupt.html"><span class="token function">interrupt</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Signal blocking calls to <a href="read.html">read</a> to wake up and return 0.</p></div></div><div class="content sourceset-dependent-content" data-togglable=":mosaic-tty:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">fun </span><a href="interrupt.html"><span class="token function">interrupt</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div><div class="content sourceset-dependent-content" data-togglable=":mosaic-tty:dokkaHtmlPartial/nativeMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">fun </span><a href="interrupt.html"><span class="token function">interrupt</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="142462798%2FFunctions%2F-742055585" anchor-label="read" id="142462798%2FFunctions%2F-742055585" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="read.html"><span><span>read</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="142462798%2FFunctions%2F-742055585"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":mosaic-tty:dokkaHtmlPartial/commonMain">common</button><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-toggle=":mosaic-tty:dokkaHtmlPartial/jvmMain">jvm</button><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-toggle=":mosaic-tty:dokkaHtmlPartial/nativeMain">native</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-tty:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">expect </span><span class="token keyword">fun </span><a href="read.html"><span class="token function">read</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">buffer<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-byte-array/index.html">ByteArray</a><span class="token punctuation">, </span></span><span class="parameter ">offset<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">count<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Read up to <a href="read.html">count</a> bytes into <a href="read.html">buffer</a> at <a href="read.html">offset</a>. The number of bytes read will be returned. 0 will be returned if <a href="interrupt.html">interrupt</a> is called while waiting for input. -1 will be returned if the input stream is closed.</p></div></div><div class="content sourceset-dependent-content" data-togglable=":mosaic-tty:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">fun </span><a href="read.html"><span class="token function">read</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">buffer<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-byte-array/index.html">ByteArray</a><span class="token punctuation">, </span></span><span class="parameter ">offset<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">count<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div></div><div class="content sourceset-dependent-content" data-togglable=":mosaic-tty:dokkaHtmlPartial/nativeMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">fun </span><a href="read.html"><span class="token function">read</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">buffer<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-byte-array/index.html">ByteArray</a><span class="token punctuation">, </span></span><span class="parameter ">offset<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">count<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1857796916%2FFunctions%2F-742055585" anchor-label="readWithTimeout" id="1857796916%2FFunctions%2F-742055585" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain,:mosaic-tty:dokkaHtmlPartial/jvmMain,:mosaic-tty:dokkaHtmlPartial/nativeMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="read-with-timeout.html"><span>read</span><wbr><span>With</span><wbr><span><span>Timeout</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1857796916%2FFunctions%2F-742055585"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":mosaic-tty:dokkaHtmlPartial/commonMain">common</button><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-toggle=":mosaic-tty:dokkaHtmlPartial/jvmMain">jvm</button><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-toggle=":mosaic-tty:dokkaHtmlPartial/nativeMain">native</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-tty:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">expect </span><span class="token keyword">fun </span><a href="read-with-timeout.html"><span class="token function">readWithTimeout</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">buffer<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-byte-array/index.html">ByteArray</a><span class="token punctuation">, </span></span><span class="parameter ">offset<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">count<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">timeoutMillis<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Read up to <a href="read-with-timeout.html">count</a> bytes into <a href="read-with-timeout.html">buffer</a> at <a href="read-with-timeout.html">offset</a>. The number of bytes read will be returned. 0 will be returned if <a href="interrupt.html">interrupt</a> is called while waiting for input, or if at least <a href="read-with-timeout.html">timeoutMillis</a> have passed without data. -1 will be returned if the input stream is closed.</p></div></div><div class="content sourceset-dependent-content" data-togglable=":mosaic-tty:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">fun </span><a href="read-with-timeout.html"><span class="token function">readWithTimeout</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">buffer<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-byte-array/index.html">ByteArray</a><span class="token punctuation">, </span></span><span class="parameter ">offset<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">count<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">timeoutMillis<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div></div><div class="content sourceset-dependent-content" data-togglable=":mosaic-tty:dokkaHtmlPartial/nativeMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">fun </span><a href="read-with-timeout.html"><span class="token function">readWithTimeout</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">buffer<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-byte-array/index.html">ByteArray</a><span class="token punctuation">, </span></span><span class="parameter ">offset<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">count<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">timeoutMillis<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div></div>                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+        <span>© 2025 Copyright</span>
+        <span class="pull-right">
+            <span>Generated by </span>
+            <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                <span>dokka</span>
+            </a>
+        </span>
+    </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

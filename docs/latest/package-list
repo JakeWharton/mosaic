@@ -15,3 +15,5 @@ com.jakewharton.mosaic.terminal
 com.jakewharton.mosaic.terminal.event
 module:mosaic-testing
 com.jakewharton.mosaic.testing
+module:mosaic-tty
+com.jakewharton.mosaic.tty
