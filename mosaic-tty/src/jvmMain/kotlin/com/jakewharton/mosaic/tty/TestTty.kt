@@ -5,11 +5,12 @@ import com.jakewharton.mosaic.tty.Jni.testTtyInit
 import com.jakewharton.mosaic.tty.Jni.ttyCallbackFree
 import com.jakewharton.mosaic.tty.Jni.ttyCallbackInit
 
-public actual class TestTty(
+public actual class TestTty private constructor(
 	private var testTtyPtr: Long,
 	public actual val tty: Tty,
 ) : AutoCloseable {
 	public actual companion object {
+		@JvmStatic
 		public actual fun create(callback: Tty.Callback): TestTty {
 			val callbackPtr = ttyCallbackInit(callback)
 			if (callbackPtr != 0L) {

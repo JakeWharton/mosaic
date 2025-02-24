@@ -1,10 +1,11 @@
 package com.jakewharton.mosaic.tty
 
-public actual class Tty(
+public actual class Tty internal constructor(
 	private var ttyPtr: Long,
 	private val callbackPtr: Long,
 ) : AutoCloseable {
 	public actual companion object {
+		@JvmStatic
 		public actual fun create(callback: Callback): Tty {
 			val callbackPtr = Jni.ttyCallbackInit(callback)
 			if (callbackPtr != 0L) {

@@ -1,7 +1,8 @@
 public final class com/jakewharton/mosaic/tty/TestTty : java/lang/AutoCloseable {
 	public static final field Companion Lcom/jakewharton/mosaic/tty/TestTty$Companion;
-	public fun <init> (JLcom/jakewharton/mosaic/tty/Tty;)V
+	public synthetic fun <init> (JLcom/jakewharton/mosaic/tty/Tty;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun close ()V
+	public static final fun create (Lcom/jakewharton/mosaic/tty/Tty$Callback;)Lcom/jakewharton/mosaic/tty/TestTty;
 	public final fun focusEvent (Z)V
 	public final fun getTty ()Lcom/jakewharton/mosaic/tty/Tty;
 	public final fun keyEvent ()V
@@ -16,8 +17,8 @@ public final class com/jakewharton/mosaic/tty/TestTty$Companion {
 
 public final class com/jakewharton/mosaic/tty/Tty : java/lang/AutoCloseable {
 	public static final field Companion Lcom/jakewharton/mosaic/tty/Tty$Companion;
-	public fun <init> (JJ)V
 	public fun close ()V
+	public static final fun create (Lcom/jakewharton/mosaic/tty/Tty$Callback;)Lcom/jakewharton/mosaic/tty/Tty;
 	public final fun currentSize ()[I
 	public final fun enableRawMode ()V
 	public final fun enableWindowResizeEvents ()V
