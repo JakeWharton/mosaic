@@ -4,47 +4,47 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-typedef void PlatformInputCallbackOnFocus(void *opaque, bool focused);
-typedef void PlatformInputCallbackOnKey(void *opaque); // TODO params
-typedef void PlatformInputCallbackOnMouse(void *opaque); // TODO params
-typedef void PlatformInputCallbackOnResize(void *opaque, int columns, int rows, int width, int height);
+typedef void MosaicTtyCallbackOnFocus(void *opaque, bool focused);
+typedef void MosaicTtyCallbackOnKey(void *opaque); // TODO params
+typedef void MosaicTtyCallbackOnMouse(void *opaque); // TODO params
+typedef void MosaicTtyCallbackOnResize(void *opaque, int columns, int rows, int width, int height);
 
-typedef struct platformInputCallback {
+typedef struct MosaicTtyCallback {
 	void *opaque;
-	PlatformInputCallbackOnFocus *onFocus;
-	PlatformInputCallbackOnKey *onKey;
-	PlatformInputCallbackOnMouse *onMouse;
-	PlatformInputCallbackOnResize *onResize;
-} platformInputCallback;
+	MosaicTtyCallbackOnFocus *onFocus;
+	MosaicTtyCallbackOnKey *onKey;
+	MosaicTtyCallbackOnMouse *onMouse;
+	MosaicTtyCallbackOnResize *onResize;
+} MosaicTtyCallback;
 
 
-typedef struct platformInputImpl platformInput;
+typedef struct MosaicTtyImpl MosaicTty;
 
-typedef struct platformInputResult {
-	platformInput *input;
+typedef struct MosaicTtyInitResult {
+	MosaicTty *tty;
 	uint32_t error;
-} platformInputResult;
+} MosaicTtyInitResult;
 
-typedef struct stdinRead {
+typedef struct MosaicTtyIoResult {
 	int count;
 	uint32_t error;
-} stdinRead;
+} MosaicTtyIoResult;
 
-typedef struct terminalSizeResult {
+typedef struct MosaicTtyTerminalSizeResult {
 	int columns;
 	int rows;
 	int width;
 	int height;
 	uint32_t error;
-} terminalSizeResult;
+} MosaicTtyTerminalSizeResult;
 
-platformInputResult platformInput_init(platformInputCallback *callback);
-stdinRead platformInput_read(platformInput *input, char *buffer, int count);
-stdinRead platformInput_readWithTimeout(platformInput *input, char *buffer, int count, int timeoutMillis);
-uint32_t platformInput_interrupt(platformInput *input);
-uint32_t platformInput_enableRawMode(platformInput *input);
-uint32_t platformInput_enableWindowResizeEvents(platformInput *input);
-terminalSizeResult platformInput_currentTerminalSize(platformInput *input);
-uint32_t platformInput_free(platformInput *input);
+MosaicTtyInitResult tty_init(MosaicTtyCallback *callback);
+MosaicTtyIoResult tty_read(MosaicTty *tty, char *buffer, int count);
+MosaicTtyIoResult tty_readWithTimeout(MosaicTty *tty, char *buffer, int count, int timeoutMillis);
+uint32_t tty_interrupt(MosaicTty *tty);
+uint32_t tty_enableRawMode(MosaicTty *tty);
+uint32_t tty_enableWindowResizeEvents(MosaicTty *tty);
+MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty);
+uint32_t tty_free(MosaicTty *tty);
 
 #endif // MOSAIC_TTY_H

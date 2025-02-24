@@ -1,8 +1,8 @@
 package com.jakewharton.mosaic.terminal
 
-internal expect class PlatformInput : AutoCloseable {
+internal expect class Tty : AutoCloseable {
 	companion object {
-		fun create(callback: Callback): PlatformInput
+		fun create(callback: Callback): Tty
 	}
 
 	/**

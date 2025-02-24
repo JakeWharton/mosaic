@@ -6,20 +6,20 @@
 #include "cutils.h"
 #include <windows.h>
 
-typedef struct platformInputWriterImpl {
-	platformInput *input;
-} platformInputWriterImpl;
+typedef struct MosaicTestTtyImpl {
+	MosaicTty *tty;
+} MosaicTestTtyImpl;
 
 // A single global input writer into which fake data can be sent. Creating and closing this over
 // and over eventually produces a failure, so we only do it once per process (since it's test only).
 HANDLE writerConin = NULL;
 
-platformInputWriterResult platformInputWriter_init(platformInputCallback *callback) {
-	platformInputWriterResult result = {};
+MosaicTestTtyInitResult testTty_init(MosaicTtyCallback *callback) {
+	MosaicTestTtyInitResult result = {};
 
-	platformInputWriterImpl *writer = calloc(1, sizeof(platformInputWriterImpl));
-	if (unlikely(writer == NULL)) {
-		// result.writer is set to 0 which will trigger OOM.
+	MosaicTestTtyImpl *testTty = calloc(1, sizeof(MosaicTestTtyImpl));
+	if (unlikely(testTty == NULL)) {
+		// result.testTty is set to 0 which will trigger OOM.
 		goto ret;
 	}
 
@@ -42,28 +42,28 @@ platformInputWriterResult platformInputWriter_init(platformInputCallback *callba
 	// Ensure we don't start with existing records in the buffer.
 	FlushConsoleInputBuffer(writerConin);
 
-	platformInputResult inputResult = platformInput_initWithHandle(writerConin, callback);
-	if (unlikely(inputResult.error)) {
-		result.error = inputResult.error;
+	MosaicTtyInitResult ttyInitResult = tty_initWithHandle(writerConin, callback);
+	if (unlikely(ttyInitResult.error)) {
+		result.error = ttyInitResult.error;
 		goto err;
 	}
-	writer->input = inputResult.input;
+	testTty->tty = ttyInitResult.tty;
 
-	result.writer = writer;
+	result.testTty = testTty;
 
 	ret:
 	return result;
 
 	err:
-	free(writer);
+	free(testTty);
 	goto ret;
 }
 
-platformInput *platformInputWriter_getPlatformInput(platformInputWriter *writer) {
-	return writer->input;
+MosaicTty *testTty_getTty(MosaicTestTty *testTty) {
+	return testTty->tty;
 }
 
-uint32_t platformInputWriter_write(platformInputWriter *writer UNUSED, char *buffer, int count) {
+uint32_t testTty_write(MosaicTestTty *testTty UNUSED, char *buffer, int count) {
 	uint32_t result = 0;
 	INPUT_RECORD *records = calloc(count, sizeof(INPUT_RECORD));
 	if (!records) {
@@ -106,24 +106,24 @@ uint32_t writeRecord(INPUT_RECORD *record) {
 	return GetLastError();
 }
 
-uint32_t platformInputWriter_focusEvent(platformInputWriter *writer UNUSED, bool focused) {
+uint32_t testTty_focusEvent(MosaicTestTty *testTty UNUSED, bool focused) {
 	INPUT_RECORD record;
 	record.EventType = FOCUS_EVENT;
 	record.Event.FocusEvent.bSetFocus = focused;
 	return writeRecord(&record);
 }
 
-uint32_t platformInputWriter_keyEvent(platformInputWriter *writer UNUSED) {
+uint32_t testTty_keyEvent(MosaicTestTty *testTty UNUSED) {
 	// TODO
 	return 0;
 }
 
-uint32_t platformInputWriter_mouseEvent(platformInputWriter *writer UNUSED) {
+uint32_t testTty_mouseEvent(MosaicTestTty *testTty UNUSED) {
 	// TODO
 	return 0;
 }
 
-uint32_t platformInputWriter_resizeEvent(platformInputWriter *writer UNUSED, int columns, int rows, int width UNUSED, int height UNUSED) {
+uint32_t testTty_resizeEvent(MosaicTestTty *testTty UNUSED, int columns, int rows, int width UNUSED, int height UNUSED) {
 	INPUT_RECORD record;
 	record.EventType = WINDOW_BUFFER_SIZE_EVENT;
 	record.Event.WindowBufferSizeEvent.dwSize.X = columns;
@@ -131,8 +131,8 @@ uint32_t platformInputWriter_resizeEvent(platformInputWriter *writer UNUSED, int
 	return writeRecord(&record);
 }
 
-uint32_t platformInputWriter_free(platformInputWriter *writer) {
-	free(writer);
+uint32_t testTty_free(MosaicTestTty *testTty) {
+	free(testTty);
 	return 0;
 }
 

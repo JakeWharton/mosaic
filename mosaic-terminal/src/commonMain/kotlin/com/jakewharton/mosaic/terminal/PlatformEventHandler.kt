@@ -9,7 +9,7 @@ import kotlinx.coroutines.channels.SendChannel
 internal class PlatformEventHandler(
 	private val events: SendChannel<Event>,
 	private val emitDebugEvents: Boolean,
-) : PlatformInput.Callback {
+) : Tty.Callback {
 	override fun onFocus(focused: Boolean) {
 		sendEvent(FocusEvent(focused))
 	}

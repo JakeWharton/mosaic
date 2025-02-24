@@ -9,31 +9,31 @@ import kotlinx.coroutines.test.runTest
 
 class TerminalParserCsiPrimaryDeviceAttributesEventTest : BaseTerminalParserTest() {
 	@Test fun noLeadingQuestionMarkIsUnknown() = runTest {
-		writer.writeHex("1b5b303063")
+		testTty.writeHex("1b5b303063")
 		assertThat(reader.next()).isEqualTo(
 			UnknownEvent("1b5b303063".hexToByteArray()),
 		)
 	}
 
 	@Test fun emptyDataFails() = runTest {
-		writer.writeHex("1b5b3f63")
+		testTty.writeHex("1b5b3f63")
 		assertThat(reader.next()).isEqualTo(
 			UnknownEvent("1b5b3f63".hexToByteArray()),
 		)
 	}
 
 	@Test fun idNoData() = runTest {
-		writer.writeHex("1b5b3f3263")
+		testTty.writeHex("1b5b3f3263")
 		assertThat(reader.next()).isEqualTo(PrimaryDeviceAttributesEvent(id = 2, data = ""))
 	}
 
 	@Test fun idWithSemicolonNoData() = runTest {
-		writer.writeHex("1b5b3f323b63")
+		testTty.writeHex("1b5b3f323b63")
 		assertThat(reader.next()).isEqualTo(PrimaryDeviceAttributesEvent(id = 2, data = ""))
 	}
 
 	@Test fun idAndData() = runTest {
-		writer.writeHex("1b5b3f323b3263")
+		testTty.writeHex("1b5b3f323b3263")
 		assertThat(reader.next()).isEqualTo(PrimaryDeviceAttributesEvent(id = 2, data = "2"))
 	}
 }

@@ -1,9 +1,9 @@
 package com.jakewharton.mosaic.terminal
 
-internal expect fun PlatformInputWriter(): PlatformInputWriter
+internal expect fun TestTty(): TestTty
 
-internal expect class PlatformInputWriter : AutoCloseable {
-	val input: PlatformInput
+internal expect class TestTty : AutoCloseable {
+	val tty: Tty
 
 	fun terminalReader(emitDebugEvents: Boolean = false): TerminalReader
 

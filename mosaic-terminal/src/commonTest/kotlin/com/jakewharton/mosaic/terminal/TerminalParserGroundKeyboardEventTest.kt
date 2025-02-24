@@ -11,178 +11,178 @@ class TerminalParserGroundKeyboardEventTest : BaseTerminalParserTest() {
 	@Test fun graphic() = runTest {
 		for (codepoint in 0x20..0x7f) {
 			val hex = codepoint.toString(16)
-			writer.writeHex(hex)
+			testTty.writeHex(hex)
 			assertThat(reader.next(), hex).isEqualTo(KeyboardEvent(codepoint))
 		}
 	}
 
 	@Test fun ctrlShiftAt() = runTest {
-		writer.writeHex("00")
+		testTty.writeHex("00")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent('@'.code, modifiers = ModifierCtrl))
 	}
 
 	@Test fun ctrlA() = runTest {
-		writer.writeHex("01")
+		testTty.writeHex("01")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent('a'.code, modifiers = ModifierCtrl))
 	}
 
 	@Test fun ctrlB() = runTest {
-		writer.writeHex("02")
+		testTty.writeHex("02")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent('b'.code, modifiers = ModifierCtrl))
 	}
 
 	@Test fun ctrlC() = runTest {
-		writer.writeHex("03")
+		testTty.writeHex("03")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent('c'.code, modifiers = ModifierCtrl))
 	}
 
 	@Test fun ctrlD() = runTest {
-		writer.writeHex("04")
+		testTty.writeHex("04")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent('d'.code, modifiers = ModifierCtrl))
 	}
 
 	@Test fun ctrlE() = runTest {
-		writer.writeHex("05")
+		testTty.writeHex("05")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent('e'.code, modifiers = ModifierCtrl))
 	}
 
 	@Test fun ctrlF() = runTest {
-		writer.writeHex("06")
+		testTty.writeHex("06")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent('f'.code, modifiers = ModifierCtrl))
 	}
 
 	@Test fun ctrlG() = runTest {
-		writer.writeHex("07")
+		testTty.writeHex("07")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent('g'.code, modifiers = ModifierCtrl))
 	}
 
 	@Test fun ctrlH() = runTest {
-		writer.writeHex("08")
+		testTty.writeHex("08")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent(0x7f))
 	}
 
 	@Test fun ctrlI() = runTest {
-		writer.writeHex("09")
+		testTty.writeHex("09")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent(0x09))
 	}
 
 	@Test fun ctrlJ() = runTest {
-		writer.writeHex("0a")
+		testTty.writeHex("0a")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent(0x0d))
 	}
 
 	@Test fun ctrlK() = runTest {
-		writer.writeHex("0b")
+		testTty.writeHex("0b")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent('k'.code, modifiers = ModifierCtrl))
 	}
 
 	@Test fun ctrlL() = runTest {
-		writer.writeHex("0c")
+		testTty.writeHex("0c")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent('l'.code, modifiers = ModifierCtrl))
 	}
 
 	@Test fun ctrlM() = runTest {
-		writer.writeHex("0d")
+		testTty.writeHex("0d")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent(0x0d))
 	}
 
 	@Test fun ctrlN() = runTest {
-		writer.writeHex("0e")
+		testTty.writeHex("0e")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent('n'.code, modifiers = ModifierCtrl))
 	}
 
 	@Test fun ctrlO() = runTest {
-		writer.writeHex("0f")
+		testTty.writeHex("0f")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent('o'.code, modifiers = ModifierCtrl))
 	}
 
 	@Test fun ctrlP() = runTest {
-		writer.writeHex("10")
+		testTty.writeHex("10")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent('p'.code, modifiers = ModifierCtrl))
 	}
 
 	@Test fun ctrlQ() = runTest {
-		writer.writeHex("11")
+		testTty.writeHex("11")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent('q'.code, modifiers = ModifierCtrl))
 	}
 
 	@Test fun ctrlR() = runTest {
-		writer.writeHex("12")
+		testTty.writeHex("12")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent('r'.code, modifiers = ModifierCtrl))
 	}
 
 	@Test fun ctrlS() = runTest {
-		writer.writeHex("13")
+		testTty.writeHex("13")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent('s'.code, modifiers = ModifierCtrl))
 	}
 
 	@Test fun ctrlT() = runTest {
-		writer.writeHex("14")
+		testTty.writeHex("14")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent('t'.code, modifiers = ModifierCtrl))
 	}
 
 	@Test fun ctrlU() = runTest {
-		writer.writeHex("15")
+		testTty.writeHex("15")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent('u'.code, modifiers = ModifierCtrl))
 	}
 
 	@Test fun ctrlV() = runTest {
-		writer.writeHex("16")
+		testTty.writeHex("16")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent('v'.code, modifiers = ModifierCtrl))
 	}
 
 	@Test fun ctrlW() = runTest {
-		writer.writeHex("17")
+		testTty.writeHex("17")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent('w'.code, modifiers = ModifierCtrl))
 	}
 
 	@Test fun ctrlX() = runTest {
-		writer.writeHex("18")
+		testTty.writeHex("18")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent('x'.code, modifiers = ModifierCtrl))
 	}
 
 	@Test fun ctrlY() = runTest {
-		writer.writeHex("19")
+		testTty.writeHex("19")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent('y'.code, modifiers = ModifierCtrl))
 	}
 
 	@Test fun ctrlZ() = runTest {
-		writer.writeHex("1a")
+		testTty.writeHex("1a")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent('z'.code, modifiers = ModifierCtrl))
 	}
 
 	@Test fun bareEscape() = runTest {
-		writer.writeHex("1b")
+		testTty.writeHex("1b")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent(0x1b))
 	}
 
 	@Test fun hex1c() = runTest {
-		writer.writeHex("1c")
+		testTty.writeHex("1c")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent(0x1c))
 	}
 
 	@Test fun hex1d() = runTest {
-		writer.writeHex("1d")
+		testTty.writeHex("1d")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent(0x1d))
 	}
 
 	@Test fun hex1e() = runTest {
-		writer.writeHex("1e")
+		testTty.writeHex("1e")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent(0x1e))
 	}
 
 	@Test fun hex1f() = runTest {
-		writer.writeHex("1f")
+		testTty.writeHex("1f")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent(0x1f))
 	}
 
 	@Test fun utf8TwoBytes() = runTest {
-		writer.writeHex("cea9")
+		testTty.writeHex("cea9")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent('Ω'.code))
 	}
 
 	@Test fun utf8ThreeBytes() = runTest {
-		writer.writeHex("e28988")
+		testTty.writeHex("e28988")
 		assertThat(reader.next()).isEqualTo(KeyboardEvent('≈'.code))
 	}
 }

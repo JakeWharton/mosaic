@@ -13,25 +13,25 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class PlatformInputTest {
-	private val writer = PlatformInputWriter()
-	private val input = writer.input
+class TtyTest {
+	private val testTty = TestTty()
+	private val tty = testTty.tty
 
 	@AfterTest fun after() {
-		input.close()
-		writer.close()
+		tty.close()
+		testTty.close()
 	}
 
 	@Test fun readWhatWasWritten() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		writer.write("hello".encodeToByteArray())
-		val readA = input.read(buffer, 0, 10)
+		testTty.write("hello".encodeToByteArray())
+		val readA = tty.read(buffer, 0, 10)
 		assertThat(readA, "readA").isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("helloxxxxx")
 
-		writer.write("world".encodeToByteArray())
-		val readB = input.read(buffer, 0, 10)
+		testTty.write("world".encodeToByteArray())
+		val readB = tty.read(buffer, 0, 10)
 		assertThat(readB, "readB").isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("worldxxxxx")
 	}
@@ -39,8 +39,8 @@ class PlatformInputTest {
 	@Test fun readOnlyUpToCount() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		writer.write("hello".encodeToByteArray())
-		val read = input.read(buffer, 0, 4)
+		testTty.write("hello".encodeToByteArray())
+		val read = tty.read(buffer, 0, 4)
 		assertThat(read).isEqualTo(4)
 		assertThat(buffer.decodeToString()).isEqualTo("hellxxxxxx")
 	}
@@ -48,8 +48,8 @@ class PlatformInputTest {
 	@Test fun readUnderflow() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		writer.write("hello".encodeToByteArray())
-		val read = input.read(buffer, 0, 10)
+		testTty.write("hello".encodeToByteArray())
+		val read = tty.read(buffer, 0, 10)
 		assertThat(read).isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("helloxxxxx")
 	}
@@ -57,8 +57,8 @@ class PlatformInputTest {
 	@Test fun readAtOffset() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		writer.write("hello".encodeToByteArray())
-		val read = input.read(buffer, 5, 5)
+		testTty.write("hello".encodeToByteArray())
+		val read = tty.read(buffer, 5, 5)
 		assertThat(read).isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("xxxxxhello")
 	}
@@ -66,16 +66,16 @@ class PlatformInputTest {
 	@Test fun readCanBeInterrupted() {
 		GlobalScope.launch(Dispatchers.Default) {
 			delay(150.milliseconds)
-			input.interrupt()
+			tty.interrupt()
 		}
-		val readA = input.read(ByteArray(10), 0, 10)
+		val readA = tty.read(ByteArray(10), 0, 10)
 		assertThat(readA).isZero()
 
 		GlobalScope.launch(Dispatchers.Default) {
 			delay(150.milliseconds)
-			input.interrupt()
+			tty.interrupt()
 		}
-		val readB = input.read(ByteArray(10), 0, 10)
+		val readB = tty.read(ByteArray(10), 0, 10)
 		assertThat(readB).isZero()
 	}
 
@@ -85,36 +85,36 @@ class PlatformInputTest {
 
 		val readA: Int
 		val tookA = measureTime {
-			readA = input.readWithTimeout(ByteArray(10), 0, 10, 100)
+			readA = tty.readWithTimeout(ByteArray(10), 0, 10, 100)
 		}
 		assertThat(readA).isZero()
 		assertThat(tookA).isGreaterThan(50.milliseconds)
 
 		val readB: Int
 		val tookB = measureTime {
-			readB = input.readWithTimeout(ByteArray(10), 0, 10, 100)
+			readB = tty.readWithTimeout(ByteArray(10), 0, 10, 100)
 		}
 		assertThat(readB).isZero()
 		assertThat(tookB).isGreaterThan(50.milliseconds)
 	}
 
 	@Test fun callbackFocusWorks() {
-		writer.focusEvent(true)
+		testTty.focusEvent(true)
 		// TODO read event
 	}
 
 	@Test fun callbackKeyWorks() {
-		writer.keyEvent()
+		testTty.keyEvent()
 		// TODO read event
 	}
 
 	@Test fun callbackMouseWorks() {
-		writer.mouseEvent()
+		testTty.mouseEvent()
 		// TODO read event
 	}
 
 	@Test fun callbackResizeEvent() {
-		writer.resizeEvent(1, 2, 3, 4)
+		testTty.resizeEvent(1, 2, 3, 4)
 		// TODO read event
 	}
 }

@@ -13,57 +13,57 @@
 #include <time.h>
 #include <unistd.h>
 
-platformInputResult platformInput_initWithFd(int stdinFd, platformInputCallback *callback) {
-	platformInputResult result = {};
+MosaicTtyInitResult tty_initWithFd(int stdinFd, MosaicTtyCallback *callback) {
+	MosaicTtyInitResult result = {};
 
-	platformInputImpl *input = calloc(1, sizeof(platformInputImpl));
-	if (unlikely(input == NULL)) {
-		// result.input is set to 0 which will trigger OOM.
+	MosaicTtyImpl *tty = calloc(1, sizeof(MosaicTtyImpl));
+	if (unlikely(tty == NULL)) {
+		// result.tty is set to 0 which will trigger OOM.
 		goto ret;
 	}
 
-	if (unlikely(pipe(input->pipe)) != 0) {
+	if (unlikely(pipe(tty->pipe)) != 0) {
 		result.error = errno;
 		goto err;
 	}
 
-	input->stdinFd = stdinFd;
+	tty->stdinFd = stdinFd;
 	// TODO Consider forcing the writer pipe to always be lower than this pipe.
 	//  If we did this, we could always assume pipe[0] + 1 is the value for nfds.
-	input->nfds = ((stdinFd > input->pipe[0]) ? stdinFd : input->pipe[0]) + 1;
-	input->callback = callback;
+	tty->nfds = ((stdinFd > tty->pipe[0]) ? stdinFd : tty->pipe[0]) + 1;
+	tty->callback = callback;
 
-	result.input = input;
+	result.tty = tty;
 
 	ret:
 	return result;
 
 	err:
-	free(input);
+	free(tty);
 	goto ret;
 }
 
-platformInputResult platformInput_init(platformInputCallback *callback) {
-	return platformInput_initWithFd(STDIN_FILENO, callback);
+MosaicTtyInitResult tty_init(MosaicTtyCallback *callback) {
+	return tty_initWithFd(STDIN_FILENO, callback);
 }
 
-stdinRead platformInput_readInternal(
-	platformInput *input,
+MosaicTtyIoResult tty_readInternal(
+	MosaicTty *tty,
 	char *buffer,
 	int count,
 	struct timeval *timeout
 ) {
-	int stdinFd = input->stdinFd;
-	FD_SET(stdinFd, &input->fds);
+	int stdinFd = tty->stdinFd;
+	FD_SET(stdinFd, &tty->fds);
 
-	int pipeIn = input->pipe[0];
-	FD_SET(pipeIn, &input->fds);
+	int pipeIn = tty->pipe[0];
+	FD_SET(pipeIn, &tty->fds);
 
-	stdinRead result = {};
+	MosaicTtyIoResult result = {};
 
 	// TODO Consider setting up fd_set once in the struct and doing a stack copy here.
-	if (likely(select(input->nfds, &input->fds, NULL, NULL, timeout) >= 0)) {
-		if (likely(FD_ISSET(stdinFd, &input->fds) != 0)) {
+	if (likely(select(tty->nfds, &tty->fds, NULL, NULL, timeout) >= 0)) {
+		if (likely(FD_ISSET(stdinFd, &tty->fds) != 0)) {
 			int c = read(stdinFd, buffer, count);
 			if (likely(c > 0)) {
 				result.count = c;
@@ -72,7 +72,7 @@ stdinRead platformInput_readInternal(
 			} else {
 				goto err;
 			}
-		} else if (unlikely(FD_ISSET(pipeIn, &input->fds) != 0)) {
+		} else if (unlikely(FD_ISSET(pipeIn, &tty->fds) != 0)) {
 			// Consume the single notification byte to clear the ready state for the next call.
 			int c = read(pipeIn, buffer, 1);
 			if (unlikely(c < 0)) {
@@ -92,12 +92,12 @@ stdinRead platformInput_readInternal(
 	goto ret;
 }
 
-stdinRead platformInput_read(platformInput *input, char *buffer, int count) {
-	return platformInput_readInternal(input, buffer, count, NULL);
+MosaicTtyIoResult tty_read(MosaicTty *tty, char *buffer, int count) {
+	return tty_readInternal(tty, buffer, count, NULL);
 }
 
-stdinRead platformInput_readWithTimeout(
-	platformInput *input,
+MosaicTtyIoResult tty_readWithTimeout(
+	MosaicTty *tty,
 	char *buffer,
 	int count,
 	int timeoutMillis
@@ -106,11 +106,11 @@ stdinRead platformInput_readWithTimeout(
 	timeout.tv_sec = 0;
 	timeout.tv_usec = timeoutMillis * 1000;
 
-	return platformInput_readInternal(input, buffer, count, &timeout);
+	return tty_readInternal(tty, buffer, count, &timeout);
 }
 
-uint32_t platformInput_interrupt(platformInput *input) {
-	int pipeOut = input->pipe[1];
+uint32_t tty_interrupt(MosaicTty *tty) {
+	int pipeOut = tty->pipe[1];
 	int result = write(pipeOut, " ", 1);
 	return unlikely(result == -1)
 		? errno
@@ -118,21 +118,21 @@ uint32_t platformInput_interrupt(platformInput *input) {
 }
 
 // TODO Make sure this is only written once. Probably just one instance per process at a time.
-platformInput *globalInput = NULL;
+MosaicTty *globalTty = NULL;
 
 void sigwinchHandler(int value UNUSED) {
 	struct winsize size;
-	if (ioctl(globalInput->stdinFd, TIOCGWINSZ, &size) != -1) {
-		platformInputCallback *callback = globalInput->callback;
+	if (ioctl(globalTty->stdinFd, TIOCGWINSZ, &size) != -1) {
+		MosaicTtyCallback *callback = globalTty->callback;
 		callback->onResize(callback->opaque, size.ws_col, size.ws_row, size.ws_xpixel, size.ws_ypixel);
 	}
 	// TODO Send errno somewhere? Maybe once we get debug logs working.
 }
 
-uint32_t platformInput_enableRawMode(platformInput *input) {
+uint32_t tty_enableRawMode(MosaicTty *tty) {
 	uint32_t result = 0;
 
-	if (unlikely(!input->saved)) {
+	if (unlikely(!tty->saved)) {
 		goto ret; // Already enabled!
 	}
 
@@ -167,7 +167,7 @@ uint32_t platformInput_enableRawMode(platformInput *input) {
 		goto err;
 	}
 
-	input->saved = saved;
+	tty->saved = saved;
 
 	ret:
 	return result;
@@ -177,8 +177,8 @@ uint32_t platformInput_enableRawMode(platformInput *input) {
 	goto ret;
 }
 
-uint32_t platformInput_enableWindowResizeEvents(platformInput *input) {
-	if (input->sigwinch) {
+uint32_t tty_enableWindowResizeEvents(MosaicTty *tty) {
+	if (tty->sigwinch) {
 		return 0; // Already installed.
 	}
 
@@ -187,20 +187,20 @@ uint32_t platformInput_enableWindowResizeEvents(platformInput *input) {
 	sigemptyset(&action.sa_mask);
 	action.sa_flags = 0;
 
-	globalInput = input;
+	globalTty = tty;
 	if (likely(sigaction(SIGWINCH, &action, NULL) == 0)) {
-		input->sigwinch = true;
+		tty->sigwinch = true;
 		return 0;
 	}
-	globalInput = NULL;
+	globalTty = NULL;
 	return errno;
 }
 
-terminalSizeResult platformInput_currentTerminalSize(platformInput *input) {
-	terminalSizeResult result = {};
+MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty) {
+	MosaicTtyTerminalSizeResult result = {};
 
 	struct winsize size;
-	if (ioctl(input->stdinFd, TIOCGWINSZ, &size) != -1) {
+	if (ioctl(tty->stdinFd, TIOCGWINSZ, &size) != -1) {
 		result.columns = size.ws_col;
 		result.rows = size.ws_row;
 		result.width = size.ws_xpixel;
@@ -212,8 +212,8 @@ terminalSizeResult platformInput_currentTerminalSize(platformInput *input) {
 	return result;
 }
 
-uint32_t platformInput_free(platformInput *input) {
-	int *pipe = input->pipe;
+uint32_t tty_free(MosaicTty *tty) {
+	int *pipe = tty->pipe;
 
 	int result = 0;
 	if (unlikely(close(pipe[0]) != 0)) {
@@ -222,16 +222,16 @@ uint32_t platformInput_free(platformInput *input) {
 	if (unlikely(close(pipe[1]) != 0 && result != 0)) {
 		result = errno;
 	}
-	if (input->sigwinch && signal(SIGWINCH, SIG_DFL) == SIG_ERR && result != 0) {
+	if (tty->sigwinch && signal(SIGWINCH, SIG_DFL) == SIG_ERR && result != 0) {
 		result = errno;
 	}
-	if (input->saved) {
-		if (tcsetattr(STDIN_FILENO, TCSAFLUSH, input->saved) && result != 0) {
+	if (tty->saved) {
+		if (tcsetattr(STDIN_FILENO, TCSAFLUSH, tty->saved) && result != 0) {
 			result = errno;
 		}
-		free(input->saved);
+		free(tty->saved);
 	}
-	free(input);
+	free(tty);
 	return result;
 }
 

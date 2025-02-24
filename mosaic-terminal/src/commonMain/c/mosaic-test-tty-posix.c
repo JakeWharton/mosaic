@@ -9,48 +9,48 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-typedef struct platformInputWriterImpl {
+typedef struct MosaicTestTtyImpl {
 	int pipe[2];
-	platformInput *input;
-} platformInputWriterImpl;
+	MosaicTty *tty;
+} MosaicTestTtyImpl;
 
-platformInputWriterResult platformInputWriter_init(platformInputCallback *callback) {
-	platformInputWriterResult result = {};
+MosaicTestTtyInitResult testTty_init(MosaicTtyCallback *callback) {
+	MosaicTestTtyInitResult result = {};
 
-	platformInputWriterImpl *writer = calloc(1, sizeof(platformInputWriterImpl));
-	if (unlikely(writer == NULL)) {
+	MosaicTestTtyImpl *testTty = calloc(1, sizeof(MosaicTestTtyImpl));
+	if (unlikely(testTty == NULL)) {
 		// result.writer is set to 0 which will trigger OOM.
 		goto ret;
 	}
 
-	if (unlikely(pipe(writer->pipe)) != 0) {
+	if (unlikely(pipe(testTty->pipe)) != 0) {
 		result.error = errno;
 		goto err;
 	}
 
-	platformInputResult inputResult = platformInput_initWithFd(writer->pipe[0], callback);
-	if (unlikely(inputResult.error)) {
-		result.error = inputResult.error;
+	MosaicTtyInitResult ttyInitResult = tty_initWithFd(testTty->pipe[0], callback);
+	if (unlikely(ttyInitResult.error)) {
+		result.error = ttyInitResult.error;
 		goto err;
 	}
-	writer->input = inputResult.input;
+	testTty->tty = ttyInitResult.tty;
 
-	result.writer = writer;
+	result.testTty = testTty;
 
 	ret:
 	return result;
 
 	err:
-	free(writer);
+	free(testTty);
 	goto ret;
 }
 
-platformInput *platformInputWriter_getPlatformInput(platformInputWriter *writer) {
-	return writer->input;
+MosaicTty *testTty_getTty(MosaicTestTty *testTty) {
+	return testTty->tty;
 }
 
-uint32_t platformInputWriter_write(platformInputWriter *writer, char *buffer, int count) {
-	int pipeOut = writer->pipe[1];
+uint32_t testTty_write(MosaicTestTty *testTty, char *buffer, int count) {
+	int pipeOut = testTty->pipe[1];
 	while (count > 0) {
 		int result = write(pipeOut, buffer, count);
 		if (unlikely(result == -1)) {
@@ -64,29 +64,29 @@ uint32_t platformInputWriter_write(platformInputWriter *writer, char *buffer, in
 	return errno;
 }
 
-uint32_t platformInputWriter_focusEvent(platformInputWriter *writer UNUSED, bool focused UNUSED) {
+uint32_t testTty_focusEvent(MosaicTestTty *testTty UNUSED, bool focused UNUSED) {
 	// Focus events are delivered through VT sequences.
 	return 0;
 }
 
-uint32_t platformInputWriter_keyEvent(platformInputWriter *writer UNUSED) {
+uint32_t testTty_keyEvent(MosaicTestTty *testTty UNUSED) {
 	// Key events are delivered through VT sequences.
 	return 0;
 }
 
-uint32_t platformInputWriter_mouseEvent(platformInputWriter *writer UNUSED) {
+uint32_t testTty_mouseEvent(MosaicTestTty *testTty UNUSED) {
 	// Mouse events are delivered through VT sequences.
 	return 0;
 }
 
-uint32_t platformInputWriter_resizeEvent(platformInputWriter *writer, int columns, int rows, int width, int height) {
-	platformInputCallback *callback = writer->input->callback;
+uint32_t testTty_resizeEvent(MosaicTestTty *testTty, int columns, int rows, int width, int height) {
+	MosaicTtyCallback *callback = testTty->tty->callback;
 	callback->onResize(callback->opaque, columns, rows, width, height);
 	return 0;
 }
 
-uint32_t platformInputWriter_free(platformInputWriter *writer) {
-	int *pipe = writer->pipe;
+uint32_t testTty_free(MosaicTestTty *testTty) {
+	int *pipe = testTty->pipe;
 
 	int result = 0;
 	if (unlikely(close(pipe[0]) != 0)) {
@@ -95,7 +95,7 @@ uint32_t platformInputWriter_free(platformInputWriter *writer) {
 	if (unlikely(close(pipe[1]) != 0 && result != 0)) {
 		result = errno;
 	}
-	free(writer);
+	free(testTty);
 	return result;
 }
 

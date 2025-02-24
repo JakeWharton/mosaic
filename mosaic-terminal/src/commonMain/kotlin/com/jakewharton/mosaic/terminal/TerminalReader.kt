@@ -41,12 +41,12 @@ import kotlinx.coroutines.channels.ReceiveChannel
 public fun TerminalReader(emitDebugEvents: Boolean = false): TerminalReader {
 	val events = Channel<Event>(UNLIMITED)
 	val callback = PlatformEventHandler(events, emitDebugEvents)
-	val platformInput = PlatformInput.create(callback)
-	return TerminalReader(platformInput, events, emitDebugEvents)
+	val tty = Tty.create(callback)
+	return TerminalReader(tty, events, emitDebugEvents)
 }
 
 public class TerminalReader internal constructor(
-	private val platformInput: PlatformInput,
+	private val tty: Tty,
 	events: Channel<Event>,
 	private val emitDebugEvents: Boolean,
 ) : AutoCloseable {
@@ -111,7 +111,7 @@ public class TerminalReader internal constructor(
 	 * than consuming CPU. Use [create] to read in a manner that can still be interrupted.
 	 */
 	public fun enableRawMode() {
-		platformInput.enableRawMode()
+		tty.enableRawMode()
 	}
 
 	/**
@@ -134,12 +134,12 @@ public class TerminalReader internal constructor(
 	 * [here](https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h4-Functions-using-CSI-_-ordered-by-the-final-character-lparen-s-rparen:CSI-Ps;Ps;Ps-t:Ps-=-1-4.2064).
 	 */
 	public fun enableWindowResizeEvents() {
-		platformInput.enableWindowResizeEvents()
+		tty.enableWindowResizeEvents()
 	}
 
 	/** Synchronously query for the current terminal size. */
 	public fun currentSize(): ResizeEvent {
-		val (columns, rows, width, height) = platformInput.currentSize()
+		val (columns, rows, width, height) = tty.currentSize()
 		return ResizeEvent(
 			columns = columns,
 			rows = rows,
@@ -191,7 +191,7 @@ public class TerminalReader internal constructor(
 			if (kittyDisambiguateEscapeCodes || limit != 1 || buffer[0] != 0x1B.toByte()) {
 				// Common case: we are using the Kitty keyboard protocol to disambiguate escape keys, or
 				// the buffer contains anything other than a bare escape. Do a normal read for more data.
-				val read = platformInput.read(buffer, limit, BufferSize - limit)
+				val read = tty.read(buffer, limit, BufferSize - limit)
 				if (read == -1) break // EOF
 				if (read == 0) return // Interrupt
 
@@ -202,7 +202,7 @@ public class TerminalReader internal constructor(
 			// Otherwise, perform a quick read to see if we have any more bytes. This will allow us to
 			// determine whether the bare escape was truly a legacy keyboard escape event, or just the
 			// start of some other escape sequence.
-			val read = platformInput.readWithTimeout(
+			val read = tty.readWithTimeout(
 				buffer,
 				1,
 				BufferSize - 1,
@@ -954,7 +954,7 @@ public class TerminalReader internal constructor(
 	}
 
 	public fun interrupt() {
-		platformInput.interrupt()
+		tty.interrupt()
 	}
 
 	/**
@@ -963,6 +963,6 @@ public class TerminalReader internal constructor(
 	 * This call can be omitted if your process is exiting.
 	 */
 	override fun close() {
-		platformInput.close()
+		tty.close()
 	}
 }

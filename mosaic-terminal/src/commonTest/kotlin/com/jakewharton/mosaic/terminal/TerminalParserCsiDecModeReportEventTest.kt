@@ -14,7 +14,7 @@ import kotlinx.coroutines.test.runTest
 
 class TerminalParserCsiDecModeReportEventTest : BaseTerminalParserTest() {
 	@Test fun settings() = runTest {
-		writer.writeHex("1b5b3f313030343b302479")
+		testTty.writeHex("1b5b3f313030343b302479")
 		assertThat(reader.next()).isEqualTo(
 			DecModeReportEvent(
 				mode = 1004,
@@ -22,7 +22,7 @@ class TerminalParserCsiDecModeReportEventTest : BaseTerminalParserTest() {
 			),
 		)
 
-		writer.writeHex("1b5b3f313030343b312479")
+		testTty.writeHex("1b5b3f313030343b312479")
 		assertThat(reader.next()).isEqualTo(
 			DecModeReportEvent(
 				mode = 1004,
@@ -30,7 +30,7 @@ class TerminalParserCsiDecModeReportEventTest : BaseTerminalParserTest() {
 			),
 		)
 
-		writer.writeHex("1b5b3f313030343b322479")
+		testTty.writeHex("1b5b3f313030343b322479")
 		assertThat(reader.next()).isEqualTo(
 			DecModeReportEvent(
 				mode = 1004,
@@ -38,7 +38,7 @@ class TerminalParserCsiDecModeReportEventTest : BaseTerminalParserTest() {
 			),
 		)
 
-		writer.writeHex("1b5b3f313030343b332479")
+		testTty.writeHex("1b5b3f313030343b332479")
 		assertThat(reader.next()).isEqualTo(
 			DecModeReportEvent(
 				mode = 1004,
@@ -46,7 +46,7 @@ class TerminalParserCsiDecModeReportEventTest : BaseTerminalParserTest() {
 			),
 		)
 
-		writer.writeHex("1b5b3f313030343b342479")
+		testTty.writeHex("1b5b3f313030343b342479")
 		assertThat(reader.next()).isEqualTo(
 			DecModeReportEvent(
 				mode = 1004,
@@ -56,7 +56,7 @@ class TerminalParserCsiDecModeReportEventTest : BaseTerminalParserTest() {
 	}
 
 	@Test fun minimal() = runTest {
-		writer.writeHex("1b5b3f313b302479")
+		testTty.writeHex("1b5b3f313b302479")
 		assertThat(reader.next()).isEqualTo(
 			DecModeReportEvent(
 				mode = 1,
@@ -66,56 +66,56 @@ class TerminalParserCsiDecModeReportEventTest : BaseTerminalParserTest() {
 	}
 
 	@Test fun unknownSetting() = runTest {
-		writer.writeHex("1b5b313030343b352479")
+		testTty.writeHex("1b5b313030343b352479")
 		assertThat(reader.next()).isEqualTo(
 			UnknownEvent("1b5b313030343b352479".hexToByteArray()),
 		)
 	}
 
 	@Test fun noQuestion() = runTest {
-		writer.writeHex("1b5b313030343b302479")
+		testTty.writeHex("1b5b313030343b302479")
 		assertThat(reader.next()).isEqualTo(
 			UnknownEvent("1b5b313030343b302479".hexToByteArray()),
 		)
 	}
 
 	@Test fun noDollar() = runTest {
-		writer.writeHex("1b5b3f313030343b3079")
+		testTty.writeHex("1b5b3f313030343b3079")
 		assertThat(reader.next()).isEqualTo(
 			UnknownEvent("1b5b3f313030343b3079".hexToByteArray()),
 		)
 	}
 
 	@Test fun noMode() = runTest {
-		writer.writeHex("1b5b3f3b3130302479")
+		testTty.writeHex("1b5b3f3b3130302479")
 		assertThat(reader.next()).isEqualTo(
 			UnknownEvent("1b5b3f3b3130302479".hexToByteArray()),
 		)
 	}
 
 	@Test fun nonDigitMode() = runTest {
-		writer.writeHex("1b5b3f31302d32343b302479")
+		testTty.writeHex("1b5b3f31302d32343b302479")
 		assertThat(reader.next()).isEqualTo(
 			UnknownEvent("1b5b3f31302d32343b302479".hexToByteArray()),
 		)
 	}
 
 	@Test fun noSetting() = runTest {
-		writer.writeHex("1b5b3f313030343b2479")
+		testTty.writeHex("1b5b3f313030343b2479")
 		assertThat(reader.next()).isEqualTo(
 			UnknownEvent("1b5b3f313030343b2479".hexToByteArray()),
 		)
 	}
 
 	@Test fun nonDigitSetting() = runTest {
-		writer.writeHex("1b5b3f313030343b312d322479")
+		testTty.writeHex("1b5b3f313030343b312d322479")
 		assertThat(reader.next()).isEqualTo(
 			UnknownEvent("1b5b3f313030343b312d322479".hexToByteArray()),
 		)
 	}
 
 	@Test fun noSemicolon() = runTest {
-		writer.writeHex("1b5b3f313030342479")
+		testTty.writeHex("1b5b3f313030342479")
 		assertThat(reader.next()).isEqualTo(
 			UnknownEvent("1b5b3f313030342479".hexToByteArray()),
 		)

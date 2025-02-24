@@ -6,15 +6,15 @@
 #include <assert.h>
 #include <windows.h>
 
-platformInputResult platformInput_initWithHandle(
+MosaicTtyInitResult tty_initWithHandle(
 	HANDLE stdinRead,
-	platformInputCallback *callback
+	MosaicTtyCallback *callback
 ) {
-	platformInputResult result = {};
+	MosaicTtyInitResult result = {};
 
-	platformInputImpl *input = calloc(1, sizeof(platformInputImpl));
-	if (unlikely(input == NULL)) {
-		// result.input is set to 0 which will trigger OOM.
+	MosaicTtyImpl *tty = calloc(1, sizeof(MosaicTtyImpl));
+	if (unlikely(tty == NULL)) {
+		// result.tty is set to 0 which will trigger OOM.
 		goto ret;
 	}
 
@@ -34,56 +34,56 @@ platformInputResult platformInput_initWithHandle(
 		goto err;
 	}
 
-	input->stdin = stdinRead;
-	input->stdout = stdoutWrite;
-	input->waitHandles[0] = stdinRead;
-	input->waitHandles[1] = interruptEvent;
-	input->callback = callback;
+	tty->stdin = stdinRead;
+	tty->stdout = stdoutWrite;
+	tty->waitHandles[0] = stdinRead;
+	tty->waitHandles[1] = interruptEvent;
+	tty->callback = callback;
 
-	result.input = input;
+	result.tty = tty;
 
 	ret:
 	return result;
 
 	err:
-	free(input);
+	free(tty);
 	goto ret;
 }
 
-platformInputResult platformInput_init(platformInputCallback *callback) {
+MosaicTtyInitResult tty_init(MosaicTtyCallback *callback) {
 	HANDLE h = GetStdHandle(STD_INPUT_HANDLE);
-	return platformInput_initWithHandle(h, callback);
+	return tty_initWithHandle(h, callback);
 }
 
-stdinRead platformInput_read(
-	platformInput *input,
+MosaicTtyIoResult tty_read(
+	MosaicTty *tty,
 	char *buffer,
 	int count
 ) {
-	return platformInput_readWithTimeout(input, buffer, count, INFINITE);
+	return tty_readWithTimeout(tty, buffer, count, INFINITE);
 }
 
-stdinRead platformInput_readWithTimeout(
-	platformInput *input,
+MosaicTtyIoResult tty_readWithTimeout(
+	MosaicTty *tty,
 	char *buffer,
 	int count,
 	int timeoutMillis
 ) {
-	stdinRead result = {};
+	MosaicTtyIoResult result = {};
 
 	DWORD waitResult;
 
 	loop:
-	waitResult = WaitForMultipleObjects(2, input->waitHandles, FALSE, timeoutMillis);
+	waitResult = WaitForMultipleObjects(2, tty->waitHandles, FALSE, timeoutMillis);
 	if (likely(waitResult == WAIT_OBJECT_0)) {
-		INPUT_RECORD *records = input->records;
+		INPUT_RECORD *records = tty->records;
 		int recordRequest = recordsCount > count ? count : recordsCount;
 		DWORD recordsRead = 0;
-		if (unlikely(!ReadConsoleInputW(input->waitHandles[0], records, recordRequest, &recordsRead))) {
+		if (unlikely(!ReadConsoleInputW(tty->waitHandles[0], records, recordRequest, &recordsRead))) {
 			goto err;
 		}
 
-		platformInputCallback *callback = input->callback;
+		MosaicTtyCallback *callback = tty->callback;
 		int nextBufferIndex = 0;
 		for (int i = 0; i < (int) recordsRead; i++) {
 			INPUT_RECORD record = records[i];
@@ -96,7 +96,7 @@ stdinRead platformInput_readWithTimeout(
 				// TODO mouse shit
 			} else if (record.EventType == FOCUS_EVENT) {
 				callback->onFocus(callback->opaque, record.Event.FocusEvent.bSetFocus);
-			} else if (record.EventType == WINDOW_BUFFER_SIZE_EVENT && input->windowResizeEvents) {
+			} else if (record.EventType == WINDOW_BUFFER_SIZE_EVENT && tty->windowResizeEvents) {
 				callback->onResize(
 					callback->opaque,
 					record.Event.WindowBufferSizeEvent.dwSize.X,
@@ -126,27 +126,27 @@ stdinRead platformInput_readWithTimeout(
 	goto ret;
 }
 
-uint32_t platformInput_interrupt(platformInput *input) {
-	return likely(SetEvent(input->waitHandles[1]) != 0)
+uint32_t tty_interrupt(MosaicTty *tty) {
+	return likely(SetEvent(tty->waitHandles[1]) != 0)
 		? 0
 		: GetLastError();
 }
 
-uint32_t platformInput_enableRawMode(platformInput *input) {
+uint32_t tty_enableRawMode(MosaicTty *tty) {
 	uint32_t result = 0;
 
-	if (input->saved_input_mode) {
+	if (tty->saved_input_mode) {
 		goto ret; // Already enabled!
 	}
 
 	DWORD input_mode;
 	DWORD output_mode;
 	UINT output_code_page;
-	if (unlikely(GetConsoleMode(input->stdin, &input_mode) == 0)) {
+	if (unlikely(GetConsoleMode(tty->stdin, &input_mode) == 0)) {
 		result = GetLastError();
 		goto ret;
 	}
-	if (unlikely(GetConsoleMode(input->stdout, &output_mode) == 0)) {
+	if (unlikely(GetConsoleMode(tty->stdout, &output_mode) == 0)) {
 		result = GetLastError();
 		goto ret;
 	}
@@ -179,40 +179,40 @@ uint32_t platformInput_enableRawMode(platformInput *input) {
 	// UTF-8 per https://learn.microsoft.com/en-us/windows/win32/intl/code-page-identifiers.
 	const int stdoutCp = 65001;
 
-	if (unlikely(SetConsoleMode(input->stdin, stdinMode) == 0)) {
+	if (unlikely(SetConsoleMode(tty->stdin, stdinMode) == 0)) {
 		result = GetLastError();
 		goto ret;
 	}
-	if (unlikely(SetConsoleMode(input->stdout, stdoutMode) == 0)) {
+	if (unlikely(SetConsoleMode(tty->stdout, stdoutMode) == 0)) {
 		result = GetLastError();
-		SetConsoleMode(input->stdin, input_mode);
+		SetConsoleMode(tty->stdin, input_mode);
 		goto ret;
 	}
 	if (unlikely(SetConsoleOutputCP(stdoutCp) == 0)) {
 		result = GetLastError();
-		SetConsoleMode(input->stdin, input_mode);
-		SetConsoleMode(input->stdout, input_mode);
+		SetConsoleMode(tty->stdin, input_mode);
+		SetConsoleMode(tty->stdout, output_mode);
 		goto ret;
 	}
 
-	input->saved_input_mode = input_mode;
-	input->saved_output_mode = output_mode;
-	input->saved_output_code_page = output_code_page;
+	tty->saved_input_mode = input_mode;
+	tty->saved_output_mode = output_mode;
+	tty->saved_output_code_page = output_code_page;
 
 	ret:
 	return result;
 }
 
-uint32_t platformInput_enableWindowResizeEvents(platformInput *input) {
-	input->windowResizeEvents = true;
+uint32_t tty_enableWindowResizeEvents(MosaicTty *tty) {
+	tty->windowResizeEvents = true;
 	return 0;
 }
 
-terminalSizeResult platformInput_currentTerminalSize(platformInput *input) {
-	terminalSizeResult result = {};
+MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty) {
+	MosaicTtyTerminalSizeResult result = {};
 
 	CONSOLE_SCREEN_BUFFER_INFO info;
-	if (likely(GetConsoleScreenBufferInfo(input->stdout, &info))) {
+	if (likely(GetConsoleScreenBufferInfo(tty->stdout, &info))) {
 		result.columns = info.dwSize.X;
 		result.rows = info.dwSize.Y;
 	} else {
@@ -222,26 +222,26 @@ terminalSizeResult platformInput_currentTerminalSize(platformInput *input) {
 	return result;
 }
 
-uint32_t platformInput_free(platformInput *input) {
+uint32_t tty_free(MosaicTty *tty) {
 	uint32_t result = 0;
 
-	if (unlikely(CloseHandle(input->waitHandles[1]) == 0)) {
+	if (unlikely(CloseHandle(tty->waitHandles[1]) == 0)) {
 		result = GetLastError();
 	}
 
-	if (input->saved_input_mode) {
-		if (unlikely(!SetConsoleMode(input->stdin, input->saved_input_mode) && result == 0)) {
+	if (tty->saved_input_mode) {
+		if (unlikely(!SetConsoleMode(tty->stdin, tty->saved_input_mode) && result == 0)) {
 			result = GetLastError();
 		}
-		if (unlikely(!SetConsoleMode(input->stdout, input->saved_output_mode) && result == 0)) {
+		if (unlikely(!SetConsoleMode(tty->stdout, tty->saved_output_mode) && result == 0)) {
 			result = GetLastError();
 		}
-		if (unlikely(!SetConsoleOutputCP(input->saved_output_code_page) && result == 0)) {
+		if (unlikely(!SetConsoleOutputCP(tty->saved_output_code_page) && result == 0)) {
 			result = GetLastError();
 		}
 	}
 
-	free(input);
+	free(tty);
 	return result;
 }
 

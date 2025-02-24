@@ -24,17 +24,17 @@ void throwIse(JNIEnv *env, unsigned int error, const char *prefix) {
 	}
 }
 
-typedef struct jniPlatformInputCallback {
+typedef struct jniTtyCallback {
 	JNIEnv *env;
 	jobject instance;
 	jmethodID onFocus;
 	jmethodID onKey;
 	jmethodID onMouse;
 	jmethodID onResize;
-} jniPlatformInputCallback;
+} jniTtyCallback;
 
 void invokeOnFocusCallback(void *opaque, bool focused) {
-	jniPlatformInputCallback *callback = (jniPlatformInputCallback *) opaque;
+	jniTtyCallback *callback = (jniTtyCallback *) opaque;
 	(*callback->env)->CallVoidMethod(
 		callback->env,
 		callback->instance,
@@ -44,7 +44,7 @@ void invokeOnFocusCallback(void *opaque, bool focused) {
 }
 
 void invokeOnKeyCallback(void *opaque) {
-	jniPlatformInputCallback *callback = (jniPlatformInputCallback *) opaque;
+	jniTtyCallback *callback = (jniTtyCallback *) opaque;
 	(*callback->env)->CallVoidMethod(
 		callback->env,
 		callback->instance,
@@ -53,7 +53,7 @@ void invokeOnKeyCallback(void *opaque) {
 }
 
 void invokeOnMouseCallback(void *opaque) {
-	jniPlatformInputCallback *callback = (jniPlatformInputCallback *) opaque;
+	jniTtyCallback *callback = (jniTtyCallback *) opaque;
 	(*callback->env)->CallVoidMethod(
 		callback->env,
 		callback->instance,
@@ -62,7 +62,7 @@ void invokeOnMouseCallback(void *opaque) {
 }
 
 void invokeOnResizeCallback(void *opaque, int columns, int rows, int width, int height) {
-	jniPlatformInputCallback *callback = (jniPlatformInputCallback *) opaque;
+	jniTtyCallback *callback = (jniTtyCallback *) opaque;
 	(*callback->env)->CallVoidMethod(
 		callback->env,
 		callback->instance,
@@ -75,7 +75,7 @@ void invokeOnResizeCallback(void *opaque, int columns, int rows, int width, int 
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformInputCallbackInit(
+Java_com_jakewharton_mosaic_terminal_Jni_ttyCallbackInit(
 	JNIEnv *env,
 	jclass type,
 	jobject instance
@@ -84,7 +84,7 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputCallbackInit(
 	if (unlikely(globalInstance == NULL)) {
 		return 0;
 	}
-	jclass clazz = (*env)->FindClass(env, "com/jakewharton/mosaic/terminal/PlatformInput$Callback");
+	jclass clazz = (*env)->FindClass(env, "com/jakewharton/mosaic/terminal/Tty$Callback");
 	if (unlikely(clazz == NULL)) {
 		return 0;
 	}
@@ -105,7 +105,7 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputCallbackInit(
 		return 0;
 	}
 
-	jniPlatformInputCallback *jniCallback = malloc(sizeof(jniPlatformInputCallback));
+	jniTtyCallback *jniCallback = malloc(sizeof(jniTtyCallback));
 	if (unlikely(!jniCallback)) {
 		return 0;
 	}
@@ -116,7 +116,7 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputCallbackInit(
 	jniCallback->onMouse = onMouse;
 	jniCallback->onResize = onResize;
 
-	platformInputCallback *callback = malloc(sizeof(platformInputCallback));
+	MosaicTtyCallback *callback = malloc(sizeof(MosaicTtyCallback));
 	if (unlikely(!callback)) {
 		return 0;
 	}
@@ -130,13 +130,13 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputCallbackInit(
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformInputCallbackFree(
+Java_com_jakewharton_mosaic_terminal_Jni_ttyCallbackFree(
 	JNIEnv *env,
 	jclass type,
 	jlong callbackOpaque
 ) {
-	platformInputCallback *callback = (platformInputCallback *) callbackOpaque;
-	jniPlatformInputCallback *jniCallback = callback->opaque;
+	MosaicTtyCallback *callback = (MosaicTtyCallback *) callbackOpaque;
+	jniTtyCallback *jniCallback = callback->opaque;
 	jobject instance = jniCallback->instance;
 	free(callback);
 	free(jniCallback);
@@ -144,15 +144,15 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputCallbackFree(
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformInputInit(
+Java_com_jakewharton_mosaic_terminal_Jni_ttyInit(
 	JNIEnv *env,
 	jclass type,
 	jlong callbackOpaque
 ) {
-	platformInputCallback *callback = (platformInputCallback *) callbackOpaque;
-	platformInputResult result = platformInput_init(callback);
+	MosaicTtyCallback *callback = (MosaicTtyCallback *) callbackOpaque;
+	MosaicTtyInitResult result = tty_init(callback);
 	if (likely(!result.error)) {
-		return (jlong) result.input;
+		return (jlong) result.tty;
 	}
 
 	// This throw can fail, but the only condition that should cause that is OOM which
@@ -162,10 +162,10 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputInit(
 }
 
 JNIEXPORT jint JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformInputRead(
+Java_com_jakewharton_mosaic_terminal_Jni_ttyRead(
 	JNIEnv *env,
 	jclass type,
-	jlong inputOpaque,
+	jlong ttyOpaque,
 	jbyteArray buffer,
 	jint offset,
 	jint count
@@ -173,8 +173,8 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputRead(
 	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
 	jbyte *nativeBufferAtOffset = nativeBuffer + offset;
 
-	platformInput *input = (platformInput *) inputOpaque;
-	stdinRead read = platformInput_read(input, nativeBufferAtOffset, count);
+	MosaicTty *tty = (MosaicTty *) ttyOpaque;
+	MosaicTtyIoResult read = tty_read(tty, nativeBufferAtOffset, count);
 
 	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
 
@@ -189,10 +189,10 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputRead(
 }
 
 JNIEXPORT jint JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformInputReadWithTimeout(
+Java_com_jakewharton_mosaic_terminal_Jni_ttyReadWithTimeout(
 	JNIEnv *env,
 	jclass type,
-	jlong inputOpaque,
+	jlong ttyOpaque,
 	jbyteArray buffer,
 	jint offset,
 	jint count,
@@ -201,9 +201,9 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputReadWithTimeout(
 	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
 	jbyte *nativeBufferAtOffset = nativeBuffer + offset;
 
-	platformInput *input = (platformInput *) inputOpaque;
-	stdinRead read = platformInput_readWithTimeout(
-		input,
+	MosaicTty *tty = (MosaicTty *) ttyOpaque;
+	MosaicTtyIoResult read = tty_readWithTimeout(
+		tty,
 		nativeBufferAtOffset,
 		count,
 		timeoutMillis
@@ -222,52 +222,52 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputReadWithTimeout(
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformInputInterrupt(
+Java_com_jakewharton_mosaic_terminal_Jni_ttyInterrupt(
 	JNIEnv *env,
 	jclass type,
-	jlong inputOpaque
+	jlong ttyOpaque
 ) {
-	platformInput *input = (platformInput *) inputOpaque;
-	uint32_t error = platformInput_interrupt(input);
+	MosaicTty *tty = (MosaicTty *) ttyOpaque;
+	uint32_t error = tty_interrupt(tty);
 	if (unlikely(error)) {
 		throwIse(env, error, "Unable to interrupt");
 	}
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformInputEnableRawMode(
+Java_com_jakewharton_mosaic_terminal_Jni_ttyEnableRawMode(
 	JNIEnv *env,
 	jclass type,
-	jlong inputOpaque
+	jlong ttyOpaque
 ) {
-	platformInput *input = (platformInput *) inputOpaque;
-	uint32_t error = platformInput_enableRawMode(input);
+	MosaicTty *tty = (MosaicTty *) ttyOpaque;
+	uint32_t error = tty_enableRawMode(tty);
 	if (unlikely(error)) {
 		throwIse(env, error, "Unable to enable raw mode");
 	}
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformInputEnableWindowResizeEvents(
+Java_com_jakewharton_mosaic_terminal_Jni_ttyEnableWindowResizeEvents(
 	JNIEnv *env,
 	jclass type,
-	jlong inputOpaque
+	jlong ttyOpaque
 ) {
-	platformInput *input = (platformInput *) inputOpaque;
-	uint32_t error = platformInput_enableWindowResizeEvents(input);
+	MosaicTty *tty = (MosaicTty *) ttyOpaque;
+	uint32_t error = tty_enableWindowResizeEvents(tty);
 	if (unlikely(error)) {
 		throwIse(env, error, "Unable to enable window resize events");
 	}
 }
 
 JNIEXPORT jintArray JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformInputCurrentSize(
+Java_com_jakewharton_mosaic_terminal_Jni_ttyCurrentSize(
 	JNIEnv *env,
 	jclass type,
-	jlong inputOpaque
+	jlong ttyOpaque
 ) {
-	platformInput *input = (platformInput *) inputOpaque;
-	terminalSizeResult result = platformInput_currentTerminalSize(input);
+	MosaicTty *tty = (MosaicTty *) ttyOpaque;
+	MosaicTtyTerminalSizeResult result = tty_currentTerminalSize(tty);
 	if (likely(!result.error)) {
 		jintArray ints = (*env)->NewIntArray(env, 4);
 		jint *intsPtr = (*env)->GetIntArrayElements(env, ints, NULL);
@@ -283,48 +283,48 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputCurrentSize(
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformInputFree(
+Java_com_jakewharton_mosaic_terminal_Jni_ttyFree(
 	JNIEnv *env,
 	jclass type,
-	jlong inputOpaque
+	jlong ttyOpaque
 ) {
-	platformInput *input = (platformInput *) inputOpaque;
-	uint32_t error = platformInput_free(input);
+	MosaicTty *tty = (MosaicTty *) ttyOpaque;
+	uint32_t error = tty_free(tty);
 	if (unlikely(error)) {
 		throwIse(env, error, "Unable to free");
 	}
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterInit(
+Java_com_jakewharton_mosaic_terminal_Jni_testTtyInit(
 	JNIEnv *env,
 	jclass type,
 	jlong callbackOpaque
 ) {
-	platformInputCallback *callback = (platformInputCallback *) callbackOpaque;
-	platformInputWriterResult result = platformInputWriter_init(callback);
+	MosaicTtyCallback *callback = (MosaicTtyCallback *) callbackOpaque;
+	MosaicTestTtyInitResult result = testTty_init(callback);
 	if (likely(!result.error)) {
-		return (jlong) result.writer;
+		return (jlong) result.testTty;
 	}
 
 	// This throw can fail, but the only condition that should cause that is OOM which
 	// will occur from returning 0 (which is otherwise ignored if the throw succeeds).
-	throwIse(env, result.error, "Unable to create stdin writer");
+	throwIse(env, result.error, "Unable to initialize");
 	return 0;
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterWrite(
+Java_com_jakewharton_mosaic_terminal_Jni_testTtyWrite(
 	JNIEnv *env,
 	jclass type,
-	jlong writerOpaque,
+	jlong testTtyOpaque,
 	jbyteArray buffer
 ) {
 	jsize count = (*env)->GetArrayLength(env, buffer);
 	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
 
-	platformInputWriter *writer = (platformInputWriter *) writerOpaque;
-	uint32_t error = platformInputWriter_write(writer, nativeBuffer, count);
+	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
+	uint32_t error = testTty_write(testTty, nativeBuffer, count);
 
 	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
 
@@ -335,69 +335,69 @@ Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterWrite(
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterFocusEvent(
+Java_com_jakewharton_mosaic_terminal_Jni_testTtyFocusEvent(
 	JNIEnv *env,
 	jclass type,
-	jlong writerOpaque,
+	jlong testTtyOpaque,
 	bool focused
 ) {
-	platformInputWriter *writer = (platformInputWriter *) writerOpaque;
-	platformInputWriter_focusEvent(writer, focused);
+	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
+	testTty_focusEvent(testTty, focused);
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterKeyEvent(
+Java_com_jakewharton_mosaic_terminal_Jni_testTtyKeyEvent(
 	JNIEnv *env,
 	jclass type,
-	jlong writerOpaque
+	jlong testTtyOpaque
 ) {
-	platformInputWriter *writer = (platformInputWriter *) writerOpaque;
-	platformInputWriter_keyEvent(writer);
+	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
+	testTty_keyEvent(testTty);
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterMouseEvent(
+Java_com_jakewharton_mosaic_terminal_Jni_testTtyMouseEvent(
 	JNIEnv *env,
 	jclass type,
-	jlong writerOpaque
+	jlong testTtyOpaque
 ) {
-	platformInputWriter *writer = (platformInputWriter *) writerOpaque;
-	platformInputWriter_mouseEvent(writer);
+	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
+	testTty_mouseEvent(testTty);
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterResizeEvent(
+Java_com_jakewharton_mosaic_terminal_Jni_testTtyResizeEvent(
 	JNIEnv *env,
 	jclass type,
-	jlong writerOpaque,
+	jlong testTtyOpaque,
 	jint columns,
 	jint rows,
 	jint width,
 	jint height
 ) {
-	platformInputWriter *writer = (platformInputWriter *) writerOpaque;
-	platformInputWriter_resizeEvent(writer, columns, rows, width, height);
+	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
+	testTty_resizeEvent(testTty, columns, rows, width, height);
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterGetPlatformInput(
+Java_com_jakewharton_mosaic_terminal_Jni_testTtyGetTty(
 	JNIEnv *env,
 	jclass type,
-	jlong writerOpaque
+	jlong testTtyOpaque
 ) {
-	platformInputWriter *writer = (platformInputWriter *) writerOpaque;
-	return (jlong) platformInputWriter_getPlatformInput(writer);
+	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
+	return (jlong) testTty_getTty(testTty);
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_terminal_Jni_platformInputWriterFree(
+Java_com_jakewharton_mosaic_terminal_Jni_testTtyFree(
 	JNIEnv *env,
 	jclass type,
-	jlong writerOpaque
+	jlong testTtyOpaque
 ) {
-	platformInputWriter *writer = (platformInputWriter *) writerOpaque;
-	uint32_t error = platformInputWriter_free(writer);
+	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
+	uint32_t error = testTty_free(testTty);
 	if (unlikely(error)) {
-		throwIse(env, error, "Unable to free stdin writer");
+		throwIse(env, error, "Unable to free");
 	}
 }
