@@ -12,35 +12,33 @@ import kotlinx.cinterop.usePinned
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 
-internal actual fun TestTty(): TestTty {
-	val events = Channel<Event>(UNLIMITED)
-
-	val callback = PlatformEventHandler(events, emitDebugEvents = false)
-	val callbackRef = StableRef.create(callback)
-	val callbackPtr = callbackRef.toNativeAllocationIn(nativeHeap).ptr
-
-	val testTtyPtr = testTty_init(callbackPtr).useContents {
-		testTty?.let { return@useContents it }
-
-		nativeHeap.free(callbackPtr)
-		callbackRef.dispose()
-
-		check(error == 0U) { "Unable to create test tty: $error" }
-		throw OutOfMemoryError()
-	}
-
-	val ttyPtr = testTty_getTty(testTtyPtr)!!
-	val tty = Tty(ttyPtr, callbackPtr, callbackRef)
-	return TestTty(testTtyPtr, events, tty)
-}
-
 internal actual class TestTty(
 	private var ptr: CPointer<MosaicTestTty>?,
 	private val events: Channel<Event>,
 	actual val tty: Tty,
 ) : AutoCloseable {
-	actual fun terminalReader(emitDebugEvents: Boolean): TerminalReader {
-		return TerminalReader(tty, events, emitDebugEvents)
+	actual companion object {
+		actual fun create(callback: Tty.Callback): TestTty {
+			val events = Channel<Event>(UNLIMITED)
+
+			val callback = PlatformEventHandler(events, emitDebugEvents = false)
+			val callbackRef = StableRef.create(callback)
+			val callbackPtr = callbackRef.toNativeAllocationIn(nativeHeap).ptr
+
+			val testTtyPtr = testTty_init(callbackPtr).useContents {
+				testTty?.let { return@useContents it }
+
+				nativeHeap.free(callbackPtr)
+				callbackRef.dispose()
+
+				check(error == 0U) { "Unable to create test tty: $error" }
+				throw OutOfMemoryError()
+			}
+
+			val ttyPtr = testTty_getTty(testTtyPtr)!!
+			val tty = Tty(ttyPtr, callbackPtr, callbackRef)
+			return TestTty(testTtyPtr, events, tty)
+		}
 	}
 
 	actual fun write(buffer: ByteArray) {

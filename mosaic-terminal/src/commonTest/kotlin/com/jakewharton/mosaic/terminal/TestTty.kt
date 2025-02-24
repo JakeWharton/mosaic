@@ -1,11 +1,11 @@
 package com.jakewharton.mosaic.terminal
 
-internal expect fun TestTty(): TestTty
-
 internal expect class TestTty : AutoCloseable {
-	val tty: Tty
+	companion object {
+		fun create(callback: Tty.Callback): TestTty
+	}
 
-	fun terminalReader(emitDebugEvents: Boolean = false): TerminalReader
+	val tty: Tty
 
 	// TODO Take ByteString once it migrates to stdlib,
 	//  or if Sink/RawSink migrates expose that as a val.

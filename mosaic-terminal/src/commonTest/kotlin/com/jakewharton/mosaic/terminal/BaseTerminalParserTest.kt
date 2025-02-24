@@ -11,8 +11,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 
 abstract class BaseTerminalParserTest {
-	internal val testTty = TestTty()
-	internal val reader = testTty.terminalReader()
+	private val testTerminalReader = TestTerminalReader()
+	internal val testTty = testTerminalReader.testTty
+	internal val reader = testTerminalReader.terminalReader
 	private val runLoop = GlobalScope.launch(Dispatchers.IO) {
 		reader.runParseLoop()
 	}

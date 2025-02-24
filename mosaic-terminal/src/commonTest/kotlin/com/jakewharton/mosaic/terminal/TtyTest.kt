@@ -14,7 +14,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class TtyTest {
-	private val testTty = TestTty()
+	private val testTty = TestTty.create(object : Tty.Callback {
+		override fun onFocus(focused: Boolean) {}
+		override fun onKey() {}
+		override fun onMouse() {}
+		override fun onResize(columns: Int, rows: Int, width: Int, height: Int) {}
+	})
 	private val tty = testTty.tty
 
 	@AfterTest fun after() {

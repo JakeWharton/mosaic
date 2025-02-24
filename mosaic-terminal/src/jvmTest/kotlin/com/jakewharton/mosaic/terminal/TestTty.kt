@@ -8,28 +8,26 @@ import com.jakewharton.mosaic.terminal.event.Event
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 
-internal actual fun TestTty(): TestTty {
-	val events = Channel<Event>(UNLIMITED)
-	val callbackPtr = ttyCallbackInit(PlatformEventHandler(events, emitDebugEvents = false))
-	if (callbackPtr != 0L) {
-		val testTtyPtr = testTtyInit(callbackPtr)
-		if (testTtyPtr != 0L) {
-			val ttyPtr = testTtyGetTty(testTtyPtr)
-			val tty = Tty(ttyPtr, callbackPtr)
-			return TestTty(testTtyPtr, events, tty)
-		}
-		ttyCallbackFree(callbackPtr)
-	}
-	throw OutOfMemoryError()
-}
-
 internal actual class TestTty(
 	private var testTtyPtr: Long,
 	private val events: Channel<Event>,
 	actual val tty: Tty,
 ) : AutoCloseable {
-	actual fun terminalReader(emitDebugEvents: Boolean): TerminalReader {
-		return TerminalReader(tty, events, emitDebugEvents)
+	actual companion object {
+		actual fun create(callback: Tty.Callback): TestTty {
+			val events = Channel<Event>(UNLIMITED)
+			val callbackPtr = ttyCallbackInit(PlatformEventHandler(events, emitDebugEvents = false))
+			if (callbackPtr != 0L) {
+				val testTtyPtr = testTtyInit(callbackPtr)
+				if (testTtyPtr != 0L) {
+					val ttyPtr = testTtyGetTty(testTtyPtr)
+					val tty = Tty(ttyPtr, callbackPtr)
+					return TestTty(testTtyPtr, events, tty)
+				}
+				ttyCallbackFree(callbackPtr)
+			}
+			throw OutOfMemoryError()
+		}
 	}
 
 	actual fun write(buffer: ByteArray) {
