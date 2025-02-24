@@ -37,9 +37,6 @@ fn setupMosaicTarget(b: *std.Build, step: *std.Build.Step, tag: std.Target.Os.Ta
 		.optimize = .ReleaseSmall,
 	});
 
-	libTty.linkLibC();
-	libTestTty.linkLibC();
-
 	libTty.addIncludePath(b.path("src/commonMain/c"));
 	libTty.addIncludePath(b.path("src/jvmMain/c"));
 	libTty.addIncludePath(b.path("src/jvmMain/include/share"));
@@ -80,6 +77,10 @@ fn setupMosaicTarget(b: *std.Build, step: *std.Build.Step, tag: std.Target.Os.Ta
 			"-std=gnu99",
 		},
 	});
+
+	libTty.linkLibC();
+	libTestTty.linkLibC();
+	libTestTty.linkLibrary(libTty);
 
 	const installTty = b.addInstallArtifact(libTty, .{
 		.dest_dir = .{
