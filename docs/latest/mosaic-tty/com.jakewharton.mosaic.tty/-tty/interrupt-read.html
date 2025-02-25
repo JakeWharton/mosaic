@@ -2,7 +2,7 @@
 <html class="no-js">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-    <title>Tty</title>
+    <title>interruptRead</title>
 <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
     <script>document.documentElement.classList.replace("no-js","js");</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
@@ -45,6 +45,8 @@
         </div>
         <div class="navigation-controls">
         <div class="filter-section filter-section_loading" id="filter-section">
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":mosaic-tty:dokkaHtmlPartial/commonMain">common</button>
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":mosaic-tty:dokkaHtmlPartial/jvmMain">jvm</button>
                 <button class="platform-tag platform-selector common-like" data-active="" data-filter=":mosaic-tty:dokkaHtmlPartial/nativeMain">native</button>
             <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
                 <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
@@ -54,6 +56,20 @@
                             <i class="ui-kit-icon ui-kit-icon_cross"></i>
                         </button>
                     </div>
+                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":mosaic-tty:dokkaHtmlPartial/commonMain" data-filter=":mosaic-tty:dokkaHtmlPartial/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-filter=":mosaic-tty:dokkaHtmlPartial/jvmMain">
+                                <span class="checkbox--icon"></span>
+                                jvm
+                            </label>
+                        </li>
                         <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
                             <label class="checkbox">
                                 <input type="checkbox" class="checkbox--input" id=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-filter=":mosaic-tty:dokkaHtmlPartial/nativeMain">
@@ -90,14 +106,14 @@
                 </div>
             </div>
             <div id="main">
-<div class="main-content" data-page-type="member" id="content" pageids="mosaic-tty::com.jakewharton.mosaic.tty/Tty/Tty/#kotlinx.cinterop.CPointer[cnames.structs.MosaicTtyImpl]#kotlinx.cinterop.CPointer[com.jakewharton.mosaic.tty.MosaicTtyCallback]#kotlinx.cinterop.StableRef[com.jakewharton.mosaic.tty.Tty.Callback]/PointingToDeclaration//-840456547">
-  <div class="breadcrumbs"><a href="../../index.html">mosaic-tty</a><span class="delimiter">/</span><a href="../index.html">com.jakewharton.mosaic.tty</a><span class="delimiter">/</span><a href="index.html">Tty</a><span class="delimiter">/</span><span class="current">Tty</span></div>
+<div class="main-content" data-page-type="member" id="content" pageids="mosaic-tty::com.jakewharton.mosaic.tty/Tty/interruptRead/#/PointingToDeclaration//-742055585">
+  <div class="breadcrumbs"><a href="../../index.html">mosaic-tty</a><span class="delimiter">/</span><a href="../index.html">com.jakewharton.mosaic.tty</a><span class="delimiter">/</span><a href="index.html">Tty</a><span class="delimiter">/</span><span class="current">interruptRead</span></div>
   <div class="cover ">
-    <h1 class="cover"><span><span>Tty</span></span></h1>
+    <h1 class="cover"><span>interrupt</span><wbr><span><span>Read</span></span></h1>
   </div>
   <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-active="" data-toggle=":mosaic-tty:dokkaHtmlPartial/nativeMain">native</button></div>
-<div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-tty:dokkaHtmlPartial/nativeMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">ptr<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlinx.cinterop/-c-pointer/index.html">CPointer</a><span class="token operator">&lt;</span><a href="../../../mosaic-tty/com.jakewharton.mosaic.tty/-mosaic-tty/index.html">MosaicTty</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">handlerPtr<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlinx.cinterop/-c-pointer/index.html">CPointer</a><span class="token operator">&lt;</span><a href="../../../mosaic-tty/com.jakewharton.mosaic.tty/-mosaic-tty-callback/index.html">MosaicTtyCallback</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">handlerRef<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlinx.cinterop/-stable-ref/index.html">StableRef</a><span class="token operator">&lt;</span><a href="-callback/index.html">Tty.Callback</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div>  </div>
+    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":mosaic-tty:dokkaHtmlPartial/commonMain">common</button><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-toggle=":mosaic-tty:dokkaHtmlPartial/jvmMain">jvm</button><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-toggle=":mosaic-tty:dokkaHtmlPartial/nativeMain">native</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-tty:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">expect </span><span class="token keyword">fun </span><a href="interrupt-read.html"><span class="token function">interruptRead</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><p class="paragraph">Signal blocking calls to <a href="read-input.html">readInput</a> or <a href="read-input-with-timeout.html">readInputWithTimeout</a> to wake up and return 0.</p></div><div class="content sourceset-dependent-content" data-togglable=":mosaic-tty:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">fun </span><a href="interrupt-read.html"><span class="token function">interruptRead</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div><div class="content sourceset-dependent-content" data-togglable=":mosaic-tty:dokkaHtmlPartial/nativeMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">fun </span><a href="interrupt-read.html"><span class="token function">interruptRead</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div>  </div>
 </div>
     <div class="footer">
         <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
