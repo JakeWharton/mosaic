@@ -3,8 +3,10 @@
   native <methods>;
 }
 
+-keepdirectories jni
+
 # These members are interacted with through native code.
--keep class com.jakewharton.mosaic.tty.Tty {
+-keep class com.jakewharton.mosaic.tty.Tty$Callback {
 	void onFocus(...);
 	void onKey(...);
 	void onMouse(...);
