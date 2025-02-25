@@ -10,7 +10,7 @@
 #include <unistd.h>
 
 typedef struct MosaicTestTtyImpl {
-	int pipe[2];
+	int stdin_write_fd;
 	MosaicTty *tty;
 } MosaicTestTtyImpl;
 
@@ -23,16 +23,24 @@ MosaicTestTtyInitResult testTty_init(MosaicTtyCallback *callback) {
 		goto ret;
 	}
 
-	if (unlikely(pipe(testTty->pipe)) != 0) {
+	int stdinPipe[2];
+	if (unlikely(pipe(stdinPipe)) != 0) {
 		result.error = errno;
 		goto err;
 	}
+	int stdinReadFd = stdinPipe[0];
+	int stdinWriteFd = stdinPipe[1];
 
-	MosaicTtyInitResult ttyInitResult = tty_initWithFd(testTty->pipe[0], callback);
+	int stdoutWriteFd = STDOUT_FILENO;
+	int stderrWriteFd = STDERR_FILENO;
+
+	MosaicTtyInitResult ttyInitResult = tty_initWithFds(stdinReadFd, stdoutWriteFd, stderrWriteFd, callback);
 	if (unlikely(ttyInitResult.error)) {
 		result.error = ttyInitResult.error;
 		goto err;
 	}
+
+	testTty->stdin_write_fd = stdinWriteFd;
 	testTty->tty = ttyInitResult.tty;
 
 	result.testTty = testTty;
@@ -50,9 +58,9 @@ MosaicTty *testTty_getTty(MosaicTestTty *testTty) {
 }
 
 uint32_t testTty_write(MosaicTestTty *testTty, char *buffer, int count) {
-	int pipeOut = testTty->pipe[1];
+	int stdinWriteFd = testTty->stdin_write_fd;
 	while (count > 0) {
-		int result = write(pipeOut, buffer, count);
+		int result = write(stdinWriteFd, buffer, count);
 		if (unlikely(result == -1)) {
 			goto err;
 		}
@@ -86,16 +94,17 @@ uint32_t testTty_resizeEvent(MosaicTestTty *testTty, int columns, int rows, int 
 }
 
 uint32_t testTty_free(MosaicTestTty *testTty) {
-	int *pipe = testTty->pipe;
+	uint32_t result = 0;
 
-	int result = 0;
-	if (unlikely(close(pipe[0]) != 0)) {
+	if (unlikely(close(testTty->stdin_write_fd) != 0)) {
 		result = errno;
 	}
-	if (unlikely(close(pipe[1]) != 0 && result != 0)) {
+	if (unlikely(close(testTty->tty->stdin_read_fd) != 0 && result != 0)) {
 		result = errno;
 	}
+
 	free(testTty);
+
 	return result;
 }
 

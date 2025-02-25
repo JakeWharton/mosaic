@@ -13,7 +13,12 @@
 #include <time.h>
 #include <unistd.h>
 
-MosaicTtyInitResult tty_initWithFd(int stdinFd, MosaicTtyCallback *callback) {
+MosaicTtyInitResult tty_initWithFds(
+	int stdinReadFd,
+	int stdoutWriteFd,
+	int stderrWriteFd,
+	MosaicTtyCallback *callback
+) {
 	MosaicTtyInitResult result = {};
 
 	MosaicTtyImpl *tty = calloc(1, sizeof(MosaicTtyImpl));
@@ -22,15 +27,17 @@ MosaicTtyInitResult tty_initWithFd(int stdinFd, MosaicTtyCallback *callback) {
 		goto ret;
 	}
 
-	if (unlikely(pipe(tty->pipe)) != 0) {
+	int interrupt_pipe[2];
+	if (unlikely(pipe(interrupt_pipe)) != 0) {
 		result.error = errno;
 		goto err;
 	}
 
-	tty->stdinFd = stdinFd;
-	// TODO Consider forcing the writer pipe to always be lower than this pipe.
-	//  If we did this, we could always assume pipe[0] + 1 is the value for nfds.
-	tty->nfds = ((stdinFd > tty->pipe[0]) ? stdinFd : tty->pipe[0]) + 1;
+	tty->stdin_read_fd = stdinReadFd;
+	tty->stdout_write_fd = stdoutWriteFd;
+	tty->stderr_write_fd = stderrWriteFd;
+	tty->interrupt_read_fd = interrupt_pipe[0];
+	tty->interrupt_write_fd = interrupt_pipe[1];
 	tty->callback = callback;
 
 	result.tty = tty;
@@ -44,27 +51,29 @@ MosaicTtyInitResult tty_initWithFd(int stdinFd, MosaicTtyCallback *callback) {
 }
 
 MosaicTtyInitResult tty_init(MosaicTtyCallback *callback) {
-	return tty_initWithFd(STDIN_FILENO, callback);
+	return tty_initWithFds(STDIN_FILENO, STDOUT_FILENO, STDERR_FILENO, callback);
 }
 
-MosaicTtyIoResult tty_readInternal(
+MosaicTtyIoResult tty_readInputInternal(
 	MosaicTty *tty,
 	char *buffer,
 	int count,
 	struct timeval *timeout
 ) {
-	int stdinFd = tty->stdinFd;
-	FD_SET(stdinFd, &tty->fds);
-
-	int pipeIn = tty->pipe[0];
-	FD_SET(pipeIn, &tty->fds);
-
 	MosaicTtyIoResult result = {};
 
-	// TODO Consider setting up fd_set once in the struct and doing a stack copy here.
-	if (likely(select(tty->nfds, &tty->fds, NULL, NULL, timeout) >= 0)) {
-		if (likely(FD_ISSET(stdinFd, &tty->fds) != 0)) {
-			int c = read(stdinFd, buffer, count);
+	int stdinReadFd = tty->stdin_read_fd;
+	int interruptReadFd = tty->interrupt_read_fd;
+
+	fd_set fds;
+	FD_ZERO(&fds);
+	FD_SET(stdinReadFd, &fds);
+	FD_SET(interruptReadFd, &fds);
+
+	int nfds = 1 + ((stdinReadFd > interruptReadFd) ? stdinReadFd : interruptReadFd);
+	if (likely(select(nfds, &fds, NULL, NULL, timeout) >= 0)) {
+		if (likely(FD_ISSET(stdinReadFd, &fds) != 0)) {
+			int c = read(stdinReadFd, buffer, count);
 			if (likely(c > 0)) {
 				result.count = c;
 			} else if (c == 0) {
@@ -72,9 +81,9 @@ MosaicTtyIoResult tty_readInternal(
 			} else {
 				goto err;
 			}
-		} else if (unlikely(FD_ISSET(pipeIn, &tty->fds) != 0)) {
+		} else if (unlikely(FD_ISSET(interruptReadFd, &fds) != 0)) {
 			// Consume the single notification byte to clear the ready state for the next call.
-			int c = read(pipeIn, buffer, 1);
+			int c = read(interruptReadFd, buffer, 1);
 			if (unlikely(c < 0)) {
 				goto err;
 			}
@@ -92,11 +101,11 @@ MosaicTtyIoResult tty_readInternal(
 	goto ret;
 }
 
-MosaicTtyIoResult tty_read(MosaicTty *tty, char *buffer, int count) {
-	return tty_readInternal(tty, buffer, count, NULL);
+MosaicTtyIoResult tty_readInput(MosaicTty *tty, char *buffer, int count) {
+	return tty_readInputInternal(tty, buffer, count, NULL);
 }
 
-MosaicTtyIoResult tty_readWithTimeout(
+MosaicTtyIoResult tty_readInputWithTimeout(
 	MosaicTty *tty,
 	char *buffer,
 	int count,
@@ -106,15 +115,33 @@ MosaicTtyIoResult tty_readWithTimeout(
 	timeout.tv_sec = 0;
 	timeout.tv_usec = timeoutMillis * 1000;
 
-	return tty_readInternal(tty, buffer, count, &timeout);
+	return tty_readInputInternal(tty, buffer, count, &timeout);
 }
 
-uint32_t tty_interrupt(MosaicTty *tty) {
-	int pipeOut = tty->pipe[1];
-	int result = write(pipeOut, " ", 1);
-	return unlikely(result == -1)
-		? errno
-		: 0;
+MosaicTtyIoResult tty_writeInternal(int writeFd, char *buffer, int count) {
+	MosaicTtyIoResult result = {};
+
+	int written = write(writeFd, buffer, count);
+	if (written != -1) {
+		result.count = written;
+	} else {
+		result.error = errno;
+	}
+
+	return result;
+}
+
+uint32_t tty_interruptRead(MosaicTty *tty) {
+	MosaicTtyIoResult result = tty_writeInternal(tty->interrupt_write_fd, " ", 1);
+	return result.error;
+}
+
+MosaicTtyIoResult tty_writeOutput(MosaicTty *tty, char *buffer, int count) {
+	return tty_writeInternal(tty->stdout_write_fd, buffer, count);
+}
+
+MosaicTtyIoResult tty_writeError(MosaicTty *tty, char *buffer, int count) {
+	return tty_writeInternal(tty->stderr_write_fd, buffer, count);
 }
 
 // TODO Make sure this is only written once. Probably just one instance per process at a time.
@@ -122,7 +149,7 @@ MosaicTty *globalTty = NULL;
 
 void sigwinchHandler(int value UNUSED) {
 	struct winsize size;
-	if (ioctl(globalTty->stdinFd, TIOCGWINSZ, &size) != -1) {
+	if (ioctl(globalTty->stdin_read_fd, TIOCGWINSZ, &size) != -1) {
 		MosaicTtyCallback *callback = globalTty->callback;
 		callback->onResize(callback->opaque, size.ws_col, size.ws_row, size.ws_xpixel, size.ws_ypixel);
 	}
@@ -142,7 +169,7 @@ uint32_t tty_enableRawMode(MosaicTty *tty) {
 		goto ret;
 	}
 
-	if (unlikely(tcgetattr(STDIN_FILENO, saved) != 0)) {
+	if (unlikely(tcgetattr(tty->stdin_read_fd, saved) != 0)) {
 		result = errno;
 		goto err;
 	}
@@ -160,10 +187,10 @@ uint32_t tty_enableRawMode(MosaicTty *tty) {
 	current.c_cc[VMIN] = 1;
 	current.c_cc[VTIME] = 0;
 
-	if (unlikely(tcsetattr(STDIN_FILENO, TCSAFLUSH, &current) != 0)) {
+	if (unlikely(tcsetattr(tty->stdin_read_fd, TCSAFLUSH, &current) != 0)) {
 		result = errno;
 		// Try to restore the saved config.
-		tcsetattr(STDIN_FILENO, TCSAFLUSH, saved);
+		tcsetattr(tty->stdin_read_fd, TCSAFLUSH, saved);
 		goto err;
 	}
 
@@ -200,7 +227,7 @@ MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty) {
 	MosaicTtyTerminalSizeResult result = {};
 
 	struct winsize size;
-	if (ioctl(tty->stdinFd, TIOCGWINSZ, &size) != -1) {
+	if (ioctl(tty->stdin_read_fd, TIOCGWINSZ, &size) != -1) {
 		result.columns = size.ws_col;
 		result.rows = size.ws_row;
 		result.width = size.ws_xpixel;
@@ -213,25 +240,28 @@ MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty) {
 }
 
 uint32_t tty_free(MosaicTty *tty) {
-	int *pipe = tty->pipe;
+	uint32_t result = 0;
 
-	int result = 0;
-	if (unlikely(close(pipe[0]) != 0)) {
+	if (unlikely(close(tty->interrupt_read_fd) != 0)) {
 		result = errno;
 	}
-	if (unlikely(close(pipe[1]) != 0 && result != 0)) {
+	if (unlikely(close(tty->interrupt_write_fd) != 0 && result != 0)) {
 		result = errno;
 	}
+
 	if (tty->sigwinch && signal(SIGWINCH, SIG_DFL) == SIG_ERR && result != 0) {
 		result = errno;
 	}
+
 	if (tty->saved) {
-		if (tcsetattr(STDIN_FILENO, TCSAFLUSH, tty->saved) && result != 0) {
+		if (tcsetattr(tty->stdin_read_fd, TCSAFLUSH, tty->saved) && result != 0) {
 			result = errno;
 		}
 		free(tty->saved);
 	}
+
 	free(tty);
+
 	return result;
 }
 

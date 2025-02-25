@@ -22,7 +22,7 @@ internal object Jni {
 	external fun ttyInit(callbackPtr: Long): Long
 
 	@JvmStatic
-	external fun ttyRead(
+	external fun ttyReadInput(
 		ttyPtr: Long,
 		buffer: ByteArray,
 		offset: Int,
@@ -30,7 +30,7 @@ internal object Jni {
 	): Int
 
 	@JvmStatic
-	external fun ttyReadWithTimeout(
+	external fun ttyReadInputWithTimeout(
 		ttyPtr: Long,
 		buffer: ByteArray,
 		offset: Int,
@@ -39,7 +39,23 @@ internal object Jni {
 	): Int
 
 	@JvmStatic
-	external fun ttyInterrupt(ttyPtr: Long)
+	external fun ttyInterruptRead(ttyPtr: Long)
+
+	@JvmStatic
+	external fun ttyWriteOutput(
+		ttyPtr: Long,
+		buffer: ByteArray,
+		offset: Int,
+		count: Int,
+	): Int
+
+	@JvmStatic
+	external fun ttyWriteError(
+		ttyPtr: Long,
+		buffer: ByteArray,
+		offset: Int,
+		count: Int,
+	): Int
 
 	@JvmStatic
 	external fun ttyEnableRawMode(ttyPtr: Long)

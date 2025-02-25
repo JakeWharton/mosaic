@@ -31,12 +31,12 @@ class TtyTest {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
 		testTty.write("hello".encodeToByteArray())
-		val readA = tty.read(buffer, 0, 10)
+		val readA = tty.readInput(buffer, 0, 10)
 		assertThat(readA, "readA").isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("helloxxxxx")
 
 		testTty.write("world".encodeToByteArray())
-		val readB = tty.read(buffer, 0, 10)
+		val readB = tty.readInput(buffer, 0, 10)
 		assertThat(readB, "readB").isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("worldxxxxx")
 	}
@@ -45,7 +45,7 @@ class TtyTest {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
 		testTty.write("hello".encodeToByteArray())
-		val read = tty.read(buffer, 0, 4)
+		val read = tty.readInput(buffer, 0, 4)
 		assertThat(read).isEqualTo(4)
 		assertThat(buffer.decodeToString()).isEqualTo("hellxxxxxx")
 	}
@@ -54,7 +54,7 @@ class TtyTest {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
 		testTty.write("hello".encodeToByteArray())
-		val read = tty.read(buffer, 0, 10)
+		val read = tty.readInput(buffer, 0, 10)
 		assertThat(read).isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("helloxxxxx")
 	}
@@ -63,7 +63,7 @@ class TtyTest {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
 		testTty.write("hello".encodeToByteArray())
-		val read = tty.read(buffer, 5, 5)
+		val read = tty.readInput(buffer, 5, 5)
 		assertThat(read).isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("xxxxxhello")
 	}
@@ -71,16 +71,16 @@ class TtyTest {
 	@Test fun readCanBeInterrupted() = runTest {
 		backgroundScope.launch(Dispatchers.Default) {
 			delay(150.milliseconds)
-			tty.interrupt()
+			tty.interruptRead()
 		}
-		val readA = tty.read(ByteArray(10), 0, 10)
+		val readA = tty.readInput(ByteArray(10), 0, 10)
 		assertThat(readA).isZero()
 
 		backgroundScope.launch(Dispatchers.Default) {
 			delay(150.milliseconds)
-			tty.interrupt()
+			tty.interruptRead()
 		}
-		val readB = tty.read(ByteArray(10), 0, 10)
+		val readB = tty.readInput(ByteArray(10), 0, 10)
 		assertThat(readB).isZero()
 	}
 
@@ -90,14 +90,14 @@ class TtyTest {
 
 		val readA: Int
 		val tookA = measureTime {
-			readA = tty.readWithTimeout(ByteArray(10), 0, 10, 100)
+			readA = tty.readInputWithTimeout(ByteArray(10), 0, 10, 100)
 		}
 		assertThat(readA).isZero()
 		assertThat(tookA).isGreaterThan(50.milliseconds)
 
 		val readB: Int
 		val tookB = measureTime {
-			readB = tty.readWithTimeout(ByteArray(10), 0, 10, 100)
+			readB = tty.readInputWithTimeout(ByteArray(10), 0, 10, 100)
 		}
 		assertThat(readB).isZero()
 		assertThat(tookB).isGreaterThan(50.milliseconds)

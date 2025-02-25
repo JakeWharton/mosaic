@@ -9,7 +9,7 @@ import kotlinx.cinterop.ptr
 import kotlinx.cinterop.useContents
 import kotlinx.cinterop.usePinned
 
-public actual class TestTty(
+public actual class TestTty private constructor(
 	private var ptr: CPointer<MosaicTestTty>?,
 	public actual val tty: Tty,
 ) : AutoCloseable {
@@ -24,7 +24,9 @@ public actual class TestTty(
 				nativeHeap.free(callbackPtr)
 				callbackRef.dispose()
 
-				check(error == 0U) { "Unable to create test tty: $error" }
+				if (error != 0U) {
+					throwError(error)
+				}
 				throw OutOfMemoryError()
 			}
 

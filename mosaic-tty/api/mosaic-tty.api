@@ -22,9 +22,11 @@ public final class com/jakewharton/mosaic/tty/Tty : java/lang/AutoCloseable {
 	public final fun currentSize ()[I
 	public final fun enableRawMode ()V
 	public final fun enableWindowResizeEvents ()V
-	public final fun interrupt ()V
-	public final fun read ([BII)I
-	public final fun readWithTimeout ([BIII)I
+	public final fun interruptRead ()V
+	public final fun readInput ([BII)I
+	public final fun readInputWithTimeout ([BIII)I
+	public final fun writeError ([BII)I
+	public final fun writeOutput ([BII)I
 }
 
 public abstract interface class com/jakewharton/mosaic/tty/Tty$Callback {

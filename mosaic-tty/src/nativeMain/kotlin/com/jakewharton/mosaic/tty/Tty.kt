@@ -14,10 +14,10 @@ import kotlinx.cinterop.staticCFunction
 import kotlinx.cinterop.useContents
 import kotlinx.cinterop.usePinned
 
-public actual class Tty(
+public actual class Tty internal constructor(
 	ptr: CPointer<MosaicTty>,
-	private val handlerPtr: CPointer<MosaicTtyCallback>,
-	private val handlerRef: StableRef<Callback>,
+	private val callbackPtr: CPointer<MosaicTtyCallback>,
+	private val callbackRef: StableRef<Callback>,
 ) : AutoCloseable {
 	public actual companion object {
 		public actual fun create(callback: Callback): Tty {
@@ -32,7 +32,9 @@ public actual class Tty(
 				nativeHeap.free(callbackPtr)
 				callbackRef.dispose()
 
-				check(error == 0U) { "Unable to create stdin reader: $error" }
+				if (error != 0U) {
+					throwError(error)
+				}
 				throw OutOfMemoryError()
 			}
 		}
@@ -40,28 +42,46 @@ public actual class Tty(
 
 	private var ptr: CPointer<MosaicTty>? = ptr
 
-	public actual fun read(buffer: ByteArray, offset: Int, count: Int): Int {
+	public actual fun readInput(buffer: ByteArray, offset: Int, count: Int): Int {
 		buffer.usePinned {
-			tty_read(ptr, it.addressOf(offset), count).useContents {
+			tty_readInput(ptr, it.addressOf(offset), count).useContents {
 				if (error == 0U) return this.count
 				throwError(error)
 			}
 		}
 	}
 
-	public actual fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
+	public actual fun readInputWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
 		buffer.usePinned {
-			tty_readWithTimeout(ptr, it.addressOf(offset), count, timeoutMillis).useContents {
+			tty_readInputWithTimeout(ptr, it.addressOf(offset), count, timeoutMillis).useContents {
 				if (error == 0U) return this.count
 				throwError(error)
 			}
 		}
 	}
 
-	public actual fun interrupt() {
-		val error = tty_interrupt(ptr)
+	public actual fun interruptRead() {
+		val error = tty_interruptRead(ptr)
 		if (error == 0U) return
 		throwError(error)
+	}
+
+	public actual fun writeOutput(buffer: ByteArray, offset: Int, count: Int): Int {
+		buffer.usePinned {
+			tty_writeOutput(ptr, it.addressOf(offset), count).useContents {
+				if (error == 0U) return this.count
+				throwError(error)
+			}
+		}
+	}
+
+	public actual fun writeError(buffer: ByteArray, offset: Int, count: Int): Int {
+		buffer.usePinned {
+			tty_writeError(ptr, it.addressOf(offset), count).useContents {
+				if (error == 0U) return this.count
+				throwError(error)
+			}
+		}
 	}
 
 	public actual fun enableRawMode() {
@@ -90,8 +110,8 @@ public actual class Tty(
 			this.ptr = null
 
 			val error = tty_free(ptr)
-			nativeHeap.free(handlerPtr)
-			handlerRef.dispose()
+			nativeHeap.free(callbackPtr)
+			callbackRef.dispose()
 
 			if (error == 0U) return
 			throwError(error)

@@ -7,8 +7,6 @@
 
 // Library unique name: <com.jakewharton.mosaic:mosaic-tty>
 final class com.jakewharton.mosaic.tty/TestTty : kotlin/AutoCloseable { // com.jakewharton.mosaic.tty/TestTty|null[0]
-    constructor <init>(kotlinx.cinterop/CPointer<cnames.structs/MosaicTestTtyImpl>?, com.jakewharton.mosaic.tty/Tty) // com.jakewharton.mosaic.tty/TestTty.<init>|<init>(kotlinx.cinterop.CPointer<cnames.structs.MosaicTestTtyImpl>?;com.jakewharton.mosaic.tty.Tty){}[0]
-
     final val tty // com.jakewharton.mosaic.tty/TestTty.tty|{}tty[0]
         final fun <get-tty>(): com.jakewharton.mosaic.tty/Tty // com.jakewharton.mosaic.tty/TestTty.tty.<get-tty>|<get-tty>(){}[0]
 
@@ -25,15 +23,15 @@ final class com.jakewharton.mosaic.tty/TestTty : kotlin/AutoCloseable { // com.j
 }
 
 final class com.jakewharton.mosaic.tty/Tty : kotlin/AutoCloseable { // com.jakewharton.mosaic.tty/Tty|null[0]
-    constructor <init>(kotlinx.cinterop/CPointer<cnames.structs/MosaicTtyImpl>, kotlinx.cinterop/CPointer<com.jakewharton.mosaic.tty/MosaicTtyCallback>, kotlinx.cinterop/StableRef<com.jakewharton.mosaic.tty/Tty.Callback>) // com.jakewharton.mosaic.tty/Tty.<init>|<init>(kotlinx.cinterop.CPointer<cnames.structs.MosaicTtyImpl>;kotlinx.cinterop.CPointer<com.jakewharton.mosaic.tty.MosaicTtyCallback>;kotlinx.cinterop.StableRef<com.jakewharton.mosaic.tty.Tty.Callback>){}[0]
-
     final fun close() // com.jakewharton.mosaic.tty/Tty.close|close(){}[0]
     final fun currentSize(): kotlin/IntArray // com.jakewharton.mosaic.tty/Tty.currentSize|currentSize(){}[0]
     final fun enableRawMode() // com.jakewharton.mosaic.tty/Tty.enableRawMode|enableRawMode(){}[0]
     final fun enableWindowResizeEvents() // com.jakewharton.mosaic.tty/Tty.enableWindowResizeEvents|enableWindowResizeEvents(){}[0]
-    final fun interrupt() // com.jakewharton.mosaic.tty/Tty.interrupt|interrupt(){}[0]
-    final fun read(kotlin/ByteArray, kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.tty/Tty.read|read(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
-    final fun readWithTimeout(kotlin/ByteArray, kotlin/Int, kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.tty/Tty.readWithTimeout|readWithTimeout(kotlin.ByteArray;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+    final fun interruptRead() // com.jakewharton.mosaic.tty/Tty.interruptRead|interruptRead(){}[0]
+    final fun readInput(kotlin/ByteArray, kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.tty/Tty.readInput|readInput(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
+    final fun readInputWithTimeout(kotlin/ByteArray, kotlin/Int, kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.tty/Tty.readInputWithTimeout|readInputWithTimeout(kotlin.ByteArray;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+    final fun writeError(kotlin/ByteArray, kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.tty/Tty.writeError|writeError(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
+    final fun writeOutput(kotlin/ByteArray, kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.tty/Tty.writeOutput|writeOutput(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
 
     abstract interface Callback { // com.jakewharton.mosaic.tty/Tty.Callback|null[0]
         abstract fun onFocus(kotlin/Boolean) // com.jakewharton.mosaic.tty/Tty.Callback.onFocus|onFocus(kotlin.Boolean){}[0]

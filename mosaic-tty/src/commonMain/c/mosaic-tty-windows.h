@@ -9,7 +9,8 @@ static const int recordsCount = 64;
 typedef struct MosaicTtyImpl {
 	HANDLE stdin;
 	HANDLE stdout;
-	HANDLE waitHandles[2];
+	HANDLE stderr;
+	HANDLE interrupt_event;
 	INPUT_RECORD records[recordsCount];
 	MosaicTtyCallback *callback;
 	bool windowResizeEvents;
@@ -18,8 +19,10 @@ typedef struct MosaicTtyImpl {
 	UINT saved_output_code_page;
 } MosaicTtyImpl;
 
-MosaicTtyInitResult tty_initWithHandle(
-	HANDLE stdinRead,
+MosaicTtyInitResult tty_initWithHandles(
+	HANDLE stdin,
+	HANDLE stdout,
+	HANDLE stderr,
 	MosaicTtyCallback *callback
 );
 

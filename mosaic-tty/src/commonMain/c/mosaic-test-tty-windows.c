@@ -42,7 +42,10 @@ MosaicTestTtyInitResult testTty_init(MosaicTtyCallback *callback) {
 	// Ensure we don't start with existing records in the buffer.
 	FlushConsoleInputBuffer(writerConin);
 
-	MosaicTtyInitResult ttyInitResult = tty_initWithHandle(writerConin, callback);
+	HANDLE stdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	HANDLE stderr = GetStdHandle(STD_ERROR_HANDLE);
+
+	MosaicTtyInitResult ttyInitResult = tty_initWithHandles(writerConin, stdout, stderr, callback);
 	if (unlikely(ttyInitResult.error)) {
 		result.error = ttyInitResult.error;
 		goto err;
@@ -65,6 +68,7 @@ MosaicTty *testTty_getTty(MosaicTestTty *testTty) {
 
 uint32_t testTty_write(MosaicTestTty *testTty UNUSED, char *buffer, int count) {
 	uint32_t result = 0;
+
 	INPUT_RECORD *records = calloc(count, sizeof(INPUT_RECORD));
 	if (!records) {
 		result = ERROR_NOT_ENOUGH_MEMORY;

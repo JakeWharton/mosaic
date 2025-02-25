@@ -6,28 +6,41 @@ public expect class Tty : AutoCloseable {
 	}
 
 	/**
-	 * Read up to [count] bytes into [buffer] at [offset]. The number of bytes read will be returned.
-	 * 0 will be returned if [interrupt] is called while waiting for input. -1 will be returned if
-	 * the input stream is closed.
+	 * Read up to [count] bytes into [buffer] at [offset] from the standard input stream.
+	 * The number of bytes read will be returned. 0 will be returned if [interruptRead] is called
+	 * while waiting for input. -1 will be returned if the input stream is closed.
 	 *
-	 * @see readWithTimeout
+	 * @see readInputWithTimeout
 	 */
-	public fun read(buffer: ByteArray, offset: Int, count: Int): Int
+	public fun readInput(buffer: ByteArray, offset: Int, count: Int): Int
 
 	/**
-	 * Read up to [count] bytes into [buffer] at [offset]. The number of bytes read will be returned.
-	 * 0 will be returned if [interrupt] is called while waiting for input, or if at least
-	 * [timeoutMillis] have passed without data. -1 will be returned if the input stream is closed.
+	 * Read up to [count] bytes into [buffer] at [offset] from the standard input stream.
+	 * The number of bytes read will be returned. 0 will be returned if [interruptRead] is called
+	 * while waiting for input, or if at least [timeoutMillis] have passed without data.
+	 * -1 will be returned if the input stream is closed.
 	 *
 	 * @param timeoutMillis A value of 0 will perform a non-blocking read. Otherwise, valid values
 	 * are 1 to 999 which represent a maximum time (in milliseconds) to wait for data. Note: This
 	 * value is not validated.
-	 * @see read
+	 * @see readInput
 	 */
-	public fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int
+	public fun readInputWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int
 
-	/** Signal blocking calls to [read] to wake up and return 0. */
-	public fun interrupt()
+	/** Signal blocking calls to [readInput] or [readInputWithTimeout] to wake up and return 0. */
+	public fun interruptRead()
+
+	/**
+	 * Write up to [count] bytes from [buffer] at [offset] to the standard output stream.
+	 * The number of bytes written will be returned.
+	 */
+	public fun writeOutput(buffer: ByteArray, offset: Int, count: Int): Int
+
+	/**
+	 * Write up to [count] bytes from [buffer] at [offset] to the standard error stream.
+	 * The number of bytes written will be returned.
+	 */
+	public fun writeError(buffer: ByteArray, offset: Int, count: Int): Int
 
 	public fun enableRawMode()
 

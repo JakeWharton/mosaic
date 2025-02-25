@@ -6,8 +6,10 @@
 #include <assert.h>
 #include <windows.h>
 
-MosaicTtyInitResult tty_initWithHandle(
-	HANDLE stdinRead,
+MosaicTtyInitResult tty_initWithHandles(
+	HANDLE stdin,
+	HANDLE stdout,
+	HANDLE stderr,
 	MosaicTtyCallback *callback
 ) {
 	MosaicTtyInitResult result = {};
@@ -18,12 +20,15 @@ MosaicTtyInitResult tty_initWithHandle(
 		goto ret;
 	}
 
-	if (unlikely(stdinRead == INVALID_HANDLE_VALUE)) {
+	if (unlikely(stdin == INVALID_HANDLE_VALUE)) {
 		result.error = GetLastError();
 		goto err;
 	}
-	HANDLE stdoutWrite = GetStdHandle(STD_OUTPUT_HANDLE);
-	if (unlikely(stdoutWrite == INVALID_HANDLE_VALUE)) {
+	if (unlikely(stdout == INVALID_HANDLE_VALUE)) {
+		result.error = GetLastError();
+		goto err;
+	}
+	if (unlikely(stderr == INVALID_HANDLE_VALUE)) {
 		result.error = GetLastError();
 		goto err;
 	}
@@ -34,10 +39,10 @@ MosaicTtyInitResult tty_initWithHandle(
 		goto err;
 	}
 
-	tty->stdin = stdinRead;
-	tty->stdout = stdoutWrite;
-	tty->waitHandles[0] = stdinRead;
-	tty->waitHandles[1] = interruptEvent;
+	tty->stdin = stdin;
+	tty->stdout = stdout;
+	tty->stderr = stderr;
+	tty->interrupt_event = interruptEvent;
 	tty->callback = callback;
 
 	result.tty = tty;
@@ -51,19 +56,21 @@ MosaicTtyInitResult tty_initWithHandle(
 }
 
 MosaicTtyInitResult tty_init(MosaicTtyCallback *callback) {
-	HANDLE h = GetStdHandle(STD_INPUT_HANDLE);
-	return tty_initWithHandle(h, callback);
+	HANDLE stdin = GetStdHandle(STD_INPUT_HANDLE);
+	HANDLE stdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	HANDLE stderr = GetStdHandle(STD_ERROR_HANDLE);
+	return tty_initWithHandles(stdin, stdout, stderr, callback);
 }
 
-MosaicTtyIoResult tty_read(
+MosaicTtyIoResult tty_readInput(
 	MosaicTty *tty,
 	char *buffer,
 	int count
 ) {
-	return tty_readWithTimeout(tty, buffer, count, INFINITE);
+	return tty_readInputWithTimeout(tty, buffer, count, INFINITE);
 }
 
-MosaicTtyIoResult tty_readWithTimeout(
+MosaicTtyIoResult tty_readInputWithTimeout(
 	MosaicTty *tty,
 	char *buffer,
 	int count,
@@ -72,14 +79,15 @@ MosaicTtyIoResult tty_readWithTimeout(
 	MosaicTtyIoResult result = {};
 
 	DWORD waitResult;
+	HANDLE waitHandles[2] = { tty->stdin, tty->interrupt_event };
 
 	loop:
-	waitResult = WaitForMultipleObjects(2, tty->waitHandles, FALSE, timeoutMillis);
+	waitResult = WaitForMultipleObjects(2, waitHandles, FALSE, timeoutMillis);
 	if (likely(waitResult == WAIT_OBJECT_0)) {
 		INPUT_RECORD *records = tty->records;
 		int recordRequest = recordsCount > count ? count : recordsCount;
 		DWORD recordsRead = 0;
-		if (unlikely(!ReadConsoleInputW(tty->waitHandles[0], records, recordRequest, &recordsRead))) {
+		if (unlikely(!ReadConsoleInputW(tty->stdin, records, recordRequest, &recordsRead))) {
 			goto err;
 		}
 
@@ -126,10 +134,32 @@ MosaicTtyIoResult tty_readWithTimeout(
 	goto ret;
 }
 
-uint32_t tty_interrupt(MosaicTty *tty) {
-	return likely(SetEvent(tty->waitHandles[1]) != 0)
+uint32_t tty_interruptRead(MosaicTty *tty) {
+	return likely(SetEvent(tty->interrupt_event) != 0)
 		? 0
 		: GetLastError();
+}
+
+MosaicTtyIoResult tty_writeInternal(HANDLE h, char *buffer, int count) {
+	MosaicTtyIoResult result = {};
+
+	DWORD written;
+	if (WriteFile(h, buffer, count, &written, NULL)) {
+		result.count = written;
+	} else {
+		result.error = GetLastError();
+	}
+
+	return result;
+}
+
+
+MosaicTtyIoResult tty_writeOutput(MosaicTty *tty, char *buffer, int count) {
+	return tty_writeInternal(tty->stdout, buffer, count);
+}
+
+MosaicTtyIoResult tty_writeError(MosaicTty *tty, char *buffer, int count) {
+	return tty_writeInternal(tty->stderr, buffer, count);
 }
 
 uint32_t tty_enableRawMode(MosaicTty *tty) {
@@ -225,7 +255,7 @@ MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty) {
 uint32_t tty_free(MosaicTty *tty) {
 	uint32_t result = 0;
 
-	if (unlikely(CloseHandle(tty->waitHandles[1]) == 0)) {
+	if (unlikely(CloseHandle(tty->interrupt_event) == 0)) {
 		result = GetLastError();
 	}
 

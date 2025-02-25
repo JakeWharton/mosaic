@@ -162,7 +162,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyInit(
 }
 
 JNIEXPORT jint JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_ttyRead(
+Java_com_jakewharton_mosaic_tty_Jni_ttyReadInput(
 	JNIEnv *env,
 	jclass type,
 	jlong ttyOpaque,
@@ -174,22 +174,22 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyRead(
 	jbyte *nativeBufferAtOffset = nativeBuffer + offset;
 
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	MosaicTtyIoResult read = tty_read(tty, nativeBufferAtOffset, count);
+	MosaicTtyIoResult result = tty_readInput(tty, nativeBufferAtOffset, count);
 
 	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
 
-	if (likely(!read.error)) {
-		return read.count;
+	if (likely(!result.error)) {
+		return result.count;
 	}
 
 	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
 	// and should cause the program to try and exit cleanly. 0 is a valid return value.
-	throwIse(env, read.error, "Unable to read stdin");
+	throwIse(env, result.error, "Unable to read input");
 	return -1;
 }
 
 JNIEXPORT jint JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_ttyReadWithTimeout(
+Java_com_jakewharton_mosaic_tty_Jni_ttyReadInputWithTimeout(
 	JNIEnv *env,
 	jclass type,
 	jlong ttyOpaque,
@@ -202,7 +202,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyReadWithTimeout(
 	jbyte *nativeBufferAtOffset = nativeBuffer + offset;
 
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	MosaicTtyIoResult read = tty_readWithTimeout(
+	MosaicTtyIoResult result = tty_readInputWithTimeout(
 		tty,
 		nativeBufferAtOffset,
 		count,
@@ -211,27 +211,81 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyReadWithTimeout(
 
 	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
 
-	if (likely(!read.error)) {
-		return read.count;
+	if (likely(!result.error)) {
+		return result.count;
 	}
 
 	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
 	// and should cause the program to try and exit cleanly. 0 is a valid return value.
-	throwIse(env, read.error, "Unable to read stdin");
+	throwIse(env, result.error, "Unable to read input");
 	return -1;
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_ttyInterrupt(
+Java_com_jakewharton_mosaic_tty_Jni_ttyInterruptRead(
 	JNIEnv *env,
 	jclass type,
 	jlong ttyOpaque
 ) {
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	uint32_t error = tty_interrupt(tty);
+	uint32_t error = tty_interruptRead(tty);
 	if (unlikely(error)) {
 		throwIse(env, error, "Unable to interrupt");
 	}
+}
+
+JNIEXPORT jint JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_ttyWriteOutput(
+	JNIEnv *env,
+	jclass type,
+	jlong ttyOpaque,
+	jbyteArray buffer,
+	jint offset,
+	jint count
+) {
+	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
+	jbyte *nativeBufferAtOffset = nativeBuffer + offset;
+
+	MosaicTty *tty = (MosaicTty *) ttyOpaque;
+	MosaicTtyIoResult result = tty_writeOutput(tty, nativeBuffer, count);
+
+	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
+
+	if (likely(!result.error)) {
+		return result.count;
+	}
+
+	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
+	// and should cause the program to try and exit cleanly. 0 is a valid return value.
+	throwIse(env, result.error, "Unable to write output");
+	return -1;
+}
+
+JNIEXPORT jint JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_ttyWriteError(
+	JNIEnv *env,
+	jclass type,
+	jlong ttyOpaque,
+	jbyteArray buffer,
+	jint offset,
+	jint count
+) {
+	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
+	jbyte *nativeBufferAtOffset = nativeBuffer + offset;
+
+	MosaicTty *tty = (MosaicTty *) ttyOpaque;
+	MosaicTtyIoResult result = tty_writeError(tty, nativeBuffer, count);
+
+	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
+
+	if (likely(!result.error)) {
+		return result.count;
+	}
+
+	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
+	// and should cause the program to try and exit cleanly. 0 is a valid return value.
+	throwIse(env, result.error, "Unable to write error");
+	return -1;
 }
 
 JNIEXPORT void JNICALL

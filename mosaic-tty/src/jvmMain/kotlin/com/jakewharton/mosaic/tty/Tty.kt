@@ -19,16 +19,24 @@ public actual class Tty internal constructor(
 		}
 	}
 
-	public actual fun read(buffer: ByteArray, offset: Int, count: Int): Int {
-		return Jni.ttyRead(ttyPtr, buffer, offset, count)
+	public actual fun readInput(buffer: ByteArray, offset: Int, count: Int): Int {
+		return Jni.ttyReadInput(ttyPtr, buffer, offset, count)
 	}
 
-	public actual fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
-		return Jni.ttyReadWithTimeout(ttyPtr, buffer, offset, count, timeoutMillis)
+	public actual fun readInputWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
+		return Jni.ttyReadInputWithTimeout(ttyPtr, buffer, offset, count, timeoutMillis)
 	}
 
-	public actual fun interrupt() {
-		Jni.ttyInterrupt(ttyPtr)
+	public actual fun interruptRead() {
+		Jni.ttyInterruptRead(ttyPtr)
+	}
+
+	public actual fun writeOutput(buffer: ByteArray, offset: Int, count: Int): Int {
+		return Jni.ttyWriteOutput(ttyPtr, buffer, offset, count)
+	}
+
+	public actual fun writeError(buffer: ByteArray, offset: Int, count: Int): Int {
+		return Jni.ttyWriteError(ttyPtr, buffer, offset, count)
 	}
 
 	public actual fun enableRawMode() {

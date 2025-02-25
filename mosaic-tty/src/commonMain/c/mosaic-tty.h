@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+typedef struct MosaicTtyImpl MosaicTty;
+
 typedef void MosaicTtyCallbackOnFocus(void *opaque, bool focused);
 typedef void MosaicTtyCallbackOnKey(void *opaque); // TODO params
 typedef void MosaicTtyCallbackOnMouse(void *opaque); // TODO params
@@ -16,9 +18,6 @@ typedef struct MosaicTtyCallback {
 	MosaicTtyCallbackOnMouse *onMouse;
 	MosaicTtyCallbackOnResize *onResize;
 } MosaicTtyCallback;
-
-
-typedef struct MosaicTtyImpl MosaicTty;
 
 typedef struct MosaicTtyInitResult {
 	MosaicTty *tty;
@@ -39,9 +38,11 @@ typedef struct MosaicTtyTerminalSizeResult {
 } MosaicTtyTerminalSizeResult;
 
 MosaicTtyInitResult tty_init(MosaicTtyCallback *callback);
-MosaicTtyIoResult tty_read(MosaicTty *tty, char *buffer, int count);
-MosaicTtyIoResult tty_readWithTimeout(MosaicTty *tty, char *buffer, int count, int timeoutMillis);
-uint32_t tty_interrupt(MosaicTty *tty);
+MosaicTtyIoResult tty_readInput(MosaicTty *tty, char *buffer, int count);
+MosaicTtyIoResult tty_readInputWithTimeout(MosaicTty *tty, char *buffer, int count, int timeoutMillis);
+uint32_t tty_interruptRead(MosaicTty *tty);
+MosaicTtyIoResult tty_writeOutput(MosaicTty *tty, char *buffer, int count);
+MosaicTtyIoResult tty_writeError(MosaicTty *tty, char *buffer, int count);
 uint32_t tty_enableRawMode(MosaicTty *tty);
 uint32_t tty_enableWindowResizeEvents(MosaicTty *tty);
 MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty);
