@@ -6,9 +6,6 @@
 -keepdirectories jni
 
 # These members are interacted with through native code.
--keep class com.jakewharton.mosaic.tty.Tty$Callback {
-	void onFocus(...);
-	void onKey(...);
-	void onMouse(...);
-	void onResize(...);
+-keep interface com.jakewharton.mosaic.tty.Tty$Callback {
+	<methods>;
 }

@@ -170,7 +170,7 @@ kotlin {
 			doFirst {
 				// Defer resolving this until execution time since JavaExec lacks provider-based args.
 				args += '-injars'
-				args += testDependencyFiles.get().files.join(File.pathSeparator)
+				args += testDependencyFiles.get().files.findAll { it.exists() }.join(File.pathSeparator)
 				// These do not need deferred, but since it must come after -injars it has to go here.
 				args += '-outjars'
 				args += proGuardJar.get().asFile.toString()

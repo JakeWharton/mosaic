@@ -240,6 +240,7 @@ jobs:
     needs:
       - docs
       - tty-tests
+      - tty-shrinker-tests
       - build
     steps:
       - name: Check
