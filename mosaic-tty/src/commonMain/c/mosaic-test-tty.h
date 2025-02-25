@@ -12,9 +12,11 @@ typedef struct MosaicTestTtyInitResult {
 	uint32_t error;
 } MosaicTestTtyInitResult;
 
-MosaicTestTtyInitResult testTty_init(MosaicTtyCallback *callback);
+MosaicTestTtyInitResult testTty_init(MosaicTtyCallback *callback, bool fakeOutputAndError);
 MosaicTty *testTty_getTty(MosaicTestTty *testTty);
-uint32_t testTty_write(MosaicTestTty *testTty, char *buffer, int count);
+MosaicTtyIoResult testTty_writeInput(MosaicTestTty *testTty, char *buffer, int count);
+MosaicTtyIoResult testTty_readOutput(MosaicTestTty *testTty, char *buffer, int count);
+MosaicTtyIoResult testTty_readError(MosaicTestTty *testTty, char *buffer, int count);
 uint32_t testTty_focusEvent(MosaicTestTty *testTty, bool focused);
 uint32_t testTty_keyEvent(MosaicTestTty *testTty);
 uint32_t testTty_mouseEvent(MosaicTestTty *testTty);

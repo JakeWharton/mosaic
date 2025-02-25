@@ -7,8 +7,10 @@ public final class com/jakewharton/mosaic/tty/TestTty : java/lang/AutoCloseable 
 	public final fun getTty ()Lcom/jakewharton/mosaic/tty/Tty;
 	public final fun keyEvent ()V
 	public final fun mouseEvent ()V
+	public final fun readError ([BII)I
+	public final fun readOutput ([BII)I
 	public final fun resizeEvent (IIII)V
-	public final fun write ([B)V
+	public final fun writeInput ([BII)I
 }
 
 public final class com/jakewharton/mosaic/tty/TestTty$Companion {

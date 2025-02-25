@@ -7,10 +7,25 @@ public expect class TestTty : AutoCloseable {
 
 	public val tty: Tty
 
-	// TODO Take ByteString once it migrates to stdlib,
-	//  or if Sink/RawSink migrates expose that as a val.
-	//  https://github.com/Kotlin/kotlinx-io/issues/354
-	public fun write(buffer: ByteArray)
+	public fun writeInput(buffer: ByteArray, offset: Int, count: Int): Int
+
+	/**
+	 * Read up to [count] bytes into [buffer] at [offset] from this instance's faked standard output
+	 * stream.
+	 *
+	 * @throws IllegalStateException if this instance was not created with faked streams (currently
+	 * always the case).
+	 */
+	public fun readOutput(buffer: ByteArray, offset: Int, count: Int): Int
+
+	/**
+	 * Read up to [count] bytes into [buffer] at [offset] from this instance's faked standard error
+	 * stream.
+	 *
+	 * @throws IllegalStateException if this instance was not created with faked streams (currently
+	 * always the case).
+	 */
+	public fun readError(buffer: ByteArray, offset: Int, count: Int): Int
 
 	public fun focusEvent(focused: Boolean)
 	public fun keyEvent()

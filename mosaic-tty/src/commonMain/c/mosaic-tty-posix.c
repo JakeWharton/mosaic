@@ -118,10 +118,10 @@ MosaicTtyIoResult tty_readInputWithTimeout(
 	return tty_readInputInternal(tty, buffer, count, &timeout);
 }
 
-MosaicTtyIoResult tty_writeInternal(int writeFd, char *buffer, int count) {
+MosaicTtyIoResult tty_writeInternal(int fd, char *buffer, int count) {
 	MosaicTtyIoResult result = {};
 
-	int written = write(writeFd, buffer, count);
+	int written = write(fd, buffer, count);
 	if (written != -1) {
 		result.count = written;
 	} else {

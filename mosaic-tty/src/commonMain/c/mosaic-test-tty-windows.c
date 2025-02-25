@@ -8,13 +8,14 @@
 
 typedef struct MosaicTestTtyImpl {
 	MosaicTty *tty;
+	bool fake_output_and_error;
 } MosaicTestTtyImpl;
 
 // A single global input writer into which fake data can be sent. Creating and closing this over
 // and over eventually produces a failure, so we only do it once per process (since it's test only).
 HANDLE writerConin = NULL;
 
-MosaicTestTtyInitResult testTty_init(MosaicTtyCallback *callback) {
+MosaicTestTtyInitResult testTty_init(MosaicTtyCallback *callback, bool fakeOutputAndError UNUSED) {
 	MosaicTestTtyInitResult result = {};
 
 	MosaicTestTtyImpl *testTty = calloc(1, sizeof(MosaicTestTtyImpl));
@@ -42,6 +43,7 @@ MosaicTestTtyInitResult testTty_init(MosaicTtyCallback *callback) {
 	// Ensure we don't start with existing records in the buffer.
 	FlushConsoleInputBuffer(stdin);
 
+	// TODO Fake these if fakeOutputAndError is true.
 	HANDLE stdout = GetStdHandle(STD_OUTPUT_HANDLE);
 	HANDLE stderr = GetStdHandle(STD_ERROR_HANDLE);
 
@@ -66,12 +68,14 @@ MosaicTty *testTty_getTty(MosaicTestTty *testTty) {
 	return testTty->tty;
 }
 
-uint32_t testTty_write(MosaicTestTty *testTty, char *buffer, int count) {
-	uint32_t result = 0;
+MosaicTtyIoResult testTty_writeInput(MosaicTestTty *testTty, char *buffer, int count) {
+	// TODO Can we just WriteFile to this and get INPUT_RECORDS on the way out?
+
+	MosaicTtyIoResult result = {};
 
 	INPUT_RECORD *records = calloc(count, sizeof(INPUT_RECORD));
 	if (!records) {
-		result = ERROR_NOT_ENOUGH_MEMORY;
+		result.error = ERROR_NOT_ENOUGH_MEMORY;
 		goto ret;
 	}
 	for (int i = 0; i < count; i++) {
@@ -80,23 +84,38 @@ uint32_t testTty_write(MosaicTestTty *testTty, char *buffer, int count) {
 	}
 
 	INPUT_RECORD *writeRecord = records;
-	while (count > 0) {
-		DWORD written;
-		if (!WriteConsoleInputW(testTty->tty->stdin, writeRecord, count, &written)) {
-			goto err;
-		}
-		count -= (int) written;
-		writeRecord += (int) written;
+	DWORD written;
+	if (WriteConsoleInputW(testTty->tty->stdin, writeRecord, count, &written)) {
+		result.count = written;
+	} else {
+		result.error = GetLastError();
 	}
 
-	ret:
 	free(records);
 
+	ret:
 	return result;
+}
 
-	err:
-	result = GetLastError();
-	goto ret;
+MosaicTtyIoResult testTty_readInternal(HANDLE h, char *buffer, int count) {
+	MosaicTtyIoResult result = {};
+
+	DWORD read;
+	if (ReadFile(h, buffer, count, &read, NULL)) {
+		result.count = read;
+	} else {
+		result.error = GetLastError();
+	}
+
+	return result;
+}
+
+MosaicTtyIoResult testTty_readOutput(MosaicTestTty *testTty, char *buffer, int count) {
+	return testTty_readInternal(testTty->tty->stdout, buffer, count);
+}
+
+MosaicTtyIoResult testTty_readError(MosaicTestTty *testTty, char *buffer, int count) {
+	return testTty_readInternal(testTty->tty->stderr, buffer, count);
 }
 
 uint32_t writeRecord(HANDLE h, INPUT_RECORD *record) {
@@ -136,8 +155,20 @@ uint32_t testTty_resizeEvent(MosaicTestTty *testTty, int columns, int rows, int 
 }
 
 uint32_t testTty_free(MosaicTestTty *testTty) {
+	uint32_t result = 0;
+
+	if (testTty->fake_output_and_error) {
+		if (!CloseHandle(testTty->tty->stdout)) {
+			result = GetLastError();
+		}
+		if (!CloseHandle(testTty->tty->stderr) && !result) {
+			result = GetLastError();
+		}
+	}
+
 	free(testTty);
-	return 0;
+
+	return result;
 }
 
 #endif

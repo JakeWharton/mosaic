@@ -26,4 +26,6 @@ MosaicTtyInitResult tty_initWithHandles(
 	MosaicTtyCallback *callback
 );
 
+MosaicTtyIoResult tty_writeInternal(HANDLE h, char *buffer, int count);
+
 #endif // MOSAIC_TTY_WINDOWS_H

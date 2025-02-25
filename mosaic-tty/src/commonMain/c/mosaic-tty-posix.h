@@ -22,4 +22,6 @@ MosaicTtyInitResult tty_initWithFds(
 	MosaicTtyCallback *callback
 );
 
+MosaicTtyIoResult tty_writeInternal(int fd, char *buffer, int count);
+
 #endif // MOSAIC_TTY_POSIX_H

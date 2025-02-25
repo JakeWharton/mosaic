@@ -27,7 +27,15 @@ abstract class BaseTerminalParserTest {
 	}
 
 	internal fun TestTty.writeHex(hex: String) {
-		write(hex.hexToByteArray())
+		val buffer = hex.hexToByteArray()
+		var offset = 0
+		while (offset < buffer.size) {
+			val written = writeInput(buffer, offset, buffer.size - offset)
+			if (written == -1) {
+				throw RuntimeException("Closed")
+			}
+			offset += written
+		}
 	}
 
 	internal suspend fun TerminalReader.next(): Event {

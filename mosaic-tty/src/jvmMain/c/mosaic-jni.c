@@ -356,7 +356,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyInit(
 	jlong callbackOpaque
 ) {
 	MosaicTtyCallback *callback = (MosaicTtyCallback *) callbackOpaque;
-	MosaicTestTtyInitResult result = testTty_init(callback);
+	MosaicTestTtyInitResult result = testTty_init(callback, false);
 	if (likely(!result.error)) {
 		return (jlong) result.testTty;
 	}
@@ -367,8 +367,8 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyInit(
 	return 0;
 }
 
-JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_testTtyWrite(
+JNIEXPORT jint JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_testTtyWriteInput(
 	JNIEnv *env,
 	jclass type,
 	jlong testTtyOpaque,
@@ -378,14 +378,68 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyWrite(
 	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
 
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
-	uint32_t error = testTty_write(testTty, nativeBuffer, count);
+	MosaicTtyIoResult result = testTty_writeInput(testTty, nativeBuffer, count);
 
 	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
 
-	if (unlikely(error)) {
-		// This throw can fail, but the only condition that should cause that is OOM. Oh well.
-		throwIse(env, error, "Unable to write stdin");
+	if (likely(!result.error)) {
+		return result.count;
 	}
+
+	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
+	// and should cause the program to try and exit cleanly. 0 is a valid return value.
+	throwIse(env, result.error, "Unable to write input");
+	return -1;
+}
+
+JNIEXPORT jint JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_testTtyReadOutput(
+	JNIEnv *env,
+	jclass type,
+	jlong testTtyOpaque,
+	jbyteArray buffer
+) {
+	jsize count = (*env)->GetArrayLength(env, buffer);
+	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
+
+	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
+	MosaicTtyIoResult result = testTty_readOutput(testTty, nativeBuffer, count);
+
+	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
+
+	if (likely(!result.error)) {
+		return result.count;
+	}
+
+	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
+	// and should cause the program to try and exit cleanly. 0 is a valid return value.
+	throwIse(env, result.error, "Unable to read output");
+	return -1;
+}
+
+JNIEXPORT jint JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_testTtyReadError(
+	JNIEnv *env,
+	jclass type,
+	jlong testTtyOpaque,
+	jbyteArray buffer
+) {
+	jsize count = (*env)->GetArrayLength(env, buffer);
+	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
+
+	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
+	MosaicTtyIoResult result = testTty_readError(testTty, nativeBuffer, count);
+
+	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
+
+	if (likely(!result.error)) {
+		return result.count;
+	}
+
+	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
+	// and should cause the program to try and exit cleanly. 0 is a valid return value.
+	throwIse(env, result.error, "Unable to read error");
+	return -1;
 }
 
 JNIEXPORT void JNICALL

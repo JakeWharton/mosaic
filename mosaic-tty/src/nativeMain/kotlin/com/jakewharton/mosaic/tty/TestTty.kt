@@ -18,7 +18,7 @@ public actual class TestTty private constructor(
 			val callbackRef = StableRef.create(callback)
 			val callbackPtr = callbackRef.toNativeAllocationIn(nativeHeap).ptr
 
-			val testTtyPtr = testTty_init(callbackPtr).useContents {
+			val testTtyPtr = testTty_init(callbackPtr, false).useContents {
 				testTty?.let { return@useContents it }
 
 				nativeHeap.free(callbackPtr)
@@ -36,12 +36,31 @@ public actual class TestTty private constructor(
 		}
 	}
 
-	public actual fun write(buffer: ByteArray) {
-		val error = buffer.usePinned {
-			testTty_write(ptr, it.addressOf(0), buffer.size)
+	public actual fun writeInput(buffer: ByteArray, offset: Int, count: Int): Int {
+		buffer.usePinned {
+			testTty_writeInput(ptr, it.addressOf(0), buffer.size).useContents {
+				if (error == 0U) return this.count
+				throwError(error)
+			}
 		}
-		if (error == 0U) return
-		throwError(error)
+	}
+
+	public actual fun readOutput(buffer: ByteArray, offset: Int, count: Int): Int {
+		buffer.usePinned {
+			testTty_readOutput(ptr, it.addressOf(0), buffer.size).useContents {
+				if (error == 0U) return this.count
+				throwError(error)
+			}
+		}
+	}
+
+	public actual fun readError(buffer: ByteArray, offset: Int, count: Int): Int {
+		buffer.usePinned {
+			testTty_readError(ptr, it.addressOf(0), buffer.size).useContents {
+				if (error == 0U) return this.count
+				throwError(error)
+			}
+		}
 	}
 
 	public actual fun focusEvent(focused: Boolean) {

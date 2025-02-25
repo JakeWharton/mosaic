@@ -80,7 +80,28 @@ internal object Jni {
 	external fun testTtyGetTty(testTtyPtr: Long): Long
 
 	@JvmStatic
-	external fun testTtyWrite(testTtyPtr: Long, buffer: ByteArray)
+	external fun testTtyWriteInput(
+		testTtyPtr: Long,
+		buffer: ByteArray,
+		offset: Int,
+		count: Int,
+	): Int
+
+	@JvmStatic
+	external fun testTtyReadOutput(
+		testTtyPtr: Long,
+		buffer: ByteArray,
+		offset: Int,
+		count: Int,
+	): Int
+
+	@JvmStatic
+	external fun testTtyReadError(
+		testTtyPtr: Long,
+		buffer: ByteArray,
+		offset: Int,
+		count: Int,
+	): Int
 
 	@JvmStatic
 	external fun testTtyFocusEvent(testTtyPtr: Long, focused: Boolean)

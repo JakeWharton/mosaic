@@ -27,15 +27,24 @@ class TtyTest {
 		testTty.close()
 	}
 
+	private fun TestTty.writeInputFully(buffer: ByteArray) {
+		var remaining = buffer.size
+		while (remaining > 0) {
+			val written = writeInput(buffer, buffer.size - remaining, remaining)
+			if (written == -1) throw RuntimeException("EOF")
+			remaining -= written
+		}
+	}
+
 	@Test fun readWhatWasWritten() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		testTty.write("hello".encodeToByteArray())
+		testTty.writeInputFully("hello".encodeToByteArray())
 		val readA = tty.readInput(buffer, 0, 10)
 		assertThat(readA, "readA").isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("helloxxxxx")
 
-		testTty.write("world".encodeToByteArray())
+		testTty.writeInputFully("world".encodeToByteArray())
 		val readB = tty.readInput(buffer, 0, 10)
 		assertThat(readB, "readB").isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("worldxxxxx")
@@ -44,7 +53,7 @@ class TtyTest {
 	@Test fun readOnlyUpToCount() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		testTty.write("hello".encodeToByteArray())
+		testTty.writeInputFully("hello".encodeToByteArray())
 		val read = tty.readInput(buffer, 0, 4)
 		assertThat(read).isEqualTo(4)
 		assertThat(buffer.decodeToString()).isEqualTo("hellxxxxxx")
@@ -53,7 +62,7 @@ class TtyTest {
 	@Test fun readUnderflow() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		testTty.write("hello".encodeToByteArray())
+		testTty.writeInputFully("hello".encodeToByteArray())
 		val read = tty.readInput(buffer, 0, 10)
 		assertThat(read).isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("helloxxxxx")
@@ -62,7 +71,7 @@ class TtyTest {
 	@Test fun readAtOffset() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		testTty.write("hello".encodeToByteArray())
+		testTty.writeInputFully("hello".encodeToByteArray())
 		val read = tty.readInput(buffer, 5, 5)
 		assertThat(read).isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("xxxxxhello")

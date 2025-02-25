@@ -9,12 +9,17 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+static const int INVALID_FD = -1;
+
 typedef struct MosaicTestTtyImpl {
-	int stdin_write_fd;
 	MosaicTty *tty;
+	int stdin_write_fd;
+	int stdout_read_fd;
+	int stderr_read_fd;
+	bool fake_output_and_error;
 } MosaicTestTtyImpl;
 
-MosaicTestTtyInitResult testTty_init(MosaicTtyCallback *callback) {
+MosaicTestTtyInitResult testTty_init(MosaicTtyCallback *callback, bool fakeOutputAndError) {
 	MosaicTestTtyInitResult result = {};
 
 	MosaicTestTtyImpl *testTty = calloc(1, sizeof(MosaicTestTtyImpl));
@@ -23,16 +28,33 @@ MosaicTestTtyInitResult testTty_init(MosaicTtyCallback *callback) {
 		goto ret;
 	}
 
-	int stdinPipe[2];
-	if (unlikely(pipe(stdinPipe)) != 0) {
+	int aPipe[2];
+	if (unlikely(pipe(aPipe)) != 0) {
 		result.error = errno;
 		goto err;
 	}
-	int stdinReadFd = stdinPipe[0];
-	int stdinWriteFd = stdinPipe[1];
+	int stdinReadFd = aPipe[0];
+	int stdinWriteFd = aPipe[1];
 
+	int stdoutReadFd = INVALID_FD;
 	int stdoutWriteFd = STDOUT_FILENO;
+	int stderrReadFd = INVALID_FD;
 	int stderrWriteFd = STDERR_FILENO;
+	if (fakeOutputAndError) {
+		if (unlikely(pipe(aPipe)) != 0) {
+			result.error = errno;
+			goto err;
+		}
+		stdoutReadFd = aPipe[0];
+		stdoutWriteFd = aPipe[1];
+
+		if (unlikely(pipe(aPipe)) != 0) {
+			result.error = errno;
+			goto err;
+		}
+		stderrReadFd = aPipe[0];
+		stderrWriteFd = aPipe[1];
+	}
 
 	MosaicTtyInitResult ttyInitResult = tty_initWithFds(stdinReadFd, stdoutWriteFd, stderrWriteFd, callback);
 	if (unlikely(ttyInitResult.error)) {
@@ -40,8 +62,11 @@ MosaicTestTtyInitResult testTty_init(MosaicTtyCallback *callback) {
 		goto err;
 	}
 
-	testTty->stdin_write_fd = stdinWriteFd;
 	testTty->tty = ttyInitResult.tty;
+	testTty->stdin_write_fd = stdinWriteFd;
+	testTty->stdout_read_fd = stdoutReadFd;
+	testTty->stderr_read_fd = stderrReadFd;
+	testTty->fake_output_and_error = fakeOutputAndError;
 
 	result.testTty = testTty;
 
@@ -57,19 +82,32 @@ MosaicTty *testTty_getTty(MosaicTestTty *testTty) {
 	return testTty->tty;
 }
 
-uint32_t testTty_write(MosaicTestTty *testTty, char *buffer, int count) {
-	int stdinWriteFd = testTty->stdin_write_fd;
-	while (count > 0) {
-		int result = write(stdinWriteFd, buffer, count);
-		if (unlikely(result == -1)) {
-			goto err;
-		}
-		count = count - result;
-	}
-	return 0;
+MosaicTtyIoResult testTty_writeInput(MosaicTestTty *testTty, char *buffer, int count) {
+	return tty_writeInternal(testTty->stdin_write_fd, buffer, count);
+}
 
-	err:
-	return errno;
+MosaicTtyIoResult testTty_readInternal(int fd, char *buffer, int count) {
+	MosaicTtyIoResult result = {};
+	if (fd == INVALID_FD) {
+		result.count = -1;
+	} else {
+		int written = read(fd, buffer, count);
+		if (written != -1) {
+			result.count = written;
+		} else {
+			result.error = errno;
+		}
+	}
+
+	return result;
+}
+
+MosaicTtyIoResult testTty_readOutput(MosaicTestTty *testTty, char *buffer, int count) {
+	return testTty_readInternal(testTty->stdout_read_fd, buffer, count);
+}
+
+MosaicTtyIoResult testTty_readError(MosaicTestTty *testTty, char *buffer, int count) {
+	return testTty_readInternal(testTty->stderr_read_fd, buffer, count);
 }
 
 uint32_t testTty_focusEvent(MosaicTestTty *testTty UNUSED, bool focused UNUSED) {
@@ -96,11 +134,26 @@ uint32_t testTty_resizeEvent(MosaicTestTty *testTty, int columns, int rows, int 
 uint32_t testTty_free(MosaicTestTty *testTty) {
 	uint32_t result = 0;
 
-	if (unlikely(close(testTty->stdin_write_fd) != 0)) {
+	if (unlikely(close(testTty->stdin_write_fd))) {
 		result = errno;
 	}
-	if (unlikely(close(testTty->tty->stdin_read_fd) != 0 && result != 0)) {
+	if (unlikely(close(testTty->tty->stdin_read_fd) && !result)) {
 		result = errno;
+	}
+
+	if (testTty->fake_output_and_error) {
+		if (unlikely(close(testTty->stdout_read_fd) && !result)) {
+			result = errno;
+		}
+		if (unlikely(close(testTty->tty->stdout_write_fd) && !result)) {
+			result = errno;
+		}
+		if (unlikely(close(testTty->stderr_read_fd) && !result)) {
+			result = errno;
+		}
+		if (unlikely(close(testTty->tty->stderr_write_fd) && !result)) {
+			result = errno;
+		}
 	}
 
 	free(testTty);
