@@ -32,6 +32,7 @@ import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
@@ -276,7 +277,11 @@ class MosaicTest {
 		var frameTimeA = 0L
 		var frameTimeB = 0L
 
-		runMosaic(isTest = true) {
+		runMosaicComposition(
+			rendering = AnsiRendering(),
+			keyEvents = Channel(),
+			terminalState = mutableStateOf(Terminal.Default),
+		) {
 			LaunchedEffect(Unit) {
 				withFrameNanos { frameTimeNanos ->
 					frameTimeA = frameTimeNanos

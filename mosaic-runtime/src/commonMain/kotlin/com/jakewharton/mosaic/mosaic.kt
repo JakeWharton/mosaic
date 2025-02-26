@@ -43,6 +43,7 @@ import com.jakewharton.mosaic.ui.BoxMeasurePolicy
 import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.concurrent.Volatile
 import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.coroutineContext
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
@@ -76,21 +77,17 @@ public fun runMosaicBlocking(content: @Composable () -> Unit) {
 	}
 }
 
-public suspend fun runMosaic(content: @Composable () -> Unit) {
-	runMosaic(isTest = false, content)
-}
-
 private const val StageDeviceAttributes = 3
 private const val StageCapabilityQueries = 2
 private const val StageDefaultQueries = 1
 private const val StageNormalOperation = 0
 
-internal suspend fun runMosaic(isTest: Boolean, content: @Composable () -> Unit) {
+public suspend fun runMosaic(content: @Composable () -> Unit) {
 	val reader = TerminalReader()
 
 	// Entering raw mode can fail, so perform it before any additional control sequences which change
 	// settings. We also need to be in character mode to query capabilities with control sequences.
-	if (!isTest && env("MOSAIC_RAW_MODE") != "false") {
+	if (env("MOSAIC_RAW_MODE") != "false") {
 		reader.enableRawMode()
 	}
 
@@ -279,7 +276,7 @@ internal suspend fun runMosaic(isTest: Boolean, content: @Composable () -> Unit)
 			}
 			print("\r\n")
 
-			if (!toggleInBandResize && !isTest) {
+			if (!toggleInBandResize) {
 				terminalState.update {
 					copy(
 						size = reader.currentSize().let { size ->
@@ -295,34 +292,44 @@ internal suspend fun runMosaic(isTest: Boolean, content: @Composable () -> Unit)
 				synchronizedRendering = supportsSynchronizedRendering,
 			)
 
-			val clock = BroadcastFrameClock()
-			val mosaicComposition = MosaicComposition(
-				coroutineContext = coroutineContext + clock,
-				onDraw = { rootNode ->
-					print(rendering.render(rootNode).toString())
-				},
-				keyEvents = keyEvents,
-				terminalState = terminalState,
-			)
+			runMosaicComposition(rendering, keyEvents, terminalState, content)
 
-			mosaicComposition.setContent(content)
-
-			mosaicComposition.scope.launch {
-				while (true) {
-					clock.sendFrame(nanoTime())
-
-					// "1000 FPS should be enough for anybody"
-					// We need to yield in order for other coroutines on this dispatcher to run, otherwise
-					// this is effectively a spin loop. We do a delay instead of a yield since dispatchers
-					// are not required to support yield, but reasonable delay support is almost a guarantee.
-					delay(1)
-				}
-			}
-
-			mosaicComposition.awaitComplete()
 			eventJob.cancel()
 		},
 	)
+}
+
+internal suspend fun runMosaicComposition(
+	rendering: Rendering,
+	keyEvents: Channel<KeyEvent>,
+	terminalState: MutableState<Terminal>,
+	content: @Composable (() -> Unit),
+) {
+	val clock = BroadcastFrameClock()
+	val mosaicComposition = MosaicComposition(
+		coroutineContext = coroutineContext + clock,
+		onDraw = { rootNode ->
+			print(rendering.render(rootNode).toString())
+		},
+		keyEvents = keyEvents,
+		terminalState = terminalState,
+	)
+
+	mosaicComposition.setContent(content)
+
+	mosaicComposition.scope.launch {
+		while (true) {
+			clock.sendFrame(nanoTime())
+
+			// "1000 FPS should be enough for anybody"
+			// We need to yield in order for other coroutines on this dispatcher to run, otherwise
+			// this is effectively a spin loop. We do a delay instead of a yield since dispatchers
+			// are not required to support yield, but reasonable delay support is almost a guarantee.
+			delay(1)
+		}
+	}
+
+	mosaicComposition.awaitComplete()
 }
 
 internal inline fun <T> MutableState<T>.update(updater: T.() -> T) {
