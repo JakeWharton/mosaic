@@ -4,7 +4,7 @@
 #include "mosaic-tty.h"
 #include <windows.h>
 
-static const int recordsCount = 64;
+enum { recordsCount = 64 };
 
 typedef struct MosaicTtyImpl {
 	HANDLE stdin;

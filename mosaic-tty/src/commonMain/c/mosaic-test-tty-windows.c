@@ -66,7 +66,7 @@ MosaicTty *testTty_getTty(MosaicTestTty *testTty) {
 	return testTty->tty;
 }
 
-uint32_t testTty_write(MosaicTestTty *testTty, char *buffer, int count) {
+uint32_t testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int count) {
 	uint32_t result = 0;
 
 	INPUT_RECORD *records = calloc(count, sizeof(INPUT_RECORD));

@@ -48,6 +48,8 @@ fn setupMosaicTarget(b: *std.Build, step: *std.Build.Step, tag: std.Target.Os.Ta
 		},
 		.flags = &.{
 			"-std=gnu99",
+			"-Wall",
+			"-Werror",
 		},
 	});
 

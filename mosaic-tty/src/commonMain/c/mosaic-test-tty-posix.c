@@ -57,7 +57,7 @@ MosaicTty *testTty_getTty(MosaicTestTty *testTty) {
 	return testTty->tty;
 }
 
-uint32_t testTty_write(MosaicTestTty *testTty, char *buffer, int count) {
+uint32_t testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int count) {
 	int stdinWriteFd = testTty->stdin_write_fd;
 	while (count > 0) {
 		int result = write(stdinWriteFd, buffer, count);

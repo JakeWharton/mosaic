@@ -38,11 +38,11 @@ typedef struct MosaicTtyTerminalSizeResult {
 } MosaicTtyTerminalSizeResult;
 
 MosaicTtyInitResult tty_init(MosaicTtyCallback *callback);
-MosaicTtyIoResult tty_readInput(MosaicTty *tty, char *buffer, int count);
-MosaicTtyIoResult tty_readInputWithTimeout(MosaicTty *tty, char *buffer, int count, int timeoutMillis);
+MosaicTtyIoResult tty_readInput(MosaicTty *tty, uint8_t *buffer, int count);
+MosaicTtyIoResult tty_readInputWithTimeout(MosaicTty *tty, uint8_t *buffer, int count, int timeoutMillis);
 uint32_t tty_interruptRead(MosaicTty *tty);
-MosaicTtyIoResult tty_writeOutput(MosaicTty *tty, char *buffer, int count);
-MosaicTtyIoResult tty_writeError(MosaicTty *tty, char *buffer, int count);
+MosaicTtyIoResult tty_writeOutput(MosaicTty *tty, uint8_t *buffer, int count);
+MosaicTtyIoResult tty_writeError(MosaicTty *tty, uint8_t *buffer, int count);
 uint32_t tty_enableRawMode(MosaicTty *tty);
 uint32_t tty_enableWindowResizeEvents(MosaicTty *tty);
 MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty);

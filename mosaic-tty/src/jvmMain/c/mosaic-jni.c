@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void throwIse(JNIEnv *env, unsigned int error, const char *prefix) {
+void throwIse(JNIEnv *env, uint32_t error, const char *prefix) {
 	jclass ise = (*env)->FindClass(env, "java/lang/IllegalStateException");
 
 	int prefixLength = strlen(prefix);
@@ -19,7 +19,7 @@ void throwIse(JNIEnv *env, unsigned int error, const char *prefix) {
 		message[prefixLength] = ':';
 		message[prefixLength + 1] = ' ';
 		// Offset the location of the formatted number by the prefix and colon+space lengths.
-		sprintf(message + prefixLength + colonSpaceLength, "%lu", error);
+		sprintf(message + prefixLength + colonSpaceLength, "%u", error);
 		(*env)->ThrowNew(env, ise, message);
 	}
 }
@@ -170,13 +170,15 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyReadInput(
 	jint offset,
 	jint count
 ) {
-	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
-	jbyte *nativeBufferAtOffset = nativeBuffer + offset;
+	jbyte *bufferElements = (*env)->GetByteArrayElements(env, buffer, NULL);
+	jbyte *bufferElementsAtOffset = bufferElements + offset;
+	// Reinterpret JVM signed bytes as unsigned.
+	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
 
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
 	MosaicTtyIoResult result = tty_readInput(tty, nativeBufferAtOffset, count);
 
-	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
+	(*env)->ReleaseByteArrayElements(env, buffer, bufferElements, 0);
 
 	if (likely(!result.error)) {
 		return result.count;
@@ -198,8 +200,10 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyReadInputWithTimeout(
 	jint count,
 	jint timeoutMillis
 ) {
-	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
-	jbyte *nativeBufferAtOffset = nativeBuffer + offset;
+	jbyte *bufferElements = (*env)->GetByteArrayElements(env, buffer, NULL);
+	jbyte *bufferElementsAtOffset = bufferElements + offset;
+	// Reinterpret JVM signed bytes as unsigned.
+	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
 
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
 	MosaicTtyIoResult result = tty_readInputWithTimeout(
@@ -209,7 +213,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyReadInputWithTimeout(
 		timeoutMillis
 	);
 
-	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
+	(*env)->ReleaseByteArrayElements(env, buffer, bufferElements, 0);
 
 	if (likely(!result.error)) {
 		return result.count;
@@ -243,13 +247,15 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyWriteOutput(
 	jint offset,
 	jint count
 ) {
-	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
-	jbyte *nativeBufferAtOffset = nativeBuffer + offset;
+	jbyte *bufferElements = (*env)->GetByteArrayElements(env, buffer, NULL);
+	jbyte *bufferElementsAtOffset = bufferElements + offset;
+	// Reinterpret JVM signed bytes as unsigned.
+	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
 
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	MosaicTtyIoResult result = tty_writeOutput(tty, nativeBuffer, count);
+	MosaicTtyIoResult result = tty_writeOutput(tty, nativeBufferAtOffset, count);
 
-	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
+	(*env)->ReleaseByteArrayElements(env, buffer, bufferElements, 0);
 
 	if (likely(!result.error)) {
 		return result.count;
@@ -270,13 +276,15 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyWriteError(
 	jint offset,
 	jint count
 ) {
-	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
-	jbyte *nativeBufferAtOffset = nativeBuffer + offset;
+	jbyte *bufferElements = (*env)->GetByteArrayElements(env, buffer, NULL);
+	jbyte *bufferElementsAtOffset = bufferElements + offset;
+	// Reinterpret JVM signed bytes as unsigned.
+	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
 
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	MosaicTtyIoResult result = tty_writeError(tty, nativeBuffer, count);
+	MosaicTtyIoResult result = tty_writeError(tty, nativeBufferAtOffset, count);
 
-	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
+	(*env)->ReleaseByteArrayElements(env, buffer, bufferElements, 0);
 
 	if (likely(!result.error)) {
 		return result.count;
@@ -334,6 +342,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyCurrentSize(
 	}
 
 	throwIse(env, result.error, "Unable to get terminal size");
+	return NULL;
 }
 
 JNIEXPORT void JNICALL
@@ -375,12 +384,14 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyWrite(
 	jbyteArray buffer
 ) {
 	jsize count = (*env)->GetArrayLength(env, buffer);
-	jbyte *nativeBuffer = (*env)->GetByteArrayElements(env, buffer, NULL);
+	jbyte *bufferElements = (*env)->GetByteArrayElements(env, buffer, NULL);
+	// Reinterpret JVM signed bytes as unsigned.
+	uint8_t *nativeBuffer = (uint8_t *) bufferElements;
 
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
 	uint32_t error = testTty_write(testTty, nativeBuffer, count);
 
-	(*env)->ReleaseByteArrayElements(env, buffer, nativeBuffer, 0);
+	(*env)->ReleaseByteArrayElements(env, buffer, bufferElements, 0);
 
 	if (unlikely(error)) {
 		// This throw can fail, but the only condition that should cause that is OOM. Oh well.

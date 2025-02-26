@@ -37,7 +37,7 @@ public actual class TestTty private constructor(
 	}
 
 	public actual fun write(buffer: ByteArray) {
-		val error = buffer.usePinned {
+		val error = buffer.asUByteArray().usePinned {
 			testTty_write(ptr, it.addressOf(0), buffer.size)
 		}
 		if (error == 0U) return

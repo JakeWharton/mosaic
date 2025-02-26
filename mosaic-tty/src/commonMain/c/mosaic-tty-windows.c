@@ -64,7 +64,7 @@ MosaicTtyInitResult tty_init(MosaicTtyCallback *callback) {
 
 MosaicTtyIoResult tty_readInput(
 	MosaicTty *tty,
-	char *buffer,
+	uint8_t *buffer,
 	int count
 ) {
 	return tty_readInputWithTimeout(tty, buffer, count, INFINITE);
@@ -72,7 +72,7 @@ MosaicTtyIoResult tty_readInput(
 
 MosaicTtyIoResult tty_readInputWithTimeout(
 	MosaicTty *tty,
-	char *buffer,
+	uint8_t *buffer,
 	int count,
 	int timeoutMillis
 ) {
@@ -140,7 +140,7 @@ uint32_t tty_interruptRead(MosaicTty *tty) {
 		: GetLastError();
 }
 
-MosaicTtyIoResult tty_writeInternal(HANDLE h, char *buffer, int count) {
+MosaicTtyIoResult tty_writeInternal(HANDLE h, uint8_t *buffer, int count) {
 	MosaicTtyIoResult result = {};
 
 	DWORD written;
@@ -153,11 +153,11 @@ MosaicTtyIoResult tty_writeInternal(HANDLE h, char *buffer, int count) {
 	return result;
 }
 
-MosaicTtyIoResult tty_writeOutput(MosaicTty *tty, char *buffer, int count) {
+MosaicTtyIoResult tty_writeOutput(MosaicTty *tty, uint8_t *buffer, int count) {
 	return tty_writeInternal(tty->stdout, buffer, count);
 }
 
-MosaicTtyIoResult tty_writeError(MosaicTty *tty, char *buffer, int count) {
+MosaicTtyIoResult tty_writeError(MosaicTty *tty, uint8_t *buffer, int count) {
 	return tty_writeInternal(tty->stderr, buffer, count);
 }
 

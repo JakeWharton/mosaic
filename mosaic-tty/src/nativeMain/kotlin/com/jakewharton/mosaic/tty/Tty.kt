@@ -43,7 +43,7 @@ public actual class Tty internal constructor(
 	private var ptr: CPointer<MosaicTty>? = ptr
 
 	public actual fun readInput(buffer: ByteArray, offset: Int, count: Int): Int {
-		buffer.usePinned {
+		buffer.asUByteArray().usePinned {
 			tty_readInput(ptr, it.addressOf(offset), count).useContents {
 				if (error == 0U) return this.count
 				throwError(error)
@@ -52,7 +52,7 @@ public actual class Tty internal constructor(
 	}
 
 	public actual fun readInputWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
-		buffer.usePinned {
+		buffer.asUByteArray().usePinned {
 			tty_readInputWithTimeout(ptr, it.addressOf(offset), count, timeoutMillis).useContents {
 				if (error == 0U) return this.count
 				throwError(error)
@@ -67,7 +67,7 @@ public actual class Tty internal constructor(
 	}
 
 	public actual fun writeOutput(buffer: ByteArray, offset: Int, count: Int): Int {
-		buffer.usePinned {
+		buffer.asUByteArray().usePinned {
 			tty_writeOutput(ptr, it.addressOf(offset), count).useContents {
 				if (error == 0U) return this.count
 				throwError(error)
@@ -76,7 +76,7 @@ public actual class Tty internal constructor(
 	}
 
 	public actual fun writeError(buffer: ByteArray, offset: Int, count: Int): Int {
-		buffer.usePinned {
+		buffer.asUByteArray().usePinned {
 			tty_writeError(ptr, it.addressOf(offset), count).useContents {
 				if (error == 0U) return this.count
 				throwError(error)
