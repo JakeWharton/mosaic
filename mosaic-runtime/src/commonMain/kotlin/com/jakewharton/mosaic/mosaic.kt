@@ -77,6 +77,7 @@ public fun runMosaicBlocking(content: @Composable () -> Unit) {
 	}
 }
 
+private const val DebugBootstrap = false
 private const val StageDeviceAttributes = 3
 private const val StageCapabilityQueries = 2
 private const val StageDefaultQueries = 1
@@ -129,9 +130,11 @@ public suspend fun runMosaic(content: @Composable () -> Unit) {
 			val eventJob = launch(start = UNDISPATCHED) {
 				try {
 					for (event in reader.events) {
-						// if (stage != StageNormalOperation) {
-						// 	print("$event\r\n")
-						// }
+						if (DebugBootstrap) {
+							if (stage != StageNormalOperation) {
+								print("$event\r\n")
+							}
+						}
 						when (event) {
 							is PrimaryDeviceAttributesEvent -> {
 								if (stage == StageNormalOperation) continue
@@ -274,7 +277,9 @@ public suspend fun runMosaic(content: @Composable () -> Unit) {
 			withTimeoutOrNull(1.seconds) {
 				bootstrapDone.await()
 			}
-			print("\r\n")
+			if (DebugBootstrap) {
+				print("\r\n")
+			}
 
 			if (!toggleInBandResize) {
 				terminalState.update {
