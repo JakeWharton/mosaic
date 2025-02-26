@@ -17,7 +17,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version-file: .github/.java-version
+          java-version-file: .github/workflows/.java-version
 
       - uses: mlugg/setup-zig@v1
         with:

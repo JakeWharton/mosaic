@@ -45,7 +45,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version-file: .github/.java-version
+          java-version-file: .github/workflows/.java-version
 
       - run: ./gradlew :mosaic-tty:installJvmTestDistribution :mosaic-tty:linkNativeDebugTests
 
@@ -124,13 +124,13 @@ jobs:
       - uses: actions/checkout@v4
         if: ${{ matrix.tests.type == 'java' && matrix.tests.version == 'latest' }}
         with:
-          sparse-checkout: .github/.java-version
+          sparse-checkout: .github/workflows/.java-version
           sparse-checkout-cone-mode: false
       - uses: actions/setup-java@v4
         if: ${{ matrix.tests.type == 'java' && matrix.tests.version == 'latest' }}
         with:
           distribution: 'zulu'
-          java-version-file: .github/.java-version
+          java-version-file: .github/workflows/.java-version
 
       - uses: actions/setup-java@v4
         if: ${{ matrix.tests.type == 'java' && matrix.tests.version != 'latest' }}
@@ -168,7 +168,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version-file: .github/.java-version
+          java-version-file: .github/workflows/.java-version
 
       - run: >
           ./gradlew
@@ -190,7 +190,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version-file: .github/.java-version
+          java-version-file: .github/workflows/.java-version
       - uses: gradle/actions/setup-gradle@v4
 
       # Disabling allTests should be enough, but https://youtrack.jetbrains.com/issue/KT-74509
@@ -223,7 +223,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version-file: .github/.java-version
+          java-version-file: .github/workflows/.java-version
       - uses: gradle/actions/setup-gradle@v4
 
       - run: ./gradlew dokkaHtmlMultiModule
@@ -267,7 +267,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version-file: .github/.java-version
+          java-version-file: .github/workflows/.java-version
       - uses: gradle/actions/setup-gradle@v4
 
       - run: ./gradlew publish
