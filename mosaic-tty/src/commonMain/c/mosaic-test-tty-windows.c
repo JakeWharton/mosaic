@@ -23,29 +23,29 @@ MosaicTestTtyInitResult testTty_init(MosaicTtyCallback *callback) {
 		goto ret;
 	}
 
-	HANDLE h = writerConin;
-	if (h == NULL) {
+	HANDLE stdin = writerConin;
+	if (stdin == NULL) {
 		// When run as a test, GetStdHandle(STD_INPUT_HANDLE) returns a closed handle which does not
 		// work. Open a new console input handle for our non-display testing purposes.
-		h = CreateFile(TEXT("CONIN$"), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
-		if (unlikely(h == INVALID_HANDLE_VALUE)) {
+		stdin = CreateFile(TEXT("CONIN$"), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
+		if (unlikely(stdin == INVALID_HANDLE_VALUE)) {
 			result.error = GetLastError();
 			goto err;
 		}
-		if (unlikely(SetConsoleMode(h, ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT | ENABLE_EXTENDED_FLAGS) == 0)) {
+		if (unlikely(SetConsoleMode(stdin, ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT | ENABLE_EXTENDED_FLAGS) == 0)) {
 			result.error = GetLastError();
 			goto err;
 		}
-		writerConin = h;
+		writerConin = stdin;
 	}
 
 	// Ensure we don't start with existing records in the buffer.
-	FlushConsoleInputBuffer(writerConin);
+	FlushConsoleInputBuffer(stdin);
 
 	HANDLE stdout = GetStdHandle(STD_OUTPUT_HANDLE);
 	HANDLE stderr = GetStdHandle(STD_ERROR_HANDLE);
 
-	MosaicTtyInitResult ttyInitResult = tty_initWithHandles(writerConin, stdout, stderr, callback);
+	MosaicTtyInitResult ttyInitResult = tty_initWithHandles(stdin, stdout, stderr, callback);
 	if (unlikely(ttyInitResult.error)) {
 		result.error = ttyInitResult.error;
 		goto err;
@@ -66,7 +66,7 @@ MosaicTty *testTty_getTty(MosaicTestTty *testTty) {
 	return testTty->tty;
 }
 
-uint32_t testTty_write(MosaicTestTty *testTty UNUSED, char *buffer, int count) {
+uint32_t testTty_write(MosaicTestTty *testTty, char *buffer, int count) {
 	uint32_t result = 0;
 
 	INPUT_RECORD *records = calloc(count, sizeof(INPUT_RECORD));
@@ -82,7 +82,7 @@ uint32_t testTty_write(MosaicTestTty *testTty UNUSED, char *buffer, int count) {
 	INPUT_RECORD *writeRecord = records;
 	while (count > 0) {
 		DWORD written;
-		if (!WriteConsoleInputW(writerConin, writeRecord, count, &written)) {
+		if (!WriteConsoleInputW(testTty->tty->stdin, writeRecord, count, &written)) {
 			goto err;
 		}
 		count -= (int) written;
@@ -99,9 +99,9 @@ uint32_t testTty_write(MosaicTestTty *testTty UNUSED, char *buffer, int count) {
 	goto ret;
 }
 
-uint32_t writeRecord(INPUT_RECORD *record) {
+uint32_t writeRecord(HANDLE h, INPUT_RECORD *record) {
 	DWORD written;
-	if (likely(WriteConsoleInputW(writerConin, record, 1, &written))) {
+	if (likely(WriteConsoleInputW(h, record, 1, &written))) {
 		if (likely(written == 1)) {
 			return 0;
 		}
@@ -110,11 +110,11 @@ uint32_t writeRecord(INPUT_RECORD *record) {
 	return GetLastError();
 }
 
-uint32_t testTty_focusEvent(MosaicTestTty *testTty UNUSED, bool focused) {
+uint32_t testTty_focusEvent(MosaicTestTty *testTty, bool focused) {
 	INPUT_RECORD record;
 	record.EventType = FOCUS_EVENT;
 	record.Event.FocusEvent.bSetFocus = focused;
-	return writeRecord(&record);
+	return writeRecord(testTty->tty->stdin, &record);
 }
 
 uint32_t testTty_keyEvent(MosaicTestTty *testTty UNUSED) {
@@ -127,12 +127,12 @@ uint32_t testTty_mouseEvent(MosaicTestTty *testTty UNUSED) {
 	return 0;
 }
 
-uint32_t testTty_resizeEvent(MosaicTestTty *testTty UNUSED, int columns, int rows, int width UNUSED, int height UNUSED) {
+uint32_t testTty_resizeEvent(MosaicTestTty *testTty, int columns, int rows, int width UNUSED, int height UNUSED) {
 	INPUT_RECORD record;
 	record.EventType = WINDOW_BUFFER_SIZE_EVENT;
 	record.Event.WindowBufferSizeEvent.dwSize.X = columns;
 	record.Event.WindowBufferSizeEvent.dwSize.Y = rows;
-	return writeRecord(&record);
+	return writeRecord(testTty->tty->stdin, &record);
 }
 
 uint32_t testTty_free(MosaicTestTty *testTty) {
