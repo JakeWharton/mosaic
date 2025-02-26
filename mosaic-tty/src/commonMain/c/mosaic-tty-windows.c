@@ -153,7 +153,6 @@ MosaicTtyIoResult tty_writeInternal(HANDLE h, char *buffer, int count) {
 	return result;
 }
 
-
 MosaicTtyIoResult tty_writeOutput(MosaicTty *tty, char *buffer, int count) {
 	return tty_writeInternal(tty->stdout, buffer, count);
 }
