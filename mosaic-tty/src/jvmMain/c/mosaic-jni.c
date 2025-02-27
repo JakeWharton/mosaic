@@ -24,17 +24,17 @@ void throwIse(JNIEnv *env, uint32_t error, const char *prefix) {
 	(*env)->ThrowNew(env, ise, message);
 }
 
-typedef struct jniTtyCallback {
+typedef struct MosaicJniTtyCallback {
 	JNIEnv *env;
 	jobject instance;
 	jmethodID onFocus;
 	jmethodID onKey;
 	jmethodID onMouse;
 	jmethodID onResize;
-} jniTtyCallback;
+} MosaicJniTtyCallback;
 
 void invokeOnFocusCallback(void *opaque, bool focused) {
-	jniTtyCallback *callback = (jniTtyCallback *) opaque;
+	MosaicJniTtyCallback *callback = (MosaicJniTtyCallback *) opaque;
 	(*callback->env)->CallVoidMethod(
 		callback->env,
 		callback->instance,
@@ -44,7 +44,7 @@ void invokeOnFocusCallback(void *opaque, bool focused) {
 }
 
 void invokeOnKeyCallback(void *opaque) {
-	jniTtyCallback *callback = (jniTtyCallback *) opaque;
+	MosaicJniTtyCallback *callback = (MosaicJniTtyCallback *) opaque;
 	(*callback->env)->CallVoidMethod(
 		callback->env,
 		callback->instance,
@@ -53,7 +53,7 @@ void invokeOnKeyCallback(void *opaque) {
 }
 
 void invokeOnMouseCallback(void *opaque) {
-	jniTtyCallback *callback = (jniTtyCallback *) opaque;
+	MosaicJniTtyCallback *callback = (MosaicJniTtyCallback *) opaque;
 	(*callback->env)->CallVoidMethod(
 		callback->env,
 		callback->instance,
@@ -62,7 +62,7 @@ void invokeOnMouseCallback(void *opaque) {
 }
 
 void invokeOnResizeCallback(void *opaque, int columns, int rows, int width, int height) {
-	jniTtyCallback *callback = (jniTtyCallback *) opaque;
+	MosaicJniTtyCallback *callback = (MosaicJniTtyCallback *) opaque;
 	(*callback->env)->CallVoidMethod(
 		callback->env,
 		callback->instance,
@@ -105,7 +105,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyCallbackInit(
 		return 0;
 	}
 
-	jniTtyCallback *jniCallback = malloc(sizeof(jniTtyCallback));
+	MosaicJniTtyCallback *jniCallback = malloc(sizeof(MosaicJniTtyCallback));
 	if (unlikely(!jniCallback)) {
 		return 0;
 	}
@@ -136,7 +136,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyCallbackFree(
 	jlong callbackOpaque
 ) {
 	MosaicTtyCallback *callback = (MosaicTtyCallback *) callbackOpaque;
-	jniTtyCallback *jniCallback = callback->opaque;
+	MosaicJniTtyCallback *jniCallback = callback->opaque;
 	jobject instance = jniCallback->instance;
 	free(callback);
 	free(jniCallback);
