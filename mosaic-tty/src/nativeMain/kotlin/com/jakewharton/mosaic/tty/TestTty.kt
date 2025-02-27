@@ -25,7 +25,7 @@ public actual class TestTty private constructor(
 				callbackRef.dispose()
 
 				if (error != 0U) {
-					throwError(error)
+					throwIse(error)
 				}
 				throw OutOfMemoryError()
 			}
@@ -41,7 +41,7 @@ public actual class TestTty private constructor(
 			testTty_write(ptr, it.addressOf(0), buffer.size)
 		}
 		if (error == 0U) return
-		throwError(error)
+		throwIse(error)
 	}
 
 	public actual fun focusEvent(focused: Boolean) {
@@ -69,7 +69,7 @@ public actual class TestTty private constructor(
 			val error = testTty_free(ref)
 
 			if (error == 0U) return
-			throwError(error)
+			throwIse(error)
 		}
 	}
 }

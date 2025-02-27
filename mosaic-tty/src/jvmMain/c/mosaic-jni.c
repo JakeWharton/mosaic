@@ -4,22 +4,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-static void throwIse(JNIEnv *env, uint32_t error, const char *prefix) {
+static void throwIse(JNIEnv *env, uint32_t error) {
 	jclass ise = (*env)->FindClass(env, "java/lang/IllegalStateException");
 
-	int prefixLength = strlen(prefix);
-	int colonSpaceLength = 2;
-	int maxLengthUnsignedDigit = 10;
-	int extraNullByte = 1;
-	int messageLength = prefixLength + colonSpaceLength + maxLengthUnsignedDigit + extraNullByte;
-
-	char *message = malloc(messageLength * sizeof(char));
+	// 11 == max unsigned digit length (10) + null termination byte (1)
+	char *message = malloc(11 * sizeof(char));
 	if (message) {
-		memcpy(message, prefix, prefixLength);
-		message[prefixLength] = ':';
-		message[prefixLength + 1] = ' ';
-		// Offset the location of the formatted number by the prefix and colon+space lengths.
-		sprintf(message + prefixLength + colonSpaceLength, "%u", error);
+		sprintf(message, "%u", error);
 	}
 	(*env)->ThrowNew(env, ise, message);
 }
@@ -157,7 +148,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyInit(
 
 	// This throw can fail, but the only condition that should cause that is OOM which
 	// will occur from returning 0 (which is otherwise ignored if the throw succeeds).
-	throwIse(env, result.error, "Unable to create");
+	throwIse(env, result.error);
 	return 0;
 }
 
@@ -186,7 +177,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyReadInput(
 
 	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
 	// and should cause the program to try and exit cleanly. 0 is a valid return value.
-	throwIse(env, result.error, "Unable to read input");
+	throwIse(env, result.error);
 	return -1;
 }
 
@@ -221,7 +212,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyReadInputWithTimeout(
 
 	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
 	// and should cause the program to try and exit cleanly. 0 is a valid return value.
-	throwIse(env, result.error, "Unable to read input");
+	throwIse(env, result.error);
 	return -1;
 }
 
@@ -234,7 +225,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyInterruptRead(
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
 	uint32_t error = tty_interruptRead(tty);
 	if (unlikely(error)) {
-		throwIse(env, error, "Unable to interrupt");
+		throwIse(env, error);
 	}
 }
 
@@ -263,7 +254,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyWriteOutput(
 
 	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
 	// and should cause the program to try and exit cleanly. 0 is a valid return value.
-	throwIse(env, result.error, "Unable to write output");
+	throwIse(env, result.error);
 	return -1;
 }
 
@@ -292,7 +283,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyWriteError(
 
 	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
 	// and should cause the program to try and exit cleanly. 0 is a valid return value.
-	throwIse(env, result.error, "Unable to write error");
+	throwIse(env, result.error);
 	return -1;
 }
 
@@ -305,7 +296,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyEnableRawMode(
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
 	uint32_t error = tty_enableRawMode(tty);
 	if (unlikely(error)) {
-		throwIse(env, error, "Unable to enable raw mode");
+		throwIse(env, error);
 	}
 }
 
@@ -318,7 +309,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyEnableWindowResizeEvents(
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
 	uint32_t error = tty_enableWindowResizeEvents(tty);
 	if (unlikely(error)) {
-		throwIse(env, error, "Unable to enable window resize events");
+		throwIse(env, error);
 	}
 }
 
@@ -341,7 +332,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyCurrentSize(
 		return ints;
 	}
 
-	throwIse(env, result.error, "Unable to get terminal size");
+	throwIse(env, result.error);
 	return NULL;
 }
 
@@ -354,7 +345,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyFree(
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
 	uint32_t error = tty_free(tty);
 	if (unlikely(error)) {
-		throwIse(env, error, "Unable to free");
+		throwIse(env, error);
 	}
 }
 
@@ -372,7 +363,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyInit(
 
 	// This throw can fail, but the only condition that should cause that is OOM which
 	// will occur from returning 0 (which is otherwise ignored if the throw succeeds).
-	throwIse(env, result.error, "Unable to initialize");
+	throwIse(env, result.error);
 	return 0;
 }
 
@@ -395,7 +386,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyWrite(
 
 	if (unlikely(error)) {
 		// This throw can fail, but the only condition that should cause that is OOM. Oh well.
-		throwIse(env, error, "Unable to write stdin");
+		throwIse(env, error);
 	}
 }
 
@@ -463,6 +454,6 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyFree(
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
 	uint32_t error = testTty_free(testTty);
 	if (unlikely(error)) {
-		throwIse(env, error, "Unable to free");
+		throwIse(env, error);
 	}
 }
