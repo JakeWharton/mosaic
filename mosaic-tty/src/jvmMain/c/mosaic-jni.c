@@ -20,8 +20,8 @@ void throwIse(JNIEnv *env, uint32_t error, const char *prefix) {
 		message[prefixLength + 1] = ' ';
 		// Offset the location of the formatted number by the prefix and colon+space lengths.
 		sprintf(message + prefixLength + colonSpaceLength, "%u", error);
-		(*env)->ThrowNew(env, ise, message);
 	}
+	(*env)->ThrowNew(env, ise, message);
 }
 
 typedef struct jniTtyCallback {
