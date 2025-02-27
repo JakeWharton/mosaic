@@ -47,7 +47,7 @@ public fun TerminalReader(emitDebugEvents: Boolean = false): TerminalReader {
 }
 
 public class TerminalReader internal constructor(
-	private val tty: Tty,
+	public val tty: Tty,
 	events: Channel<Event>,
 	private val emitDebugEvents: Boolean,
 ) : AutoCloseable {

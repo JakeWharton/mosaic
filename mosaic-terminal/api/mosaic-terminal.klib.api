@@ -370,6 +370,8 @@ final class com.jakewharton.mosaic.terminal.event/XtermPixelSizeEvent : com.jake
 final class com.jakewharton.mosaic.terminal/TerminalReader : kotlin/AutoCloseable { // com.jakewharton.mosaic.terminal/TerminalReader|null[0]
     final val events // com.jakewharton.mosaic.terminal/TerminalReader.events|{}events[0]
         final fun <get-events>(): kotlinx.coroutines.channels/ReceiveChannel<com.jakewharton.mosaic.terminal.event/Event> // com.jakewharton.mosaic.terminal/TerminalReader.events.<get-events>|<get-events>(){}[0]
+    final val tty // com.jakewharton.mosaic.terminal/TerminalReader.tty|{}tty[0]
+        final fun <get-tty>(): com.jakewharton.mosaic.tty/Tty // com.jakewharton.mosaic.terminal/TerminalReader.tty.<get-tty>|<get-tty>(){}[0]
 
     final var kittyDisambiguateEscapeCodes // com.jakewharton.mosaic.terminal/TerminalReader.kittyDisambiguateEscapeCodes|{}kittyDisambiguateEscapeCodes[0]
         final fun <get-kittyDisambiguateEscapeCodes>(): kotlin/Boolean // com.jakewharton.mosaic.terminal/TerminalReader.kittyDisambiguateEscapeCodes.<get-kittyDisambiguateEscapeCodes>|<get-kittyDisambiguateEscapeCodes>(){}[0]

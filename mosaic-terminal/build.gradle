@@ -23,7 +23,7 @@ kotlin {
 		commonMain {
 			dependencies {
 				api libs.kotlinx.coroutines.core
-				implementation projects.mosaicTty
+				api projects.mosaicTty
 			}
 		}
 		commonTest {

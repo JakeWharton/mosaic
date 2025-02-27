@@ -5,6 +5,7 @@ public final class com/jakewharton/mosaic/terminal/TerminalReader : java/lang/Au
 	public final fun enableWindowResizeEvents ()V
 	public final fun getEvents ()Lkotlinx/coroutines/channels/ReceiveChannel;
 	public final fun getKittyDisambiguateEscapeCodes ()Z
+	public final fun getTty ()Lcom/jakewharton/mosaic/tty/Tty;
 	public final fun getXtermExtendedUtf8Mouse ()Z
 	public final fun interrupt ()V
 	public final fun runParseLoop ()V
