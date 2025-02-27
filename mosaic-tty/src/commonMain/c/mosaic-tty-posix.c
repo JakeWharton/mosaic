@@ -54,7 +54,7 @@ MosaicTtyInitResult tty_init(MosaicTtyCallback *callback) {
 	return tty_initWithFds(STDIN_FILENO, STDOUT_FILENO, STDERR_FILENO, callback);
 }
 
-MosaicTtyIoResult tty_readInputInternal(
+static MosaicTtyIoResult tty_readInputInternal(
 	MosaicTty *tty,
 	uint8_t *buffer,
 	int count,

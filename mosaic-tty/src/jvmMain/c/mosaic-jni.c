@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void throwIse(JNIEnv *env, uint32_t error, const char *prefix) {
+static void throwIse(JNIEnv *env, uint32_t error, const char *prefix) {
 	jclass ise = (*env)->FindClass(env, "java/lang/IllegalStateException");
 
 	int prefixLength = strlen(prefix);
@@ -33,7 +33,7 @@ typedef struct MosaicJniTtyCallback {
 	jmethodID onResize;
 } MosaicJniTtyCallback;
 
-void invokeOnFocusCallback(void *opaque, bool focused) {
+static void invokeOnFocusCallback(void *opaque, bool focused) {
 	MosaicJniTtyCallback *callback = (MosaicJniTtyCallback *) opaque;
 	(*callback->env)->CallVoidMethod(
 		callback->env,
@@ -43,7 +43,7 @@ void invokeOnFocusCallback(void *opaque, bool focused) {
 	);
 }
 
-void invokeOnKeyCallback(void *opaque) {
+static void invokeOnKeyCallback(void *opaque) {
 	MosaicJniTtyCallback *callback = (MosaicJniTtyCallback *) opaque;
 	(*callback->env)->CallVoidMethod(
 		callback->env,
@@ -52,7 +52,7 @@ void invokeOnKeyCallback(void *opaque) {
 	);
 }
 
-void invokeOnMouseCallback(void *opaque) {
+static void invokeOnMouseCallback(void *opaque) {
 	MosaicJniTtyCallback *callback = (MosaicJniTtyCallback *) opaque;
 	(*callback->env)->CallVoidMethod(
 		callback->env,
@@ -61,7 +61,7 @@ void invokeOnMouseCallback(void *opaque) {
 	);
 }
 
-void invokeOnResizeCallback(void *opaque, int columns, int rows, int width, int height) {
+static void invokeOnResizeCallback(void *opaque, int columns, int rows, int width, int height) {
 	MosaicJniTtyCallback *callback = (MosaicJniTtyCallback *) opaque;
 	(*callback->env)->CallVoidMethod(
 		callback->env,

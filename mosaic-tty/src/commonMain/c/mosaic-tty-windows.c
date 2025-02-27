@@ -140,7 +140,7 @@ uint32_t tty_interruptRead(MosaicTty *tty) {
 		: GetLastError();
 }
 
-MosaicTtyIoResult tty_writeInternal(HANDLE h, uint8_t *buffer, int count) {
+static MosaicTtyIoResult tty_writeInternal(HANDLE h, uint8_t *buffer, int count) {
 	MosaicTtyIoResult result = {};
 
 	DWORD written;

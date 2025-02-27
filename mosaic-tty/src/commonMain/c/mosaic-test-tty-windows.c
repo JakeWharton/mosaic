@@ -12,7 +12,7 @@ typedef struct MosaicTestTtyImpl {
 
 // A single global input writer into which fake data can be sent. Creating and closing this over
 // and over eventually produces a failure, so we only do it once per process (since it's test only).
-HANDLE writerConin = NULL;
+static HANDLE writerConin = NULL;
 
 MosaicTestTtyInitResult testTty_init(MosaicTtyCallback *callback) {
 	MosaicTestTtyInitResult result = {};
@@ -99,7 +99,7 @@ uint32_t testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int count) {
 	goto ret;
 }
 
-uint32_t writeRecord(HANDLE h, INPUT_RECORD *record) {
+static uint32_t writeRecord(HANDLE h, INPUT_RECORD *record) {
 	DWORD written;
 	if (likely(WriteConsoleInputW(h, record, 1, &written))) {
 		if (likely(written == 1)) {
