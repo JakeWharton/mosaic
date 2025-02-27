@@ -77,7 +77,7 @@ static void invokeOnResizeCallback(void *opaque, int columns, int rows, int widt
 JNIEXPORT jlong JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_ttyCallbackInit(
 	JNIEnv *env,
-	jclass type,
+	jclass type UNUSED,
 	jobject instance
 ) {
 	jobject globalInstance = (*env)->NewGlobalRef(env, instance);
@@ -132,7 +132,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyCallbackInit(
 JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_ttyCallbackFree(
 	JNIEnv *env,
-	jclass type,
+	jclass type UNUSED,
 	jlong callbackOpaque
 ) {
 	MosaicTtyCallback *callback = (MosaicTtyCallback *) callbackOpaque;
@@ -146,7 +146,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyCallbackFree(
 JNIEXPORT jlong JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_ttyInit(
 	JNIEnv *env,
-	jclass type,
+	jclass type UNUSED,
 	jlong callbackOpaque
 ) {
 	MosaicTtyCallback *callback = (MosaicTtyCallback *) callbackOpaque;
@@ -164,7 +164,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyInit(
 JNIEXPORT jint JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_ttyReadInput(
 	JNIEnv *env,
-	jclass type,
+	jclass type UNUSED,
 	jlong ttyOpaque,
 	jbyteArray buffer,
 	jint offset,
@@ -193,7 +193,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyReadInput(
 JNIEXPORT jint JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_ttyReadInputWithTimeout(
 	JNIEnv *env,
-	jclass type,
+	jclass type UNUSED,
 	jlong ttyOpaque,
 	jbyteArray buffer,
 	jint offset,
@@ -228,7 +228,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyReadInputWithTimeout(
 JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_ttyInterruptRead(
 	JNIEnv *env,
-	jclass type,
+	jclass type UNUSED,
 	jlong ttyOpaque
 ) {
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
@@ -241,7 +241,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyInterruptRead(
 JNIEXPORT jint JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_ttyWriteOutput(
 	JNIEnv *env,
-	jclass type,
+	jclass type UNUSED,
 	jlong ttyOpaque,
 	jbyteArray buffer,
 	jint offset,
@@ -270,7 +270,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyWriteOutput(
 JNIEXPORT jint JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_ttyWriteError(
 	JNIEnv *env,
-	jclass type,
+	jclass type UNUSED,
 	jlong ttyOpaque,
 	jbyteArray buffer,
 	jint offset,
@@ -299,7 +299,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyWriteError(
 JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_ttyEnableRawMode(
 	JNIEnv *env,
-	jclass type,
+	jclass type UNUSED,
 	jlong ttyOpaque
 ) {
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
@@ -312,7 +312,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyEnableRawMode(
 JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_ttyEnableWindowResizeEvents(
 	JNIEnv *env,
-	jclass type,
+	jclass type UNUSED,
 	jlong ttyOpaque
 ) {
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
@@ -325,7 +325,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyEnableWindowResizeEvents(
 JNIEXPORT jintArray JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_ttyCurrentSize(
 	JNIEnv *env,
-	jclass type,
+	jclass type UNUSED,
 	jlong ttyOpaque
 ) {
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
@@ -348,7 +348,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyCurrentSize(
 JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_ttyFree(
 	JNIEnv *env,
-	jclass type,
+	jclass type UNUSED,
 	jlong ttyOpaque
 ) {
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
@@ -361,7 +361,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyFree(
 JNIEXPORT jlong JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_testTtyInit(
 	JNIEnv *env,
-	jclass type,
+	jclass type UNUSED,
 	jlong callbackOpaque
 ) {
 	MosaicTtyCallback *callback = (MosaicTtyCallback *) callbackOpaque;
@@ -379,7 +379,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyInit(
 JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_testTtyWrite(
 	JNIEnv *env,
-	jclass type,
+	jclass type UNUSED,
 	jlong testTtyOpaque,
 	jbyteArray buffer
 ) {
@@ -401,8 +401,8 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyWrite(
 
 JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_testTtyFocusEvent(
-	JNIEnv *env,
-	jclass type,
+	JNIEnv *env UNUSED,
+	jclass type UNUSED,
 	jlong testTtyOpaque,
 	bool focused
 ) {
@@ -412,8 +412,8 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyFocusEvent(
 
 JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_testTtyKeyEvent(
-	JNIEnv *env,
-	jclass type,
+	JNIEnv *env UNUSED,
+	jclass type UNUSED,
 	jlong testTtyOpaque
 ) {
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
@@ -422,8 +422,8 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyKeyEvent(
 
 JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_testTtyMouseEvent(
-	JNIEnv *env,
-	jclass type,
+	JNIEnv *env UNUSED,
+	jclass type UNUSED,
 	jlong testTtyOpaque
 ) {
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
@@ -432,8 +432,8 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyMouseEvent(
 
 JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_testTtyResizeEvent(
-	JNIEnv *env,
-	jclass type,
+	JNIEnv *env UNUSED,
+	jclass type UNUSED,
 	jlong testTtyOpaque,
 	jint columns,
 	jint rows,
@@ -446,8 +446,8 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyResizeEvent(
 
 JNIEXPORT jlong JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_testTtyGetTty(
-	JNIEnv *env,
-	jclass type,
+	JNIEnv *env UNUSED,
+	jclass type UNUSED,
 	jlong testTtyOpaque
 ) {
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
@@ -456,8 +456,8 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyGetTty(
 
 JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_testTtyFree(
-	JNIEnv *env,
-	jclass type,
+	JNIEnv *env UNUSED,
+	jclass type UNUSED,
 	jlong testTtyOpaque
 ) {
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;

@@ -203,7 +203,11 @@ kotlin {
 			create('mosaic') {
 				header(file('src/commonMain/c/mosaic.h'))
 				packageName('com.jakewharton.mosaic.tty')
-				compilerOpts('-Wall', '-Werror')
+				compilerOpts(
+					'-Wall',
+					'-Wunused-parameter',
+					'-Werror',
+				)
 			}
 		}
 		linkNativeDebugTests.configure {
