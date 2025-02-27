@@ -205,7 +205,7 @@ kotlin {
 				packageName('com.jakewharton.mosaic.tty')
 				compilerOpts(
 					'-Wall',
-					'-Wunused-parameter',
+					'-Wextra',
 					'-Werror',
 				)
 			}
