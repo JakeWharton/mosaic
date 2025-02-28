@@ -40,11 +40,6 @@ internal inline fun ByteArray.indexOfFirstOrElse(
 	return orElse()
 }
 
-@Deprecated("Use overload with orElse")
-internal fun ByteArray.parseIntDigits(start: Int, end: Int): Int {
-	return parseIntDigits(start, end, orElse = { -1 })
-}
-
 internal inline fun ByteArray.parseIntDigits(start: Int, end: Int, orElse: () -> Int): Int {
 	error@ do {
 		if (end > start) {

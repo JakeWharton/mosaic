@@ -210,20 +210,23 @@ public class TerminalParser(
 	private fun parseApc(buffer: ByteArray, start: Int, limit: Int): Event? {
 		// TODO https://stackoverflow.com/a/71632523/132047
 		return parseUntilStringTerminator(buffer, start, limit) { b3Index, stIndex ->
-			if (stIndex > b3Index && buffer[b3Index].toInt() == 'G'.code) {
-				val delimiter = buffer.indexOf(';'.code.toByte(), b3Index, stIndex)
-				val b5Index = start + 4
-				if (delimiter != -1 &&
-					delimiter > b5Index &&
-					buffer[start + 3].toInt() == 'i'.code &&
-					buffer[b5Index].toInt() == '='.code
-				) {
-					return@parseUntilStringTerminator KittyGraphicsEvent(
-						id = buffer.parseIntDigits(b5Index, delimiter),
-						message = buffer.decodeToString(delimiter + 1, stIndex),
-					)
+			error@ do {
+				if (stIndex > b3Index && buffer[b3Index].toInt() == 'G'.code) {
+					val delimiter = buffer.indexOf(';'.code.toByte(), b3Index, stIndex)
+					val b5Index = start + 4
+					if (delimiter != -1 &&
+						delimiter > b5Index &&
+						buffer[start + 3].toInt() == 'i'.code &&
+						buffer[b5Index].toInt() == '='.code
+					) {
+						return@parseUntilStringTerminator KittyGraphicsEvent(
+							id = buffer.parseIntDigits(b5Index, delimiter, orElse = { break@error }),
+							message = buffer.decodeToString(delimiter + 1, stIndex),
+						)
+					}
 				}
-			}
+			} while (false)
+
 			null
 		}
 	}
