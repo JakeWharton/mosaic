@@ -9,14 +9,12 @@ import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.enum
 import com.jakewharton.finalization.withFinalizationHook
-import com.jakewharton.mosaic.terminal.TerminalReader
-import com.jakewharton.mosaic.terminal.event.DebugEvent
+import com.jakewharton.mosaic.terminal.TerminalParser
 import com.jakewharton.mosaic.terminal.event.KeyboardEvent
 import com.jakewharton.mosaic.terminal.event.KeyboardEvent.Companion.ModifierCtrl
+import com.jakewharton.mosaic.tty.Tty
 import kotlin.jvm.JvmName
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -42,8 +40,17 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 	private val windowResize by option().flag()
 
 	override fun run() = runBlocking {
-		val reader = TerminalReader(emitDebugEvents = mode != Mode.Event)
-		reader.enableRawMode()
+		val tty = Tty.create(object : Tty.Callback {
+			override fun onFocus(focused: Boolean) {
+			}
+			override fun onKey() {
+			}
+			override fun onMouse() {
+			}
+			override fun onResize(columns: Int, rows: Int, width: Int, height: Int) {
+			}
+		})
+		tty.enableRawMode()
 		withFinalizationHook(
 			hook = {
 				print("\u001b[?1003l") // Any-event disable
@@ -51,7 +58,7 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 				print("\u001b[?2004l") // Bracketed paste disable
 				print("\u001b[?2048l") // In-band resize disable
 				print("\u001b[?25h") // Cursor enable
-				reader.close()
+				tty.close()
 			},
 			block = {
 				print("\u001b[?25l") // Cursor disable
@@ -93,22 +100,18 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 				print("\u001b[5n") // Device status report
 
 				if (windowResize) {
-					reader.enableWindowResizeEvents()
+					tty.enableWindowResizeEvents()
+					print("Initial size: ${tty.currentSize().contentToString()}\r\n")
 				}
-				print("Initial size: ${reader.currentSize()}\r\n")
 
-				// Upon receiving a signal, this block's job will be canceled. Use that to wake up the
-				// blocking stdin read so it loops and checks if its job is still active or not.
+				// Upon receiving a signal, this block's job will be canceled.
+				// Use that to wake up the stdin read so it can exit cleanly.
 				val readerInterruptJob = launch(start = UNDISPATCHED) {
 					try {
 						awaitCancellation()
 					} finally {
-						reader.interrupt()
+						tty.interruptRead()
 					}
-				}
-
-				launch(Dispatchers.IO) {
-					reader.runParseLoop()
 				}
 
 				var first = true
@@ -117,16 +120,16 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 					first = false
 				}
 
-				val events = reader.events
+				val parser = TerminalParser(tty)
 				while (true) {
-					val event = events.receive()
+					val (event, bytes) = parser.debugNext() ?: break
 
 					fun printDebug() {
 						printNewline()
 						print(event.toString())
 					}
-					suspend fun printHex() {
-						val string = (events.receive() as DebugEvent).bytes.toHexString()
+					fun printHex() {
+						val string = bytes.toHexString()
 						if (string.isNotEmpty()) {
 							printNewline()
 							print(string)

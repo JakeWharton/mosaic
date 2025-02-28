@@ -89,7 +89,7 @@ public suspend fun runMosaic(content: @Composable () -> Unit) {
 	// Entering raw mode can fail, so perform it before any additional control sequences which change
 	// settings. We also need to be in character mode to query capabilities with control sequences.
 	if (env("MOSAIC_RAW_MODE") != "false") {
-		reader.enableRawMode()
+		reader.tty.enableRawMode()
 	}
 
 	// Each of these will become true when their respective feature is recognized by the terminal
@@ -284,12 +284,12 @@ public suspend fun runMosaic(content: @Composable () -> Unit) {
 			if (!toggleInBandResize) {
 				terminalState.update {
 					copy(
-						size = reader.currentSize().let { size ->
-							IntSize(size.columns, size.rows)
+						size = reader.tty.currentSize().let { (columns, rows) ->
+							IntSize(columns, rows)
 						},
 					)
 				}
-				reader.enableWindowResizeEvents()
+				reader.tty.enableWindowResizeEvents()
 			}
 
 			val rendering = createRendering(

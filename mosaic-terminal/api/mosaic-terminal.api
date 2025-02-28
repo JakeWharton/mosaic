@@ -10,9 +10,6 @@ public final class com/jakewharton/mosaic/terminal/TerminalParser {
 
 public final class com/jakewharton/mosaic/terminal/TerminalReader : java/lang/AutoCloseable {
 	public fun close ()V
-	public final fun currentSize ()Lcom/jakewharton/mosaic/terminal/event/ResizeEvent;
-	public final fun enableRawMode ()V
-	public final fun enableWindowResizeEvents ()V
 	public final fun getEvents ()Lkotlinx/coroutines/channels/ReceiveChannel;
 	public final fun getTty ()Lcom/jakewharton/mosaic/tty/Tty;
 	public final fun interrupt ()V
