@@ -2,7 +2,6 @@ package com.jakewharton.mosaic.terminal
 
 import com.jakewharton.mosaic.terminal.event.BracketedPasteEvent
 import com.jakewharton.mosaic.terminal.event.CapabilityQueryEvent
-import com.jakewharton.mosaic.terminal.event.DebugEvent
 import com.jakewharton.mosaic.terminal.event.DecModeReportEvent
 import com.jakewharton.mosaic.terminal.event.Event
 import com.jakewharton.mosaic.terminal.event.FocusEvent
@@ -26,31 +25,10 @@ import com.jakewharton.mosaic.terminal.event.XtermCharacterSizeEvent
 import com.jakewharton.mosaic.terminal.event.XtermPixelSizeEvent
 import com.jakewharton.mosaic.tty.Tty
 import kotlin.concurrent.Volatile
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
-import kotlinx.coroutines.channels.ReceiveChannel
 
-/**
- * Create a [TerminalReader] which will read from this process' stdin stream while also
- * supporting interruption.
- *
- * Use with [enableRawMode] to read input byte-by-byte.
- *
- * @param emitDebugEvents When true, each event sent to [TerminalReader.events] will be followed
- * by a [DebugEvent] that contains the original event and the bytes which produced it.
- */
-public fun TerminalReader(emitDebugEvents: Boolean = false): TerminalReader {
-	val events = Channel<Event>(UNLIMITED)
-	val callback = EventChannelTtyCallback(events, emitDebugEvents)
-	val tty = Tty.create(callback)
-	return TerminalReader(tty, events, emitDebugEvents)
-}
-
-public class TerminalReader internal constructor(
-	public val tty: Tty,
-	events: Channel<Event>,
-	private val emitDebugEvents: Boolean,
-) : AutoCloseable {
+public class TerminalParser(
+	private val tty: Tty,
+) {
 	private companion object {
 		private const val BufferSize = 8 * 1024
 		private const val BareEscapeDisambiguationReadTimeoutMillis = 100
@@ -62,11 +40,6 @@ public class TerminalReader internal constructor(
 
 	@TestApi
 	internal fun copyBuffer() = buffer.copyOfRange(offset, limit)
-
-	private val _events = events
-
-	/** Events read as a result of calls to [tryReadEvents]. */
-	public val events: ReceiveChannel<Event> get() = _events
 
 	/**
 	 * Indicate whether Kitty's
@@ -96,91 +69,37 @@ public class TerminalReader internal constructor(
 	public var xtermExtendedUtf8Mouse: Boolean = false
 
 	/**
-	 * Save the current terminal settings and enter "raw" mode.
+	 * A version of [next] which also returns the bytes that produced the event.
 	 *
-	 * Raw mode is described as "input is available character by character, echoing is disabled,
-	 * and all special processing of terminal input and output characters is disabled."
-	 *
-	 * The saved settings can be restored by calling [close][AutoCloseable.close] on
-	 * the returned instance.
-	 *
-	 * See [`termios(3)`](https://linux.die.net/man/3/termios) for more information.
-	 *
-	 * In addition to the flags required for entering "raw" mode, on POSIX-compliant platforms,
-	 * this function will change the standard input stream to block indefinitely until a minimum
-	 * of 1 byte is available to read. This allows the reader thread to fully be suspended rather
-	 * than consuming CPU. Use [create] to read in a manner that can still be interrupted.
+	 * **WARNING** This function is expensive, and should only be used for debugging.
 	 */
-	public fun enableRawMode() {
-		tty.enableRawMode()
+	public fun debugNext(): Pair<Event, ByteArray>? {
+		// Move any existing data to index 0 of the buffer. This will ensure we can capture all the
+		// bytes consumed (even across multiple reads) since the original offset will always be 0.
+		buffer.copyInto(buffer, 0, startIndex = offset, endIndex = limit)
+		limit = limit - offset
+		offset = 0
+
+		val event = next() ?: return null
+		val bytes = buffer.copyOfRange(0, offset)
+		return event to bytes
 	}
 
 	/**
-	 * Write [ResizeEvent]s into [events] using platform-specific window monitoring.
-	 *
-	 * Note: Before enabling this, consider querying the terminal for support of
-	 * [mode 2048 in-band resize events](https://gist.github.com/rockorager/e695fb2924d36b2bcf1fff4a3704bd83)
-	 * which are more reliable. Mode 2048 events are also parsed and sent as [ResizeEvent]s.
-	 *
-	 * On Windows this enables receiving
-	 * [`WINDOW_BUFFER_SIZE_RECORD`](https://learn.microsoft.com/en-us/windows/console/window-buffer-size-record-str)
-	 * records from the console. Only the row and column values of the [ResizeEvent] will be present.
-	 * The width and height will always be 0.
-	 *
-	 * On Linux and macOS this installs a `SIGWINCH` signal handler which then queries `TIOCGWINSZ`
-	 * using `ioctl`.
-	 *
-	 * Note: You can also respond to [ResizeEvent]s which lack necessary data by sending `XTWINOPS`
-	 * to query row/col counts and/or window or cell size in pixels. More details
-	 * [here](https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h4-Functions-using-CSI-_-ordered-by-the-final-character-lparen-s-rparen:CSI-Ps;Ps;Ps-t:Ps-=-1-4.2064).
-	 */
-	public fun enableWindowResizeEvents() {
-		tty.enableWindowResizeEvents()
-	}
-
-	/** Synchronously query for the current terminal size. */
-	public fun currentSize(): ResizeEvent {
-		val (columns, rows, width, height) = tty.currentSize()
-		return ResizeEvent(
-			columns = columns,
-			rows = rows,
-			width = width,
-			height = height,
-		)
-	}
-
-	/**
-	 * Perform a blocking read from stdin to try and parse events. Calls to this function are not
-	 * guaranteed to read an event, nor are they guaranteed to read only one event. Events
-	 * which are read will be placed into [events].
+	 * Perform blocking reads from stdin until a full event can be parsed.
 	 *
 	 * It is expected that this function will be called repeatedly in a loop.
 	 *
-	 * @return False if returning due to [interrupt] being called. True means some data was read,
-	 * but not necessarily that any events were put into the [events] channel. This could be because
-	 * not enough bytes were available to parse the entire event, for example.
+	 * @return A parsed event, or `null` if interrupt was called.
 	 */
-	public fun runParseLoop() {
+	public fun next(): Event? {
 		val buffer = buffer
 
 		while (true) {
 			if (offset < limit) {
 				val event = tryParse(buffer, offset, limit)
 				if (event != null) {
-					_events.trySend(event)
-					if (!emitDebugEvents) continue
-
-					// In debug event mode, parsing starts at index 0 of the buffer (see below). Leverage
-					// this to capture the consumed bytes by looking at where the next parse would start.
-					val eventBytes = buffer.copyOfRange(0, offset)
-					_events.trySend(DebugEvent(event, eventBytes))
-
-					// Move remaining data to the start of the buffer to maintain the parse from 0 invariant.
-					buffer.copyInto(buffer, 0, startIndex = offset, endIndex = limit)
-					limit -= offset
-					offset = 0
-
-					continue
+					return event
 				}
 			}
 
@@ -194,7 +113,7 @@ public class TerminalReader internal constructor(
 				// the buffer contains anything other than a bare escape. Do a normal read for more data.
 				val read = tty.readInput(buffer, limit, BufferSize - limit)
 				if (read == -1) break // EOF
-				if (read == 0) return // Interrupt
+				if (read == 0) return null // Interrupt
 
 				limit += read
 				continue
@@ -209,23 +128,29 @@ public class TerminalReader internal constructor(
 				BufferSize - 1,
 				BareEscapeDisambiguationReadTimeoutMillis,
 			)
-			if (read == -1) break
-
-			limit = if (read == 0) {
-				_events.trySend(KeyboardEvent(0x1B))
+			if (read == 0) {
 				// We know the offset is 0, so resetting the limit effectively consumes the byte.
-				0
-			} else {
-				read + 1
+				limit = 0
+				return KeyboardEvent(0x1B)
 			}
+			if (read == -1) break // EOF
+
+			limit += read
 		}
 
 		if (limit > 0) {
-			_events.trySend(UnknownEvent(buffer.copyOfRange(0, limit)))
+			val bytes = buffer.copyOfRange(0, limit)
+			limit = 0
+			return UnknownEvent(bytes)
 		}
-		_events.close()
+
+		throw RuntimeException("EOF")
 	}
 
+	/**
+	 * Return an [Event] which corresponds to the VT sequence parsed from [buffer] at [start],
+	 * or `null` if a full sequence was not available before reaching [limit].
+	 */
 	private fun tryParse(buffer: ByteArray, start: Int, limit: Int): Event? {
 		val b1 = buffer[start].toInt() and 0xff
 		if (b1 == 0x1B) {
@@ -952,18 +877,5 @@ public class TerminalReader internal constructor(
 		offset = end
 		return handler(b3Index, stIndex)
 			?: UnknownEvent(buffer.copyOfRange(start, end))
-	}
-
-	public fun interrupt() {
-		tty.interruptRead()
-	}
-
-	/**
-	 * Free the resources associated with this reader.
-	 *
-	 * This call can be omitted if your process is exiting.
-	 */
-	override fun close() {
-		tty.close()
 	}
 }

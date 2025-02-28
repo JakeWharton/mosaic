@@ -25,96 +25,96 @@ import kotlinx.coroutines.test.runTest
 class TerminalParserCsiKeyboardEventTest : BaseTerminalParserTest() {
 	@Test fun up() = runTest {
 		testTty.writeHex("1b5b41")
-		assertThat(reader.next()).isEqualTo(KeyboardEvent(Up))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up))
 	}
 
 	@Test fun down() = runTest {
 		testTty.writeHex("1b5b42")
-		assertThat(reader.next()).isEqualTo(KeyboardEvent(Down))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Down))
 	}
 
 	@Test fun right() = runTest {
 		testTty.writeHex("1b5b43")
-		assertThat(reader.next()).isEqualTo(KeyboardEvent(Right))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Right))
 	}
 
 	@Test fun left() = runTest {
 		testTty.writeHex("1b5b44")
-		assertThat(reader.next()).isEqualTo(KeyboardEvent(Left))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Left))
 	}
 
 	@Test fun begin() = runTest {
 		testTty.writeHex("1b5b45")
-		assertThat(reader.next()).isEqualTo(KeyboardEvent(KpBegin))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(KpBegin))
 	}
 
 	@Test fun end() = runTest {
 		testTty.writeHex("1b5b46")
-		assertThat(reader.next()).isEqualTo(KeyboardEvent(End))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(End))
 	}
 
 	@Test fun home() = runTest {
 		testTty.writeHex("1b5b48")
-		assertThat(reader.next()).isEqualTo(KeyboardEvent(Home))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Home))
 	}
 
 	@Test fun modifierShiftUp() = runTest {
 		testTty.writeHex("1b5b313b3241")
-		assertThat(reader.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierShift))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierShift))
 	}
 
 	@Test fun modifierAltUp() = runTest {
 		testTty.writeHex("1b5b313b3341")
-		assertThat(reader.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierAlt))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierAlt))
 	}
 
 	@Test fun modifierCtrlUp() = runTest {
 		testTty.writeHex("1b5b313b3541")
-		assertThat(reader.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierCtrl))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierCtrl))
 	}
 
 	@Test fun modifierSuperUp() = runTest {
 		testTty.writeHex("1b5b313b3941")
-		assertThat(reader.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierSuper))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierSuper))
 	}
 
 	@Test fun modifierHyperUp() = runTest {
 		testTty.writeHex("1b5b313b313741")
-		assertThat(reader.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierHyper))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierHyper))
 	}
 
 	@Test fun modifierMetaUp() = runTest {
 		testTty.writeHex("1b5b313b333341")
-		assertThat(reader.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierMeta))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierMeta))
 	}
 
 	@Test fun modifierCapsLockUp() = runTest {
 		testTty.writeHex("1b5b313b363541")
-		assertThat(reader.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierCapsLock))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierCapsLock))
 	}
 
 	@Test fun modifierNumLockUp() = runTest {
 		testTty.writeHex("1b5b313b31323941")
-		assertThat(reader.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierNumLock))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierNumLock))
 	}
 
 	@Test fun non1p0() = runTest {
 		testTty.writeHex("1b5b323b3248")
-		assertThat(reader.next()).isEqualTo(
+		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b323b3248".hexToByteArray()),
 		)
 	}
 
 	@Test fun emptyModifier() = runTest {
 		testTty.writeHex("1b5b313b48")
-		assertThat(reader.next()).isEqualTo(
+		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b313b48".hexToByteArray()),
 		)
 	}
 
 	@Test fun nonDigitModifier() = runTest {
 		testTty.writeHex("1b5b313b2f48")
-		assertThat(reader.next()).isEqualTo(
+		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b313b2f48".hexToByteArray()),
 		)
 	}

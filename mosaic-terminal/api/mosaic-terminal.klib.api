@@ -367,18 +367,25 @@ final class com.jakewharton.mosaic.terminal.event/XtermPixelSizeEvent : com.jake
     final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal.event/XtermPixelSizeEvent.toString|toString(){}[0]
 }
 
+final class com.jakewharton.mosaic.terminal/TerminalParser { // com.jakewharton.mosaic.terminal/TerminalParser|null[0]
+    constructor <init>(com.jakewharton.mosaic.tty/Tty) // com.jakewharton.mosaic.terminal/TerminalParser.<init>|<init>(com.jakewharton.mosaic.tty.Tty){}[0]
+
+    final var kittyDisambiguateEscapeCodes // com.jakewharton.mosaic.terminal/TerminalParser.kittyDisambiguateEscapeCodes|{}kittyDisambiguateEscapeCodes[0]
+        final fun <get-kittyDisambiguateEscapeCodes>(): kotlin/Boolean // com.jakewharton.mosaic.terminal/TerminalParser.kittyDisambiguateEscapeCodes.<get-kittyDisambiguateEscapeCodes>|<get-kittyDisambiguateEscapeCodes>(){}[0]
+        final fun <set-kittyDisambiguateEscapeCodes>(kotlin/Boolean) // com.jakewharton.mosaic.terminal/TerminalParser.kittyDisambiguateEscapeCodes.<set-kittyDisambiguateEscapeCodes>|<set-kittyDisambiguateEscapeCodes>(kotlin.Boolean){}[0]
+    final var xtermExtendedUtf8Mouse // com.jakewharton.mosaic.terminal/TerminalParser.xtermExtendedUtf8Mouse|{}xtermExtendedUtf8Mouse[0]
+        final fun <get-xtermExtendedUtf8Mouse>(): kotlin/Boolean // com.jakewharton.mosaic.terminal/TerminalParser.xtermExtendedUtf8Mouse.<get-xtermExtendedUtf8Mouse>|<get-xtermExtendedUtf8Mouse>(){}[0]
+        final fun <set-xtermExtendedUtf8Mouse>(kotlin/Boolean) // com.jakewharton.mosaic.terminal/TerminalParser.xtermExtendedUtf8Mouse.<set-xtermExtendedUtf8Mouse>|<set-xtermExtendedUtf8Mouse>(kotlin.Boolean){}[0]
+
+    final fun debugNext(): kotlin/Pair<com.jakewharton.mosaic.terminal.event/Event, kotlin/ByteArray>? // com.jakewharton.mosaic.terminal/TerminalParser.debugNext|debugNext(){}[0]
+    final fun next(): com.jakewharton.mosaic.terminal.event/Event? // com.jakewharton.mosaic.terminal/TerminalParser.next|next(){}[0]
+}
+
 final class com.jakewharton.mosaic.terminal/TerminalReader : kotlin/AutoCloseable { // com.jakewharton.mosaic.terminal/TerminalReader|null[0]
     final val events // com.jakewharton.mosaic.terminal/TerminalReader.events|{}events[0]
         final fun <get-events>(): kotlinx.coroutines.channels/ReceiveChannel<com.jakewharton.mosaic.terminal.event/Event> // com.jakewharton.mosaic.terminal/TerminalReader.events.<get-events>|<get-events>(){}[0]
     final val tty // com.jakewharton.mosaic.terminal/TerminalReader.tty|{}tty[0]
         final fun <get-tty>(): com.jakewharton.mosaic.tty/Tty // com.jakewharton.mosaic.terminal/TerminalReader.tty.<get-tty>|<get-tty>(){}[0]
-
-    final var kittyDisambiguateEscapeCodes // com.jakewharton.mosaic.terminal/TerminalReader.kittyDisambiguateEscapeCodes|{}kittyDisambiguateEscapeCodes[0]
-        final fun <get-kittyDisambiguateEscapeCodes>(): kotlin/Boolean // com.jakewharton.mosaic.terminal/TerminalReader.kittyDisambiguateEscapeCodes.<get-kittyDisambiguateEscapeCodes>|<get-kittyDisambiguateEscapeCodes>(){}[0]
-        final fun <set-kittyDisambiguateEscapeCodes>(kotlin/Boolean) // com.jakewharton.mosaic.terminal/TerminalReader.kittyDisambiguateEscapeCodes.<set-kittyDisambiguateEscapeCodes>|<set-kittyDisambiguateEscapeCodes>(kotlin.Boolean){}[0]
-    final var xtermExtendedUtf8Mouse // com.jakewharton.mosaic.terminal/TerminalReader.xtermExtendedUtf8Mouse|{}xtermExtendedUtf8Mouse[0]
-        final fun <get-xtermExtendedUtf8Mouse>(): kotlin/Boolean // com.jakewharton.mosaic.terminal/TerminalReader.xtermExtendedUtf8Mouse.<get-xtermExtendedUtf8Mouse>|<get-xtermExtendedUtf8Mouse>(){}[0]
-        final fun <set-xtermExtendedUtf8Mouse>(kotlin/Boolean) // com.jakewharton.mosaic.terminal/TerminalReader.xtermExtendedUtf8Mouse.<set-xtermExtendedUtf8Mouse>|<set-xtermExtendedUtf8Mouse>(kotlin.Boolean){}[0]
 
     final fun close() // com.jakewharton.mosaic.terminal/TerminalReader.close|close(){}[0]
     final fun currentSize(): com.jakewharton.mosaic.terminal.event/ResizeEvent // com.jakewharton.mosaic.terminal/TerminalReader.currentSize|currentSize(){}[0]

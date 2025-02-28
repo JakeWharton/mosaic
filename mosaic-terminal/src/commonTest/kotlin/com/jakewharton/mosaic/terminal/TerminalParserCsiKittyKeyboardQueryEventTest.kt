@@ -10,29 +10,29 @@ import kotlinx.coroutines.test.runTest
 class TerminalParserCsiKittyKeyboardQueryEventTest : BaseTerminalParserTest() {
 	@Test fun flagsNone() = runTest {
 		testTty.writeHex("1b5b3f3075")
-		assertThat(reader.next()).isEqualTo(KittyKeyboardQueryEvent(0))
+		assertThat(parser.next()).isEqualTo(KittyKeyboardQueryEvent(0))
 	}
 
 	@Test fun flagsAll() = runTest {
 		testTty.writeHex("1b5b3f333175")
-		assertThat(reader.next()).isEqualTo(KittyKeyboardQueryEvent(31))
+		assertThat(parser.next()).isEqualTo(KittyKeyboardQueryEvent(31))
 	}
 
 	@Test fun flagsUnknown() = runTest {
 		testTty.writeHex("1b5b3f31323875")
-		assertThat(reader.next()).isEqualTo(KittyKeyboardQueryEvent(128))
+		assertThat(parser.next()).isEqualTo(KittyKeyboardQueryEvent(128))
 	}
 
 	@Test fun flagsMissing() = runTest {
 		testTty.writeHex("1b5b3f75")
-		assertThat(reader.next()).isEqualTo(
+		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3f75".hexToByteArray()),
 		)
 	}
 
 	@Test fun flagsNonDigit() = runTest {
 		testTty.writeHex("1b5b3f312b2075")
-		assertThat(reader.next()).isEqualTo(
+		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3f312b2075".hexToByteArray()),
 		)
 	}

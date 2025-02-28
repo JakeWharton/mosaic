@@ -1,19 +1,25 @@
+public final class com/jakewharton/mosaic/terminal/TerminalParser {
+	public fun <init> (Lcom/jakewharton/mosaic/tty/Tty;)V
+	public final fun debugNext ()Lkotlin/Pair;
+	public final fun getKittyDisambiguateEscapeCodes ()Z
+	public final fun getXtermExtendedUtf8Mouse ()Z
+	public final fun next ()Lcom/jakewharton/mosaic/terminal/event/Event;
+	public final fun setKittyDisambiguateEscapeCodes (Z)V
+	public final fun setXtermExtendedUtf8Mouse (Z)V
+}
+
 public final class com/jakewharton/mosaic/terminal/TerminalReader : java/lang/AutoCloseable {
 	public fun close ()V
 	public final fun currentSize ()Lcom/jakewharton/mosaic/terminal/event/ResizeEvent;
 	public final fun enableRawMode ()V
 	public final fun enableWindowResizeEvents ()V
 	public final fun getEvents ()Lkotlinx/coroutines/channels/ReceiveChannel;
-	public final fun getKittyDisambiguateEscapeCodes ()Z
 	public final fun getTty ()Lcom/jakewharton/mosaic/tty/Tty;
-	public final fun getXtermExtendedUtf8Mouse ()Z
 	public final fun interrupt ()V
 	public final fun runParseLoop ()V
-	public final fun setKittyDisambiguateEscapeCodes (Z)V
-	public final fun setXtermExtendedUtf8Mouse (Z)V
 }
 
-public final class com/jakewharton/mosaic/terminal/TerminalReaderKt {
+public final class com/jakewharton/mosaic/terminal/TerminalReader2Kt {
 	public static final fun TerminalReader (Z)Lcom/jakewharton/mosaic/terminal/TerminalReader;
 	public static synthetic fun TerminalReader$default (ZILjava/lang/Object;)Lcom/jakewharton/mosaic/terminal/TerminalReader;
 }

@@ -9,11 +9,11 @@ import kotlinx.coroutines.test.runTest
 class TerminalParserDcsTerminalVersionEventTest : BaseTerminalParserTest() {
 	@Test fun empty() = runTest {
 		testTty.writeHex("1b503e7c1b5c")
-		assertThat(reader.next()).isEqualTo(TerminalVersionEvent(""))
+		assertThat(parser.next()).isEqualTo(TerminalVersionEvent(""))
 	}
 
 	@Test fun text() = runTest {
 		testTty.writeHex("1b503e7c68656c6c6f1b5c")
-		assertThat(reader.next()).isEqualTo(TerminalVersionEvent("hello"))
+		assertThat(parser.next()).isEqualTo(TerminalVersionEvent("hello"))
 	}
 }

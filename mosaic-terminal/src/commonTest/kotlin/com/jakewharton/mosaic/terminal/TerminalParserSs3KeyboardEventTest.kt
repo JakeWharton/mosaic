@@ -21,66 +21,66 @@ import kotlinx.coroutines.test.runTest
 class TerminalParserSs3KeyboardEventTest : BaseTerminalParserTest() {
 	@Test fun up() = runTest {
 		testTty.writeHex("1b4f41")
-		assertThat(reader.next()).isEqualTo(KeyboardEvent(Up))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up))
 	}
 
 	@Test fun down() = runTest {
 		testTty.writeHex("1b4f42")
-		assertThat(reader.next()).isEqualTo(KeyboardEvent(Down))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Down))
 	}
 
 	@Test fun right() = runTest {
 		testTty.writeHex("1b4f43")
-		assertThat(reader.next()).isEqualTo(KeyboardEvent(Right))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Right))
 	}
 
 	@Test fun left() = runTest {
 		testTty.writeHex("1b4f44")
-		assertThat(reader.next()).isEqualTo(KeyboardEvent(Left))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Left))
 	}
 
 	@Test fun end() = runTest {
 		testTty.writeHex("1b4f46")
-		assertThat(reader.next()).isEqualTo(KeyboardEvent(End))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(End))
 	}
 
 	@Test fun home() = runTest {
 		testTty.writeHex("1b4f48")
-		assertThat(reader.next()).isEqualTo(KeyboardEvent(Home))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(Home))
 	}
 
 	@Test fun f1() = runTest {
 		testTty.writeHex("1b4f50")
-		assertThat(reader.next()).isEqualTo(KeyboardEvent(F1))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(F1))
 	}
 
 	@Test fun f2() = runTest {
 		testTty.writeHex("1b4f51")
-		assertThat(reader.next()).isEqualTo(KeyboardEvent(F2))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(F2))
 	}
 
 	@Test fun f3() = runTest {
 		testTty.writeHex("1b4f52")
-		assertThat(reader.next()).isEqualTo(KeyboardEvent(F3))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(F3))
 	}
 
 	@Test fun f4() = runTest {
 		testTty.writeHex("1b4f53")
-		assertThat(reader.next()).isEqualTo(KeyboardEvent(F4))
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(F4))
 	}
 
 	@Test fun invalidKey() = runTest {
 		testTty.writeHex("1b4f75")
-		assertThat(reader.next()).isEqualTo(
+		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b4f75".hexToByteArray()),
 		)
 	}
 
 	@Test fun keyIsEscapeDoesNotConsumeEscape() = runTest {
 		testTty.writeHex("1b4f1b5b306e")
-		assertThat(reader.next()).isEqualTo(
+		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b4f".hexToByteArray()),
 		)
-		assertThat(reader.next()).isEqualTo(OperatingStatusResponseEvent(ok = true))
+		assertThat(parser.next()).isEqualTo(OperatingStatusResponseEvent(ok = true))
 	}
 }
