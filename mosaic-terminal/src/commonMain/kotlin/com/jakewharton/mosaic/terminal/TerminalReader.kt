@@ -41,7 +41,7 @@ import kotlinx.coroutines.channels.ReceiveChannel
  */
 public fun TerminalReader(emitDebugEvents: Boolean = false): TerminalReader {
 	val events = Channel<Event>(UNLIMITED)
-	val callback = PlatformEventHandler(events, emitDebugEvents)
+	val callback = EventChannelTtyCallback(events, emitDebugEvents)
 	val tty = Tty.create(callback)
 	return TerminalReader(tty, events, emitDebugEvents)
 }

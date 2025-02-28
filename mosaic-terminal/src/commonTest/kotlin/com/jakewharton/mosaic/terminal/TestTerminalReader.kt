@@ -7,8 +7,8 @@ import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 
 internal fun TestTerminalReader(): TestTerminalReader {
 	val events = Channel<Event>(UNLIMITED)
-	val platformEventHandler = PlatformEventHandler(events, emitDebugEvents = false)
-	val testTty = TestTty.create(platformEventHandler)
+	val callback = EventChannelTtyCallback(events, emitDebugEvents = false)
+	val testTty = TestTty.create(callback)
 	val reader = TerminalReader(testTty.tty, events, emitDebugEvents = false)
 	return TestTerminalReader(testTty, reader)
 }

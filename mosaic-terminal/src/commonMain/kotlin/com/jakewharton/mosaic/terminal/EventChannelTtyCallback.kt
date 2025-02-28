@@ -7,7 +7,7 @@ import com.jakewharton.mosaic.terminal.event.ResizeEvent
 import com.jakewharton.mosaic.tty.Tty
 import kotlinx.coroutines.channels.SendChannel
 
-internal class PlatformEventHandler(
+internal class EventChannelTtyCallback(
 	private val events: SendChannel<Event>,
 	private val emitDebugEvents: Boolean,
 ) : Tty.Callback {
