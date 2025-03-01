@@ -38,7 +38,6 @@ import com.jakewharton.mosaic.terminal.event.OperatingStatusResponseEvent
 import com.jakewharton.mosaic.terminal.event.PrimaryDeviceAttributesEvent
 import com.jakewharton.mosaic.terminal.event.ResizeEvent
 import com.jakewharton.mosaic.terminal.event.SystemThemeEvent
-import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.BoxMeasurePolicy
 import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.concurrent.Volatile
@@ -58,18 +57,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeoutOrNull
-
-public fun renderMosaic(content: @Composable () -> Unit): String {
-	val mosaicComposition = MosaicComposition(
-		coroutineContext = BroadcastFrameClock(),
-		onDraw = {},
-		keyEvents = Channel(),
-		terminalState = mutableStateOf(Terminal.Default),
-	)
-	mosaicComposition.setContent(content)
-	mosaicComposition.cancel()
-	return createRendering().render(mosaicComposition).toString()
-}
 
 public fun runMosaicBlocking(content: @Composable () -> Unit) {
 	runBlocking {
@@ -292,10 +279,12 @@ public suspend fun runMosaic(content: @Composable () -> Unit) {
 				reader.tty.enableWindowResizeEvents()
 			}
 
-			val rendering = createRendering(
-				ansiLevel = detectAnsiLevel(),
-				synchronizedRendering = supportsSynchronizedRendering,
-			)
+			val ansiLevel = detectAnsiLevel()
+			val rendering = if (env("MOSAIC_DEBUG_RENDERING") == "true") {
+				DebugRendering(ansiLevel)
+			} else {
+				AnsiRendering(ansiLevel, supportsSynchronizedRendering)
+			}
 
 			runMosaicComposition(rendering, keyEvents, terminalState, content)
 
@@ -339,17 +328,6 @@ internal suspend fun runMosaicComposition(
 
 internal inline fun <T> MutableState<T>.update(updater: T.() -> T) {
 	value = value.updater()
-}
-
-private fun createRendering(
-	ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR,
-	synchronizedRendering: Boolean = false,
-): Rendering {
-	return if (env("MOSAIC_DEBUG_RENDERING") == "true") {
-		DebugRendering(ansiLevel = ansiLevel)
-	} else {
-		AnsiRendering(ansiLevel, synchronizedRendering)
-	}
 }
 
 public interface Mosaic {

@@ -16,8 +16,8 @@ internal interface Rendering {
 }
 
 internal class DebugRendering(
-	private val systemClock: TimeSource = TimeSource.Monotonic,
 	private val ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR,
+	private val systemClock: TimeSource = TimeSource.Monotonic,
 ) : Rendering {
 	private var lastRender: TimeMark? = null
 

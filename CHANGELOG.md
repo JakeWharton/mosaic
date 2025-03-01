@@ -15,6 +15,9 @@ Fixed:
 - Prevent final character from being erased when a row writes into the last column of the terminal.
 - Do not emit ANSI style reset escape sequence when colors are disabled (such as in testing).
 
+Removed:
+- `renderMosaic` was removed without replacement. As the capabilities of the library grow, supporting a string as a render target was increasingly difficult.
+
 
 ## [0.16.0] - 2025-02-14
 [0.16.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.16.0

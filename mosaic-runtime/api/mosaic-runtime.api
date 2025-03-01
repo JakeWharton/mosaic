@@ -10,7 +10,6 @@ public abstract interface class com/jakewharton/mosaic/Mosaic {
 
 public final class com/jakewharton/mosaic/MosaicKt {
 	public static final fun Mosaic (Lkotlin/coroutines/CoroutineContext;Lkotlin/jvm/functions/Function1;Lkotlinx/coroutines/channels/Channel;Landroidx/compose/runtime/State;)Lcom/jakewharton/mosaic/Mosaic;
-	public static final fun renderMosaic (Lkotlin/jvm/functions/Function2;)Ljava/lang/String;
 	public static final fun runMosaic (Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static final fun runMosaicBlocking (Lkotlin/jvm/functions/Function2;)V
 }

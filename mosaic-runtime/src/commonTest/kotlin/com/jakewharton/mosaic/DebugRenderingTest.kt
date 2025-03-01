@@ -21,7 +21,7 @@ import kotlinx.coroutines.test.runTest
 
 class DebugRenderingTest {
 	private val timeSource = TestTimeSource()
-	private val rendering = DebugRendering(timeSource)
+	private val rendering = DebugRendering(systemClock = timeSource)
 
 	@Test fun drawFailureStillRendersMeasuredAndPlacedNodes() = runTest {
 		runMosaicTest(RenderingSnapshots(rendering)) {
