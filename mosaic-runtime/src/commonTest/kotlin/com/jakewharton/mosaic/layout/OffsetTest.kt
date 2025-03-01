@@ -4,7 +4,6 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.TestChar
 import com.jakewharton.mosaic.TestFiller
-import com.jakewharton.mosaic.assertFailure
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.s
 import com.jakewharton.mosaic.testing.runMosaicTest
@@ -34,31 +33,67 @@ class OffsetTest {
 		}
 	}
 
-	@Test fun offsetHorizontalFixedBeyondBorders() = runTest {
+	@Test fun offsetHorizontalFixedFarBeyondBorders() = runTest {
 		runMosaicTest {
+			val size = 6
 			setContent {
-				Box(modifier = Modifier.size(6).offset(30, 0)) {
+				Box(modifier = Modifier.requiredSize(size).offset(30, 0)) {
 					TestFiller(modifier = Modifier.size(1))
 				}
 			}
-			// check when going beyond the border of the TextSurface#get
-			assertFailure<IllegalStateException> {
-				awaitSnapshot()
+			assertThat(awaitSnapshot()).isEqualTo(getBlankStringBlock(size))
+		}
+	}
+
+	@Test fun offsetHorizontalFixedNegativeFarBeyondBorders() = runTest {
+		runMosaicTest {
+			val size = 6
+			setContent {
+				Box(modifier = Modifier.size(size).offset(-30, 0)) {
+					TestFiller(modifier = Modifier.size(1))
+				}
 			}
+			assertThat(awaitSnapshot()).isEqualTo(getBlankStringBlock(size))
+		}
+	}
+
+	@Test fun offsetHorizontalFixedBeyondBorders() = runTest {
+		runMosaicTest {
+			setContent {
+				Box(modifier = Modifier.requiredSize(6).offset(4, 0)) {
+					TestFiller(modifier = Modifier.size(3))
+				}
+			}
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|    $TestChar$TestChar
+				|    $TestChar$TestChar
+				|    $TestChar$TestChar
+				|     $s
+				|     $s
+				|     $s
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun offsetHorizontalFixedNegativeBeyondBorders() = runTest {
 		runMosaicTest {
 			setContent {
-				Box(modifier = Modifier.size(6).offset(-3, 0)) {
-					TestFiller(modifier = Modifier.size(1))
+				Box(modifier = Modifier.size(6).offset(-1, 0)) {
+					TestFiller(modifier = Modifier.size(3))
 				}
 			}
-			// check when going beyond the border of the TextSurface#get
-			assertFailure<IllegalStateException> {
-				awaitSnapshot()
-			}
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|$TestChar$TestChar   $s
+				|$TestChar$TestChar   $s
+				|$TestChar$TestChar   $s
+				|     $s
+				|     $s
+				|     $s
+				""".trimMargin(),
+			)
 		}
 	}
 
@@ -82,31 +117,67 @@ class OffsetTest {
 		}
 	}
 
-	@Test fun offsetVerticalFixedBeyondBorders() = runTest {
+	@Test fun offsetVerticalFixedFarBeyondBorders() = runTest {
 		runMosaicTest {
+			val size = 6
 			setContent {
-				Box(modifier = Modifier.size(6).offset(0, 40)) {
+				Box(modifier = Modifier.size(size).offset(0, 40)) {
 					TestFiller(modifier = Modifier.size(1))
 				}
 			}
-			// check when going beyond the border of the TextSurface#get
-			assertFailure<IllegalStateException> {
-				awaitSnapshot()
+			assertThat(awaitSnapshot()).isEqualTo(getBlankStringBlock(size))
+		}
+	}
+
+	@Test fun offsetVerticalFixedNegativeFarBeyondBorders() = runTest {
+		runMosaicTest {
+			val size = 6
+			setContent {
+				Box(modifier = Modifier.size(size).offset(0, -40)) {
+					TestFiller(modifier = Modifier.size(1))
+				}
 			}
+			assertThat(awaitSnapshot()).isEqualTo(getBlankStringBlock(size))
+		}
+	}
+
+	@Test fun offsetVerticalFixedBeyondBorders() = runTest {
+		runMosaicTest {
+			setContent {
+				Box(modifier = Modifier.size(6).offset(0, 4)) {
+					TestFiller(modifier = Modifier.size(3))
+				}
+			}
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|     $s
+				|     $s
+				|     $s
+				|     $s
+				|$TestChar$TestChar$TestChar  $s
+				|$TestChar$TestChar$TestChar  $s
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun offsetVerticalFixedNegativeBeyondBorders() = runTest {
 		runMosaicTest {
 			setContent {
-				Box(modifier = Modifier.size(6).offset(0, -4)) {
-					TestFiller(modifier = Modifier.size(1))
+				Box(modifier = Modifier.size(6).offset(0, -1)) {
+					TestFiller(modifier = Modifier.size(3))
 				}
 			}
-			// check when going beyond the border of the TextSurface#get
-			assertFailure<IllegalStateException> {
-				awaitSnapshot()
-			}
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|$TestChar$TestChar$TestChar  $s
+				|$TestChar$TestChar$TestChar  $s
+				|     $s
+				|     $s
+				|     $s
+				|     $s
+				""".trimMargin(),
+			)
 		}
 	}
 
@@ -130,31 +201,68 @@ class OffsetTest {
 		}
 	}
 
-	@Test fun offsetFixedBeyondBorders() = runTest {
+	@Test fun offsetFixedFarBeyondBorders() = runTest {
 		runMosaicTest {
+			val size = 6
 			setContent {
-				Box(modifier = Modifier.size(6).offset(30, 40)) {
+				Box(modifier = Modifier.size(size).offset(30, 40)) {
 					TestFiller(modifier = Modifier.size(1))
 				}
 			}
-			// check when going beyond the border of the TextSurface#get
-			assertFailure<IllegalStateException> {
-				awaitSnapshot()
+			assertThat(awaitSnapshot()).isEqualTo(getBlankStringBlock(size))
+		}
+	}
+
+	@Test fun offsetFixedNegativeFarBeyondBorders() = runTest {
+		runMosaicTest {
+			val size = 6
+			setContent {
+				Box(modifier = Modifier.size(size).offset(-30, -40)) {
+					TestFiller(modifier = Modifier.size(1))
+				}
 			}
+			assertThat(awaitSnapshot()).isEqualTo(getBlankStringBlock(size))
+		}
+	}
+
+	@Test fun offsetFixedBeyondBorders() = runTest {
+		runMosaicTest {
+			setContent {
+				Box(modifier = Modifier.size(6).offset(4, 5)) {
+					TestFiller(modifier = Modifier.size(3))
+				}
+			}
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|     $s
+				|     $s
+				|     $s
+				|     $s
+				|     $s
+				|    $TestChar$TestChar
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun offsetFixedNegativeBeyondBorders() = runTest {
 		runMosaicTest {
+			val size = 6
 			setContent {
-				Box(modifier = Modifier.size(6).offset(-3, -4)) {
-					TestFiller(modifier = Modifier.size(1))
+				Box(modifier = Modifier.size(size).offset(-1, -2)) {
+					TestFiller(modifier = Modifier.size(3))
 				}
 			}
-			// check when going beyond the border of the TextSurface#get
-			assertFailure<IllegalStateException> {
-				awaitSnapshot()
-			}
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|$TestChar$TestChar   $s
+				|     $s
+				|     $s
+				|     $s
+				|     $s
+				|     $s
+				""".trimMargin(),
+			)
 		}
 	}
 
@@ -183,31 +291,67 @@ class OffsetTest {
 		}
 	}
 
-	@Test fun offsetHorizontalModifiableBeyondBorders() = runTest {
+	@Test fun offsetHorizontalModifiableFarBeyondBorders() = runTest {
 		runMosaicTest {
+			val size = 6
 			setContent {
-				Box(modifier = Modifier.size(6).offset { IntOffset(30, 0) }) {
+				Box(modifier = Modifier.size(size).offset { IntOffset(30, 0) }) {
 					TestFiller(modifier = Modifier.size(1))
 				}
 			}
-			// check when going beyond the border of the TextSurface#get
-			assertFailure<IllegalStateException> {
-				awaitSnapshot()
+			assertThat(awaitSnapshot()).isEqualTo(getBlankStringBlock(size))
+		}
+	}
+
+	@Test fun offsetHorizontalModifiableNegativeFarBeyondBorders() = runTest {
+		runMosaicTest {
+			val size = 6
+			setContent {
+				Box(modifier = Modifier.size(size).offset { IntOffset(-30, 0) }) {
+					TestFiller(modifier = Modifier.size(1))
+				}
 			}
+			assertThat(awaitSnapshot()).isEqualTo(getBlankStringBlock(size))
+		}
+	}
+
+	@Test fun offsetHorizontalModifiableBeyondBorders() = runTest {
+		runMosaicTest {
+			setContent {
+				Box(modifier = Modifier.size(6).offset { IntOffset(4, 0) }) {
+					TestFiller(modifier = Modifier.size(3))
+				}
+			}
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|    $TestChar$TestChar
+				|    $TestChar$TestChar
+				|    $TestChar$TestChar
+				|     $s
+				|     $s
+				|     $s
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun offsetHorizontalModifiableNegativeBeyondBorders() = runTest {
 		runMosaicTest {
 			setContent {
-				Box(modifier = Modifier.size(6).offset { IntOffset(-3, 0) }) {
-					TestFiller(modifier = Modifier.size(1))
+				Box(modifier = Modifier.size(6).offset { IntOffset(-1, 0) }) {
+					TestFiller(modifier = Modifier.size(3))
 				}
 			}
-			// check when going beyond the border of the TextSurface#get
-			assertFailure<IllegalStateException> {
-				awaitSnapshot()
-			}
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|$TestChar$TestChar   $s
+				|$TestChar$TestChar   $s
+				|$TestChar$TestChar   $s
+				|     $s
+				|     $s
+				|     $s
+				""".trimMargin(),
+			)
 		}
 	}
 
@@ -231,31 +375,67 @@ class OffsetTest {
 		}
 	}
 
-	@Test fun offsetVerticalModifiableBeyondBorders() = runTest {
+	@Test fun offsetVerticalModifiableFarBeyondBorders() = runTest {
 		runMosaicTest {
+			val size = 6
 			setContent {
-				Box(modifier = Modifier.size(6).offset { IntOffset(0, 40) }) {
+				Box(modifier = Modifier.size(size).offset { IntOffset(0, 40) }) {
 					TestFiller(modifier = Modifier.size(1))
 				}
 			}
-			// check when going beyond the border of the TextSurface#get
-			assertFailure<IllegalStateException> {
-				awaitSnapshot()
+			assertThat(awaitSnapshot()).isEqualTo(getBlankStringBlock(size))
+		}
+	}
+
+	@Test fun offsetVerticalModifiableBeyondBorders() = runTest {
+		runMosaicTest {
+			setContent {
+				Box(modifier = Modifier.size(6).offset { IntOffset(0, 4) }) {
+					TestFiller(modifier = Modifier.size(3))
+				}
 			}
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|     $s
+				|     $s
+				|     $s
+				|     $s
+				|$TestChar$TestChar$TestChar  $s
+				|$TestChar$TestChar$TestChar  $s
+				""".trimMargin(),
+			)
+		}
+	}
+
+	@Test fun offsetVerticalModifiableNegativeFarBeyondBorders() = runTest {
+		runMosaicTest {
+			val size = 6
+			setContent {
+				Box(modifier = Modifier.size(size).offset { IntOffset(0, -40) }) {
+					TestFiller(modifier = Modifier.size(1))
+				}
+			}
+			assertThat(awaitSnapshot()).isEqualTo(getBlankStringBlock(size))
 		}
 	}
 
 	@Test fun offsetVerticalModifiableNegativeBeyondBorders() = runTest {
 		runMosaicTest {
 			setContent {
-				Box(modifier = Modifier.size(6).offset { IntOffset(0, -4) }) {
-					TestFiller(modifier = Modifier.size(1))
+				Box(modifier = Modifier.size(6).offset { IntOffset(0, -1) }) {
+					TestFiller(modifier = Modifier.size(3))
 				}
 			}
-			// check when going beyond the border of the TextSurface#get
-			assertFailure<IllegalStateException> {
-				awaitSnapshot()
-			}
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|$TestChar$TestChar$TestChar  $s
+				|$TestChar$TestChar$TestChar  $s
+				|     $s
+				|     $s
+				|     $s
+				|     $s
+				""".trimMargin(),
+			)
 		}
 	}
 
@@ -279,31 +459,67 @@ class OffsetTest {
 		}
 	}
 
-	@Test fun offsetModifiableBeyondBorders() = runTest {
+	@Test fun offsetModifiableFarBeyondBorders() = runTest {
 		runMosaicTest {
+			val size = 6
 			setContent {
-				Box(modifier = Modifier.size(6).offset { IntOffset(30, 40) }) {
+				Box(modifier = Modifier.size(size).offset { IntOffset(30, 40) }) {
 					TestFiller(modifier = Modifier.size(1))
 				}
 			}
-			// check when going beyond the border of the TextSurface#get
-			assertFailure<IllegalStateException> {
-				awaitSnapshot()
+			assertThat(awaitSnapshot()).isEqualTo(getBlankStringBlock(size))
+		}
+	}
+
+	@Test fun offsetModifiableBeyondBorders() = runTest {
+		runMosaicTest {
+			setContent {
+				Box(modifier = Modifier.size(6).offset { IntOffset(4, 5) }) {
+					TestFiller(modifier = Modifier.size(3))
+				}
 			}
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|     $s
+				|     $s
+				|     $s
+				|     $s
+				|     $s
+				|    $TestChar$TestChar
+				""".trimMargin(),
+			)
+		}
+	}
+
+	@Test fun offsetModifiableNegativeFarBeyondBorders() = runTest {
+		runMosaicTest {
+			val size = 6
+			setContent {
+				Box(modifier = Modifier.size(size).offset { IntOffset(-30, -40) }) {
+					TestFiller(modifier = Modifier.size(1))
+				}
+			}
+			assertThat(awaitSnapshot()).isEqualTo(getBlankStringBlock(size))
 		}
 	}
 
 	@Test fun offsetModifiableNegativeBeyondBorders() = runTest {
 		runMosaicTest {
 			setContent {
-				Box(modifier = Modifier.size(6).offset { IntOffset(-3, -4) }) {
-					TestFiller(modifier = Modifier.size(1))
+				Box(modifier = Modifier.size(6).offset { IntOffset(-1, -2) }) {
+					TestFiller(modifier = Modifier.size(3))
 				}
 			}
-			// check when going beyond the border of the TextSurface#get
-			assertFailure<IllegalStateException> {
-				awaitSnapshot()
-			}
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|$TestChar$TestChar   $s
+				|     $s
+				|     $s
+				|     $s
+				|     $s
+				|     $s
+				""".trimMargin(),
+			)
 		}
 	}
 
@@ -311,5 +527,14 @@ class OffsetTest {
 		val offsetLambda = { IntOffset(-3, -4) }
 		val actual = Modifier.offset(offsetLambda).toString()
 		assertThat(actual).isEqualTo("ChangeableOffset(offset=$offsetLambda)")
+	}
+
+	private fun getBlankStringBlock(size: Int): String {
+		val line = s.repeat(size)
+		return buildString {
+			repeat(size) {
+				appendLine(line)
+			}
+		}.removeSuffix("\n")
 	}
 }
