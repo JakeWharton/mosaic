@@ -77,7 +77,7 @@ public class TerminalParser(
 		// Move any existing data to index 0 of the buffer. This will ensure we can capture all the
 		// bytes consumed (even across multiple reads) since the original offset will always be 0.
 		buffer.copyInto(buffer, 0, startIndex = offset, endIndex = limit)
-		limit = limit - offset
+		limit -= offset
 		offset = 0
 
 		val event = next() ?: return null
@@ -97,8 +97,7 @@ public class TerminalParser(
 
 		while (true) {
 			if (offset < limit) {
-				val event = tryParse(buffer, offset, limit)
-				if (event != null) {
+				tryParse(buffer, offset, limit)?.let { event ->
 					return event
 				}
 			}
