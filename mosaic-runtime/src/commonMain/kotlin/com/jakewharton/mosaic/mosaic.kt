@@ -297,7 +297,7 @@ internal suspend fun runMosaicComposition(
 	rendering: Rendering,
 	keyEvents: Channel<KeyEvent>,
 	terminalState: MutableState<Terminal>,
-	content: @Composable (() -> Unit),
+	content: @Composable () -> Unit,
 ) {
 	val clock = BroadcastFrameClock()
 	val mosaicComposition = MosaicComposition(

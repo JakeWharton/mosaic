@@ -77,7 +77,7 @@ private class RealTestMosaic<T>(
 		mosaic.setContent(content)
 	}
 
-	override fun setContentAndSnapshot(content: @Composable (() -> Unit)): T {
+	override fun setContentAndSnapshot(content: @Composable () -> Unit): T {
 		setContent(content)
 		check(hasChanges)
 		hasChanges = false
