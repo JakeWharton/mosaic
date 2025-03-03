@@ -106,7 +106,7 @@ class MosaicTest {
 		var frameTimeB = 0L
 
 		runMosaicComposition(
-			rendering = AnsiRendering(
+			vtDisplay = DefaultVtDisplay(
 				ansiLevel = AnsiLevel.NONE,
 				synchronizedRendering = false,
 				supportsKittyUnderlines = false,

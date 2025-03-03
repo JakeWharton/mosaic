@@ -281,9 +281,9 @@ public suspend fun runMosaic(content: @Composable () -> Unit) {
 
 			val ansiLevel = detectAnsiLevel()
 			val rendering = if (env("MOSAIC_DEBUG_RENDERING") == "true") {
-				DebugRendering(ansiLevel, supportsKittyUnderlines, TimeSource.Monotonic)
+				DebugVtDisplay(ansiLevel, supportsKittyUnderlines, TimeSource.Monotonic)
 			} else {
-				AnsiRendering(ansiLevel, supportsSynchronizedRendering, supportsKittyUnderlines)
+				DefaultVtDisplay(ansiLevel, supportsSynchronizedRendering, supportsKittyUnderlines)
 			}
 
 			runMosaicComposition(rendering, keyEvents, terminalState, content)
@@ -294,7 +294,7 @@ public suspend fun runMosaic(content: @Composable () -> Unit) {
 }
 
 internal suspend fun runMosaicComposition(
-	rendering: Rendering,
+	vtDisplay: VtDisplay,
 	keyEvents: Channel<KeyEvent>,
 	terminalState: MutableState<Terminal>,
 	content: @Composable (() -> Unit),
@@ -303,7 +303,7 @@ internal suspend fun runMosaicComposition(
 	val mosaicComposition = MosaicComposition(
 		coroutineContext = coroutineContext + clock,
 		onDraw = { rootNode ->
-			print(rendering.render(rootNode).toString())
+			print(vtDisplay.render(rootNode).toString())
 		},
 		keyEvents = keyEvents,
 		terminalState = terminalState,

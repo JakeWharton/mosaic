@@ -5,31 +5,30 @@ import com.jakewharton.mosaic.ui.AnsiLevel
 import kotlin.time.TimeMark
 import kotlin.time.TimeSource
 
-internal interface Rendering {
+internal interface VtDisplay {
 	/**
 	 * Render [node] to a single string for display.
 	 *
 	 * Note: The returned [CharSequence] is only valid until the next call to this function,
 	 * as implementations are free to reuse buffers across invocations.
 	 */
-	fun render(mosaic: Mosaic): CharSequence
+	fun render(mosaic: MosaicComposition): CharSequence
 }
 
-internal class DebugRendering(
-	private val ansiLevel: AnsiLevel,
-	private val supportsKittyUnderlines: Boolean,
+internal class DebugVtDisplay(
+	private val vtEncoder: VtEncoder,
 	private val systemClock: TimeSource,
-) : Rendering {
+) : VtDisplay {
 	private var lastRender: TimeMark? = null
 
-	fun StringBuilder.appendSurface(canvas: TextCanvas) {
-		for (row in 0 until canvas.height) {
-			canvas.appendRowTo(this, row, ansiLevel, supportsKittyUnderlines)
+	fun StringBuilder.appendSurface(surface: TextSurface) {
+		for (row in 0 until surface.height) {
+			vtEncoder.encodeRowTo(surface, row, this)
 			append("\r\n")
 		}
 	}
 
-	override fun render(mosaic: Mosaic): CharSequence {
+	override fun render(mosaic: MosaicComposition): CharSequence {
 		var failed = false
 		val output = buildString {
 			lastRender?.let { lastRender ->
@@ -44,7 +43,7 @@ internal class DebugRendering(
 			append(mosaic.dump().replace("\n", "\r\n"))
 			append("\r\n\r\n")
 
-			val statics = mutableObjectListOf<TextCanvas>()
+			val statics = mutableObjectListOf<TextSurface>()
 			try {
 				mosaic.paintStaticsTo(statics)
 				if (statics.isNotEmpty()) {
@@ -75,11 +74,11 @@ internal class DebugRendering(
 	}
 }
 
-internal class AnsiRendering(
+internal class DefaultVtDisplay(
 	private val ansiLevel: AnsiLevel,
 	private val synchronizedRendering: Boolean,
 	private val supportsKittyUnderlines: Boolean,
-) : Rendering {
+) : VtDisplay {
 	private val stringBuilder = StringBuilder(100)
 	private val staticSurfaces = mutableObjectListOf<TextCanvas>()
 	private var lastHeight = 0

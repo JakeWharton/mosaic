@@ -16,9 +16,9 @@ internal object NodeSnapshots : SnapshotStrategy<MosaicNode> {
 }
 
 internal class RenderingSnapshots(
-	private val rendering: Rendering,
+	private val vtDisplay: VtDisplay,
 ) : SnapshotStrategy<String> {
 	override fun create(mosaic: Mosaic): String {
-		return rendering.render(mosaic).toString()
+		return vtDisplay.render(mosaic).toString()
 	}
 }
