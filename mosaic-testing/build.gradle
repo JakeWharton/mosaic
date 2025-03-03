@@ -8,6 +8,10 @@ kotlin {
 	explicitApi()
 
 	sourceSets {
+		configureEach {
+			languageSettings.optIn('com.jakewharton.mosaic.MosaicUnstableApi')
+		}
+
 		commonMain {
 			dependencies {
 				api projects.mosaicRuntime

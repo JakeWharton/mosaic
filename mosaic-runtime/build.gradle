@@ -11,6 +11,7 @@ kotlin {
 
 	sourceSets {
 		configureEach {
+			languageSettings.optIn('com.jakewharton.mosaic.MosaicUnstableApi')
 			languageSettings.optIn('kotlinx.cinterop.ExperimentalForeignApi')
 		}
 

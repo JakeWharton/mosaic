@@ -14,6 +14,9 @@ public final class com/jakewharton/mosaic/MosaicKt {
 	public static final fun runMosaicBlocking (Lkotlin/jvm/functions/Function2;)V
 }
 
+public abstract interface annotation class com/jakewharton/mosaic/MosaicUnstableApi : java/lang/annotation/Annotation {
+}
+
 public final class com/jakewharton/mosaic/Terminal {
 	public static final field $stable I
 	public static final field Companion Lcom/jakewharton/mosaic/Terminal$Companion;
@@ -34,11 +37,35 @@ public final class com/jakewharton/mosaic/TerminalKt {
 	public static final fun getLocalTerminal ()Landroidx/compose/runtime/ProvidableCompositionLocal;
 }
 
-public abstract interface class com/jakewharton/mosaic/TextCanvas {
-	public abstract fun appendRowTo (Ljava/lang/Appendable;ILcom/jakewharton/mosaic/ui/AnsiLevel;Z)V
-	public abstract fun getHeight ()I
-	public abstract fun getWidth ()I
-	public abstract fun render (Lcom/jakewharton/mosaic/ui/AnsiLevel;Z)Ljava/lang/String;
+public final class com/jakewharton/mosaic/TextCanvas {
+	public static final field $stable I
+	public field translationX I
+	public field translationY I
+	public fun <init> (II)V
+	public final fun appendRowTo (Ljava/lang/Appendable;ILcom/jakewharton/mosaic/ui/AnsiLevel;Z)V
+	public final fun get (II)Lcom/jakewharton/mosaic/TextPixel;
+	public final fun getHeight ()I
+	public final fun getWidth ()I
+	public final fun render (Lcom/jakewharton/mosaic/ui/AnsiLevel;Z)Ljava/lang/String;
+	public final fun withTranslation (IILkotlin/jvm/functions/Function1;)V
+}
+
+public final class com/jakewharton/mosaic/TextPixel {
+	public static final field $stable I
+	public fun <init> (I)V
+	public final fun getBackground-OrXnJU4 ()I
+	public final fun getCodePoint ()I
+	public final fun getForeground-OrXnJU4 ()I
+	public final fun getTextStyle-4EWmQI8 ()I
+	public final fun getUnderlineColor-OrXnJU4 ()I
+	public final fun getUnderlineStyle-4rOp0I0 ()I
+	public final fun setBackground-ZsyVsVM (I)V
+	public final fun setCodePoint (I)V
+	public final fun setForeground-ZsyVsVM (I)V
+	public final fun setTextStyle-kLqBjOQ (I)V
+	public final fun setUnderlineColor-ZsyVsVM (I)V
+	public final fun setUnderlineStyle-0vVbRVg (I)V
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/jakewharton/mosaic/layout/AspectRatioKt {

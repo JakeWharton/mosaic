@@ -11,38 +11,47 @@ import com.jakewharton.mosaic.ui.TextStyle.Companion.Strikethrough
 import com.jakewharton.mosaic.ui.UnderlineStyle
 import com.jakewharton.mosaic.ui.isNotEmptyTextStyle
 import com.jakewharton.mosaic.ui.isSpecifiedColor
+import com.jakewharton.mosaic.ui.isSpecifiedTextStyle
+import com.jakewharton.mosaic.ui.isSpecifiedUnderlineStyle
 import com.jakewharton.mosaic.ui.isUnspecifiedColor
 import de.cketti.codepoints.appendCodePoint
+import kotlin.jvm.JvmField
 
-private val blankPixel = TextPixel(' ')
+private val blankPixel = TextPixel(' '.code)
 
-public interface TextCanvas {
-	public val height: Int
-	public val width: Int
+@MosaicUnstableApi
+public class TextCanvas(
+	public val width: Int,
+	public val height: Int,
+) {
+	@JvmField
+	@PublishedApi
+	internal var translationX: Int = 0
+	@JvmField
+	@PublishedApi
+	internal var translationY: Int = 0
 
-	// TODO Hey! These don't go here...
-	public fun render(ansiLevel: AnsiLevel, supportsKittyUnderlines: Boolean): String
-	public fun appendRowTo(appendable: Appendable, row: Int, ansiLevel: AnsiLevel, supportsKittyUnderlines: Boolean)
-}
+	private val cells = Array(width * height) { TextPixel(' '.code) }
 
-internal class TextSurface(
-	override val width: Int,
-	override val height: Int,
-) : TextCanvas {
-	var translationX = 0
-	var translationY = 0
+	public inline fun withTranslation(x: Int, y: Int, block: TextCanvas.() -> Unit) {
+		val oldTranslationX = translationX
+		val oldTranslationY = translationY
+		translationX = x
+		translationY = y
+		block()
+		translationX = oldTranslationX
+		translationY = oldTranslationY
+	}
 
-	private val cells = Array(width * height) { TextPixel(' ') }
-
-	operator fun get(row: Int, column: Int): TextPixel {
+	public operator fun get(row: Int, column: Int): TextPixel {
 		val x = translationX + column
-		val y = row + translationY
+		val y = translationY + row
 		check(x in 0 until width)
 		check(y in 0 until height)
 		return cells[y * width + x]
 	}
 
-	override fun appendRowTo(appendable: Appendable, row: Int, ansiLevel: AnsiLevel, supportsKittyUnderlines: Boolean) {
+	public fun appendRowTo(appendable: Appendable, row: Int, ansiLevel: AnsiLevel, supportsKittyUnderlines: Boolean) {
 		// Reused heap allocation for building ANSI attributes inside the loop.
 		val attributes = mutableListOf<String>()
 
@@ -174,7 +183,7 @@ internal class TextSurface(
 		}
 	}
 
-	override fun render(ansiLevel: AnsiLevel, supportsKittyUnderlines: Boolean): String = buildString {
+	public fun render(ansiLevel: AnsiLevel, supportsKittyUnderlines: Boolean): String = buildString {
 		if (height > 0) {
 			for (rowIndex in 0 until height) {
 				appendRowTo(this, rowIndex, ansiLevel, supportsKittyUnderlines)
@@ -186,16 +195,17 @@ internal class TextSurface(
 	}
 }
 
-internal class TextPixel(var codePoint: Int) {
-	var background: Color = Color.Unspecified
-	var foreground: Color = Color.Unspecified
-	var textStyle: TextStyle = TextStyle.Empty
-	var underlineStyle: UnderlineStyle = UnderlineStyle.None
-	var underlineColor: Color = Color.Unspecified
+@MosaicUnstableApi
+public class TextPixel(
+	public var codePoint: Int,
+) {
+	public var background: Color = Color.Unspecified
+	public var foreground: Color = Color.Unspecified
+	public var textStyle: TextStyle = TextStyle.Empty
+	public var underlineStyle: UnderlineStyle = UnderlineStyle.None
+	public var underlineColor: Color = Color.Unspecified
 
-	constructor(char: Char) : this(char.code)
-
-	override fun toString() = buildString {
+	override fun toString(): String = buildString {
 		append("TextPixel(\"")
 		appendCodePoint(codePoint)
 		append("\"")
@@ -207,7 +217,18 @@ internal class TextPixel(var codePoint: Int) {
 			append(" fg=")
 			append(foreground)
 		}
-		// TODO style
+		if (textStyle.isSpecifiedTextStyle && textStyle.isNotEmptyTextStyle) {
+			append(" textStyle=")
+			append(textStyle)
+		}
+		if (underlineStyle.isSpecifiedUnderlineStyle) {
+			append(" underlineStyle=")
+			append(underlineStyle)
+		}
+		if (underlineColor.isSpecifiedColor) {
+			append(" underlineColor=")
+			append(underlineColor)
+		}
 		append(')')
 	}
 }

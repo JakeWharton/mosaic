@@ -2,7 +2,6 @@ package com.jakewharton.mosaic.layout
 
 import androidx.collection.MutableObjectList
 import com.jakewharton.mosaic.TextCanvas
-import com.jakewharton.mosaic.TextSurface
 import com.jakewharton.mosaic.layout.Placeable.PlacementScope
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.ui.StaticState
@@ -59,7 +58,7 @@ internal abstract class MosaicNodeLayer(
 		measureResult.placeChildren()
 	}
 
-	open fun drawTo(canvas: TextSurface) {
+	open fun drawTo(canvas: TextCanvas) {
 		next?.drawTo(canvas)
 	}
 
@@ -146,17 +145,17 @@ internal class MosaicNode(
 	}
 
 	/**
-	 * Draw this node to a [TextSurface].
+	 * Draw this node to a [TextCanvas].
 	 * A call to [measureAndPlace] must precede calls to this function.
 	 */
 	fun paint(): TextCanvas {
-		val surface = TextSurface(width, height)
+		val surface = TextCanvas(width, height)
 		topLayer.drawTo(surface)
 		return surface
 	}
 
 	/**
-	 * Append any static [TextSurfaces][TextSurface] to [statics].
+	 * Append any static [TextSurfaces][TextCanvas] to [statics].
 	 * A call to [measureAndPlace] must precede calls to this function.
 	 */
 	fun paintStaticsTo(statics: MutableObjectList<TextCanvas>) {
@@ -209,7 +208,7 @@ private class BottomLayer(
 		return node.measurePolicy.run { measure(node.children, constraints) }
 	}
 
-	override fun drawTo(canvas: TextSurface) {
+	override fun drawTo(canvas: TextCanvas) {
 		for (child in node.children) {
 			if (child.width != 0 && child.height != 0) {
 				child.topLayer.drawTo(canvas)
@@ -272,19 +271,15 @@ private class DrawLayer(
 	private val element: DrawModifier,
 	override val next: MosaicNodeLayer,
 ) : MosaicNodeLayer(false) {
-	override fun drawTo(canvas: TextSurface) {
-		val oldX = canvas.translationX
-		val oldY = canvas.translationY
-		canvas.translationX = x
-		canvas.translationY = y
-		val scope = object : TextCanvasDrawScope(canvas, width, height), ContentDrawScope {
-			override fun drawContent() {
-				next.drawTo(canvas)
+	override fun drawTo(canvas: TextCanvas) {
+		canvas.withTranslation(x, y) {
+			val scope = object : TextCanvasDrawScope(canvas, width, height), ContentDrawScope {
+				override fun drawContent() {
+					next.drawTo(canvas)
+				}
 			}
+			element.run { scope.draw() }
 		}
-		element.run { scope.draw() }
-		canvas.translationX = oldX
-		canvas.translationY = oldY
 	}
 }
 
