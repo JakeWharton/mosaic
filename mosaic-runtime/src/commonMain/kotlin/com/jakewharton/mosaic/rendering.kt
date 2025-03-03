@@ -1,7 +1,6 @@
 package com.jakewharton.mosaic
 
 import androidx.collection.mutableObjectListOf
-import com.jakewharton.mosaic.ui.AnsiLevel
 import kotlin.time.TimeMark
 import kotlin.time.TimeSource
 
@@ -12,7 +11,7 @@ internal interface VtDisplay {
 	 * Note: The returned [CharSequence] is only valid until the next call to this function,
 	 * as implementations are free to reuse buffers across invocations.
 	 */
-	fun render(mosaic: MosaicComposition): CharSequence
+	fun render(mosaic: Mosaic): CharSequence
 }
 
 internal class DebugVtDisplay(
@@ -21,14 +20,14 @@ internal class DebugVtDisplay(
 ) : VtDisplay {
 	private var lastRender: TimeMark? = null
 
-	fun StringBuilder.appendSurface(surface: TextSurface) {
+	fun StringBuilder.appendSurface(surface: TextCanvas) {
 		for (row in 0 until surface.height) {
 			vtEncoder.encodeRowTo(surface, row, this)
 			append("\r\n")
 		}
 	}
 
-	override fun render(mosaic: MosaicComposition): CharSequence {
+	override fun render(mosaic: Mosaic): CharSequence {
 		var failed = false
 		val output = buildString {
 			lastRender?.let { lastRender ->
@@ -43,7 +42,7 @@ internal class DebugVtDisplay(
 			append(mosaic.dump().replace("\n", "\r\n"))
 			append("\r\n\r\n")
 
-			val statics = mutableObjectListOf<TextSurface>()
+			val statics = mutableObjectListOf<TextCanvas>()
 			try {
 				mosaic.paintStaticsTo(statics)
 				if (statics.isNotEmpty()) {
@@ -75,9 +74,8 @@ internal class DebugVtDisplay(
 }
 
 internal class DefaultVtDisplay(
-	private val ansiLevel: AnsiLevel,
+	private val vtEncoder: VtEncoder,
 	private val synchronizedRendering: Boolean,
-	private val supportsKittyUnderlines: Boolean,
 ) : VtDisplay {
 	private val stringBuilder = StringBuilder(100)
 	private val staticSurfaces = mutableObjectListOf<TextCanvas>()
@@ -106,7 +104,7 @@ internal class DefaultVtDisplay(
 						// do not support synchronized rendering, this may allow seeing a partial row render.
 						append(clearLine)
 					}
-					canvas.appendRowTo(this, row, ansiLevel, supportsKittyUnderlines)
+					vtEncoder.encodeRowTo(canvas, row, this)
 					append("\r\n")
 				}
 			}

@@ -18,11 +18,11 @@ internal class VtEncoder(
 	private val ansiLevel: AnsiLevel,
 	private val supportsKittyUnderlines: Boolean,
 ) {
-	fun encode(surface: TextSurface): String {
+	fun encode(canvas: TextCanvas): String {
 		return buildString {
-			if (surface.height > 0) {
-				for (rowIndex in 0 until surface.height) {
-					encodeRowTo(surface, rowIndex, this)
+			if (canvas.height > 0) {
+				for (rowIndex in 0 until canvas.height) {
+					encodeRowTo(canvas, rowIndex, this)
 					append("\r\n")
 				}
 				// Remove trailing newline.
@@ -31,18 +31,18 @@ internal class VtEncoder(
 		}
 	}
 
-	private val blankPixel = TextPixel(' ')
+	private val blankPixel = TextPixel(' '.code)
 
-	fun encodeRowTo(surface: TextSurface, row: Int, appendable: Appendable) {
+	fun encodeRowTo(canvas: TextCanvas, row: Int, appendable: Appendable) {
 		// Reused heap allocation for building ANSI attributes inside the loop.
 		val attributes = mutableListOf<String>()
 
 		var lastPixel = blankPixel
 
-		val rowStart = row * surface.width
-		val rowStop = rowStart + surface.width
+		val rowStart = row * canvas.width
+		val rowStop = rowStart + canvas.width
 		for (columnIndex in rowStart until rowStop) {
-			val pixel = surface.cells[columnIndex]
+			val pixel = canvas.cells[columnIndex]
 
 			if (ansiLevel != AnsiLevel.NONE) {
 				if (pixel.foreground != lastPixel.foreground) {

@@ -280,10 +280,12 @@ public suspend fun runMosaic(content: @Composable () -> Unit) {
 			}
 
 			val ansiLevel = detectAnsiLevel()
+			val vtEncoder = VtEncoder(ansiLevel, supportsKittyUnderlines)
+
 			val rendering = if (env("MOSAIC_DEBUG_RENDERING") == "true") {
-				DebugVtDisplay(ansiLevel, supportsKittyUnderlines, TimeSource.Monotonic)
+				DebugVtDisplay(vtEncoder, TimeSource.Monotonic)
 			} else {
-				DefaultVtDisplay(ansiLevel, supportsSynchronizedRendering, supportsKittyUnderlines)
+				DefaultVtDisplay(vtEncoder, supportsSynchronizedRendering)
 			}
 
 			runMosaicComposition(rendering, keyEvents, terminalState, content)
