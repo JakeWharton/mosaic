@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import com.jakewharton.mosaic.Mosaic
 import com.jakewharton.mosaic.Terminal
 import com.jakewharton.mosaic.TextCanvas
+import com.jakewharton.mosaic.VtEncoder
 import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.ui.AnsiLevel
 import kotlin.coroutines.CoroutineContext
@@ -124,7 +125,13 @@ private class RealTestMosaic<T>(
 }
 
 internal object PlainTextSnapshots : SnapshotStrategy<String> {
+	private val vtEncoder = VtEncoder(
+		ansiLevel = AnsiLevel.NONE,
+		supportsKittyUnderlines = false,
+	)
+
 	override fun create(mosaic: Mosaic): String {
-		return mosaic.paint().render(AnsiLevel.NONE, false)
+		val canvas = mosaic.paint()
+		return vtEncoder.encode(canvas)
 	}
 }

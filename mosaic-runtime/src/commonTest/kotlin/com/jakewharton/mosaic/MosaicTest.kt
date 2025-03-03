@@ -107,9 +107,11 @@ class MosaicTest {
 
 		runMosaicComposition(
 			vtDisplay = DefaultVtDisplay(
-				ansiLevel = AnsiLevel.NONE,
+				vtEncoder = VtEncoder(
+					ansiLevel = AnsiLevel.NONE,
+					supportsKittyUnderlines = false,
+				),
 				synchronizedRendering = false,
-				supportsKittyUnderlines = false,
 			),
 			keyEvents = Channel(),
 			terminalState = mutableStateOf(Terminal.Default),

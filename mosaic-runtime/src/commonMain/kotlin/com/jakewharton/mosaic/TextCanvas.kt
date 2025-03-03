@@ -10,7 +10,6 @@ import com.jakewharton.mosaic.ui.isSpecifiedUnderlineStyle
 import de.cketti.codepoints.appendCodePoint
 import kotlin.jvm.JvmField
 
-@MosaicUnstableApi
 public class TextCanvas(
 	public val width: Int,
 	public val height: Int,
@@ -44,7 +43,6 @@ public class TextCanvas(
 	}
 }
 
-@MosaicUnstableApi
 public class TextPixel(
 	public var codePoint: Int,
 ) {

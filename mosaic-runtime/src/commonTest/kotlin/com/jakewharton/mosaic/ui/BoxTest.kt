@@ -22,6 +22,7 @@ import com.jakewharton.mosaic.layout.size
 import com.jakewharton.mosaic.layout.width
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.position
+import com.jakewharton.mosaic.render
 import com.jakewharton.mosaic.s
 import com.jakewharton.mosaic.size
 import com.jakewharton.mosaic.testIntrinsics
@@ -61,7 +62,7 @@ class BoxTest {
 			assertThat(positionedChildContainerNode.size).isEqualTo(IntSize(size, size))
 			assertThat(positionedChildContainerNode.position).isEqualTo(IntOffset.Zero)
 
-			assertThat(rootNode.paint().render(AnsiLevel.NONE, false)).isEqualTo(
+			assertThat(rootNode.paint().render()).isEqualTo(
 				"""
 				|     $s
 				|     $s
@@ -143,7 +144,7 @@ class BoxTest {
 			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(size, size))
 			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset.Zero)
 
-			assertThat(rootNode.paint().render(AnsiLevel.NONE, false)).isEqualTo(
+			assertThat(rootNode.paint().render()).isEqualTo(
 				"""
 				|     $s
 				| $TestChar$TestChar$TestChar$TestChar$TestChar
@@ -190,7 +191,7 @@ class BoxTest {
 			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(size, size))
 			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset.Zero)
 
-			assertThat(rootNode.paint().render(AnsiLevel.NONE, false)).isEqualTo(
+			assertThat(rootNode.paint().render()).isEqualTo(
 				"""
 				|$TestChar$TestChar$TestChar$TestChar$TestChar$s
 				|$TestChar$TestChar$TestChar$TestChar$TestChar$s
@@ -237,7 +238,7 @@ class BoxTest {
 			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(size, size))
 			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset.Zero)
 
-			assertThat(rootNode.paint().render(AnsiLevel.NONE, false)).isEqualTo(
+			assertThat(rootNode.paint().render()).isEqualTo(
 				"""
 				| $TestChar$TestChar$TestChar$TestChar$s
 				| $TestChar$TestChar$TestChar$TestChar$s
@@ -284,7 +285,7 @@ class BoxTest {
 			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(size, size))
 			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset.Zero)
 
-			assertThat(rootNode.paint().render(AnsiLevel.NONE, false)).isEqualTo(
+			assertThat(rootNode.paint().render()).isEqualTo(
 				"""
 				|     $s
 				|$TestChar$TestChar$TestChar$TestChar$TestChar$TestChar

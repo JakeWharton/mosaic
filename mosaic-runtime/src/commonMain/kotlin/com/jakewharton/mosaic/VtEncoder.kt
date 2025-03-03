@@ -14,11 +14,11 @@ import com.jakewharton.mosaic.ui.isSpecifiedColor
 import com.jakewharton.mosaic.ui.isUnspecifiedColor
 import de.cketti.codepoints.appendCodePoint
 
-internal class VtEncoder(
+public class VtEncoder(
 	private val ansiLevel: AnsiLevel,
 	private val supportsKittyUnderlines: Boolean,
 ) {
-	fun encode(canvas: TextCanvas): String {
+	public fun encode(canvas: TextCanvas): String {
 		return buildString {
 			if (canvas.height > 0) {
 				for (rowIndex in 0 until canvas.height) {
@@ -33,7 +33,7 @@ internal class VtEncoder(
 
 	private val blankPixel = TextPixel(' '.code)
 
-	fun encodeRowTo(canvas: TextCanvas, row: Int, appendable: Appendable) {
+	public fun encodeRowTo(canvas: TextCanvas, row: Int, appendable: Appendable) {
 		// Reused heap allocation for building ANSI attributes inside the loop.
 		val attributes = mutableListOf<String>()
 

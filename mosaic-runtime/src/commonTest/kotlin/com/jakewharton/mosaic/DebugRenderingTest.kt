@@ -23,8 +23,10 @@ import kotlinx.coroutines.test.runTest
 class DebugRenderingTest {
 	private val timeSource = TestTimeSource()
 	private val rendering = DebugVtDisplay(
-		ansiLevel = AnsiLevel.TRUECOLOR,
-		supportsKittyUnderlines = false,
+		vtEncoder = VtEncoder(
+			ansiLevel = AnsiLevel.TRUECOLOR,
+			supportsKittyUnderlines = false,
+		),
 		systemClock = timeSource,
 	)
 

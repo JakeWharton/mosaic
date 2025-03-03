@@ -269,5 +269,5 @@ internal fun AtLeastSize(
 	)
 }
 
-fun TextCanvas.render() = render(NONE, false)
+fun TextCanvas.render() = VtEncoder(NONE, false).encode(this)
 fun List<TextCanvas>.render() = map { it.render() }

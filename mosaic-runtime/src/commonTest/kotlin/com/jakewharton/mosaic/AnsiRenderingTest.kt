@@ -13,9 +13,11 @@ import kotlinx.coroutines.test.runTest
 
 class AnsiRenderingTest {
 	private val rendering = DefaultVtDisplay(
-		ansiLevel = AnsiLevel.TRUECOLOR,
+		vtEncoder = VtEncoder(
+			ansiLevel = AnsiLevel.TRUECOLOR,
+			supportsKittyUnderlines = false,
+		),
 		synchronizedRendering = true,
-		supportsKittyUnderlines = false,
 	)
 
 	@Test fun firstRender() = runTest {

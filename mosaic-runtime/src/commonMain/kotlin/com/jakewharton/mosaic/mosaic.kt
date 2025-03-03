@@ -335,13 +335,10 @@ internal inline fun <T> MutableState<T>.update(updater: T.() -> T) {
 public interface Mosaic {
 	public fun setContent(content: @Composable () -> Unit)
 
-	@MosaicUnstableApi
 	public fun paint(): TextCanvas
 
-	@MosaicUnstableApi
 	public fun paintStaticsTo(list: MutableObjectList<TextCanvas>)
 
-	@MosaicUnstableApi
 	public fun paintStatics(): List<TextCanvas> {
 		return mutableObjectListOf<TextCanvas>()
 			.apply(::paintStaticsTo)
@@ -429,14 +426,12 @@ internal class MosaicComposition(
 		onDraw(this)
 	}
 
-	@MosaicUnstableApi
 	override fun paint(): TextCanvas {
 		return Snapshot.observe(readObserver = drawBlockStateReadObserver) {
 			rootNode.paint()
 		}
 	}
 
-	@MosaicUnstableApi
 	override fun paintStaticsTo(list: MutableObjectList<TextCanvas>) {
 		rootNode.paintStaticsTo(list)
 	}
