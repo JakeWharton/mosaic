@@ -74,8 +74,6 @@ jobs:
             target: macosArm64
           - os: macOS-15
             target: macosArm64
-          - os: ubuntu-20.04
-            target: linuxX64
           - os: ubuntu-22.04
             target: linuxX64
           - os: ubuntu-22.04-arm
@@ -87,6 +85,8 @@ jobs:
           - os: windows-2019
             target: mingwX64
           - os: windows-2022
+            target: mingwX64
+          - os: windows-2025
             target: mingwX64
         tests:
           - type: native
