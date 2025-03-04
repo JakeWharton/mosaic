@@ -1,5 +1,8 @@
 package com.jakewharton.mosaic.tty
 
+import java.io.InputStream
+import java.io.OutputStream
+
 public actual class Tty internal constructor(
 	private var ttyPtr: Long,
 ) : AutoCloseable {
@@ -13,6 +16,12 @@ public actual class Tty internal constructor(
 			return null
 		}
 	}
+
+	/** Read from the TTY using a regular [InputStream]. */
+	public fun asInputStream(): InputStream = TtyInputStream(this)
+
+	/** Write to the TTY using a regular [OutputStream]. */
+	public fun asOutputStream(): OutputStream = TtyOutputStream(this)
 
 	private var callbackPtr = 0L
 

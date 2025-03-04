@@ -19,6 +19,8 @@ public final class com/jakewharton/mosaic/tty/TestTty$Companion {
 
 public final class com/jakewharton/mosaic/tty/Tty : java/lang/AutoCloseable {
 	public static final field Companion Lcom/jakewharton/mosaic/tty/Tty$Companion;
+	public final fun asInputStream ()Ljava/io/InputStream;
+	public final fun asOutputStream ()Ljava/io/OutputStream;
 	public fun close ()V
 	public final fun currentSize ()[I
 	public final fun enableRawMode ()V
