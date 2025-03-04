@@ -22,8 +22,7 @@ typedef struct MosaicTtyImpl {
 MosaicTtyInitResult tty_initWithHandles(
 	HANDLE stdin,
 	HANDLE stdout,
-	HANDLE stderr,
-	MosaicTtyCallback *callback
+	HANDLE stderr
 );
 
 #endif // MOSAIC_TTY_WINDOWS_H

@@ -45,9 +45,10 @@ kotlin {
 
 		commonTest {
 			dependencies {
+				implementation libs.androidx.annotation
+				implementation libs.assertk
 				implementation libs.kotlin.test
 				implementation libs.kotlinx.coroutines.test
-				implementation libs.assertk
 			}
 		}
 	}

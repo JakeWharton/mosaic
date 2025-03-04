@@ -137,11 +137,9 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyCallbackFree(
 JNIEXPORT jlong JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_ttyInit(
 	JNIEnv *env,
-	jclass type UNUSED,
-	jlong callbackOpaque
+	jclass type UNUSED
 ) {
-	MosaicTtyCallback *callback = (MosaicTtyCallback *) callbackOpaque;
-	MosaicTtyInitResult result = tty_init(callback);
+	MosaicTtyInitResult result = tty_init();
 	if (likely(!result.error)) {
 		return (jlong) result.tty;
 	}
@@ -150,6 +148,18 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyInit(
 	// will occur from returning 0 (which is otherwise ignored if the throw succeeds).
 	throwIse(env, result.error);
 	return 0;
+}
+
+JNIEXPORT void JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_ttySetCallback(
+	JNIEnv *env UNUSED,
+	jclass type UNUSED,
+	jlong ttyOpaque,
+	jlong callbackOpaque
+) {
+	MosaicTty *tty = (MosaicTty *) ttyOpaque;
+	MosaicTtyCallback *callback = (MosaicTtyCallback *) callbackOpaque;
+	tty_setCallback(tty, callback);
 }
 
 JNIEXPORT jint JNICALL
@@ -352,11 +362,9 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyFree(
 JNIEXPORT jlong JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_testTtyInit(
 	JNIEnv *env,
-	jclass type UNUSED,
-	jlong callbackOpaque
+	jclass type UNUSED
 ) {
-	MosaicTtyCallback *callback = (MosaicTtyCallback *) callbackOpaque;
-	MosaicTestTtyInitResult result = testTty_init(callback);
+	MosaicTestTtyInitResult result = testTty_init();
 	if (likely(!result.error)) {
 		return (jlong) result.testTty;
 	}

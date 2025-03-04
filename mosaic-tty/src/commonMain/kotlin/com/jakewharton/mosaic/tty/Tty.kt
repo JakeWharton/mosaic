@@ -2,8 +2,16 @@ package com.jakewharton.mosaic.tty
 
 public expect class Tty : AutoCloseable {
 	public companion object {
-		public fun create(callback: Callback): Tty
+		public fun create(): Tty
 	}
+
+	/**
+	 * Set or clear the callback used for reporting events about the terminal using platform-specific
+	 * integration. The callback may be invoked on any thread and must never throw an exception.
+	 * On Windows the callback will only be invoked during calls to [readInput] or
+	 * [readInputWithTimeout].
+	 */
+	public fun setCallback(callback: Callback?)
 
 	/**
 	 * Read up to [count] bytes into [buffer] at [offset] from the standard input stream.
@@ -63,7 +71,7 @@ public expect class Tty : AutoCloseable {
 
 	/**
 	 * Use platform-specific window monitoring to call [Callback.onResize] when the OS determines
-	 * the terminal window size has changed.
+	 * the terminal window size has changed. You *must* call [setCallback] to monitor these events.
 	 *
 	 * Note: Before enabling this, consider querying the terminal for support of
 	 * [mode 2048 in-band resize events](https://gist.github.com/rockorager/e695fb2924d36b2bcf1fff4a3704bd83)
@@ -86,11 +94,7 @@ public expect class Tty : AutoCloseable {
 	/** @return Array of `[columns, rows, width, height]` */
 	public fun currentSize(): IntArray
 
-	/**
-	 * Free the resources associated with this reader.
-	 *
-	 * This call can be omitted if your process is exiting.
-	 */
+	/** Reset TTY state and free the resources associated with this reader. */
 	override fun close()
 
 	public interface Callback {

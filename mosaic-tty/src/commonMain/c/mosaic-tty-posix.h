@@ -18,8 +18,7 @@ typedef struct MosaicTtyImpl {
 MosaicTtyInitResult tty_initWithFds(
 	int stdinReadFd,
 	int stdoutWriteFd,
-	int stderrWriteFd,
-	MosaicTtyCallback *callback
+	int stderrWriteFd
 );
 
 #endif // MOSAIC_TTY_POSIX_H

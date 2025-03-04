@@ -16,8 +16,7 @@
 MosaicTtyInitResult tty_initWithFds(
 	int stdinReadFd,
 	int stdoutWriteFd,
-	int stderrWriteFd,
-	MosaicTtyCallback *callback
+	int stderrWriteFd
 ) {
 	MosaicTtyInitResult result = {};
 
@@ -38,7 +37,6 @@ MosaicTtyInitResult tty_initWithFds(
 	tty->stderr_write_fd = stderrWriteFd;
 	tty->interrupt_read_fd = interrupt_pipe[0];
 	tty->interrupt_write_fd = interrupt_pipe[1];
-	tty->callback = callback;
 
 	result.tty = tty;
 
@@ -50,8 +48,12 @@ MosaicTtyInitResult tty_initWithFds(
 	goto ret;
 }
 
-MosaicTtyInitResult tty_init(MosaicTtyCallback *callback) {
-	return tty_initWithFds(STDIN_FILENO, STDOUT_FILENO, STDERR_FILENO, callback);
+MosaicTtyInitResult tty_init() {
+	return tty_initWithFds(STDIN_FILENO, STDOUT_FILENO, STDERR_FILENO);
+}
+
+void tty_setCallback(MosaicTty *tty, MosaicTtyCallback *callback) {
+	tty->callback = callback;
 }
 
 static MosaicTtyIoResult tty_readInputInternal(
@@ -152,9 +154,14 @@ void sigwinchHandler(int value UNUSED) {
 	struct winsize size;
 	if (ioctl(globalTty->stdin_read_fd, TIOCGWINSZ, &size) != -1) {
 		MosaicTtyCallback *callback = globalTty->callback;
-		callback->onResize(callback->opaque, size.ws_col, size.ws_row, size.ws_xpixel, size.ws_ypixel);
+		if (likely(callback)) {
+			callback->onResize(callback->opaque, size.ws_col, size.ws_row, size.ws_xpixel, size.ws_ypixel);
+		} else {
+			// TODO Send warning somewhere? Maybe once we get debug logs working.
+		}
+	} else {
+		// TODO Send errno somewhere? Maybe once we get debug logs working.
 	}
-	// TODO Send errno somewhere? Maybe once we get debug logs working.
 }
 
 uint32_t tty_enableRawMode(MosaicTty *tty) {

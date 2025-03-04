@@ -14,7 +14,7 @@ typedef struct MosaicTestTtyImpl {
 	MosaicTty *tty;
 } MosaicTestTtyImpl;
 
-MosaicTestTtyInitResult testTty_init(MosaicTtyCallback *callback) {
+MosaicTestTtyInitResult testTty_init() {
 	MosaicTestTtyInitResult result = {};
 
 	MosaicTestTtyImpl *testTty = calloc(1, sizeof(MosaicTestTtyImpl));
@@ -34,7 +34,7 @@ MosaicTestTtyInitResult testTty_init(MosaicTtyCallback *callback) {
 	int stdoutWriteFd = STDOUT_FILENO;
 	int stderrWriteFd = STDERR_FILENO;
 
-	MosaicTtyInitResult ttyInitResult = tty_initWithFds(stdinReadFd, stdoutWriteFd, stderrWriteFd, callback);
+	MosaicTtyInitResult ttyInitResult = tty_initWithFds(stdinReadFd, stdoutWriteFd, stderrWriteFd);
 	if (unlikely(ttyInitResult.error)) {
 		result.error = ttyInitResult.error;
 		goto err;
@@ -89,7 +89,9 @@ uint32_t testTty_mouseEvent(MosaicTestTty *testTty UNUSED) {
 
 uint32_t testTty_resizeEvent(MosaicTestTty *testTty, int columns, int rows, int width, int height) {
 	MosaicTtyCallback *callback = testTty->tty->callback;
-	callback->onResize(callback->opaque, columns, rows, width, height);
+	if (callback) {
+		callback->onResize(callback->opaque, columns, rows, width, height);
+	}
 	return 0;
 }
 

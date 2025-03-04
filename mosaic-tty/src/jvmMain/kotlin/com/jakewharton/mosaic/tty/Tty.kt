@@ -2,21 +2,38 @@ package com.jakewharton.mosaic.tty
 
 public actual class Tty internal constructor(
 	private var ttyPtr: Long,
-	private val callbackPtr: Long,
 ) : AutoCloseable {
 	public actual companion object {
 		@JvmStatic
-		public actual fun create(callback: Callback): Tty {
-			val callbackPtr = Jni.ttyCallbackInit(callback)
-			if (callbackPtr != 0L) {
-				val ttyPtr = Jni.ttyInit(callbackPtr)
-				if (ttyPtr != 0L) {
-					return Tty(ttyPtr, callbackPtr)
-				}
-				Jni.ttyCallbackFree(callbackPtr)
+		public actual fun create(): Tty {
+			val ttyPtr = Jni.ttyInit()
+			if (ttyPtr != 0L) {
+				return Tty(ttyPtr)
 			}
 			throw OutOfMemoryError()
 		}
+	}
+
+	private var callbackPtr = 0L
+
+	public actual fun setCallback(callback: Callback?) {
+		val oldCallbackPtr = callbackPtr
+		if (oldCallbackPtr != 0L) {
+			Jni.ttyCallbackFree(oldCallbackPtr)
+		}
+
+		val newCallbackPtr = if (callback != null) {
+			Jni.ttyCallbackInit(callback).also { ptr ->
+				if (ptr == 0L) {
+					throw OutOfMemoryError()
+				}
+			}
+		} else {
+			0L
+		}
+
+		callbackPtr = newCallbackPtr
+		Jni.ttySetCallback(ttyPtr, newCallbackPtr)
 	}
 
 	public actual fun readInput(buffer: ByteArray, offset: Int, count: Int): Int {
@@ -55,7 +72,11 @@ public actual class Tty internal constructor(
 		if (ttyPtr != 0L) {
 			Jni.ttyFree(ttyPtr)
 			ttyPtr = 0
-			Jni.ttyCallbackFree(callbackPtr)
+
+			if (callbackPtr != 0L) {
+				Jni.ttyCallbackFree(callbackPtr)
+				callbackPtr = 0
+			}
 		}
 	}
 

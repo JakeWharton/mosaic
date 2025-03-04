@@ -2,8 +2,6 @@ package com.jakewharton.mosaic.tty
 
 import com.jakewharton.mosaic.tty.Jni.testTtyGetTty
 import com.jakewharton.mosaic.tty.Jni.testTtyInit
-import com.jakewharton.mosaic.tty.Jni.ttyCallbackFree
-import com.jakewharton.mosaic.tty.Jni.ttyCallbackInit
 
 public actual class TestTty private constructor(
 	private var testTtyPtr: Long,
@@ -11,16 +9,12 @@ public actual class TestTty private constructor(
 ) : AutoCloseable {
 	public actual companion object {
 		@JvmStatic
-		public actual fun create(callback: Tty.Callback): TestTty {
-			val callbackPtr = ttyCallbackInit(callback)
-			if (callbackPtr != 0L) {
-				val testTtyPtr = testTtyInit(callbackPtr)
-				if (testTtyPtr != 0L) {
-					val ttyPtr = testTtyGetTty(testTtyPtr)
-					val tty = Tty(ttyPtr, callbackPtr)
-					return TestTty(testTtyPtr, tty)
-				}
-				ttyCallbackFree(callbackPtr)
+		public actual fun create(): TestTty {
+			val testTtyPtr = testTtyInit()
+			if (testTtyPtr != 0L) {
+				val ttyPtr = testTtyGetTty(testTtyPtr)
+				val tty = Tty(ttyPtr)
+				return TestTty(testTtyPtr, tty)
 			}
 			throw OutOfMemoryError()
 		}

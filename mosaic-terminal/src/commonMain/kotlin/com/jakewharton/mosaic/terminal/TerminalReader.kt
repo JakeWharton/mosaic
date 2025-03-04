@@ -17,9 +17,10 @@ import kotlinx.coroutines.channels.ReceiveChannel
  * by a [DebugEvent] that contains the original event and the bytes which produced it.
  */
 public fun TerminalReader(emitDebugEvents: Boolean = false): TerminalReader {
+	val tty = Tty.create()
 	val events = Channel<Event>(UNLIMITED)
 	val callback = EventChannelTtyCallback(events, emitDebugEvents)
-	val tty = Tty.create(callback)
+	tty.setCallback(callback)
 	val parser = TerminalParser(tty)
 	return TerminalReader(tty, parser, events, emitDebugEvents)
 }

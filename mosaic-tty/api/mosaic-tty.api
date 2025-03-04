@@ -2,7 +2,7 @@ public final class com/jakewharton/mosaic/tty/TestTty : java/lang/AutoCloseable 
 	public static final field Companion Lcom/jakewharton/mosaic/tty/TestTty$Companion;
 	public synthetic fun <init> (JLcom/jakewharton/mosaic/tty/Tty;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun close ()V
-	public static final fun create (Lcom/jakewharton/mosaic/tty/Tty$Callback;)Lcom/jakewharton/mosaic/tty/TestTty;
+	public static final fun create ()Lcom/jakewharton/mosaic/tty/TestTty;
 	public final fun focusEvent (Z)V
 	public final fun getTty ()Lcom/jakewharton/mosaic/tty/Tty;
 	public final fun keyEvent ()V
@@ -12,19 +12,20 @@ public final class com/jakewharton/mosaic/tty/TestTty : java/lang/AutoCloseable 
 }
 
 public final class com/jakewharton/mosaic/tty/TestTty$Companion {
-	public final fun create (Lcom/jakewharton/mosaic/tty/Tty$Callback;)Lcom/jakewharton/mosaic/tty/TestTty;
+	public final fun create ()Lcom/jakewharton/mosaic/tty/TestTty;
 }
 
 public final class com/jakewharton/mosaic/tty/Tty : java/lang/AutoCloseable {
 	public static final field Companion Lcom/jakewharton/mosaic/tty/Tty$Companion;
 	public fun close ()V
-	public static final fun create (Lcom/jakewharton/mosaic/tty/Tty$Callback;)Lcom/jakewharton/mosaic/tty/Tty;
+	public static final fun create ()Lcom/jakewharton/mosaic/tty/Tty;
 	public final fun currentSize ()[I
 	public final fun enableRawMode ()V
 	public final fun enableWindowResizeEvents ()V
 	public final fun interruptRead ()V
 	public final fun readInput ([BII)I
 	public final fun readInputWithTimeout ([BIII)I
+	public final fun setCallback (Lcom/jakewharton/mosaic/tty/Tty$Callback;)V
 	public final fun writeError ([BII)I
 	public final fun writeOutput ([BII)I
 }
@@ -37,6 +38,6 @@ public abstract interface class com/jakewharton/mosaic/tty/Tty$Callback {
 }
 
 public final class com/jakewharton/mosaic/tty/Tty$Companion {
-	public final fun create (Lcom/jakewharton/mosaic/tty/Tty$Callback;)Lcom/jakewharton/mosaic/tty/Tty;
+	public final fun create ()Lcom/jakewharton/mosaic/tty/Tty;
 }
 

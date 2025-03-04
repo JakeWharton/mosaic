@@ -16,22 +16,13 @@ import kotlinx.cinterop.usePinned
 
 public actual class Tty internal constructor(
 	ptr: CPointer<MosaicTty>,
-	private val callbackPtr: CPointer<MosaicTtyCallback>,
-	private val callbackRef: StableRef<Callback>,
 ) : AutoCloseable {
 	public actual companion object {
-		public actual fun create(callback: Callback): Tty {
-			val callbackRef = StableRef.create(callback)
-			val callbackPtr = callbackRef.toNativeAllocationIn(nativeHeap).ptr
-
-			tty_init(callbackPtr).useContents {
+		public actual fun create(): Tty {
+			tty_init().useContents {
 				tty?.let { ttyPtr ->
-					return Tty(ttyPtr, callbackPtr, callbackRef)
+					return Tty(ttyPtr)
 				}
-
-				nativeHeap.free(callbackPtr)
-				callbackRef.dispose()
-
 				if (error != 0U) {
 					throwIse(error)
 				}
@@ -41,6 +32,25 @@ public actual class Tty internal constructor(
 	}
 
 	private var ptr: CPointer<MosaicTty>? = ptr
+	private var callbackPtrAndRef: Pair<CPointer<MosaicTtyCallback>, StableRef<Callback>>? = null
+
+	public actual fun setCallback(callback: Callback?) {
+		callbackPtrAndRef?.let { (callbackPtr, callbackRef) ->
+			nativeHeap.free(callbackPtr)
+			callbackRef.dispose()
+			callbackPtrAndRef = null
+		}
+
+		val callbackPtr = callback?.let { callback ->
+			val callbackRef = StableRef.create(callback)
+			val callbackPtr = callbackRef.toNativeAllocationIn(nativeHeap).ptr
+
+			callbackPtrAndRef = callbackPtr to callbackRef
+			callbackPtr
+		}
+
+		tty_setCallback(ptr, callbackPtr)
+	}
 
 	public actual fun readInput(buffer: ByteArray, offset: Int, count: Int): Int {
 		buffer.asUByteArray().usePinned {
@@ -110,8 +120,12 @@ public actual class Tty internal constructor(
 			this.ptr = null
 
 			val error = tty_free(ptr)
-			nativeHeap.free(callbackPtr)
-			callbackRef.dispose()
+
+			callbackPtrAndRef?.let { (callbackPtr, callbackRef) ->
+				nativeHeap.free(callbackPtr)
+				callbackRef.dispose()
+				callbackPtrAndRef = null
+			}
 
 			if (error == 0U) return
 			throwIse(error)

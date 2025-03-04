@@ -14,7 +14,7 @@ typedef struct MosaicTestTtyImpl {
 // and over eventually produces a failure, so we only do it once per process (since it's test only).
 static HANDLE writerConin = NULL;
 
-MosaicTestTtyInitResult testTty_init(MosaicTtyCallback *callback) {
+MosaicTestTtyInitResult testTty_init() {
 	MosaicTestTtyInitResult result = {};
 
 	MosaicTestTtyImpl *testTty = calloc(1, sizeof(MosaicTestTtyImpl));
@@ -45,7 +45,7 @@ MosaicTestTtyInitResult testTty_init(MosaicTtyCallback *callback) {
 	HANDLE stdout = GetStdHandle(STD_OUTPUT_HANDLE);
 	HANDLE stderr = GetStdHandle(STD_ERROR_HANDLE);
 
-	MosaicTtyInitResult ttyInitResult = tty_initWithHandles(stdin, stdout, stderr, callback);
+	MosaicTtyInitResult ttyInitResult = tty_initWithHandles(stdin, stdout, stderr);
 	if (unlikely(ttyInitResult.error)) {
 		result.error = ttyInitResult.error;
 		goto err;

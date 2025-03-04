@@ -9,8 +9,7 @@
 MosaicTtyInitResult tty_initWithHandles(
 	HANDLE stdin,
 	HANDLE stdout,
-	HANDLE stderr,
-	MosaicTtyCallback *callback
+	HANDLE stderr
 ) {
 	MosaicTtyInitResult result = {};
 
@@ -43,7 +42,6 @@ MosaicTtyInitResult tty_initWithHandles(
 	tty->stdout = stdout;
 	tty->stderr = stderr;
 	tty->interrupt_event = interruptEvent;
-	tty->callback = callback;
 
 	result.tty = tty;
 
@@ -55,11 +53,15 @@ MosaicTtyInitResult tty_initWithHandles(
 	goto ret;
 }
 
-MosaicTtyInitResult tty_init(MosaicTtyCallback *callback) {
+MosaicTtyInitResult tty_init() {
 	HANDLE stdin = GetStdHandle(STD_INPUT_HANDLE);
 	HANDLE stdout = GetStdHandle(STD_OUTPUT_HANDLE);
 	HANDLE stderr = GetStdHandle(STD_ERROR_HANDLE);
-	return tty_initWithHandles(stdin, stdout, stderr, callback);
+	return tty_initWithHandles(stdin, stdout, stderr);
+}
+
+void tty_setCallback(MosaicTty *tty, MosaicTtyCallback *callback) {
+	tty->callback = callback;
 }
 
 MosaicTtyIoResult tty_readInput(
@@ -103,14 +105,18 @@ MosaicTtyIoResult tty_readInputWithTimeout(
 			} else if (record.EventType == MOUSE_EVENT) {
 				// TODO mouse shit
 			} else if (record.EventType == FOCUS_EVENT) {
-				callback->onFocus(callback->opaque, record.Event.FocusEvent.bSetFocus);
+				if (callback) {
+					callback->onFocus(callback->opaque, record.Event.FocusEvent.bSetFocus);
+				}
 			} else if (record.EventType == WINDOW_BUFFER_SIZE_EVENT && tty->windowResizeEvents) {
-				callback->onResize(
-					callback->opaque,
-					record.Event.WindowBufferSizeEvent.dwSize.X,
-					record.Event.WindowBufferSizeEvent.dwSize.Y,
-					0, 0
-				);
+				if (callback) {
+					callback->onResize(
+						callback->opaque,
+						record.Event.WindowBufferSizeEvent.dwSize.X,
+						record.Event.WindowBufferSizeEvent.dwSize.Y,
+						0, 0
+					);
+				}
 			}
 		}
 

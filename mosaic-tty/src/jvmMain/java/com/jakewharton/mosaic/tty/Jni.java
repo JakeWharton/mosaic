@@ -60,7 +60,9 @@ final class Jni {
 
 	static native void ttyCallbackFree(long callbackPtr);
 
-	static native long ttyInit(long callbackPtr);
+	static native long ttyInit();
+
+	static native long ttySetCallback(long ttyPtr, long callbackPtr);
 
 	static native int ttyReadInput(
 		long ttyPtr,
@@ -105,7 +107,7 @@ final class Jni {
 
 	static native void ttyFree(long ttyPtr);
 
-	static native long testTtyInit(long callbackPtr);
+	static native long testTtyInit();
 
 	static native long testTtyGetTty(long testTtyPtr);
 

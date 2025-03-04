@@ -3,17 +3,11 @@ package com.jakewharton.mosaic.terminal
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.tty.TestTty
-import com.jakewharton.mosaic.tty.Tty
 import kotlin.test.AfterTest
 import kotlinx.coroutines.test.runTest
 
 abstract class BaseTerminalParserTest {
-	internal val testTty = TestTty.create(object : Tty.Callback {
-		override fun onFocus(focused: Boolean) {}
-		override fun onKey() {}
-		override fun onMouse() {}
-		override fun onResize(columns: Int, rows: Int, width: Int, height: Int) {}
-	})
+	internal val testTty = TestTty.create()
 	private val tty = testTty.tty
 	internal val parser = TerminalParser(tty)
 

@@ -18,7 +18,7 @@ final class com.jakewharton.mosaic.tty/TestTty : kotlin/AutoCloseable { // com.j
     final fun write(kotlin/ByteArray) // com.jakewharton.mosaic.tty/TestTty.write|write(kotlin.ByteArray){}[0]
 
     final object Companion { // com.jakewharton.mosaic.tty/TestTty.Companion|null[0]
-        final fun create(com.jakewharton.mosaic.tty/Tty.Callback): com.jakewharton.mosaic.tty/TestTty // com.jakewharton.mosaic.tty/TestTty.Companion.create|create(com.jakewharton.mosaic.tty.Tty.Callback){}[0]
+        final fun create(): com.jakewharton.mosaic.tty/TestTty // com.jakewharton.mosaic.tty/TestTty.Companion.create|create(){}[0]
     }
 }
 
@@ -30,6 +30,7 @@ final class com.jakewharton.mosaic.tty/Tty : kotlin/AutoCloseable { // com.jakew
     final fun interruptRead() // com.jakewharton.mosaic.tty/Tty.interruptRead|interruptRead(){}[0]
     final fun readInput(kotlin/ByteArray, kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.tty/Tty.readInput|readInput(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
     final fun readInputWithTimeout(kotlin/ByteArray, kotlin/Int, kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.tty/Tty.readInputWithTimeout|readInputWithTimeout(kotlin.ByteArray;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+    final fun setCallback(com.jakewharton.mosaic.tty/Tty.Callback?) // com.jakewharton.mosaic.tty/Tty.setCallback|setCallback(com.jakewharton.mosaic.tty.Tty.Callback?){}[0]
     final fun writeError(kotlin/ByteArray, kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.tty/Tty.writeError|writeError(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
     final fun writeOutput(kotlin/ByteArray, kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.tty/Tty.writeOutput|writeOutput(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
 
@@ -41,6 +42,6 @@ final class com.jakewharton.mosaic.tty/Tty : kotlin/AutoCloseable { // com.jakew
     }
 
     final object Companion { // com.jakewharton.mosaic.tty/Tty.Companion|null[0]
-        final fun create(com.jakewharton.mosaic.tty/Tty.Callback): com.jakewharton.mosaic.tty/Tty // com.jakewharton.mosaic.tty/Tty.Companion.create|create(com.jakewharton.mosaic.tty.Tty.Callback){}[0]
+        final fun create(): com.jakewharton.mosaic.tty/Tty // com.jakewharton.mosaic.tty/Tty.Companion.create|create(){}[0]
     }
 }
