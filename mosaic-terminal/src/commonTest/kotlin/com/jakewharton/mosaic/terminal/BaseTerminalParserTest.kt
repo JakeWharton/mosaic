@@ -17,6 +17,8 @@ abstract class BaseTerminalParserTest {
 	}
 
 	internal fun TestTty.writeHex(hex: String) {
-		write(hex.hexToByteArray())
+		val buffer = hex.hexToByteArray()
+		val written = writeInput(buffer, 0, buffer.size)
+		assertThat(written).isEqualTo(buffer.size)
 	}
 }

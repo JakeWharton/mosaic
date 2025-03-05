@@ -14,7 +14,7 @@ typedef struct MosaicTestTtyInitResult {
 
 MosaicTestTtyInitResult testTty_init();
 MosaicTty *testTty_getTty(MosaicTestTty *testTty);
-uint32_t testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int count);
+MosaicTtyIoResult testTty_writeInput(MosaicTestTty *testTty, uint8_t *buffer, int count);
 uint32_t testTty_focusEvent(MosaicTestTty *testTty, bool focused);
 uint32_t testTty_keyEvent(MosaicTestTty *testTty);
 uint32_t testTty_mouseEvent(MosaicTestTty *testTty);

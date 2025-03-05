@@ -57,19 +57,17 @@ MosaicTty *testTty_getTty(MosaicTestTty *testTty) {
 	return testTty->tty;
 }
 
-uint32_t testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int count) {
-	int stdinWriteFd = testTty->stdin_write_fd;
-	while (count > 0) {
-		int result = write(stdinWriteFd, buffer, count);
-		if (unlikely(result == -1)) {
-			goto err;
-		}
-		count = count - result;
-	}
-	return 0;
+MosaicTtyIoResult testTty_writeInput(MosaicTestTty *testTty, uint8_t *buffer, int count) {
+	MosaicTtyIoResult result = {};
 
-	err:
-	return errno;
+	int written = write(testTty->stdin_write_fd, buffer, count);
+	if (written != -1) {
+		result.count = written;
+	} else {
+		result.error = errno;
+	}
+
+	return result;
 }
 
 uint32_t testTty_focusEvent(MosaicTestTty *testTty UNUSED, bool focused UNUSED) {

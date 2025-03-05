@@ -111,7 +111,7 @@ final class Jni {
 
 	static native long testTtyGetTty(long testTtyPtr);
 
-	static native void testTtyWrite(long testTtyPtr, byte[] buffer);
+	static native int testTtyWriteInput(long testTtyPtr, byte[] buffer, int offset, int count);
 
 	static native void testTtyFocusEvent(long testTtyPtr, boolean focused);
 

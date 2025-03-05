@@ -66,12 +66,12 @@ MosaicTty *testTty_getTty(MosaicTestTty *testTty) {
 	return testTty->tty;
 }
 
-uint32_t testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int count) {
-	uint32_t result = 0;
+MosaicTtyIoResult testTty_writeInput(MosaicTestTty *testTty, uint8_t *buffer, int count) {
+	MosaicTtyIoResult result = {};
 
 	INPUT_RECORD *records = calloc(count, sizeof(INPUT_RECORD));
 	if (!records) {
-		result = ERROR_NOT_ENOUGH_MEMORY;
+		result.error = ERROR_NOT_ENOUGH_MEMORY;
 		goto ret;
 	}
 	for (int i = 0; i < count; i++) {
@@ -79,24 +79,17 @@ uint32_t testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int count) {
 		records[i].Event.KeyEvent.uChar.AsciiChar = buffer[i];
 	}
 
-	INPUT_RECORD *writeRecord = records;
-	while (count > 0) {
-		DWORD written;
-		if (!WriteConsoleInputW(testTty->tty->stdin, writeRecord, count, &written)) {
-			goto err;
-		}
-		count -= (int) written;
-		writeRecord += (int) written;
+	DWORD written;
+	if (WriteConsoleInputW(testTty->tty->stdin, records, count, &written)) {
+		result.count = written;
+	} else {
+		result.error = GetLastError();
 	}
 
-	ret:
 	free(records);
 
+	ret:
 	return result;
-
-	err:
-	result = GetLastError();
-	goto ret;
 }
 
 static uint32_t writeRecord(HANDLE h, INPUT_RECORD *record) {

@@ -375,27 +375,33 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyInit(
 	return 0;
 }
 
-JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_testTtyWrite(
+JNIEXPORT jint JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_testTtyWriteInput(
 	JNIEnv *env,
 	jclass type UNUSED,
 	jlong testTtyOpaque,
-	jbyteArray buffer
+	jbyteArray buffer,
+	jint offset,
+	jint count
 ) {
-	jsize count = (*env)->GetArrayLength(env, buffer);
 	jbyte *bufferElements = (*env)->GetByteArrayElements(env, buffer, NULL);
+	jbyte *bufferElementsAtOffset = bufferElements + offset;
 	// Reinterpret JVM signed bytes as unsigned.
-	uint8_t *nativeBuffer = (uint8_t *) bufferElements;
+	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
 
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
-	uint32_t error = testTty_write(testTty, nativeBuffer, count);
+	MosaicTtyIoResult result = testTty_writeInput(testTty, nativeBufferAtOffset, count);
 
 	(*env)->ReleaseByteArrayElements(env, buffer, bufferElements, 0);
 
-	if (unlikely(error)) {
-		// This throw can fail, but the only condition that should cause that is OOM. Oh well.
-		throwIse(env, error);
+	if (likely(!result.error)) {
+		return result.count;
 	}
+
+	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
+	// and should cause the program to try and exit cleanly.
+	throwIse(env, result.error);
+	return -1;
 }
 
 JNIEXPORT void JNICALL

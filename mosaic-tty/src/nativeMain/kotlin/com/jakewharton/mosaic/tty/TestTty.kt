@@ -26,12 +26,15 @@ public actual class TestTty private constructor(
 		}
 	}
 
-	public actual fun write(buffer: ByteArray) {
-		val error = buffer.asUByteArray().usePinned {
-			testTty_write(ptr, it.addressOf(0), buffer.size)
+	public actual fun writeInput(buffer: ByteArray, offset: Int, count: Int): Int {
+		buffer.asUByteArray().usePinned {
+			testTty_writeInput(ptr, it.addressOf(0), buffer.size).useContents {
+				if (error == 0U) {
+					return this.count
+				}
+				throwIse(error)
+			}
 		}
-		if (error == 0U) return
-		throwIse(error)
 	}
 
 	public actual fun focusEvent(focused: Boolean) {

@@ -29,12 +29,12 @@ class TtyTest {
 	@Test fun readWhatWasWritten() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		testTty.write("hello".encodeToByteArray())
+		testTty.writeInput("hello".encodeToByteArray())
 		val readA = tty.readInput(buffer, 0, 10)
 		assertThat(readA, "readA").isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("helloxxxxx")
 
-		testTty.write("world".encodeToByteArray())
+		testTty.writeInput("world".encodeToByteArray())
 		val readB = tty.readInput(buffer, 0, 10)
 		assertThat(readB, "readB").isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("worldxxxxx")
@@ -43,7 +43,7 @@ class TtyTest {
 	@Test fun readOnlyUpToCount() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		testTty.write("hello".encodeToByteArray())
+		testTty.writeInput("hello".encodeToByteArray())
 		val read = tty.readInput(buffer, 0, 4)
 		assertThat(read).isEqualTo(4)
 		assertThat(buffer.decodeToString()).isEqualTo("hellxxxxxx")
@@ -52,7 +52,7 @@ class TtyTest {
 	@Test fun readUnderflow() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		testTty.write("hello".encodeToByteArray())
+		testTty.writeInput("hello".encodeToByteArray())
 		val read = tty.readInput(buffer, 0, 10)
 		assertThat(read).isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("helloxxxxx")
@@ -61,7 +61,7 @@ class TtyTest {
 	@Test fun readAtOffset() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		testTty.write("hello".encodeToByteArray())
+		testTty.writeInput("hello".encodeToByteArray())
 		val read = tty.readInput(buffer, 5, 5)
 		assertThat(read).isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("xxxxxhello")
@@ -256,7 +256,7 @@ class TtyTest {
 	 */
 	private fun doWriteReadRoundtrip() {
 		val outgoing = "roundtrip".encodeToByteArray()
-		testTty.write(outgoing)
+		testTty.writeInput(outgoing)
 		var offset = 0
 		val incoming = ByteArray(1024)
 		while (offset < outgoing.size) {
@@ -284,5 +284,11 @@ class TtyTest {
 		override fun onResize(columns: Int, rows: Int, width: Int, height: Int) {
 			events += "$prefix onResize $columns $rows $width $height"
 		}
+	}
+
+	private fun TestTty.writeInput(buffer: ByteArray) {
+		// TODO Figure out public API to fully write a ByteArray.
+		val written = writeInput(buffer, 0, buffer.size)
+		assertThat(written).isEqualTo(buffer.size)
 	}
 }

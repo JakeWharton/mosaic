@@ -7,10 +7,7 @@ public expect class TestTty : AutoCloseable {
 
 	public val tty: Tty
 
-	// TODO Take ByteString once it migrates to stdlib,
-	//  or if Sink/RawSink migrates expose that as a val.
-	//  https://github.com/Kotlin/kotlinx-io/issues/354
-	public fun write(buffer: ByteArray)
+	public fun writeInput(buffer: ByteArray, offset: Int, count: Int): Int
 
 	/**
 	 * Send a focus event to [tty]'s callback.
