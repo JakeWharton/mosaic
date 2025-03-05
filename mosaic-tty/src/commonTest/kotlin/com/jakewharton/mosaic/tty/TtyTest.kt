@@ -41,12 +41,12 @@ class TtyTest {
 	@Test fun readWhatWasWritten() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		testTty.writeInput("hello".encodeToByteArray())
+		testTty.writeInput("hello")
 		val readA = tty.readInput(buffer, 0, 10)
 		assertThat(readA, "readA").isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("helloxxxxx")
 
-		testTty.writeInput("world".encodeToByteArray())
+		testTty.writeInput("world")
 		val readB = tty.readInput(buffer, 0, 10)
 		assertThat(readB, "readB").isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("worldxxxxx")
@@ -55,7 +55,7 @@ class TtyTest {
 	@Test fun readOnlyUpToCount() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		testTty.writeInput("hello".encodeToByteArray())
+		testTty.writeInput("hello")
 		val read = tty.readInput(buffer, 0, 4)
 		assertThat(read).isEqualTo(4)
 		assertThat(buffer.decodeToString()).isEqualTo("hellxxxxxx")
@@ -64,7 +64,7 @@ class TtyTest {
 	@Test fun readUnderflow() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		testTty.writeInput("hello".encodeToByteArray())
+		testTty.writeInput("hello")
 		val read = tty.readInput(buffer, 0, 10)
 		assertThat(read).isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("helloxxxxx")
@@ -73,7 +73,7 @@ class TtyTest {
 	@Test fun readAtOffset() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		testTty.writeInput("hello".encodeToByteArray())
+		testTty.writeInput("hello")
 		val read = tty.readInput(buffer, 5, 5)
 		assertThat(read).isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("xxxxxhello")
@@ -267,18 +267,9 @@ class TtyTest {
 	 * write-read round-trip to ensure all events were processed.
 	 */
 	private fun doWriteReadRoundtrip() {
-		val outgoing = "roundtrip".encodeToByteArray()
-		testTty.writeInput(outgoing)
-		var offset = 0
-		val incoming = ByteArray(1024)
-		while (offset < outgoing.size) {
-			val read = tty.readInput(incoming, offset, outgoing.size)
-			if (read == -1) {
-				throw RuntimeException("eof")
-			}
-			offset += read
-		}
-		assertThat(incoming.decodeToString(endIndex = offset)).isEqualTo("roundtrip")
+		val data = "roundtrip"
+		testTty.writeInput(data)
+		assertThat(tty.readInput(data.length)).isEqualTo(data)
 	}
 
 	inner class MyCallback(
@@ -296,11 +287,5 @@ class TtyTest {
 		override fun onResize(columns: Int, rows: Int, width: Int, height: Int) {
 			events += "$prefix onResize $columns $rows $width $height"
 		}
-	}
-
-	private fun TestTty.writeInput(buffer: ByteArray) {
-		// TODO Figure out public API to fully write a ByteArray.
-		val written = writeInput(buffer, 0, buffer.size)
-		assertThat(written).isEqualTo(buffer.size)
 	}
 }
