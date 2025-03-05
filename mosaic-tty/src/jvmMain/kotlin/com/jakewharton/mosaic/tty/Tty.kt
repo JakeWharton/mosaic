@@ -1,5 +1,8 @@
 package com.jakewharton.mosaic.tty
 
+import java.io.InputStream
+import java.io.OutputStream
+
 public actual class Tty internal constructor(
 	private var ttyPtr: Long,
 ) : AutoCloseable {
@@ -79,6 +82,10 @@ public actual class Tty internal constructor(
 			}
 		}
 	}
+
+	public val input: InputStream get() = TtyInputStream(this)
+	public val output: OutputStream get() = TtyOutputStream(this, false)
+	public val error: OutputStream get() = TtyOutputStream(this, true)
 
 	public actual interface Callback {
 		public actual fun onFocus(focused: Boolean)
