@@ -6,6 +6,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <signal.h>
+#include <stdatomic.h>
 #include <stdlib.h>
 #include <sys/ioctl.h>
 #include <sys/select.h>
@@ -48,8 +49,21 @@ MosaicTtyInitResult tty_initWithFds(
 	goto ret;
 }
 
+static _Atomic(MosaicTty *) globalTty;
+
 MosaicTtyInitResult tty_init() {
-	return tty_initWithFds(STDIN_FILENO, STDOUT_FILENO, STDERR_FILENO);
+	MosaicTtyInitResult result = tty_initWithFds(STDIN_FILENO, STDOUT_FILENO, STDERR_FILENO);
+
+	MosaicTty *tty = result.tty;
+	MosaicTty *expected = NULL;
+	if (likely(tty) && !atomic_compare_exchange_strong(&globalTty, &expected, tty)) {
+		// We initialized an instance but there already was a global instance.
+		result.tty = NULL;
+		result.error = tty_free(tty);
+		result.already_bound = true;
+	}
+
+	return result;
 }
 
 void tty_setCallback(MosaicTty *tty, MosaicTtyCallback *callback) {
@@ -147,20 +161,20 @@ MosaicTtyIoResult tty_writeError(MosaicTty *tty, uint8_t *buffer, int count) {
 	return tty_writeInternal(tty->stderr_write_fd, buffer, count);
 }
 
-// TODO Make sure this is only written once. Probably just one instance per process at a time.
-MosaicTty *globalTty = NULL;
-
 void sigwinchHandler(int value UNUSED) {
-	struct winsize size;
-	if (ioctl(globalTty->stdin_read_fd, TIOCGWINSZ, &size) != -1) {
-		MosaicTtyCallback *callback = globalTty->callback;
-		if (likely(callback)) {
-			callback->onResize(callback->opaque, size.ws_col, size.ws_row, size.ws_xpixel, size.ws_ypixel);
+	MosaicTty *tty = atomic_load(&globalTty);
+	if (likely(tty)) {
+		struct winsize size;
+		if (ioctl(tty->stdin_read_fd, TIOCGWINSZ, &size) != -1) {
+			MosaicTtyCallback *callback = tty->callback;
+			if (likely(callback)) {
+				callback->onResize(callback->opaque, size.ws_col, size.ws_row, size.ws_xpixel, size.ws_ypixel);
+			} else {
+				// TODO Send warning somewhere? Maybe once we get debug logs working.
+			}
 		} else {
-			// TODO Send warning somewhere? Maybe once we get debug logs working.
+			// TODO Send errno somewhere? Maybe once we get debug logs working.
 		}
-	} else {
-		// TODO Send errno somewhere? Maybe once we get debug logs working.
 	}
 }
 
@@ -222,12 +236,10 @@ uint32_t tty_enableWindowResizeEvents(MosaicTty *tty) {
 	sigemptyset(&action.sa_mask);
 	action.sa_flags = 0;
 
-	globalTty = tty;
 	if (likely(sigaction(SIGWINCH, &action, NULL) == 0)) {
 		tty->sigwinch = true;
 		return 0;
 	}
-	globalTty = NULL;
 	return errno;
 }
 
@@ -268,8 +280,8 @@ uint32_t tty_free(MosaicTty *tty) {
 		free(tty->saved);
 	}
 
+	atomic_store(&globalTty, NULL);
 	free(tty);
-
 	return result;
 }
 

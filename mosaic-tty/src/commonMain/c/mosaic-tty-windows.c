@@ -4,6 +4,7 @@
 
 #include "cutils.h"
 #include <assert.h>
+#include <stdatomic.h>
 #include <windows.h>
 
 MosaicTtyInitResult tty_initWithHandles(
@@ -53,11 +54,24 @@ MosaicTtyInitResult tty_initWithHandles(
 	goto ret;
 }
 
+static _Atomic(MosaicTty *) globalTty;
+
 MosaicTtyInitResult tty_init() {
 	HANDLE stdin = GetStdHandle(STD_INPUT_HANDLE);
 	HANDLE stdout = GetStdHandle(STD_OUTPUT_HANDLE);
 	HANDLE stderr = GetStdHandle(STD_ERROR_HANDLE);
-	return tty_initWithHandles(stdin, stdout, stderr);
+	MosaicTtyInitResult result = tty_initWithHandles(stdin, stdout, stderr);
+
+	MosaicTty *tty = result.tty;
+	MosaicTty *expected = NULL;
+	if (likely(tty) && !atomic_compare_exchange_strong(&globalTty, &expected, tty)) {
+		// We initialized an instance but there already was a global instance.
+		result.tty = NULL;
+		result.error = tty_free(tty);
+		result.already_bound = true;
+	}
+
+	return result;
 }
 
 void tty_setCallback(MosaicTty *tty, MosaicTtyCallback *callback) {
@@ -276,6 +290,7 @@ uint32_t tty_free(MosaicTty *tty) {
 		}
 	}
 
+	atomic_store(&globalTty, NULL);
 	free(tty);
 	return result;
 }

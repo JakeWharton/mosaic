@@ -1,9 +1,12 @@
 package com.jakewharton.mosaic.tty
 
+import assertk.assertFailure
 import assertk.assertThat
+import assertk.assertions.hasMessage
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isGreaterThan
+import assertk.assertions.isInstanceOf
 import assertk.assertions.isZero
 import kotlin.test.AfterTest
 import kotlin.test.Ignore
@@ -24,6 +27,15 @@ class TtyTest {
 		tty.close()
 		testTty.close()
 		assertThat(events, name = "events").isEmpty()
+	}
+
+	@Test fun bindTwiceFails() {
+		Tty.bind().use {
+			assertFailure {
+				Tty.bind()
+			}.isInstanceOf<IllegalStateException>()
+				.hasMessage("Tty already bound")
+		}
 	}
 
 	@Test fun readWhatWasWritten() {

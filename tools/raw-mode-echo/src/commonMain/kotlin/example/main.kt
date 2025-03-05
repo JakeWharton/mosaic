@@ -40,7 +40,7 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 	private val windowResize by option().flag()
 
 	override fun run() = runBlocking {
-		val tty = Tty.create()
+		val tty = Tty.bind()
 		tty.enableRawMode()
 		withFinalizationHook(
 			hook = {

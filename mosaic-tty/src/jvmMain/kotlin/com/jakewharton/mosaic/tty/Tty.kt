@@ -5,7 +5,7 @@ public actual class Tty internal constructor(
 ) : AutoCloseable {
 	public actual companion object {
 		@JvmStatic
-		public actual fun create(): Tty {
+		public actual fun bind(): Tty {
 			val ttyPtr = Jni.ttyInit()
 			if (ttyPtr != 0L) {
 				return Tty(ttyPtr)

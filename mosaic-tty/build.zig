@@ -47,7 +47,7 @@ fn setupMosaicTarget(b: *std.Build, step: *std.Build.Step, tag: std.Target.Os.Ta
 			"src/jvmMain/c/mosaic-jni.c",
 		},
 		.flags = &.{
-			"-std=gnu99",
+			"-std=gnu11",
 			"-Wall",
 			"-Wextra",
 			"-Werror",

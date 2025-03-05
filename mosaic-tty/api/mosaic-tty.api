@@ -17,8 +17,8 @@ public final class com/jakewharton/mosaic/tty/TestTty$Companion {
 
 public final class com/jakewharton/mosaic/tty/Tty : java/lang/AutoCloseable {
 	public static final field Companion Lcom/jakewharton/mosaic/tty/Tty$Companion;
+	public static final fun bind ()Lcom/jakewharton/mosaic/tty/Tty;
 	public fun close ()V
-	public static final fun create ()Lcom/jakewharton/mosaic/tty/Tty;
 	public final fun currentSize ()[I
 	public final fun enableRawMode ()V
 	public final fun enableWindowResizeEvents ()V
@@ -38,6 +38,6 @@ public abstract interface class com/jakewharton/mosaic/tty/Tty$Callback {
 }
 
 public final class com/jakewharton/mosaic/tty/Tty$Companion {
-	public final fun create ()Lcom/jakewharton/mosaic/tty/Tty;
+	public final fun bind ()Lcom/jakewharton/mosaic/tty/Tty;
 }
 

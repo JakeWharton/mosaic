@@ -205,6 +205,7 @@ kotlin {
 				header(file('src/commonMain/c/mosaic.h'))
 				packageName('com.jakewharton.mosaic.tty')
 				compilerOpts(
+					'-std=gnu11',
 					'-Wall',
 					'-Wextra',
 					'-Werror',

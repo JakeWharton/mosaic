@@ -42,6 +42,6 @@ final class com.jakewharton.mosaic.tty/Tty : kotlin/AutoCloseable { // com.jakew
     }
 
     final object Companion { // com.jakewharton.mosaic.tty/Tty.Companion|null[0]
-        final fun create(): com.jakewharton.mosaic.tty/Tty // com.jakewharton.mosaic.tty/Tty.Companion.create|create(){}[0]
+        final fun bind(): com.jakewharton.mosaic.tty/Tty // com.jakewharton.mosaic.tty/Tty.Companion.bind|bind(){}[0]
     }
 }

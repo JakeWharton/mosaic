@@ -140,13 +140,16 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyInit(
 	jclass type UNUSED
 ) {
 	MosaicTtyInitResult result = tty_init();
-	if (likely(!result.error)) {
+	if (likely(result.tty)) {
 		return (jlong) result.tty;
 	}
 
-	// This throw can fail, but the only condition that should cause that is OOM which
-	// will occur from returning 0 (which is otherwise ignored if the throw succeeds).
-	throwIse(env, result.error);
+	if (result.already_bound) {
+		jclass ise = (*env)->FindClass(env, "java/lang/IllegalStateException");
+		(*env)->ThrowNew(env, ise, "Tty already bound");
+	} else {
+		throwIse(env, result.error);
+	}
 	return 0;
 }
 

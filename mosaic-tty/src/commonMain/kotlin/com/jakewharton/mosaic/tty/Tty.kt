@@ -2,7 +2,12 @@ package com.jakewharton.mosaic.tty
 
 public expect class Tty : AutoCloseable {
 	public companion object {
-		public fun create(): Tty
+		/**
+		 * Initialize a [Tty] instance to the standard input, output, and error streams for this
+		 * application. Only a single [Tty] instance can be bound at a time. Subsequent calls will
+		 * throw an exception until [Tty.close] is called.
+		 */
+		public fun bind(): Tty
 	}
 
 	/**

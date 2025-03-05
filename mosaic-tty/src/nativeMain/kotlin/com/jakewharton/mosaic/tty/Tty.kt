@@ -18,10 +18,13 @@ public actual class Tty internal constructor(
 	ptr: CPointer<MosaicTty>,
 ) : AutoCloseable {
 	public actual companion object {
-		public actual fun create(): Tty {
+		public actual fun bind(): Tty {
 			tty_init().useContents {
 				tty?.let { ttyPtr ->
 					return Tty(ttyPtr)
+				}
+				if (already_bound) {
+					throw IllegalStateException("Tty already bound")
 				}
 				if (error != 0U) {
 					throwIse(error)

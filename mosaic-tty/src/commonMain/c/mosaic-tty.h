@@ -22,6 +22,7 @@ typedef struct MosaicTtyCallback {
 typedef struct MosaicTtyInitResult {
 	MosaicTty *tty;
 	uint32_t error;
+	bool already_bound;
 } MosaicTtyInitResult;
 
 typedef struct MosaicTtyIoResult {
