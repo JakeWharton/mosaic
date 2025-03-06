@@ -301,13 +301,26 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyWriteError(
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_ttyEnableRawMode(
+Java_com_jakewharton_mosaic_tty_Jni_ttyEnableRawInput(
 	JNIEnv *env,
 	jclass type UNUSED,
 	jlong ttyOpaque
 ) {
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	uint32_t error = tty_enableRawMode(tty);
+	uint32_t error = tty_enableRawInput(tty);
+	if (unlikely(error)) {
+		throwIse(env, error);
+	}
+}
+
+JNIEXPORT void JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_ttyEnableRawOutput(
+	JNIEnv *env,
+	jclass type UNUSED,
+	jlong ttyOpaque
+) {
+	MosaicTty *tty = (MosaicTty *) ttyOpaque;
+	uint32_t error = tty_enableRawOutput(tty);
 	if (unlikely(error)) {
 		throwIse(env, error);
 	}

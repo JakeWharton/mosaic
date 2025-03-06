@@ -41,7 +41,7 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 
 	override fun run() = runBlocking {
 		val tty = Tty.bind()
-		tty.enableRawMode()
+		tty.enableRawInput()
 		withFinalizationHook(
 			hook = {
 				print("\u001b[?1003l") // Any-event disable

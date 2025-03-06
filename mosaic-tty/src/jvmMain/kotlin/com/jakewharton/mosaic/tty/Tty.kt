@@ -56,8 +56,12 @@ public actual class Tty internal constructor(
 		return Jni.ttyWriteError(ttyPtr, buffer, offset, count)
 	}
 
-	public actual fun enableRawMode() {
-		Jni.ttyEnableRawMode(ttyPtr)
+	public actual fun enableRawInput() {
+		Jni.ttyEnableRawInput(ttyPtr)
+	}
+
+	public actual fun enableRawOutput() {
+		Jni.ttyEnableRawOutput(ttyPtr)
 	}
 
 	public actual fun enableWindowResizeEvents() {

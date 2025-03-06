@@ -181,31 +181,21 @@ MosaicTtyIoResult tty_writeError(MosaicTty *tty, uint8_t *buffer, int count) {
 	return tty_writeInternal(tty->stderr, buffer, count);
 }
 
-uint32_t tty_enableRawMode(MosaicTty *tty) {
+uint32_t tty_enableRawInput(MosaicTty *tty) {
 	uint32_t result = 0;
 
 	if (tty->saved_input_mode) {
 		goto ret; // Already enabled!
 	}
 
-	DWORD input_mode;
-	DWORD output_mode;
-	UINT output_code_page;
-	if (unlikely(GetConsoleMode(tty->stdin, &input_mode) == 0)) {
-		result = GetLastError();
-		goto ret;
-	}
-	if (unlikely(GetConsoleMode(tty->stdout, &output_mode) == 0)) {
-		result = GetLastError();
-		goto ret;
-	}
-	if (unlikely((output_code_page = GetConsoleOutputCP()) == 0)) {
+	DWORD savedInputMode;
+	if (unlikely(GetConsoleMode(tty->stdin, &savedInputMode) == 0)) {
 		result = GetLastError();
 		goto ret;
 	}
 
 	// https://learn.microsoft.com/en-us/windows/console/setconsolemode
-	const int stdinMode = 0
+	const int newInputMode = 0
 		// Disable quick edit mode.
 		| ENABLE_EXTENDED_FLAGS
 		// Report changes to the mouse position.
@@ -215,7 +205,38 @@ uint32_t tty_enableRawMode(MosaicTty *tty) {
 		// Report changes to the buffer size.
 		| ENABLE_WINDOW_INPUT
 		;
-	const int stdoutMode = 0
+	if (unlikely(SetConsoleMode(tty->stdin, newInputMode) == 0)) {
+		result = GetLastError();
+		goto ret;
+	}
+
+	tty->saved_input_mode = savedInputMode;
+
+	ret:
+	return result;
+}
+
+
+uint32_t tty_enableRawOutput(MosaicTty *tty) {
+	uint32_t result = 0;
+
+	if (tty->saved_output_mode) {
+		goto ret; // Already enabled!
+	}
+
+	DWORD savedOutputMode;
+	UINT savedOutputCodePage;
+	if (unlikely(GetConsoleMode(tty->stdout, &savedOutputMode) == 0)) {
+		result = GetLastError();
+		goto ret;
+	}
+	if (unlikely((savedOutputCodePage = GetConsoleOutputCP()) == 0)) {
+		result = GetLastError();
+		goto ret;
+	}
+
+	// https://learn.microsoft.com/en-us/windows/console/setconsolemode
+	const int newOutputMode = 0
 		// Do not wrap cursor to next line automatically when writing final column.
 		| DISABLE_NEWLINE_AUTO_RETURN
 		// Allow color sequences to affect characters in all locales.
@@ -225,28 +246,21 @@ uint32_t tty_enableRawMode(MosaicTty *tty) {
 		// Process outgoing VT sequences for cursor movement, etc.
 		| ENABLE_VIRTUAL_TERMINAL_PROCESSING
 		;
+	if (unlikely(SetConsoleMode(tty->stdout, newOutputMode) == 0)) {
+		result = GetLastError();
+		goto ret;
+	}
+
 	// UTF-8 per https://learn.microsoft.com/en-us/windows/win32/intl/code-page-identifiers.
-	const int stdoutCp = 65001;
-
-	if (unlikely(SetConsoleMode(tty->stdin, stdinMode) == 0)) {
+	const int newOutputCodePage = 65001;
+	if (unlikely(SetConsoleOutputCP(newOutputCodePage) == 0)) {
 		result = GetLastError();
-		goto ret;
-	}
-	if (unlikely(SetConsoleMode(tty->stdout, stdoutMode) == 0)) {
-		result = GetLastError();
-		SetConsoleMode(tty->stdin, input_mode);
-		goto ret;
-	}
-	if (unlikely(SetConsoleOutputCP(stdoutCp) == 0)) {
-		result = GetLastError();
-		SetConsoleMode(tty->stdin, input_mode);
-		SetConsoleMode(tty->stdout, output_mode);
+		SetConsoleMode(tty->stdout, savedOutputMode);
 		goto ret;
 	}
 
-	tty->saved_input_mode = input_mode;
-	tty->saved_output_mode = output_mode;
-	tty->saved_output_code_page = output_code_page;
+	tty->saved_output_mode = savedOutputMode;
+	tty->saved_output_code_page = savedOutputCodePage;
 
 	ret:
 	return result;
@@ -282,6 +296,8 @@ uint32_t tty_free(MosaicTty *tty) {
 		if (unlikely(!SetConsoleMode(tty->stdin, tty->saved_input_mode) && result == 0)) {
 			result = GetLastError();
 		}
+	}
+	if (tty->saved_output_mode) {
 		if (unlikely(!SetConsoleMode(tty->stdout, tty->saved_output_mode) && result == 0)) {
 			result = GetLastError();
 		}

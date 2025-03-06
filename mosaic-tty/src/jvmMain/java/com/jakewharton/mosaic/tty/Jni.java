@@ -95,7 +95,9 @@ final class Jni {
 		int count
 	);
 
-	static native void ttyEnableRawMode(long ttyPtr);
+	static native void ttyEnableRawInput(long ttyPtr);
+
+	static native void ttyEnableRawOutput(long ttyPtr);
 
 	static native void ttyEnableWindowResizeEvents(long ttyPtr);
 

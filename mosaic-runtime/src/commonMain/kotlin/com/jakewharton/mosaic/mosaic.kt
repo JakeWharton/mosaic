@@ -77,7 +77,7 @@ public suspend fun runMosaic(content: @Composable () -> Unit) {
 	// Entering raw mode can fail, so perform it before any additional control sequences which change
 	// settings. We also need to be in character mode to query capabilities with control sequences.
 	if (env("MOSAIC_RAW_MODE") != "false") {
-		reader.tty.enableRawMode()
+		reader.tty.enableRawInput()
 	}
 
 	// Each of these will become true when their respective feature is recognized by the terminal

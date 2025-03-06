@@ -8,7 +8,19 @@ public expect class Tty : AutoCloseable {
 		 * throw an exception until [Tty.close] is called.
 		 */
 		public fun bind(): Tty
+
+		public val FeatureWindowsMouseEvents: Long
+		public val FeatureWindowsRawInput: Long
+		public val FeatureWindowsRawOutput: Long
+		public val FeatureWindowsResizeEvents: Long
+		public val FeatureSigwinchResizeEvents: Long
+		public val FeaturePosixRawInput: Long
+		public val FeaturePosixRawOutput: Long
 	}
+
+	public fun enableFeatures(features: Long)
+	public fun disableFeatures(features: Long)
+	public fun hasFeatures(features: Long): Long
 
 	/**
 	 * Set or clear the callback used for reporting events about the terminal using platform-specific
@@ -56,23 +68,38 @@ public expect class Tty : AutoCloseable {
 	public fun writeError(buffer: ByteArray, offset: Int, count: Int): Int
 
 	/**
-	 * Save the current terminal settings and enter "raw" mode.
+	 * Save the current input settings and enter "raw" input mode.
 	 *
-	 * Raw mode is described as "input is available character by character, echoing is disabled,
-	 * and all special processing of terminal input and output characters is disabled."
+	 * On Linux and macOS, raw mode is described as "input is available character by character,
+	 * echoing is disabled, and all special processing of terminal input and output characters
+	 * is disabled". See [`termios(3)`](https://linux.die.net/man/3/termios) for more information.
 	 *
-	 * The saved settings can be restored by calling [close][AutoCloseable.close] on
-	 * the returned instance.
+	 * In addition to the flags required for entering "raw" mode, this function will change the
+	 * standard input stream to block indefinitely until a minimum of 1 byte is available to read.
+	 * This allows the reader thread to fully be suspended rather than consuming CPU. Use [readInput]
+	 * or [readInputWithTimeout] to read in a manner that can still be interrupted by [interruptRead].
 	 *
-	 * See [`termios(3)`](https://linux.die.net/man/3/termios) for more information.
+	 * On Windows, raw mode is described as "input is unfiltered and any processing is left to
+	 * the application". See
+	 * ["Console Modes"](https://learn.microsoft.com/en-us/windows/console/high-level-console-modes)
+	 * for more information.
 	 *
-	 * In addition to the flags required for entering "raw" mode, on POSIX-compliant platforms,
-	 * this function will change the standard input stream to block indefinitely until a minimum
-	 * of 1 byte is available to read. This allows the reader thread to fully be suspended rather
-	 * than consuming CPU. Use [readInput] or [readInputWithTimeout] to read in a manner that can
-	 * still be interrupted by [interruptRead].
+	 * The saved settings will be restored when [close] is called.
 	 */
-	public fun enableRawMode()
+	public fun enableRawInput()
+
+	/**
+	 * Save the current output settings and enter "raw" output mode.
+	 *
+	 * On Windows, this disables end-of-line wrapping and enables VT sequence processing. See
+	 * ["Console Modes"](https://learn.microsoft.com/en-us/windows/console/high-level-console-modes)
+	 * for more information.
+	 *
+	 * On Linux and macOS this call has no effect.
+	 *
+	 * The saved settings will be restored when [close] is called.
+	 */
+	public fun enableRawOutput()
 
 	/**
 	 * Use platform-specific window monitoring to call [Callback.onResize] when the OS determines

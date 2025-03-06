@@ -97,8 +97,14 @@ public actual class Tty internal constructor(
 		}
 	}
 
-	public actual fun enableRawMode() {
-		val error = tty_enableRawMode(ptr)
+	public actual fun enableRawInput() {
+		val error = tty_enableRawInput(ptr)
+		if (error == 0U) return
+		throwIse(error)
+	}
+
+	public actual fun enableRawOutput() {
+		val error = tty_enableRawOutput(ptr)
 		if (error == 0U) return
 		throwIse(error)
 	}

@@ -178,7 +178,7 @@ void sigwinchHandler(int value UNUSED) {
 	}
 }
 
-uint32_t tty_enableRawMode(MosaicTty *tty) {
+uint32_t tty_enableRawInput(MosaicTty *tty) {
 	uint32_t result = 0;
 
 	if (unlikely(tty->saved)) {
@@ -224,6 +224,10 @@ uint32_t tty_enableRawMode(MosaicTty *tty) {
 	err:
 	free(saved);
 	goto ret;
+}
+
+uint32_t tty_enableRawOutput(MosaicTty *tty UNUSED) {
+	return 0;
 }
 
 uint32_t tty_enableWindowResizeEvents(MosaicTty *tty) {

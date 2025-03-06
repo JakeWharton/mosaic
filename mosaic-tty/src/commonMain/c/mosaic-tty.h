@@ -45,7 +45,8 @@ MosaicTtyIoResult tty_readInputWithTimeout(MosaicTty *tty, uint8_t *buffer, int 
 uint32_t tty_interruptRead(MosaicTty *tty);
 MosaicTtyIoResult tty_writeOutput(MosaicTty *tty, uint8_t *buffer, int count);
 MosaicTtyIoResult tty_writeError(MosaicTty *tty, uint8_t *buffer, int count);
-uint32_t tty_enableRawMode(MosaicTty *tty);
+uint32_t tty_enableRawInput(MosaicTty *tty);
+uint32_t tty_enableRawOutput(MosaicTty *tty);
 uint32_t tty_enableWindowResizeEvents(MosaicTty *tty);
 MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty);
 uint32_t tty_free(MosaicTty *tty);
