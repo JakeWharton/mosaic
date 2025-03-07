@@ -1,4 +1,4 @@
-package com.jakewharton.mosaic.ui
+package com.jakewharton.mosaic
 
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -12,9 +12,9 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
 import assertk.assertions.isNull
 import assertk.assertions.isTrue
-import com.jakewharton.mosaic.render
 import com.jakewharton.mosaic.testing.MosaicSnapshots
 import com.jakewharton.mosaic.testing.runMosaicTest
+import com.jakewharton.mosaic.ui.Text
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 import kotlin.time.Duration.Companion.milliseconds

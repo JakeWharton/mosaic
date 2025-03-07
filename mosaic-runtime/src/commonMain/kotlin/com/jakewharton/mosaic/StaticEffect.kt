@@ -1,6 +1,6 @@
 @file:JvmName("Static")
 
-package com.jakewharton.mosaic.ui
+package com.jakewharton.mosaic
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Composition
@@ -11,8 +11,6 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.rememberCompositionContext
 import androidx.compose.runtime.staticCompositionLocalOf
-import com.jakewharton.mosaic.MosaicNodeApplier
-import com.jakewharton.mosaic.TextCanvas
 import kotlin.jvm.JvmName
 import kotlinx.coroutines.channels.SendChannel
 

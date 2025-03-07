@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import com.jakewharton.mosaic.StaticEffect
 import com.jakewharton.mosaic.layout.background
 import com.jakewharton.mosaic.layout.height
 import com.jakewharton.mosaic.layout.padding
@@ -26,7 +27,6 @@ import com.jakewharton.mosaic.ui.Color.Companion.Yellow
 import com.jakewharton.mosaic.ui.Column
 import com.jakewharton.mosaic.ui.Row
 import com.jakewharton.mosaic.ui.Spacer
-import com.jakewharton.mosaic.ui.StaticEffect
 import com.jakewharton.mosaic.ui.Text
 import com.jakewharton.mosaic.ui.TextStyle.Companion.Bold
 import example.TestState.Fail
