@@ -13,7 +13,6 @@ import com.jakewharton.mosaic.testing.runMosaicTest
 import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.Layout
 import com.jakewharton.mosaic.ui.Row
-import com.jakewharton.mosaic.ui.StaticEffect
 import com.jakewharton.mosaic.ui.Text
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.milliseconds

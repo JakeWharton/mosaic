@@ -13,6 +13,19 @@ public final class com/jakewharton/mosaic/MosaicKt {
 	public static final fun runMosaicBlocking (Lkotlin/jvm/functions/Function2;)V
 }
 
+public final class com/jakewharton/mosaic/Static {
+	public static final fun StaticEffect (Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
+	public static final fun getLocalStaticLogger ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public final class com/jakewharton/mosaic/StaticLogger {
+	public static final field $stable I
+	public final fun log (Lcom/jakewharton/mosaic/TextCanvas;)V
+	public final fun log (Ljava/lang/String;)V
+	public final fun plusAssign (Lcom/jakewharton/mosaic/TextCanvas;)V
+	public final fun plusAssign (Ljava/lang/String;)V
+}
+
 public final class com/jakewharton/mosaic/Terminal {
 	public static final field $stable I
 	public static final field Companion Lcom/jakewharton/mosaic/Terminal$Companion;
@@ -600,19 +613,6 @@ public abstract interface class com/jakewharton/mosaic/ui/RowScope {
 
 public final class com/jakewharton/mosaic/ui/SpacerKt {
 	public static final fun Spacer (Lcom/jakewharton/mosaic/modifier/Modifier;Landroidx/compose/runtime/Composer;II)V
-}
-
-public final class com/jakewharton/mosaic/ui/Static {
-	public static final fun StaticEffect (Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
-	public static final fun getLocalStaticLogger ()Landroidx/compose/runtime/ProvidableCompositionLocal;
-}
-
-public final class com/jakewharton/mosaic/ui/StaticLogger {
-	public static final field $stable I
-	public final fun log (Lcom/jakewharton/mosaic/TextCanvas;)V
-	public final fun log (Ljava/lang/String;)V
-	public final fun plusAssign (Lcom/jakewharton/mosaic/TextCanvas;)V
-	public final fun plusAssign (Ljava/lang/String;)V
 }
 
 public final class com/jakewharton/mosaic/ui/Text {
