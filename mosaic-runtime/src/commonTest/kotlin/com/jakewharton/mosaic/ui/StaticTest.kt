@@ -1,6 +1,5 @@
 package com.jakewharton.mosaic.ui
 
-import androidx.collection.mutableObjectListOf
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
@@ -9,14 +8,10 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
 import assertk.assertAll
 import assertk.assertThat
-import assertk.assertions.containsExactly
-import assertk.assertions.hasSize
-import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
+import assertk.assertions.isNull
 import assertk.assertions.isTrue
-import com.jakewharton.mosaic.NodeSnapshots
-import com.jakewharton.mosaic.assertFailure
 import com.jakewharton.mosaic.render
 import com.jakewharton.mosaic.testing.MosaicSnapshots
 import com.jakewharton.mosaic.testing.runMosaicTest
@@ -31,11 +26,11 @@ class StaticTest {
 	@Test fun renderingDoesNotCauseAnotherFrame() = runTest {
 		runMosaicTest(MosaicSnapshots) {
 			setContent {
-				Static { Text("static") }
+				StaticEffect { Text("static") }
 				Text("content")
 			}
 
-			assertThat(awaitSnapshot().paintStatics()).hasSize(1)
+			assertThat(awaitSnapshot().static()).isEqualTo("static")
 			assertFailsWith<TimeoutCancellationException> { awaitSnapshot() }
 		}
 	}
@@ -44,57 +39,19 @@ class StaticTest {
 		runMosaicTest(MosaicSnapshots) {
 			var count by mutableIntStateOf(1)
 			setContent {
-				Static { Text("static: $count") }
+				StaticEffect { Text("static: $count") }
 				Text("content: $count")
 			}
 
 			val one = awaitSnapshot()
-			assertThat(one.paint().render()).isEqualTo("content: 1")
-			assertThat(one.paintStatics().render()).containsExactly("static: 1")
+			assertThat(one.draw().render()).isEqualTo("content: 1")
+			assertThat(one.static()).isEqualTo("static: 1")
 
 			count = 2
 
 			val two = awaitSnapshot()
-			assertThat(two.paint().render()).isEqualTo("content: 2")
-			assertThat(two.paintStatics().render()).isEmpty()
-		}
-	}
-
-	@Test fun staticNodesRemovedAfterRenderWithoutRecomposition() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			var count by mutableIntStateOf(1)
-			setContent {
-				Static { Text("static: $count") }
-				Text("content: $count")
-			}
-
-			val one = awaitSnapshot()
-			assertThat(one.toString()).isEqualTo(
-				"""
-				|Static()
-				|  Text("static: 1") x=0 y=0 w=9 h=1 DrawBehind
-				|Text("content: 1") x=0 y=0 w=10 h=1 DrawBehind
-				""".trimMargin(),
-			)
-
-			one.paintStaticsTo(mutableObjectListOf())
-			assertThat(one.toString()).isEqualTo(
-				"""
-				|Static()
-				|Text("content: 1") x=0 y=0 w=10 h=1 DrawBehind
-				""".trimMargin(),
-			)
-
-			assertFailure<TimeoutCancellationException> { awaitSnapshot() }
-
-			count = 2
-			val two = awaitSnapshot()
-			assertThat(two.toString()).isEqualTo(
-				"""
-				|Static()
-				|Text("content: 2") x=0 y=0 w=10 h=1 DrawBehind
-				""".trimMargin(),
-			)
+			assertThat(two.draw().render()).isEqualTo("content: 2")
+			assertThat(two.static()).isNull()
 		}
 	}
 
@@ -102,7 +59,7 @@ class StaticTest {
 		runMosaicTest {
 			var ran = false
 			setContent {
-				Static {
+				StaticEffect {
 					SideEffect {
 						ran = true
 					}
@@ -116,7 +73,7 @@ class StaticTest {
 		runMosaicTest {
 			var ran = false
 			setContent {
-				Static {
+				StaticEffect {
 					LaunchedEffect(Unit) {
 						ran = true
 					}
@@ -135,7 +92,7 @@ class StaticTest {
 			var effectRan = false
 			var disposeRan = false
 			setContent {
-				Static {
+				StaticEffect {
 					DisposableEffect(Unit) {
 						effectRan = true
 						onDispose {
@@ -157,7 +114,7 @@ class StaticTest {
 			var normalRecompositions = 0
 			var count by mutableIntStateOf(0)
 			setContentAndSnapshot {
-				Static {
+				StaticEffect {
 					staticRecompositions++
 					Text("count: $count")
 				}
@@ -172,6 +129,24 @@ class StaticTest {
 			awaitSnapshot()
 			assertThat(staticRecompositions).isEqualTo(1)
 			assertThat(normalRecompositions).isEqualTo(2)
+		}
+	}
+
+	@Test fun loggingCausesFrameWithoutRecomposition() = runTest {
+		runMosaicTest(MosaicSnapshots) {
+			var recompositionCount = 0
+			lateinit var staticLogger: StaticLogger
+			val initial = setContentAndSnapshot {
+				staticLogger = LocalStaticLogger.current
+				Text("Count: ${++recompositionCount}")
+			}
+			assertThat(initial.draw().render()).isEqualTo("Count: 1")
+			assertThat(initial.static()).isNull()
+
+			staticLogger += "sup"
+			val snapshot = awaitSnapshot()
+			assertThat(snapshot.draw().render()).isEqualTo("Count: 1")
+			assertThat(snapshot.static()).isEqualTo("sup")
 		}
 	}
 }

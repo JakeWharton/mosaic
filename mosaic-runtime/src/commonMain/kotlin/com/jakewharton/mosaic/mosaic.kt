@@ -1,7 +1,5 @@
 package com.jakewharton.mosaic
 
-import androidx.collection.MutableObjectList
-import androidx.collection.mutableObjectListOf
 import androidx.collection.mutableScatterSetOf
 import androidx.compose.runtime.AbstractApplier
 import androidx.compose.runtime.BroadcastFrameClock
@@ -38,7 +36,10 @@ import com.jakewharton.mosaic.terminal.event.OperatingStatusResponseEvent
 import com.jakewharton.mosaic.terminal.event.PrimaryDeviceAttributesEvent
 import com.jakewharton.mosaic.terminal.event.ResizeEvent
 import com.jakewharton.mosaic.terminal.event.SystemThemeEvent
+import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.BoxMeasurePolicy
+import com.jakewharton.mosaic.ui.LocalStaticLogger
+import com.jakewharton.mosaic.ui.StaticLogger
 import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.concurrent.Volatile
 import kotlin.coroutines.CoroutineContext
@@ -286,7 +287,7 @@ public suspend fun runMosaic(content: @Composable () -> Unit) {
 				AnsiRendering(ansiLevel, supportsSynchronizedRendering, supportsKittyUnderlines)
 			}
 
-			runMosaicComposition(rendering, keyEvents, terminalState, content)
+			runMosaicComposition(rendering, keyEvents, terminalState, ansiLevel, supportsKittyUnderlines, content)
 
 			eventJob.cancel()
 		},
@@ -297,6 +298,8 @@ internal suspend fun runMosaicComposition(
 	rendering: Rendering,
 	keyEvents: Channel<KeyEvent>,
 	terminalState: MutableState<Terminal>,
+	ansiLevel: AnsiLevel,
+	supportsKittyUnderlines: Boolean,
 	content: @Composable () -> Unit,
 ) {
 	val clock = BroadcastFrameClock()
@@ -307,6 +310,8 @@ internal suspend fun runMosaicComposition(
 		},
 		keyEvents = keyEvents,
 		terminalState = terminalState,
+		ansiLevel = ansiLevel,
+		supportsKittyUnderlines = supportsKittyUnderlines,
 	)
 
 	mosaicComposition.setContent(content)
@@ -333,15 +338,9 @@ internal inline fun <T> MutableState<T>.update(updater: T.() -> T) {
 public interface Mosaic {
 	public fun setContent(content: @Composable () -> Unit)
 
-	public fun paint(): TextCanvas
-	public fun paintStaticsTo(list: MutableObjectList<TextCanvas>)
-	public fun paintStatics(): List<TextCanvas> {
-		return mutableObjectListOf<TextCanvas>()
-			.apply(::paintStaticsTo)
-			.asList()
-	}
-
-	public fun dump(): String
+	public fun draw(): TextCanvas
+	public fun static(): String?
+	public fun dumpNodes(): String
 
 	public suspend fun awaitComplete()
 	public fun cancel()
@@ -354,7 +353,7 @@ public fun Mosaic(
 	keyEvents: Channel<KeyEvent>,
 	terminalState: State<Terminal>,
 ): Mosaic {
-	return MosaicComposition(coroutineContext, onDraw, keyEvents, terminalState)
+	return MosaicComposition(coroutineContext, onDraw, keyEvents, terminalState, AnsiLevel.NONE, false)
 }
 
 internal class MosaicComposition(
@@ -362,6 +361,9 @@ internal class MosaicComposition(
 	private val onDraw: (Mosaic) -> Unit,
 	private val keyEvents: Channel<KeyEvent>,
 	private val terminalState: State<Terminal>,
+	// TODO These two don't belong here!
+	private val ansiLevel: AnsiLevel,
+	private val supportsKittyUnderlines: Boolean,
 ) : Mosaic,
 	LifecycleOwner {
 	private val externalClock = checkNotNull(coroutineContext[MonotonicFrameClock]) {
@@ -377,6 +379,9 @@ internal class MosaicComposition(
 	val rootNode = applier.root
 	private val recomposer = Recomposer(composeContext)
 	private val composition = Composition(applier, recomposer)
+
+	private val staticLogs = Channel<Any>(UNLIMITED)
+	private val staticLogger = StaticLogger(staticLogs) { needDraw = true }
 
 	override val lifecycle = LifecycleRegistry.createUnsafe(this).also { lifecycle ->
 		scope.launch(start = UNDISPATCHED) {
@@ -422,17 +427,41 @@ internal class MosaicComposition(
 		onDraw(this)
 	}
 
-	override fun paint(): TextCanvas {
+	override fun draw(): TextCanvas {
 		return Snapshot.observe(readObserver = drawBlockStateReadObserver) {
-			rootNode.paint()
+			rootNode.draw()
 		}
 	}
 
-	override fun paintStaticsTo(list: MutableObjectList<TextCanvas>) {
-		rootNode.paintStaticsTo(list)
+	override fun static(): String? {
+		var static = staticLogs.tryReceive().getOrNull()
+		if (static == null) {
+			return null
+		}
+		return buildString {
+			do {
+				when (static) {
+					is String -> {
+						append(static)
+						append("\r\n")
+					}
+					is TextCanvas -> {
+						for (row in 0 until static.height) {
+							static.appendRowTo(this, row, ansiLevel, supportsKittyUnderlines)
+							append("\r\n")
+						}
+					}
+				}
+
+				static = staticLogs.tryReceive().getOrNull()
+			} while (static != null)
+
+			// Remove trailing "\r\n".
+			setLength(length - 2)
+		}
 	}
 
-	override fun dump(): String {
+	override fun dumpNodes(): String {
 		return rootNode.toString()
 	}
 
@@ -495,6 +524,7 @@ internal class MosaicComposition(
 		composition.setContent {
 			CompositionLocalProvider(
 				LocalTerminal provides terminalState.value,
+				LocalStaticLogger provides staticLogger,
 				LocalLifecycleOwner provides this,
 				content = content,
 			)
@@ -535,10 +565,9 @@ internal class MosaicComposition(
 }
 
 internal class MosaicNodeApplier(
-	root: MosaicNode? = null,
 	private val onChanges: () -> Unit = {},
 ) : AbstractApplier<MosaicNode>(
-	root = root ?: MosaicNode(
+	root = MosaicNode(
 		measurePolicy = BoxMeasurePolicy(),
 		debugPolicy = { children.joinToString(separator = "\n") },
 		isStatic = false,

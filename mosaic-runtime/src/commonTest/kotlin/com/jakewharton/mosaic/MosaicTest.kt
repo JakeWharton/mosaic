@@ -113,6 +113,8 @@ class MosaicTest {
 			),
 			keyEvents = Channel(),
 			terminalState = mutableStateOf(Terminal.Default),
+			ansiLevel = AnsiLevel.NONE,
+			supportsKittyUnderlines = false,
 		) {
 			LaunchedEffect(Unit) {
 				withFrameNanos { frameTimeNanos ->
