@@ -16,7 +16,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.ObserverHandle
 import androidx.compose.runtime.snapshots.Snapshot
-import androidx.compose.runtime.withFrameNanos
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
@@ -512,7 +511,8 @@ internal class MosaicComposition(
 
 			applyObserverHandle.dispose()
 			if (needLayout || needDraw) {
-				awaitFrame()
+				// TODO Re-evaluate this for correctness.
+				scope.launch { internalClock.withFrameNanos { } }.join()
 			}
 
 			recomposer.close()
@@ -527,10 +527,6 @@ internal class MosaicComposition(
 		applyObserverHandle.dispose()
 		recomposer.cancel()
 		job.cancel()
-	}
-
-	private suspend fun awaitFrame() {
-		scope.launch { withFrameNanos { } }.join()
 	}
 }
 
