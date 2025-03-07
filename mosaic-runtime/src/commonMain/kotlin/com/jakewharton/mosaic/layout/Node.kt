@@ -1,20 +1,17 @@
 package com.jakewharton.mosaic.layout
 
-import androidx.collection.MutableObjectList
 import com.jakewharton.mosaic.TextCanvas
 import com.jakewharton.mosaic.TextSurface
 import com.jakewharton.mosaic.layout.Placeable.PlacementScope
 import com.jakewharton.mosaic.modifier.Modifier
-import com.jakewharton.mosaic.ui.StaticState
 import com.jakewharton.mosaic.ui.unit.Constraints
 
 internal fun interface DebugPolicy {
 	fun MosaicNode.renderDebug(): String
 }
 
-internal abstract class MosaicNodeLayer(
-	private val isStatic: Boolean,
-) : Placeable(),
+internal abstract class MosaicNodeLayer :
+	Placeable(),
 	Measurable,
 	PlacementScope,
 	MeasureScope {
@@ -49,13 +46,8 @@ internal abstract class MosaicNodeLayer(
 		private set
 
 	final override fun placeAt(x: Int, y: Int) {
-		// If this layer belongs to a static node, ignore the placement coordinates from the parent.
-		// We reset the coordinate system to draw at 0,0 since static drawing will be on a canvas
-		// sized to this node's width and height.
-		if (!isStatic) {
-			this.x = x
-			this.y = y
-		}
+		this.x = x
+		this.y = y
 		measureResult.placeChildren()
 	}
 
@@ -96,7 +88,6 @@ internal class MosaicNode(
 	val isStatic: Boolean,
 ) : Measurable {
 	val children = ArrayList<MosaicNode>()
-	var staticState: StaticState? = null
 
 	private val bottomLayer: MosaicNodeLayer = BottomLayer(this)
 	var topLayer: MosaicNodeLayer = bottomLayer
@@ -149,32 +140,10 @@ internal class MosaicNode(
 	 * Draw this node to a [TextSurface].
 	 * A call to [measureAndPlace] must precede calls to this function.
 	 */
-	fun paint(): TextCanvas {
+	fun draw(): TextCanvas {
 		val surface = TextSurface(width, height)
 		topLayer.drawTo(surface)
 		return surface
-	}
-
-	/**
-	 * Append any static [TextSurfaces][TextSurface] to [statics].
-	 * A call to [measureAndPlace] must precede calls to this function.
-	 */
-	fun paintStaticsTo(statics: MutableObjectList<TextCanvas>) {
-		if (!isStatic) {
-			for (index in children.indices) {
-				children[index].paintStaticsTo(statics)
-			}
-			return
-		}
-		staticState?.let { staticState ->
-			for (index in children.indices) {
-				val child = children[index]
-				statics += child.paint()
-				child.paintStaticsTo(statics)
-			}
-			children.clear()
-			this.staticState = null
-		}
 	}
 
 	fun sendKeyEvent(keyEvent: KeyEvent): Boolean {
@@ -202,7 +171,7 @@ internal class MosaicNode(
 
 private class BottomLayer(
 	private val node: MosaicNode,
-) : MosaicNodeLayer(node.isStatic) {
+) : MosaicNodeLayer() {
 	override val next: MosaicNodeLayer? get() = null
 
 	override fun doMeasure(constraints: Constraints): MeasureResult {
@@ -246,7 +215,7 @@ private class BottomLayer(
 private class LayoutLayer(
 	private val element: LayoutModifier,
 	override val next: MosaicNodeLayer,
-) : MosaicNodeLayer(false) {
+) : MosaicNodeLayer() {
 	override fun doMeasure(constraints: Constraints): MeasureResult {
 		return element.run { measure(next, constraints) }
 	}
@@ -271,7 +240,7 @@ private class LayoutLayer(
 private class DrawLayer(
 	private val element: DrawModifier,
 	override val next: MosaicNodeLayer,
-) : MosaicNodeLayer(false) {
+) : MosaicNodeLayer() {
 	override fun drawTo(canvas: TextSurface) {
 		val oldX = canvas.translationX
 		val oldY = canvas.translationY
@@ -291,7 +260,7 @@ private class DrawLayer(
 private class KeyLayer(
 	private val element: KeyModifier,
 	override val next: MosaicNodeLayer,
-) : MosaicNodeLayer(false) {
+) : MosaicNodeLayer() {
 	override fun sendKeyEvent(keyEvent: KeyEvent) =
 		element.onPreKeyEvent(keyEvent) ||
 			next.sendKeyEvent(keyEvent) ||

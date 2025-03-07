@@ -1,13 +1,11 @@
 package com.jakewharton.mosaic.testing
 
-import androidx.collection.MutableObjectList
 import androidx.compose.runtime.BroadcastFrameClock
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.jakewharton.mosaic.Mosaic
 import com.jakewharton.mosaic.Terminal
-import com.jakewharton.mosaic.TextCanvas
 import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.ui.AnsiLevel
 import kotlin.coroutines.CoroutineContext
@@ -106,25 +104,16 @@ private class RealTestMosaic<T>(
 		keyEvents.trySend(keyEvent)
 	}
 
-	override fun paint() = mosaic.paint()
+	override fun draw() = mosaic.draw()
+	override fun static() = mosaic.static()
+	override fun dumpNodes() = mosaic.dumpNodes()
 
-	override fun paintStaticsTo(list: MutableObjectList<TextCanvas>) {
-		mosaic.paintStaticsTo(list)
-	}
-
-	override fun dump() = mosaic.dump()
-
-	override suspend fun awaitComplete() {
-		mosaic.awaitComplete()
-	}
-
-	override fun cancel() {
-		mosaic.cancel()
-	}
+	override suspend fun awaitComplete() = mosaic.awaitComplete()
+	override fun cancel() = mosaic.cancel()
 }
 
 internal object PlainTextSnapshots : SnapshotStrategy<String> {
 	override fun create(mosaic: Mosaic): String {
-		return mosaic.paint().render(AnsiLevel.NONE, false)
+		return mosaic.draw().render(AnsiLevel.NONE, false)
 	}
 }

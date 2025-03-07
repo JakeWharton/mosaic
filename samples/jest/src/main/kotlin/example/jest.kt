@@ -26,7 +26,7 @@ import com.jakewharton.mosaic.ui.Color.Companion.Yellow
 import com.jakewharton.mosaic.ui.Column
 import com.jakewharton.mosaic.ui.Row
 import com.jakewharton.mosaic.ui.Spacer
-import com.jakewharton.mosaic.ui.Static
+import com.jakewharton.mosaic.ui.StaticEffect
 import com.jakewharton.mosaic.ui.Text
 import com.jakewharton.mosaic.ui.TextStyle.Companion.Bold
 import example.TestState.Fail
@@ -138,13 +138,15 @@ fun TestRow(test: Test) {
 @Composable
 fun Log(complete: SnapshotStateList<Test>) {
 	complete.forEach { test ->
-		Static {
-			TestRow(test)
-			if (test.failures.isNotEmpty()) {
-				for (failure in test.failures) {
-					Text(" ‣ $failure")
+		StaticEffect {
+			Column {
+				TestRow(test)
+				if (test.failures.isNotEmpty()) {
+					for (failure in test.failures) {
+						Text(" ‣ $failure")
+					}
+					Spacer(Modifier.height(1)) // Blank line
 				}
-				Spacer(Modifier.height(1)) // Blank line
 			}
 		}
 	}

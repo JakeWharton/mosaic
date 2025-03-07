@@ -5,7 +5,7 @@ import com.jakewharton.mosaic.testing.SnapshotStrategy
 
 internal object DumpSnapshots : SnapshotStrategy<String> {
 	override fun create(mosaic: Mosaic): String {
-		return mosaic.dump()
+		return mosaic.dumpNodes()
 	}
 }
 

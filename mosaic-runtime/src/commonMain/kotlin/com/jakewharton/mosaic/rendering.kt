@@ -1,6 +1,5 @@
 package com.jakewharton.mosaic
 
-import androidx.collection.mutableObjectListOf
 import com.jakewharton.mosaic.ui.AnsiLevel
 import kotlin.time.TimeMark
 import kotlin.time.TimeSource
@@ -41,18 +40,14 @@ internal class DebugRendering(
 			lastRender = systemClock.markNow()
 
 			append("NODES:\r\n")
-			append(mosaic.dump().replace("\n", "\r\n"))
+			append(mosaic.dumpNodes().replace("\n", "\r\n"))
 			append("\r\n\r\n")
 
-			val statics = mutableObjectListOf<TextCanvas>()
 			try {
-				mosaic.paintStaticsTo(statics)
-				if (statics.isNotEmpty()) {
+				mosaic.static()?.let { static ->
 					append("STATIC:\r\n")
-					statics.forEach { static ->
-						appendSurface(static)
-					}
-					append("\r\n")
+					append(static)
+					append("\r\n\r\n")
 				}
 			} catch (t: Throwable) {
 				failed = true
@@ -62,7 +57,7 @@ internal class DebugRendering(
 
 			append("OUTPUT:\r\n")
 			try {
-				appendSurface(mosaic.paint())
+				appendSurface(mosaic.draw())
 			} catch (t: Throwable) {
 				failed = true
 				append(t.stackTraceToString().replace("\n", "\r\n"))
@@ -81,7 +76,6 @@ internal class AnsiRendering(
 	private val supportsKittyUnderlines: Boolean,
 ) : Rendering {
 	private val stringBuilder = StringBuilder(100)
-	private val staticSurfaces = mutableObjectListOf<TextCanvas>()
 	private var lastHeight = 0
 
 	override fun render(mosaic: Mosaic): CharSequence {
@@ -112,17 +106,20 @@ internal class AnsiRendering(
 				}
 			}
 
-			staticSurfaces.let { staticSurfaces ->
-				mosaic.paintStaticsTo(staticSurfaces)
-				if (staticSurfaces.isNotEmpty()) {
-					staticSurfaces.forEach { staticSurface ->
-						appendSurface(staticSurface)
-					}
-					staticSurfaces.clear()
+			mosaic.static()?.let { static ->
+				// We don't know the width or height of static strings, and we don't want to waste time
+				// parsing them to get an accurate count of each to minimally clear only the lines it will
+				// write. Instead, just clear everything to ensure we neither leave old cells nor attempt
+				// a clear to end-of-line when the cursor is on the last column (thus clearing that cell).
+				if (staleLines > 0) {
+					append(clearDisplay)
+					staleLines = 0
 				}
+				append(static)
+				append("\r\n")
 			}
 
-			val surface = mosaic.paint()
+			val surface = mosaic.draw()
 			appendSurface(surface)
 
 			// If the new output contains fewer lines than the last output, clear those old lines.

@@ -13,7 +13,7 @@ import com.jakewharton.mosaic.testing.runMosaicTest
 import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.Layout
 import com.jakewharton.mosaic.ui.Row
-import com.jakewharton.mosaic.ui.Static
+import com.jakewharton.mosaic.ui.StaticEffect
 import com.jakewharton.mosaic.ui.Text
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.milliseconds
@@ -64,7 +64,7 @@ class DebugRenderingTest {
 		runMosaicTest(RenderingSnapshots(rendering)) {
 			setContent {
 				Text("Hello")
-				Static {
+				StaticEffect {
 					Text("Static")
 				}
 			}
@@ -73,8 +73,6 @@ class DebugRenderingTest {
 				"""
 				|NODES:
 				|Text("Hello") x=0 y=0 w=5 h=1 DrawBehind
-				|Static()
-				|  Text("Static") x=0 y=0 w=6 h=1 DrawBehind
 				|
 				|STATIC:
 				|Static

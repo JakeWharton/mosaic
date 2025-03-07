@@ -9,7 +9,7 @@ import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.Color
 import com.jakewharton.mosaic.ui.Column
 import com.jakewharton.mosaic.ui.Row
-import com.jakewharton.mosaic.ui.Static
+import com.jakewharton.mosaic.ui.StaticEffect
 import com.jakewharton.mosaic.ui.Text
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
@@ -120,7 +120,7 @@ class AnsiRenderingTest {
 		runMosaicTest(RenderingSnapshots(rendering)) {
 			setContent {
 				Text("Hello")
-				Static {
+				StaticEffect {
 					Text("World!")
 				}
 			}
@@ -138,7 +138,7 @@ class AnsiRenderingTest {
 	@Test fun staticLinesNotErased() = runTest {
 		runMosaicTest(RenderingSnapshots(rendering)) {
 			setContent {
-				Static {
+				StaticEffect {
 					Text("One")
 				}
 				Text("Two")
@@ -153,7 +153,7 @@ class AnsiRenderingTest {
 			)
 
 			setContent {
-				Static {
+				StaticEffect {
 					Text("Three")
 				}
 				Text("Four")
@@ -161,7 +161,7 @@ class AnsiRenderingTest {
 
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|${cursorUp(1)}${clearLine}Three
+				|${cursorUp(1)}${clearDisplay}Three
 				|Four
 				|
 				""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
@@ -172,24 +172,24 @@ class AnsiRenderingTest {
 	@Test fun staticOrderingIsDfs() = runTest {
 		runMosaicTest(RenderingSnapshots(rendering)) {
 			setContent {
-				Static {
+				StaticEffect {
 					Text("One")
 				}
 				Column {
-					Static {
+					StaticEffect {
 						Text("Two")
 					}
 					Row {
-						Static {
+						StaticEffect {
 							Text("Three")
 						}
 						Text("Sup")
 					}
-					Static {
+					StaticEffect {
 						Text("Four")
 					}
 				}
-				Static {
+				StaticEffect {
 					Text("Five")
 				}
 			}
@@ -215,7 +215,7 @@ class AnsiRenderingTest {
 					Text("TopTopTop")
 					Row {
 						Text("LeftLeft")
-						Static {
+						StaticEffect {
 							Text("Static")
 						}
 					}

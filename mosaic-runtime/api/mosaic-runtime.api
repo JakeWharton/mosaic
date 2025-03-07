@@ -1,11 +1,10 @@
 public abstract interface class com/jakewharton/mosaic/Mosaic {
 	public abstract fun awaitComplete (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun cancel ()V
-	public abstract fun dump ()Ljava/lang/String;
-	public abstract fun paint ()Lcom/jakewharton/mosaic/TextCanvas;
-	public fun paintStatics ()Ljava/util/List;
-	public abstract fun paintStaticsTo (Landroidx/collection/MutableObjectList;)V
+	public abstract fun draw ()Lcom/jakewharton/mosaic/TextCanvas;
+	public abstract fun dumpNodes ()Ljava/lang/String;
 	public abstract fun setContent (Lkotlin/jvm/functions/Function2;)V
+	public abstract fun static ()Ljava/lang/String;
 }
 
 public final class com/jakewharton/mosaic/MosaicKt {
@@ -604,8 +603,16 @@ public final class com/jakewharton/mosaic/ui/SpacerKt {
 }
 
 public final class com/jakewharton/mosaic/ui/Static {
-	public static final fun Static (Landroidx/compose/runtime/snapshots/SnapshotStateList;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;I)V
-	public static final fun Static (Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
+	public static final fun StaticEffect (Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
+	public static final fun getLocalStaticLogger ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public final class com/jakewharton/mosaic/ui/StaticLogger {
+	public static final field $stable I
+	public final fun log (Lcom/jakewharton/mosaic/TextCanvas;)V
+	public final fun log (Ljava/lang/String;)V
+	public final fun plusAssign (Lcom/jakewharton/mosaic/TextCanvas;)V
+	public final fun plusAssign (Ljava/lang/String;)V
 }
 
 public final class com/jakewharton/mosaic/ui/Text {
