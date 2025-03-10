@@ -18,9 +18,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version-file: .github/workflows/.java-version
+
       - uses: mlugg/setup-zig@v1
         with:
           version: 0.13.0
+
+      - name: Generate JNI header
+        run: ./gradlew :mosaic-tty:compileJvmMainJava
 
       - run: zig build -p src/jvmMain/resources/jni
         working-directory: mosaic-tty

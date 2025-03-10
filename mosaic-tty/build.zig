@@ -29,6 +29,7 @@ fn setupMosaicTarget(b: *std.Build, step: *std.Build.Step, tag: std.Target.Os.Ta
 	lib.linkLibC();
 
 	lib.addIncludePath(b.path("src/commonMain/c"));
+	lib.addIncludePath(b.path("build/generated/sources/headers/java/jvmMain"));
 	lib.addIncludePath(b.path("src/jvmMain/include/share"));
 	lib.addIncludePath(
 		switch (tag) {
@@ -44,7 +45,7 @@ fn setupMosaicTarget(b: *std.Build, step: *std.Build.Step, tag: std.Target.Os.Ta
 			"src/commonMain/c/mosaic-tty-windows.c",
 			"src/commonMain/c/mosaic-test-tty-posix.c",
 			"src/commonMain/c/mosaic-test-tty-windows.c",
-			"src/jvmMain/c/mosaic-jni.c",
+			"src/jvmMain/c/com_jakewharton_mosaic_tty_Jni.c",
 		},
 		.flags = &.{
 			"-std=gnu11",
