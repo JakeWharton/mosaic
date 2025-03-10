@@ -7,8 +7,12 @@ Low-level TTY manipulation library.
 
 The JVM target requires native libraries which are built outside Gradle using Zig 0.13.0.
 
-After downloading or installing Zig, in the `mosaic-tty/` directory run:
+First, generate the JNI headers:
+```
+./gradlew compileJvmMainJava
+```
+
+Then, after downloading or installing Zig, in the `mosaic-tty/` directory run:
 ```
 zig build -p src/jvmMain/resources/jni
 ```
-to create them.

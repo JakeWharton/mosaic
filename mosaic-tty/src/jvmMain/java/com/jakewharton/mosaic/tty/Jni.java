@@ -62,7 +62,7 @@ final class Jni {
 
 	static native long ttyInit();
 
-	static native long ttySetCallback(long ttyPtr, long callbackPtr);
+	static native void ttySetCallback(long ttyPtr, long callbackPtr);
 
 	static native int ttyReadInput(
 		long ttyPtr,

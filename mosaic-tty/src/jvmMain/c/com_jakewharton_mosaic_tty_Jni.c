@@ -1,3 +1,5 @@
+#include "com_jakewharton_mosaic_tty_Jni.h"
+
 #include "cutils.h"
 #include "jni.h"
 #include "mosaic.h"
@@ -412,7 +414,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyFocusEvent(
 	JNIEnv *env UNUSED,
 	jclass type UNUSED,
 	jlong testTtyOpaque,
-	bool focused
+	jboolean focused
 ) {
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
 	testTty_focusEvent(testTty, focused);
