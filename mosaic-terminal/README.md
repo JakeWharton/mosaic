@@ -1,3 +1,5 @@
 # Mosaic Terminal
 
-High-level terminal manipulation and parsing library.
+High-level terminal interface.
+
+See [mosaic-tty-terminal](../mosaic-tty-terminal) for an implementation.

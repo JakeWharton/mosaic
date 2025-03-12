@@ -4,6 +4,7 @@ import androidx.compose.runtime.BroadcastFrameClock
 import androidx.compose.runtime.Composable
 import com.jakewharton.mosaic.Mosaic
 import com.jakewharton.mosaic.terminal.AnsiLevel
+import com.jakewharton.mosaic.terminal.Terminal
 import com.jakewharton.mosaic.terminal.event.KeyboardEvent
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration
@@ -15,7 +16,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeout
 
 public suspend fun runMosaicTest(
-	capabilities: TestCapabilities = TestCapabilities(),
+	capabilities: Terminal.Capabilities = TestTerminal.Capabilities(),
 	block: suspend TestMosaic<String>.() -> Unit,
 ) {
 	runMosaicTest(PlainTextSnapshots, capabilities, block)
@@ -31,7 +32,7 @@ public object MosaicSnapshots : SnapshotStrategy<Mosaic> {
 
 public suspend fun <T, R> runMosaicTest(
 	snapshotStrategy: SnapshotStrategy<T>,
-	capabilities: TestCapabilities = TestCapabilities(),
+	capabilities: Terminal.Capabilities = TestTerminal.Capabilities(),
 	block: suspend TestMosaic<T>.() -> R,
 ): R {
 	val tester = RealTestMosaic(
@@ -49,16 +50,18 @@ public interface TestMosaic<T> : Mosaic {
 	public suspend fun awaitSnapshot(duration: Duration = 1.seconds): T
 
 	public fun sendKeyEvent(keyEvent: KeyboardEvent)
-	public val state: TestState
+	public val state: TestTerminal.State
 }
 
 private class RealTestMosaic<T>(
 	coroutineContext: CoroutineContext,
 	private val snapshotStrategy: SnapshotStrategy<T>,
-	capabilities: TestCapabilities,
+	capabilities: Terminal.Capabilities,
 ) : TestMosaic<T> {
 	private val keyEvents = Channel<KeyboardEvent>(UNLIMITED)
-	override val state: TestState = TestTerminal.State()
+
+	private val testTerminal = TestTerminal(capabilities)
+	override val state get() = testTerminal.state
 
 	private var timeNanos = 0L
 	private val frameDelay = 1.seconds / 60
@@ -69,11 +72,7 @@ private class RealTestMosaic<T>(
 	val mosaic = Mosaic(
 		coroutineContext = coroutineContext + clock,
 		onDraw = { hasChanges = true },
-		terminal = TestTerminal(
-			state = state,
-			capabilities = capabilities,
-			keyEvents = keyEvents,
-		),
+		terminal = testTerminal,
 	)
 
 	override fun setContent(content: @Composable () -> Unit) {

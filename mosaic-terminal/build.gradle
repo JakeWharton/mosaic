@@ -8,38 +8,16 @@ kotlin {
 	explicitApi()
 
 	sourceSets {
-		configureEach {
-			languageSettings {
-				optIn('kotlin.contracts.ExperimentalContracts')
-				optIn('kotlinx.cinterop.ExperimentalForeignApi')
-			}
-			if (it.name.endsWith("Test")) {
-				languageSettings {
-					optIn('com.jakewharton.mosaic.terminal.TestApi')
-					optIn('kotlin.ExperimentalStdlibApi')
-				}
-			}
-		}
-
 		commonMain {
 			dependencies {
 				api libs.kotlinx.coroutines.core
-				api projects.mosaicTty
-				implementation libs.finalizationHook
 			}
 		}
 		commonTest {
 			dependencies {
 				implementation libs.kotlin.test
-				implementation libs.kotlinx.coroutines.test
 				implementation libs.assertk
 			}
 		}
 	}
-
-	tasks.withType(Test).configureEach {
-		systemProperty('kotlinx.coroutines.test.default_timeout', '2s')
-	}
-
-	compilerOptions.freeCompilerArgs.add('-Xnon-local-break-continue')
 }

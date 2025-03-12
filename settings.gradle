@@ -21,6 +21,7 @@ include ':mosaic-runtime'
 include ':mosaic-terminal'
 include ':mosaic-testing'
 include ':mosaic-tty'
+include ':mosaic-tty-terminal'
 
 include ':samples:counter'
 include ':samples:demo'

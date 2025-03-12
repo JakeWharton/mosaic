@@ -1,0 +1,40 @@
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+apply from: "$rootDir/addAllTargets.gradle"
+apply from: "$rootDir/publish.gradle"
+
+kotlin {
+	explicitApi()
+
+	sourceSets {
+		configureEach {
+			languageSettings {
+				optIn("kotlin.contracts.ExperimentalContracts")
+				optIn('kotlinx.cinterop.ExperimentalForeignApi')
+			}
+			if (it.name.endsWith("Test")) {
+				languageSettings {
+					optIn('com.jakewharton.mosaic.tty.terminal.TestApi')
+					optIn('kotlin.ExperimentalStdlibApi')
+				}
+			}
+		}
+
+		commonMain {
+			dependencies {
+				api libs.kotlinx.coroutines.core
+				api projects.mosaicTerminal
+				api projects.mosaicTty
+				implementation libs.finalizationHook
+			}
+		}
+		commonTest {
+			dependencies {
+				implementation libs.kotlin.test
+				implementation libs.kotlinx.coroutines.test
+				implementation libs.assertk
+			}
+		}
+	}
+
+	compilerOptions.freeCompilerArgs.add('-Xnon-local-break-continue')
+}

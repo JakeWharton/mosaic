@@ -5,8 +5,6 @@ apply from: "$rootDir/publish.gradle"
 apply plugin: 'dev.drewhamilton.poko'
 
 kotlin {
-	applyDefaultHierarchyTemplate()
-
 	explicitApi()
 
 	sourceSets {
@@ -19,7 +17,8 @@ kotlin {
 				api libs.androidx.compose.runtime
 				api libs.androidx.lifecycle.compose
 				api libs.kotlinx.coroutines.core
-				implementation projects.mosaicTerminal
+				api projects.mosaicTerminal
+				implementation projects.mosaicTtyTerminal
 				implementation libs.androidx.collection
 				implementation libs.codepoints
 			}

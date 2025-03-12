@@ -8,7 +8,7 @@ kotlin {
 	sourceSets {
 		commonMain {
 			dependencies {
-				implementation projects.mosaicTerminal
+				implementation projects.mosaicTtyTerminal
 				implementation libs.clikt
 				implementation libs.finalizationHook
 			}
