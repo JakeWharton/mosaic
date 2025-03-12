@@ -4,8 +4,8 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.layout.background
 import com.jakewharton.mosaic.modifier.Modifier
+import com.jakewharton.mosaic.terminal.AnsiLevel
 import com.jakewharton.mosaic.testing.runMosaicTest
-import com.jakewharton.mosaic.ui.AnsiLevel
 import com.jakewharton.mosaic.ui.Color
 import com.jakewharton.mosaic.ui.Column
 import com.jakewharton.mosaic.ui.Row

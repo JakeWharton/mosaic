@@ -3,6 +3,7 @@
 package com.jakewharton.mosaic
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import com.jakewharton.mosaic.layout.IntrinsicMeasurable
 import com.jakewharton.mosaic.layout.Measurable
 import com.jakewharton.mosaic.layout.MeasurePolicy
@@ -11,9 +12,9 @@ import com.jakewharton.mosaic.layout.MeasureScope
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.layout.Placeable
 import com.jakewharton.mosaic.modifier.Modifier
+import com.jakewharton.mosaic.terminal.AnsiLevel.NONE
 import com.jakewharton.mosaic.testing.runMosaicTest
 import com.jakewharton.mosaic.ui.Alignment
-import com.jakewharton.mosaic.ui.AnsiLevel.NONE
 import com.jakewharton.mosaic.ui.Filler
 import com.jakewharton.mosaic.ui.Layout
 import com.jakewharton.mosaic.ui.unit.Constraints
@@ -270,4 +271,3 @@ internal fun AtLeastSize(
 }
 
 fun TextCanvas.render() = render(NONE, false)
-fun List<TextCanvas>.render() = map { it.render() }
