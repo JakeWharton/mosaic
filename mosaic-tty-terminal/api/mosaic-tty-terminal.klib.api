@@ -20,4 +20,4 @@ final class com.jakewharton.mosaic.tty.terminal/TerminalParser { // com.jakewhar
     final fun next(): com.jakewharton.mosaic.terminal.event/Event? // com.jakewharton.mosaic.tty.terminal/TerminalParser.next|next(){}[0]
 }
 
-final suspend fun (com.jakewharton.mosaic.tty/Tty).com.jakewharton.mosaic.tty.terminal/asTerminal(kotlin.coroutines/SuspendFunction1<com.jakewharton.mosaic.terminal/Terminal, kotlin/Unit>) // com.jakewharton.mosaic.tty.terminal/asTerminal|asTerminal@com.jakewharton.mosaic.tty.Tty(kotlin.coroutines.SuspendFunction1<com.jakewharton.mosaic.terminal.Terminal,kotlin.Unit>){}[0]
+final suspend fun (com.jakewharton.mosaic.tty/Tty).com.jakewharton.mosaic.tty.terminal/useAsTerminal(kotlin/Boolean = ..., kotlin.coroutines/SuspendFunction1<com.jakewharton.mosaic.terminal/Terminal, kotlin/Unit>) // com.jakewharton.mosaic.tty.terminal/useAsTerminal|useAsTerminal@com.jakewharton.mosaic.tty.Tty(kotlin.Boolean;kotlin.coroutines.SuspendFunction1<com.jakewharton.mosaic.terminal.Terminal,kotlin.Unit>){}[0]

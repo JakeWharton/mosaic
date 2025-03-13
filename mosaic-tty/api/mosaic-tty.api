@@ -25,6 +25,7 @@ public final class com/jakewharton/mosaic/tty/Tty : java/lang/AutoCloseable {
 	public final fun interruptRead ()V
 	public final fun readInput ([BII)I
 	public final fun readInputWithTimeout ([BIII)I
+	public final fun reset ()V
 	public final fun setCallback (Lcom/jakewharton/mosaic/tty/Tty$Callback;)V
 	public final fun writeError ([BII)I
 	public final fun writeOutput ([BII)I

@@ -352,6 +352,19 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyCurrentSize(
 }
 
 JNIEXPORT void JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_ttyReset(
+	JNIEnv *env,
+	jclass type UNUSED,
+	jlong ttyOpaque
+) {
+	MosaicTty *tty = (MosaicTty *) ttyOpaque;
+	uint32_t error = tty_reset(tty);
+	if (unlikely(error)) {
+		throwIse(env, error);
+	}
+}
+
+JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_ttyFree(
 	JNIEnv *env,
 	jclass type UNUSED,

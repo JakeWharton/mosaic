@@ -30,6 +30,7 @@ final class com.jakewharton.mosaic.tty/Tty : kotlin/AutoCloseable { // com.jakew
     final fun interruptRead() // com.jakewharton.mosaic.tty/Tty.interruptRead|interruptRead(){}[0]
     final fun readInput(kotlin/ByteArray, kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.tty/Tty.readInput|readInput(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
     final fun readInputWithTimeout(kotlin/ByteArray, kotlin/Int, kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.tty/Tty.readInputWithTimeout|readInputWithTimeout(kotlin.ByteArray;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+    final fun reset() // com.jakewharton.mosaic.tty/Tty.reset|reset(){}[0]
     final fun setCallback(com.jakewharton.mosaic.tty/Tty.Callback?) // com.jakewharton.mosaic.tty/Tty.setCallback|setCallback(com.jakewharton.mosaic.tty.Tty.Callback?){}[0]
     final fun writeError(kotlin/ByteArray, kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.tty/Tty.writeError|writeError(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
     final fun writeOutput(kotlin/ByteArray, kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.tty/Tty.writeOutput|writeOutput(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]

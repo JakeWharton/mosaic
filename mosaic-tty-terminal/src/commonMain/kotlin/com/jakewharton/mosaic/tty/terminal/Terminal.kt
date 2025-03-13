@@ -60,7 +60,11 @@ private const val StageCapabilityQueries = 2
 private const val StageDefaultQueries = 1
 private const val StageNormalOperation = 0
 
-public suspend fun Tty.asTerminal(block: suspend (Terminal) -> Unit) {
+public suspend fun Tty.useAsTerminal(
+	/** When true, Call [Tty.reset] at and of [block] instead of [Tty.close]. */
+	resetOnly: Boolean = false,
+	block: suspend (Terminal) -> Unit,
+) {
 	val events = Channel<Event>(UNLIMITED)
 
 	setCallback(EventChannelTtyCallback(events, false))
@@ -86,11 +90,15 @@ public suspend fun Tty.asTerminal(block: suspend (Terminal) -> Unit) {
 			if (toggleFocus) print(focusDisable)
 			if (toggleCursor) print(cursorEnable)
 
-			close() // TODO We should have a way to reset the Tty without closing.
+			if (resetOnly) {
+				reset()
+			} else {
+				close()
+			}
 		},
 		block = {
 			launch(Dispatchers.IO) {
-				val parser = TerminalParser(this@asTerminal)
+				val parser = TerminalParser(this@useAsTerminal)
 				while (true) {
 					val event = parser.next() ?: break
 					events.trySend(event)
