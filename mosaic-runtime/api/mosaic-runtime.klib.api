@@ -387,24 +387,19 @@ final class com.jakewharton.mosaic/StaticLogger { // com.jakewharton.mosaic/Stat
     final inline fun plusAssign(kotlin/String) // com.jakewharton.mosaic/StaticLogger.plusAssign|plusAssign(kotlin.String){}[0]
 }
 
-final class com.jakewharton.mosaic/Terminal { // com.jakewharton.mosaic/Terminal|null[0]
-    constructor <init>(kotlin/Boolean, kotlin/Boolean, com.jakewharton.mosaic.ui.unit/IntSize) // com.jakewharton.mosaic/Terminal.<init>|<init>(kotlin.Boolean;kotlin.Boolean;com.jakewharton.mosaic.ui.unit.IntSize){}[0]
+final class com.jakewharton.mosaic/TerminalState { // com.jakewharton.mosaic/TerminalState|null[0]
+    constructor <init>(kotlin/Boolean, kotlin/Boolean, com.jakewharton.mosaic.ui.unit/IntSize) // com.jakewharton.mosaic/TerminalState.<init>|<init>(kotlin.Boolean;kotlin.Boolean;com.jakewharton.mosaic.ui.unit.IntSize){}[0]
 
-    final val darkTheme // com.jakewharton.mosaic/Terminal.darkTheme|{}darkTheme[0]
-        final fun <get-darkTheme>(): kotlin/Boolean // com.jakewharton.mosaic/Terminal.darkTheme.<get-darkTheme>|<get-darkTheme>(){}[0]
-    final val focused // com.jakewharton.mosaic/Terminal.focused|{}focused[0]
-        final fun <get-focused>(): kotlin/Boolean // com.jakewharton.mosaic/Terminal.focused.<get-focused>|<get-focused>(){}[0]
-    final val size // com.jakewharton.mosaic/Terminal.size|{}size[0]
-        final fun <get-size>(): com.jakewharton.mosaic.ui.unit/IntSize // com.jakewharton.mosaic/Terminal.size.<get-size>|<get-size>(){}[0]
+    final val darkTheme // com.jakewharton.mosaic/TerminalState.darkTheme|{}darkTheme[0]
+        final fun <get-darkTheme>(): kotlin/Boolean // com.jakewharton.mosaic/TerminalState.darkTheme.<get-darkTheme>|<get-darkTheme>(){}[0]
+    final val focused // com.jakewharton.mosaic/TerminalState.focused|{}focused[0]
+        final fun <get-focused>(): kotlin/Boolean // com.jakewharton.mosaic/TerminalState.focused.<get-focused>|<get-focused>(){}[0]
+    final val size // com.jakewharton.mosaic/TerminalState.size|{}size[0]
+        final fun <get-size>(): com.jakewharton.mosaic.ui.unit/IntSize // com.jakewharton.mosaic/TerminalState.size.<get-size>|<get-size>(){}[0]
 
-    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic/Terminal.equals|equals(kotlin.Any?){}[0]
-    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic/Terminal.hashCode|hashCode(){}[0]
-    final fun toString(): kotlin/String // com.jakewharton.mosaic/Terminal.toString|toString(){}[0]
-
-    final object Companion { // com.jakewharton.mosaic/Terminal.Companion|null[0]
-        final val Default // com.jakewharton.mosaic/Terminal.Companion.Default|{}Default[0]
-            final fun <get-Default>(): com.jakewharton.mosaic/Terminal // com.jakewharton.mosaic/Terminal.Companion.Default.<get-Default>|<get-Default>(){}[0]
-    }
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic/TerminalState.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic/TerminalState.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic/TerminalState.toString|toString(){}[0]
 }
 
 final value class com.jakewharton.mosaic.ui.unit/Constraints { // com.jakewharton.mosaic.ui.unit/Constraints|null[0]
@@ -720,15 +715,15 @@ final val com.jakewharton.mosaic.ui/isUnspecifiedUnderlineStyle // com.jakewhart
     final inline fun (com.jakewharton.mosaic.ui/UnderlineStyle).<get-isUnspecifiedUnderlineStyle>(): kotlin/Boolean // com.jakewharton.mosaic.ui/isUnspecifiedUnderlineStyle.<get-isUnspecifiedUnderlineStyle>|<get-isUnspecifiedUnderlineStyle>@com.jakewharton.mosaic.ui.UnderlineStyle(){}[0]
 final val com.jakewharton.mosaic/LocalStaticLogger // com.jakewharton.mosaic/LocalStaticLogger|{}LocalStaticLogger[0]
     final fun <get-LocalStaticLogger>(): androidx.compose.runtime/ProvidableCompositionLocal<com.jakewharton.mosaic/StaticLogger> // com.jakewharton.mosaic/LocalStaticLogger.<get-LocalStaticLogger>|<get-LocalStaticLogger>(){}[0]
-final val com.jakewharton.mosaic/LocalTerminal // com.jakewharton.mosaic/LocalTerminal|{}LocalTerminal[0]
-    final fun <get-LocalTerminal>(): androidx.compose.runtime/ProvidableCompositionLocal<com.jakewharton.mosaic/Terminal> // com.jakewharton.mosaic/LocalTerminal.<get-LocalTerminal>|<get-LocalTerminal>(){}[0]
+final val com.jakewharton.mosaic/LocalTerminalState // com.jakewharton.mosaic/LocalTerminalState|{}LocalTerminalState[0]
+    final fun <get-LocalTerminalState>(): androidx.compose.runtime/ProvidableCompositionLocal<com.jakewharton.mosaic/TerminalState> // com.jakewharton.mosaic/LocalTerminalState.<get-LocalTerminalState>|<get-LocalTerminalState>(){}[0]
 final val com.jakewharton.mosaic/com_jakewharton_mosaic_AnsiRendering$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_AnsiRendering$stableprop|#static{}com_jakewharton_mosaic_AnsiRendering$stableprop[0]
 final val com.jakewharton.mosaic/com_jakewharton_mosaic_DebugRendering$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_DebugRendering$stableprop|#static{}com_jakewharton_mosaic_DebugRendering$stableprop[0]
 final val com.jakewharton.mosaic/com_jakewharton_mosaic_GlobalSnapshotManager$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_GlobalSnapshotManager$stableprop|#static{}com_jakewharton_mosaic_GlobalSnapshotManager$stableprop[0]
 final val com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicComposition$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicComposition$stableprop|#static{}com_jakewharton_mosaic_MosaicComposition$stableprop[0]
 final val com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicNodeApplier$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicNodeApplier$stableprop|#static{}com_jakewharton_mosaic_MosaicNodeApplier$stableprop[0]
 final val com.jakewharton.mosaic/com_jakewharton_mosaic_StaticLogger$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_StaticLogger$stableprop|#static{}com_jakewharton_mosaic_StaticLogger$stableprop[0]
-final val com.jakewharton.mosaic/com_jakewharton_mosaic_Terminal$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_Terminal$stableprop|#static{}com_jakewharton_mosaic_Terminal$stableprop[0]
+final val com.jakewharton.mosaic/com_jakewharton_mosaic_TerminalState$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_TerminalState$stableprop|#static{}com_jakewharton_mosaic_TerminalState$stableprop[0]
 final val com.jakewharton.mosaic/com_jakewharton_mosaic_TextPixel$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_TextPixel$stableprop|#static{}com_jakewharton_mosaic_TextPixel$stableprop[0]
 final val com.jakewharton.mosaic/com_jakewharton_mosaic_TextSurface$stableprop // com.jakewharton.mosaic/com_jakewharton_mosaic_TextSurface$stableprop|#static{}com_jakewharton_mosaic_TextSurface$stableprop[0]
 
@@ -844,7 +839,7 @@ final fun com.jakewharton.mosaic/com_jakewharton_mosaic_GlobalSnapshotManager$st
 final fun com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicComposition$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicComposition$stableprop_getter|com_jakewharton_mosaic_MosaicComposition$stableprop_getter(){}[0]
 final fun com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicNodeApplier$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_MosaicNodeApplier$stableprop_getter|com_jakewharton_mosaic_MosaicNodeApplier$stableprop_getter(){}[0]
 final fun com.jakewharton.mosaic/com_jakewharton_mosaic_StaticLogger$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_StaticLogger$stableprop_getter|com_jakewharton_mosaic_StaticLogger$stableprop_getter(){}[0]
-final fun com.jakewharton.mosaic/com_jakewharton_mosaic_Terminal$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_Terminal$stableprop_getter|com_jakewharton_mosaic_Terminal$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic/com_jakewharton_mosaic_TerminalState$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_TerminalState$stableprop_getter|com_jakewharton_mosaic_TerminalState$stableprop_getter(){}[0]
 final fun com.jakewharton.mosaic/com_jakewharton_mosaic_TextPixel$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_TextPixel$stableprop_getter|com_jakewharton_mosaic_TextPixel$stableprop_getter(){}[0]
 final fun com.jakewharton.mosaic/com_jakewharton_mosaic_TextSurface$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_TextSurface$stableprop_getter|com_jakewharton_mosaic_TextSurface$stableprop_getter(){}[0]
 final fun com.jakewharton.mosaic/runMosaicBlocking(kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>) // com.jakewharton.mosaic/runMosaicBlocking|runMosaicBlocking(kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>){}[0]

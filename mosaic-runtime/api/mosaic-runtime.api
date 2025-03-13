@@ -26,9 +26,12 @@ public final class com/jakewharton/mosaic/StaticLogger {
 	public final fun plusAssign (Ljava/lang/String;)V
 }
 
-public final class com/jakewharton/mosaic/Terminal {
+public final class com/jakewharton/mosaic/TerminalKt {
+	public static final fun getLocalTerminalState ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public final class com/jakewharton/mosaic/TerminalState {
 	public static final field $stable I
-	public static final field Companion Lcom/jakewharton/mosaic/Terminal$Companion;
 	public synthetic fun <init> (ZZJLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getDarkTheme ()Z
@@ -36,14 +39,6 @@ public final class com/jakewharton/mosaic/Terminal {
 	public final fun getSize-Usd9Mdw ()J
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/jakewharton/mosaic/Terminal$Companion {
-	public final fun getDefault ()Lcom/jakewharton/mosaic/Terminal;
-}
-
-public final class com/jakewharton/mosaic/TerminalKt {
-	public static final fun getLocalTerminal ()Landroidx/compose/runtime/ProvidableCompositionLocal;
 }
 
 public abstract interface class com/jakewharton/mosaic/TextCanvas {

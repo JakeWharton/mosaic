@@ -17,6 +17,7 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.layout.MosaicNode
+import com.jakewharton.mosaic.terminal.Terminal
 import com.jakewharton.mosaic.tty.Tty
 import com.jakewharton.mosaic.tty.terminal.asTerminal
 import com.jakewharton.mosaic.ui.BoxMeasurePolicy
@@ -63,7 +64,7 @@ public suspend fun runMosaic(content: @Composable () -> Unit) {
 }
 
 internal suspend fun runMosaicComposition(
-	terminal: com.jakewharton.mosaic.terminal.Terminal,
+	terminal: Terminal,
 	rendering: Rendering,
 	content: @Composable () -> Unit,
 ) {
@@ -107,7 +108,7 @@ public interface Mosaic {
 public fun Mosaic(
 	coroutineContext: CoroutineContext,
 	onDraw: (Mosaic) -> Unit,
-	terminal: com.jakewharton.mosaic.terminal.Terminal,
+	terminal: Terminal,
 ): Mosaic {
 	return MosaicComposition(coroutineContext, onDraw, terminal)
 }
@@ -115,7 +116,7 @@ public fun Mosaic(
 internal class MosaicComposition(
 	coroutineContext: CoroutineContext,
 	private val onDraw: (Mosaic) -> Unit,
-	private val terminal: com.jakewharton.mosaic.terminal.Terminal,
+	private val terminal: Terminal,
 ) : Mosaic,
 	LifecycleOwner {
 	private val externalClock = checkNotNull(coroutineContext[MonotonicFrameClock]) {
@@ -138,7 +139,7 @@ internal class MosaicComposition(
 	override val lifecycle = LifecycleRegistry.createUnsafe(this)
 
 	private var terminalState = mutableStateOf(
-		Terminal(
+		TerminalState(
 			terminal.state.focused.value,
 			terminal.state.systemTheme.value,
 			terminal.state.size.value.let { IntSize(it.columns, it.rows) },
@@ -301,7 +302,7 @@ internal class MosaicComposition(
 	override fun setContent(content: @Composable () -> Unit) {
 		composition.setContent {
 			CompositionLocalProvider(
-				LocalTerminal provides terminalState.value,
+				LocalTerminalState provides terminalState.value,
 				LocalStaticLogger provides staticLogger,
 				LocalLifecycleOwner provides this,
 				content = content,

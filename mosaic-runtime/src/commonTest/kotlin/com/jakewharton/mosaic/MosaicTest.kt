@@ -132,7 +132,7 @@ class MosaicTest {
 	@Test fun lifecycleUpdatesWithTerminal() = runTest {
 		runMosaicTest {
 			setContent {
-				val terminal = LocalTerminal.current
+				val terminal = LocalTerminalState.current
 				val lifecycle = LocalLifecycleOwner.current.lifecycle
 				Text("${terminal.focused} ${lifecycle.currentState}")
 			}

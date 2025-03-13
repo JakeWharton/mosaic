@@ -13,6 +13,7 @@ Changed:
 - Switched to our own terminal integration library. Report any issues with keyboard input, incorrect size reporting, or garbled output.
 - Only disable the cursor and emit synchronized rendering markers if the terminal reports support for those features.
 - `Static` function is now called `StaticEffect` to better indicate that it only renders its content once.
+- The runtime's `Terminal` was renamed to `TerminalState` to avoid conflict with new, lower-level `Terminal` type.
 
 Fixed:
 - Prevent final character from being erased when a row writes into the last column of the terminal.

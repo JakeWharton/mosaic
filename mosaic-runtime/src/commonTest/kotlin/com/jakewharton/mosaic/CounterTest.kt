@@ -88,7 +88,7 @@ class CounterTest {
 			var count by remember { mutableIntStateOf(0) }
 
 			Box(
-				modifier = Modifier.width(LocalTerminal.current.size.width),
+				modifier = Modifier.width(LocalTerminalState.current.size.width),
 				contentAlignment = Alignment.Center,
 			) {
 				Text("The count is: $count")
