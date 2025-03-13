@@ -1,12 +1,36 @@
-apply plugin: 'org.jetbrains.kotlin.jvm'
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
+
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
 apply plugin: 'org.jetbrains.kotlin.plugin.compose'
-apply plugin: 'application'
+apply from: "$rootDir/addAllTargets.gradle"
 
-application {
-	mainClass = 'example.RrtopKt'
-}
+kotlin {
+	sourceSets {
+		commonMain {
+			dependencies {
+				implementation projects.mosaicRuntime
+				implementation 'org.jetbrains.kotlinx:kotlinx-datetime:0.6.2'
+			}
+		}
+	}
 
-dependencies {
-	implementation projects.mosaicRuntime
-	implementation 'org.jetbrains.kotlinx:kotlinx-datetime:0.6.2'
+	jvm {
+		binaries {
+			executable {
+				mainClass = 'example.RrtopKt'
+			}
+		}
+	}
+
+	targets.withType(KotlinNativeTarget).configureEach { target ->
+		target.binaries.executable {
+			entryPoint = 'example.main'
+			if (buildType == NativeBuildType.DEBUG) {
+				linkTaskProvider.configure {
+					enabled = false
+				}
+			}
+		}
+	}
 }
