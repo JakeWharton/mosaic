@@ -271,15 +271,11 @@ MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty) {
 	return result;
 }
 
-uint32_t tty_free(MosaicTty *tty) {
+uint32_t tty_reset(MosaicTty *tty) {
 	uint32_t result = 0;
 
-	if (unlikely(CloseHandle(tty->interrupt_event) == 0)) {
-		result = GetLastError();
-	}
-
 	if (tty->saved_input_mode) {
-		if (unlikely(!SetConsoleMode(tty->stdin, tty->saved_input_mode) && result == 0)) {
+		if (unlikely(!SetConsoleMode(tty->stdin, tty->saved_input_mode))) {
 			result = GetLastError();
 		}
 		if (unlikely(!SetConsoleMode(tty->stdout, tty->saved_output_mode) && result == 0)) {
@@ -288,6 +284,24 @@ uint32_t tty_free(MosaicTty *tty) {
 		if (unlikely(!SetConsoleOutputCP(tty->saved_output_code_page) && result == 0)) {
 			result = GetLastError();
 		}
+		tty->saved_input_mode = 0;
+		tty->saved_output_mode = 0;
+		tty->saved_output_code_page = 0;
+	}
+
+	return result;
+}
+
+uint32_t tty_free(MosaicTty *tty) {
+	uint32_t result = 0;
+
+	if (unlikely(CloseHandle(tty->interrupt_event) == 0)) {
+		result = GetLastError();
+	}
+
+	uint32_t resetResult = tty_reset(tty);
+	if (resetResult != 0 && result == 0) {
+		result = resetResult;
 	}
 
 	atomic_store(&globalTty, NULL);

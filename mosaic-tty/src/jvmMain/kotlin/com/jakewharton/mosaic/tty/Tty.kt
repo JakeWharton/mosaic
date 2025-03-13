@@ -68,6 +68,10 @@ public actual class Tty internal constructor(
 		return Jni.ttyCurrentSize(ttyPtr)
 	}
 
+	public actual fun reset() {
+		Jni.ttyReset(ttyPtr)
+	}
+
 	actual override fun close() {
 		if (ttyPtr != 0L) {
 			Jni.ttyFree(ttyPtr)

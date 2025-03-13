@@ -48,6 +48,7 @@ MosaicTtyIoResult tty_writeError(MosaicTty *tty, uint8_t *buffer, int count);
 uint32_t tty_enableRawMode(MosaicTty *tty);
 uint32_t tty_enableWindowResizeEvents(MosaicTty *tty);
 MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty);
+uint32_t tty_reset(MosaicTty *tty);
 uint32_t tty_free(MosaicTty *tty);
 
 #endif // MOSAIC_TTY_H

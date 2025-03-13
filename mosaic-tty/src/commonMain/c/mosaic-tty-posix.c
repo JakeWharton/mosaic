@@ -259,25 +259,40 @@ MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty) {
 	return result;
 }
 
+uint32_t tty_reset(MosaicTty *tty) {
+	uint32_t result = 0;
+
+	if (tty->sigwinch) {
+		if (unlikely(signal(SIGWINCH, SIG_DFL) == SIG_ERR)) {
+			result = errno;
+		}
+		tty->sigwinch = false;
+	}
+
+	if (tty->saved) {
+		if (unlikely(tcsetattr(tty->stdin_read_fd, TCSAFLUSH, tty->saved) && result == 0)) {
+			result = errno;
+		}
+		free(tty->saved);
+		tty->saved = NULL;
+	}
+
+	return result;
+}
+
 uint32_t tty_free(MosaicTty *tty) {
 	uint32_t result = 0;
 
 	if (unlikely(close(tty->interrupt_read_fd) != 0)) {
 		result = errno;
 	}
-	if (unlikely(close(tty->interrupt_write_fd) != 0 && result != 0)) {
+	if (unlikely(close(tty->interrupt_write_fd) != 0 && result == 0)) {
 		result = errno;
 	}
 
-	if (tty->sigwinch && signal(SIGWINCH, SIG_DFL) == SIG_ERR && result != 0) {
-		result = errno;
-	}
-
-	if (tty->saved) {
-		if (tcsetattr(tty->stdin_read_fd, TCSAFLUSH, tty->saved) && result != 0) {
-			result = errno;
-		}
-		free(tty->saved);
+	uint32_t resetResult = tty_reset(tty);
+	if (resetResult != 0 && result == 0) {
+		result = resetResult;
 	}
 
 	atomic_store(&globalTty, NULL);

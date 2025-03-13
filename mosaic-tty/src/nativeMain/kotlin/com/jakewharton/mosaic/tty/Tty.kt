@@ -118,6 +118,10 @@ public actual class Tty internal constructor(
 		}
 	}
 
+	public actual fun reset() {
+		tty_reset(ptr)
+	}
+
 	actual override fun close() {
 		ptr?.let { ptr ->
 			this.ptr = null

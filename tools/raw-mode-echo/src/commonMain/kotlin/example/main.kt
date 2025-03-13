@@ -49,7 +49,7 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 				print("\u001b[?2004l") // Bracketed paste disable
 				print("\u001b[?2048l") // In-band resize disable
 				print("\u001b[?25h") // Cursor enable
-				tty.close()
+				tty.reset()
 			},
 			block = {
 				print("\u001b[?25l") // Cursor disable

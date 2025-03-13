@@ -19,7 +19,7 @@ import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.terminal.Terminal
 import com.jakewharton.mosaic.tty.Tty
-import com.jakewharton.mosaic.tty.terminal.asTerminal
+import com.jakewharton.mosaic.tty.terminal.useAsTerminal
 import com.jakewharton.mosaic.ui.BoxMeasurePolicy
 import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.concurrent.Volatile
@@ -44,7 +44,7 @@ public fun runMosaicBlocking(content: @Composable () -> Unit) {
 }
 
 public suspend fun runMosaic(content: @Composable () -> Unit) {
-	Tty.bind().asTerminal { terminal ->
+	Tty.bind().useAsTerminal(resetOnly = true) { terminal ->
 		val rendering = if (env("MOSAIC_DEBUG_RENDERING") == "true") {
 			DebugRendering(
 				ansiLevel = terminal.capabilities.ansiLevel,

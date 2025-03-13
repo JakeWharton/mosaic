@@ -99,7 +99,10 @@ public expect class Tty : AutoCloseable {
 	/** @return Array of `[columns, rows, width, height]` */
 	public fun currentSize(): IntArray
 
-	/** Reset TTY state and free the resources associated with this reader. */
+	/** Reset TTY state. */
+	public fun reset()
+
+	/** Calls [reset] and then frees the resources associated with this instance. */
 	override fun close()
 
 	public interface Callback {
