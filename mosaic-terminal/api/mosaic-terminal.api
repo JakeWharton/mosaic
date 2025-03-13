@@ -10,7 +10,7 @@ public final class com/jakewharton/mosaic/terminal/AnsiLevel : java/lang/Enum {
 
 public abstract interface class com/jakewharton/mosaic/terminal/Terminal {
 	public abstract fun getCapabilities ()Lcom/jakewharton/mosaic/terminal/Terminal$Capabilities;
-	public abstract fun getKeyEvents ()Lkotlinx/coroutines/channels/Channel;
+	public abstract fun getKeyEvents ()Lkotlinx/coroutines/channels/ReceiveChannel;
 	public abstract fun getState ()Lcom/jakewharton/mosaic/terminal/Terminal$State;
 }
 
@@ -45,20 +45,6 @@ public abstract interface class com/jakewharton/mosaic/terminal/Terminal$State {
 	public abstract fun getFocused ()Lkotlinx/coroutines/flow/StateFlow;
 	public abstract fun getSize ()Lkotlinx/coroutines/flow/StateFlow;
 	public abstract fun getSystemTheme ()Lkotlinx/coroutines/flow/StateFlow;
-}
-
-public final class com/jakewharton/mosaic/terminal/TerminalKt {
-	public static final fun asTerminal (Lcom/jakewharton/mosaic/tty/Tty;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
-public final class com/jakewharton/mosaic/terminal/TerminalParser {
-	public fun <init> (Lcom/jakewharton/mosaic/tty/Tty;)V
-	public final fun debugNext ()Lkotlin/Pair;
-	public final fun getKittyDisambiguateEscapeCodes ()Z
-	public final fun getXtermExtendedUtf8Mouse ()Z
-	public final fun next ()Lcom/jakewharton/mosaic/terminal/event/Event;
-	public final fun setKittyDisambiguateEscapeCodes (Z)V
-	public final fun setXtermExtendedUtf8Mouse (Z)V
 }
 
 public final class com/jakewharton/mosaic/terminal/event/BracketedPasteEvent : com/jakewharton/mosaic/terminal/event/Event {
@@ -121,9 +107,28 @@ public final class com/jakewharton/mosaic/terminal/event/FocusEvent : com/jakewh
 
 public final class com/jakewharton/mosaic/terminal/event/KeyboardEvent : com/jakewharton/mosaic/terminal/event/Event {
 	public static final field Companion Lcom/jakewharton/mosaic/terminal/event/KeyboardEvent$Companion;
+	public static final field Delete I
+	public static final field Down I
+	public static final field End I
 	public static final field EventTypePress I
 	public static final field EventTypeRelease I
 	public static final field EventTypeRepeat I
+	public static final field F1 I
+	public static final field F10 I
+	public static final field F11 I
+	public static final field F12 I
+	public static final field F2 I
+	public static final field F3 I
+	public static final field F4 I
+	public static final field F5 I
+	public static final field F6 I
+	public static final field F7 I
+	public static final field F8 I
+	public static final field F9 I
+	public static final field Home I
+	public static final field Insert I
+	public static final field KpBegin I
+	public static final field Left I
 	public static final field ModifierAlt I
 	public static final field ModifierCapsLock I
 	public static final field ModifierCtrl I
@@ -132,6 +137,10 @@ public final class com/jakewharton/mosaic/terminal/event/KeyboardEvent : com/jak
 	public static final field ModifierNumLock I
 	public static final field ModifierShift I
 	public static final field ModifierSuper I
+	public static final field PageDown I
+	public static final field PageUp I
+	public static final field Right I
+	public static final field Up I
 	public fun <init> (IIIIILjava/lang/String;)V
 	public synthetic fun <init> (IIIIILjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun equals (Ljava/lang/Object;)Z
@@ -203,6 +212,47 @@ public final class com/jakewharton/mosaic/terminal/event/KittyPointerQuerySuppor
 	public final fun getValues ()[Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/jakewharton/mosaic/terminal/event/MouseEvent : com/jakewharton/mosaic/terminal/event/Event {
+	public fun <init> (IILcom/jakewharton/mosaic/terminal/event/MouseEvent$Type;Lcom/jakewharton/mosaic/terminal/event/MouseEvent$Button;ZZZ)V
+	public synthetic fun <init> (IILcom/jakewharton/mosaic/terminal/event/MouseEvent$Type;Lcom/jakewharton/mosaic/terminal/event/MouseEvent$Button;ZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAlt ()Z
+	public final fun getButton ()Lcom/jakewharton/mosaic/terminal/event/MouseEvent$Button;
+	public final fun getCtrl ()Z
+	public final fun getShift ()Z
+	public final fun getType ()Lcom/jakewharton/mosaic/terminal/event/MouseEvent$Type;
+	public final fun getX ()I
+	public final fun getY ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/jakewharton/mosaic/terminal/event/MouseEvent$Button : java/lang/Enum {
+	public static final field Button10 Lcom/jakewharton/mosaic/terminal/event/MouseEvent$Button;
+	public static final field Button11 Lcom/jakewharton/mosaic/terminal/event/MouseEvent$Button;
+	public static final field Button8 Lcom/jakewharton/mosaic/terminal/event/MouseEvent$Button;
+	public static final field Button9 Lcom/jakewharton/mosaic/terminal/event/MouseEvent$Button;
+	public static final field Left Lcom/jakewharton/mosaic/terminal/event/MouseEvent$Button;
+	public static final field Middle Lcom/jakewharton/mosaic/terminal/event/MouseEvent$Button;
+	public static final field None Lcom/jakewharton/mosaic/terminal/event/MouseEvent$Button;
+	public static final field Right Lcom/jakewharton/mosaic/terminal/event/MouseEvent$Button;
+	public static final field WheelDown Lcom/jakewharton/mosaic/terminal/event/MouseEvent$Button;
+	public static final field WheelUp Lcom/jakewharton/mosaic/terminal/event/MouseEvent$Button;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/jakewharton/mosaic/terminal/event/MouseEvent$Button;
+	public static fun values ()[Lcom/jakewharton/mosaic/terminal/event/MouseEvent$Button;
+}
+
+public final class com/jakewharton/mosaic/terminal/event/MouseEvent$Type : java/lang/Enum {
+	public static final field Drag Lcom/jakewharton/mosaic/terminal/event/MouseEvent$Type;
+	public static final field Motion Lcom/jakewharton/mosaic/terminal/event/MouseEvent$Type;
+	public static final field Press Lcom/jakewharton/mosaic/terminal/event/MouseEvent$Type;
+	public static final field Release Lcom/jakewharton/mosaic/terminal/event/MouseEvent$Type;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/jakewharton/mosaic/terminal/event/MouseEvent$Type;
+	public static fun values ()[Lcom/jakewharton/mosaic/terminal/event/MouseEvent$Type;
 }
 
 public final class com/jakewharton/mosaic/terminal/event/OperatingStatusResponseEvent : com/jakewharton/mosaic/terminal/event/Event {

@@ -65,29 +65,29 @@ public class KeyboardEvent(
 		public const val EventTypeRelease: Int = 3
 
 		// These codepoints are defined by Kitty in the Unicode private space.
-		internal const val Insert = 57348
-		internal const val Delete = 57349
-		internal const val PageUp = 57354
-		internal const val PageDown = 57355
-		internal const val Up = 57352
-		internal const val Down = 57353
-		internal const val Right = 57351
-		internal const val Left = 57350
-		internal const val KpBegin = 57427
-		internal const val End = 57357
-		internal const val Home = 57356
-		internal const val F1 = 57364
-		internal const val F2 = 57365
-		internal const val F3 = 57366
-		internal const val F4 = 57367
-		internal const val F5 = 57368
-		internal const val F6 = 57369
-		internal const val F7 = 57370
-		internal const val F8 = 57371
-		internal const val F9 = 57372
-		internal const val F10 = 57373
-		internal const val F11 = 57374
-		internal const val F12 = 57375
+		public const val Insert: Int = 57348
+		public const val Delete: Int = 57349
+		public const val PageUp: Int = 57354
+		public const val PageDown: Int = 57355
+		public const val Up: Int = 57352
+		public const val Down: Int = 57353
+		public const val Right: Int = 57351
+		public const val Left: Int = 57350
+		public const val KpBegin: Int = 57427
+		public const val End: Int = 57357
+		public const val Home: Int = 57356
+		public const val F1: Int = 57364
+		public const val F2: Int = 57365
+		public const val F3: Int = 57366
+		public const val F4: Int = 57367
+		public const val F5: Int = 57368
+		public const val F6: Int = 57369
+		public const val F7: Int = 57370
+		public const val F8: Int = 57371
+		public const val F9: Int = 57372
+		public const val F10: Int = 57373
+		public const val F11: Int = 57374
+		public const val F12: Int = 57375
 	}
 }
 
@@ -223,22 +223,23 @@ public class PaletteColorEvent(
 	public val value: String,
 ) : Event
 
-internal data class MouseEvent(
-	val x: Int,
-	val y: Int,
-	val type: Type,
-	val button: Button = Button.None,
-	val shift: Boolean = false,
-	val alt: Boolean = false,
-	val ctrl: Boolean = false,
+@Poko
+public class MouseEvent(
+	public val x: Int,
+	public val y: Int,
+	public val type: Type,
+	public val button: Button = Button.None,
+	public val shift: Boolean = false,
+	public val alt: Boolean = false,
+	public val ctrl: Boolean = false,
 ) : Event {
-	enum class Type {
+	public enum class Type {
 		Drag,
 		Motion,
 		Release,
 		Press,
 	}
-	enum class Button {
+	public enum class Button {
 		Left,
 		Middle,
 		Right,

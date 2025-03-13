@@ -9,10 +9,10 @@ import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.enum
 import com.jakewharton.finalization.withFinalizationHook
-import com.jakewharton.mosaic.terminal.TerminalParser
 import com.jakewharton.mosaic.terminal.event.KeyboardEvent
 import com.jakewharton.mosaic.terminal.event.KeyboardEvent.Companion.ModifierCtrl
 import com.jakewharton.mosaic.tty.Tty
+import com.jakewharton.mosaic.tty.terminal.TerminalParser
 import kotlin.jvm.JvmName
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.awaitCancellation
