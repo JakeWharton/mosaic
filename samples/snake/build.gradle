@@ -1,12 +1,35 @@
-apply plugin: 'org.jetbrains.kotlin.jvm'
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
+
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
 apply plugin: 'org.jetbrains.kotlin.plugin.compose'
-apply plugin: 'application'
+apply from: "$rootDir/addAllTargets.gradle"
 
-application {
-	mainClass = 'example.SnakeKt'
-}
+kotlin {
+	sourceSets {
+		commonMain {
+			dependencies {
+				implementation projects.mosaicRuntime
+			}
+		}
+	}
 
-dependencies {
-	implementation projects.mosaicRuntime
-	implementation libs.androidx.collection
+	jvm {
+		binaries {
+			executable {
+				mainClass = 'example.SnakeKt'
+			}
+		}
+	}
+
+	targets.withType(KotlinNativeTarget).configureEach { target ->
+		target.binaries.executable {
+			entryPoint = 'example.main'
+			if (buildType == NativeBuildType.DEBUG) {
+				linkTaskProvider.configure {
+					enabled = false
+				}
+			}
+		}
+	}
 }

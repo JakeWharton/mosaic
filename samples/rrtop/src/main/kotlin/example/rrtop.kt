@@ -8,7 +8,7 @@ import example.palletes.NordColorsPalette
 import example.palletes.OneDarkColorsPalette
 import example.palletes.SolarizedDarkColorsPalette
 
-fun main(args: Array<String>) {
+fun main(vararg args: String) {
 	val rrtopColorsPalette = parseArgsForColorsPalette(args)
 	val rrtopViewModel = RrtopViewModel()
 
@@ -17,7 +17,7 @@ fun main(args: Array<String>) {
 	}
 }
 
-private fun parseArgsForColorsPalette(args: Array<String>): RrtopColorsPalette {
+private fun parseArgsForColorsPalette(args: Array<out String>): RrtopColorsPalette {
 	val keyIndex = args.indexOf("-c")
 	if (keyIndex < 0 || keyIndex >= args.lastIndex) {
 		return DefaultColorsPalette
