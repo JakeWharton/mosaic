@@ -3,7 +3,6 @@
 package com.jakewharton.mosaic
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import com.jakewharton.mosaic.layout.IntrinsicMeasurable
 import com.jakewharton.mosaic.layout.Measurable
 import com.jakewharton.mosaic.layout.MeasurePolicy
