@@ -1,6 +1,6 @@
 package com.jakewharton.mosaic
 
-import com.jakewharton.mosaic.ui.AnsiLevel
+import com.jakewharton.mosaic.terminal.AnsiLevel
 import kotlin.time.TimeMark
 import kotlin.time.TimeSource
 

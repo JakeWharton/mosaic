@@ -1,6 +1,6 @@
 package com.jakewharton.mosaic
 
-import com.jakewharton.mosaic.ui.AnsiLevel
+import com.jakewharton.mosaic.terminal.AnsiLevel
 import com.jakewharton.mosaic.ui.Color
 import com.jakewharton.mosaic.ui.TextStyle
 import com.jakewharton.mosaic.ui.TextStyle.Companion.Bold

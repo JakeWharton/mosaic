@@ -1,4 +1,4 @@
-package com.jakewharton.mosaic.ui
+package com.jakewharton.mosaic.terminal
 
 public enum class AnsiLevel {
 	NONE,

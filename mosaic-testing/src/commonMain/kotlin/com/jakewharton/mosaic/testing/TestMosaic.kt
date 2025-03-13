@@ -2,12 +2,9 @@ package com.jakewharton.mosaic.testing
 
 import androidx.compose.runtime.BroadcastFrameClock
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import com.jakewharton.mosaic.Mosaic
-import com.jakewharton.mosaic.Terminal
-import com.jakewharton.mosaic.layout.KeyEvent
-import com.jakewharton.mosaic.ui.AnsiLevel
+import com.jakewharton.mosaic.terminal.AnsiLevel
+import com.jakewharton.mosaic.terminal.event.KeyboardEvent
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -17,8 +14,11 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeout
 
-public suspend fun runMosaicTest(block: suspend TestMosaic<String>.() -> Unit) {
-	runMosaicTest(PlainTextSnapshots, block)
+public suspend fun runMosaicTest(
+	capabilities: TestCapabilities = TestCapabilities(),
+	block: suspend TestMosaic<String>.() -> Unit,
+) {
+	runMosaicTest(PlainTextSnapshots, capabilities, block)
 }
 
 public fun interface SnapshotStrategy<T> {
@@ -31,11 +31,13 @@ public object MosaicSnapshots : SnapshotStrategy<Mosaic> {
 
 public suspend fun <T, R> runMosaicTest(
 	snapshotStrategy: SnapshotStrategy<T>,
+	capabilities: TestCapabilities = TestCapabilities(),
 	block: suspend TestMosaic<T>.() -> R,
 ): R {
 	val tester = RealTestMosaic(
 		coroutineContext = currentCoroutineContext(),
 		snapshotStrategy = snapshotStrategy,
+		capabilities = capabilities,
 	)
 	val result = block.invoke(tester)
 	tester.cancel()
@@ -46,16 +48,17 @@ public interface TestMosaic<T> : Mosaic {
 	public fun setContentAndSnapshot(content: @Composable () -> Unit): T
 	public suspend fun awaitSnapshot(duration: Duration = 1.seconds): T
 
-	public fun sendKeyEvent(keyEvent: KeyEvent)
-	public val terminalState: MutableState<Terminal>
+	public fun sendKeyEvent(keyEvent: KeyboardEvent)
+	public val state: TestState
 }
 
 private class RealTestMosaic<T>(
 	coroutineContext: CoroutineContext,
 	private val snapshotStrategy: SnapshotStrategy<T>,
+	capabilities: TestCapabilities,
 ) : TestMosaic<T> {
-	private val keyEvents = Channel<KeyEvent>(UNLIMITED)
-	override val terminalState = mutableStateOf(Terminal.Default)
+	private val keyEvents = Channel<KeyboardEvent>(UNLIMITED)
+	override val state: TestState = TestTerminal.State()
 
 	private var timeNanos = 0L
 	private val frameDelay = 1.seconds / 60
@@ -66,8 +69,11 @@ private class RealTestMosaic<T>(
 	val mosaic = Mosaic(
 		coroutineContext = coroutineContext + clock,
 		onDraw = { hasChanges = true },
-		keyEvents = keyEvents,
-		terminalState = terminalState,
+		terminal = TestTerminal(
+			state = state,
+			capabilities = capabilities,
+			keyEvents = keyEvents,
+		),
 	)
 
 	override fun setContent(content: @Composable () -> Unit) {
@@ -100,7 +106,7 @@ private class RealTestMosaic<T>(
 		return snapshotStrategy.create(mosaic)
 	}
 
-	override fun sendKeyEvent(keyEvent: KeyEvent) {
+	override fun sendKeyEvent(keyEvent: KeyboardEvent) {
 		keyEvents.trySend(keyEvent)
 	}
 

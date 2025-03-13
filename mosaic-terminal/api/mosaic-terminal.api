@@ -1,3 +1,56 @@
+public final class com/jakewharton/mosaic/terminal/AnsiLevel : java/lang/Enum {
+	public static final field ANSI16 Lcom/jakewharton/mosaic/terminal/AnsiLevel;
+	public static final field ANSI256 Lcom/jakewharton/mosaic/terminal/AnsiLevel;
+	public static final field NONE Lcom/jakewharton/mosaic/terminal/AnsiLevel;
+	public static final field TRUECOLOR Lcom/jakewharton/mosaic/terminal/AnsiLevel;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/jakewharton/mosaic/terminal/AnsiLevel;
+	public static fun values ()[Lcom/jakewharton/mosaic/terminal/AnsiLevel;
+}
+
+public abstract interface class com/jakewharton/mosaic/terminal/Terminal {
+	public abstract fun getCapabilities ()Lcom/jakewharton/mosaic/terminal/Terminal$Capabilities;
+	public abstract fun getKeyEvents ()Lkotlinx/coroutines/channels/Channel;
+	public abstract fun getState ()Lcom/jakewharton/mosaic/terminal/Terminal$State;
+}
+
+public abstract interface class com/jakewharton/mosaic/terminal/Terminal$Capabilities {
+	public abstract fun getAnsiLevel ()Lcom/jakewharton/mosaic/terminal/AnsiLevel;
+	public abstract fun getKittyGraphics ()Z
+	public abstract fun getKittyKeyboard ()Z
+	public abstract fun getKittyNotifications ()Z
+	public abstract fun getKittyPointerShape ()Z
+	public abstract fun getKittyUnderline ()Z
+	public abstract fun getSynchronizedRendering ()Z
+}
+
+public final class com/jakewharton/mosaic/terminal/Terminal$Size {
+	public static final field Companion Lcom/jakewharton/mosaic/terminal/Terminal$Size$Companion;
+	public fun <init> (IIII)V
+	public synthetic fun <init> (IIIIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColumns ()I
+	public final fun getHeight ()I
+	public final fun getRows ()I
+	public final fun getWidth ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/jakewharton/mosaic/terminal/Terminal$Size$Companion {
+	public final fun getDefault ()Lcom/jakewharton/mosaic/terminal/Terminal$Size;
+}
+
+public abstract interface class com/jakewharton/mosaic/terminal/Terminal$State {
+	public abstract fun getFocused ()Lkotlinx/coroutines/flow/StateFlow;
+	public abstract fun getSize ()Lkotlinx/coroutines/flow/StateFlow;
+	public abstract fun getSystemTheme ()Lkotlinx/coroutines/flow/StateFlow;
+}
+
+public final class com/jakewharton/mosaic/terminal/TerminalKt {
+	public static final fun asTerminal (Lcom/jakewharton/mosaic/tty/Tty;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
 public final class com/jakewharton/mosaic/terminal/TerminalParser {
 	public fun <init> (Lcom/jakewharton/mosaic/tty/Tty;)V
 	public final fun debugNext ()Lkotlin/Pair;
@@ -6,19 +59,6 @@ public final class com/jakewharton/mosaic/terminal/TerminalParser {
 	public final fun next ()Lcom/jakewharton/mosaic/terminal/event/Event;
 	public final fun setKittyDisambiguateEscapeCodes (Z)V
 	public final fun setXtermExtendedUtf8Mouse (Z)V
-}
-
-public final class com/jakewharton/mosaic/terminal/TerminalReader : java/lang/AutoCloseable {
-	public fun close ()V
-	public final fun getEvents ()Lkotlinx/coroutines/channels/ReceiveChannel;
-	public final fun getTty ()Lcom/jakewharton/mosaic/tty/Tty;
-	public final fun interrupt ()V
-	public final fun runParseLoop ()V
-}
-
-public final class com/jakewharton/mosaic/terminal/TerminalReaderKt {
-	public static final fun TerminalReader (Z)Lcom/jakewharton/mosaic/terminal/TerminalReader;
-	public static synthetic fun TerminalReader$default (ZILjava/lang/Object;)Lcom/jakewharton/mosaic/terminal/TerminalReader;
 }
 
 public final class com/jakewharton/mosaic/terminal/event/BracketedPasteEvent : com/jakewharton/mosaic/terminal/event/Event {

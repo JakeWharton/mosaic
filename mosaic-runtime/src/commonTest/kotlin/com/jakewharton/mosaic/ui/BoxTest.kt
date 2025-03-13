@@ -23,6 +23,7 @@ import com.jakewharton.mosaic.layout.width
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.position
 import com.jakewharton.mosaic.size
+import com.jakewharton.mosaic.terminal.AnsiLevel
 import com.jakewharton.mosaic.testIntrinsics
 import com.jakewharton.mosaic.testing.runMosaicTest
 import com.jakewharton.mosaic.ui.unit.Constraints

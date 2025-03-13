@@ -9,13 +9,13 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.layout.width
 import com.jakewharton.mosaic.modifier.Modifier
+import com.jakewharton.mosaic.terminal.Terminal
 import com.jakewharton.mosaic.testing.TestMosaic
 import com.jakewharton.mosaic.testing.runMosaicTest
 import com.jakewharton.mosaic.ui.Alignment
 import com.jakewharton.mosaic.ui.Box
 import com.jakewharton.mosaic.ui.Column
 import com.jakewharton.mosaic.ui.Text
-import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.test.Test
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
@@ -32,13 +32,13 @@ class CounterTest {
 
 	@Test fun counterInTerminalCenter() = runTest {
 		runMosaicTest {
-			terminalState.update { copy(size = IntSize(width = 30, height = 1)) }
+			state.size.value = Terminal.Size(30, 1)
 			setCounterInTerminalCenter()
 			for (count in 0..9) {
 				assertThat(awaitSnapshot()).isEqualTo("        The count is: $count")
 			}
 
-			terminalState.update { copy(size = IntSize(width = 20, height = 1)) }
+			state.size.value = Terminal.Size(20, 1)
 
 			// After changing the terminal size, we wait for the counter to increase before getting a
 			// new snapshot, otherwise there will be the previous value (9) and a different output size.

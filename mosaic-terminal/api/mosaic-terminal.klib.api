@@ -6,6 +6,76 @@
 // - Show declarations: true
 
 // Library unique name: <com.jakewharton.mosaic:mosaic-terminal>
+final enum class com.jakewharton.mosaic.terminal/AnsiLevel : kotlin/Enum<com.jakewharton.mosaic.terminal/AnsiLevel> { // com.jakewharton.mosaic.terminal/AnsiLevel|null[0]
+    enum entry ANSI16 // com.jakewharton.mosaic.terminal/AnsiLevel.ANSI16|null[0]
+    enum entry ANSI256 // com.jakewharton.mosaic.terminal/AnsiLevel.ANSI256|null[0]
+    enum entry NONE // com.jakewharton.mosaic.terminal/AnsiLevel.NONE|null[0]
+    enum entry TRUECOLOR // com.jakewharton.mosaic.terminal/AnsiLevel.TRUECOLOR|null[0]
+
+    final val entries // com.jakewharton.mosaic.terminal/AnsiLevel.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<com.jakewharton.mosaic.terminal/AnsiLevel> // com.jakewharton.mosaic.terminal/AnsiLevel.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): com.jakewharton.mosaic.terminal/AnsiLevel // com.jakewharton.mosaic.terminal/AnsiLevel.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<com.jakewharton.mosaic.terminal/AnsiLevel> // com.jakewharton.mosaic.terminal/AnsiLevel.values|values#static(){}[0]
+}
+
+abstract interface com.jakewharton.mosaic.terminal/Terminal { // com.jakewharton.mosaic.terminal/Terminal|null[0]
+    abstract val capabilities // com.jakewharton.mosaic.terminal/Terminal.capabilities|{}capabilities[0]
+        abstract fun <get-capabilities>(): com.jakewharton.mosaic.terminal/Terminal.Capabilities // com.jakewharton.mosaic.terminal/Terminal.capabilities.<get-capabilities>|<get-capabilities>(){}[0]
+    abstract val keyEvents // com.jakewharton.mosaic.terminal/Terminal.keyEvents|{}keyEvents[0]
+        abstract fun <get-keyEvents>(): kotlinx.coroutines.channels/Channel<com.jakewharton.mosaic.terminal.event/KeyboardEvent> // com.jakewharton.mosaic.terminal/Terminal.keyEvents.<get-keyEvents>|<get-keyEvents>(){}[0]
+    abstract val state // com.jakewharton.mosaic.terminal/Terminal.state|{}state[0]
+        abstract fun <get-state>(): com.jakewharton.mosaic.terminal/Terminal.State // com.jakewharton.mosaic.terminal/Terminal.state.<get-state>|<get-state>(){}[0]
+
+    abstract interface Capabilities { // com.jakewharton.mosaic.terminal/Terminal.Capabilities|null[0]
+        abstract val ansiLevel // com.jakewharton.mosaic.terminal/Terminal.Capabilities.ansiLevel|{}ansiLevel[0]
+            abstract fun <get-ansiLevel>(): com.jakewharton.mosaic.terminal/AnsiLevel // com.jakewharton.mosaic.terminal/Terminal.Capabilities.ansiLevel.<get-ansiLevel>|<get-ansiLevel>(){}[0]
+        abstract val kittyGraphics // com.jakewharton.mosaic.terminal/Terminal.Capabilities.kittyGraphics|{}kittyGraphics[0]
+            abstract fun <get-kittyGraphics>(): kotlin/Boolean // com.jakewharton.mosaic.terminal/Terminal.Capabilities.kittyGraphics.<get-kittyGraphics>|<get-kittyGraphics>(){}[0]
+        abstract val kittyKeyboard // com.jakewharton.mosaic.terminal/Terminal.Capabilities.kittyKeyboard|{}kittyKeyboard[0]
+            abstract fun <get-kittyKeyboard>(): kotlin/Boolean // com.jakewharton.mosaic.terminal/Terminal.Capabilities.kittyKeyboard.<get-kittyKeyboard>|<get-kittyKeyboard>(){}[0]
+        abstract val kittyNotifications // com.jakewharton.mosaic.terminal/Terminal.Capabilities.kittyNotifications|{}kittyNotifications[0]
+            abstract fun <get-kittyNotifications>(): kotlin/Boolean // com.jakewharton.mosaic.terminal/Terminal.Capabilities.kittyNotifications.<get-kittyNotifications>|<get-kittyNotifications>(){}[0]
+        abstract val kittyPointerShape // com.jakewharton.mosaic.terminal/Terminal.Capabilities.kittyPointerShape|{}kittyPointerShape[0]
+            abstract fun <get-kittyPointerShape>(): kotlin/Boolean // com.jakewharton.mosaic.terminal/Terminal.Capabilities.kittyPointerShape.<get-kittyPointerShape>|<get-kittyPointerShape>(){}[0]
+        abstract val kittyUnderline // com.jakewharton.mosaic.terminal/Terminal.Capabilities.kittyUnderline|{}kittyUnderline[0]
+            abstract fun <get-kittyUnderline>(): kotlin/Boolean // com.jakewharton.mosaic.terminal/Terminal.Capabilities.kittyUnderline.<get-kittyUnderline>|<get-kittyUnderline>(){}[0]
+        abstract val synchronizedRendering // com.jakewharton.mosaic.terminal/Terminal.Capabilities.synchronizedRendering|{}synchronizedRendering[0]
+            abstract fun <get-synchronizedRendering>(): kotlin/Boolean // com.jakewharton.mosaic.terminal/Terminal.Capabilities.synchronizedRendering.<get-synchronizedRendering>|<get-synchronizedRendering>(){}[0]
+    }
+
+    abstract interface State { // com.jakewharton.mosaic.terminal/Terminal.State|null[0]
+        abstract val focused // com.jakewharton.mosaic.terminal/Terminal.State.focused|{}focused[0]
+            abstract fun <get-focused>(): kotlinx.coroutines.flow/StateFlow<kotlin/Boolean> // com.jakewharton.mosaic.terminal/Terminal.State.focused.<get-focused>|<get-focused>(){}[0]
+        abstract val size // com.jakewharton.mosaic.terminal/Terminal.State.size|{}size[0]
+            abstract fun <get-size>(): kotlinx.coroutines.flow/StateFlow<com.jakewharton.mosaic.terminal/Terminal.Size> // com.jakewharton.mosaic.terminal/Terminal.State.size.<get-size>|<get-size>(){}[0]
+        abstract val systemTheme // com.jakewharton.mosaic.terminal/Terminal.State.systemTheme|{}systemTheme[0]
+            abstract fun <get-systemTheme>(): kotlinx.coroutines.flow/StateFlow<kotlin/Boolean> // com.jakewharton.mosaic.terminal/Terminal.State.systemTheme.<get-systemTheme>|<get-systemTheme>(){}[0]
+    }
+
+    final class Size { // com.jakewharton.mosaic.terminal/Terminal.Size|null[0]
+        constructor <init>(kotlin/Int, kotlin/Int, kotlin/Int = ..., kotlin/Int = ...) // com.jakewharton.mosaic.terminal/Terminal.Size.<init>|<init>(kotlin.Int;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+
+        final val columns // com.jakewharton.mosaic.terminal/Terminal.Size.columns|{}columns[0]
+            final fun <get-columns>(): kotlin/Int // com.jakewharton.mosaic.terminal/Terminal.Size.columns.<get-columns>|<get-columns>(){}[0]
+        final val height // com.jakewharton.mosaic.terminal/Terminal.Size.height|{}height[0]
+            final fun <get-height>(): kotlin/Int // com.jakewharton.mosaic.terminal/Terminal.Size.height.<get-height>|<get-height>(){}[0]
+        final val rows // com.jakewharton.mosaic.terminal/Terminal.Size.rows|{}rows[0]
+            final fun <get-rows>(): kotlin/Int // com.jakewharton.mosaic.terminal/Terminal.Size.rows.<get-rows>|<get-rows>(){}[0]
+        final val width // com.jakewharton.mosaic.terminal/Terminal.Size.width|{}width[0]
+            final fun <get-width>(): kotlin/Int // com.jakewharton.mosaic.terminal/Terminal.Size.width.<get-width>|<get-width>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal/Terminal.Size.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal/Terminal.Size.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal/Terminal.Size.toString|toString(){}[0]
+
+        final object Companion { // com.jakewharton.mosaic.terminal/Terminal.Size.Companion|null[0]
+            final val Default // com.jakewharton.mosaic.terminal/Terminal.Size.Companion.Default|{}Default[0]
+                final fun <get-Default>(): com.jakewharton.mosaic.terminal/Terminal.Size // com.jakewharton.mosaic.terminal/Terminal.Size.Companion.Default.<get-Default>|<get-Default>(){}[0]
+        }
+    }
+}
+
 sealed interface com.jakewharton.mosaic.terminal.event/Event // com.jakewharton.mosaic.terminal.event/Event|null[0]
 
 sealed interface com.jakewharton.mosaic.terminal.event/KittyPointerQueryEvent : com.jakewharton.mosaic.terminal.event/Event // com.jakewharton.mosaic.terminal.event/KittyPointerQueryEvent|null[0]
@@ -381,15 +451,4 @@ final class com.jakewharton.mosaic.terminal/TerminalParser { // com.jakewharton.
     final fun next(): com.jakewharton.mosaic.terminal.event/Event? // com.jakewharton.mosaic.terminal/TerminalParser.next|next(){}[0]
 }
 
-final class com.jakewharton.mosaic.terminal/TerminalReader : kotlin/AutoCloseable { // com.jakewharton.mosaic.terminal/TerminalReader|null[0]
-    final val events // com.jakewharton.mosaic.terminal/TerminalReader.events|{}events[0]
-        final fun <get-events>(): kotlinx.coroutines.channels/ReceiveChannel<com.jakewharton.mosaic.terminal.event/Event> // com.jakewharton.mosaic.terminal/TerminalReader.events.<get-events>|<get-events>(){}[0]
-    final val tty // com.jakewharton.mosaic.terminal/TerminalReader.tty|{}tty[0]
-        final fun <get-tty>(): com.jakewharton.mosaic.tty/Tty // com.jakewharton.mosaic.terminal/TerminalReader.tty.<get-tty>|<get-tty>(){}[0]
-
-    final fun close() // com.jakewharton.mosaic.terminal/TerminalReader.close|close(){}[0]
-    final fun interrupt() // com.jakewharton.mosaic.terminal/TerminalReader.interrupt|interrupt(){}[0]
-    final fun runParseLoop() // com.jakewharton.mosaic.terminal/TerminalReader.runParseLoop|runParseLoop(){}[0]
-}
-
-final fun com.jakewharton.mosaic.terminal/TerminalReader(kotlin/Boolean = ...): com.jakewharton.mosaic.terminal/TerminalReader // com.jakewharton.mosaic.terminal/TerminalReader|TerminalReader(kotlin.Boolean){}[0]
+final suspend fun (com.jakewharton.mosaic.tty/Tty).com.jakewharton.mosaic.terminal/asTerminal(kotlin.coroutines/SuspendFunction1<com.jakewharton.mosaic.terminal/Terminal, kotlin/Unit>) // com.jakewharton.mosaic.terminal/asTerminal|asTerminal@com.jakewharton.mosaic.tty.Tty(kotlin.coroutines.SuspendFunction1<com.jakewharton.mosaic.terminal.Terminal,kotlin.Unit>){}[0]

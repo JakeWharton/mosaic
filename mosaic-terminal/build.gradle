@@ -11,6 +11,7 @@ kotlin {
 		configureEach {
 			languageSettings {
 				optIn('kotlin.contracts.ExperimentalContracts')
+				optIn('kotlinx.cinterop.ExperimentalForeignApi')
 			}
 			if (it.name.endsWith("Test")) {
 				languageSettings {
@@ -24,6 +25,7 @@ kotlin {
 			dependencies {
 				api libs.kotlinx.coroutines.core
 				api projects.mosaicTty
+				implementation libs.finalizationHook
 			}
 		}
 		commonTest {

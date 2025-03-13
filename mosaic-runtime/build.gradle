@@ -21,7 +21,6 @@ kotlin {
 				api libs.kotlinx.coroutines.core
 				implementation projects.mosaicTerminal
 				implementation libs.androidx.collection
-				implementation libs.finalizationHook
 				implementation libs.codepoints
 			}
 		}
