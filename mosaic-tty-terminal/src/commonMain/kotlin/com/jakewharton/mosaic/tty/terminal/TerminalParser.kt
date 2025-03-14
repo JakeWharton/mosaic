@@ -38,8 +38,13 @@ public class TerminalParser(
 	private var offset = 0
 	private var limit = 0
 
-	@TestApi
-	internal fun copyBuffer() = buffer.copyOfRange(offset, limit)
+	/**
+	 * Return a copy of any buffered data.
+	 *
+	 * If a call to [next] was interrupted and parsing will not continue, this can be used to
+	 * ensure any bytes which were already buffered are not lost.
+	 */
+	public fun copyBuffer(): ByteArray = buffer.copyOfRange(offset, limit)
 
 	/**
 	 * Indicate whether Kitty's
