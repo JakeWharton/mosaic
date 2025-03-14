@@ -1,0 +1,17 @@
+package com.jakewharton.mosaic.tty.terminal
+
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import com.jakewharton.mosaic.terminal.event.OperatingStatusResponseEvent
+import kotlin.test.Test
+
+class TerminalParserTest : BaseTerminalParserTest() {
+	@Test fun copyBuffer() {
+		assertThat(parser.copyBuffer().toHexString()).isEqualTo("")
+		testTty.writeHex("1b5b306e1b5b306e")
+		assertThat(parser.next()).isEqualTo(OperatingStatusResponseEvent(ok = true))
+		assertThat(parser.copyBuffer().toHexString()).isEqualTo("1b5b306e")
+		assertThat(parser.next()).isEqualTo(OperatingStatusResponseEvent(ok = true))
+		assertThat(parser.copyBuffer().toHexString()).isEqualTo("")
+	}
+}

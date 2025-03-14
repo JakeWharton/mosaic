@@ -13,7 +13,6 @@ kotlin {
 			}
 			if (it.name.endsWith("Test")) {
 				languageSettings {
-					optIn('com.jakewharton.mosaic.tty.terminal.TestApi')
 					optIn('kotlin.ExperimentalStdlibApi')
 				}
 			}
