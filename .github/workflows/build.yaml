@@ -242,6 +242,35 @@ jobs:
           path: build/dokka/htmlMultiModule/
           if-no-files-found: error
 
+  samples:
+    runs-on: macos-15
+    needs:
+      - tty-zig
+    strategy:
+      fail-fast: false
+      matrix:
+        sample:
+          - counter
+          - jest
+    env:
+      MOSAIC_RAW_MODE: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: mosaic-tty-jni-libraries
+          path: mosaic-tty/src/jvmMain/resources/jni
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version-file: .github/workflows/.java-version
+      - uses: gradle/actions/setup-gradle@v4
+
+      - run: ./gradlew -p samples/${{ matrix.sample }} linkReleaseExecutableMacosArm64 installJvmDist
+      - run: ./samples/${{ matrix.sample }}/build/install/${{ matrix.sample }}-jvm/bin/${{ matrix.sample }}
+      #- run: ./samples/${{ matrix.sample }}/build/bin/macosArm64/releaseExecutable/${{ matrix.sample }}.kexe
+
   final-status:
     if: always()
     runs-on: ubuntu-latest
@@ -250,6 +279,7 @@ jobs:
       - tty-tests
       - tty-shrinker-tests
       - build
+      - samples
     steps:
       - name: Check
         run: |
