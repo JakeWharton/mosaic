@@ -5,7 +5,7 @@ Low-level TTY manipulation library.
 
 ## Prerequisites
 
-The JVM target requires native libraries which are built outside Gradle using Zig 0.13.0.
+The JVM target requires native libraries which are built outside Gradle using Zig 0.14.0.
 
 First, generate the JNI headers:
 ```

@@ -2,7 +2,7 @@ const std = @import("std");
 
 pub fn build(b: *std.Build) !void {
 	// The Windows builds create a .lib file in the lib/ directory which we don't need.
-	const deleteLib = b.addRemoveDirTree(b.getInstallPath(.prefix, "lib"));
+	const deleteLib = b.addRemoveDirTree(b.path(b.getInstallPath(.prefix, "lib")));
 	b.getInstallStep().dependOn(&deleteLib.step);
 
 	setupMosaicTarget(b, &deleteLib.step, .linux, .aarch64, "aarch64");

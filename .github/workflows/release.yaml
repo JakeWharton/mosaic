@@ -21,7 +21,7 @@ jobs:
 
       - uses: mlugg/setup-zig@v1
         with:
-          version: 0.13.0
+          version: 0.14.0
       - run: zig build -p src/jvmMain/resources/jni
         working-directory: mosaic-tty
 
