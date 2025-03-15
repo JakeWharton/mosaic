@@ -6,7 +6,7 @@ import com.jakewharton.mosaic.terminal.TerminalVersionEvent
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
-class TerminalParserDcsTerminalVersionEventTest : BaseTerminalParserTest() {
+class EventParserDcsEventVersionEventTest : BaseEventParserTest() {
 	@Test fun empty() = runTest {
 		testTty.writeHex("1b503e7c1b5c")
 		assertThat(parser.next()).isEqualTo(TerminalVersionEvent(""))

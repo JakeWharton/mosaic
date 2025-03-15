@@ -8,7 +8,7 @@ import com.jakewharton.mosaic.terminal.UnknownEvent
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
-class TerminalParserOscKittyPointerQueryEventTest : BaseTerminalParserTest() {
+class EventParserOscKittyPointerQueryEventTest : BaseEventParserTest() {
 	@Test fun emptyFails() = runTest {
 		testTty.writeHex("1b5d32323b1b5c")
 		assertThat(parser.next()).isEqualTo(

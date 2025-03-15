@@ -1,9 +1,4 @@
-public final class com/jakewharton/mosaic/tty/terminal/TerminalKt {
-	public static final fun useAsTerminal (Lcom/jakewharton/mosaic/tty/Tty;ZLkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun useAsTerminal$default (Lcom/jakewharton/mosaic/tty/Tty;ZLkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-}
-
-public final class com/jakewharton/mosaic/tty/terminal/TerminalParser {
+public final class com/jakewharton/mosaic/tty/terminal/EventParser {
 	public fun <init> (Lcom/jakewharton/mosaic/tty/Tty;)V
 	public final fun copyBuffer ()[B
 	public final fun debugNext ()Lkotlin/Pair;
@@ -12,5 +7,10 @@ public final class com/jakewharton/mosaic/tty/terminal/TerminalParser {
 	public final fun next ()Lcom/jakewharton/mosaic/terminal/Event;
 	public final fun setKittyDisambiguateEscapeCodes (Z)V
 	public final fun setXtermExtendedUtf8Mouse (Z)V
+}
+
+public final class com/jakewharton/mosaic/tty/terminal/TerminalKt {
+	public static final fun useAsTerminal (Lcom/jakewharton/mosaic/tty/Tty;ZLkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun useAsTerminal$default (Lcom/jakewharton/mosaic/tty/Tty;ZLkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 

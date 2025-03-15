@@ -7,7 +7,7 @@ import com.jakewharton.mosaic.terminal.KeyboardEvent.Companion.ModifierCtrl
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
-class TerminalParserGroundKeyboardEventTest : BaseTerminalParserTest() {
+class EventParserGroundKeyboardEventTest : BaseEventParserTest() {
 	@Test fun graphic() = runTest {
 		for (codepoint in 0x20..0x7f) {
 			val hex = codepoint.toString(16)

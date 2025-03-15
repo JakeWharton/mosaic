@@ -98,7 +98,7 @@ public suspend fun Tty.useAsTerminal(
 		},
 		block = {
 			launch(Dispatchers.IO) {
-				val parser = TerminalParser(this@useAsTerminal)
+				val parser = EventParser(this@useAsTerminal)
 				while (true) {
 					val event = parser.next() ?: break
 					events.trySend(event)

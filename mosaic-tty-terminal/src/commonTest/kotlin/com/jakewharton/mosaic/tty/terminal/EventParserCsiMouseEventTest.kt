@@ -8,7 +8,7 @@ import com.jakewharton.mosaic.terminal.MouseEvent.Type
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
-class TerminalParserCsiMouseEventTest : BaseTerminalParserTest() {
+class EventParserCsiMouseEventTest : BaseEventParserTest() {
 	@Test fun motion() = runTest {
 		testTty.writeHex("1b5b4d434837")
 		assertThat(parser.next()).isEqualTo(

@@ -26,7 +26,7 @@ import com.jakewharton.mosaic.terminal.XtermPixelSizeEvent
 import com.jakewharton.mosaic.tty.Tty
 import kotlin.concurrent.Volatile
 
-public class TerminalParser(
+public class EventParser(
 	private val tty: Tty,
 ) {
 	private companion object {

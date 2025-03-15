@@ -7,7 +7,7 @@ import com.jakewharton.mosaic.terminal.UnknownEvent
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
-class TerminalParserCsiKittyKeyboardQueryEventTest : BaseTerminalParserTest() {
+class EventParserCsiKittyKeyboardQueryEventTest : BaseEventParserTest() {
 	@Test fun flagsNone() = runTest {
 		testTty.writeHex("1b5b3f3075")
 		assertThat(parser.next()).isEqualTo(KittyKeyboardQueryEvent(0))

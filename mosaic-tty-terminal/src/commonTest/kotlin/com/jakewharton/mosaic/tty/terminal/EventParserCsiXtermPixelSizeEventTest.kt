@@ -7,7 +7,7 @@ import com.jakewharton.mosaic.terminal.XtermPixelSizeEvent
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
-class TerminalParserCsiXtermPixelSizeEventTest : BaseTerminalParserTest() {
+class EventParserCsiXtermPixelSizeEventTest : BaseEventParserTest() {
 	@Test fun basic() = runTest {
 		testTty.writeHex("1b5b343b313b3274")
 		assertThat(parser.next()).isEqualTo(XtermPixelSizeEvent(1, 2))

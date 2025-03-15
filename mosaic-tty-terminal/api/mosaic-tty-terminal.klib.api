@@ -6,19 +6,19 @@
 // - Show declarations: true
 
 // Library unique name: <com.jakewharton.mosaic:mosaic-tty-terminal>
-final class com.jakewharton.mosaic.tty.terminal/TerminalParser { // com.jakewharton.mosaic.tty.terminal/TerminalParser|null[0]
-    constructor <init>(com.jakewharton.mosaic.tty/Tty) // com.jakewharton.mosaic.tty.terminal/TerminalParser.<init>|<init>(com.jakewharton.mosaic.tty.Tty){}[0]
+final class com.jakewharton.mosaic.tty.terminal/EventParser { // com.jakewharton.mosaic.tty.terminal/EventParser|null[0]
+    constructor <init>(com.jakewharton.mosaic.tty/Tty) // com.jakewharton.mosaic.tty.terminal/EventParser.<init>|<init>(com.jakewharton.mosaic.tty.Tty){}[0]
 
-    final var kittyDisambiguateEscapeCodes // com.jakewharton.mosaic.tty.terminal/TerminalParser.kittyDisambiguateEscapeCodes|{}kittyDisambiguateEscapeCodes[0]
-        final fun <get-kittyDisambiguateEscapeCodes>(): kotlin/Boolean // com.jakewharton.mosaic.tty.terminal/TerminalParser.kittyDisambiguateEscapeCodes.<get-kittyDisambiguateEscapeCodes>|<get-kittyDisambiguateEscapeCodes>(){}[0]
-        final fun <set-kittyDisambiguateEscapeCodes>(kotlin/Boolean) // com.jakewharton.mosaic.tty.terminal/TerminalParser.kittyDisambiguateEscapeCodes.<set-kittyDisambiguateEscapeCodes>|<set-kittyDisambiguateEscapeCodes>(kotlin.Boolean){}[0]
-    final var xtermExtendedUtf8Mouse // com.jakewharton.mosaic.tty.terminal/TerminalParser.xtermExtendedUtf8Mouse|{}xtermExtendedUtf8Mouse[0]
-        final fun <get-xtermExtendedUtf8Mouse>(): kotlin/Boolean // com.jakewharton.mosaic.tty.terminal/TerminalParser.xtermExtendedUtf8Mouse.<get-xtermExtendedUtf8Mouse>|<get-xtermExtendedUtf8Mouse>(){}[0]
-        final fun <set-xtermExtendedUtf8Mouse>(kotlin/Boolean) // com.jakewharton.mosaic.tty.terminal/TerminalParser.xtermExtendedUtf8Mouse.<set-xtermExtendedUtf8Mouse>|<set-xtermExtendedUtf8Mouse>(kotlin.Boolean){}[0]
+    final var kittyDisambiguateEscapeCodes // com.jakewharton.mosaic.tty.terminal/EventParser.kittyDisambiguateEscapeCodes|{}kittyDisambiguateEscapeCodes[0]
+        final fun <get-kittyDisambiguateEscapeCodes>(): kotlin/Boolean // com.jakewharton.mosaic.tty.terminal/EventParser.kittyDisambiguateEscapeCodes.<get-kittyDisambiguateEscapeCodes>|<get-kittyDisambiguateEscapeCodes>(){}[0]
+        final fun <set-kittyDisambiguateEscapeCodes>(kotlin/Boolean) // com.jakewharton.mosaic.tty.terminal/EventParser.kittyDisambiguateEscapeCodes.<set-kittyDisambiguateEscapeCodes>|<set-kittyDisambiguateEscapeCodes>(kotlin.Boolean){}[0]
+    final var xtermExtendedUtf8Mouse // com.jakewharton.mosaic.tty.terminal/EventParser.xtermExtendedUtf8Mouse|{}xtermExtendedUtf8Mouse[0]
+        final fun <get-xtermExtendedUtf8Mouse>(): kotlin/Boolean // com.jakewharton.mosaic.tty.terminal/EventParser.xtermExtendedUtf8Mouse.<get-xtermExtendedUtf8Mouse>|<get-xtermExtendedUtf8Mouse>(){}[0]
+        final fun <set-xtermExtendedUtf8Mouse>(kotlin/Boolean) // com.jakewharton.mosaic.tty.terminal/EventParser.xtermExtendedUtf8Mouse.<set-xtermExtendedUtf8Mouse>|<set-xtermExtendedUtf8Mouse>(kotlin.Boolean){}[0]
 
-    final fun copyBuffer(): kotlin/ByteArray // com.jakewharton.mosaic.tty.terminal/TerminalParser.copyBuffer|copyBuffer(){}[0]
-    final fun debugNext(): kotlin/Pair<com.jakewharton.mosaic.terminal/Event, kotlin/ByteArray>? // com.jakewharton.mosaic.tty.terminal/TerminalParser.debugNext|debugNext(){}[0]
-    final fun next(): com.jakewharton.mosaic.terminal/Event? // com.jakewharton.mosaic.tty.terminal/TerminalParser.next|next(){}[0]
+    final fun copyBuffer(): kotlin/ByteArray // com.jakewharton.mosaic.tty.terminal/EventParser.copyBuffer|copyBuffer(){}[0]
+    final fun debugNext(): kotlin/Pair<com.jakewharton.mosaic.terminal/Event, kotlin/ByteArray>? // com.jakewharton.mosaic.tty.terminal/EventParser.debugNext|debugNext(){}[0]
+    final fun next(): com.jakewharton.mosaic.terminal/Event? // com.jakewharton.mosaic.tty.terminal/EventParser.next|next(){}[0]
 }
 
 final suspend fun (com.jakewharton.mosaic.tty/Tty).com.jakewharton.mosaic.tty.terminal/useAsTerminal(kotlin/Boolean = ..., kotlin.coroutines/SuspendFunction1<com.jakewharton.mosaic.terminal/Terminal, kotlin/Unit>) // com.jakewharton.mosaic.tty.terminal/useAsTerminal|useAsTerminal@com.jakewharton.mosaic.tty.Tty(kotlin.Boolean;kotlin.coroutines.SuspendFunction1<com.jakewharton.mosaic.terminal.Terminal,kotlin.Unit>){}[0]

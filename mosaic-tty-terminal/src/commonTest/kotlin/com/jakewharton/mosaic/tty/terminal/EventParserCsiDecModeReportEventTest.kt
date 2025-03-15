@@ -12,7 +12,7 @@ import com.jakewharton.mosaic.terminal.UnknownEvent
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
-class TerminalParserCsiDecModeReportEventTest : BaseTerminalParserTest() {
+class EventParserCsiDecModeReportEventTest : BaseEventParserTest() {
 	@Test fun settings() = runTest {
 		testTty.writeHex("1b5b3f313030343b302479")
 		assertThat(parser.next()).isEqualTo(
