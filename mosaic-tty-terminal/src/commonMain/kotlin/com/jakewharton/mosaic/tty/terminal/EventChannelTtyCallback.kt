@@ -1,9 +1,9 @@
 package com.jakewharton.mosaic.tty.terminal
 
-import com.jakewharton.mosaic.terminal.event.DebugEvent
-import com.jakewharton.mosaic.terminal.event.Event
-import com.jakewharton.mosaic.terminal.event.FocusEvent
-import com.jakewharton.mosaic.terminal.event.ResizeEvent
+import com.jakewharton.mosaic.terminal.DebugEvent
+import com.jakewharton.mosaic.terminal.Event
+import com.jakewharton.mosaic.terminal.FocusEvent
+import com.jakewharton.mosaic.terminal.ResizeEvent
 import com.jakewharton.mosaic.tty.Tty
 import kotlinx.coroutines.channels.SendChannel
 

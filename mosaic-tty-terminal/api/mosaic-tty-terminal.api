@@ -9,7 +9,7 @@ public final class com/jakewharton/mosaic/tty/terminal/TerminalParser {
 	public final fun debugNext ()Lkotlin/Pair;
 	public final fun getKittyDisambiguateEscapeCodes ()Z
 	public final fun getXtermExtendedUtf8Mouse ()Z
-	public final fun next ()Lcom/jakewharton/mosaic/terminal/event/Event;
+	public final fun next ()Lcom/jakewharton/mosaic/terminal/Event;
 	public final fun setKittyDisambiguateEscapeCodes (Z)V
 	public final fun setXtermExtendedUtf8Mouse (Z)V
 }

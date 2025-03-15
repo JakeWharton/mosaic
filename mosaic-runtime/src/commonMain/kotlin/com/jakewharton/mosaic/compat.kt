@@ -1,7 +1,7 @@
 package com.jakewharton.mosaic
 
 import com.jakewharton.mosaic.layout.KeyEvent
-import com.jakewharton.mosaic.terminal.event.KeyboardEvent
+import com.jakewharton.mosaic.terminal.KeyboardEvent
 
 internal fun KeyboardEvent.toKeyEventOrNull(): KeyEvent? {
 	if (eventType != KeyboardEvent.EventTypePress) {

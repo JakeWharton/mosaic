@@ -1,6 +1,5 @@
 package com.jakewharton.mosaic.terminal
 
-import com.jakewharton.mosaic.terminal.event.KeyboardEvent
 import dev.drewhamilton.poko.Poko
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.StateFlow

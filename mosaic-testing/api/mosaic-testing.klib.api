@@ -14,7 +14,7 @@ abstract interface <#A: kotlin/Any?> com.jakewharton.mosaic.testing/TestMosaic :
     abstract val state // com.jakewharton.mosaic.testing/TestMosaic.state|{}state[0]
         abstract fun <get-state>(): com.jakewharton.mosaic.testing/TestTerminal.State // com.jakewharton.mosaic.testing/TestMosaic.state.<get-state>|<get-state>(){}[0]
 
-    abstract fun sendKeyEvent(com.jakewharton.mosaic.terminal.event/KeyboardEvent) // com.jakewharton.mosaic.testing/TestMosaic.sendKeyEvent|sendKeyEvent(com.jakewharton.mosaic.terminal.event.KeyboardEvent){}[0]
+    abstract fun sendKeyEvent(com.jakewharton.mosaic.terminal/KeyboardEvent) // com.jakewharton.mosaic.testing/TestMosaic.sendKeyEvent|sendKeyEvent(com.jakewharton.mosaic.terminal.KeyboardEvent){}[0]
     abstract fun setContentAndSnapshot(kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>): #A // com.jakewharton.mosaic.testing/TestMosaic.setContentAndSnapshot|setContentAndSnapshot(kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>){}[0]
     abstract suspend fun awaitSnapshot(kotlin.time/Duration = ...): #A // com.jakewharton.mosaic.testing/TestMosaic.awaitSnapshot|awaitSnapshot(kotlin.time.Duration){}[0]
 }
@@ -25,7 +25,7 @@ final class com.jakewharton.mosaic.testing/TestTerminal : com.jakewharton.mosaic
     final val capabilities // com.jakewharton.mosaic.testing/TestTerminal.capabilities|{}capabilities[0]
         final fun <get-capabilities>(): com.jakewharton.mosaic.terminal/Terminal.Capabilities // com.jakewharton.mosaic.testing/TestTerminal.capabilities.<get-capabilities>|<get-capabilities>(){}[0]
     final val keyEvents // com.jakewharton.mosaic.testing/TestTerminal.keyEvents|{}keyEvents[0]
-        final fun <get-keyEvents>(): kotlinx.coroutines.channels/Channel<com.jakewharton.mosaic.terminal.event/KeyboardEvent> // com.jakewharton.mosaic.testing/TestTerminal.keyEvents.<get-keyEvents>|<get-keyEvents>(){}[0]
+        final fun <get-keyEvents>(): kotlinx.coroutines.channels/Channel<com.jakewharton.mosaic.terminal/KeyboardEvent> // com.jakewharton.mosaic.testing/TestTerminal.keyEvents.<get-keyEvents>|<get-keyEvents>(){}[0]
     final val state // com.jakewharton.mosaic.testing/TestTerminal.state|{}state[0]
         final fun <get-state>(): com.jakewharton.mosaic.testing/TestTerminal.State // com.jakewharton.mosaic.testing/TestTerminal.state.<get-state>|<get-state>(){}[0]
 

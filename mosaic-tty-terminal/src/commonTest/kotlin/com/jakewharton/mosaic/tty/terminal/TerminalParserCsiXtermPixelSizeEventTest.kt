@@ -2,8 +2,8 @@ package com.jakewharton.mosaic.tty.terminal
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.jakewharton.mosaic.terminal.event.UnknownEvent
-import com.jakewharton.mosaic.terminal.event.XtermPixelSizeEvent
+import com.jakewharton.mosaic.terminal.UnknownEvent
+import com.jakewharton.mosaic.terminal.XtermPixelSizeEvent
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 

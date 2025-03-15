@@ -2,19 +2,19 @@ package com.jakewharton.mosaic.tty.terminal
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.jakewharton.mosaic.terminal.event.KeyboardEvent
-import com.jakewharton.mosaic.terminal.event.KeyboardEvent.Companion.Down
-import com.jakewharton.mosaic.terminal.event.KeyboardEvent.Companion.End
-import com.jakewharton.mosaic.terminal.event.KeyboardEvent.Companion.F1
-import com.jakewharton.mosaic.terminal.event.KeyboardEvent.Companion.F2
-import com.jakewharton.mosaic.terminal.event.KeyboardEvent.Companion.F3
-import com.jakewharton.mosaic.terminal.event.KeyboardEvent.Companion.F4
-import com.jakewharton.mosaic.terminal.event.KeyboardEvent.Companion.Home
-import com.jakewharton.mosaic.terminal.event.KeyboardEvent.Companion.Left
-import com.jakewharton.mosaic.terminal.event.KeyboardEvent.Companion.Right
-import com.jakewharton.mosaic.terminal.event.KeyboardEvent.Companion.Up
-import com.jakewharton.mosaic.terminal.event.OperatingStatusResponseEvent
-import com.jakewharton.mosaic.terminal.event.UnknownEvent
+import com.jakewharton.mosaic.terminal.KeyboardEvent
+import com.jakewharton.mosaic.terminal.KeyboardEvent.Companion.Down
+import com.jakewharton.mosaic.terminal.KeyboardEvent.Companion.End
+import com.jakewharton.mosaic.terminal.KeyboardEvent.Companion.F1
+import com.jakewharton.mosaic.terminal.KeyboardEvent.Companion.F2
+import com.jakewharton.mosaic.terminal.KeyboardEvent.Companion.F3
+import com.jakewharton.mosaic.terminal.KeyboardEvent.Companion.F4
+import com.jakewharton.mosaic.terminal.KeyboardEvent.Companion.Home
+import com.jakewharton.mosaic.terminal.KeyboardEvent.Companion.Left
+import com.jakewharton.mosaic.terminal.KeyboardEvent.Companion.Right
+import com.jakewharton.mosaic.terminal.KeyboardEvent.Companion.Up
+import com.jakewharton.mosaic.terminal.OperatingStatusResponseEvent
+import com.jakewharton.mosaic.terminal.UnknownEvent
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 

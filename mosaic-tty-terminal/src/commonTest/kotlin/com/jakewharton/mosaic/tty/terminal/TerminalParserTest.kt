@@ -2,7 +2,7 @@ package com.jakewharton.mosaic.tty.terminal
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.jakewharton.mosaic.terminal.event.OperatingStatusResponseEvent
+import com.jakewharton.mosaic.terminal.OperatingStatusResponseEvent
 import kotlin.test.Test
 
 class TerminalParserTest : BaseTerminalParserTest() {
