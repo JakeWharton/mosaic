@@ -115,14 +115,15 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 
 				val parser = EventParser(tty)
 				while (true) {
-					val (event, bytes) = parser.debugNext() ?: break
+					val debugEvent = parser.nextDebug() ?: break
+					val event = debugEvent.event
 
 					fun printDebug() {
 						printNewline()
-						print(event.toString())
+						print(event)
 					}
 					fun printHex() {
-						val string = bytes.toHexString()
+						val string = debugEvent.bytes.toHexString()
 						if (string.isNotEmpty()) {
 							printNewline()
 							print(string)
