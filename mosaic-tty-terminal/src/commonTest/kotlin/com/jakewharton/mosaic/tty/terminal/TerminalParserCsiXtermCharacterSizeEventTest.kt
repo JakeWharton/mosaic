@@ -2,8 +2,8 @@ package com.jakewharton.mosaic.tty.terminal
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.jakewharton.mosaic.terminal.event.UnknownEvent
-import com.jakewharton.mosaic.terminal.event.XtermCharacterSizeEvent
+import com.jakewharton.mosaic.terminal.UnknownEvent
+import com.jakewharton.mosaic.terminal.XtermCharacterSizeEvent
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 

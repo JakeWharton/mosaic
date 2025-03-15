@@ -2,9 +2,9 @@ package com.jakewharton.mosaic.tty.terminal
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.jakewharton.mosaic.terminal.event.MouseEvent
-import com.jakewharton.mosaic.terminal.event.MouseEvent.Button
-import com.jakewharton.mosaic.terminal.event.MouseEvent.Type
+import com.jakewharton.mosaic.terminal.MouseEvent
+import com.jakewharton.mosaic.terminal.MouseEvent.Button
+import com.jakewharton.mosaic.terminal.MouseEvent.Type
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 

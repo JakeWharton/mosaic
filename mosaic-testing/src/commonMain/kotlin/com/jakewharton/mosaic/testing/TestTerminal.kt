@@ -1,8 +1,8 @@
 package com.jakewharton.mosaic.testing
 
 import com.jakewharton.mosaic.terminal.AnsiLevel
+import com.jakewharton.mosaic.terminal.KeyboardEvent
 import com.jakewharton.mosaic.terminal.Terminal
-import com.jakewharton.mosaic.terminal.event.KeyboardEvent
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.flow.MutableStateFlow

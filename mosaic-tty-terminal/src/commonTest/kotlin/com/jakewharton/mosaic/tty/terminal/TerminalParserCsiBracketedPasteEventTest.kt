@@ -2,7 +2,7 @@ package com.jakewharton.mosaic.tty.terminal
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.jakewharton.mosaic.terminal.event.BracketedPasteEvent
+import com.jakewharton.mosaic.terminal.BracketedPasteEvent
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 

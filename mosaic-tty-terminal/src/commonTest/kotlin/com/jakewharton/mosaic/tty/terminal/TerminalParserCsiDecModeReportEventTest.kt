@@ -2,13 +2,13 @@ package com.jakewharton.mosaic.tty.terminal
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.jakewharton.mosaic.terminal.event.DecModeReportEvent
-import com.jakewharton.mosaic.terminal.event.DecModeReportEvent.Setting.NotRecognized
-import com.jakewharton.mosaic.terminal.event.DecModeReportEvent.Setting.PermanentlyReset
-import com.jakewharton.mosaic.terminal.event.DecModeReportEvent.Setting.PermanentlySet
-import com.jakewharton.mosaic.terminal.event.DecModeReportEvent.Setting.Reset
-import com.jakewharton.mosaic.terminal.event.DecModeReportEvent.Setting.Set
-import com.jakewharton.mosaic.terminal.event.UnknownEvent
+import com.jakewharton.mosaic.terminal.DecModeReportEvent
+import com.jakewharton.mosaic.terminal.DecModeReportEvent.Setting.NotRecognized
+import com.jakewharton.mosaic.terminal.DecModeReportEvent.Setting.PermanentlyReset
+import com.jakewharton.mosaic.terminal.DecModeReportEvent.Setting.PermanentlySet
+import com.jakewharton.mosaic.terminal.DecModeReportEvent.Setting.Reset
+import com.jakewharton.mosaic.terminal.DecModeReportEvent.Setting.Set
+import com.jakewharton.mosaic.terminal.UnknownEvent
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 

@@ -4,8 +4,8 @@ import androidx.compose.runtime.BroadcastFrameClock
 import androidx.compose.runtime.Composable
 import com.jakewharton.mosaic.Mosaic
 import com.jakewharton.mosaic.terminal.AnsiLevel
+import com.jakewharton.mosaic.terminal.KeyboardEvent
 import com.jakewharton.mosaic.terminal.Terminal
-import com.jakewharton.mosaic.terminal.event.KeyboardEvent
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds

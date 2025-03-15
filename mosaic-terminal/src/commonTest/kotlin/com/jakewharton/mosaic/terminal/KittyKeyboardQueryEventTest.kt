@@ -1,4 +1,4 @@
-package com.jakewharton.mosaic.terminal.event
+package com.jakewharton.mosaic.terminal
 
 import assertk.Assert
 import assertk.all

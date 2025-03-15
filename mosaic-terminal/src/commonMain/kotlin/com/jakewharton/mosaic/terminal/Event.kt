@@ -1,4 +1,4 @@
-package com.jakewharton.mosaic.terminal.event
+package com.jakewharton.mosaic.terminal
 
 import com.jakewharton.cite.__TYPE__
 import dev.drewhamilton.poko.Poko

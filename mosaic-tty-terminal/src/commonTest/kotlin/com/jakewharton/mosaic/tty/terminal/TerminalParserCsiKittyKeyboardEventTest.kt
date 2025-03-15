@@ -2,8 +2,8 @@ package com.jakewharton.mosaic.tty.terminal
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.jakewharton.mosaic.terminal.event.KeyboardEvent
-import com.jakewharton.mosaic.terminal.event.KeyboardEvent.Companion.ModifierShift
+import com.jakewharton.mosaic.terminal.KeyboardEvent
+import com.jakewharton.mosaic.terminal.KeyboardEvent.Companion.ModifierShift
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
