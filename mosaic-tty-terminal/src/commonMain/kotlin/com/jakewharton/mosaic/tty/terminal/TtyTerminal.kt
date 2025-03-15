@@ -3,6 +3,7 @@ package com.jakewharton.mosaic.tty.terminal
 import com.jakewharton.finalization.withFinalizationHook
 import com.jakewharton.mosaic.terminal.AnsiLevel
 import com.jakewharton.mosaic.terminal.CapabilityQueryEvent
+import com.jakewharton.mosaic.terminal.DebugEvent
 import com.jakewharton.mosaic.terminal.DecModeReportEvent
 import com.jakewharton.mosaic.terminal.DecModeReportEvent.Setting
 import com.jakewharton.mosaic.terminal.Event
@@ -61,13 +62,15 @@ private const val StageDefaultQueries = 1
 private const val StageNormalOperation = 0
 
 public suspend fun Tty.useAsTerminal(
-	/** When true, Call [Tty.reset] at and of [block] instead of [Tty.close]. */
+	/** When true, call [Tty.reset] at and of [block] instead of [Tty.close]. */
 	resetOnly: Boolean = false,
+	/** When true, each terminal event will be immediately followed by a matching [DebugEvent]. */
+	emitDebugEvents: Boolean = false,
 	block: suspend (Terminal) -> Unit,
 ) {
 	val events = Channel<Event>(UNLIMITED)
 
-	setCallback(EventChannelTtyCallback(events, false))
+	setCallback(EventChannelTtyCallback(events, emitDebugEvents))
 
 	// Each of these will become true when their respective feature is recognized by the terminal
 	// and was not already configured to our desired setting. Revert each toggled setting on exit.
@@ -99,9 +102,17 @@ public suspend fun Tty.useAsTerminal(
 		block = {
 			launch(Dispatchers.IO) {
 				val parser = EventParser(this@useAsTerminal)
-				while (true) {
-					val event = parser.next() ?: break
-					events.trySend(event)
+				if (!emitDebugEvents) {
+					while (true) {
+						val event = parser.next() ?: break
+						events.trySend(event)
+					}
+				} else {
+					while (true) {
+						val debugEvent = parser.nextDebug() ?: break
+						events.trySend(debugEvent.event)
+						events.trySend(debugEvent)
+					}
 				}
 			}
 

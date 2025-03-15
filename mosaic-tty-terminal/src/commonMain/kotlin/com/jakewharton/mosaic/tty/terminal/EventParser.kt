@@ -2,6 +2,7 @@ package com.jakewharton.mosaic.tty.terminal
 
 import com.jakewharton.mosaic.terminal.BracketedPasteEvent
 import com.jakewharton.mosaic.terminal.CapabilityQueryEvent
+import com.jakewharton.mosaic.terminal.DebugEvent
 import com.jakewharton.mosaic.terminal.DecModeReportEvent
 import com.jakewharton.mosaic.terminal.Event
 import com.jakewharton.mosaic.terminal.FocusEvent
@@ -74,11 +75,12 @@ public class EventParser(
 	public var xtermExtendedUtf8Mouse: Boolean = false
 
 	/**
-	 * A version of [next] which also returns the bytes that produced the event.
+	 * A version of [next] which only produces [DebugEvent]s containing the original event and
+	 * the parsed bytes which produced it.
 	 *
 	 * **WARNING** This function is expensive, and should only be used for debugging.
 	 */
-	public fun debugNext(): Pair<Event, ByteArray>? {
+	public fun nextDebug(): DebugEvent? {
 		// Move any existing data to index 0 of the buffer. This will ensure we can capture all the
 		// bytes consumed (even across multiple reads) since the original offset will always be 0.
 		buffer.copyInto(buffer, 0, startIndex = offset, endIndex = limit)
@@ -87,7 +89,7 @@ public class EventParser(
 
 		val event = next() ?: return null
 		val bytes = buffer.copyOfRange(0, offset)
-		return event to bytes
+		return DebugEvent(event, bytes)
 	}
 
 	/**

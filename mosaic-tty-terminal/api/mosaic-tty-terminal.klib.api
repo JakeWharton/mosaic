@@ -17,8 +17,8 @@ final class com.jakewharton.mosaic.tty.terminal/EventParser { // com.jakewharton
         final fun <set-xtermExtendedUtf8Mouse>(kotlin/Boolean) // com.jakewharton.mosaic.tty.terminal/EventParser.xtermExtendedUtf8Mouse.<set-xtermExtendedUtf8Mouse>|<set-xtermExtendedUtf8Mouse>(kotlin.Boolean){}[0]
 
     final fun copyBuffer(): kotlin/ByteArray // com.jakewharton.mosaic.tty.terminal/EventParser.copyBuffer|copyBuffer(){}[0]
-    final fun debugNext(): kotlin/Pair<com.jakewharton.mosaic.terminal/Event, kotlin/ByteArray>? // com.jakewharton.mosaic.tty.terminal/EventParser.debugNext|debugNext(){}[0]
     final fun next(): com.jakewharton.mosaic.terminal/Event? // com.jakewharton.mosaic.tty.terminal/EventParser.next|next(){}[0]
+    final fun nextDebug(): com.jakewharton.mosaic.terminal/DebugEvent? // com.jakewharton.mosaic.tty.terminal/EventParser.nextDebug|nextDebug(){}[0]
 }
 
-final suspend fun (com.jakewharton.mosaic.tty/Tty).com.jakewharton.mosaic.tty.terminal/useAsTerminal(kotlin/Boolean = ..., kotlin.coroutines/SuspendFunction1<com.jakewharton.mosaic.terminal/Terminal, kotlin/Unit>) // com.jakewharton.mosaic.tty.terminal/useAsTerminal|useAsTerminal@com.jakewharton.mosaic.tty.Tty(kotlin.Boolean;kotlin.coroutines.SuspendFunction1<com.jakewharton.mosaic.terminal.Terminal,kotlin.Unit>){}[0]
+final suspend fun (com.jakewharton.mosaic.tty/Tty).com.jakewharton.mosaic.tty.terminal/useAsTerminal(kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin.coroutines/SuspendFunction1<com.jakewharton.mosaic.terminal/Terminal, kotlin/Unit>) // com.jakewharton.mosaic.tty.terminal/useAsTerminal|useAsTerminal@com.jakewharton.mosaic.tty.Tty(kotlin.Boolean;kotlin.Boolean;kotlin.coroutines.SuspendFunction1<com.jakewharton.mosaic.terminal.Terminal,kotlin.Unit>){}[0]
