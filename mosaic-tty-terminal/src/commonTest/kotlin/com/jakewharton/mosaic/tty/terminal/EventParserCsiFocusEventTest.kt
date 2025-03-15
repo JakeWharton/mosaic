@@ -6,7 +6,7 @@ import com.jakewharton.mosaic.terminal.FocusEvent
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
-class TerminalParserCsiFocusEventTest : BaseTerminalParserTest() {
+class EventParserCsiFocusEventTest : BaseEventParserTest() {
 	@Test fun focusedTrue() = runTest {
 		testTty.writeHex("1b5b49")
 		assertThat(parser.next()).isEqualTo(FocusEvent(focused = true))

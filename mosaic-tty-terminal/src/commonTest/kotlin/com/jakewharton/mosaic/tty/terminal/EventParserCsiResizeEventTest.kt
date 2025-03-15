@@ -7,7 +7,7 @@ import com.jakewharton.mosaic.terminal.UnknownEvent
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
-class TerminalParserCsiResizeEventTest : BaseTerminalParserTest() {
+class EventParserCsiResizeEventTest : BaseEventParserTest() {
 	@Test fun basic() = runTest {
 		testTty.writeHex("1b5b34383b313b323b333b3474")
 		assertThat(parser.next()).isEqualTo(ResizeEvent(2, 1, 4, 3))

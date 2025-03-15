@@ -7,7 +7,7 @@ import com.jakewharton.mosaic.terminal.UnknownEvent
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
-class TerminalParserCsiOperatingStatusResponseEventTest : BaseTerminalParserTest() {
+class EventParserCsiOperatingStatusResponseEventTest : BaseEventParserTest() {
 	@Test fun ok() = runTest {
 		testTty.writeHex("1b5b306e")
 		assertThat(parser.next()).isEqualTo(OperatingStatusResponseEvent(ok = true))

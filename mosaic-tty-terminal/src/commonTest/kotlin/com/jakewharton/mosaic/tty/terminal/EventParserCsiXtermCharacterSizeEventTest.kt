@@ -7,7 +7,7 @@ import com.jakewharton.mosaic.terminal.XtermCharacterSizeEvent
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
-class TerminalParserCsiXtermCharacterSizeEventTest : BaseTerminalParserTest() {
+class EventParserCsiXtermCharacterSizeEventTest : BaseEventParserTest() {
 	@Test fun basic() = runTest {
 		testTty.writeHex("1b5b383b313b3274")
 		assertThat(parser.next()).isEqualTo(XtermCharacterSizeEvent(1, 2))

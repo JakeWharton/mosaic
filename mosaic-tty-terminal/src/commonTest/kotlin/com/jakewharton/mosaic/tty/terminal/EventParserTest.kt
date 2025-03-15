@@ -5,7 +5,7 @@ import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.terminal.OperatingStatusResponseEvent
 import kotlin.test.Test
 
-class TerminalParserTest : BaseTerminalParserTest() {
+class EventParserTest : BaseEventParserTest() {
 	@Test fun copyBuffer() {
 		assertThat(parser.copyBuffer().toHexString()).isEqualTo("")
 		testTty.writeHex("1b5b306e1b5b306e")

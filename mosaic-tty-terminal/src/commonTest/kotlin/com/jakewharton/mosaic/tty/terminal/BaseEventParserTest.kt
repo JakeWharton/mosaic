@@ -6,10 +6,10 @@ import com.jakewharton.mosaic.tty.TestTty
 import kotlin.test.AfterTest
 import kotlinx.coroutines.test.runTest
 
-abstract class BaseTerminalParserTest {
+abstract class BaseEventParserTest {
 	internal val testTty = TestTty.create()
 	private val tty = testTty.tty
-	internal val parser = TerminalParser(tty)
+	internal val parser = EventParser(tty)
 
 	@AfterTest fun after() = runTest {
 		testTty.close()

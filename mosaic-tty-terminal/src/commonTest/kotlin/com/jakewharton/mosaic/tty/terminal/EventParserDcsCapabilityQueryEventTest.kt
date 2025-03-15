@@ -7,7 +7,7 @@ import com.jakewharton.mosaic.terminal.UnknownEvent
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
-class TerminalParserDcsCapabilityQueryEventTest : BaseTerminalParserTest() {
+class EventParserDcsCapabilityQueryEventTest : BaseEventParserTest() {
 	@Test fun unknownStatus() = runTest {
 		testTty.writeHex("1b50322b721b5c")
 		assertThat(parser.next()).isEqualTo(

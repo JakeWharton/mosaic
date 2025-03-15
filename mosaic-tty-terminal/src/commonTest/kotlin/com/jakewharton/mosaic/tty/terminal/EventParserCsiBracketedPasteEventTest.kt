@@ -6,7 +6,7 @@ import com.jakewharton.mosaic.terminal.BracketedPasteEvent
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
-class TerminalParserCsiBracketedPasteEventTest : BaseTerminalParserTest() {
+class EventParserCsiBracketedPasteEventTest : BaseEventParserTest() {
 	@Test fun pasteStart() = runTest {
 		testTty.writeHex("1b5b3230307e")
 		assertThat(parser.next()).isEqualTo(BracketedPasteEvent(start = true))

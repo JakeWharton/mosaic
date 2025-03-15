@@ -7,7 +7,7 @@ import com.jakewharton.mosaic.terminal.KeyboardEvent.Companion.ModifierShift
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
-class TerminalParserCsiKittyKeyboardEventTest : BaseTerminalParserTest() {
+class EventParserCsiKittyKeyboardEventTest : BaseEventParserTest() {
 	@Test fun h() = runTest {
 		testTty.writeHex("1b5b31303475")
 		assertThat(parser.next()).isEqualTo(

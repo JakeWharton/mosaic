@@ -18,7 +18,7 @@ import com.jakewharton.mosaic.terminal.UnknownEvent
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
-class TerminalParserSs3KeyboardEventTest : BaseTerminalParserTest() {
+class EventParserSs3KeyboardEventTest : BaseEventParserTest() {
 	@Test fun up() = runTest {
 		testTty.writeHex("1b4f41")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up))

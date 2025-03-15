@@ -12,7 +12,7 @@ import com.jakewharton.finalization.withFinalizationHook
 import com.jakewharton.mosaic.terminal.KeyboardEvent
 import com.jakewharton.mosaic.terminal.KeyboardEvent.Companion.ModifierCtrl
 import com.jakewharton.mosaic.tty.Tty
-import com.jakewharton.mosaic.tty.terminal.TerminalParser
+import com.jakewharton.mosaic.tty.terminal.EventParser
 import kotlin.jvm.JvmName
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.awaitCancellation
@@ -113,7 +113,7 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 					first = false
 				}
 
-				val parser = TerminalParser(tty)
+				val parser = EventParser(tty)
 				while (true) {
 					val (event, bytes) = parser.debugNext() ?: break
 

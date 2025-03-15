@@ -7,7 +7,7 @@ import com.jakewharton.mosaic.terminal.UnknownEvent
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
-class TerminalParserCsiPrimaryDeviceAttributesEventTest : BaseTerminalParserTest() {
+class EventParserCsiPrimaryDeviceAttributesEventTest : BaseEventParserTest() {
 	@Test fun noLeadingQuestionMarkIsUnknown() = runTest {
 		testTty.writeHex("1b5b303063")
 		assertThat(parser.next()).isEqualTo(

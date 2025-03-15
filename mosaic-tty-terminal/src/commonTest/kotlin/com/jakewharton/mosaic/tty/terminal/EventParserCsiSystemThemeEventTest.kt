@@ -7,7 +7,7 @@ import com.jakewharton.mosaic.terminal.UnknownEvent
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
-class TerminalParserCsiSystemThemeEventTest : BaseTerminalParserTest() {
+class EventParserCsiSystemThemeEventTest : BaseEventParserTest() {
 	@Test fun dark() = runTest {
 		testTty.writeHex("1b5b3f3939373b316e")
 		assertThat(parser.next()).isEqualTo(SystemThemeEvent(isDark = true))

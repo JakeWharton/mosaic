@@ -7,7 +7,7 @@ import com.jakewharton.mosaic.terminal.UnknownEvent
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
-class TerminalParserDcsTertiaryDeviceAttributesEventTest : BaseTerminalParserTest() {
+class EventParserDcsTertiaryDeviceAttributesEventTest : BaseEventParserTest() {
 	@Test fun zeroes() = runTest {
 		testTty.writeHex("1b50217c30303030303030301b5c")
 		assertThat(parser.next()).isEqualTo(TertiaryDeviceAttributesEvent(0, 0))
