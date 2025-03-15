@@ -36,6 +36,18 @@ public actual class Tty internal constructor(
 		Jni.ttySetCallback(ttyPtr, newCallbackPtr)
 	}
 
+	public actual fun isInputTty(): Boolean {
+		return Jni.ttyIsInputTty(ttyPtr)
+	}
+
+	public actual fun isOutputTty(): Boolean {
+		return Jni.ttyIsOutputTty(ttyPtr)
+	}
+
+	public actual fun isErrorTty(): Boolean {
+		return Jni.ttyIsErrorTty(ttyPtr)
+	}
+
 	public actual fun readInput(buffer: ByteArray, offset: Int, count: Int): Int {
 		return Jni.ttyReadInput(ttyPtr, buffer, offset, count)
 	}

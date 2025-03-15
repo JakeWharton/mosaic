@@ -23,6 +23,9 @@ public final class com/jakewharton/mosaic/tty/Tty : java/lang/AutoCloseable {
 	public final fun enableRawMode ()V
 	public final fun enableWindowResizeEvents ()V
 	public final fun interruptRead ()V
+	public final fun isErrorTty ()Z
+	public final fun isInputTty ()Z
+	public final fun isOutputTty ()Z
 	public final fun readInput ([BII)I
 	public final fun readInputWithTimeout ([BIII)I
 	public final fun reset ()V

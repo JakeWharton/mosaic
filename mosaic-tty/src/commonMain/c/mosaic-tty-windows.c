@@ -78,6 +78,18 @@ void tty_setCallback(MosaicTty *tty, MosaicTtyCallback *callback) {
 	tty->callback = callback;
 }
 
+bool tty_isInputTty(MosaicTty *tty) {
+	return GetFileType(tty->stdin) == FILE_TYPE_CHAR;
+}
+
+bool tty_isOutputTty(MosaicTty *tty) {
+	return GetFileType(tty->stdout) == FILE_TYPE_CHAR;
+}
+
+bool tty_isErrorTty(MosaicTty *tty) {
+	return GetFileType(tty->stderr) == FILE_TYPE_CHAR;
+}
+
 MosaicTtyIoResult tty_readInput(
 	MosaicTty *tty,
 	uint8_t *buffer,
