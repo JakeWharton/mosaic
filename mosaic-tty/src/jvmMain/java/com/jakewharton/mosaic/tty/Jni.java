@@ -64,6 +64,12 @@ final class Jni {
 
 	static native void ttySetCallback(long ttyPtr, long callbackPtr);
 
+	static native boolean ttyIsInputTty(long ttyPtr);
+
+	static native boolean ttyIsOutputTty(long ttyPtr);
+
+	static native boolean ttyIsErrorTty(long ttyPtr);
+
 	static native int ttyReadInput(
 		long ttyPtr,
 		byte[] buffer,

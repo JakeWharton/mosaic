@@ -55,6 +55,18 @@ public actual class Tty internal constructor(
 		tty_setCallback(ptr, callbackPtr)
 	}
 
+	public actual fun isInputTty(): Boolean {
+		return tty_isInputTty(ptr)
+	}
+
+	public actual fun isOutputTty(): Boolean {
+		return tty_isOutputTty(ptr)
+	}
+
+	public actual fun isErrorTty(): Boolean {
+		return tty_isErrorTty(ptr)
+	}
+
 	public actual fun readInput(buffer: ByteArray, offset: Int, count: Int): Int {
 		buffer.asUByteArray().usePinned {
 			tty_readInput(ptr, it.addressOf(offset), count).useContents {

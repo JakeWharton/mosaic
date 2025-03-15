@@ -70,6 +70,18 @@ void tty_setCallback(MosaicTty *tty, MosaicTtyCallback *callback) {
 	tty->callback = callback;
 }
 
+bool tty_isInputTty(MosaicTty *tty) {
+	return isatty(tty->stdin_read_fd) != 0;
+}
+
+bool tty_isOutputTty(MosaicTty *tty) {
+	return isatty(tty->stdout_write_fd) != 0;
+}
+
+bool tty_isErrorTty(MosaicTty *tty) {
+	return isatty(tty->stderr_write_fd) != 0;
+}
+
 static MosaicTtyIoResult tty_readInputInternal(
 	MosaicTty *tty,
 	uint8_t *buffer,

@@ -18,6 +18,15 @@ public expect class Tty : AutoCloseable {
 	 */
 	public fun setCallback(callback: Callback?)
 
+	/** True if the input is coming from an interactive TTY (as opposed to a file, pipe, etc.). */
+	public fun isInputTty(): Boolean
+
+	/** True if the output is going to an interactive TTY (as opposed to a file, pipe, etc.). */
+	public fun isOutputTty(): Boolean
+
+	/** True if the error is going to an interactive TTY (as opposed to a file, pipe, etc.). */
+	public fun isErrorTty(): Boolean
+
 	/**
 	 * Read up to [count] bytes into [buffer] at [offset] from the standard input stream.
 	 * The number of bytes read will be returned. 0 will be returned if [interruptRead] is called

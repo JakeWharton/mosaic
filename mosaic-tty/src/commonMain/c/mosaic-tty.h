@@ -40,6 +40,9 @@ typedef struct MosaicTtyTerminalSizeResult {
 
 MosaicTtyInitResult tty_init();
 void tty_setCallback(MosaicTty *tty, MosaicTtyCallback *callback);
+bool tty_isInputTty(MosaicTty *tty);
+bool tty_isOutputTty(MosaicTty *tty);
+bool tty_isErrorTty(MosaicTty *tty);
 MosaicTtyIoResult tty_readInput(MosaicTty *tty, uint8_t *buffer, int count);
 MosaicTtyIoResult tty_readInputWithTimeout(MosaicTty *tty, uint8_t *buffer, int count, int timeoutMillis);
 uint32_t tty_interruptRead(MosaicTty *tty);

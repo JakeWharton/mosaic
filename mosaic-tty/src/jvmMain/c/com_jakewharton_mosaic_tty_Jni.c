@@ -167,6 +167,36 @@ Java_com_jakewharton_mosaic_tty_Jni_ttySetCallback(
 	tty_setCallback(tty, callback);
 }
 
+JNIEXPORT jboolean JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_ttyIsInputTty(
+	JNIEnv *env UNUSED,
+	jclass type UNUSED,
+	jlong ttyOpaque
+) {
+	MosaicTty *tty = (MosaicTty *) ttyOpaque;
+	return tty_isInputTty(tty);
+}
+
+JNIEXPORT jboolean JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_ttyIsOutputTty(
+	JNIEnv *env UNUSED,
+	jclass type UNUSED,
+	jlong ttyOpaque
+) {
+	MosaicTty *tty = (MosaicTty *) ttyOpaque;
+	return tty_isOutputTty(tty);
+}
+
+JNIEXPORT jboolean JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_ttyIsErrorTty(
+	JNIEnv *env UNUSED,
+	jclass type UNUSED,
+	jlong ttyOpaque
+) {
+	MosaicTty *tty = (MosaicTty *) ttyOpaque;
+	return tty_isErrorTty(tty);
+}
+
 JNIEXPORT jint JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_ttyReadInput(
 	JNIEnv *env,
