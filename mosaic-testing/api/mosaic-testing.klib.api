@@ -24,8 +24,8 @@ final class com.jakewharton.mosaic.testing/TestTerminal : com.jakewharton.mosaic
 
     final val capabilities // com.jakewharton.mosaic.testing/TestTerminal.capabilities|{}capabilities[0]
         final fun <get-capabilities>(): com.jakewharton.mosaic.terminal/Terminal.Capabilities // com.jakewharton.mosaic.testing/TestTerminal.capabilities.<get-capabilities>|<get-capabilities>(){}[0]
-    final val keyEvents // com.jakewharton.mosaic.testing/TestTerminal.keyEvents|{}keyEvents[0]
-        final fun <get-keyEvents>(): kotlinx.coroutines.channels/Channel<com.jakewharton.mosaic.terminal/KeyboardEvent> // com.jakewharton.mosaic.testing/TestTerminal.keyEvents.<get-keyEvents>|<get-keyEvents>(){}[0]
+    final val events // com.jakewharton.mosaic.testing/TestTerminal.events|{}events[0]
+        final fun <get-events>(): kotlinx.coroutines.channels/Channel<com.jakewharton.mosaic.terminal/Event> // com.jakewharton.mosaic.testing/TestTerminal.events.<get-events>|<get-events>(){}[0]
     final val state // com.jakewharton.mosaic.testing/TestTerminal.state|{}state[0]
         final fun <get-state>(): com.jakewharton.mosaic.testing/TestTerminal.State // com.jakewharton.mosaic.testing/TestTerminal.state.<get-state>|<get-state>(){}[0]
 

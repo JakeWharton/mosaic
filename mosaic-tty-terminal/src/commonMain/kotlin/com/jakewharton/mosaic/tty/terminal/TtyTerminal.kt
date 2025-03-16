@@ -8,7 +8,6 @@ import com.jakewharton.mosaic.terminal.DecModeReportEvent
 import com.jakewharton.mosaic.terminal.DecModeReportEvent.Setting
 import com.jakewharton.mosaic.terminal.Event
 import com.jakewharton.mosaic.terminal.FocusEvent
-import com.jakewharton.mosaic.terminal.KeyboardEvent
 import com.jakewharton.mosaic.terminal.KittyGraphicsEvent
 import com.jakewharton.mosaic.terminal.KittyKeyboardQueryEvent
 import com.jakewharton.mosaic.terminal.KittyNotificationEvent
@@ -24,9 +23,9 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.channels.BufferOverflow.DROP_OLDEST
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -36,7 +35,7 @@ import kotlinx.coroutines.withTimeoutOrNull
 private class TtyTerminal(
 	override val state: Terminal.State,
 	override val capabilities: Terminal.Capabilities,
-	override val keyEvents: ReceiveChannel<KeyboardEvent>,
+	override val events: ReceiveChannel<Event>,
 ) : Terminal {
 	class State(
 		override val focused: StateFlow<Boolean>,
@@ -68,9 +67,13 @@ public suspend fun Tty.useAsTerminal(
 	emitDebugEvents: Boolean = false,
 	block: suspend (Terminal) -> Unit,
 ) {
-	val events = Channel<Event>(UNLIMITED)
+	val focused = MutableStateFlow(true)
+	val systemTheme = MutableStateFlow(false)
+	val size = MutableStateFlow(Terminal.Size.Default)
 
-	setCallback(EventChannelTtyCallback(events, emitDebugEvents))
+	val events = Channel<Event>(64, onBufferOverflow = DROP_OLDEST)
+
+	setCallback(EventParserTtyCallback(focused, size, events, emitDebugEvents))
 
 	// Each of these will become true when their respective feature is recognized by the terminal
 	// and was not already configured to our desired setting. Revert each toggled setting on exit.
@@ -100,22 +103,6 @@ public suspend fun Tty.useAsTerminal(
 			}
 		},
 		block = {
-			launch(Dispatchers.IO) {
-				val parser = EventParser(this@useAsTerminal)
-				if (!emitDebugEvents) {
-					while (true) {
-						val event = parser.next() ?: break
-						events.trySend(event)
-					}
-				} else {
-					while (true) {
-						val debugEvent = parser.nextDebug() ?: break
-						events.trySend(debugEvent.event)
-						events.trySend(debugEvent)
-					}
-				}
-			}
-
 			print("${CSI}0c")
 			var stage = StageDeviceAttributes
 
@@ -126,147 +113,146 @@ public suspend fun Tty.useAsTerminal(
 			var supportsKittyPointerShape = false
 			var supportsKittyUnderlines = false
 
-			val focused = MutableStateFlow(true)
-			val systemTheme = MutableStateFlow(false)
-			val size = MutableStateFlow(Terminal.Size.Default)
-
-			val keyEvents = Channel<KeyboardEvent>(64, onBufferOverflow = DROP_OLDEST)
-
 			val bootstrapDone = CompletableDeferred<Unit>()
-			val eventJob = launch(start = UNDISPATCHED) {
-				try {
-					for (event in events) {
-						if (DebugBootstrap) {
-							if (stage != StageNormalOperation) {
-								print("$event\r\n")
-							}
-						}
-						when (event) {
-							is PrimaryDeviceAttributesEvent -> {
-								if (stage == StageNormalOperation) continue
-
-								if (event.id == 1) {
-									// VT100 terminals can't handle most of the other queries so just bail.
-									stage = StageNormalOperation
-									bootstrapDone.complete(Unit)
-									continue
-								}
-
-								stage = StageCapabilityQueries
-								print(
-									"$CSI?${cursorMode}\$p" +
-										"$CSI?${focusMode}\$p" +
-										"$CSI?${synchronizedRenderingMode}\$p" +
-										"$CSI?${systemThemeMode}\$p" +
-										"$CSI?${inBandResizeMode}\$p" +
-										"$CSI?u" + // Kitty keyboard
-										"${APC}Gi=31,s=1,v=1,a=q,t=d,f=24;AAAA$ST" + // Kitty graphics
-										"${OSC}99;i=1:p=?$ST" + // Kitty notifications
-										"${OSC}22;?__current__$ST" + // Kitty pointer shape
-										"$DCS+q5375$ST" + // Kitty underline ("Su")
-										"${CSI}5n", // DSR (end marker)
-								)
-							}
-							is DecModeReportEvent -> {
-								if (stage != StageCapabilityQueries) continue
-
-								when (event.mode) {
-									cursorMode -> {
-										if (event.setting == Setting.Set) {
-											toggleCursor = true
-											print(cursorDisable)
-										}
-									}
-									focusMode -> {
-										if (event.setting == Setting.Reset) {
-											toggleFocus = true
-											// Enabling focus notification _might_ trigger an initial event. There is
-											// otherwise no explicit way to request the initial value.
-											print(focusEnable)
-										}
-									}
-									synchronizedRenderingMode -> {
-										if (event.setting == Setting.Reset) {
-											supportsSynchronizedRendering = true
-										}
-									}
-									systemThemeMode -> {
-										if (event.setting == Setting.Reset) {
-											toggleSystemTheme = true
-											print(
-												systemThemeEnable +
-													"$CSI?996n", // Current system theme query.
-											)
-										}
-									}
-									inBandResizeMode -> {
-										if (event.setting == Setting.Reset) {
-											toggleInBandResize = true
-											// Enabling in-band resize will trigger an initial event.
-											print(inBandResizeEnable)
-										}
-									}
-								}
-							}
-							is OperatingStatusResponseEvent -> {
-								if (stage == StageCapabilityQueries) {
-									if (toggleFocus or toggleInBandResize or toggleSystemTheme) {
-										// By enabling these modes (or by sending an explicit default value query after
-										// enabling the mode) wait for a reply about the default with a second DSR.
-										stage = StageDefaultQueries
-										print("${CSI}5n")
-									} else {
-										stage = StageNormalOperation
-										bootstrapDone.complete(Unit)
-									}
-								} else if (stage == StageDefaultQueries) {
-									bootstrapDone.complete(Unit)
-								}
-							}
-							is KittyKeyboardQueryEvent -> {
-								if (stage == StageCapabilityQueries) {
-									supportsKittyKeyboard = true
-								}
-							}
-							is KittyGraphicsEvent -> {
-								if (stage == StageCapabilityQueries) {
-									supportsKittyGraphics = true
-								}
-							}
-							is KittyPointerQueryEvent -> {
-								if (stage == StageCapabilityQueries) {
-									supportsKittyPointerShape = true
-								}
-							}
-							is KittyNotificationEvent -> {
-								if (stage == StageCapabilityQueries) {
-									supportsKittyNotifications = true
-								}
-							}
-							is CapabilityQueryEvent -> {
-								if (stage == StageCapabilityQueries && event.success) {
-									if ("Su" in event.data) {
-										supportsKittyUnderlines = true
-									}
-								}
-							}
-
-							is FocusEvent -> {
-								focused.value = event.focused
-							}
-							is KeyboardEvent -> {
-								keyEvents.trySend(event)
-							}
-							is ResizeEvent -> {
-								size.value = Terminal.Size(event.columns, event.rows, event.width, event.height)
-							}
-							is SystemThemeEvent -> {
-								systemTheme.value = event.isDark
-							}
-
-							else -> {}
+			launch(Dispatchers.IO) {
+				val parser = EventParser(this@useAsTerminal)
+				while (true) {
+					val event = parser.next() ?: break
+					if (DebugBootstrap) {
+						if (stage != StageNormalOperation) {
+							print("$event\r\n")
 						}
 					}
+					when (event) {
+						is PrimaryDeviceAttributesEvent -> {
+							if (stage == StageNormalOperation) continue
+
+							if (event.id == 1) {
+								// VT100 terminals can't handle most of the other queries so just bail.
+								stage = StageNormalOperation
+								bootstrapDone.complete(Unit)
+								continue
+							}
+
+							stage = StageCapabilityQueries
+							print(
+								"$CSI?${cursorMode}\$p" +
+									"$CSI?${focusMode}\$p" +
+									"$CSI?${synchronizedRenderingMode}\$p" +
+									"$CSI?${systemThemeMode}\$p" +
+									"$CSI?${inBandResizeMode}\$p" +
+									"$CSI?u" + // Kitty keyboard
+									"${APC}Gi=31,s=1,v=1,a=q,t=d,f=24;AAAA$ST" + // Kitty graphics
+									"${OSC}99;i=1:p=?$ST" + // Kitty notifications
+									"${OSC}22;?__current__$ST" + // Kitty pointer shape
+									"$DCS+q5375$ST" + // Kitty underline ("Su")
+									"${CSI}5n", // DSR (end marker)
+							)
+						}
+						is DecModeReportEvent -> {
+							if (stage != StageCapabilityQueries) continue
+
+							when (event.mode) {
+								cursorMode -> {
+									if (event.setting == Setting.Set) {
+										toggleCursor = true
+										print(cursorDisable)
+									}
+								}
+								focusMode -> {
+									if (event.setting == Setting.Reset) {
+										toggleFocus = true
+										// Enabling focus notification _might_ trigger an initial event. There is
+										// otherwise no explicit way to request the initial value.
+										print(focusEnable)
+									}
+								}
+								synchronizedRenderingMode -> {
+									if (event.setting == Setting.Reset) {
+										supportsSynchronizedRendering = true
+									}
+								}
+								systemThemeMode -> {
+									if (event.setting == Setting.Reset) {
+										toggleSystemTheme = true
+										print(
+											systemThemeEnable +
+												"$CSI?996n", // Current system theme query.
+										)
+									}
+								}
+								inBandResizeMode -> {
+									if (event.setting == Setting.Reset) {
+										toggleInBandResize = true
+										// Enabling in-band resize will trigger an initial event.
+										print(inBandResizeEnable)
+									}
+								}
+							}
+						}
+						is OperatingStatusResponseEvent -> {
+							if (stage == StageCapabilityQueries) {
+								if (toggleFocus or toggleInBandResize or toggleSystemTheme) {
+									// By enabling these modes (or by sending an explicit default value query after
+									// enabling the mode) wait for a reply about the default with a second DSR.
+									stage = StageDefaultQueries
+									print("${CSI}5n")
+								} else {
+									stage = StageNormalOperation
+									bootstrapDone.complete(Unit)
+								}
+							} else if (stage == StageDefaultQueries) {
+								bootstrapDone.complete(Unit)
+							}
+						}
+						is KittyKeyboardQueryEvent -> {
+							if (stage == StageCapabilityQueries) {
+								supportsKittyKeyboard = true
+							}
+						}
+						is KittyGraphicsEvent -> {
+							if (stage == StageCapabilityQueries) {
+								supportsKittyGraphics = true
+							}
+						}
+						is KittyPointerQueryEvent -> {
+							if (stage == StageCapabilityQueries) {
+								supportsKittyPointerShape = true
+							}
+						}
+						is KittyNotificationEvent -> {
+							if (stage == StageCapabilityQueries) {
+								supportsKittyNotifications = true
+							}
+						}
+						is CapabilityQueryEvent -> {
+							if (stage == StageCapabilityQueries && event.success) {
+								if ("Su" in event.data) {
+									supportsKittyUnderlines = true
+								}
+							}
+						}
+
+						is FocusEvent -> {
+							focused.value = event.focused
+						}
+						is ResizeEvent -> {
+							size.value = Terminal.Size(event.columns, event.rows, event.width, event.height)
+						}
+						is SystemThemeEvent -> {
+							systemTheme.value = event.isDark
+						}
+
+						else -> {}
+					}
+
+					events.trySend(event)
+				}
+			}
+
+			val interruptJob = launch(start = UNDISPATCHED) {
+				try {
+					awaitCancellation()
 				} finally {
 					// When cancelled (from signal or normally), wake up the reader parse loop so it can exit.
 					interruptRead()
@@ -310,12 +296,12 @@ public suspend fun Tty.useAsTerminal(
 					kittyPointerShape = supportsKittyPointerShape,
 					synchronizedRendering = supportsSynchronizedRendering,
 				),
-				keyEvents = keyEvents,
+				events = events,
 			)
 
 			block(terminal)
 
-			eventJob.cancel()
+			interruptJob.cancel()
 		},
 	)
 }

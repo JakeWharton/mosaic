@@ -1,7 +1,7 @@
 package com.jakewharton.mosaic.testing
 
 import com.jakewharton.mosaic.terminal.AnsiLevel
-import com.jakewharton.mosaic.terminal.KeyboardEvent
+import com.jakewharton.mosaic.terminal.Event
 import com.jakewharton.mosaic.terminal.Terminal
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
@@ -11,7 +11,7 @@ public class TestTerminal(
 	override val capabilities: Terminal.Capabilities = Capabilities(),
 ) : Terminal {
 	override val state: State = State()
-	override val keyEvents: Channel<KeyboardEvent> = Channel(UNLIMITED)
+	override val events: Channel<Event> = Channel(UNLIMITED)
 
 	public class State : Terminal.State {
 		override val focused: MutableStateFlow<Boolean> = MutableStateFlow(true)

@@ -263,7 +263,7 @@ public final class com/jakewharton/mosaic/terminal/SystemThemeEvent : com/jakewh
 
 public abstract interface class com/jakewharton/mosaic/terminal/Terminal {
 	public abstract fun getCapabilities ()Lcom/jakewharton/mosaic/terminal/Terminal$Capabilities;
-	public abstract fun getKeyEvents ()Lkotlinx/coroutines/channels/ReceiveChannel;
+	public abstract fun getEvents ()Lkotlinx/coroutines/channels/ReceiveChannel;
 	public abstract fun getState ()Lcom/jakewharton/mosaic/terminal/Terminal$State;
 }
 

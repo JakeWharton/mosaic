@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 public interface Terminal {
 	public val state: State
 	public val capabilities: Capabilities
-	public val keyEvents: ReceiveChannel<KeyboardEvent>
+	public val events: ReceiveChannel<Event>
 
 	public interface State {
 		public val focused: StateFlow<Boolean>
