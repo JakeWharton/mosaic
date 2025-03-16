@@ -98,6 +98,8 @@ public class EventParser(
 	 * It is expected that this function will be called repeatedly in a loop.
 	 *
 	 * @return A parsed event, or `null` if interrupt was called.
+	 * @throws EofException if input stream is closed (after processing all read bytes). A partial
+	 * sequence will be returned as an [UnknownEvent] before this is thrown.
 	 */
 	public fun next(): Event? {
 		val buffer = buffer
@@ -150,7 +152,7 @@ public class EventParser(
 			return UnknownEvent(bytes)
 		}
 
-		throw RuntimeException("EOF")
+		throw EofException()
 	}
 
 	/**
