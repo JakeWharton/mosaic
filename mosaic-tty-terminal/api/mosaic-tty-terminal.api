@@ -1,3 +1,7 @@
+public final class com/jakewharton/mosaic/tty/terminal/EofException : java/lang/RuntimeException {
+	public fun <init> ()V
+}
+
 public final class com/jakewharton/mosaic/tty/terminal/EventParser {
 	public fun <init> (Lcom/jakewharton/mosaic/tty/Tty;)V
 	public final fun copyBuffer ()[B

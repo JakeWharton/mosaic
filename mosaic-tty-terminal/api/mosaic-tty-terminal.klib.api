@@ -6,6 +6,10 @@
 // - Show declarations: true
 
 // Library unique name: <com.jakewharton.mosaic:mosaic-tty-terminal>
+final class com.jakewharton.mosaic.tty.terminal/EofException : kotlin/RuntimeException { // com.jakewharton.mosaic.tty.terminal/EofException|null[0]
+    constructor <init>() // com.jakewharton.mosaic.tty.terminal/EofException.<init>|<init>(){}[0]
+}
+
 final class com.jakewharton.mosaic.tty.terminal/EventParser { // com.jakewharton.mosaic.tty.terminal/EventParser|null[0]
     constructor <init>(com.jakewharton.mosaic.tty/Tty) // com.jakewharton.mosaic.tty.terminal/EventParser.<init>|<init>(com.jakewharton.mosaic.tty.Tty){}[0]
 
