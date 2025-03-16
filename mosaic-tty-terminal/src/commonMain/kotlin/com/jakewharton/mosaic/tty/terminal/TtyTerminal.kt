@@ -289,7 +289,7 @@ public suspend fun Tty.useAsTerminal(
 				print("\r\n")
 			}
 
-			if (!toggleInBandResize) {
+			if (!toggleInBandResize && isInputTty()) {
 				currentSize().let { (columns, rows) ->
 					size.value = Terminal.Size(columns, rows)
 				}
