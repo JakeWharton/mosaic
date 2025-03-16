@@ -30,8 +30,8 @@ public final class com/jakewharton/mosaic/testing/TestTerminal : com/jakewharton
 	public fun <init> (Lcom/jakewharton/mosaic/terminal/Terminal$Capabilities;)V
 	public synthetic fun <init> (Lcom/jakewharton/mosaic/terminal/Terminal$Capabilities;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun getCapabilities ()Lcom/jakewharton/mosaic/terminal/Terminal$Capabilities;
-	public fun getKeyEvents ()Lkotlinx/coroutines/channels/Channel;
-	public synthetic fun getKeyEvents ()Lkotlinx/coroutines/channels/ReceiveChannel;
+	public fun getEvents ()Lkotlinx/coroutines/channels/Channel;
+	public synthetic fun getEvents ()Lkotlinx/coroutines/channels/ReceiveChannel;
 	public synthetic fun getState ()Lcom/jakewharton/mosaic/terminal/Terminal$State;
 	public fun getState ()Lcom/jakewharton/mosaic/testing/TestTerminal$State;
 }

@@ -17,6 +17,7 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.layout.MosaicNode
+import com.jakewharton.mosaic.terminal.KeyboardEvent
 import com.jakewharton.mosaic.terminal.Terminal
 import com.jakewharton.mosaic.tty.Tty
 import com.jakewharton.mosaic.tty.terminal.useAsTerminal
@@ -278,8 +279,9 @@ internal class MosaicComposition(
 				externalClock.withFrameNanos { nanos ->
 					// Drain any pending key events before triggering the frame.
 					while (true) {
-						val keyboardEvent = terminal.keyEvents.tryReceive().getOrNull() ?: break
-						val keyEvent = keyboardEvent.toKeyEventOrNull() ?: continue
+						val event = terminal.events.tryReceive().getOrNull() ?: break
+						if (event !is KeyboardEvent) continue
+						val keyEvent = event.toKeyEventOrNull() ?: continue
 						val keyHandled = rootNode.sendKeyEvent(keyEvent)
 						if (!keyHandled && keyEvent == ctrlC) {
 							job.cancel()
