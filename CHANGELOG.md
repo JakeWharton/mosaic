@@ -6,7 +6,6 @@
 New:
 - Add `focused` and `darkTheme` booleans to `Terminal` (available through `LocalTerminal`). These default to true and false, respectively, but will be updated if the terminal supports sending change notifications.
 - Bind `Terminal.focused` to a `Lifecycle` and expose into the composition as `LocalLifecycleOwner`. This allows using Compose lifecycle helpers such as `LifecycleResumeEffect` and others.
-- Underline styles (single, double, dashed, dotted, curved) and colors can now be specified for text and annotated string spans.
 - `LocalStaticLogger` composition local provides access to `StaticLogger` which allows logging plain strings at arbitrary points for inclusion in the next frame. This can be used from effects, callback, state classes, etc.
 
 Changed:

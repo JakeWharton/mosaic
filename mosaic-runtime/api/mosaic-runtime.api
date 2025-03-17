@@ -601,8 +601,8 @@ public final class com/jakewharton/mosaic/ui/SpacerKt {
 }
 
 public final class com/jakewharton/mosaic/ui/Text {
-	public static final fun Text-cbmis8g (Lcom/jakewharton/mosaic/text/AnnotatedString;Lcom/jakewharton/mosaic/modifier/Modifier;IIIIILandroidx/compose/runtime/Composer;II)V
-	public static final fun Text-cbmis8g (Ljava/lang/String;Lcom/jakewharton/mosaic/modifier/Modifier;IIIIILandroidx/compose/runtime/Composer;II)V
+	public static final fun Text-GddN7rU (Lcom/jakewharton/mosaic/text/AnnotatedString;Lcom/jakewharton/mosaic/modifier/Modifier;IIILandroidx/compose/runtime/Composer;II)V
+	public static final fun Text-GddN7rU (Ljava/lang/String;Lcom/jakewharton/mosaic/modifier/Modifier;IIILandroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/jakewharton/mosaic/ui/TextStyle {

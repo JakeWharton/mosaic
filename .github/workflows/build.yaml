@@ -269,7 +269,7 @@ jobs:
 
       - run: ./gradlew -p samples/${{ matrix.sample }} linkReleaseExecutableMacosArm64 installJvmDist
       - run: ./samples/${{ matrix.sample }}/build/install/${{ matrix.sample }}-jvm/bin/${{ matrix.sample }}
-      #- run: ./samples/${{ matrix.sample }}/build/bin/macosArm64/releaseExecutable/${{ matrix.sample }}.kexe
+      - run: ./samples/${{ matrix.sample }}/build/bin/macosArm64/releaseExecutable/${{ matrix.sample }}.kexe
 
   final-status:
     if: always()
