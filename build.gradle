@@ -1,8 +1,6 @@
-import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
-import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import org.jetbrains.kotlin.gradle.tasks.KotlinNativeCompile
 
 buildscript {
 	dependencies {
@@ -42,10 +40,11 @@ allprojects {
 
 	tasks.withType(KotlinJvmCompile).configureEach {
 		compilerOptions.jvmTarget = JvmTarget.JVM_1_8
+		compilerOptions.freeCompilerArgs.add('-Xjvm-default=all')
 	}
 
-	tasks.withType(KotlinCompile).configureEach {
-		compilerOptions.freeCompilerArgs.add('-Xjvm-default=all')
+	tasks.withType(KotlinNativeCompile).configureEach {
+		compilerOptions.freeCompilerArgs.add('-Xpartial-linkage=disable')
 	}
 
 	tasks.withType(AbstractTestTask).configureEach {

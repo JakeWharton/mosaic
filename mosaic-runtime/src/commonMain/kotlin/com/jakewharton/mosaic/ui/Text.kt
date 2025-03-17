@@ -19,8 +19,9 @@ public fun Text(
 	color: Color = Color.Unspecified,
 	background: Color = Color.Unspecified,
 	textStyle: TextStyle = TextStyle.Unspecified,
-	underlineStyle: UnderlineStyle = UnderlineStyle.Unspecified,
-	underlineColor: Color = Color.Unspecified,
+	// TODO https://github.com/JakeWharton/mosaic/issues/802
+	//  underlineStyle: UnderlineStyle = UnderlineStyle.Unspecified,
+	//  underlineColor: Color = Color.Unspecified,
 ) {
 	val layout = remember { StringTextLayout() }
 	layout.value = value
@@ -35,7 +36,9 @@ public fun Text(
 		},
 		modifier = modifier.drawBehind {
 			layout.lines.forEachIndexed { row, line ->
-				drawText(row, 0, line, color, background, textStyle, underlineStyle, underlineColor)
+				drawText(row, 0, line, color, background, textStyle, UnderlineStyle.Unspecified, Color.Unspecified)
+				// TODO https://github.com/JakeWharton/mosaic/issues/802
+				//  drawText(row, 0, line, color, background, textStyle, underlineStyle, underlineColor)
 			}
 		},
 	)
@@ -49,8 +52,9 @@ public fun Text(
 	color: Color = Color.Unspecified,
 	background: Color = Color.Unspecified,
 	textStyle: TextStyle = TextStyle.Unspecified,
-	underlineStyle: UnderlineStyle = UnderlineStyle.Unspecified,
-	underlineColor: Color = Color.Unspecified,
+	// TODO https://github.com/JakeWharton/mosaic/issues/802
+	//  underlineStyle: UnderlineStyle = UnderlineStyle.Unspecified,
+	//  underlineColor: Color = Color.Unspecified,
 ) {
 	val layout = remember { AnnotatedStringTextLayout() }
 	layout.value = value
@@ -65,7 +69,9 @@ public fun Text(
 		},
 		modifier = modifier.drawBehind {
 			layout.lines.forEachIndexed { row, line ->
-				drawText(row, 0, line, color, background, textStyle, underlineStyle, underlineColor)
+				// TODO https://github.com/JakeWharton/mosaic/issues/802
+				//  drawText(row, 0, line, color, background, textStyle, underlineStyle, underlineColor)
+				drawText(row, 0, line, color, background, textStyle, UnderlineStyle.Unspecified, Color.Unspecified)
 			}
 		},
 	)
