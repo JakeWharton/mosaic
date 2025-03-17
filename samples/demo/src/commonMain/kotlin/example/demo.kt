@@ -9,7 +9,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
-import com.jakewharton.mosaic.LocalTerminal
+import com.jakewharton.mosaic.LocalTerminalState
 import com.jakewharton.mosaic.animation.Animatable
 import com.jakewharton.mosaic.animation.LinearEasing
 import com.jakewharton.mosaic.animation.Spring
@@ -59,7 +59,7 @@ fun main() = runMosaicBlocking {
 private fun TerminalInfo() {
 	val widthAndHeightTitleColorAnimatable = remember { Animatable(Color.White) }
 
-	val screenSize = LocalTerminal.current.size
+	val screenSize = LocalTerminalState.current.size
 	val screenWidth = screenSize.width
 	val screenHeight = screenSize.height
 
@@ -188,7 +188,7 @@ private fun ColumnScope.GradientsBlock() {
 		textColorProvider = { percent -> Color(1.0f - percent, 0.0f, 1.0f - percent) },
 		backgroundColorProvider = { percent -> Color(percent, 0.0f, percent) },
 	)
-	val screenHalfWidth = LocalTerminal.current.size.width / 2
+	val screenHalfWidth = LocalTerminalState.current.size.width / 2
 	LaunchedEffect(screenHalfWidth) {
 		gradientWidthAnimatable.animateTo(screenHalfWidth)
 	}
