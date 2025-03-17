@@ -27,8 +27,8 @@ public class StaticLogger internal constructor(
 	public fun log(string: String): Unit = send(string)
 	public fun log(canvas: TextCanvas): Unit = send(canvas)
 
-	public inline operator fun plusAssign(string: String): Unit = log(string)
-	public inline operator fun plusAssign(canvas: TextCanvas): Unit = log(canvas)
+	public operator fun plusAssign(string: String): Unit = send(string)
+	public operator fun plusAssign(canvas: TextCanvas): Unit = send(canvas)
 }
 
 public val LocalStaticLogger: ProvidableCompositionLocal<StaticLogger> =
