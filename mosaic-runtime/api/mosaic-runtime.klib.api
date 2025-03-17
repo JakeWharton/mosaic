@@ -383,8 +383,8 @@ final class com.jakewharton.mosaic.ui/BiasAlignment : com.jakewharton.mosaic.ui/
 final class com.jakewharton.mosaic/StaticLogger { // com.jakewharton.mosaic/StaticLogger|null[0]
     final fun log(com.jakewharton.mosaic/TextCanvas) // com.jakewharton.mosaic/StaticLogger.log|log(com.jakewharton.mosaic.TextCanvas){}[0]
     final fun log(kotlin/String) // com.jakewharton.mosaic/StaticLogger.log|log(kotlin.String){}[0]
-    final inline fun plusAssign(com.jakewharton.mosaic/TextCanvas) // com.jakewharton.mosaic/StaticLogger.plusAssign|plusAssign(com.jakewharton.mosaic.TextCanvas){}[0]
-    final inline fun plusAssign(kotlin/String) // com.jakewharton.mosaic/StaticLogger.plusAssign|plusAssign(kotlin.String){}[0]
+    final fun plusAssign(com.jakewharton.mosaic/TextCanvas) // com.jakewharton.mosaic/StaticLogger.plusAssign|plusAssign(com.jakewharton.mosaic.TextCanvas){}[0]
+    final fun plusAssign(kotlin/String) // com.jakewharton.mosaic/StaticLogger.plusAssign|plusAssign(kotlin.String){}[0]
 }
 
 final class com.jakewharton.mosaic/TerminalState { // com.jakewharton.mosaic/TerminalState|null[0]
