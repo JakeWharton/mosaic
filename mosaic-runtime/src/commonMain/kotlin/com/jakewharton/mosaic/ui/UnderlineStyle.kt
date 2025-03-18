@@ -8,7 +8,8 @@ import kotlin.jvm.JvmInline
 
 @Immutable
 @JvmInline
-public value class UnderlineStyle private constructor(
+// TODO private constructor once https://issuetracker.google.com/issues/404479708 is fixed.
+public value class UnderlineStyle internal constructor(
 	@PublishedApi
 	internal val value: Int,
 ) {
