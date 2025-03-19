@@ -13,6 +13,10 @@ public class TestTerminal(
 	override val state: State = State()
 	override val events: Channel<Event> = Channel(UNLIMITED)
 
+	override fun close() {
+		events.close()
+	}
+
 	public class State : Terminal.State {
 		override val focused: MutableStateFlow<Boolean> = MutableStateFlow(true)
 		override val systemTheme: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -20,6 +24,7 @@ public class TestTerminal(
 	}
 
 	public class Capabilities(
+		override val interactive: Boolean = true,
 		override val ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR,
 		override val kittyKeyboard: Boolean = true,
 		override val kittyUnderline: Boolean = true,

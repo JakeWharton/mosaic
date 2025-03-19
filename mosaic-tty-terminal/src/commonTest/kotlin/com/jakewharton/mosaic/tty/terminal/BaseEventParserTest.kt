@@ -4,12 +4,19 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.tty.TestTty
 import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlinx.coroutines.test.runTest
 
 abstract class BaseEventParserTest {
 	internal val testTty = TestTty.create()
 	private val tty = testTty.tty
 	internal val parser = EventParser(tty)
+
+	@BeforeTest fun before() {
+		if (!isWindows()) {
+			tty.enableRawMode()
+		}
+	}
 
 	@AfterTest fun after() = runTest {
 		testTty.close()

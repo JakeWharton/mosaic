@@ -5,12 +5,12 @@ public actual class Tty internal constructor(
 ) : AutoCloseable {
 	public actual companion object {
 		@JvmStatic
-		public actual fun bind(): Tty {
+		public actual fun tryBind(): Tty? {
 			val ttyPtr = Jni.ttyInit()
 			if (ttyPtr != 0L) {
 				return Tty(ttyPtr)
 			}
-			throw OutOfMemoryError()
+			return null
 		}
 	}
 
@@ -36,36 +36,20 @@ public actual class Tty internal constructor(
 		Jni.ttySetCallback(ttyPtr, newCallbackPtr)
 	}
 
-	public actual fun isInputTty(): Boolean {
-		return Jni.ttyIsInputTty(ttyPtr)
+	public actual fun read(buffer: ByteArray, offset: Int, count: Int): Int {
+		return Jni.ttyRead(ttyPtr, buffer, offset, count)
 	}
 
-	public actual fun isOutputTty(): Boolean {
-		return Jni.ttyIsOutputTty(ttyPtr)
-	}
-
-	public actual fun isErrorTty(): Boolean {
-		return Jni.ttyIsErrorTty(ttyPtr)
-	}
-
-	public actual fun readInput(buffer: ByteArray, offset: Int, count: Int): Int {
-		return Jni.ttyReadInput(ttyPtr, buffer, offset, count)
-	}
-
-	public actual fun readInputWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
-		return Jni.ttyReadInputWithTimeout(ttyPtr, buffer, offset, count, timeoutMillis)
+	public actual fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
+		return Jni.ttyReadWithTimeout(ttyPtr, buffer, offset, count, timeoutMillis)
 	}
 
 	public actual fun interruptRead() {
 		Jni.ttyInterruptRead(ttyPtr)
 	}
 
-	public actual fun writeOutput(buffer: ByteArray, offset: Int, count: Int): Int {
-		return Jni.ttyWriteOutput(ttyPtr, buffer, offset, count)
-	}
-
-	public actual fun writeError(buffer: ByteArray, offset: Int, count: Int): Int {
-		return Jni.ttyWriteError(ttyPtr, buffer, offset, count)
+	public actual fun write(buffer: ByteArray, offset: Int, count: Int): Int {
+		return Jni.ttyWrite(ttyPtr, buffer, offset, count)
 	}
 
 	public actual fun enableRawMode() {

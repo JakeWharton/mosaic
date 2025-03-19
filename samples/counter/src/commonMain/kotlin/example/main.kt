@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.jakewharton.mosaic.NonInteractivePolicy.Ignore
 import com.jakewharton.mosaic.runMosaicBlocking
 import com.jakewharton.mosaic.ui.Text
 import kotlin.jvm.JvmName
@@ -27,6 +28,8 @@ fun Counter() {
 	}
 }
 
-fun main() = runMosaicBlocking {
-	Counter()
+fun main() {
+	runMosaicBlocking(onNonInteractive = Ignore) {
+		Counter()
+	}
 }

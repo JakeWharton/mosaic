@@ -8,12 +8,14 @@ New:
 - Bind `Terminal.focused` to a `Lifecycle` and expose into the composition as `LocalLifecycleOwner`. This allows using Compose lifecycle helpers such as `LifecycleResumeEffect` and others.
 - Underline styles (single, double, dashed, dotted, curved) and colors can now be specified for text and annotated string spans.
 - `LocalStaticLogger` composition local provides access to `StaticLogger` which allows logging plain strings at arbitrary points for inclusion in the next frame. This can be used from effects, callback, state classes, etc.
+- `runMosaicMain` function replaces the existing `runMosaicBlocking` for use specifically in `fun main()` or main-like scenarios.
 
 Changed:
 - Switched to our own terminal integration library. Report any issues with keyboard input, incorrect size reporting, or garbled output.
 - Only disable the cursor and emit synchronized rendering markers if the terminal reports support for those features.
 - `Static` function is now called `StaticEffect` to better indicate that it only renders its content once.
 - The runtime's `Terminal` was renamed to `TerminalState` to avoid conflict with new, lower-level `Terminal` type.
+- `runMosaic` and `runMosaicBlocking` now accept a `NonInteractivePolicy` argument which dictates the behavior when Mosaic cannot connect directly to the TTY.
 
 Fixed:
 - Prevent final character from being erased when a row writes into the last column of the terminal.

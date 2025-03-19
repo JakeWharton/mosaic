@@ -23,7 +23,7 @@ import com.jakewharton.mosaic.layout.background
 import com.jakewharton.mosaic.layout.height
 import com.jakewharton.mosaic.layout.size
 import com.jakewharton.mosaic.modifier.Modifier
-import com.jakewharton.mosaic.runMosaicBlocking
+import com.jakewharton.mosaic.runMosaicMain
 import com.jakewharton.mosaic.text.SpanStyle
 import com.jakewharton.mosaic.text.buildAnnotatedString
 import com.jakewharton.mosaic.text.withStyle
@@ -44,7 +44,7 @@ import kotlinx.coroutines.flow.collectLatest
 private val BrightGreen = Color(100, 255, 100)
 private val BrightBlue = Color(60, 140, 230)
 
-fun main() = runMosaicBlocking {
+fun main() = runMosaicMain {
 	Column {
 		TerminalInfo()
 		Spacer(modifier = Modifier.height(1))

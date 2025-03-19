@@ -1,5 +1,7 @@
 #if defined(__APPLE__) || defined(__linux__)
 
+#define _XOPEN_SOURCE 600
+
 #include "mosaic-tty-posix.h"
 #include "mosaic-test-tty.h"
 
@@ -10,7 +12,7 @@
 #include <unistd.h>
 
 typedef struct MosaicTestTtyImpl {
-	int stdin_write_fd;
+	int fd;
 	MosaicTty *tty;
 } MosaicTestTtyImpl;
 
@@ -23,24 +25,29 @@ MosaicTestTtyInitResult testTty_init() {
 		goto ret;
 	}
 
-	int stdinPipe[2];
-	if (unlikely(pipe(stdinPipe)) != 0) {
+	// Note: the terms of art here appear to be "master" and "slave".
+	// We use "parent" and "child" instead, respectively.
+	int parentFd = posix_openpt(O_RDWR | O_NOCTTY);
+	if (unlikely(parentFd == -1 || grantpt(parentFd) || unlockpt(parentFd))) {
 		result.error = errno;
 		goto err;
 	}
-	int stdinReadFd = stdinPipe[0];
-	int stdinWriteFd = stdinPipe[1];
 
-	int stdoutWriteFd = STDOUT_FILENO;
-	int stderrWriteFd = STDERR_FILENO;
+	char *childName = ptsname(parentFd);
+	int childFd = open(childName, O_RDWR | O_NOCTTY);
 
-	MosaicTtyInitResult ttyInitResult = tty_initWithFds(stdinReadFd, stdoutWriteFd, stderrWriteFd);
+	if (unlikely(childFd == -1)) {
+		result.error = errno;
+		goto err;
+	}
+
+	MosaicTtyInitResult ttyInitResult = tty_initWithFd(childFd);
 	if (unlikely(ttyInitResult.error)) {
 		result.error = ttyInitResult.error;
 		goto err;
 	}
 
-	testTty->stdin_write_fd = stdinWriteFd;
+	testTty->fd = parentFd;
 	testTty->tty = ttyInitResult.tty;
 
 	result.testTty = testTty;
@@ -60,7 +67,7 @@ MosaicTty *testTty_getTty(MosaicTestTty *testTty) {
 MosaicTtyIoResult testTty_writeInput(MosaicTestTty *testTty, uint8_t *buffer, int count) {
 	MosaicTtyIoResult result = {};
 
-	int written = write(testTty->stdin_write_fd, buffer, count);
+	int written = write(testTty->fd, buffer, count);
 	if (written != -1) {
 		result.count = written;
 	} else {
@@ -96,10 +103,7 @@ uint32_t testTty_resizeEvent(MosaicTestTty *testTty, int columns, int rows, int 
 uint32_t testTty_free(MosaicTestTty *testTty) {
 	uint32_t result = 0;
 
-	if (unlikely(close(testTty->stdin_write_fd) != 0)) {
-		result = errno;
-	}
-	if (unlikely(close(testTty->tty->stdin_read_fd) != 0 && result != 0)) {
+	if (unlikely(close(testTty->fd) != 0)) {
 		result = errno;
 	}
 

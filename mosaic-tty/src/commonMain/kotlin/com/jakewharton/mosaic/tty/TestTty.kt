@@ -12,8 +12,8 @@ public expect class TestTty : AutoCloseable {
 	/**
 	 * Send a focus event to [tty]'s callback.
 	 *
-	 * On Windows this event can only be observed by during calls to [Tty.readInput] or
-	 * [Tty.readInputWithTimeout]. This event is not supported on other platforms.
+	 * On Windows this event can only be observed by during calls to [Tty.read] or
+	 * [Tty.readWithTimeout]. This event is not supported on other platforms.
 	 */
 	public fun focusEvent(focused: Boolean)
 
@@ -22,8 +22,8 @@ public expect class TestTty : AutoCloseable {
 	 *
 	 * Note: Currently this does not work.
 	 *
-	 * On Windows this event can only be observed by during calls to [Tty.readInput] or
-	 * [Tty.readInputWithTimeout]. This event is not supported on other platforms.
+	 * On Windows this event can only be observed by during calls to [Tty.read] or
+	 * [Tty.readWithTimeout]. This event is not supported on other platforms.
 	 */
 	public fun keyEvent()
 
@@ -32,16 +32,16 @@ public expect class TestTty : AutoCloseable {
 	 *
 	 * Note: Currently this does not work.
 	 *
-	 * On Windows this event can only be observed by during calls to [Tty.readInput] or
-	 * [Tty.readInputWithTimeout]. This event is not supported on other platforms.
+	 * On Windows this event can only be observed by during calls to [Tty.read] or
+	 * [Tty.readWithTimeout]. This event is not supported on other platforms.
 	 */
 	public fun mouseEvent()
 
 	/**
 	 * Send a resize event to [tty]'s callback.
 	 *
-	 * On Windows this event can only be observed by during calls to [Tty.readInput] or
-	 * [Tty.readInputWithTimeout]. On other platforms this is delivered to the callback synchronously.
+	 * On Windows this event can only be observed by during calls to [Tty.read] or
+	 * [Tty.readWithTimeout]. On other platforms this is delivered to the callback synchronously.
 	 */
 	public fun resizeEvent(columns: Int, rows: Int, width: Int, height: Int)
 

@@ -18,10 +18,13 @@ public actual class Tty internal constructor(
 	ptr: CPointer<MosaicTty>,
 ) : AutoCloseable {
 	public actual companion object {
-		public actual fun bind(): Tty {
+		public actual fun tryBind(): Tty? {
 			tty_init().useContents {
 				tty?.let { ttyPtr ->
 					return Tty(ttyPtr)
+				}
+				if (no_tty) {
+					return null
 				}
 				if (already_bound) {
 					throw IllegalStateException("Tty already bound")
@@ -55,30 +58,18 @@ public actual class Tty internal constructor(
 		tty_setCallback(ptr, callbackPtr)
 	}
 
-	public actual fun isInputTty(): Boolean {
-		return tty_isInputTty(ptr)
-	}
-
-	public actual fun isOutputTty(): Boolean {
-		return tty_isOutputTty(ptr)
-	}
-
-	public actual fun isErrorTty(): Boolean {
-		return tty_isErrorTty(ptr)
-	}
-
-	public actual fun readInput(buffer: ByteArray, offset: Int, count: Int): Int {
+	public actual fun read(buffer: ByteArray, offset: Int, count: Int): Int {
 		buffer.asUByteArray().usePinned {
-			tty_readInput(ptr, it.addressOf(offset), count).useContents {
+			tty_read(ptr, it.addressOf(offset), count).useContents {
 				if (error == 0U) return this.count
 				throwIse(error)
 			}
 		}
 	}
 
-	public actual fun readInputWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
+	public actual fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
 		buffer.asUByteArray().usePinned {
-			tty_readInputWithTimeout(ptr, it.addressOf(offset), count, timeoutMillis).useContents {
+			tty_readWithTimeout(ptr, it.addressOf(offset), count, timeoutMillis).useContents {
 				if (error == 0U) return this.count
 				throwIse(error)
 			}
@@ -91,18 +82,9 @@ public actual class Tty internal constructor(
 		throwIse(error)
 	}
 
-	public actual fun writeOutput(buffer: ByteArray, offset: Int, count: Int): Int {
+	public actual fun write(buffer: ByteArray, offset: Int, count: Int): Int {
 		buffer.asUByteArray().usePinned {
-			tty_writeOutput(ptr, it.addressOf(offset), count).useContents {
-				if (error == 0U) return this.count
-				throwIse(error)
-			}
-		}
-	}
-
-	public actual fun writeError(buffer: ByteArray, offset: Int, count: Int): Int {
-		buffer.asUByteArray().usePinned {
-			tty_writeError(ptr, it.addressOf(offset), count).useContents {
+			tty_write(ptr, it.addressOf(offset), count).useContents {
 				if (error == 0U) return this.count
 				throwIse(error)
 			}

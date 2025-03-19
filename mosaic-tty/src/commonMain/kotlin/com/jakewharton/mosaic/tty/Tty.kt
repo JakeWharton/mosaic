@@ -5,64 +5,50 @@ public expect class Tty : AutoCloseable {
 		/**
 		 * Initialize a [Tty] instance to the standard input, output, and error streams for this
 		 * application. Only a single [Tty] instance can be bound at a time. Subsequent calls will
-		 * throw an exception until [Tty.close] is called.
+		 * throw an exception until [Tty.close] is called. Returns `null` if no TTY is available
+		 * for this process.
 		 */
-		public fun bind(): Tty
+		public fun tryBind(): Tty?
 	}
 
 	/**
 	 * Set or clear the callback used for reporting events about the terminal using platform-specific
 	 * integration. The callback may be invoked on any thread and must never throw an exception.
-	 * On Windows the callback will only be invoked during calls to [readInput] or
-	 * [readInputWithTimeout].
+	 * On Windows the callback will only be invoked during calls to [read] or
+	 * [readWithTimeout].
 	 */
 	public fun setCallback(callback: Callback?)
 
-	/** True if the input is coming from an interactive TTY (as opposed to a file, pipe, etc.). */
-	public fun isInputTty(): Boolean
-
-	/** True if the output is going to an interactive TTY (as opposed to a file, pipe, etc.). */
-	public fun isOutputTty(): Boolean
-
-	/** True if the error is going to an interactive TTY (as opposed to a file, pipe, etc.). */
-	public fun isErrorTty(): Boolean
-
 	/**
-	 * Read up to [count] bytes into [buffer] at [offset] from the standard input stream.
+	 * Read up to [count] bytes into [buffer] at [offset] from the TTY.
 	 * The number of bytes read will be returned. 0 will be returned if [interruptRead] is called
-	 * while waiting for input. -1 will be returned if the input stream is closed.
+	 * while waiting for input. -1 will be returned if the TTY is not interactive.
 	 *
-	 * @see readInputWithTimeout
+	 * @see readWithTimeout
 	 */
-	public fun readInput(buffer: ByteArray, offset: Int, count: Int): Int
+	public fun read(buffer: ByteArray, offset: Int, count: Int): Int
 
 	/**
-	 * Read up to [count] bytes into [buffer] at [offset] from the standard input stream.
+	 * Read up to [count] bytes into [buffer] at [offset] from the TTY.
 	 * The number of bytes read will be returned. 0 will be returned if [interruptRead] is called
 	 * while waiting for input, or if at least [timeoutMillis] have passed without data.
-	 * -1 will be returned if the input stream is closed.
+	 * -1 will be returned if the TTY is not interactive.
 	 *
 	 * @param timeoutMillis A value of 0 will perform a non-blocking read. Otherwise, valid values
 	 * are 1 to 999 which represent a maximum time (in milliseconds) to wait for data. Note: This
 	 * value is not validated.
-	 * @see readInput
+	 * @see read
 	 */
-	public fun readInputWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int
+	public fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int
 
-	/** Signal blocking calls to [readInput] or [readInputWithTimeout] to wake up and return 0. */
+	/** Signal blocking calls to [read] or [readWithTimeout] to wake up and return 0. */
 	public fun interruptRead()
 
 	/**
-	 * Write up to [count] bytes from [buffer] at [offset] to the standard output stream.
+	 * Write up to [count] bytes from [buffer] at [offset] to the TTY.
 	 * The number of bytes written will be returned.
 	 */
-	public fun writeOutput(buffer: ByteArray, offset: Int, count: Int): Int
-
-	/**
-	 * Write up to [count] bytes from [buffer] at [offset] to the standard error stream.
-	 * The number of bytes written will be returned.
-	 */
-	public fun writeError(buffer: ByteArray, offset: Int, count: Int): Int
+	public fun write(buffer: ByteArray, offset: Int, count: Int): Int
 
 	/**
 	 * Save the current terminal settings and enter "raw" mode.
@@ -78,7 +64,7 @@ public expect class Tty : AutoCloseable {
 	 * In addition to the flags required for entering "raw" mode, on POSIX-compliant platforms,
 	 * this function will change the standard input stream to block indefinitely until a minimum
 	 * of 1 byte is available to read. This allows the reader thread to fully be suspended rather
-	 * than consuming CPU. Use [readInput] or [readInputWithTimeout] to read in a manner that can
+	 * than consuming CPU. Use [read] or [readWithTimeout] to read in a manner that can
 	 * still be interrupted by [interruptRead].
 	 */
 	public fun enableRawMode()

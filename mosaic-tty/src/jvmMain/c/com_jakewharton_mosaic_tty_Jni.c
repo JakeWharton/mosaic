@@ -145,14 +145,20 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyInit(
 	if (likely(result.tty)) {
 		return (jlong) result.tty;
 	}
+	if (result.no_tty) {
+		return 0;
+	}
 
 	if (result.already_bound) {
 		jclass ise = (*env)->FindClass(env, "java/lang/IllegalStateException");
 		(*env)->ThrowNew(env, ise, "Tty already bound");
-	} else {
+	} else if (result.error) {
 		throwIse(env, result.error);
+	} else {
+		jclass ise = (*env)->FindClass(env, "java/lang/OutOfMemoryException");
+		(*env)->ThrowNew(env, ise, NULL);
 	}
-	return 0;
+	return 0; // Unused.
 }
 
 JNIEXPORT void JNICALL
@@ -167,38 +173,8 @@ Java_com_jakewharton_mosaic_tty_Jni_ttySetCallback(
 	tty_setCallback(tty, callback);
 }
 
-JNIEXPORT jboolean JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_ttyIsInputTty(
-	JNIEnv *env UNUSED,
-	jclass type UNUSED,
-	jlong ttyOpaque
-) {
-	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	return tty_isInputTty(tty);
-}
-
-JNIEXPORT jboolean JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_ttyIsOutputTty(
-	JNIEnv *env UNUSED,
-	jclass type UNUSED,
-	jlong ttyOpaque
-) {
-	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	return tty_isOutputTty(tty);
-}
-
-JNIEXPORT jboolean JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_ttyIsErrorTty(
-	JNIEnv *env UNUSED,
-	jclass type UNUSED,
-	jlong ttyOpaque
-) {
-	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	return tty_isErrorTty(tty);
-}
-
 JNIEXPORT jint JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_ttyReadInput(
+Java_com_jakewharton_mosaic_tty_Jni_ttyRead(
 	JNIEnv *env,
 	jclass type UNUSED,
 	jlong ttyOpaque,
@@ -212,7 +188,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyReadInput(
 	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
 
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	MosaicTtyIoResult result = tty_readInput(tty, nativeBufferAtOffset, count);
+	MosaicTtyIoResult result = tty_read(tty, nativeBufferAtOffset, count);
 
 	(*env)->ReleaseByteArrayElements(env, buffer, bufferElements, 0);
 
@@ -227,7 +203,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyReadInput(
 }
 
 JNIEXPORT jint JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_ttyReadInputWithTimeout(
+Java_com_jakewharton_mosaic_tty_Jni_ttyReadWithTimeout(
 	JNIEnv *env,
 	jclass type UNUSED,
 	jlong ttyOpaque,
@@ -242,7 +218,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyReadInputWithTimeout(
 	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
 
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	MosaicTtyIoResult result = tty_readInputWithTimeout(
+	MosaicTtyIoResult result = tty_readWithTimeout(
 		tty,
 		nativeBufferAtOffset,
 		count,
@@ -275,7 +251,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyInterruptRead(
 }
 
 JNIEXPORT jint JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_ttyWriteOutput(
+Java_com_jakewharton_mosaic_tty_Jni_ttyWrite(
 	JNIEnv *env,
 	jclass type UNUSED,
 	jlong ttyOpaque,
@@ -289,36 +265,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyWriteOutput(
 	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
 
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	MosaicTtyIoResult result = tty_writeOutput(tty, nativeBufferAtOffset, count);
-
-	(*env)->ReleaseByteArrayElements(env, buffer, bufferElements, 0);
-
-	if (likely(!result.error)) {
-		return result.count;
-	}
-
-	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
-	// and should cause the program to try and exit cleanly. 0 is a valid return value.
-	throwIse(env, result.error);
-	return -1;
-}
-
-JNIEXPORT jint JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_ttyWriteError(
-	JNIEnv *env,
-	jclass type UNUSED,
-	jlong ttyOpaque,
-	jbyteArray buffer,
-	jint offset,
-	jint count
-) {
-	jbyte *bufferElements = (*env)->GetByteArrayElements(env, buffer, NULL);
-	jbyte *bufferElementsAtOffset = bufferElements + offset;
-	// Reinterpret JVM signed bytes as unsigned.
-	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
-
-	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	MosaicTtyIoResult result = tty_writeError(tty, nativeBufferAtOffset, count);
+	MosaicTtyIoResult result = tty_write(tty, nativeBufferAtOffset, count);
 
 	(*env)->ReleaseByteArrayElements(env, buffer, bufferElements, 0);
 

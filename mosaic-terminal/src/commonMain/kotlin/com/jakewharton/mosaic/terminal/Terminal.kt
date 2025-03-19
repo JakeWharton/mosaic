@@ -4,7 +4,7 @@ import dev.drewhamilton.poko.Poko
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.StateFlow
 
-public interface Terminal {
+public interface Terminal : AutoCloseable {
 	public val state: State
 	public val capabilities: Capabilities
 	public val events: ReceiveChannel<Event>
@@ -16,6 +16,7 @@ public interface Terminal {
 	}
 
 	public interface Capabilities {
+		public val interactive: Boolean
 		public val ansiLevel: AnsiLevel
 		public val kittyKeyboard: Boolean
 		public val kittyUnderline: Boolean

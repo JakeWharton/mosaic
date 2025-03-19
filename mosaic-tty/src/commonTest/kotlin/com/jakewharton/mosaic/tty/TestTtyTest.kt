@@ -8,12 +8,12 @@ class TestTtyTest {
 	@Test fun canCreateMultiple() {
 		if (isWindows()) return // TODO Not currently supported.
 
-		TestTty.create().use { one ->
-			TestTty.create().use { two ->
-				one.writeInput("hey")
-				two.writeInput("bye")
-				assertThat(two.tty.readInput(3)).isEqualTo("bye")
-				assertThat(one.tty.readInput(3)).isEqualTo("hey")
+		TestTty.create().use { testOne ->
+			TestTty.create().use { testTwo ->
+				testOne.writeInput("hey\n")
+				testTwo.writeInput("bye\n")
+				assertThat(testTwo.tty.readInput(4)).isEqualTo("bye\n")
+				assertThat(testOne.tty.readInput(4)).isEqualTo("hey\n")
 			}
 		}
 	}

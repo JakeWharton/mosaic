@@ -40,8 +40,7 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 	private val windowResize by option().flag()
 
 	override fun run() = runBlocking {
-		val tty = Tty.bind()
-		require(tty.isInputTty()) { "Input device not a TTY" }
+		val tty = checkNotNull(Tty.tryBind()) { "No TTY" }
 		tty.enableRawMode()
 
 		withFinalizationHook(

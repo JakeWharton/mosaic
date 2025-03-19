@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import com.jakewharton.mosaic.NonInteractivePolicy.Ignore
 import com.jakewharton.mosaic.StaticEffect
 import com.jakewharton.mosaic.layout.background
 import com.jakewharton.mosaic.layout.height
@@ -39,64 +40,66 @@ import kotlinx.coroutines.launch
 
 private val Gray = Color(128, 128, 128)
 
-fun main() = runMosaicBlocking {
-	val paths = ArrayDeque(
-		listOf(
-			"tests/login.kt",
-			"tests/signup.kt",
-			"tests/forgot-password.kt",
-			"tests/reset-password.kt",
-			"tests/view-profile.kt",
-			"tests/edit-profile.kt",
-			"tests/delete-profile.kt",
-			"tests/posts.kt",
-			"tests/post.kt",
-			"tests/comments.kt",
-		),
-	)
-	val totalTests = paths.size
+fun main() {
+	runMosaicBlocking(onNonInteractive = Ignore) {
+		val paths = ArrayDeque(
+			listOf(
+				"tests/login.kt",
+				"tests/signup.kt",
+				"tests/forgot-password.kt",
+				"tests/reset-password.kt",
+				"tests/view-profile.kt",
+				"tests/edit-profile.kt",
+				"tests/delete-profile.kt",
+				"tests/posts.kt",
+				"tests/post.kt",
+				"tests/comments.kt",
+			),
+		)
+		val totalTests = paths.size
 
-	var exit by remember { mutableStateOf(false) }
-	val complete = mutableStateListOf<Test>()
-	val tests = mutableStateListOf<Test>()
+		var exit by remember { mutableStateOf(false) }
+		val complete = mutableStateListOf<Test>()
+		val tests = mutableStateListOf<Test>()
 
-	LaunchedEffect(Unit) {
-		val job = launch {
-			// Number of test workers.
-			repeat(4) {
-				launch(start = UNDISPATCHED) {
-					while (true) {
-						val path = paths.removeFirstOrNull() ?: break
-						val nextIndex = tests.size
-						tests += Test(path, Running)
-						delay(random.nextLong(2_500L, 4_000L))
+		LaunchedEffect(Unit) {
+			val job = launch {
+				// Number of test workers.
+				repeat(4) {
+					launch(start = UNDISPATCHED) {
+						while (true) {
+							val path = paths.removeFirstOrNull() ?: break
+							val nextIndex = tests.size
+							tests += Test(path, Running)
+							delay(random.nextLong(2_500L, 4_000L))
 
-						// Flip a coin biased 60% to pass to produce the final state of the test.
-						tests[nextIndex] = when {
-							random.nextFloat() < .7f -> tests[nextIndex].copy(state = Pass)
-							else -> {
-								val test = tests[nextIndex]
-								val failures = buildList {
-									repeat(1 + random.nextInt(2)) {
-										add("Failure on line ${random.nextInt(50)} in ${test.path}")
+							// Flip a coin biased 60% to pass to produce the final state of the test.
+							tests[nextIndex] = when {
+								random.nextFloat() < .7f -> tests[nextIndex].copy(state = Pass)
+								else -> {
+									val test = tests[nextIndex]
+									val failures = buildList {
+										repeat(1 + random.nextInt(2)) {
+											add("Failure on line ${random.nextInt(50)} in ${test.path}")
+										}
 									}
+									test.copy(state = Fail, failures = failures)
 								}
-								test.copy(state = Fail, failures = failures)
 							}
+							complete += tests[nextIndex]
 						}
-						complete += tests[nextIndex]
 					}
 				}
 			}
+			job.join()
+			exit = true
 		}
-		job.join()
-		exit = true
-	}
 
-	Column {
-		Log(complete)
-		Status(tests)
-		Summary(totalTests, tests, exit)
+		Column {
+			Log(complete)
+			Status(tests)
+			Summary(totalTests, tests, exit)
+		}
 	}
 }
 

@@ -15,7 +15,7 @@ import com.jakewharton.mosaic.layout.onKeyEvent
 import com.jakewharton.mosaic.layout.padding
 import com.jakewharton.mosaic.layout.size
 import com.jakewharton.mosaic.modifier.Modifier
-import com.jakewharton.mosaic.runMosaicBlocking
+import com.jakewharton.mosaic.runMosaicMain
 import com.jakewharton.mosaic.ui.Box
 import com.jakewharton.mosaic.ui.Column
 import com.jakewharton.mosaic.ui.Spacer
@@ -32,7 +32,7 @@ private const val worldBorderWidth = 1
 private const val robotWidth = 3
 private const val robotHeight = 1
 
-fun main() = runMosaicBlocking {
+fun main() = runMosaicMain {
 	var x by remember { mutableIntStateOf(0) }
 	var y by remember { mutableIntStateOf(0) }
 	var exit by remember { mutableStateOf(false) }

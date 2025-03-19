@@ -5,9 +5,7 @@
 #include <sys/select.h>
 
 typedef struct MosaicTtyImpl {
-	int stdin_read_fd;
-	int stdout_write_fd;
-	int stderr_write_fd;
+	int fd;
 	int interrupt_read_fd;
 	int interrupt_write_fd;
 	MosaicTtyCallback *callback;
@@ -15,10 +13,6 @@ typedef struct MosaicTtyImpl {
 	struct termios *saved;
 } MosaicTtyImpl;
 
-MosaicTtyInitResult tty_initWithFds(
-	int stdinReadFd,
-	int stdoutWriteFd,
-	int stderrWriteFd
-);
+MosaicTtyInitResult tty_initWithFd(int fd);
 
 #endif // MOSAIC_TTY_POSIX_H
