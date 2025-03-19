@@ -1,6 +1,6 @@
 -keep class **.*Test {
 	public <init>();
-	@org.junit.Test public void *(...);
+	@org.junit.* public void *(...);
 }
 
 # Gradle does A LOT of reflection to invoke JUnit. Just keep it all.
