@@ -10,6 +10,7 @@ kotlin {
 		commonMain {
 			dependencies {
 				implementation projects.mosaicRuntime
+				implementation libs.androidx.collection
 			}
 		}
 	}
