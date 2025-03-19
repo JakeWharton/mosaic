@@ -29,11 +29,15 @@ final class com.jakewharton.mosaic.testing/TestTerminal : com.jakewharton.mosaic
     final val state // com.jakewharton.mosaic.testing/TestTerminal.state|{}state[0]
         final fun <get-state>(): com.jakewharton.mosaic.testing/TestTerminal.State // com.jakewharton.mosaic.testing/TestTerminal.state.<get-state>|<get-state>(){}[0]
 
+    final fun close() // com.jakewharton.mosaic.testing/TestTerminal.close|close(){}[0]
+
     final class Capabilities : com.jakewharton.mosaic.terminal/Terminal.Capabilities { // com.jakewharton.mosaic.testing/TestTerminal.Capabilities|null[0]
-        constructor <init>(com.jakewharton.mosaic.terminal/AnsiLevel = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ...) // com.jakewharton.mosaic.testing/TestTerminal.Capabilities.<init>|<init>(com.jakewharton.mosaic.terminal.AnsiLevel;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean){}[0]
+        constructor <init>(kotlin/Boolean = ..., com.jakewharton.mosaic.terminal/AnsiLevel = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ...) // com.jakewharton.mosaic.testing/TestTerminal.Capabilities.<init>|<init>(kotlin.Boolean;com.jakewharton.mosaic.terminal.AnsiLevel;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean){}[0]
 
         final val ansiLevel // com.jakewharton.mosaic.testing/TestTerminal.Capabilities.ansiLevel|{}ansiLevel[0]
             final fun <get-ansiLevel>(): com.jakewharton.mosaic.terminal/AnsiLevel // com.jakewharton.mosaic.testing/TestTerminal.Capabilities.ansiLevel.<get-ansiLevel>|<get-ansiLevel>(){}[0]
+        final val interactive // com.jakewharton.mosaic.testing/TestTerminal.Capabilities.interactive|{}interactive[0]
+            final fun <get-interactive>(): kotlin/Boolean // com.jakewharton.mosaic.testing/TestTerminal.Capabilities.interactive.<get-interactive>|<get-interactive>(){}[0]
         final val kittyGraphics // com.jakewharton.mosaic.testing/TestTerminal.Capabilities.kittyGraphics|{}kittyGraphics[0]
             final fun <get-kittyGraphics>(): kotlin/Boolean // com.jakewharton.mosaic.testing/TestTerminal.Capabilities.kittyGraphics.<get-kittyGraphics>|<get-kittyGraphics>(){}[0]
         final val kittyKeyboard // com.jakewharton.mosaic.testing/TestTerminal.Capabilities.kittyKeyboard|{}kittyKeyboard[0]

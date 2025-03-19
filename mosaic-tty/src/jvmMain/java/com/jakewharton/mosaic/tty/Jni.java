@@ -64,20 +64,14 @@ final class Jni {
 
 	static native void ttySetCallback(long ttyPtr, long callbackPtr);
 
-	static native boolean ttyIsInputTty(long ttyPtr);
-
-	static native boolean ttyIsOutputTty(long ttyPtr);
-
-	static native boolean ttyIsErrorTty(long ttyPtr);
-
-	static native int ttyReadInput(
+	static native int ttyRead(
 		long ttyPtr,
 		byte[] buffer,
 		int offset,
 		int count
 	);
 
-	static native int ttyReadInputWithTimeout(
+	static native int ttyReadWithTimeout(
 		long ttyPtr,
 		byte[] buffer,
 		int offset,
@@ -87,14 +81,7 @@ final class Jni {
 
 	static native void ttyInterruptRead(long ttyPtr);
 
-	static native int ttyWriteOutput(
-		long ttyPtr,
-		byte[] buffer,
-		int offset,
-		int count
-	);
-
-	static native int ttyWriteError(
+	static native int ttyWrite(
 		long ttyPtr,
 		byte[] buffer,
 		int offset,

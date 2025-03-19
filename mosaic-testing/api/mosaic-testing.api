@@ -29,6 +29,7 @@ public final class com/jakewharton/mosaic/testing/TestTerminal : com/jakewharton
 	public fun <init> ()V
 	public fun <init> (Lcom/jakewharton/mosaic/terminal/Terminal$Capabilities;)V
 	public synthetic fun <init> (Lcom/jakewharton/mosaic/terminal/Terminal$Capabilities;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun close ()V
 	public fun getCapabilities ()Lcom/jakewharton/mosaic/terminal/Terminal$Capabilities;
 	public fun getEvents ()Lkotlinx/coroutines/channels/Channel;
 	public synthetic fun getEvents ()Lkotlinx/coroutines/channels/ReceiveChannel;
@@ -39,9 +40,10 @@ public final class com/jakewharton/mosaic/testing/TestTerminal : com/jakewharton
 public final class com/jakewharton/mosaic/testing/TestTerminal$Capabilities : com/jakewharton/mosaic/terminal/Terminal$Capabilities {
 	public static final field $stable I
 	public fun <init> ()V
-	public fun <init> (Lcom/jakewharton/mosaic/terminal/AnsiLevel;ZZZZZZ)V
-	public synthetic fun <init> (Lcom/jakewharton/mosaic/terminal/AnsiLevel;ZZZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ZLcom/jakewharton/mosaic/terminal/AnsiLevel;ZZZZZZ)V
+	public synthetic fun <init> (ZLcom/jakewharton/mosaic/terminal/AnsiLevel;ZZZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun getAnsiLevel ()Lcom/jakewharton/mosaic/terminal/AnsiLevel;
+	public fun getInteractive ()Z
 	public fun getKittyGraphics ()Z
 	public fun getKittyKeyboard ()Z
 	public fun getKittyNotifications ()Z

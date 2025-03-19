@@ -43,9 +43,8 @@ MosaicTestTtyInitResult testTty_init() {
 	FlushConsoleInputBuffer(stdin);
 
 	HANDLE stdout = GetStdHandle(STD_OUTPUT_HANDLE);
-	HANDLE stderr = GetStdHandle(STD_ERROR_HANDLE);
 
-	MosaicTtyInitResult ttyInitResult = tty_initWithHandles(stdin, stdout, stderr);
+	MosaicTtyInitResult ttyInitResult = tty_initWithHandles(stdin, stdout);
 	if (unlikely(ttyInitResult.error)) {
 		result.error = ttyInitResult.error;
 		goto err;

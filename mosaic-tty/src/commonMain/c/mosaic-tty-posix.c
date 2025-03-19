@@ -14,11 +14,7 @@
 #include <time.h>
 #include <unistd.h>
 
-MosaicTtyInitResult tty_initWithFds(
-	int stdinReadFd,
-	int stdoutWriteFd,
-	int stderrWriteFd
-) {
+MosaicTtyInitResult tty_initWithFd(int fd) {
 	MosaicTtyInitResult result = {};
 
 	MosaicTtyImpl *tty = calloc(1, sizeof(MosaicTtyImpl));
@@ -33,9 +29,7 @@ MosaicTtyInitResult tty_initWithFds(
 		goto err;
 	}
 
-	tty->stdin_read_fd = stdinReadFd;
-	tty->stdout_write_fd = stdoutWriteFd;
-	tty->stderr_write_fd = stderrWriteFd;
+	tty->fd = fd;
 	tty->interrupt_read_fd = interrupt_pipe[0];
 	tty->interrupt_write_fd = interrupt_pipe[1];
 
@@ -52,7 +46,16 @@ MosaicTtyInitResult tty_initWithFds(
 static _Atomic(MosaicTty *) globalTty;
 
 MosaicTtyInitResult tty_init() {
-	MosaicTtyInitResult result = tty_initWithFds(STDIN_FILENO, STDOUT_FILENO, STDERR_FILENO);
+	MosaicTtyInitResult result = {};
+
+	int fd = open("/dev/tty", O_RDWR);
+	if (unlikely(fd == -1)) {
+		result.error = errno;
+		result.no_tty = true;
+		goto ret;
+	}
+
+	result = tty_initWithFd(fd);
 
 	MosaicTty *tty = result.tty;
 	MosaicTty *expected = NULL;
@@ -63,6 +66,7 @@ MosaicTtyInitResult tty_init() {
 		result.already_bound = true;
 	}
 
+	ret:
 	return result;
 }
 
@@ -70,19 +74,7 @@ void tty_setCallback(MosaicTty *tty, MosaicTtyCallback *callback) {
 	tty->callback = callback;
 }
 
-bool tty_isInputTty(MosaicTty *tty) {
-	return isatty(tty->stdin_read_fd) != 0;
-}
-
-bool tty_isOutputTty(MosaicTty *tty) {
-	return isatty(tty->stdout_write_fd) != 0;
-}
-
-bool tty_isErrorTty(MosaicTty *tty) {
-	return isatty(tty->stderr_write_fd) != 0;
-}
-
-static MosaicTtyIoResult tty_readInputInternal(
+static MosaicTtyIoResult tty_readInternal(
 	MosaicTty *tty,
 	uint8_t *buffer,
 	int count,
@@ -90,18 +82,18 @@ static MosaicTtyIoResult tty_readInputInternal(
 ) {
 	MosaicTtyIoResult result = {};
 
-	int stdinReadFd = tty->stdin_read_fd;
+	int ttyFd = tty->fd;
 	int interruptReadFd = tty->interrupt_read_fd;
 
 	fd_set fds;
 	FD_ZERO(&fds);
-	FD_SET(stdinReadFd, &fds);
+	FD_SET(ttyFd, &fds);
 	FD_SET(interruptReadFd, &fds);
 
-	int nfds = 1 + ((stdinReadFd > interruptReadFd) ? stdinReadFd : interruptReadFd);
+	int nfds = 1 + ((ttyFd > interruptReadFd) ? ttyFd : interruptReadFd);
 	if (likely(select(nfds, &fds, NULL, NULL, timeout) >= 0)) {
-		if (likely(FD_ISSET(stdinReadFd, &fds) != 0)) {
-			int c = read(stdinReadFd, buffer, count);
+		if (likely(FD_ISSET(ttyFd, &fds) != 0)) {
+			int c = read(ttyFd, buffer, count);
 			if (likely(c > 0)) {
 				result.count = c;
 			} else if (c == 0) {
@@ -129,11 +121,11 @@ static MosaicTtyIoResult tty_readInputInternal(
 	goto ret;
 }
 
-MosaicTtyIoResult tty_readInput(MosaicTty *tty, uint8_t *buffer, int count) {
-	return tty_readInputInternal(tty, buffer, count, NULL);
+MosaicTtyIoResult tty_read(MosaicTty *tty, uint8_t *buffer, int count) {
+	return tty_readInternal(tty, buffer, count, NULL);
 }
 
-MosaicTtyIoResult tty_readInputWithTimeout(
+MosaicTtyIoResult tty_readWithTimeout(
 	MosaicTty *tty,
 	uint8_t *buffer,
 	int count,
@@ -143,7 +135,7 @@ MosaicTtyIoResult tty_readInputWithTimeout(
 	timeout.tv_sec = 0;
 	timeout.tv_usec = timeoutMillis * 1000;
 
-	return tty_readInputInternal(tty, buffer, count, &timeout);
+	return tty_readInternal(tty, buffer, count, &timeout);
 }
 
 MosaicTtyIoResult tty_writeInternal(int writeFd, uint8_t *buffer, int count) {
@@ -165,19 +157,15 @@ uint32_t tty_interruptRead(MosaicTty *tty) {
 	return result.error;
 }
 
-MosaicTtyIoResult tty_writeOutput(MosaicTty *tty, uint8_t *buffer, int count) {
-	return tty_writeInternal(tty->stdout_write_fd, buffer, count);
-}
-
-MosaicTtyIoResult tty_writeError(MosaicTty *tty, uint8_t *buffer, int count) {
-	return tty_writeInternal(tty->stderr_write_fd, buffer, count);
+MosaicTtyIoResult tty_write(MosaicTty *tty, uint8_t *buffer, int count) {
+	return tty_writeInternal(tty->fd, buffer, count);
 }
 
 void sigwinchHandler(int value UNUSED) {
 	MosaicTty *tty = atomic_load(&globalTty);
 	if (likely(tty)) {
 		struct winsize size;
-		if (ioctl(tty->stdin_read_fd, TIOCGWINSZ, &size) != -1) {
+		if (ioctl(tty->fd, TIOCGWINSZ, &size) != -1) {
 			MosaicTtyCallback *callback = tty->callback;
 			if (likely(callback)) {
 				callback->onResize(callback->opaque, size.ws_col, size.ws_row, size.ws_xpixel, size.ws_ypixel);
@@ -203,7 +191,7 @@ uint32_t tty_enableRawMode(MosaicTty *tty) {
 		goto ret;
 	}
 
-	if (unlikely(tcgetattr(tty->stdin_read_fd, saved) != 0)) {
+	if (unlikely(tcgetattr(tty->fd, saved) != 0)) {
 		result = errno;
 		goto err;
 	}
@@ -221,10 +209,10 @@ uint32_t tty_enableRawMode(MosaicTty *tty) {
 	current.c_cc[VMIN] = 1;
 	current.c_cc[VTIME] = 0;
 
-	if (unlikely(tcsetattr(tty->stdin_read_fd, TCSAFLUSH, &current) != 0)) {
+	if (unlikely(tcsetattr(tty->fd, TCSAFLUSH, &current) != 0)) {
 		result = errno;
 		// Try to restore the saved config.
-		tcsetattr(tty->stdin_read_fd, TCSAFLUSH, saved);
+		tcsetattr(tty->fd, TCSAFLUSH, saved);
 		goto err;
 	}
 
@@ -259,7 +247,7 @@ MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty) {
 	MosaicTtyTerminalSizeResult result = {};
 
 	struct winsize size;
-	if (ioctl(tty->stdin_read_fd, TIOCGWINSZ, &size) != -1) {
+	if (ioctl(tty->fd, TIOCGWINSZ, &size) != -1) {
 		result.columns = size.ws_col;
 		result.rows = size.ws_row;
 		result.width = size.ws_xpixel;
@@ -282,7 +270,7 @@ uint32_t tty_reset(MosaicTty *tty) {
 	}
 
 	if (tty->saved) {
-		if (unlikely(tcsetattr(tty->stdin_read_fd, TCSAFLUSH, tty->saved) && result == 0)) {
+		if (unlikely(tcsetattr(tty->fd, TCSAFLUSH, tty->saved) && result == 0)) {
 			result = errno;
 		}
 		free(tty->saved);
@@ -295,16 +283,20 @@ uint32_t tty_reset(MosaicTty *tty) {
 uint32_t tty_free(MosaicTty *tty) {
 	uint32_t result = 0;
 
-	if (unlikely(close(tty->interrupt_read_fd) != 0)) {
+	uint32_t resetResult = tty_reset(tty);
+	if (resetResult != 0) {
+		result = resetResult;
+	}
+
+	if (unlikely(close(tty->fd) != 0 && result == 0)) {
+		result = errno;
+	}
+
+	if (unlikely(close(tty->interrupt_read_fd) != 0 && result == 0)) {
 		result = errno;
 	}
 	if (unlikely(close(tty->interrupt_write_fd) != 0 && result == 0)) {
 		result = errno;
-	}
-
-	uint32_t resetResult = tty_reset(tty);
-	if (resetResult != 0 && result == 0) {
-		result = resetResult;
 	}
 
 	atomic_store(&globalTty, NULL);

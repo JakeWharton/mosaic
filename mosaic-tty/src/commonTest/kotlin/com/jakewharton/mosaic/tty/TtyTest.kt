@@ -1,14 +1,12 @@
 package com.jakewharton.mosaic.tty
 
-import assertk.assertFailure
 import assertk.assertThat
-import assertk.assertions.hasMessage
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isGreaterThan
-import assertk.assertions.isInstanceOf
 import assertk.assertions.isZero
 import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.milliseconds
@@ -23,31 +21,28 @@ class TtyTest {
 	private val testTty = TestTty.create()
 	private val tty = testTty.tty
 
+	@BeforeTest fun before() {
+		if (!isWindows()) {
+			tty.enableRawMode()
+		}
+	}
+
 	@AfterTest fun after() {
 		tty.close()
 		testTty.close()
 		assertThat(events, name = "events").isEmpty()
 	}
 
-	@Test fun bindTwiceFails() {
-		Tty.bind().use {
-			assertFailure {
-				Tty.bind()
-			}.isInstanceOf<IllegalStateException>()
-				.hasMessage("Tty already bound")
-		}
-	}
-
 	@Test fun readWhatWasWritten() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
 		testTty.writeInput("hello")
-		val readA = tty.readInput(buffer, 0, 10)
+		val readA = tty.read(buffer, 0, 10)
 		assertThat(readA, "readA").isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("helloxxxxx")
 
 		testTty.writeInput("world")
-		val readB = tty.readInput(buffer, 0, 10)
+		val readB = tty.read(buffer, 0, 10)
 		assertThat(readB, "readB").isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("worldxxxxx")
 	}
@@ -56,7 +51,7 @@ class TtyTest {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
 		testTty.writeInput("hello")
-		val read = tty.readInput(buffer, 0, 4)
+		val read = tty.read(buffer, 0, 4)
 		assertThat(read).isEqualTo(4)
 		assertThat(buffer.decodeToString()).isEqualTo("hellxxxxxx")
 	}
@@ -65,7 +60,7 @@ class TtyTest {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
 		testTty.writeInput("hello")
-		val read = tty.readInput(buffer, 0, 10)
+		val read = tty.read(buffer, 0, 10)
 		assertThat(read).isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("helloxxxxx")
 	}
@@ -74,7 +69,7 @@ class TtyTest {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
 		testTty.writeInput("hello")
-		val read = tty.readInput(buffer, 5, 5)
+		val read = tty.read(buffer, 5, 5)
 		assertThat(read).isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("xxxxxhello")
 	}
@@ -84,14 +79,14 @@ class TtyTest {
 			delay(150.milliseconds)
 			tty.interruptRead()
 		}
-		val readA = tty.readInput(ByteArray(10), 0, 10)
+		val readA = tty.read(ByteArray(10), 0, 10)
 		assertThat(readA).isZero()
 
 		backgroundScope.launch(Dispatchers.Default) {
 			delay(150.milliseconds)
 			tty.interruptRead()
 		}
-		val readB = tty.readInput(ByteArray(10), 0, 10)
+		val readB = tty.read(ByteArray(10), 0, 10)
 		assertThat(readB).isZero()
 	}
 
@@ -101,14 +96,14 @@ class TtyTest {
 
 		val readA: Int
 		val tookA = measureTime {
-			readA = tty.readInputWithTimeout(ByteArray(10), 0, 10, 100)
+			readA = tty.readWithTimeout(ByteArray(10), 0, 10, 100)
 		}
 		assertThat(readA).isZero()
 		assertThat(tookA).isGreaterThan(50.milliseconds)
 
 		val readB: Int
 		val tookB = measureTime {
-			readB = tty.readInputWithTimeout(ByteArray(10), 0, 10, 100)
+			readB = tty.readWithTimeout(ByteArray(10), 0, 10, 100)
 		}
 		assertThat(readB).isZero()
 		assertThat(tookB).isGreaterThan(50.milliseconds)

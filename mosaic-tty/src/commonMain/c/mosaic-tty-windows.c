@@ -9,8 +9,7 @@
 
 MosaicTtyInitResult tty_initWithHandles(
 	HANDLE stdin,
-	HANDLE stdout,
-	HANDLE stderr
+	HANDLE stdout
 ) {
 	MosaicTtyInitResult result = {};
 
@@ -28,10 +27,6 @@ MosaicTtyInitResult tty_initWithHandles(
 		result.error = GetLastError();
 		goto err;
 	}
-	if (unlikely(stderr == INVALID_HANDLE_VALUE)) {
-		result.error = GetLastError();
-		goto err;
-	}
 
 	HANDLE interruptEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 	if (unlikely(interruptEvent == NULL)) {
@@ -41,7 +36,6 @@ MosaicTtyInitResult tty_initWithHandles(
 
 	tty->stdin = stdin;
 	tty->stdout = stdout;
-	tty->stderr = stderr;
 	tty->interrupt_event = interruptEvent;
 
 	result.tty = tty;
@@ -59,8 +53,7 @@ static _Atomic(MosaicTty *) globalTty;
 MosaicTtyInitResult tty_init() {
 	HANDLE stdin = GetStdHandle(STD_INPUT_HANDLE);
 	HANDLE stdout = GetStdHandle(STD_OUTPUT_HANDLE);
-	HANDLE stderr = GetStdHandle(STD_ERROR_HANDLE);
-	MosaicTtyInitResult result = tty_initWithHandles(stdin, stdout, stderr);
+	MosaicTtyInitResult result = tty_initWithHandles(stdin, stdout);
 
 	MosaicTty *tty = result.tty;
 	MosaicTty *expected = NULL;
@@ -78,27 +71,15 @@ void tty_setCallback(MosaicTty *tty, MosaicTtyCallback *callback) {
 	tty->callback = callback;
 }
 
-bool tty_isInputTty(MosaicTty *tty) {
-	return GetFileType(tty->stdin) == FILE_TYPE_CHAR;
-}
-
-bool tty_isOutputTty(MosaicTty *tty) {
-	return GetFileType(tty->stdout) == FILE_TYPE_CHAR;
-}
-
-bool tty_isErrorTty(MosaicTty *tty) {
-	return GetFileType(tty->stderr) == FILE_TYPE_CHAR;
-}
-
-MosaicTtyIoResult tty_readInput(
+MosaicTtyIoResult tty_read(
 	MosaicTty *tty,
 	uint8_t *buffer,
 	int count
 ) {
-	return tty_readInputWithTimeout(tty, buffer, count, INFINITE);
+	return tty_readWithTimeout(tty, buffer, count, INFINITE);
 }
 
-MosaicTtyIoResult tty_readInputWithTimeout(
+MosaicTtyIoResult tty_readWithTimeout(
 	MosaicTty *tty,
 	uint8_t *buffer,
 	int count,
@@ -172,25 +153,17 @@ uint32_t tty_interruptRead(MosaicTty *tty) {
 		: GetLastError();
 }
 
-static MosaicTtyIoResult tty_writeInternal(HANDLE h, uint8_t *buffer, int count) {
+MosaicTtyIoResult tty_write(MosaicTty *tty, uint8_t *buffer, int count) {
 	MosaicTtyIoResult result = {};
 
 	DWORD written;
-	if (WriteFile(h, buffer, count, &written, NULL)) {
+	if (WriteFile(tty->stdout, buffer, count, &written, NULL)) {
 		result.count = written;
 	} else {
 		result.error = GetLastError();
 	}
 
 	return result;
-}
-
-MosaicTtyIoResult tty_writeOutput(MosaicTty *tty, uint8_t *buffer, int count) {
-	return tty_writeInternal(tty->stdout, buffer, count);
-}
-
-MosaicTtyIoResult tty_writeError(MosaicTty *tty, uint8_t *buffer, int count) {
-	return tty_writeInternal(tty->stderr, buffer, count);
 }
 
 uint32_t tty_enableRawMode(MosaicTty *tty) {

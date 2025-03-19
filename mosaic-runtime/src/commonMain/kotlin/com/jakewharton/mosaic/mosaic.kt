@@ -15,12 +15,16 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.jakewharton.mosaic.NonInteractivePolicy.Exit
+import com.jakewharton.mosaic.NonInteractivePolicy.Ignore
+import com.jakewharton.mosaic.NonInteractivePolicy.Return
+import com.jakewharton.mosaic.NonInteractivePolicy.Throw
 import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.terminal.KeyboardEvent
 import com.jakewharton.mosaic.terminal.Terminal
 import com.jakewharton.mosaic.tty.Tty
-import com.jakewharton.mosaic.tty.terminal.useAsTerminal
+import com.jakewharton.mosaic.tty.terminal.asTerminalIn
 import com.jakewharton.mosaic.ui.BoxMeasurePolicy
 import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.concurrent.Volatile
@@ -34,18 +38,40 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-public fun runMosaicBlocking(content: @Composable () -> Unit) {
-	runBlocking {
-		runMosaic(content)
+public fun runMosaicMain(
+	content: @Composable () -> Unit,
+) {
+	runMosaicBlocking(content = content)
+}
+
+public fun runMosaicBlocking(
+	onNonInteractive: NonInteractivePolicy = Exit,
+	content: @Composable () -> Unit,
+): Boolean {
+	return runBlocking {
+		runMosaic(onNonInteractive, content)
 	}
 }
 
-public suspend fun runMosaic(content: @Composable () -> Unit) {
-	Tty.bind().useAsTerminal(resetOnly = true) { terminal ->
+public suspend fun runMosaic(
+	nonInteractivePolicy: NonInteractivePolicy = Exit,
+	content: @Composable () -> Unit,
+): Boolean = coroutineScope {
+	val terminal = Tty.tryBind()
+		?.asTerminalIn(this)
+		?: when (nonInteractivePolicy) {
+			Exit -> nonInteractiveExit()
+			Throw -> throw IllegalStateException(NonInteractiveMessage)
+			Ignore -> NonInteractiveTerminal
+			Return -> return@coroutineScope false
+		}
+
+	terminal.use { terminal ->
 		val rendering = if (env("MOSAIC_DEBUG_RENDERING") == "true") {
 			DebugRendering(
 				ansiLevel = terminal.capabilities.ansiLevel,
@@ -62,6 +88,8 @@ public suspend fun runMosaic(content: @Composable () -> Unit) {
 
 		runMosaicComposition(terminal, rendering, content)
 	}
+
+	true
 }
 
 internal suspend fun runMosaicComposition(

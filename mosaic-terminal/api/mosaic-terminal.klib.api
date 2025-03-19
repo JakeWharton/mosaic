@@ -19,7 +19,7 @@ final enum class com.jakewharton.mosaic.terminal/AnsiLevel : kotlin/Enum<com.jak
     final fun values(): kotlin/Array<com.jakewharton.mosaic.terminal/AnsiLevel> // com.jakewharton.mosaic.terminal/AnsiLevel.values|values#static(){}[0]
 }
 
-abstract interface com.jakewharton.mosaic.terminal/Terminal { // com.jakewharton.mosaic.terminal/Terminal|null[0]
+abstract interface com.jakewharton.mosaic.terminal/Terminal : kotlin/AutoCloseable { // com.jakewharton.mosaic.terminal/Terminal|null[0]
     abstract val capabilities // com.jakewharton.mosaic.terminal/Terminal.capabilities|{}capabilities[0]
         abstract fun <get-capabilities>(): com.jakewharton.mosaic.terminal/Terminal.Capabilities // com.jakewharton.mosaic.terminal/Terminal.capabilities.<get-capabilities>|<get-capabilities>(){}[0]
     abstract val events // com.jakewharton.mosaic.terminal/Terminal.events|{}events[0]
@@ -30,6 +30,8 @@ abstract interface com.jakewharton.mosaic.terminal/Terminal { // com.jakewharton
     abstract interface Capabilities { // com.jakewharton.mosaic.terminal/Terminal.Capabilities|null[0]
         abstract val ansiLevel // com.jakewharton.mosaic.terminal/Terminal.Capabilities.ansiLevel|{}ansiLevel[0]
             abstract fun <get-ansiLevel>(): com.jakewharton.mosaic.terminal/AnsiLevel // com.jakewharton.mosaic.terminal/Terminal.Capabilities.ansiLevel.<get-ansiLevel>|<get-ansiLevel>(){}[0]
+        abstract val interactive // com.jakewharton.mosaic.terminal/Terminal.Capabilities.interactive|{}interactive[0]
+            abstract fun <get-interactive>(): kotlin/Boolean // com.jakewharton.mosaic.terminal/Terminal.Capabilities.interactive.<get-interactive>|<get-interactive>(){}[0]
         abstract val kittyGraphics // com.jakewharton.mosaic.terminal/Terminal.Capabilities.kittyGraphics|{}kittyGraphics[0]
             abstract fun <get-kittyGraphics>(): kotlin/Boolean // com.jakewharton.mosaic.terminal/Terminal.Capabilities.kittyGraphics.<get-kittyGraphics>|<get-kittyGraphics>(){}[0]
         abstract val kittyKeyboard // com.jakewharton.mosaic.terminal/Terminal.Capabilities.kittyKeyboard|{}kittyKeyboard[0]

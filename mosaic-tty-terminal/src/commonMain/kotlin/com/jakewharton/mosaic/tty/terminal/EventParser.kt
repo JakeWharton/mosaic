@@ -119,7 +119,7 @@ public class EventParser(
 			if (kittyDisambiguateEscapeCodes || limit != 1 || buffer[0] != 0x1B.toByte()) {
 				// Common case: we are using the Kitty keyboard protocol to disambiguate escape keys, or
 				// the buffer contains anything other than a bare escape. Do a normal read for more data.
-				val read = tty.readInput(buffer, limit, BufferSize - limit)
+				val read = tty.read(buffer, limit, BufferSize - limit)
 				if (read == -1) break // EOF
 				if (read == 0) return null // Interrupt
 
@@ -130,7 +130,7 @@ public class EventParser(
 			// Otherwise, perform a quick read to see if we have any more bytes. This will allow us to
 			// determine whether the bare escape was truly a legacy keyboard escape event, or just the
 			// start of some other escape sequence.
-			val read = tty.readInputWithTimeout(
+			val read = tty.readWithTimeout(
 				buffer,
 				1,
 				BufferSize - 1,

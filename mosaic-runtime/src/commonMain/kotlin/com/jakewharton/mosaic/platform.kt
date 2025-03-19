@@ -11,3 +11,5 @@ internal expect inline fun AtomicBoolean.compareAndSet(expect: Boolean, update: 
 internal expect inline fun atomicBooleanOf(initialValue: Boolean): AtomicBoolean
 
 internal expect inline fun nanoTime(): Long
+
+internal expect fun nonInteractiveExit(): Nothing
