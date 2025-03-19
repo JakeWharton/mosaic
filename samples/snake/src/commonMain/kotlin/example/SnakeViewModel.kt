@@ -16,9 +16,13 @@ import example.models.width
 import example.models.x
 import example.models.y
 import example.utils.asLong
-import java.util.concurrent.atomic.AtomicReference
+import example.utils.exitProcess
+import example.utils.updateAndGet
+import kotlin.concurrent.atomics.AtomicReference
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.random.Random
-import kotlin.system.exitProcess
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -37,11 +41,13 @@ import kotlinx.coroutines.launch
 
 private const val INITIAL_SNAKE_SIZE = 3
 
+@OptIn(ExperimentalAtomicApi::class, ExperimentalTime::class)
 class SnakeViewModel(
 	parentCoroutineScope: CoroutineScope,
 	private val fieldSize: Size = Size(60, 20),
 	private val updateDelayMs: Long = 200L,
 ) {
+	private val clock: Clock = Clock.System
 
 	private val coroutineScope =
 		CoroutineScope(SupervisorJob(parentCoroutineScope.coroutineContext[Job]))
@@ -59,11 +65,11 @@ class SnakeViewModel(
 	)
 
 	val uiStateFlow: StateFlow<SnakeUiState> = updateUiStateFlow
-		.map { gameState.get() }
+		.map { gameState.load() }
 		.onEach { checkGameOver(it) }
 		.map { it.toUiState() }
 		.distinctUntilChanged()
-		.stateIn(coroutineScope, SharingStarted.WhileSubscribed(), gameState.get().toUiState())
+		.stateIn(coroutineScope, SharingStarted.WhileSubscribed(), gameState.load().toUiState())
 
 	private var gameCycleJob: Job? = null
 
@@ -98,7 +104,7 @@ class SnakeViewModel(
 
 	private fun startGame() {
 		gameCycleJob?.cancel()
-		gameState.set(createInitialGameState())
+		gameState.store(createInitialGameState())
 		gameCycleJob = coroutineScope.launch {
 			launch {
 				moveDirectionFlow.collect { newDirection ->
@@ -111,7 +117,7 @@ class SnakeViewModel(
 				while (coroutineContext.isActive) {
 					delay(delayMs)
 					gameState.updateAndGet {
-						val currentTimeMs = System.currentTimeMillis()
+						val currentTimeMs = clock.now().toEpochMilliseconds()
 						val diffMs = currentTimeMs - it.lastUpdateMs
 						if (diffMs < updateDelayMs) {
 							delayMs = updateDelayMs - diffMs
@@ -211,7 +217,7 @@ class SnakeViewModel(
 			}
 		}
 
-		return gameState.copy(snake = snake, food = food, lastUpdateMs = System.currentTimeMillis())
+		return gameState.copy(snake = snake, food = food, lastUpdateMs = clock.now().toEpochMilliseconds())
 	}
 
 	private fun checkGameOver(gameState: GameState) {
