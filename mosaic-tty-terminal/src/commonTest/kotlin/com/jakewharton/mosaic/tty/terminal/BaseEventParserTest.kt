@@ -13,9 +13,7 @@ abstract class BaseEventParserTest {
 	internal val parser = EventParser(tty)
 
 	@BeforeTest fun before() {
-		if (!isWindows()) {
-			tty.enableRawMode()
-		}
+		tty.enableRawMode()
 	}
 
 	@AfterTest fun after() = runTest {
