@@ -10,10 +10,6 @@ typedef struct MosaicTestTtyImpl {
 	MosaicTty *tty;
 } MosaicTestTtyImpl;
 
-// A single global input writer into which fake data can be sent. Creating and closing this over
-// and over eventually produces a failure, so we only do it once per process (since it's test only).
-static HANDLE writerConin = NULL;
-
 MosaicTestTtyInitResult testTty_init() {
 	MosaicTestTtyInitResult result = {};
 
@@ -23,26 +19,28 @@ MosaicTestTtyInitResult testTty_init() {
 		goto ret;
 	}
 
-	HANDLE stdin = writerConin;
-	if (stdin == NULL) {
-		// When run as a test, GetStdHandle(STD_INPUT_HANDLE) returns a closed handle which does not
-		// work. Open a new console input handle for our non-display testing purposes.
-		stdin = CreateFile(TEXT("CONIN$"), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
-		if (unlikely(stdin == INVALID_HANDLE_VALUE)) {
-			result.error = GetLastError();
-			goto err;
-		}
-		if (unlikely(SetConsoleMode(stdin, ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT | ENABLE_EXTENDED_FLAGS) == 0)) {
-			result.error = GetLastError();
-			goto err;
-		}
-		writerConin = stdin;
+	HANDLE stdin = CreateFile(TEXT("CONIN$"), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
+	if (unlikely(stdin == INVALID_HANDLE_VALUE)) {
+		result.error = GetLastError();
+		goto err;
+	}
+	if (unlikely(SetConsoleMode(stdin, ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT | ENABLE_EXTENDED_FLAGS) == 0)) {
+		result.error = GetLastError();
+		goto err;
 	}
 
 	// Ensure we don't start with existing records in the buffer.
 	FlushConsoleInputBuffer(stdin);
 
-	HANDLE stdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	HANDLE stdout = CreateFile(TEXT("CONOUT$"), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
+	if (unlikely(stdout == INVALID_HANDLE_VALUE)) {
+		result.error = GetLastError();
+		goto err;
+	}
+	if (unlikely(SetConsoleMode(stdout, ENABLE_PROCESSED_OUTPUT | ENABLE_WRAP_AT_EOL_OUTPUT) == 0)) {
+		result.error = GetLastError();
+		goto err;
+	}
 
 	MosaicTtyInitResult ttyInitResult = tty_initWithHandles(stdin, stdout);
 	if (unlikely(ttyInitResult.error)) {
