@@ -22,9 +22,7 @@ class TtyTest {
 	private val tty = testTty.tty
 
 	@BeforeTest fun before() {
-		if (!isWindows()) {
-			tty.enableRawMode()
-		}
+		tty.enableRawMode()
 	}
 
 	@AfterTest fun after() {
