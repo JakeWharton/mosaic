@@ -14,7 +14,7 @@ Changed:
 - Switched to our own terminal integration library. Report any issues with keyboard input, incorrect size reporting, or garbled output.
 - Only disable the cursor and emit synchronized rendering markers if the terminal reports support for those features.
 - `Static` function is now called `StaticEffect` to better indicate that it only renders its content once.
-- The runtime's `Terminal` was renamed to `TerminalState` to avoid conflict with new, lower-level `Terminal` type.
+- The runtime's `Terminal` was renamed to `TerminalState` to avoid conflict with new, lower-level `Terminal` type. Additionally, `TerminalState` now uses `Terminal.Theme` and `Terminal.Size` for exposing the theme and size, respectively.
 - `runMosaic` and `runMosaicBlocking` now accept a `NonInteractivePolicy` argument which dictates the behavior when Mosaic cannot connect directly to the TTY.
 
 Fixed:

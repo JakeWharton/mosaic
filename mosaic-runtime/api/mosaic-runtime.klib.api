@@ -402,14 +402,14 @@ final class com.jakewharton.mosaic/StaticLogger { // com.jakewharton.mosaic/Stat
 }
 
 final class com.jakewharton.mosaic/TerminalState { // com.jakewharton.mosaic/TerminalState|null[0]
-    constructor <init>(kotlin/Boolean, kotlin/Boolean, com.jakewharton.mosaic.ui.unit/IntSize) // com.jakewharton.mosaic/TerminalState.<init>|<init>(kotlin.Boolean;kotlin.Boolean;com.jakewharton.mosaic.ui.unit.IntSize){}[0]
+    constructor <init>(kotlin/Boolean, com.jakewharton.mosaic.terminal/Terminal.Theme, com.jakewharton.mosaic.terminal/Terminal.Size) // com.jakewharton.mosaic/TerminalState.<init>|<init>(kotlin.Boolean;com.jakewharton.mosaic.terminal.Terminal.Theme;com.jakewharton.mosaic.terminal.Terminal.Size){}[0]
 
-    final val darkTheme // com.jakewharton.mosaic/TerminalState.darkTheme|{}darkTheme[0]
-        final fun <get-darkTheme>(): kotlin/Boolean // com.jakewharton.mosaic/TerminalState.darkTheme.<get-darkTheme>|<get-darkTheme>(){}[0]
     final val focused // com.jakewharton.mosaic/TerminalState.focused|{}focused[0]
         final fun <get-focused>(): kotlin/Boolean // com.jakewharton.mosaic/TerminalState.focused.<get-focused>|<get-focused>(){}[0]
     final val size // com.jakewharton.mosaic/TerminalState.size|{}size[0]
-        final fun <get-size>(): com.jakewharton.mosaic.ui.unit/IntSize // com.jakewharton.mosaic/TerminalState.size.<get-size>|<get-size>(){}[0]
+        final fun <get-size>(): com.jakewharton.mosaic.terminal/Terminal.Size // com.jakewharton.mosaic/TerminalState.size.<get-size>|<get-size>(){}[0]
+    final val theme // com.jakewharton.mosaic/TerminalState.theme|{}theme[0]
+        final fun <get-theme>(): com.jakewharton.mosaic.terminal/Terminal.Theme // com.jakewharton.mosaic/TerminalState.theme.<get-theme>|<get-theme>(){}[0]
 
     final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic/TerminalState.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // com.jakewharton.mosaic/TerminalState.hashCode|hashCode(){}[0]

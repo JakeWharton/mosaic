@@ -27,7 +27,6 @@ import com.jakewharton.mosaic.terminal.Terminal
 import com.jakewharton.mosaic.tty.Tty
 import com.jakewharton.mosaic.tty.terminal.asTerminalIn
 import com.jakewharton.mosaic.ui.BoxMeasurePolicy
-import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.concurrent.Volatile
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
@@ -176,8 +175,8 @@ internal class MosaicComposition(
 	private var terminalState = mutableStateOf(
 		TerminalState(
 			terminal.state.focused.value,
-			terminal.state.systemTheme.value,
-			terminal.state.size.value.let { IntSize(it.columns, it.rows) },
+			terminal.state.theme.value,
+			terminal.state.size.value,
 		),
 	).also { state ->
 		scope.launch(Unconfined, start = UNDISPATCHED) {
@@ -190,13 +189,13 @@ internal class MosaicComposition(
 			}
 		}
 		scope.launch(Unconfined, start = UNDISPATCHED) {
-			terminal.state.systemTheme.collect { systemTheme ->
-				state.value = state.value.copy(darkTheme = systemTheme)
+			terminal.state.theme.collect { theme ->
+				state.value = state.value.copy(theme = theme)
 			}
 		}
 		scope.launch(Unconfined, start = UNDISPATCHED) {
 			terminal.state.size.collect { size ->
-				state.value = state.value.copy(size = IntSize(size.columns, size.rows))
+				state.value = state.value.copy(size = size)
 			}
 		}
 	}

@@ -27,6 +27,18 @@ abstract interface com.jakewharton.mosaic.terminal/Terminal : kotlin/AutoCloseab
     abstract val state // com.jakewharton.mosaic.terminal/Terminal.state|{}state[0]
         abstract fun <get-state>(): com.jakewharton.mosaic.terminal/Terminal.State // com.jakewharton.mosaic.terminal/Terminal.state.<get-state>|<get-state>(){}[0]
 
+    final enum class Theme : kotlin/Enum<com.jakewharton.mosaic.terminal/Terminal.Theme> { // com.jakewharton.mosaic.terminal/Terminal.Theme|null[0]
+        enum entry Dark // com.jakewharton.mosaic.terminal/Terminal.Theme.Dark|null[0]
+        enum entry Light // com.jakewharton.mosaic.terminal/Terminal.Theme.Light|null[0]
+        enum entry Unknown // com.jakewharton.mosaic.terminal/Terminal.Theme.Unknown|null[0]
+
+        final val entries // com.jakewharton.mosaic.terminal/Terminal.Theme.entries|#static{}entries[0]
+            final fun <get-entries>(): kotlin.enums/EnumEntries<com.jakewharton.mosaic.terminal/Terminal.Theme> // com.jakewharton.mosaic.terminal/Terminal.Theme.entries.<get-entries>|<get-entries>#static(){}[0]
+
+        final fun valueOf(kotlin/String): com.jakewharton.mosaic.terminal/Terminal.Theme // com.jakewharton.mosaic.terminal/Terminal.Theme.valueOf|valueOf#static(kotlin.String){}[0]
+        final fun values(): kotlin/Array<com.jakewharton.mosaic.terminal/Terminal.Theme> // com.jakewharton.mosaic.terminal/Terminal.Theme.values|values#static(){}[0]
+    }
+
     abstract interface Capabilities { // com.jakewharton.mosaic.terminal/Terminal.Capabilities|null[0]
         abstract val ansiLevel // com.jakewharton.mosaic.terminal/Terminal.Capabilities.ansiLevel|{}ansiLevel[0]
             abstract fun <get-ansiLevel>(): com.jakewharton.mosaic.terminal/AnsiLevel // com.jakewharton.mosaic.terminal/Terminal.Capabilities.ansiLevel.<get-ansiLevel>|<get-ansiLevel>(){}[0]
@@ -51,8 +63,8 @@ abstract interface com.jakewharton.mosaic.terminal/Terminal : kotlin/AutoCloseab
             abstract fun <get-focused>(): kotlinx.coroutines.flow/StateFlow<kotlin/Boolean> // com.jakewharton.mosaic.terminal/Terminal.State.focused.<get-focused>|<get-focused>(){}[0]
         abstract val size // com.jakewharton.mosaic.terminal/Terminal.State.size|{}size[0]
             abstract fun <get-size>(): kotlinx.coroutines.flow/StateFlow<com.jakewharton.mosaic.terminal/Terminal.Size> // com.jakewharton.mosaic.terminal/Terminal.State.size.<get-size>|<get-size>(){}[0]
-        abstract val systemTheme // com.jakewharton.mosaic.terminal/Terminal.State.systemTheme|{}systemTheme[0]
-            abstract fun <get-systemTheme>(): kotlinx.coroutines.flow/StateFlow<kotlin/Boolean> // com.jakewharton.mosaic.terminal/Terminal.State.systemTheme.<get-systemTheme>|<get-systemTheme>(){}[0]
+        abstract val theme // com.jakewharton.mosaic.terminal/Terminal.State.theme|{}theme[0]
+            abstract fun <get-theme>(): kotlinx.coroutines.flow/StateFlow<com.jakewharton.mosaic.terminal/Terminal.Theme> // com.jakewharton.mosaic.terminal/Terminal.State.theme.<get-theme>|<get-theme>(){}[0]
     }
 
     final class Size { // com.jakewharton.mosaic.terminal/Terminal.Size|null[0]

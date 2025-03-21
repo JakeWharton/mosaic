@@ -59,8 +59,8 @@ final class com.jakewharton.mosaic.testing/TestTerminal : com.jakewharton.mosaic
             final fun <get-focused>(): kotlinx.coroutines.flow/MutableStateFlow<kotlin/Boolean> // com.jakewharton.mosaic.testing/TestTerminal.State.focused.<get-focused>|<get-focused>(){}[0]
         final val size // com.jakewharton.mosaic.testing/TestTerminal.State.size|{}size[0]
             final fun <get-size>(): kotlinx.coroutines.flow/MutableStateFlow<com.jakewharton.mosaic.terminal/Terminal.Size> // com.jakewharton.mosaic.testing/TestTerminal.State.size.<get-size>|<get-size>(){}[0]
-        final val systemTheme // com.jakewharton.mosaic.testing/TestTerminal.State.systemTheme|{}systemTheme[0]
-            final fun <get-systemTheme>(): kotlinx.coroutines.flow/MutableStateFlow<kotlin/Boolean> // com.jakewharton.mosaic.testing/TestTerminal.State.systemTheme.<get-systemTheme>|<get-systemTheme>(){}[0]
+        final val theme // com.jakewharton.mosaic.testing/TestTerminal.State.theme|{}theme[0]
+            final fun <get-theme>(): kotlinx.coroutines.flow/MutableStateFlow<com.jakewharton.mosaic.terminal/Terminal.Theme> // com.jakewharton.mosaic.testing/TestTerminal.State.theme.<get-theme>|<get-theme>(){}[0]
     }
 }
 

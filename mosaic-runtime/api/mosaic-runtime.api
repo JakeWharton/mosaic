@@ -46,11 +46,11 @@ public final class com/jakewharton/mosaic/TerminalKt {
 
 public final class com/jakewharton/mosaic/TerminalState {
 	public static final field $stable I
-	public synthetic fun <init> (ZZJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ZLcom/jakewharton/mosaic/terminal/Terminal$Theme;Lcom/jakewharton/mosaic/terminal/Terminal$Size;)V
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getDarkTheme ()Z
 	public final fun getFocused ()Z
-	public final fun getSize-Usd9Mdw ()J
+	public final fun getSize ()Lcom/jakewharton/mosaic/terminal/Terminal$Size;
+	public final fun getTheme ()Lcom/jakewharton/mosaic/terminal/Terminal$Theme;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }

@@ -19,7 +19,7 @@ public class TestTerminal(
 
 	public class State : Terminal.State {
 		override val focused: MutableStateFlow<Boolean> = MutableStateFlow(true)
-		override val systemTheme: MutableStateFlow<Boolean> = MutableStateFlow(false)
+		override val theme: MutableStateFlow<Terminal.Theme> = MutableStateFlow(Terminal.Theme.Unknown)
 		override val size: MutableStateFlow<Terminal.Size> = MutableStateFlow(Terminal.Size.Default)
 	}
 
