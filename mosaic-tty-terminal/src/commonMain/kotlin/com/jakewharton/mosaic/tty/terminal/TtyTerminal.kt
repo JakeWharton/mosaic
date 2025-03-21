@@ -74,10 +74,7 @@ public suspend fun Tty.asTerminalIn(
 ): Terminal {
 	// Entering raw mode can fail, so perform it before any additional control sequences which change
 	// settings. We also need to be in character mode to query capabilities with control sequences.
-	// TODO This should also be a parameter.
-	if (env("MOSAIC_RAW_MODE") != "false") {
-		enableRawMode()
-	}
+	enableRawMode()
 
 	val focused = MutableStateFlow(true)
 	val systemTheme = MutableStateFlow(false)

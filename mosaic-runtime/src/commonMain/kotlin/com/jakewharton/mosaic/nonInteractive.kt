@@ -16,11 +16,14 @@ public enum class NonInteractivePolicy {
 	/** Throw an [IllegalStateException] with a non-interactive message. */
 	Throw,
 
+	/** Immediately return false. */
+	Return,
+
 	/** Continue running with a fake [Terminal] with default state, no capabilities, and no events. */
 	Ignore,
 
-	/** Immediately return false. */
-	Return,
+	/** Assume the absence of a TTY without checking, and proceed using [Ignore]. */
+	AssumeAndIgnore,
 }
 
 internal object NonInteractiveTerminal : Terminal, Terminal.State, Terminal.Capabilities {
