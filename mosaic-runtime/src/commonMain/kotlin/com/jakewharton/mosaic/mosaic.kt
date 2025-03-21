@@ -15,6 +15,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.jakewharton.mosaic.NonInteractivePolicy.AssumeAndIgnore
 import com.jakewharton.mosaic.NonInteractivePolicy.Exit
 import com.jakewharton.mosaic.NonInteractivePolicy.Ignore
 import com.jakewharton.mosaic.NonInteractivePolicy.Return
@@ -59,17 +60,22 @@ public fun runMosaicBlocking(
 }
 
 public suspend fun runMosaic(
-	nonInteractivePolicy: NonInteractivePolicy = Exit,
+	onNonInteractive: NonInteractivePolicy = Exit,
 	content: @Composable () -> Unit,
 ): Boolean = coroutineScope {
-	val terminal = Tty.tryBind()
-		?.asTerminalIn(this)
-		?: when (nonInteractivePolicy) {
-			Exit -> nonInteractiveExit()
-			Throw -> throw IllegalStateException(NonInteractiveMessage)
-			Ignore -> NonInteractiveTerminal
-			Return -> return@coroutineScope false
-		}
+	val terminal = if (onNonInteractive != AssumeAndIgnore) {
+		Tty.tryBind()
+			?.asTerminalIn(this)
+			?: when (onNonInteractive) {
+				Exit -> nonInteractiveExit()
+				Throw -> throw IllegalStateException(NonInteractiveMessage)
+				Return -> return@coroutineScope false
+				Ignore -> NonInteractiveTerminal
+				AssumeAndIgnore -> throw AssertionError()
+			}
+	} else {
+		NonInteractiveTerminal
+	}
 
 	terminal.use { terminal ->
 		val rendering = if (env("MOSAIC_DEBUG_RENDERING") == "true") {

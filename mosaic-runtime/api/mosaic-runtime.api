@@ -17,6 +17,7 @@ public final class com/jakewharton/mosaic/MosaicKt {
 }
 
 public final class com/jakewharton/mosaic/NonInteractivePolicy : java/lang/Enum {
+	public static final field AssumeAndIgnore Lcom/jakewharton/mosaic/NonInteractivePolicy;
 	public static final field Exit Lcom/jakewharton/mosaic/NonInteractivePolicy;
 	public static final field Ignore Lcom/jakewharton/mosaic/NonInteractivePolicy;
 	public static final field Return Lcom/jakewharton/mosaic/NonInteractivePolicy;

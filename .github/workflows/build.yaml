@@ -252,8 +252,6 @@ jobs:
         sample:
           - counter
           - jest
-    env:
-      MOSAIC_RAW_MODE: false
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4

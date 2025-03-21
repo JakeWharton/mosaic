@@ -26,6 +26,7 @@ final enum class com.jakewharton.mosaic.layout/IntrinsicSize : kotlin/Enum<com.j
 }
 
 final enum class com.jakewharton.mosaic/NonInteractivePolicy : kotlin/Enum<com.jakewharton.mosaic/NonInteractivePolicy> { // com.jakewharton.mosaic/NonInteractivePolicy|null[0]
+    enum entry AssumeAndIgnore // com.jakewharton.mosaic/NonInteractivePolicy.AssumeAndIgnore|null[0]
     enum entry Exit // com.jakewharton.mosaic/NonInteractivePolicy.Exit|null[0]
     enum entry Ignore // com.jakewharton.mosaic/NonInteractivePolicy.Ignore|null[0]
     enum entry Return // com.jakewharton.mosaic/NonInteractivePolicy.Return|null[0]
