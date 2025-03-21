@@ -60,8 +60,8 @@ private fun TerminalInfo() {
 	val widthAndHeightTitleColorAnimatable = remember { Animatable(Color.White) }
 
 	val screenSize = LocalTerminalState.current.size
-	val screenWidth = screenSize.width
-	val screenHeight = screenSize.height
+	val screenWidth = screenSize.columns
+	val screenHeight = screenSize.rows
 
 	val screenWidthState = rememberUpdatedIntState(screenWidth)
 	val screenHeightState = rememberUpdatedIntState(screenHeight)
@@ -188,7 +188,7 @@ private fun ColumnScope.GradientsBlock() {
 		textColorProvider = { percent -> Color(1.0f - percent, 0.0f, 1.0f - percent) },
 		backgroundColorProvider = { percent -> Color(percent, 0.0f, percent) },
 	)
-	val screenHalfWidth = LocalTerminalState.current.size.width / 2
+	val screenHalfWidth = LocalTerminalState.current.size.columns / 2
 	LaunchedEffect(screenHalfWidth) {
 		gradientWidthAnimatable.animateTo(screenHalfWidth)
 	}

@@ -29,7 +29,7 @@ internal object NonInteractiveTerminal : Terminal, Terminal.State, Terminal.Capa
 	override val events: ReceiveChannel<Event> = Channel<Event>().apply { close() }
 
 	override val focused: StateFlow<Boolean> = MutableStateFlow(true)
-	override val systemTheme: StateFlow<Boolean> = MutableStateFlow(false)
+	override val theme: StateFlow<Terminal.Theme> = MutableStateFlow(Terminal.Theme.Unknown)
 	override val size: StateFlow<Terminal.Size> = MutableStateFlow(Terminal.Size.Default)
 
 	override val interactive: Boolean get() = false

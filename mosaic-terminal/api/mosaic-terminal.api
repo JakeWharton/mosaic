@@ -298,7 +298,16 @@ public final class com/jakewharton/mosaic/terminal/Terminal$Size$Companion {
 public abstract interface class com/jakewharton/mosaic/terminal/Terminal$State {
 	public abstract fun getFocused ()Lkotlinx/coroutines/flow/StateFlow;
 	public abstract fun getSize ()Lkotlinx/coroutines/flow/StateFlow;
-	public abstract fun getSystemTheme ()Lkotlinx/coroutines/flow/StateFlow;
+	public abstract fun getTheme ()Lkotlinx/coroutines/flow/StateFlow;
+}
+
+public final class com/jakewharton/mosaic/terminal/Terminal$Theme : java/lang/Enum {
+	public static final field Dark Lcom/jakewharton/mosaic/terminal/Terminal$Theme;
+	public static final field Light Lcom/jakewharton/mosaic/terminal/Terminal$Theme;
+	public static final field Unknown Lcom/jakewharton/mosaic/terminal/Terminal$Theme;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/jakewharton/mosaic/terminal/Terminal$Theme;
+	public static fun values ()[Lcom/jakewharton/mosaic/terminal/Terminal$Theme;
 }
 
 public final class com/jakewharton/mosaic/terminal/TerminalColorEvent : com/jakewharton/mosaic/terminal/Event {

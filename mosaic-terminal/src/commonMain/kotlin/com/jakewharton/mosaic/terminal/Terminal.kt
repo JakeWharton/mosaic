@@ -11,7 +11,7 @@ public interface Terminal : AutoCloseable {
 
 	public interface State {
 		public val focused: StateFlow<Boolean>
-		public val systemTheme: StateFlow<Boolean>
+		public val theme: StateFlow<Theme>
 		public val size: StateFlow<Size>
 	}
 
@@ -36,5 +36,11 @@ public interface Terminal : AutoCloseable {
 		public companion object {
 			public val Default: Size = Size(80, 24)
 		}
+	}
+
+	public enum class Theme {
+		Unknown,
+		Light,
+		Dark,
 	}
 }

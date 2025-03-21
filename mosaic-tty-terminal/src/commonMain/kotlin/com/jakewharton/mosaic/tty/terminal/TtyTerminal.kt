@@ -44,7 +44,7 @@ private class TtyTerminal(
 
 	class State(
 		override val focused: StateFlow<Boolean>,
-		override val systemTheme: StateFlow<Boolean>,
+		override val theme: StateFlow<Terminal.Theme>,
 		override val size: StateFlow<Terminal.Size>,
 	) : Terminal.State
 
@@ -80,7 +80,7 @@ public suspend fun Tty.asTerminalIn(
 	}
 
 	val focused = MutableStateFlow(true)
-	val systemTheme = MutableStateFlow(false)
+	val theme = MutableStateFlow(Terminal.Theme.Unknown)
 	val size = MutableStateFlow(Terminal.Size.Default)
 
 	val events = Channel<Event>(64, onBufferOverflow = DROP_OLDEST)
@@ -265,7 +265,11 @@ public suspend fun Tty.asTerminalIn(
 				}
 
 				is SystemThemeEvent -> {
-					systemTheme.value = event.isDark
+					theme.value = if (event.isDark) {
+						Terminal.Theme.Dark
+					} else {
+						Terminal.Theme.Light
+					}
 				}
 
 				else -> {}
@@ -300,7 +304,7 @@ public suspend fun Tty.asTerminalIn(
 	return TtyTerminal(
 		state = TtyTerminal.State(
 			focused = focused,
-			systemTheme = systemTheme,
+			theme = theme,
 			size = size,
 		),
 		capabilities = TtyTerminal.Capabilities(
