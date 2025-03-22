@@ -162,7 +162,6 @@ jobs:
   # up the additional test runs for use in the above matrix-based runner. For now, run them through
   # Gradle on a single OS and single JDK just to get some coverage.
   tty-shrinker-tests:
-    if: ${{ github.ref != 'refs/heads/trunk' }}
     needs:
       - tty-zig
     runs-on: macos-15
