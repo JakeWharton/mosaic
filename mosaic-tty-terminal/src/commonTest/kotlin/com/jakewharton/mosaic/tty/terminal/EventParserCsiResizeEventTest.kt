@@ -5,37 +5,36 @@ import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.terminal.ResizeEvent
 import com.jakewharton.mosaic.terminal.UnknownEvent
 import kotlin.test.Test
-import kotlinx.coroutines.test.runTest
 
 class EventParserCsiResizeEventTest : BaseEventParserTest() {
-	@Test fun basic() = runTest {
+	@Test fun basic() {
 		testTty.writeHex("1b5b34383b313b323b333b3474")
 		assertThat(parser.next()).isEqualTo(ResizeEvent(2, 1, 4, 3))
 	}
 
-	@Test fun pixelSizeAsZero() = runTest {
+	@Test fun pixelSizeAsZero() {
 		testTty.writeHex("1b5b34383b313b323b303b3074")
 		assertThat(parser.next()).isEqualTo(ResizeEvent(2, 1, 0, 0))
 	}
 
-	@Test fun subparametersIgnored() = runTest {
+	@Test fun subparametersIgnored() {
 		testTty.writeHex("1b5b34383b313a39393b323a39383a39373b333a39393a3a39373b343a39393a74")
 		assertThat(parser.next()).isEqualTo(ResizeEvent(2, 1, 4, 3))
 	}
 
-	@Test fun emptySubparametersIgnored() = runTest {
+	@Test fun emptySubparametersIgnored() {
 		testTty.writeHex("1b5b34383b313a3b323a3b333a3b343a74")
 		assertThat(parser.next()).isEqualTo(ResizeEvent(2, 1, 4, 3))
 	}
 
-	@Test fun emptyModeFails() = runTest {
+	@Test fun emptyModeFails() {
 		testTty.writeHex("1b5b3b313b323b333b3474")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3b313b323b333b3474".hexToByteArray()),
 		)
 	}
 
-	@Test fun emptyParameterFails() = runTest {
+	@Test fun emptyParameterFails() {
 		testTty.writeHex("1b5b34383b3b323b333b3474")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b34383b3b323b333b3474".hexToByteArray()),
@@ -54,7 +53,7 @@ class EventParserCsiResizeEventTest : BaseEventParserTest() {
 		)
 	}
 
-	@Test fun nonDigitParameterFails() = runTest {
+	@Test fun nonDigitParameterFails() {
 		testTty.writeHex("1b5b34383b312e303b323b333b3474")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b34383b312e303b323b333b3474".hexToByteArray()),

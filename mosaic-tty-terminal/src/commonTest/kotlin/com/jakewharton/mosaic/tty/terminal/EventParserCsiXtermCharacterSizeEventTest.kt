@@ -5,15 +5,14 @@ import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.terminal.UnknownEvent
 import com.jakewharton.mosaic.terminal.XtermCharacterSizeEvent
 import kotlin.test.Test
-import kotlinx.coroutines.test.runTest
 
 class EventParserCsiXtermCharacterSizeEventTest : BaseEventParserTest() {
-	@Test fun basic() = runTest {
+	@Test fun basic() {
 		testTty.writeHex("1b5b383b313b3274")
 		assertThat(parser.next()).isEqualTo(XtermCharacterSizeEvent(1, 2))
 	}
 
-	@Test fun emptyParameterFails() = runTest {
+	@Test fun emptyParameterFails() {
 		testTty.writeHex("1b5b383b3b3274")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b383b3b3274".hexToByteArray()),
@@ -24,7 +23,7 @@ class EventParserCsiXtermCharacterSizeEventTest : BaseEventParserTest() {
 		)
 	}
 
-	@Test fun nonDigitParameterFails() = runTest {
+	@Test fun nonDigitParameterFails() {
 		testTty.writeHex("1b5b383b223b3274")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b383b223b3274".hexToByteArray()),

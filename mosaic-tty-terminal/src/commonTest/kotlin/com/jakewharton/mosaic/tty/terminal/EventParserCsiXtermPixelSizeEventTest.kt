@@ -5,15 +5,14 @@ import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.terminal.UnknownEvent
 import com.jakewharton.mosaic.terminal.XtermPixelSizeEvent
 import kotlin.test.Test
-import kotlinx.coroutines.test.runTest
 
 class EventParserCsiXtermPixelSizeEventTest : BaseEventParserTest() {
-	@Test fun basic() = runTest {
+	@Test fun basic() {
 		testTty.writeHex("1b5b343b313b3274")
 		assertThat(parser.next()).isEqualTo(XtermPixelSizeEvent(1, 2))
 	}
 
-	@Test fun emptyParameterFails() = runTest {
+	@Test fun emptyParameterFails() {
 		testTty.writeHex("1b5b343b3b3274")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b343b3b3274".hexToByteArray()),
@@ -24,7 +23,7 @@ class EventParserCsiXtermPixelSizeEventTest : BaseEventParserTest() {
 		)
 	}
 
-	@Test fun nonDigitParameterFails() = runTest {
+	@Test fun nonDigitParameterFails() {
 		testTty.writeHex("1b5b343b223b3274")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b343b223b3274".hexToByteArray()),
