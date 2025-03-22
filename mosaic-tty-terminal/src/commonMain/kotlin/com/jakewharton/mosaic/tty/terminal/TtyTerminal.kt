@@ -23,6 +23,7 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.Unconfined
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.awaitCancellation
@@ -91,7 +92,8 @@ public suspend fun Tty.asTerminalIn(
 	var toggleInBandResize = false
 	var toggleSystemTheme = false
 
-	val interruptJob = scope.launch(start = UNDISPATCHED) {
+	// TODO The design of finalization hook fights us here. We don't need suspension.
+	val interruptJob = scope.launch(Unconfined, start = UNDISPATCHED) {
 		withFinalizationHook(
 			hook = {
 				setCallback(null)
