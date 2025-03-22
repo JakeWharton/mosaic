@@ -16,67 +16,66 @@ import com.jakewharton.mosaic.terminal.KeyboardEvent.Companion.Up
 import com.jakewharton.mosaic.terminal.OperatingStatusResponseEvent
 import com.jakewharton.mosaic.terminal.UnknownEvent
 import kotlin.test.Test
-import kotlinx.coroutines.test.runTest
 
 class EventParserSs3KeyboardEventTest : BaseEventParserTest() {
-	@Test fun up() = runTest {
+	@Test fun up() {
 		testTty.writeHex("1b4f41")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up))
 	}
 
-	@Test fun down() = runTest {
+	@Test fun down() {
 		testTty.writeHex("1b4f42")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Down))
 	}
 
-	@Test fun right() = runTest {
+	@Test fun right() {
 		testTty.writeHex("1b4f43")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Right))
 	}
 
-	@Test fun left() = runTest {
+	@Test fun left() {
 		testTty.writeHex("1b4f44")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Left))
 	}
 
-	@Test fun end() = runTest {
+	@Test fun end() {
 		testTty.writeHex("1b4f46")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(End))
 	}
 
-	@Test fun home() = runTest {
+	@Test fun home() {
 		testTty.writeHex("1b4f48")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Home))
 	}
 
-	@Test fun f1() = runTest {
+	@Test fun f1() {
 		testTty.writeHex("1b4f50")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(F1))
 	}
 
-	@Test fun f2() = runTest {
+	@Test fun f2() {
 		testTty.writeHex("1b4f51")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(F2))
 	}
 
-	@Test fun f3() = runTest {
+	@Test fun f3() {
 		testTty.writeHex("1b4f52")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(F3))
 	}
 
-	@Test fun f4() = runTest {
+	@Test fun f4() {
 		testTty.writeHex("1b4f53")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(F4))
 	}
 
-	@Test fun invalidKey() = runTest {
+	@Test fun invalidKey() {
 		testTty.writeHex("1b4f75")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b4f75".hexToByteArray()),
 		)
 	}
 
-	@Test fun keyIsEscapeDoesNotConsumeEscape() = runTest {
+	@Test fun keyIsEscapeDoesNotConsumeEscape() {
 		testTty.writeHex("1b4f1b5b306e")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b4f".hexToByteArray()),

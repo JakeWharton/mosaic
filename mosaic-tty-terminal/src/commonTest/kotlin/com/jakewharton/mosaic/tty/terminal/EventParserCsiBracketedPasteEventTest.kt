@@ -4,15 +4,14 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.terminal.BracketedPasteEvent
 import kotlin.test.Test
-import kotlinx.coroutines.test.runTest
 
 class EventParserCsiBracketedPasteEventTest : BaseEventParserTest() {
-	@Test fun pasteStart() = runTest {
+	@Test fun pasteStart() {
 		testTty.writeHex("1b5b3230307e")
 		assertThat(parser.next()).isEqualTo(BracketedPasteEvent(start = true))
 	}
 
-	@Test fun pasteEnd() = runTest {
+	@Test fun pasteEnd() {
 		testTty.writeHex("1b5b3230317e")
 		assertThat(parser.next()).isEqualTo(BracketedPasteEvent(start = false))
 	}

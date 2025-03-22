@@ -5,7 +5,6 @@ import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.tty.TestTty
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
-import kotlinx.coroutines.test.runTest
 
 abstract class BaseEventParserTest {
 	internal val testTty = TestTty.create()
@@ -16,7 +15,7 @@ abstract class BaseEventParserTest {
 		tty.enableRawMode()
 	}
 
-	@AfterTest fun after() = runTest {
+	@AfterTest fun after() {
 		testTty.close()
 		assertThat(parser.copyBuffer().toHexString()).isEqualTo("")
 	}

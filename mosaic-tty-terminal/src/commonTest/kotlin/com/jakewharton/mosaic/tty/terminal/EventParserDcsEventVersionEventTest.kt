@@ -4,15 +4,14 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.terminal.TerminalVersionEvent
 import kotlin.test.Test
-import kotlinx.coroutines.test.runTest
 
 class EventParserDcsEventVersionEventTest : BaseEventParserTest() {
-	@Test fun empty() = runTest {
+	@Test fun empty() {
 		testTty.writeHex("1b503e7c1b5c")
 		assertThat(parser.next()).isEqualTo(TerminalVersionEvent(""))
 	}
 
-	@Test fun text() = runTest {
+	@Test fun text() {
 		testTty.writeHex("1b503e7c68656c6c6f1b5c")
 		assertThat(parser.next()).isEqualTo(TerminalVersionEvent("hello"))
 	}

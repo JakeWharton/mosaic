@@ -5,38 +5,37 @@ import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.terminal.KeyboardEvent
 import com.jakewharton.mosaic.terminal.KeyboardEvent.Companion.ModifierShift
 import kotlin.test.Test
-import kotlinx.coroutines.test.runTest
 
 class EventParserCsiKittyKeyboardEventTest : BaseEventParserTest() {
-	@Test fun h() = runTest {
+	@Test fun h() {
 		testTty.writeHex("1b5b31303475")
 		assertThat(parser.next()).isEqualTo(
 			KeyboardEvent(0x68),
 		)
 	}
 
-	@Test fun shiftH() = runTest {
+	@Test fun shiftH() {
 		testTty.writeHex("1b5b3130343b3275")
 		assertThat(parser.next()).isEqualTo(
 			KeyboardEvent(0x68, modifiers = ModifierShift),
 		)
 	}
 
-	@Test fun shiftHWithAlternate() = runTest {
+	@Test fun shiftHWithAlternate() {
 		testTty.writeHex("1b5b3130343a37323b3275")
 		assertThat(parser.next()).isEqualTo(
 			KeyboardEvent(0x68, 0x48, modifiers = ModifierShift),
 		)
 	}
 
-	@Test fun shiftHWithReleaseEventType() = runTest {
+	@Test fun shiftHWithReleaseEventType() {
 		testTty.writeHex("1b5b3130343b323a3375")
 		assertThat(parser.next()).isEqualTo(
 			KeyboardEvent(0x68, modifiers = ModifierShift, eventType = 3),
 		)
 	}
 
-	@Test fun hWithAssociatedText() = runTest {
+	@Test fun hWithAssociatedText() {
 		testTty.writeHex("1b5b3130343b3b31303475")
 		assertThat(parser.next()).isEqualTo(
 			KeyboardEvent(0x68, text = "h"),
