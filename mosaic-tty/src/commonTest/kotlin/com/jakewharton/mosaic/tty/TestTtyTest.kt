@@ -17,4 +17,14 @@ class TestTtyTest {
 			}
 		}
 	}
+
+	@Test fun multipleResets() {
+		TestTty.create().use { testTty ->
+			val tty = testTty.tty
+			repeat(10) {
+				tty.enableRawMode()
+				tty.reset()
+			}
+		}
+	}
 }
