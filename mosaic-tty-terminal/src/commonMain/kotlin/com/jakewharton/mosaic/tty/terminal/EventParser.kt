@@ -221,14 +221,14 @@ public class EventParser(
 			error@ do {
 				if (stIndex > b3Index && buffer[b3Index].toInt() == 'G'.code) {
 					val delimiter = buffer.indexOf(';'.code.toByte(), b3Index, stIndex)
-					val b5Index = start + 4
+					val b6Index = start + 5
 					if (delimiter != -1 &&
-						delimiter > b5Index &&
+						delimiter > b6Index &&
 						buffer[start + 3].toInt() == 'i'.code &&
-						buffer[b5Index].toInt() == '='.code
+						buffer[start + 4].toInt() == '='.code
 					) {
 						return@parseUntilStringTerminator KittyGraphicsEvent(
-							id = buffer.parseIntDigits(b5Index, delimiter, orElse = { break@error }),
+							id = buffer.parseIntDigits(b6Index, delimiter, orElse = { break@error }),
 							message = buffer.decodeToString(delimiter + 1, stIndex),
 						)
 					}
