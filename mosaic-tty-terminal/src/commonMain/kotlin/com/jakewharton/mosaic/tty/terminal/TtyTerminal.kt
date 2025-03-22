@@ -62,7 +62,6 @@ private class TtyTerminal(
 	}
 }
 
-private const val DebugBootstrap = false
 private const val StageDeviceAttributes = 3
 private const val StageCapabilityQueries = 2
 private const val StageDefaultQueries = 1
@@ -115,6 +114,7 @@ public suspend fun Tty.asTerminalIn(
 	}
 
 	print("${CSI}0c")
+	val debugBootstrap = env("MOSAIC_TTY_TERMINAL_DEBUG") == "true"
 	var stage = StageDeviceAttributes
 
 	var supportsSynchronizedRendering = false
@@ -129,10 +129,8 @@ public suspend fun Tty.asTerminalIn(
 		val parser = EventParser(this@asTerminalIn)
 		while (true) {
 			val event = parser.next() ?: break
-			if (DebugBootstrap) {
-				if (stage != StageNormalOperation) {
-					print("$event\r\n")
-				}
+			if (stage != StageNormalOperation && debugBootstrap) {
+				print("$event\r\n")
 			}
 			when (event) {
 				is PrimaryDeviceAttributesEvent -> {
@@ -287,7 +285,7 @@ public suspend fun Tty.asTerminalIn(
 	}
 	stage = StageNormalOperation
 
-	if (DebugBootstrap) {
+	if (debugBootstrap) {
 		print("\r\n")
 	}
 
