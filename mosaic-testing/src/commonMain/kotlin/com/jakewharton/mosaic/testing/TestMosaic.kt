@@ -9,8 +9,6 @@ import com.jakewharton.mosaic.terminal.Terminal
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeout
@@ -58,8 +56,6 @@ private class RealTestMosaic<T>(
 	private val snapshotStrategy: SnapshotStrategy<T>,
 	capabilities: Terminal.Capabilities,
 ) : TestMosaic<T> {
-	private val keyEvents = Channel<KeyboardEvent>(UNLIMITED)
-
 	private val testTerminal = TestTerminal(capabilities)
 	override val state get() = testTerminal.state
 
@@ -106,7 +102,7 @@ private class RealTestMosaic<T>(
 	}
 
 	override fun sendKeyEvent(keyEvent: KeyboardEvent) {
-		keyEvents.trySend(keyEvent)
+		testTerminal.events.trySend(keyEvent)
 	}
 
 	override fun draw() = mosaic.draw()
