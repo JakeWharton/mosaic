@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.jakewharton.mosaic.LocalTerminal
+import com.jakewharton.mosaic.LocalTerminalState
 import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.layout.background
 import com.jakewharton.mosaic.layout.fillMaxWidth
@@ -27,13 +27,13 @@ import example.screens.StatScreen
 
 @Composable
 fun RrtopApp(rrtopViewModel: RrtopViewModel, colorsPalette: RrtopColorsPalette) {
-	val terminal = LocalTerminal.current
+	val terminal = LocalTerminalState.current
 	val rrtopUiState by rrtopViewModel.uiStateFlow.collectAsState()
 	CompositionLocalProvider(LocalRrtopColorsPalette provides colorsPalette) {
 		Box(
 			modifier = Modifier
-				.width(terminal.size.width)
-				.height(terminal.size.height - 1) // subtraction of one is necessary, because there is a line with a cursor at the bottom, which moves up all the content
+				.width(terminal.size.columns)
+				.height(terminal.size.rows - 1) // subtraction of one is necessary, because there is a line with a cursor at the bottom, which moves up all the content
 				.background(LocalRrtopColorsPalette.current.mainBg)
 				.onKeyEvent {
 					when (it) {

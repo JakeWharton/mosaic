@@ -2,7 +2,7 @@ package example.screens
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
-import com.jakewharton.mosaic.LocalTerminal
+import com.jakewharton.mosaic.LocalTerminalState
 import com.jakewharton.mosaic.layout.drawBehind
 import com.jakewharton.mosaic.layout.fillMaxHeight
 import com.jakewharton.mosaic.layout.fillMaxSize
@@ -32,7 +32,7 @@ import example.common.TableData
 @Composable
 fun MainScreen(uiState: MainScreenUiState, modifier: Modifier = Modifier) {
 	Column(modifier = modifier) {
-		val withStatSection = LocalTerminal.current.size.height > 30
+		val withStatSection = LocalTerminalState.current.size.rows > 30
 		CpuSection(
 			uiState = uiState,
 			modifier = Modifier.fillMaxHeight(if (withStatSection) 0.4f else 0.55f),
