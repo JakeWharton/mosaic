@@ -2,6 +2,7 @@ package com.jakewharton.mosaic.tty.terminal
 
 import com.jakewharton.mosaic.terminal.BracketedPasteEvent
 import com.jakewharton.mosaic.terminal.CapabilityQueryEvent
+import com.jakewharton.mosaic.terminal.CursorPositionEvent
 import com.jakewharton.mosaic.terminal.DebugEvent
 import com.jakewharton.mosaic.terminal.DecModeReportEvent
 import com.jakewharton.mosaic.terminal.Event
@@ -262,11 +263,6 @@ public class EventParser(
 				'E'.code -> return parseCsiLegacyKeyboard(buffer, start, end, KeyboardEvent.KpBegin)
 				'F'.code -> return parseCsiLegacyKeyboard(buffer, start, end, KeyboardEvent.End)
 				'H'.code -> return parseCsiLegacyKeyboard(buffer, start, end, KeyboardEvent.Home)
-				// TODO Where are these documented? I only see SS3 variants.
-				// 'P'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.F1)
-				// 'Q'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.F2)
-				// 'R'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.F3)
-				// 'S'.code -> return parseCsiLegacyKeyboard(buffer, start, end, LegacyKeyboardEvent.F4)
 
 				'~'.code -> {
 					val delimiter =
@@ -303,6 +299,13 @@ public class EventParser(
 
 				'I'.code -> return FocusEvent(focused = true)
 				'O'.code -> return FocusEvent(focused = false)
+
+				'R'.code -> {
+					val semi = buffer.indexOfOrElse(';'.code.toByte(), b3Index, finalIndex, orElse = { break@error })
+					val row = buffer.parseIntDigits(b3Index, semi, orElse = { break@error })
+					val col = buffer.parseIntDigits(semi + 1, finalIndex, orElse = { break@error })
+					return CursorPositionEvent(row, col)
+				}
 
 				'm'.code,
 				'M'.code,

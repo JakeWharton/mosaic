@@ -120,6 +120,19 @@ final class com.jakewharton.mosaic.terminal/CapabilityQueryEvent : com.jakewhart
     final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal/CapabilityQueryEvent.toString|toString(){}[0]
 }
 
+final class com.jakewharton.mosaic.terminal/CursorPositionEvent : com.jakewharton.mosaic.terminal/Event { // com.jakewharton.mosaic.terminal/CursorPositionEvent|null[0]
+    constructor <init>(kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.terminal/CursorPositionEvent.<init>|<init>(kotlin.Int;kotlin.Int){}[0]
+
+    final val column // com.jakewharton.mosaic.terminal/CursorPositionEvent.column|{}column[0]
+        final fun <get-column>(): kotlin/Int // com.jakewharton.mosaic.terminal/CursorPositionEvent.column.<get-column>|<get-column>(){}[0]
+    final val row // com.jakewharton.mosaic.terminal/CursorPositionEvent.row|{}row[0]
+        final fun <get-row>(): kotlin/Int // com.jakewharton.mosaic.terminal/CursorPositionEvent.row.<get-row>|<get-row>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.terminal/CursorPositionEvent.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.terminal/CursorPositionEvent.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.terminal/CursorPositionEvent.toString|toString(){}[0]
+}
+
 final class com.jakewharton.mosaic.terminal/DebugEvent : com.jakewharton.mosaic.terminal/Event { // com.jakewharton.mosaic.terminal/DebugEvent|null[0]
     constructor <init>(com.jakewharton.mosaic.terminal/Event, kotlin/ByteArray) // com.jakewharton.mosaic.terminal/DebugEvent.<init>|<init>(com.jakewharton.mosaic.terminal.Event;kotlin.ByteArray){}[0]
 
