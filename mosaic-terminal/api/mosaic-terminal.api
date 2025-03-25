@@ -253,6 +253,16 @@ public final class com/jakewharton/mosaic/terminal/ResizeEvent : com/jakewharton
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class com/jakewharton/mosaic/terminal/SecondaryDeviceAttributesEvent : com/jakewharton/mosaic/terminal/Event {
+	public fun <init> (III)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFirmwareVersion ()I
+	public final fun getRegistrationNumber ()I
+	public final fun getType ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/jakewharton/mosaic/terminal/SystemThemeEvent : com/jakewharton/mosaic/terminal/Event {
 	public fun <init> (Z)V
 	public fun equals (Ljava/lang/Object;)Z

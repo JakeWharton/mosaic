@@ -108,6 +108,27 @@ public class PrimaryDeviceAttributesEvent(
 ) : Event
 
 @Poko
+public class SecondaryDeviceAttributesEvent(
+	/**
+	 * Possible values (non-exhaustive):
+	 * - 0: VT100
+	 * - 1: VT220
+	 * - 2: VT240 or VT241
+	 * - 18: VT330
+	 * - 19: VT340
+	 * - 24: VT320
+	 * - 32: VT382
+	 * - 41: VT420
+	 * - 61: VT510
+	 * - 64: VT520
+	 * - 65: VT525
+	 */
+	public val type: Int,
+	public val firmwareVersion: Int,
+	public val registrationNumber: Int,
+) : Event
+
+@Poko
 public class TertiaryDeviceAttributesEvent(
 	public val manufacturingSite: Int,
 	public val terminalId: Int,

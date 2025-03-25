@@ -17,6 +17,7 @@ import com.jakewharton.mosaic.terminal.OperatingStatusResponseEvent
 import com.jakewharton.mosaic.terminal.PaletteColorEvent
 import com.jakewharton.mosaic.terminal.PrimaryDeviceAttributesEvent
 import com.jakewharton.mosaic.terminal.ResizeEvent
+import com.jakewharton.mosaic.terminal.SecondaryDeviceAttributesEvent
 import com.jakewharton.mosaic.terminal.SystemThemeEvent
 import com.jakewharton.mosaic.terminal.TerminalColorEvent
 import com.jakewharton.mosaic.terminal.TerminalVersionEvent
@@ -411,16 +412,34 @@ public class EventParser(
 				}
 
 				'c'.code -> {
-					if (buffer[b3Index].toInt() == '?'.code) {
-						val b4Index = start + 3
-						val delimiter = buffer.indexOfOrDefault(';'.code.toByte(), b4Index, finalIndex, finalIndex)
-						val id = buffer.parseIntDigits(b4Index, delimiter, orElse = { break@error })
-						val data = if (delimiter < finalIndex) {
-							buffer.decodeToString(delimiter + 1, finalIndex)
-						} else {
-							""
+					when (buffer[b3Index].toInt()) {
+						'?'.code -> {
+							val b4Index = start + 3
+							val delimiter = buffer.indexOfOrDefault(';'.code.toByte(), b4Index, finalIndex, finalIndex)
+							val id = buffer.parseIntDigits(b4Index, delimiter, orElse = { break@error })
+							val data = if (delimiter < finalIndex) {
+								buffer.decodeToString(delimiter + 1, finalIndex)
+							} else {
+								""
+							}
+							return PrimaryDeviceAttributesEvent(id, data)
 						}
-						return PrimaryDeviceAttributesEvent(id, data)
+						'>'.code -> {
+							// CSI > Pp ; Pv ; Pc c
+							//  Pp denotes the terminal type
+							//  Pv is the firmware version
+							//  Pc indicates the ROM cartridge registration number
+							val pStart = start + 3
+							val pEnd = buffer.indexOfOrElse(';'.code.toByte(), pStart, finalIndex, orElse = { break@error })
+							val vStart = pEnd + 1
+							val vEnd = buffer.indexOfOrElse(';'.code.toByte(), vStart, finalIndex, orElse = { break@error })
+							val cStart = vEnd + 1
+							val cEnd = finalIndex
+							val type = buffer.parseIntDigits(pStart, pEnd, orElse = { break@error })
+							val firmwareVersion = buffer.parseIntDigits(vStart, vEnd, orElse = { break@error })
+							val registrationNumber = buffer.parseIntDigits(cStart, cEnd, orElse = { break@error })
+							return SecondaryDeviceAttributesEvent(type, firmwareVersion, registrationNumber)
+						}
 					}
 				}
 

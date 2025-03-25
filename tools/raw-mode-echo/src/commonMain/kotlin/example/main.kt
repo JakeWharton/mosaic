@@ -55,8 +55,8 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 			block = {
 				print("\u001b[?25l") // Cursor disable
 				print("\u001b[c") // Primary device attrs
+				print("\u001b[>c") // Secondary device attrs
 				print("\u001b[=c") // Tertiary device attrs
-				print("\u001b[5n") // Device status report
 				print("\u001b[>0q") // xterm version
 				if (all || focusEvents) {
 					print("\u001b[?1004\$p") // Focus query
