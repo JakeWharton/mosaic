@@ -8,6 +8,7 @@ import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.flow.MutableStateFlow
 
 public class TestTerminal(
+	override val name: String? = "Mosaic Test Terminal",
 	override val capabilities: Terminal.Capabilities = Capabilities(),
 ) : Terminal {
 	override val state: State = State()

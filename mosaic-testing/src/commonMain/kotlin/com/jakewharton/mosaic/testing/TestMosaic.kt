@@ -56,7 +56,7 @@ private class RealTestMosaic<T>(
 	private val snapshotStrategy: SnapshotStrategy<T>,
 	capabilities: Terminal.Capabilities,
 ) : TestMosaic<T> {
-	private val testTerminal = TestTerminal(capabilities)
+	private val testTerminal = TestTerminal(capabilities = capabilities)
 	override val state get() = testTerminal.state
 
 	private var timeNanos = 0L
