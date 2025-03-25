@@ -249,8 +249,14 @@ jobs:
       fail-fast: false
       matrix:
         sample:
-          - counter
-          - jest
+          - name: counter
+            run: true
+          - name: demo
+          - name: jest
+            run: true
+          - name: robot
+          - name: rrtop
+          - name: snake
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -264,9 +270,12 @@ jobs:
           java-version-file: .github/workflows/.java-version
       - uses: gradle/actions/setup-gradle@v4
 
-      - run: ./gradlew -p samples/${{ matrix.sample }} linkReleaseExecutableMacosArm64 installJvmDist
-      - run: ./samples/${{ matrix.sample }}/build/install/${{ matrix.sample }}-jvm/bin/${{ matrix.sample }}
-      - run: ./samples/${{ matrix.sample }}/build/bin/macosArm64/releaseExecutable/${{ matrix.sample }}.kexe
+      - run: ./gradlew -p samples/${{ matrix.sample.name }} build installJvmDist
+
+      - run: ./samples/${{ matrix.sample.name }}/build/install/${{ matrix.sample.name }}-jvm/bin/${{ matrix.sample.name }}
+        if: ${{ matrix.sample.run }}
+      - run: ./samples/${{ matrix.sample.name }}/build/bin/macosArm64/releaseExecutable/${{ matrix.sample.name }}.kexe
+        if: ${{ matrix.sample.run }}
 
   final-status:
     if: always()
