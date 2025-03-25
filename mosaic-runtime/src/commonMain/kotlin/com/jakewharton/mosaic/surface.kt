@@ -12,6 +12,7 @@ import com.jakewharton.mosaic.ui.UnderlineStyle
 import com.jakewharton.mosaic.ui.isEmptyTextStyle
 import com.jakewharton.mosaic.ui.isNotEmptyTextStyle
 import com.jakewharton.mosaic.ui.isSpecifiedColor
+import com.jakewharton.mosaic.ui.isSpecifiedUnderlineStyle
 import com.jakewharton.mosaic.ui.isUnspecifiedColor
 import com.jakewharton.mosaic.ui.isUnspecifiedUnderlineStyle
 import de.cketti.codepoints.appendCodePoint
@@ -142,7 +143,9 @@ internal class TextSurface(
 			(
 				lastPixel.background.isSpecifiedColor ||
 					lastPixel.foreground.isSpecifiedColor ||
-					lastPixel.textStyle.isNotEmptyTextStyle
+					lastPixel.textStyle.isNotEmptyTextStyle ||
+					lastPixel.underlineColor.isSpecifiedColor ||
+					lastPixel.underlineStyle.isSpecifiedUnderlineStyle
 				)
 		) {
 			appendable.append(ansiReset)
