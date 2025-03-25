@@ -24,6 +24,8 @@ abstract interface com.jakewharton.mosaic.terminal/Terminal : kotlin/AutoCloseab
         abstract fun <get-capabilities>(): com.jakewharton.mosaic.terminal/Terminal.Capabilities // com.jakewharton.mosaic.terminal/Terminal.capabilities.<get-capabilities>|<get-capabilities>(){}[0]
     abstract val events // com.jakewharton.mosaic.terminal/Terminal.events|{}events[0]
         abstract fun <get-events>(): kotlinx.coroutines.channels/ReceiveChannel<com.jakewharton.mosaic.terminal/Event> // com.jakewharton.mosaic.terminal/Terminal.events.<get-events>|<get-events>(){}[0]
+    abstract val name // com.jakewharton.mosaic.terminal/Terminal.name|{}name[0]
+        abstract fun <get-name>(): kotlin/String? // com.jakewharton.mosaic.terminal/Terminal.name.<get-name>|<get-name>(){}[0]
     abstract val state // com.jakewharton.mosaic.terminal/Terminal.state|{}state[0]
         abstract fun <get-state>(): com.jakewharton.mosaic.terminal/Terminal.State // com.jakewharton.mosaic.terminal/Terminal.state.<get-state>|<get-state>(){}[0]
 

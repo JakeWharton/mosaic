@@ -5,6 +5,7 @@ import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.StateFlow
 
 public interface Terminal : AutoCloseable {
+	public val name: String?
 	public val state: State
 	public val capabilities: Capabilities
 	public val events: ReceiveChannel<Event>

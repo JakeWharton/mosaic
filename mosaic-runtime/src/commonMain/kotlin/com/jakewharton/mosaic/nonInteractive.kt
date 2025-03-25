@@ -27,6 +27,7 @@ public enum class NonInteractivePolicy {
 }
 
 internal object NonInteractiveTerminal : Terminal, Terminal.State, Terminal.Capabilities {
+	override val name: String? get() = null
 	override val state: Terminal.State get() = this
 	override val capabilities: Terminal.Capabilities get() = this
 	override val events: ReceiveChannel<Event> = Channel<Event>().apply { close() }

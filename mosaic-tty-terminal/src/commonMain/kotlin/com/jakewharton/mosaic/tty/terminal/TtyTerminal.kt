@@ -17,6 +17,7 @@ import com.jakewharton.mosaic.terminal.PrimaryDeviceAttributesEvent
 import com.jakewharton.mosaic.terminal.ResizeEvent
 import com.jakewharton.mosaic.terminal.SystemThemeEvent
 import com.jakewharton.mosaic.terminal.Terminal
+import com.jakewharton.mosaic.terminal.TerminalVersionEvent
 import com.jakewharton.mosaic.tty.Tty
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CompletableDeferred
@@ -36,6 +37,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 
 private class TtyTerminal(
+	override val name: String?,
 	override val state: Terminal.State,
 	override val capabilities: Terminal.Capabilities,
 	override val events: ReceiveChannel<Event>,
@@ -123,6 +125,7 @@ public suspend fun Tty.asTerminalIn(
 	var supportsKittyNotifications = false
 	var supportsKittyPointerShape = false
 	var supportsKittyUnderlines = false
+	var terminalName: String? = null
 
 	val bootstrapDone = CompletableDeferred<Unit>()
 	scope.launch(Dispatchers.IO) {
@@ -155,6 +158,7 @@ public suspend fun Tty.asTerminalIn(
 							"${OSC}99;i=1:p=?$ST" + // Kitty notifications
 							"${OSC}22;?__current__$ST" + // Kitty pointer shape
 							"$DCS+q5375$ST" + // Kitty underline ("Su")
+							"$CSI>0q" + // Xterm version
 							"${CSI}5n", // DSR (end marker)
 					)
 				}
@@ -253,6 +257,12 @@ public suspend fun Tty.asTerminalIn(
 					}
 				}
 
+				is TerminalVersionEvent -> {
+					if (stage == StageCapabilityQueries) {
+						terminalName = event.data
+					}
+				}
+
 				is FocusEvent -> {
 					focused.value = event.focused
 				}
@@ -299,6 +309,7 @@ public suspend fun Tty.asTerminalIn(
 	val ansiLevel = detectAnsiLevel()
 
 	return TtyTerminal(
+		name = terminalName,
 		state = TtyTerminal.State(
 			focused = focused,
 			theme = theme,

@@ -27,12 +27,13 @@ public final class com/jakewharton/mosaic/testing/TestMosaicKt {
 public final class com/jakewharton/mosaic/testing/TestTerminal : com/jakewharton/mosaic/terminal/Terminal {
 	public static final field $stable I
 	public fun <init> ()V
-	public fun <init> (Lcom/jakewharton/mosaic/terminal/Terminal$Capabilities;)V
-	public synthetic fun <init> (Lcom/jakewharton/mosaic/terminal/Terminal$Capabilities;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Lcom/jakewharton/mosaic/terminal/Terminal$Capabilities;)V
+	public synthetic fun <init> (Ljava/lang/String;Lcom/jakewharton/mosaic/terminal/Terminal$Capabilities;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun close ()V
 	public fun getCapabilities ()Lcom/jakewharton/mosaic/terminal/Terminal$Capabilities;
 	public fun getEvents ()Lkotlinx/coroutines/channels/Channel;
 	public synthetic fun getEvents ()Lkotlinx/coroutines/channels/ReceiveChannel;
+	public fun getName ()Ljava/lang/String;
 	public synthetic fun getState ()Lcom/jakewharton/mosaic/terminal/Terminal$State;
 	public fun getState ()Lcom/jakewharton/mosaic/testing/TestTerminal$State;
 }
