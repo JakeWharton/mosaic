@@ -301,10 +301,13 @@ public class EventParser(
 				'O'.code -> return FocusEvent(focused = false)
 
 				'R'.code -> {
-					val semi = buffer.indexOfOrElse(';'.code.toByte(), b3Index, finalIndex, orElse = { break@error })
-					val row = buffer.parseIntDigits(b3Index, semi, orElse = { break@error })
-					val col = buffer.parseIntDigits(semi + 1, finalIndex, orElse = { break@error })
-					return CursorPositionEvent(row, col)
+					// `CSI 6 n` responds with `CSI r ; c R`
+					// `CSI ? 6 n` responds with `CSI ? r ; c R`
+					val firstIndex = if (buffer[b3Index].toInt() == '?'.code) b3Index + 1 else b3Index
+					val delimiter = buffer.indexOfOrElse(';'.code.toByte(), firstIndex, finalIndex, orElse = { break@error })
+					val row = buffer.parseIntDigits(firstIndex, delimiter, orElse = { break@error })
+					val column = buffer.parseIntDigits(delimiter + 1, finalIndex, orElse = { break@error })
+					return CursorPositionEvent(row, column)
 				}
 
 				'm'.code,
