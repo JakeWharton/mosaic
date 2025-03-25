@@ -25,6 +25,15 @@ public final class com/jakewharton/mosaic/terminal/CapabilityQueryEvent : com/ja
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class com/jakewharton/mosaic/terminal/CursorPositionEvent : com/jakewharton/mosaic/terminal/Event {
+	public fun <init> (II)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColumn ()I
+	public final fun getRow ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/jakewharton/mosaic/terminal/DebugEvent : com/jakewharton/mosaic/terminal/Event {
 	public fun <init> (Lcom/jakewharton/mosaic/terminal/Event;[B)V
 	public fun equals (Ljava/lang/Object;)Z

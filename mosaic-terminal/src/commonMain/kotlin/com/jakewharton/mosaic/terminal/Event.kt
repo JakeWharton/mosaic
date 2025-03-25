@@ -140,6 +140,12 @@ public class OperatingStatusResponseEvent(
 ) : Event
 
 @Poko
+public class CursorPositionEvent(
+	public val row: Int,
+	public val column: Int,
+) : Event
+
+@Poko
 public class CapabilityQueryEvent(
 	public val success: Boolean,
 	public val data: Map<String, String?>,
