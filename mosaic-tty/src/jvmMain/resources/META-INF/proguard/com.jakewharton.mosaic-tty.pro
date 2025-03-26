@@ -3,7 +3,7 @@
   native <methods>;
 }
 
--keepdirectories jni
+-keepdirectories com/jakewharton/mosaic/tty/jni
 
 # These members are interacted with through native code.
 -keep interface com.jakewharton.mosaic.tty.Tty$Callback {

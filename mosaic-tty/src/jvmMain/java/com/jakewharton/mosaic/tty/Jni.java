@@ -11,34 +11,36 @@ import static java.util.Locale.US;
 
 final class Jni {
 	static {
-		loadEmbeddedNativeLibrary("mosaic");
+		loadEmbeddedNativeLibrary("jni", "mosaic");
 	}
 
 	@SuppressWarnings("SameParameterValue") // Preserving copy/paste!
-	private static void loadEmbeddedNativeLibrary(String name) {
+	private static void loadEmbeddedNativeLibrary(String path, String name) {
 		String osName = System.getProperty("os.name").toLowerCase(US);
 		String osArch = System.getProperty("os.arch").toLowerCase(US);
-		StringBuilder nativeLibraryJarPath = new StringBuilder(30)
-			.append("/jni/")
+		StringBuilder nativeLibraryJarPathBuilder = new StringBuilder(50)
+			.append(path)
+			.append('/')
 			.append(osArch)
 			.append('/');
 		if (osName.contains("linux")) {
-			nativeLibraryJarPath.append("lib")
+			nativeLibraryJarPathBuilder.append("lib")
 				.append(name)
 				.append(".so");
 		} else if (osName.contains("mac")) {
-			nativeLibraryJarPath.append("lib")
+			nativeLibraryJarPathBuilder.append("lib")
 				.append(name)
 				.append(".dylib");
 		} else if (osName.contains("windows")) {
-			nativeLibraryJarPath.append(name)
+			nativeLibraryJarPathBuilder.append(name)
 				.append(".dll");
 		} else {
 			throw new IllegalStateException("Unsupported OS: " + osName + ' ' + osArch);
 		}
-		URL nativeLibraryUrl = Jni.class.getResource(nativeLibraryJarPath.toString());
+		String nativeLibraryJarPath = nativeLibraryJarPathBuilder.toString();
+		URL nativeLibraryUrl = Jni.class.getResource(nativeLibraryJarPath);
 		if (nativeLibraryUrl == null) {
-			throw new IllegalStateException("Unable to read $nativeLibraryJarPath from JAR");
+			throw new IllegalStateException("Unable to read ".concat(nativeLibraryJarPath));
 		}
 
 		Path nativeLibraryFile;

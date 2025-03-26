@@ -14,5 +14,5 @@ First, generate the JNI headers:
 
 Then, after downloading or installing Zig, in the `mosaic-tty/` directory run:
 ```
-zig build -p src/jvmMain/resources/jni
+zig build -p src/jvmMain/resources
 ```

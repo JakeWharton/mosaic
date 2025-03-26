@@ -60,7 +60,7 @@ kotlin {
 		mainCompilation.configure { main ->
 			tasks.named(main.processResourcesTaskName).configure {
 				doFirst {
-					def jniDir = file("src/${target.name}Main/resources/jni")
+					def jniDir = file("src/${target.name}Main/resources/com")
 					def files = project.fileTree(jniDir).files
 					if (files.size() != 6) {
 						throw new RuntimeException("""Native library mismatch!
