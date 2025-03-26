@@ -27,11 +27,13 @@ public class TestTerminal(
 	public class Capabilities(
 		override val interactive: Boolean = true,
 		override val ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR,
-		override val kittyKeyboard: Boolean = true,
-		override val kittyUnderline: Boolean = true,
 		override val kittyGraphics: Boolean = true,
+		override val kittyKeyboard: Boolean = true,
 		override val kittyNotifications: Boolean = true,
 		override val kittyPointerShape: Boolean = true,
+		override val kittyTextSizingScale: Boolean = true,
+		override val kittyTextSizingWidth: Boolean = true,
+		override val kittyUnderline: Boolean = true,
 		override val synchronizedRendering: Boolean = true,
 	) : Terminal.Capabilities
 }

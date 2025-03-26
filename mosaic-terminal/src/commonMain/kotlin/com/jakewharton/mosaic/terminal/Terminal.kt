@@ -19,11 +19,13 @@ public interface Terminal : AutoCloseable {
 	public interface Capabilities {
 		public val interactive: Boolean
 		public val ansiLevel: AnsiLevel
-		public val kittyKeyboard: Boolean
-		public val kittyUnderline: Boolean
 		public val kittyGraphics: Boolean
+		public val kittyKeyboard: Boolean
 		public val kittyNotifications: Boolean
 		public val kittyPointerShape: Boolean
+		public val kittyTextSizingScale: Boolean
+		public val kittyTextSizingWidth: Boolean
+		public val kittyUnderline: Boolean
 		public val synchronizedRendering: Boolean
 	}
 
