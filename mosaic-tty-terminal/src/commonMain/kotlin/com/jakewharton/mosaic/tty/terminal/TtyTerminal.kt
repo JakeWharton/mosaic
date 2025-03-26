@@ -155,11 +155,11 @@ public suspend fun Tty.asTerminalIn(
 
 					stage = StageCapabilityQueries
 					print(
-						"$CSI?${cursorMode}\$p" +
-							"$CSI?${focusMode}\$p" +
-							"$CSI?${synchronizedRenderingMode}\$p" +
-							"$CSI?${systemThemeMode}\$p" +
-							"$CSI?${inBandResizeMode}\$p" +
+						"$CSI?$cursorMode\$p" +
+							"$CSI?$focusMode\$p" +
+							"$CSI?$synchronizedRenderingMode\$p" +
+							"$CSI?$systemThemeMode\$p" +
+							"$CSI?$inBandResizeMode\$p" +
 							"${APC}Gi=31,s=1,v=1,a=q,t=d,f=24;AAAA$ST" + // Kitty graphics
 							"$CSI?u" + // Kitty keyboard
 							"${OSC}99;i=1:p=?$ST" + // Kitty notifications
