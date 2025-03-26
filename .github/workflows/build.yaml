@@ -30,13 +30,13 @@ jobs:
       - name: Generate JNI header
         run: ./gradlew :mosaic-tty:compileJvmMainJava
 
-      - run: zig build -p src/jvmMain/resources/jni
+      - run: zig build -p src/jvmMain/resources
         working-directory: mosaic-tty
 
       - uses: actions/upload-artifact@v4
         with:
           name: mosaic-tty-jni-libraries
-          path: mosaic-tty/src/jvmMain/resources/jni
+          path: mosaic-tty/src/jvmMain/resources/**/jni
           if-no-files-found: error
 
   tty-test-binaries:
@@ -48,7 +48,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: mosaic-tty-jni-libraries
-          path: mosaic-tty/src/jvmMain/resources/jni
+          path: mosaic-tty/src/jvmMain/resources
 
       - uses: actions/setup-java@v4
         with:
@@ -170,7 +170,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: mosaic-tty-jni-libraries
-          path: mosaic-tty/src/jvmMain/resources/jni
+          path: mosaic-tty/src/jvmMain/resources
 
       - uses: actions/setup-java@v4
         with:
@@ -192,7 +192,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: mosaic-tty-jni-libraries
-          path: mosaic-tty/src/jvmMain/resources/jni
+          path: mosaic-tty/src/jvmMain/resources
 
       - uses: actions/setup-java@v4
         with:
@@ -225,7 +225,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: mosaic-tty-jni-libraries
-          path: mosaic-tty/src/jvmMain/resources/jni
+          path: mosaic-tty/src/jvmMain/resources
 
       - uses: actions/setup-java@v4
         with:
@@ -256,7 +256,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: mosaic-tty-jni-libraries
-          path: mosaic-tty/src/jvmMain/resources/jni
+          path: mosaic-tty/src/jvmMain/resources
 
       - uses: actions/setup-java@v4
         with:
@@ -297,7 +297,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: mosaic-tty-jni-libraries
-          path: mosaic-tty/src/jvmMain/resources/jni
+          path: mosaic-tty/src/jvmMain/resources
 
       - uses: actions/setup-java@v4
         with:

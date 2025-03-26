@@ -5,12 +5,12 @@ pub fn build(b: *std.Build) !void {
 	const deleteLib = b.addRemoveDirTree(b.path(b.getInstallPath(.prefix, "lib")));
 	b.getInstallStep().dependOn(&deleteLib.step);
 
-	setupMosaicTarget(b, &deleteLib.step, .linux, .aarch64, "aarch64");
-	setupMosaicTarget(b, &deleteLib.step, .linux, .x86_64, "amd64");
-	setupMosaicTarget(b, &deleteLib.step, .macos, .aarch64, "aarch64");
-	setupMosaicTarget(b, &deleteLib.step, .macos, .x86_64, "x86_64");
-	setupMosaicTarget(b, &deleteLib.step, .windows, .aarch64, "aarch64");
-	setupMosaicTarget(b, &deleteLib.step, .windows, .x86_64, "amd64");
+	setupMosaicTarget(b, &deleteLib.step, .linux, .aarch64, "com/jakewharton/mosaic/tty/jni/aarch64");
+	setupMosaicTarget(b, &deleteLib.step, .linux, .x86_64, "com/jakewharton/mosaic/tty/jni/amd64");
+	setupMosaicTarget(b, &deleteLib.step, .macos, .aarch64, "com/jakewharton/mosaic/tty/jni/aarch64");
+	setupMosaicTarget(b, &deleteLib.step, .macos, .x86_64, "com/jakewharton/mosaic/tty/jni/x86_64");
+	setupMosaicTarget(b, &deleteLib.step, .windows, .aarch64, "com/jakewharton/mosaic/tty/jni/aarch64");
+	setupMosaicTarget(b, &deleteLib.step, .windows, .x86_64, "com/jakewharton/mosaic/tty/jni/amd64");
 }
 
 fn setupMosaicTarget(b: *std.Build, step: *std.Build.Step, tag: std.Target.Os.Tag, arch: std.Target.Cpu.Arch, dir: []const u8) void {

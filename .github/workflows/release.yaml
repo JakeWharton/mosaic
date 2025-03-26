@@ -22,7 +22,7 @@ jobs:
       - uses: mlugg/setup-zig@v1
         with:
           version: 0.14.0
-      - run: zig build -p src/jvmMain/resources/jni
+      - run: zig build -p src/jvmMain/resources
         working-directory: mosaic-tty
 
       - run: ./gradlew publish
