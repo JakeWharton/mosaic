@@ -34,7 +34,7 @@ final class com.jakewharton.mosaic.testing/TestTerminal : com.jakewharton.mosaic
     final fun close() // com.jakewharton.mosaic.testing/TestTerminal.close|close(){}[0]
 
     final class Capabilities : com.jakewharton.mosaic.terminal/Terminal.Capabilities { // com.jakewharton.mosaic.testing/TestTerminal.Capabilities|null[0]
-        constructor <init>(kotlin/Boolean = ..., com.jakewharton.mosaic.terminal/AnsiLevel = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ...) // com.jakewharton.mosaic.testing/TestTerminal.Capabilities.<init>|<init>(kotlin.Boolean;com.jakewharton.mosaic.terminal.AnsiLevel;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean){}[0]
+        constructor <init>(kotlin/Boolean = ..., com.jakewharton.mosaic.terminal/AnsiLevel = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ...) // com.jakewharton.mosaic.testing/TestTerminal.Capabilities.<init>|<init>(kotlin.Boolean;com.jakewharton.mosaic.terminal.AnsiLevel;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean;kotlin.Boolean){}[0]
 
         final val ansiLevel // com.jakewharton.mosaic.testing/TestTerminal.Capabilities.ansiLevel|{}ansiLevel[0]
             final fun <get-ansiLevel>(): com.jakewharton.mosaic.terminal/AnsiLevel // com.jakewharton.mosaic.testing/TestTerminal.Capabilities.ansiLevel.<get-ansiLevel>|<get-ansiLevel>(){}[0]
@@ -48,6 +48,10 @@ final class com.jakewharton.mosaic.testing/TestTerminal : com.jakewharton.mosaic
             final fun <get-kittyNotifications>(): kotlin/Boolean // com.jakewharton.mosaic.testing/TestTerminal.Capabilities.kittyNotifications.<get-kittyNotifications>|<get-kittyNotifications>(){}[0]
         final val kittyPointerShape // com.jakewharton.mosaic.testing/TestTerminal.Capabilities.kittyPointerShape|{}kittyPointerShape[0]
             final fun <get-kittyPointerShape>(): kotlin/Boolean // com.jakewharton.mosaic.testing/TestTerminal.Capabilities.kittyPointerShape.<get-kittyPointerShape>|<get-kittyPointerShape>(){}[0]
+        final val kittyTextSizingScale // com.jakewharton.mosaic.testing/TestTerminal.Capabilities.kittyTextSizingScale|{}kittyTextSizingScale[0]
+            final fun <get-kittyTextSizingScale>(): kotlin/Boolean // com.jakewharton.mosaic.testing/TestTerminal.Capabilities.kittyTextSizingScale.<get-kittyTextSizingScale>|<get-kittyTextSizingScale>(){}[0]
+        final val kittyTextSizingWidth // com.jakewharton.mosaic.testing/TestTerminal.Capabilities.kittyTextSizingWidth|{}kittyTextSizingWidth[0]
+            final fun <get-kittyTextSizingWidth>(): kotlin/Boolean // com.jakewharton.mosaic.testing/TestTerminal.Capabilities.kittyTextSizingWidth.<get-kittyTextSizingWidth>|<get-kittyTextSizingWidth>(){}[0]
         final val kittyUnderline // com.jakewharton.mosaic.testing/TestTerminal.Capabilities.kittyUnderline|{}kittyUnderline[0]
             final fun <get-kittyUnderline>(): kotlin/Boolean // com.jakewharton.mosaic.testing/TestTerminal.Capabilities.kittyUnderline.<get-kittyUnderline>|<get-kittyUnderline>(){}[0]
         final val synchronizedRendering // com.jakewharton.mosaic.testing/TestTerminal.Capabilities.synchronizedRendering|{}synchronizedRendering[0]

@@ -3,6 +3,7 @@ package com.jakewharton.mosaic.tty.terminal
 import com.jakewharton.finalization.withFinalizationHook
 import com.jakewharton.mosaic.terminal.AnsiLevel
 import com.jakewharton.mosaic.terminal.CapabilityQueryEvent
+import com.jakewharton.mosaic.terminal.CursorPositionEvent
 import com.jakewharton.mosaic.terminal.DebugEvent
 import com.jakewharton.mosaic.terminal.DecModeReportEvent
 import com.jakewharton.mosaic.terminal.DecModeReportEvent.Setting
@@ -53,11 +54,13 @@ private class TtyTerminal(
 
 	class Capabilities(
 		override val ansiLevel: AnsiLevel,
-		override val kittyKeyboard: Boolean,
-		override val kittyUnderline: Boolean,
 		override val kittyGraphics: Boolean,
+		override val kittyKeyboard: Boolean,
 		override val kittyNotifications: Boolean,
 		override val kittyPointerShape: Boolean,
+		override val kittyTextSizingScale: Boolean,
+		override val kittyTextSizingWidth: Boolean,
+		override val kittyUnderline: Boolean,
 		override val synchronizedRendering: Boolean,
 	) : Terminal.Capabilities {
 		override val interactive get() = true
@@ -119,12 +122,16 @@ public suspend fun Tty.asTerminalIn(
 	val debugBootstrap = env("MOSAIC_TTY_TERMINAL_DEBUG") == "true"
 	var stage = StageDeviceAttributes
 
-	var supportsSynchronizedRendering = false
-	var supportsKittyKeyboard = false
-	var supportsKittyGraphics = false
-	var supportsKittyNotifications = false
-	var supportsKittyPointerShape = false
-	var supportsKittyUnderlines = false
+	var kittyGraphics = false
+	var kittyKeyboard = false
+	var kittyNotifications = false
+	var kittyPointerShape = false
+	var kittyTextSizingScale = false
+	var kittyTextSizingWidth = false
+	var kittyTextSizingCursorPositionCount = 0
+	var kittyTextSizingLastCursorPosition: CursorPositionEvent? = null
+	var kittyUnderlines = false
+	var synchronizedRendering = false
 	var terminalName: String? = null
 
 	val bootstrapDone = CompletableDeferred<Unit>()
@@ -153,10 +160,11 @@ public suspend fun Tty.asTerminalIn(
 							"$CSI?${synchronizedRenderingMode}\$p" +
 							"$CSI?${systemThemeMode}\$p" +
 							"$CSI?${inBandResizeMode}\$p" +
-							"$CSI?u" + // Kitty keyboard
 							"${APC}Gi=31,s=1,v=1,a=q,t=d,f=24;AAAA$ST" + // Kitty graphics
+							"$CSI?u" + // Kitty keyboard
 							"${OSC}99;i=1:p=?$ST" + // Kitty notifications
 							"${OSC}22;?__current__$ST" + // Kitty pointer shape
+							"${CSI}6n${OSC}66;w=1; $ST${CSI}6n${OSC}66;s=2; $ST${CSI}6n\r" + // Kitty text sizing
 							"$DCS+q5375$ST" + // Kitty underline ("Su")
 							"$CSI>0q" + // Xterm version
 							"${CSI}5n", // DSR (end marker)
@@ -185,7 +193,7 @@ public suspend fun Tty.asTerminalIn(
 
 						synchronizedRenderingMode -> {
 							if (event.setting == Setting.Reset) {
-								supportsSynchronizedRendering = true
+								synchronizedRendering = true
 							}
 						}
 
@@ -227,33 +235,43 @@ public suspend fun Tty.asTerminalIn(
 
 				is KittyKeyboardQueryEvent -> {
 					if (stage == StageCapabilityQueries) {
-						supportsKittyKeyboard = true
+						kittyKeyboard = true
 					}
 				}
 
 				is KittyGraphicsEvent -> {
 					if (stage == StageCapabilityQueries) {
-						supportsKittyGraphics = true
+						kittyGraphics = true
 					}
 				}
 
 				is KittyPointerQueryEvent -> {
 					if (stage == StageCapabilityQueries) {
-						supportsKittyPointerShape = true
+						kittyPointerShape = true
 					}
 				}
 
 				is KittyNotificationEvent -> {
 					if (stage == StageCapabilityQueries) {
-						supportsKittyNotifications = true
+						kittyNotifications = true
 					}
 				}
 
 				is CapabilityQueryEvent -> {
 					if (stage == StageCapabilityQueries && event.success) {
 						if ("Su" in event.data) {
-							supportsKittyUnderlines = true
+							kittyUnderlines = true
 						}
+					}
+				}
+
+				is CursorPositionEvent -> {
+					if (stage == StageCapabilityQueries) {
+						when (kittyTextSizingCursorPositionCount++) {
+							1 -> kittyTextSizingWidth = event != kittyTextSizingLastCursorPosition
+							2 -> kittyTextSizingScale = event != kittyTextSizingLastCursorPosition
+						}
+						kittyTextSizingLastCursorPosition = event
 					}
 				}
 
@@ -317,12 +335,14 @@ public suspend fun Tty.asTerminalIn(
 		),
 		capabilities = TtyTerminal.Capabilities(
 			ansiLevel = ansiLevel,
-			kittyKeyboard = supportsKittyKeyboard,
-			kittyUnderline = supportsKittyUnderlines,
-			kittyGraphics = supportsKittyGraphics,
-			kittyNotifications = supportsKittyNotifications,
-			kittyPointerShape = supportsKittyPointerShape,
-			synchronizedRendering = supportsSynchronizedRendering,
+			kittyGraphics = kittyGraphics,
+			kittyKeyboard = kittyKeyboard,
+			kittyNotifications = kittyNotifications,
+			kittyPointerShape = kittyPointerShape,
+			kittyTextSizingScale = kittyTextSizingScale,
+			kittyTextSizingWidth = kittyTextSizingWidth,
+			kittyUnderline = kittyUnderlines,
+			synchronizedRendering = synchronizedRendering,
 		),
 		events = events,
 		closeJob = interruptJob,

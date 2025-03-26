@@ -38,11 +38,13 @@ internal object NonInteractiveTerminal : Terminal, Terminal.State, Terminal.Capa
 
 	override val interactive: Boolean get() = false
 	override val ansiLevel: AnsiLevel get() = AnsiLevel.NONE
-	override val kittyKeyboard get() = false
-	override val kittyUnderline get() = false
 	override val kittyGraphics get() = false
+	override val kittyKeyboard get() = false
 	override val kittyNotifications get() = false
 	override val kittyPointerShape get() = false
+	override val kittyTextSizingScale get() = false
+	override val kittyTextSizingWidth get() = false
+	override val kittyUnderline get() = false
 	override val synchronizedRendering get() = false
 
 	override fun close() {}

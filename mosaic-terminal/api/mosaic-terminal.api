@@ -294,6 +294,8 @@ public abstract interface class com/jakewharton/mosaic/terminal/Terminal$Capabil
 	public abstract fun getKittyKeyboard ()Z
 	public abstract fun getKittyNotifications ()Z
 	public abstract fun getKittyPointerShape ()Z
+	public abstract fun getKittyTextSizingScale ()Z
+	public abstract fun getKittyTextSizingWidth ()Z
 	public abstract fun getKittyUnderline ()Z
 	public abstract fun getSynchronizedRendering ()Z
 }
