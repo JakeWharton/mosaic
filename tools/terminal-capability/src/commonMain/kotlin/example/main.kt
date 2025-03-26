@@ -43,7 +43,7 @@ private class TerminalCapabilityCommand : CliktCommand("terminal-capability") {
 		}
 		print(text)
 
-		output?.let { output->
+		output?.let { output ->
 			output.createParentDirectories()
 			output.writeText(text)
 		}
