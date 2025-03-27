@@ -235,21 +235,6 @@ class AnsiRenderingTest {
 	@Test fun withoutTrailingSpaces() = runTest {
 		runMosaicTest(RenderingSnapshots(rendering)) {
 			val snapshot = setContentAndSnapshot {
-				Text("OneTwoThree   ")
-			}
-
-			assertThat(snapshot).isEqualTo(
-				"""
-				|OneTwoThree
-				|
-				""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
-			)
-		}
-	}
-
-	@Test fun withoutTrailingSpacesInContainer() = runTest {
-		runMosaicTest(RenderingSnapshots(rendering)) {
-			val snapshot = setContentAndSnapshot {
 				Column {
 					Text("OneTwoThree")
 					Text("OneTwoThreeFour")
@@ -266,7 +251,7 @@ class AnsiRenderingTest {
 		}
 	}
 
-	@Test fun withoutTrailingSpacesInContainerWithAnsiNone() = runTest {
+	@Test fun withoutTrailingSpacesWithAnsiNone() = runTest {
 		val rendering = AnsiRendering(
 			ansiLevel = AnsiLevel.NONE,
 			synchronizedRendering = true,
@@ -290,7 +275,7 @@ class AnsiRenderingTest {
 		}
 	}
 
-	@Test fun withColoredTrailingSpacesInContainer() = runTest {
+	@Test fun withColoredTrailingSpaces() = runTest {
 		runMosaicTest(RenderingSnapshots(rendering)) {
 			val snapshot = setContentAndSnapshot {
 				Column(modifier = Modifier.background(Color.Red)) {

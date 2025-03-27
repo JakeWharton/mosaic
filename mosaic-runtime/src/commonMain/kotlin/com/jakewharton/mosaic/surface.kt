@@ -17,7 +17,7 @@ import com.jakewharton.mosaic.ui.isUnspecifiedColor
 import com.jakewharton.mosaic.ui.isUnspecifiedUnderlineStyle
 import de.cketti.codepoints.appendCodePoint
 
-private val blankPixel = TextPixel(SpaceCharCodePoint)
+private val blankPixel = TextPixel()
 
 public interface TextCanvas {
 	public val height: Int
@@ -35,7 +35,7 @@ internal class TextSurface(
 	var translationX = 0
 	var translationY = 0
 
-	private val cells = Array(width * height) { TextPixel(SpaceCharCodePoint) }
+	private val cells = Array(width * height) { TextPixel() }
 
 	operator fun get(row: Int, column: Int): TextPixel {
 		val x = translationX + column
@@ -133,8 +133,11 @@ internal class TextSurface(
 					attributes.clear() // This list is reused!
 				}
 			}
-
-			appendable.appendCodePoint(pixel.codePoint)
+			if (pixel.codePoint.isSpecifiedCodePoint) {
+				appendable.appendCodePoint(pixel.codePoint)
+			} else {
+				appendable.append(' ')
+			}
 			lastPixel = pixel
 		}
 
@@ -201,7 +204,8 @@ internal class TextSurface(
 	}
 }
 
-internal class TextPixel(var codePoint: Int) {
+internal class TextPixel {
+	var codePoint: Int = UnspecifiedCodePoint
 	var background: Color = Color.Unspecified
 	var foreground: Color = Color.Unspecified
 	var textStyle: TextStyle = TextStyle.Empty
@@ -209,7 +213,7 @@ internal class TextPixel(var codePoint: Int) {
 	var underlineColor: Color = Color.Unspecified
 
 	fun isEmpty(): Boolean {
-		return codePoint == SpaceCharCodePoint &&
+		return codePoint == UnspecifiedCodePoint &&
 			background.isUnspecifiedColor &&
 			foreground.isUnspecifiedColor &&
 			textStyle.isEmptyTextStyle &&
@@ -218,9 +222,12 @@ internal class TextPixel(var codePoint: Int) {
 	}
 
 	override fun toString() = buildString {
-		append("TextPixel(\"")
-		appendCodePoint(codePoint)
-		append("\"")
+		append("TextPixel(")
+		if (codePoint.isSpecifiedCodePoint) {
+			append('"')
+			appendCodePoint(codePoint)
+			append('"')
+		}
 		if (background.isSpecifiedColor) {
 			append(" bg=")
 			append(background)
