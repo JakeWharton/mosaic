@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 public class TestTerminal(
 	override val name: String? = "Mosaic Test Terminal",
+	override val interactive: Boolean = true,
 	override val capabilities: Terminal.Capabilities = Capabilities(),
 ) : Terminal {
 	override val state: State = State()
@@ -25,8 +26,10 @@ public class TestTerminal(
 	}
 
 	public class Capabilities(
-		override val interactive: Boolean = true,
 		override val ansiLevel: AnsiLevel = AnsiLevel.TRUECOLOR,
+		override val cursorVisibility: Boolean = true,
+		override val focusEvents: Boolean = true,
+		override val inBandResizeEvents: Boolean = true,
 		override val kittyGraphics: Boolean = true,
 		override val kittyKeyboard: Boolean = true,
 		override val kittyNotifications: Boolean = true,
@@ -34,6 +37,7 @@ public class TestTerminal(
 		override val kittyTextSizingScale: Boolean = true,
 		override val kittyTextSizingWidth: Boolean = true,
 		override val kittyUnderline: Boolean = true,
-		override val synchronizedRendering: Boolean = true,
+		override val synchronizedOutput: Boolean = true,
+		override val themeEvents: Boolean = true,
 	) : Terminal.Capabilities
 }

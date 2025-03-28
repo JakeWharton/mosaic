@@ -16,7 +16,7 @@ import kotlinx.coroutines.test.runTest
 class AnsiRenderingTest {
 	private val rendering = AnsiRendering(
 		ansiLevel = AnsiLevel.TRUECOLOR,
-		synchronizedRendering = true,
+		synchronizedOutput = true,
 		supportsKittyUnderlines = false,
 	)
 
@@ -269,7 +269,7 @@ class AnsiRenderingTest {
 	@Test fun withoutTrailingSpacesInContainerWithAnsiNone() = runTest {
 		val rendering = AnsiRendering(
 			ansiLevel = AnsiLevel.NONE,
-			synchronizedRendering = true,
+			synchronizedOutput = true,
 			supportsKittyUnderlines = false,
 		)
 		runMosaicTest(RenderingSnapshots(rendering)) {

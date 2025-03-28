@@ -28,6 +28,8 @@ public enum class NonInteractivePolicy {
 
 internal object NonInteractiveTerminal : Terminal, Terminal.State, Terminal.Capabilities {
 	override val name: String? get() = null
+	override val interactive: Boolean get() = false
+
 	override val state: Terminal.State get() = this
 	override val capabilities: Terminal.Capabilities get() = this
 	override val events: ReceiveChannel<Event> = Channel<Event>().apply { close() }
@@ -36,8 +38,10 @@ internal object NonInteractiveTerminal : Terminal, Terminal.State, Terminal.Capa
 	override val theme: StateFlow<Terminal.Theme> = MutableStateFlow(Terminal.Theme.Unknown)
 	override val size: StateFlow<Terminal.Size> = MutableStateFlow(Terminal.Size.Default)
 
-	override val interactive: Boolean get() = false
 	override val ansiLevel: AnsiLevel get() = AnsiLevel.NONE
+	override val cursorVisibility: Boolean get() = false
+	override val focusEvents: Boolean get() = false
+	override val inBandResizeEvents: Boolean get() = false
 	override val kittyGraphics get() = false
 	override val kittyKeyboard get() = false
 	override val kittyNotifications get() = false
@@ -45,7 +49,8 @@ internal object NonInteractiveTerminal : Terminal, Terminal.State, Terminal.Capa
 	override val kittyTextSizingScale get() = false
 	override val kittyTextSizingWidth get() = false
 	override val kittyUnderline get() = false
-	override val synchronizedRendering get() = false
+	override val synchronizedOutput get() = false
+	override val themeEvents: Boolean get() = false
 
 	override fun close() {}
 }
