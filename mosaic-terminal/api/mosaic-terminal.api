@@ -283,13 +283,16 @@ public final class com/jakewharton/mosaic/terminal/SystemThemeEvent : com/jakewh
 public abstract interface class com/jakewharton/mosaic/terminal/Terminal : java/lang/AutoCloseable {
 	public abstract fun getCapabilities ()Lcom/jakewharton/mosaic/terminal/Terminal$Capabilities;
 	public abstract fun getEvents ()Lkotlinx/coroutines/channels/ReceiveChannel;
+	public abstract fun getInteractive ()Z
 	public abstract fun getName ()Ljava/lang/String;
 	public abstract fun getState ()Lcom/jakewharton/mosaic/terminal/Terminal$State;
 }
 
 public abstract interface class com/jakewharton/mosaic/terminal/Terminal$Capabilities {
 	public abstract fun getAnsiLevel ()Lcom/jakewharton/mosaic/terminal/AnsiLevel;
-	public abstract fun getInteractive ()Z
+	public abstract fun getCursorVisibility ()Z
+	public abstract fun getFocusEvents ()Z
+	public abstract fun getInBandResizeEvents ()Z
 	public abstract fun getKittyGraphics ()Z
 	public abstract fun getKittyKeyboard ()Z
 	public abstract fun getKittyNotifications ()Z
@@ -297,7 +300,8 @@ public abstract interface class com/jakewharton/mosaic/terminal/Terminal$Capabil
 	public abstract fun getKittyTextSizingScale ()Z
 	public abstract fun getKittyTextSizingWidth ()Z
 	public abstract fun getKittyUnderline ()Z
-	public abstract fun getSynchronizedRendering ()Z
+	public abstract fun getSynchronizedOutput ()Z
+	public abstract fun getThemeEvents ()Z
 }
 
 public final class com/jakewharton/mosaic/terminal/Terminal$Size {

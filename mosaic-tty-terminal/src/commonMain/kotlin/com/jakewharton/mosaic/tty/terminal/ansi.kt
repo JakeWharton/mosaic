@@ -16,7 +16,7 @@ internal const val focusMode = 1004
 internal const val focusEnable = "$CSI?${focusMode}h"
 internal const val focusDisable = "$CSI?${focusMode}l"
 
-internal const val synchronizedRenderingMode = 2026
+internal const val synchronizedOutputMode = 2026
 
 internal const val systemThemeMode = 2031
 internal const val systemThemeEnable = "$CSI?${systemThemeMode}h"

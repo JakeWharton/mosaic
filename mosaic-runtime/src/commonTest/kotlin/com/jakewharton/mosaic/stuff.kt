@@ -33,7 +33,7 @@ fun String.replaceLineEndingsWithCRLF(): String {
 }
 
 fun String.wrapWithAnsiSynchronizedUpdate(): String {
-	return "$synchronizedRenderingEnable$this$synchronizedRenderingDisable"
+	return "$synchronizedOutputEnable$this$synchronizedOutputDisable"
 }
 
 fun cursorUp(lines: Int): String = "${CSI}${lines}F"

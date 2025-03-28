@@ -108,7 +108,7 @@ class MosaicTest {
 		runMosaicComposition(
 			rendering = AnsiRendering(
 				ansiLevel = AnsiLevel.NONE,
-				synchronizedRendering = false,
+				synchronizedOutput = false,
 				supportsKittyUnderlines = false,
 			),
 			terminal = TestTerminal(),

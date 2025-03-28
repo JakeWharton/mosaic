@@ -86,7 +86,7 @@ public suspend fun runMosaic(
 		} else {
 			AnsiRendering(
 				ansiLevel = terminal.capabilities.ansiLevel,
-				synchronizedRendering = terminal.capabilities.synchronizedRendering,
+				synchronizedOutput = terminal.capabilities.synchronizedOutput,
 				supportsKittyUnderlines = terminal.capabilities.kittyUnderline,
 			)
 		}

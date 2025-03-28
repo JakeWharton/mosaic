@@ -6,9 +6,9 @@ import kotlin.math.roundToInt
 internal const val ESC = "\u001B"
 internal const val CSI = "$ESC["
 
-internal const val synchronizedRenderingMode = 2026
-internal const val synchronizedRenderingEnable = "$CSI?${synchronizedRenderingMode}h"
-internal const val synchronizedRenderingDisable = "$CSI?${synchronizedRenderingMode}l"
+internal const val synchronizedOutputMode = 2026
+internal const val synchronizedOutputEnable = "$CSI?${synchronizedOutputMode}h"
+internal const val synchronizedOutputDisable = "$CSI?${synchronizedOutputMode}l"
 
 internal const val ansiReset = "${CSI}0"
 internal const val clearLine = "${CSI}K"

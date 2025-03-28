@@ -27,12 +27,13 @@ public final class com/jakewharton/mosaic/testing/TestMosaicKt {
 public final class com/jakewharton/mosaic/testing/TestTerminal : com/jakewharton/mosaic/terminal/Terminal {
 	public static final field $stable I
 	public fun <init> ()V
-	public fun <init> (Ljava/lang/String;Lcom/jakewharton/mosaic/terminal/Terminal$Capabilities;)V
-	public synthetic fun <init> (Ljava/lang/String;Lcom/jakewharton/mosaic/terminal/Terminal$Capabilities;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;ZLcom/jakewharton/mosaic/terminal/Terminal$Capabilities;)V
+	public synthetic fun <init> (Ljava/lang/String;ZLcom/jakewharton/mosaic/terminal/Terminal$Capabilities;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun close ()V
 	public fun getCapabilities ()Lcom/jakewharton/mosaic/terminal/Terminal$Capabilities;
 	public fun getEvents ()Lkotlinx/coroutines/channels/Channel;
 	public synthetic fun getEvents ()Lkotlinx/coroutines/channels/ReceiveChannel;
+	public fun getInteractive ()Z
 	public fun getName ()Ljava/lang/String;
 	public synthetic fun getState ()Lcom/jakewharton/mosaic/terminal/Terminal$State;
 	public fun getState ()Lcom/jakewharton/mosaic/testing/TestTerminal$State;
@@ -41,10 +42,12 @@ public final class com/jakewharton/mosaic/testing/TestTerminal : com/jakewharton
 public final class com/jakewharton/mosaic/testing/TestTerminal$Capabilities : com/jakewharton/mosaic/terminal/Terminal$Capabilities {
 	public static final field $stable I
 	public fun <init> ()V
-	public fun <init> (ZLcom/jakewharton/mosaic/terminal/AnsiLevel;ZZZZZZZZ)V
-	public synthetic fun <init> (ZLcom/jakewharton/mosaic/terminal/AnsiLevel;ZZZZZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lcom/jakewharton/mosaic/terminal/AnsiLevel;ZZZZZZZZZZZZ)V
+	public synthetic fun <init> (Lcom/jakewharton/mosaic/terminal/AnsiLevel;ZZZZZZZZZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun getAnsiLevel ()Lcom/jakewharton/mosaic/terminal/AnsiLevel;
-	public fun getInteractive ()Z
+	public fun getCursorVisibility ()Z
+	public fun getFocusEvents ()Z
+	public fun getInBandResizeEvents ()Z
 	public fun getKittyGraphics ()Z
 	public fun getKittyKeyboard ()Z
 	public fun getKittyNotifications ()Z
@@ -52,7 +55,8 @@ public final class com/jakewharton/mosaic/testing/TestTerminal$Capabilities : co
 	public fun getKittyTextSizingScale ()Z
 	public fun getKittyTextSizingWidth ()Z
 	public fun getKittyUnderline ()Z
-	public fun getSynchronizedRendering ()Z
+	public fun getSynchronizedOutput ()Z
+	public fun getThemeEvents ()Z
 }
 
 public final class com/jakewharton/mosaic/testing/TestTerminal$State : com/jakewharton/mosaic/terminal/Terminal$State {

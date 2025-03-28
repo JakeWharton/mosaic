@@ -72,7 +72,7 @@ internal class DebugRendering(
 
 internal class AnsiRendering(
 	private val ansiLevel: AnsiLevel,
-	private val synchronizedRendering: Boolean,
+	private val synchronizedOutput: Boolean,
 	private val supportsKittyUnderlines: Boolean,
 ) : Rendering {
 	private val stringBuilder = StringBuilder(100)
@@ -82,8 +82,8 @@ internal class AnsiRendering(
 		return stringBuilder.apply {
 			clear()
 
-			if (synchronizedRendering) {
-				append(synchronizedRenderingEnable)
+			if (synchronizedOutput) {
+				append(synchronizedOutputEnable)
 			}
 
 			var staleLines = lastHeight
@@ -127,8 +127,8 @@ internal class AnsiRendering(
 				append(clearDisplay)
 			}
 
-			if (synchronizedRendering) {
-				append(synchronizedRenderingDisable)
+			if (synchronizedOutput) {
+				append(synchronizedOutputDisable)
 			}
 
 			lastHeight = surface.height

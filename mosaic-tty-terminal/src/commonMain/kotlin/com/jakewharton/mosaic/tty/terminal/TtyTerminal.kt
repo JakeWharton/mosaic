@@ -44,6 +44,7 @@ private class TtyTerminal(
 	override val events: ReceiveChannel<Event>,
 	private val closeJob: Job,
 ) : Terminal {
+	override val interactive get() = true
 	override fun close() = closeJob.cancel()
 
 	class State(
@@ -54,6 +55,9 @@ private class TtyTerminal(
 
 	class Capabilities(
 		override val ansiLevel: AnsiLevel,
+		override val cursorVisibility: Boolean,
+		override val focusEvents: Boolean,
+		override val inBandResizeEvents: Boolean,
 		override val kittyGraphics: Boolean,
 		override val kittyKeyboard: Boolean,
 		override val kittyNotifications: Boolean,
@@ -61,10 +65,9 @@ private class TtyTerminal(
 		override val kittyTextSizingScale: Boolean,
 		override val kittyTextSizingWidth: Boolean,
 		override val kittyUnderline: Boolean,
-		override val synchronizedRendering: Boolean,
-	) : Terminal.Capabilities {
-		override val interactive get() = true
-	}
+		override val synchronizedOutput: Boolean,
+		override val themeEvents: Boolean,
+	) : Terminal.Capabilities
 }
 
 private const val StageDeviceAttributes = 3
@@ -122,6 +125,9 @@ public suspend fun Tty.asTerminalIn(
 	val debugBootstrap = env("MOSAIC_TTY_TERMINAL_DEBUG") == "true"
 	var stage = StageDeviceAttributes
 
+	var cursorVisibility = false
+	var focusEvents = false
+	var inBandResizeEvents = false
 	var kittyGraphics = false
 	var kittyKeyboard = false
 	var kittyNotifications = false
@@ -131,8 +137,9 @@ public suspend fun Tty.asTerminalIn(
 	var kittyTextSizingCursorPositionCount = 0
 	var kittyTextSizingLastCursorPosition: CursorPositionEvent? = null
 	var kittyUnderlines = false
-	var synchronizedRendering = false
+	var synchronizedOutput = false
 	var terminalName: String? = null
+	var themeEvents = false
 
 	val bootstrapDone = CompletableDeferred<Unit>()
 	scope.launch(Dispatchers.IO) {
@@ -157,7 +164,7 @@ public suspend fun Tty.asTerminalIn(
 					print(
 						"$CSI?$cursorMode\$p" +
 							"$CSI?$focusMode\$p" +
-							"$CSI?$synchronizedRenderingMode\$p" +
+							"$CSI?$synchronizedOutputMode\$p" +
 							"$CSI?$systemThemeMode\$p" +
 							"$CSI?$inBandResizeMode\$p" +
 							"${APC}Gi=31,s=1,v=1,a=q,t=d,f=24;AAAA$ST" + // Kitty graphics
@@ -176,6 +183,7 @@ public suspend fun Tty.asTerminalIn(
 
 					when (event.mode) {
 						cursorMode -> {
+							cursorVisibility = event.setting.isSupported
 							if (event.setting == Setting.Set) {
 								toggleCursor = true
 								print(cursorDisable)
@@ -183,6 +191,7 @@ public suspend fun Tty.asTerminalIn(
 						}
 
 						focusMode -> {
+							focusEvents = event.setting.isSupported
 							if (event.setting == Setting.Reset) {
 								toggleFocus = true
 								// Enabling focus notification _might_ trigger an initial event. There is
@@ -191,13 +200,12 @@ public suspend fun Tty.asTerminalIn(
 							}
 						}
 
-						synchronizedRenderingMode -> {
-							if (event.setting == Setting.Reset) {
-								synchronizedRendering = true
-							}
+						synchronizedOutputMode -> {
+							synchronizedOutput = event.setting.isSupported
 						}
 
 						systemThemeMode -> {
+							themeEvents = event.setting.isSupported
 							if (event.setting == Setting.Reset) {
 								toggleSystemTheme = true
 								print(
@@ -208,6 +216,7 @@ public suspend fun Tty.asTerminalIn(
 						}
 
 						inBandResizeMode -> {
+							inBandResizeEvents = event.setting.isSupported
 							if (event.setting == Setting.Reset) {
 								toggleInBandResize = true
 								// Enabling in-band resize will trigger an initial event.
@@ -335,6 +344,9 @@ public suspend fun Tty.asTerminalIn(
 		),
 		capabilities = TtyTerminal.Capabilities(
 			ansiLevel = ansiLevel,
+			cursorVisibility = cursorVisibility,
+			focusEvents = focusEvents,
+			inBandResizeEvents = inBandResizeEvents,
 			kittyGraphics = kittyGraphics,
 			kittyKeyboard = kittyKeyboard,
 			kittyNotifications = kittyNotifications,
@@ -342,7 +354,8 @@ public suspend fun Tty.asTerminalIn(
 			kittyTextSizingScale = kittyTextSizingScale,
 			kittyTextSizingWidth = kittyTextSizingWidth,
 			kittyUnderline = kittyUnderlines,
-			synchronizedRendering = synchronizedRendering,
+			synchronizedOutput = synchronizedOutput,
+			themeEvents = themeEvents,
 		),
 		events = events,
 		closeJob = interruptJob,
