@@ -94,7 +94,7 @@ public suspend fun Tty.asTerminalIn(
 
 	// Each of these will become true when their respective feature is recognized by the terminal
 	// and was not already configured to our desired setting. Revert each toggled setting on exit.
-	var toggleCursor = false
+	var toggleCursor = true
 	var toggleFocus = false
 	var toggleInBandResize = false
 	var toggleSystemTheme = false
