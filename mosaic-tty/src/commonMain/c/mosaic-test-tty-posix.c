@@ -64,7 +64,7 @@ MosaicTty *testTty_getTty(MosaicTestTty *testTty) {
 	return testTty->tty;
 }
 
-MosaicTtyIoResult testTty_writeInput(MosaicTestTty *testTty, uint8_t *buffer, int count) {
+MosaicTtyIoResult testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int count) {
 	MosaicTtyIoResult result = {};
 
 	int written = write(testTty->fd, buffer, count);

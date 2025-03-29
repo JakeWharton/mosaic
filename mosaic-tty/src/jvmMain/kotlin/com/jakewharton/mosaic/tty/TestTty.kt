@@ -20,8 +20,8 @@ public actual class TestTty private constructor(
 		}
 	}
 
-	public actual fun writeInput(buffer: ByteArray, offset: Int, count: Int): Int {
-		return Jni.testTtyWriteInput(testTtyPtr, buffer, offset, count)
+	public actual fun write(buffer: ByteArray, offset: Int, count: Int): Int {
+		return Jni.testTtyWrite(testTtyPtr, buffer, offset, count)
 	}
 
 	public actual fun focusEvent(focused: Boolean) {

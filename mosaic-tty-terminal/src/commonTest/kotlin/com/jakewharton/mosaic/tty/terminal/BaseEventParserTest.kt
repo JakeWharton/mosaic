@@ -22,7 +22,7 @@ abstract class BaseEventParserTest {
 
 	internal fun TestTty.writeHex(hex: String) {
 		val buffer = hex.hexToByteArray()
-		val written = writeInput(buffer, 0, buffer.size)
+		val written = write(buffer, 0, buffer.size)
 		assertThat(written).isEqualTo(buffer.size)
 	}
 }

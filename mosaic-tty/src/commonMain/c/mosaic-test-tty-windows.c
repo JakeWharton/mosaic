@@ -63,7 +63,7 @@ MosaicTty *testTty_getTty(MosaicTestTty *testTty) {
 	return testTty->tty;
 }
 
-MosaicTtyIoResult testTty_writeInput(MosaicTestTty *testTty, uint8_t *buffer, int count) {
+MosaicTtyIoResult testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int count) {
 	MosaicTtyIoResult result = {};
 
 	INPUT_RECORD *records = calloc(count, sizeof(INPUT_RECORD));

@@ -371,7 +371,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyInit(
 }
 
 JNIEXPORT jint JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_testTtyWriteInput(
+Java_com_jakewharton_mosaic_tty_Jni_testTtyWrite(
 	JNIEnv *env,
 	jclass type UNUSED,
 	jlong testTtyOpaque,
@@ -385,7 +385,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyWriteInput(
 	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
 
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
-	MosaicTtyIoResult result = testTty_writeInput(testTty, nativeBufferAtOffset, count);
+	MosaicTtyIoResult result = testTty_write(testTty, nativeBufferAtOffset, count);
 
 	(*env)->ReleaseByteArrayElements(env, buffer, bufferElements, 0);
 

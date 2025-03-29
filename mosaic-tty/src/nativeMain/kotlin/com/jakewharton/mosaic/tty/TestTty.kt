@@ -26,9 +26,9 @@ public actual class TestTty private constructor(
 		}
 	}
 
-	public actual fun writeInput(buffer: ByteArray, offset: Int, count: Int): Int {
+	public actual fun write(buffer: ByteArray, offset: Int, count: Int): Int {
 		buffer.asUByteArray().usePinned {
-			testTty_writeInput(ptr, it.addressOf(0), buffer.size).useContents {
+			testTty_write(ptr, it.addressOf(offset), count).useContents {
 				if (error == 0U) {
 					return this.count
 				}

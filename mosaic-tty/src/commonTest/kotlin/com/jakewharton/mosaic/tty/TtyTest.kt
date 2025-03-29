@@ -26,6 +26,7 @@ class TtyTest {
 	}
 
 	@AfterTest fun after() {
+		// TestTty.close() will call Tty.close(), but we get a free idempotency test here.
 		tty.close()
 		testTty.close()
 		assertThat(events, name = "events").isEmpty()
@@ -34,12 +35,12 @@ class TtyTest {
 	@Test fun readWhatWasWritten() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		testTty.writeInput("hello")
+		testTty.write("hello")
 		val readA = tty.read(buffer, 0, 10)
 		assertThat(readA, "readA").isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("helloxxxxx")
 
-		testTty.writeInput("world")
+		testTty.write("world")
 		val readB = tty.read(buffer, 0, 10)
 		assertThat(readB, "readB").isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("worldxxxxx")
@@ -48,7 +49,7 @@ class TtyTest {
 	@Test fun readOnlyUpToCount() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		testTty.writeInput("hello")
+		testTty.write("hello")
 		val read = tty.read(buffer, 0, 4)
 		assertThat(read).isEqualTo(4)
 		assertThat(buffer.decodeToString()).isEqualTo("hellxxxxxx")
@@ -57,7 +58,7 @@ class TtyTest {
 	@Test fun readUnderflow() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		testTty.writeInput("hello")
+		testTty.write("hello")
 		val read = tty.read(buffer, 0, 10)
 		assertThat(read).isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("helloxxxxx")
@@ -66,7 +67,7 @@ class TtyTest {
 	@Test fun readAtOffset() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		testTty.writeInput("hello")
+		testTty.write("hello")
 		val read = tty.read(buffer, 5, 5)
 		assertThat(read).isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("xxxxxhello")
@@ -261,8 +262,8 @@ class TtyTest {
 	 */
 	private fun doWriteReadRoundtrip() {
 		val data = "roundtrip"
-		testTty.writeInput(data)
-		assertThat(tty.readInput(data.length)).isEqualTo(data)
+		testTty.write(data)
+		assertThat(tty.read(data.length)).isEqualTo(data)
 	}
 
 	inner class MyCallback(
