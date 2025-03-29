@@ -89,6 +89,19 @@ MosaicTtyIoResult testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int cou
 	return result;
 }
 
+MosaicTtyIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffer, int count) {
+	MosaicTtyIoResult result = {};
+
+	DWORD written;
+	if (ReadFile(testTty->tty->stdout, buffer, count, &written, NULL)) {
+		result.count = written;
+	} else {
+		result.error = GetLastError();
+	}
+
+	return result;
+}
+
 static uint32_t writeRecord(HANDLE h, INPUT_RECORD *record) {
 	DWORD written;
 	if (likely(WriteConsoleInputW(h, record, 1, &written))) {

@@ -24,6 +24,10 @@ public actual class TestTty private constructor(
 		return Jni.testTtyWrite(testTtyPtr, buffer, offset, count)
 	}
 
+	public actual fun read(buffer: ByteArray, offset: Int, count: Int): Int {
+		return Jni.testTtyRead(testTtyPtr, buffer, offset, count)
+	}
+
 	public actual fun focusEvent(focused: Boolean) {
 		Jni.testTtyFocusEvent(testTtyPtr, focused)
 	}

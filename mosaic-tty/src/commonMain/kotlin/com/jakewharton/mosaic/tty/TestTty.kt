@@ -17,6 +17,14 @@ public expect class TestTty : AutoCloseable {
 	public fun write(buffer: ByteArray, offset: Int, count: Int): Int
 
 	/**
+	 * Read up to [count] bytes into [buffer] at [offset] from the PTY.
+	 * The number of bytes read will be returned.
+	 *
+	 * @see Tty.write
+	 */
+	public fun read(buffer: ByteArray, offset: Int, count: Int): Int
+
+	/**
 	 * Send a focus event to [tty]'s callback.
 	 *
 	 * On Windows this event can only be observed by during calls to [Tty.read] or
