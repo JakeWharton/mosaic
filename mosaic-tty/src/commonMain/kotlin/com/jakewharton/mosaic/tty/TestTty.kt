@@ -7,7 +7,14 @@ public expect class TestTty : AutoCloseable {
 
 	public val tty: Tty
 
-	public fun writeInput(buffer: ByteArray, offset: Int, count: Int): Int
+	/**
+	 * Write up to [count] bytes into [buffer] at [offset] to the PTY.
+	 * The number of bytes read will be returned.
+	 *
+	 * @see Tty.read
+	 * @see Tty.readWithTimeout
+	 */
+	public fun write(buffer: ByteArray, offset: Int, count: Int): Int
 
 	/**
 	 * Send a focus event to [tty]'s callback.
