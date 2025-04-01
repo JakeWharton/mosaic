@@ -9,6 +9,7 @@
 typedef struct MosaicTestTtyImpl {
 	MosaicTty *tty;
 	HANDLE stdout_read;
+	HANDLE stdout_write;
 } MosaicTestTtyImpl;
 
 MosaicTestTtyInitResult testTty_init() {
@@ -35,18 +36,21 @@ MosaicTestTtyInitResult testTty_init() {
 
 	HANDLE stdoutRead;
 	HANDLE stdoutWrite;
-	if (unlikely(CreatePipe(&stdoutRead, &stdoutWrite, NULL, 0) == 0)) {
+	if (unlikely(!CreatePipe(&stdoutRead, &stdoutWrite, NULL, 0))) {
 		result.error = GetLastError();
 		goto err;
 	}
 
 	MosaicTtyInitResult ttyInitResult = tty_initWithHandles(stdin, stdoutWrite, true);
 	if (unlikely(ttyInitResult.error)) {
+		CloseHandle(stdoutRead);
+		CloseHandle(stdoutWrite);
 		result.error = ttyInitResult.error;
 		goto err;
 	}
 	testTty->tty = ttyInitResult.tty;
 	testTty->stdout_read = stdoutRead;
+	testTty->stdout_write = stdoutWrite;
 
 	result.testTty = testTty;
 
@@ -140,10 +144,10 @@ uint32_t testTty_resizeEvent(MosaicTestTty *testTty, int columns, int rows, int 
 uint32_t testTty_free(MosaicTestTty *testTty) {
 	uint32_t result = 0;
 
-	if (!CloseHandle(testTty->tty->stdout)) {
+	if (!CloseHandle(testTty->stdout_read)) {
 		result = GetLastError();
 	}
-	if (!CloseHandle(testTty->stdout_read) && result == 0) {
+	if (!CloseHandle(testTty->stdout_write) && result == 0) {
 		result = GetLastError();
 	}
 
