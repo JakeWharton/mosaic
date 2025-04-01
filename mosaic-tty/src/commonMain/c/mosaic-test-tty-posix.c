@@ -77,6 +77,19 @@ MosaicTtyIoResult testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int cou
 	return result;
 }
 
+MosaicTtyIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffer, int count) {
+	MosaicTtyIoResult result = {};
+
+	int c = read(testTty->fd, buffer, count);
+	if (c != -1) {
+		result.count = c;
+	} else {
+		result.error = errno;
+	}
+
+	return result;
+}
+
 uint32_t testTty_focusEvent(MosaicTestTty *testTty UNUSED, bool focused UNUSED) {
 	// Focus events are delivered through VT sequences.
 	return 0;

@@ -37,6 +37,17 @@ public actual class TestTty private constructor(
 		}
 	}
 
+	public actual fun read(buffer: ByteArray, offset: Int, count: Int): Int {
+		buffer.asUByteArray().usePinned {
+			testTty_read(ptr, it.addressOf(offset), count).useContents {
+				if (error == 0U) {
+					return this.count
+				}
+				throwIse(error)
+			}
+		}
+	}
+
 	public actual fun focusEvent(focused: Boolean) {
 		testTty_focusEvent(ptr, focused)
 	}

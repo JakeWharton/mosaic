@@ -8,6 +8,8 @@
 
 typedef struct MosaicTestTtyImpl {
 	MosaicTty *tty;
+	HANDLE stdout_read;
+	HANDLE stdout_write;
 } MosaicTestTtyImpl;
 
 MosaicTestTtyInitResult testTty_init() {
@@ -32,22 +34,23 @@ MosaicTestTtyInitResult testTty_init() {
 	// Ensure we don't start with existing records in the buffer.
 	FlushConsoleInputBuffer(stdin);
 
-	HANDLE stdout = CreateFile(TEXT("CONOUT$"), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
-	if (unlikely(stdout == INVALID_HANDLE_VALUE)) {
-		result.error = GetLastError();
-		goto err;
-	}
-	if (unlikely(SetConsoleMode(stdout, ENABLE_PROCESSED_OUTPUT | ENABLE_WRAP_AT_EOL_OUTPUT) == 0)) {
+	HANDLE stdoutRead;
+	HANDLE stdoutWrite;
+	if (unlikely(!CreatePipe(&stdoutRead, &stdoutWrite, NULL, 0))) {
 		result.error = GetLastError();
 		goto err;
 	}
 
-	MosaicTtyInitResult ttyInitResult = tty_initWithHandles(stdin, stdout);
+	MosaicTtyInitResult ttyInitResult = tty_initWithHandles(stdin, stdoutWrite, true);
 	if (unlikely(ttyInitResult.error)) {
+		CloseHandle(stdoutRead);
+		CloseHandle(stdoutWrite);
 		result.error = ttyInitResult.error;
 		goto err;
 	}
 	testTty->tty = ttyInitResult.tty;
+	testTty->stdout_read = stdoutRead;
+	testTty->stdout_write = stdoutWrite;
 
 	result.testTty = testTty;
 
@@ -89,6 +92,19 @@ MosaicTtyIoResult testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int cou
 	return result;
 }
 
+MosaicTtyIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffer, int count) {
+	MosaicTtyIoResult result = {};
+
+	DWORD c;
+	if (ReadFile(testTty->stdout_read, buffer, count, &c, NULL)) {
+		result.count = c;
+	} else {
+		result.error = GetLastError();
+	}
+
+	return result;
+}
+
 static uint32_t writeRecord(HANDLE h, INPUT_RECORD *record) {
 	DWORD written;
 	if (likely(WriteConsoleInputW(h, record, 1, &written))) {
@@ -126,8 +142,17 @@ uint32_t testTty_resizeEvent(MosaicTestTty *testTty, int columns, int rows, int 
 }
 
 uint32_t testTty_free(MosaicTestTty *testTty) {
+	uint32_t result = 0;
+
+	if (!CloseHandle(testTty->stdout_read)) {
+		result = GetLastError();
+	}
+	if (!CloseHandle(testTty->stdout_write) && result == 0) {
+		result = GetLastError();
+	}
+
 	free(testTty);
-	return 0;
+	return result;
 }
 
 #endif

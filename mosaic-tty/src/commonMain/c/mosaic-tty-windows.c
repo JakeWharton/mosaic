@@ -9,7 +9,8 @@
 
 MosaicTtyInitResult tty_initWithHandles(
 	HANDLE stdin,
-	HANDLE stdout
+	HANDLE stdout,
+	bool stdoutFake
 ) {
 	MosaicTtyInitResult result = {};
 
@@ -36,6 +37,7 @@ MosaicTtyInitResult tty_initWithHandles(
 
 	tty->stdin = stdin;
 	tty->stdout = stdout;
+	tty->stdout_fake = stdoutFake;
 	tty->interrupt_event = interruptEvent;
 
 	result.tty = tty;
@@ -53,7 +55,7 @@ static _Atomic(MosaicTty *) globalTty;
 MosaicTtyInitResult tty_init() {
 	HANDLE stdin = GetStdHandle(STD_INPUT_HANDLE);
 	HANDLE stdout = GetStdHandle(STD_OUTPUT_HANDLE);
-	MosaicTtyInitResult result = tty_initWithHandles(stdin, stdout);
+	MosaicTtyInitResult result = tty_initWithHandles(stdin, stdout, false);
 
 	MosaicTty *tty = result.tty;
 	MosaicTty *expected = NULL;
@@ -180,13 +182,15 @@ uint32_t tty_enableRawMode(MosaicTty *tty) {
 		result = GetLastError();
 		goto ret;
 	}
-	if (unlikely(GetConsoleMode(tty->stdout, &output_mode) == 0)) {
-		result = GetLastError();
-		goto ret;
-	}
-	if (unlikely((output_code_page = GetConsoleOutputCP()) == 0)) {
-		result = GetLastError();
-		goto ret;
+	if (!tty->stdout_fake) {
+		if (unlikely(GetConsoleMode(tty->stdout, &output_mode) == 0)) {
+			result = GetLastError();
+			goto ret;
+		}
+		if (unlikely((output_code_page = GetConsoleOutputCP()) == 0)) {
+			result = GetLastError();
+			goto ret;
+		}
 	}
 
 	// https://learn.microsoft.com/en-us/windows/console/setconsolemode
@@ -217,16 +221,18 @@ uint32_t tty_enableRawMode(MosaicTty *tty) {
 		result = GetLastError();
 		goto ret;
 	}
-	if (unlikely(SetConsoleMode(tty->stdout, stdoutMode) == 0)) {
-		result = GetLastError();
-		SetConsoleMode(tty->stdin, input_mode);
-		goto ret;
-	}
-	if (unlikely(SetConsoleOutputCP(stdoutCp) == 0)) {
-		result = GetLastError();
-		SetConsoleMode(tty->stdin, input_mode);
-		SetConsoleMode(tty->stdout, output_mode);
-		goto ret;
+	if (!tty->stdout_fake) {
+		if (unlikely(SetConsoleMode(tty->stdout, stdoutMode) == 0)) {
+			result = GetLastError();
+			SetConsoleMode(tty->stdin, input_mode);
+			goto ret;
+		}
+		if (unlikely(SetConsoleOutputCP(stdoutCp) == 0)) {
+			result = GetLastError();
+			SetConsoleMode(tty->stdin, input_mode);
+			SetConsoleMode(tty->stdout, output_mode);
+			goto ret;
+		}
 	}
 
 	tty->saved_input_mode = input_mode;
@@ -263,11 +269,13 @@ uint32_t tty_reset(MosaicTty *tty) {
 		if (unlikely(!SetConsoleMode(tty->stdin, tty->saved_input_mode))) {
 			result = GetLastError();
 		}
-		if (unlikely(!SetConsoleMode(tty->stdout, tty->saved_output_mode) && result == 0)) {
-			result = GetLastError();
-		}
-		if (unlikely(!SetConsoleOutputCP(tty->saved_output_code_page) && result == 0)) {
-			result = GetLastError();
+		if (!tty->stdout_fake) {
+			if (unlikely(!SetConsoleMode(tty->stdout, tty->saved_output_mode) && result == 0)) {
+				result = GetLastError();
+			}
+			if (unlikely(!SetConsoleOutputCP(tty->saved_output_code_page) && result == 0)) {
+				result = GetLastError();
+			}
 		}
 		tty->saved_input_mode = 0;
 		tty->saved_output_mode = 0;

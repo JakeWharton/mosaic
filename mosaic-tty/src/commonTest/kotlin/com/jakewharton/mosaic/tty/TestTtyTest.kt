@@ -38,6 +38,52 @@ class TestTtyTest {
 		}
 	}
 
+	@Test fun readWhatWasWritten() {
+		tty.write("hello")
+
+		val bufferA = ByteArray(10) { 'x'.code.toByte() }
+		val readA = testTty.read(bufferA, 0, 10)
+		assertThat(readA, "readA").isEqualTo(5)
+		assertThat(bufferA.decodeToString()).isEqualTo("helloxxxxx")
+
+		tty.write("world")
+
+		val bufferB = ByteArray(10) { 'x'.code.toByte() }
+		val readB = testTty.read(bufferB, 0, 10)
+		assertThat(readB, "readB").isEqualTo(5)
+		assertThat(bufferB.decodeToString()).isEqualTo("worldxxxxx")
+	}
+
+	@Test fun readOnlyUpToCount() {
+		tty.write("abcdefghij")
+
+		val buffer = ByteArray(10) { 'x'.code.toByte() }
+		val read = testTty.read(buffer, 0, 5)
+		assertThat(read).isEqualTo(5)
+		assertThat(buffer.decodeToString()).isEqualTo("abcdexxxxx")
+
+		// Drain the TTY output buffer, otherwise resetting raw mode will hang on its flush.
+		testTty.read(5)
+	}
+
+	@Test fun readUnderflow() {
+		tty.write("hello")
+
+		val buffer = ByteArray(10) { 'x'.code.toByte() }
+		val read = testTty.read(buffer, 0, 10)
+		assertThat(read).isEqualTo(5)
+		assertThat(buffer.decodeToString()).isEqualTo("helloxxxxx")
+	}
+
+	@Test fun readAtOffset() {
+		tty.write("hello")
+
+		val buffer = ByteArray(10) { 'x'.code.toByte() }
+		val read = testTty.read(buffer, 5, 5)
+		assertThat(read).isEqualTo(5)
+		assertThat(buffer.decodeToString()).isEqualTo("xxxxxhello")
+	}
+
 	@Test fun writeOnlyUpToCount() {
 		val written = testTty.write("abcdefghij".encodeToByteArray(), 0, 5)
 		assertThat(written).isEqualTo(5)
