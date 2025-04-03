@@ -2,9 +2,15 @@ package com.jakewharton.mosaic.tty
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import assertk.assertions.isZero
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runTest
 
 class TestTtyTest {
 	private val testTty = TestTty.create()
@@ -82,6 +88,22 @@ class TestTtyTest {
 		val read = testTty.read(buffer, 5, 5)
 		assertThat(read).isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("xxxxxhello")
+	}
+
+	@Test fun readCanBeInterrupted() = runTest {
+		backgroundScope.launch(Dispatchers.Default) {
+			delay(150.milliseconds)
+			testTty.interruptRead()
+		}
+		val readA = testTty.read(ByteArray(10), 0, 10)
+		assertThat(readA).isZero()
+
+		backgroundScope.launch(Dispatchers.Default) {
+			delay(150.milliseconds)
+			testTty.interruptRead()
+		}
+		val readB = testTty.read(ByteArray(10), 0, 10)
+		assertThat(readB).isZero()
 	}
 
 	@Test fun writeOnlyUpToCount() {

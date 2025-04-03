@@ -24,6 +24,9 @@ public expect class TestTty : AutoCloseable {
 	 */
 	public fun read(buffer: ByteArray, offset: Int, count: Int): Int
 
+	/** Signal blocking calls to [read] to wake up and return 0. */
+	public fun interruptRead()
+
 	/**
 	 * Send a focus event to [tty]'s callback.
 	 *

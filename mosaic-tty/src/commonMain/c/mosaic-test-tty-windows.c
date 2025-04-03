@@ -4,16 +4,20 @@
 #include "mosaic-test-tty.h"
 
 #include "cutils.h"
+#include <stdatomic.h>
 #include <windows.h>
 
 typedef struct MosaicTestTtyImpl {
 	MosaicTty *tty;
 	HANDLE conout_read;
 	HANDLE conout_write;
+	atomic_bool interrupt;
 } MosaicTestTtyImpl;
 
 MosaicTestTtyInitResult testTty_init() {
 	MosaicTestTtyInitResult result = {};
+
+	// TODO Atomic boolean guaranteeing single instance
 
 	MosaicTestTtyImpl *testTty = calloc(1, sizeof(MosaicTestTtyImpl));
 	if (unlikely(testTty == NULL)) {
@@ -24,11 +28,11 @@ MosaicTestTtyInitResult testTty_init() {
 	HANDLE conin = CreateFile(TEXT("CONIN$"), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
 	if (unlikely(conin == INVALID_HANDLE_VALUE)) {
 		result.error = GetLastError();
-		goto err;
+		goto err_free;
 	}
 	if (unlikely(SetConsoleMode(conin, ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT | ENABLE_EXTENDED_FLAGS) == 0)) {
 		result.error = GetLastError();
-		goto err;
+		goto err_conin;
 	}
 
 	// Ensure we don't start with existing records in the buffer.
@@ -38,7 +42,7 @@ MosaicTestTtyInitResult testTty_init() {
 	HANDLE conoutWrite;
 	if (unlikely(!CreatePipe(&conoutRead, &conoutWrite, NULL, 0))) {
 		result.error = GetLastError();
-		goto err;
+		goto err_conin;
 	}
 
 	MosaicTtyInitResult ttyInitResult = tty_initWithHandles(conin, conoutWrite, true);
@@ -46,8 +50,9 @@ MosaicTestTtyInitResult testTty_init() {
 		CloseHandle(conoutRead);
 		CloseHandle(conoutWrite);
 		result.error = ttyInitResult.error;
-		goto err;
+		goto err_conout;
 	}
+
 	testTty->tty = ttyInitResult.tty;
 	testTty->conout_read = conoutRead;
 	testTty->conout_write = conoutWrite;
@@ -57,7 +62,14 @@ MosaicTestTtyInitResult testTty_init() {
 	ret:
 	return result;
 
-	err:
+	err_conout:
+	CloseHandle(conoutRead);
+	CloseHandle(conoutWrite);
+
+	err_conin:
+	CloseHandle(conin);
+
+	err_free:
 	free(testTty);
 	goto ret;
 }
@@ -95,14 +107,39 @@ MosaicTtyIoResult testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int cou
 MosaicTtyIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffer, int count) {
 	MosaicTtyIoResult result = {};
 
-	DWORD c;
-	if (ReadFile(testTty->conout_read, buffer, count, &c, NULL)) {
-		result.count = c;
-	} else {
-		result.error = GetLastError();
+	// Perform a spin loop to check for data or interrupt. We can't do a normal wait because pipes
+	// do not signal properly. Since this is only for testing, the busy wait isn't a huge deal.
+	for (;;) {
+		DWORD available;
+		if (!PeekNamedPipe(testTty->conout_read, NULL, 0, NULL, &available, NULL)) {
+			goto err;
+		}
+		if (available) {
+			DWORD c;
+			if (!ReadFile(testTty->conout_read, buffer, count, &c, NULL)) {
+				goto err;
+			}
+			result.count = c;
+			break;
+		}
+		if (atomic_load(&testTty->interrupt)) {
+			atomic_store(&testTty->interrupt, false);
+			// result.count will be 0
+			break;
+		}
 	}
 
+	ret:
 	return result;
+
+	err:
+	result.error = GetLastError();
+	goto ret;
+}
+
+uint32_t testTty_interruptRead(MosaicTestTty *testTty) {
+	atomic_store(&testTty->interrupt, true);
+	return 0;
 }
 
 static uint32_t writeRecord(HANDLE h, INPUT_RECORD *record) {

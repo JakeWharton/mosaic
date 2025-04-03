@@ -13,6 +13,8 @@
 
 typedef struct MosaicTestTtyImpl {
 	int fd;
+	int interrupt_read_fd;
+	int interrupt_write_fd;
 	MosaicTty *tty;
 } MosaicTestTtyImpl;
 
@@ -25,29 +27,36 @@ MosaicTestTtyInitResult testTty_init() {
 		goto ret;
 	}
 
+	int interrupt_pipe[2];
+	if (unlikely(pipe(interrupt_pipe)) != 0) {
+		result.error = errno;
+		goto err_free;
+	}
+
 	// Note: the terms of art here appear to be "master" and "slave".
 	// We use "parent" and "child" instead, respectively.
 	int parentFd = posix_openpt(O_RDWR | O_NOCTTY);
 	if (unlikely(parentFd == -1 || grantpt(parentFd) || unlockpt(parentFd))) {
 		result.error = errno;
-		goto err;
+		goto err_pipes;
 	}
 
 	char *childName = ptsname(parentFd);
 	int childFd = open(childName, O_RDWR | O_NOCTTY);
-
 	if (unlikely(childFd == -1)) {
 		result.error = errno;
-		goto err;
+		goto err_parent;
 	}
 
 	MosaicTtyInitResult ttyInitResult = tty_initWithFd(childFd);
 	if (unlikely(ttyInitResult.error)) {
 		result.error = ttyInitResult.error;
-		goto err;
+		goto err_child;
 	}
 
 	testTty->fd = parentFd;
+	testTty->interrupt_read_fd = interrupt_pipe[0];
+	testTty->interrupt_write_fd = interrupt_pipe[1];
 	testTty->tty = ttyInitResult.tty;
 
 	result.testTty = testTty;
@@ -55,7 +64,17 @@ MosaicTestTtyInitResult testTty_init() {
 	ret:
 	return result;
 
-	err:
+	err_child:
+	close(childFd);
+
+	err_parent:
+	close(parentFd);
+
+	err_pipes:
+	close(interrupt_pipe[0]);
+	close(interrupt_pipe[1]);
+
+	err_free:
 	free(testTty);
 	goto ret;
 }
@@ -65,29 +84,17 @@ MosaicTty *testTty_getTty(MosaicTestTty *testTty) {
 }
 
 MosaicTtyIoResult testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int count) {
-	MosaicTtyIoResult result = {};
-
-	int written = write(testTty->fd, buffer, count);
-	if (written != -1) {
-		result.count = written;
-	} else {
-		result.error = errno;
-	}
-
-	return result;
+	return tty_writeInternal(testTty->fd, buffer, count);
 }
 
 MosaicTtyIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffer, int count) {
-	MosaicTtyIoResult result = {};
+	return tty_readInternal(testTty->fd, testTty->interrupt_read_fd, buffer, count, NULL);
+}
 
-	int c = read(testTty->fd, buffer, count);
-	if (c != -1) {
-		result.count = c;
-	} else {
-		result.error = errno;
-	}
-
-	return result;
+uint32_t testTty_interruptRead(MosaicTestTty *testTty) {
+	uint8_t space = ' ';
+	MosaicTtyIoResult result = tty_writeInternal(testTty->interrupt_write_fd, &space, 1);
+	return result.error;
 }
 
 uint32_t testTty_focusEvent(MosaicTestTty *testTty UNUSED, bool focused UNUSED) {
@@ -117,6 +124,13 @@ uint32_t testTty_free(MosaicTestTty *testTty) {
 	uint32_t result = 0;
 
 	if (unlikely(close(testTty->fd) != 0)) {
+		result = errno;
+	}
+
+	if (unlikely(close(testTty->interrupt_read_fd) != 0 && result == 0)) {
+		result = errno;
+	}
+	if (unlikely(close(testTty->interrupt_write_fd) != 0 && result == 0)) {
 		result = errno;
 	}
 

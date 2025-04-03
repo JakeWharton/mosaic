@@ -48,6 +48,10 @@ public actual class TestTty private constructor(
 		}
 	}
 
+	public actual fun interruptRead() {
+		testTty_interruptRead(ptr)
+	}
+
 	public actual fun focusEvent(focused: Boolean) {
 		testTty_focusEvent(ptr, focused)
 	}

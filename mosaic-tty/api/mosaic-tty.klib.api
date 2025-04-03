@@ -12,6 +12,7 @@ final class com.jakewharton.mosaic.tty/TestTty : kotlin/AutoCloseable { // com.j
 
     final fun close() // com.jakewharton.mosaic.tty/TestTty.close|close(){}[0]
     final fun focusEvent(kotlin/Boolean) // com.jakewharton.mosaic.tty/TestTty.focusEvent|focusEvent(kotlin.Boolean){}[0]
+    final fun interruptRead() // com.jakewharton.mosaic.tty/TestTty.interruptRead|interruptRead(){}[0]
     final fun keyEvent() // com.jakewharton.mosaic.tty/TestTty.keyEvent|keyEvent(){}[0]
     final fun mouseEvent() // com.jakewharton.mosaic.tty/TestTty.mouseEvent|mouseEvent(){}[0]
     final fun read(kotlin/ByteArray, kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.tty/TestTty.read|read(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
