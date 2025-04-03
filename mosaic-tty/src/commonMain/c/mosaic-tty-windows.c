@@ -8,9 +8,9 @@
 #include <windows.h>
 
 MosaicTtyInitResult tty_initWithHandles(
-	HANDLE stdin,
-	HANDLE stdout,
-	bool stdoutFake
+	HANDLE conin,
+	HANDLE conout,
+	bool conoutFake
 ) {
 	MosaicTtyInitResult result = {};
 
@@ -20,11 +20,11 @@ MosaicTtyInitResult tty_initWithHandles(
 		goto ret;
 	}
 
-	if (unlikely(stdin == INVALID_HANDLE_VALUE)) {
+	if (unlikely(conin == INVALID_HANDLE_VALUE)) {
 		result.error = GetLastError();
 		goto err;
 	}
-	if (unlikely(stdout == INVALID_HANDLE_VALUE)) {
+	if (unlikely(conout == INVALID_HANDLE_VALUE)) {
 		result.error = GetLastError();
 		goto err;
 	}
@@ -35,9 +35,9 @@ MosaicTtyInitResult tty_initWithHandles(
 		goto err;
 	}
 
-	tty->stdin = stdin;
-	tty->stdout = stdout;
-	tty->stdout_fake = stdoutFake;
+	tty->conin = conin;
+	tty->conout = conout;
+	tty->conout_fake = conoutFake;
 	tty->interrupt_event = interruptEvent;
 
 	result.tty = tty;
@@ -53,9 +53,9 @@ MosaicTtyInitResult tty_initWithHandles(
 static _Atomic(MosaicTty *) globalTty;
 
 MosaicTtyInitResult tty_init() {
-	HANDLE stdin = GetStdHandle(STD_INPUT_HANDLE);
-	HANDLE stdout = GetStdHandle(STD_OUTPUT_HANDLE);
-	MosaicTtyInitResult result = tty_initWithHandles(stdin, stdout, false);
+	HANDLE conin = CreateFile(TEXT("CONIN$"), GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, 0, 0);
+	HANDLE conout = CreateFile(TEXT("CONOUT$"), GENERIC_WRITE, FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
+	MosaicTtyInitResult result = tty_initWithHandles(conin, conout, false);
 
 	MosaicTty *tty = result.tty;
 	MosaicTty *expected = NULL;
@@ -90,7 +90,7 @@ MosaicTtyIoResult tty_readWithTimeout(
 	MosaicTtyIoResult result = {};
 
 	DWORD waitResult;
-	HANDLE waitHandles[2] = { tty->stdin, tty->interrupt_event };
+	HANDLE waitHandles[2] = { tty->conin, tty->interrupt_event };
 
 	loop:
 	waitResult = WaitForMultipleObjects(2, waitHandles, FALSE, timeoutMillis);
@@ -98,7 +98,7 @@ MosaicTtyIoResult tty_readWithTimeout(
 		INPUT_RECORD *records = tty->records;
 		int recordRequest = recordsCount > count ? count : recordsCount;
 		DWORD recordsRead = 0;
-		if (unlikely(!ReadConsoleInputW(tty->stdin, records, recordRequest, &recordsRead))) {
+		if (unlikely(!ReadConsoleInputW(tty->conin, records, recordRequest, &recordsRead))) {
 			goto err;
 		}
 
@@ -159,7 +159,7 @@ MosaicTtyIoResult tty_write(MosaicTty *tty, uint8_t *buffer, int count) {
 	MosaicTtyIoResult result = {};
 
 	DWORD written;
-	if (WriteFile(tty->stdout, buffer, count, &written, NULL)) {
+	if (WriteFile(tty->conout, buffer, count, &written, NULL)) {
 		result.count = written;
 	} else {
 		result.error = GetLastError();
@@ -178,12 +178,12 @@ uint32_t tty_enableRawMode(MosaicTty *tty) {
 	DWORD input_mode;
 	DWORD output_mode;
 	UINT output_code_page;
-	if (unlikely(GetConsoleMode(tty->stdin, &input_mode) == 0)) {
+	if (unlikely(GetConsoleMode(tty->conin, &input_mode) == 0)) {
 		result = GetLastError();
 		goto ret;
 	}
-	if (!tty->stdout_fake) {
-		if (unlikely(GetConsoleMode(tty->stdout, &output_mode) == 0)) {
+	if (!tty->conout_fake) {
+		if (unlikely(GetConsoleMode(tty->conout, &output_mode) == 0)) {
 			result = GetLastError();
 			goto ret;
 		}
@@ -194,7 +194,7 @@ uint32_t tty_enableRawMode(MosaicTty *tty) {
 	}
 
 	// https://learn.microsoft.com/en-us/windows/console/setconsolemode
-	const int stdinMode = 0
+	const int coninMode = 0
 		// Disable quick edit mode.
 		| ENABLE_EXTENDED_FLAGS
 		// Report changes to the mouse position.
@@ -204,7 +204,7 @@ uint32_t tty_enableRawMode(MosaicTty *tty) {
 		// Report changes to the buffer size.
 		| ENABLE_WINDOW_INPUT
 		;
-	const int stdoutMode = 0
+	const int conoutMode = 0
 		// Do not wrap cursor to next line automatically when writing final column.
 		| DISABLE_NEWLINE_AUTO_RETURN
 		// Allow color sequences to affect characters in all locales.
@@ -215,22 +215,22 @@ uint32_t tty_enableRawMode(MosaicTty *tty) {
 		| ENABLE_VIRTUAL_TERMINAL_PROCESSING
 		;
 	// UTF-8 per https://learn.microsoft.com/en-us/windows/win32/intl/code-page-identifiers.
-	const int stdoutCp = 65001;
+	const int conoutCp = 65001;
 
-	if (unlikely(SetConsoleMode(tty->stdin, stdinMode) == 0)) {
+	if (unlikely(SetConsoleMode(tty->conin, coninMode) == 0)) {
 		result = GetLastError();
 		goto ret;
 	}
-	if (!tty->stdout_fake) {
-		if (unlikely(SetConsoleMode(tty->stdout, stdoutMode) == 0)) {
+	if (!tty->conout_fake) {
+		if (unlikely(SetConsoleMode(tty->conout, conoutMode) == 0)) {
 			result = GetLastError();
-			SetConsoleMode(tty->stdin, input_mode);
+			SetConsoleMode(tty->conin, input_mode);
 			goto ret;
 		}
-		if (unlikely(SetConsoleOutputCP(stdoutCp) == 0)) {
+		if (unlikely(SetConsoleOutputCP(conoutCp) == 0)) {
 			result = GetLastError();
-			SetConsoleMode(tty->stdin, input_mode);
-			SetConsoleMode(tty->stdout, output_mode);
+			SetConsoleMode(tty->conin, input_mode);
+			SetConsoleMode(tty->conout, output_mode);
 			goto ret;
 		}
 	}
@@ -252,7 +252,7 @@ MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty) {
 	MosaicTtyTerminalSizeResult result = {};
 
 	CONSOLE_SCREEN_BUFFER_INFO info;
-	if (likely(GetConsoleScreenBufferInfo(tty->stdout, &info))) {
+	if (likely(GetConsoleScreenBufferInfo(tty->conout, &info))) {
 		result.columns = info.dwSize.X;
 		result.rows = info.dwSize.Y;
 	} else {
@@ -266,11 +266,11 @@ uint32_t tty_reset(MosaicTty *tty) {
 	uint32_t result = 0;
 
 	if (tty->saved_input_mode) {
-		if (unlikely(!SetConsoleMode(tty->stdin, tty->saved_input_mode))) {
+		if (unlikely(!SetConsoleMode(tty->conin, tty->saved_input_mode))) {
 			result = GetLastError();
 		}
-		if (!tty->stdout_fake) {
-			if (unlikely(!SetConsoleMode(tty->stdout, tty->saved_output_mode) && result == 0)) {
+		if (!tty->conout_fake) {
+			if (unlikely(!SetConsoleMode(tty->conout, tty->saved_output_mode) && result == 0)) {
 				result = GetLastError();
 			}
 			if (unlikely(!SetConsoleOutputCP(tty->saved_output_code_page) && result == 0)) {
