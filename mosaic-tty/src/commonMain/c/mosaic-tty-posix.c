@@ -74,26 +74,24 @@ void tty_setCallback(MosaicTty *tty, MosaicTtyCallback *callback) {
 	tty->callback = callback;
 }
 
-static MosaicTtyIoResult tty_readInternal(
-	MosaicTty *tty,
+MosaicTtyIoResult tty_readInternal(
+	int fd,
+	int interruptFd,
 	uint8_t *buffer,
 	int count,
 	struct timeval *timeout
 ) {
 	MosaicTtyIoResult result = {};
 
-	int ttyFd = tty->fd;
-	int interruptReadFd = tty->interrupt_read_fd;
-
 	fd_set fds;
 	FD_ZERO(&fds);
-	FD_SET(ttyFd, &fds);
-	FD_SET(interruptReadFd, &fds);
+	FD_SET(fd, &fds);
+	FD_SET(interruptFd, &fds);
 
-	int nfds = 1 + ((ttyFd > interruptReadFd) ? ttyFd : interruptReadFd);
+	int nfds = 1 + ((fd > interruptFd) ? fd : interruptFd);
 	if (likely(select(nfds, &fds, NULL, NULL, timeout) >= 0)) {
-		if (likely(FD_ISSET(ttyFd, &fds) != 0)) {
-			int c = read(ttyFd, buffer, count);
+		if (likely(FD_ISSET(fd, &fds) != 0)) {
+			int c = read(fd, buffer, count);
 			if (likely(c > 0)) {
 				result.count = c;
 			} else if (c == 0) {
@@ -101,10 +99,10 @@ static MosaicTtyIoResult tty_readInternal(
 			} else {
 				goto err;
 			}
-		} else if (unlikely(FD_ISSET(interruptReadFd, &fds) != 0)) {
+		} else if (unlikely(FD_ISSET(interruptFd, &fds) != 0)) {
 			// Consume the single notification byte to clear the ready state for the next call.
-			int c = read(interruptReadFd, buffer, 1);
-			if (unlikely(c < 0)) {
+			uint8_t space;
+			if (unlikely(read(interruptFd, &space, 1) < 0)) {
 				goto err;
 			}
 		}
@@ -122,7 +120,7 @@ static MosaicTtyIoResult tty_readInternal(
 }
 
 MosaicTtyIoResult tty_read(MosaicTty *tty, uint8_t *buffer, int count) {
-	return tty_readInternal(tty, buffer, count, NULL);
+	return tty_readInternal(tty->fd, tty->interrupt_read_fd, buffer, count, NULL);
 }
 
 MosaicTtyIoResult tty_readWithTimeout(
@@ -135,7 +133,7 @@ MosaicTtyIoResult tty_readWithTimeout(
 	timeout.tv_sec = 0;
 	timeout.tv_usec = timeoutMillis * 1000;
 
-	return tty_readInternal(tty, buffer, count, &timeout);
+	return tty_readInternal(tty->fd, tty->interrupt_read_fd, buffer, count, &timeout);
 }
 
 MosaicTtyIoResult tty_writeInternal(int writeFd, uint8_t *buffer, int count) {
@@ -152,8 +150,8 @@ MosaicTtyIoResult tty_writeInternal(int writeFd, uint8_t *buffer, int count) {
 }
 
 uint32_t tty_interruptRead(MosaicTty *tty) {
-	uint8_t space[1] = { ' ' };
-	MosaicTtyIoResult result = tty_writeInternal(tty->interrupt_write_fd, space, 1);
+	uint8_t space = ' ';
+	MosaicTtyIoResult result = tty_writeInternal(tty->interrupt_write_fd, &space, 1);
 	return result.error;
 }
 

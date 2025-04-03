@@ -5,6 +5,7 @@ public final class com/jakewharton/mosaic/tty/TestTty : java/lang/AutoCloseable 
 	public static final fun create ()Lcom/jakewharton/mosaic/tty/TestTty;
 	public final fun focusEvent (Z)V
 	public final fun getTty ()Lcom/jakewharton/mosaic/tty/Tty;
+	public final fun interruptRead ()V
 	public final fun keyEvent ()V
 	public final fun mouseEvent ()V
 	public final fun read ([BII)I

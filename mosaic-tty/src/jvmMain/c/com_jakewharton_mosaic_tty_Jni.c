@@ -429,6 +429,19 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyRead(
 }
 
 JNIEXPORT void JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_testTtyInterruptRead(
+	JNIEnv *env,
+	jclass type UNUSED,
+	jlong testTtyOpaque
+) {
+	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
+	uint32_t error = testTty_interruptRead(testTty);
+	if (unlikely(error)) {
+		throwIse(env, error);
+	}
+}
+
+JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_testTtyFocusEvent(
 	JNIEnv *env UNUSED,
 	jclass type UNUSED,

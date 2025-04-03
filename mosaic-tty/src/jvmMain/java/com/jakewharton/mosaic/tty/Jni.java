@@ -112,6 +112,8 @@ final class Jni {
 
 	static native int testTtyRead(long testTtyPtr, byte[] buffer, int offset, int count);
 
+	static native void testTtyInterruptRead(long testTtyPtr);
+
 	static native void testTtyFocusEvent(long testTtyPtr, boolean focused);
 
 	static native void testTtyKeyEvent(long testTtyPtr);

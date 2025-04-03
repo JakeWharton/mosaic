@@ -28,6 +28,10 @@ public actual class TestTty private constructor(
 		return Jni.testTtyRead(testTtyPtr, buffer, offset, count)
 	}
 
+	public actual fun interruptRead() {
+		Jni.testTtyInterruptRead(testTtyPtr)
+	}
+
 	public actual fun focusEvent(focused: Boolean) {
 		Jni.testTtyFocusEvent(testTtyPtr, focused)
 	}
