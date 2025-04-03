@@ -8,8 +8,8 @@
 
 typedef struct MosaicTestTtyImpl {
 	MosaicTty *tty;
-	HANDLE stdout_read;
-	HANDLE stdout_write;
+	HANDLE conout_read;
+	HANDLE conout_write;
 } MosaicTestTtyImpl;
 
 MosaicTestTtyInitResult testTty_init() {
@@ -21,36 +21,36 @@ MosaicTestTtyInitResult testTty_init() {
 		goto ret;
 	}
 
-	HANDLE stdin = CreateFile(TEXT("CONIN$"), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
-	if (unlikely(stdin == INVALID_HANDLE_VALUE)) {
+	HANDLE conin = CreateFile(TEXT("CONIN$"), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
+	if (unlikely(conin == INVALID_HANDLE_VALUE)) {
 		result.error = GetLastError();
 		goto err;
 	}
-	if (unlikely(SetConsoleMode(stdin, ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT | ENABLE_EXTENDED_FLAGS) == 0)) {
+	if (unlikely(SetConsoleMode(conin, ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT | ENABLE_EXTENDED_FLAGS) == 0)) {
 		result.error = GetLastError();
 		goto err;
 	}
 
 	// Ensure we don't start with existing records in the buffer.
-	FlushConsoleInputBuffer(stdin);
+	FlushConsoleInputBuffer(conin);
 
-	HANDLE stdoutRead;
-	HANDLE stdoutWrite;
-	if (unlikely(!CreatePipe(&stdoutRead, &stdoutWrite, NULL, 0))) {
+	HANDLE conoutRead;
+	HANDLE conoutWrite;
+	if (unlikely(!CreatePipe(&conoutRead, &conoutWrite, NULL, 0))) {
 		result.error = GetLastError();
 		goto err;
 	}
 
-	MosaicTtyInitResult ttyInitResult = tty_initWithHandles(stdin, stdoutWrite, true);
+	MosaicTtyInitResult ttyInitResult = tty_initWithHandles(conin, conoutWrite, true);
 	if (unlikely(ttyInitResult.error)) {
-		CloseHandle(stdoutRead);
-		CloseHandle(stdoutWrite);
+		CloseHandle(conoutRead);
+		CloseHandle(conoutWrite);
 		result.error = ttyInitResult.error;
 		goto err;
 	}
 	testTty->tty = ttyInitResult.tty;
-	testTty->stdout_read = stdoutRead;
-	testTty->stdout_write = stdoutWrite;
+	testTty->conout_read = conoutRead;
+	testTty->conout_write = conoutWrite;
 
 	result.testTty = testTty;
 
@@ -80,7 +80,7 @@ MosaicTtyIoResult testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int cou
 	}
 
 	DWORD written;
-	if (WriteConsoleInputW(testTty->tty->stdin, records, count, &written)) {
+	if (WriteConsoleInputW(testTty->tty->conin, records, count, &written)) {
 		result.count = written;
 	} else {
 		result.error = GetLastError();
@@ -96,7 +96,7 @@ MosaicTtyIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffer, int coun
 	MosaicTtyIoResult result = {};
 
 	DWORD c;
-	if (ReadFile(testTty->stdout_read, buffer, count, &c, NULL)) {
+	if (ReadFile(testTty->conout_read, buffer, count, &c, NULL)) {
 		result.count = c;
 	} else {
 		result.error = GetLastError();
@@ -120,7 +120,7 @@ uint32_t testTty_focusEvent(MosaicTestTty *testTty, bool focused) {
 	INPUT_RECORD record;
 	record.EventType = FOCUS_EVENT;
 	record.Event.FocusEvent.bSetFocus = focused;
-	return writeRecord(testTty->tty->stdin, &record);
+	return writeRecord(testTty->tty->conin, &record);
 }
 
 uint32_t testTty_keyEvent(MosaicTestTty *testTty UNUSED) {
@@ -138,16 +138,16 @@ uint32_t testTty_resizeEvent(MosaicTestTty *testTty, int columns, int rows, int 
 	record.EventType = WINDOW_BUFFER_SIZE_EVENT;
 	record.Event.WindowBufferSizeEvent.dwSize.X = columns;
 	record.Event.WindowBufferSizeEvent.dwSize.Y = rows;
-	return writeRecord(testTty->tty->stdin, &record);
+	return writeRecord(testTty->tty->conin, &record);
 }
 
 uint32_t testTty_free(MosaicTestTty *testTty) {
 	uint32_t result = 0;
 
-	if (!CloseHandle(testTty->stdout_read)) {
+	if (!CloseHandle(testTty->conout_read)) {
 		result = GetLastError();
 	}
-	if (!CloseHandle(testTty->stdout_write) && result == 0) {
+	if (!CloseHandle(testTty->conout_write) && result == 0) {
 		result = GetLastError();
 	}
 
