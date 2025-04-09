@@ -104,10 +104,10 @@ public suspend fun Tty.asTerminalIn(
 		withFinalizationHook(
 			hook = {
 				setCallback(null)
-				if (toggleSystemTheme) print(systemThemeDisable)
-				if (toggleInBandResize) print(inBandResizeDisable)
-				if (toggleFocus) print(focusDisable)
-				if (toggleCursor) print(cursorEnable)
+				if (toggleSystemTheme) write(systemThemeDisable)
+				if (toggleInBandResize) write(inBandResizeDisable)
+				if (toggleFocus) write(focusDisable)
+				if (toggleCursor) write(cursorEnable)
 				reset()
 			},
 			block = {
@@ -121,7 +121,7 @@ public suspend fun Tty.asTerminalIn(
 		)
 	}
 
-	print("${CSI}0c")
+	write("${CSI}0c")
 	val debugBootstrap = env("MOSAIC_TTY_TERMINAL_DEBUG") == "true"
 	var stage = StageDeviceAttributes
 
@@ -147,7 +147,7 @@ public suspend fun Tty.asTerminalIn(
 		while (true) {
 			val event = parser.next() ?: break
 			if (stage != StageNormalOperation && debugBootstrap) {
-				print("$event\r\n")
+				write("$event\r\n")
 			}
 			when (event) {
 				is PrimaryDeviceAttributesEvent -> {
@@ -161,7 +161,7 @@ public suspend fun Tty.asTerminalIn(
 					}
 
 					stage = StageCapabilityQueries
-					print(
+					write(
 						"$CSI?$cursorMode\$p" +
 							"$CSI?$focusMode\$p" +
 							"$CSI?$synchronizedOutputMode\$p" +
@@ -186,7 +186,7 @@ public suspend fun Tty.asTerminalIn(
 							cursorVisibility = event.setting.isSupported
 							if (event.setting == Setting.Set) {
 								toggleCursor = true
-								print(cursorDisable)
+								write(cursorDisable)
 							}
 						}
 
@@ -196,7 +196,7 @@ public suspend fun Tty.asTerminalIn(
 								toggleFocus = true
 								// Enabling focus notification _might_ trigger an initial event. There is
 								// otherwise no explicit way to request the initial value.
-								print(focusEnable)
+								write(focusEnable)
 							}
 						}
 
@@ -208,7 +208,7 @@ public suspend fun Tty.asTerminalIn(
 							themeEvents = event.setting.isSupported
 							if (event.setting == Setting.Reset) {
 								toggleSystemTheme = true
-								print(
+								write(
 									systemThemeEnable +
 										"$CSI?996n", // Current system theme query.
 								)
@@ -220,7 +220,7 @@ public suspend fun Tty.asTerminalIn(
 							if (event.setting == Setting.Reset) {
 								toggleInBandResize = true
 								// Enabling in-band resize will trigger an initial event.
-								print(inBandResizeEnable)
+								write(inBandResizeEnable)
 							}
 						}
 					}
@@ -232,7 +232,7 @@ public suspend fun Tty.asTerminalIn(
 							// By enabling these modes (or by sending an explicit default value query after
 							// enabling the mode) wait for a reply about the default with a second DSR.
 							stage = StageDefaultQueries
-							print("${CSI}5n")
+							write("${CSI}5n")
 						} else {
 							stage = StageNormalOperation
 							bootstrapDone.complete(Unit)
@@ -323,7 +323,7 @@ public suspend fun Tty.asTerminalIn(
 	stage = StageNormalOperation
 
 	if (debugBootstrap) {
-		print("\r\n")
+		write("\r\n")
 	}
 
 	if (!toggleInBandResize) {
@@ -360,6 +360,16 @@ public suspend fun Tty.asTerminalIn(
 		events = events,
 		closeJob = interruptJob,
 	)
+}
+
+private fun Tty.write(s: String) {
+	val b = s.encodeToByteArray()
+	var offset = 0
+	while (offset < b.size) {
+		val written = write(b, offset, b.size - offset)
+		if (written == -1) throw EofException()
+		offset += written
+	}
 }
 
 internal fun detectAnsiLevel(): AnsiLevel {
