@@ -7,7 +7,7 @@ import kotlin.test.Test
 
 class EventParserApcKittyGraphicsEventTest : BaseEventParserTest() {
 	@Test fun pasteStart() {
-		testTty.writeHex("1b5f47693d33313b4f4b1b5c")
+		testTty.write("${APC}Gi=31;OK$ST")
 		assertThat(parser.next()).isEqualTo(KittyGraphicsEvent(31, "OK"))
 	}
 }

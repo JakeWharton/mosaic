@@ -7,6 +7,7 @@ internal const val APC = "${ESC}_"
 internal const val CSI = "$ESC["
 internal const val DCS = "${ESC}P"
 internal const val OSC = "$ESC]"
+internal const val SS3 = "${ESC}O"
 
 internal const val cursorMode = 25
 internal const val cursorEnable = "$CSI?${cursorMode}h"

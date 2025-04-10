@@ -23,96 +23,96 @@ import kotlin.test.Test
 
 class EventParserCsiKeyboardEventTest : BaseEventParserTest() {
 	@Test fun up() {
-		testTty.writeHex("1b5b41")
+		testTty.write("${CSI}A")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up))
 	}
 
 	@Test fun down() {
-		testTty.writeHex("1b5b42")
+		testTty.write("${CSI}B")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Down))
 	}
 
 	@Test fun right() {
-		testTty.writeHex("1b5b43")
+		testTty.write("${CSI}C")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Right))
 	}
 
 	@Test fun left() {
-		testTty.writeHex("1b5b44")
+		testTty.write("${CSI}D")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Left))
 	}
 
 	@Test fun begin() {
-		testTty.writeHex("1b5b45")
+		testTty.write("${CSI}E")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(KpBegin))
 	}
 
 	@Test fun end() {
-		testTty.writeHex("1b5b46")
+		testTty.write("${CSI}F")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(End))
 	}
 
 	@Test fun home() {
-		testTty.writeHex("1b5b48")
+		testTty.write("${CSI}H")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Home))
 	}
 
 	@Test fun modifierShiftUp() {
-		testTty.writeHex("1b5b313b3241")
+		testTty.write("${CSI}1;2A")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierShift))
 	}
 
 	@Test fun modifierAltUp() {
-		testTty.writeHex("1b5b313b3341")
+		testTty.write("${CSI}1;3A")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierAlt))
 	}
 
 	@Test fun modifierCtrlUp() {
-		testTty.writeHex("1b5b313b3541")
+		testTty.write("${CSI}1;5A")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierCtrl))
 	}
 
 	@Test fun modifierSuperUp() {
-		testTty.writeHex("1b5b313b3941")
+		testTty.write("${CSI}1;9A")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierSuper))
 	}
 
 	@Test fun modifierHyperUp() {
-		testTty.writeHex("1b5b313b313741")
+		testTty.write("${CSI}1;17A")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierHyper))
 	}
 
 	@Test fun modifierMetaUp() {
-		testTty.writeHex("1b5b313b333341")
+		testTty.write("${CSI}1;33A")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierMeta))
 	}
 
 	@Test fun modifierCapsLockUp() {
-		testTty.writeHex("1b5b313b363541")
+		testTty.write("${CSI}1;65A")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierCapsLock))
 	}
 
 	@Test fun modifierNumLockUp() {
-		testTty.writeHex("1b5b313b31323941")
+		testTty.write("${CSI}1;129A")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierNumLock))
 	}
 
 	@Test fun non1p0() {
-		testTty.writeHex("1b5b323b3248")
+		testTty.write("${CSI}2;2H")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b323b3248".hexToByteArray()),
 		)
 	}
 
 	@Test fun emptyModifier() {
-		testTty.writeHex("1b5b313b48")
+		testTty.write("${CSI}1;H")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b313b48".hexToByteArray()),
 		)
 	}
 
 	@Test fun nonDigitModifier() {
-		testTty.writeHex("1b5b313b2f48")
+		testTty.write("${CSI}1;/H")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b313b2f48".hexToByteArray()),
 		)

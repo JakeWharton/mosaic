@@ -8,29 +8,29 @@ import kotlin.test.Test
 
 class EventParserCsiKittyKeyboardQueryEventTest : BaseEventParserTest() {
 	@Test fun flagsNone() {
-		testTty.writeHex("1b5b3f3075")
+		testTty.write("$CSI?0u")
 		assertThat(parser.next()).isEqualTo(KittyKeyboardQueryEvent(0))
 	}
 
 	@Test fun flagsAll() {
-		testTty.writeHex("1b5b3f333175")
+		testTty.write("$CSI?31u")
 		assertThat(parser.next()).isEqualTo(KittyKeyboardQueryEvent(31))
 	}
 
 	@Test fun flagsUnknown() {
-		testTty.writeHex("1b5b3f31323875")
+		testTty.write("$CSI?128u")
 		assertThat(parser.next()).isEqualTo(KittyKeyboardQueryEvent(128))
 	}
 
 	@Test fun flagsMissing() {
-		testTty.writeHex("1b5b3f75")
+		testTty.write("$CSI?u")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3f75".hexToByteArray()),
 		)
 	}
 
 	@Test fun flagsNonDigit() {
-		testTty.writeHex("1b5b3f312b2075")
+		testTty.write("$CSI?1+ u")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3f312b2075".hexToByteArray()),
 		)

@@ -9,77 +9,77 @@ import kotlin.test.Test
 
 class EventParserCsiMouseEventTest : BaseEventParserTest() {
 	@Test fun motion() {
-		testTty.writeHex("1b5b4d434837")
+		testTty.write("${CSI}MCH7")
 		assertThat(parser.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Motion, Button.None),
 		)
 	}
 
 	@Test fun click() {
-		testTty.writeHex("1b5b4d204837")
+		testTty.write("${CSI}M H7")
 		assertThat(parser.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Press, Button.Left),
 		)
 	}
 
 	@Test fun drag() {
-		testTty.writeHex("1b5b4d404837")
+		testTty.write("${CSI}M@H7")
 		assertThat(parser.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Drag, Button.Left),
 		)
 	}
 
 	@Test fun clickMouseUp() {
-		testTty.writeHex("1b5b4d234837")
+		testTty.write("${CSI}M#H7")
 		assertThat(parser.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Press, Button.None),
 		)
 	}
 
 	@Test fun shiftClick() {
-		testTty.writeHex("1b5b4d244837")
+		testTty.write("${CSI}M\$H7")
 		assertThat(parser.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Press, Button.Left, shift = true),
 		)
 	}
 
 	@Test fun altClick() {
-		testTty.writeHex("1b5b4d284837")
+		testTty.write("${CSI}M(H7")
 		assertThat(parser.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Press, Button.Left, alt = true),
 		)
 	}
 
 	@Test fun ctrlClick() {
-		testTty.writeHex("1b5b4d304837")
+		testTty.write("${CSI}M0H7")
 		assertThat(parser.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Press, Button.Left, ctrl = true),
 		)
 	}
 
 	@Test fun clickRight() {
-		testTty.writeHex("1b5b4d224837")
+		testTty.write("${CSI}M\"H7")
 		assertThat(parser.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Press, Button.Right),
 		)
 	}
 
 	@Test fun clickMiddle() {
-		testTty.writeHex("1b5b4d214837")
+		testTty.write("${CSI}M!H7")
 		assertThat(parser.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Press, Button.Middle),
 		)
 	}
 
 	@Test fun clickWheelUp() {
-		testTty.writeHex("1b5b4d604837")
+		testTty.write("${CSI}M`H7")
 		assertThat(parser.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Press, Button.WheelUp),
 		)
 	}
 
 	@Test fun clickWheelDown() {
-		testTty.writeHex("1b5b4d614837")
+		testTty.write("${CSI}MaH7")
 		assertThat(parser.next()).isEqualTo(
 			MouseEvent(39, 22, Type.Press, Button.WheelDown),
 		)

@@ -8,14 +8,14 @@ import kotlin.test.Test
 
 class EventParserDcsCapabilityQueryEventTest : BaseEventParserTest() {
 	@Test fun unknownStatus() {
-		testTty.writeHex("1b50322b721b5c")
+		testTty.write("${DCS}2+r$ST")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b50322b721b5c".hexToByteArray()),
 		)
 	}
 
 	@Test fun failureEmpty() {
-		testTty.writeHex("1b50302b721b5c")
+		testTty.write("${DCS}0+r$ST")
 		assertThat(parser.next()).isEqualTo(
 			CapabilityQueryEvent(
 				success = false,
@@ -25,7 +25,7 @@ class EventParserDcsCapabilityQueryEventTest : BaseEventParserTest() {
 	}
 
 	@Test fun failureOneEntryNoValue() {
-		testTty.writeHex("1b50302b72353337351b5c")
+		testTty.write("${DCS}0+r5375$ST")
 		assertThat(parser.next()).isEqualTo(
 			CapabilityQueryEvent(
 				success = false,
@@ -35,28 +35,28 @@ class EventParserDcsCapabilityQueryEventTest : BaseEventParserTest() {
 	}
 
 	@Test fun failureOneEntryNoValueWithEquals() {
-		testTty.writeHex("1b50302b72353337353d1b5c")
+		testTty.write("${DCS}0+r5375=$ST")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b50302b72353337353d1b5c".hexToByteArray()),
 		)
 	}
 
 	@Test fun failureOneEntryWithValue() {
-		testTty.writeHex("1b50302b72353337353d35373635374135343635373236441b5c")
+		testTty.write("${DCS}0+r5375=57657A5465726D$ST")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b50302b72353337353d35373635374135343635373236441b5c".hexToByteArray()),
 		)
 	}
 
 	@Test fun successRequiresData() {
-		testTty.writeHex("1b50312b721b5c")
+		testTty.write("${DCS}1+r$ST")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b50312b721b5c".hexToByteArray()),
 		)
 	}
 
 	@Test fun successOneEntryNoValue() {
-		testTty.writeHex("1b50312b72353337351b5c")
+		testTty.write("${DCS}1+r5375$ST")
 		assertThat(parser.next()).isEqualTo(
 			CapabilityQueryEvent(
 				success = true,
@@ -66,7 +66,7 @@ class EventParserDcsCapabilityQueryEventTest : BaseEventParserTest() {
 	}
 
 	@Test fun successOneEntryNoValueWithEquals() {
-		testTty.writeHex("1b50312b72353337353d1b5c")
+		testTty.write("${DCS}1+r5375=$ST")
 		assertThat(parser.next()).isEqualTo(
 			CapabilityQueryEvent(
 				success = true,
@@ -76,7 +76,7 @@ class EventParserDcsCapabilityQueryEventTest : BaseEventParserTest() {
 	}
 
 	@Test fun successOneEntryWithValue() {
-		testTty.writeHex("1b50312b72353337353d35373635374135343635373236441b5c")
+		testTty.write("${DCS}1+r5375=57657A5465726D$ST")
 		assertThat(parser.next()).isEqualTo(
 			CapabilityQueryEvent(
 				success = true,
@@ -86,7 +86,7 @@ class EventParserDcsCapabilityQueryEventTest : BaseEventParserTest() {
 	}
 
 	@Test fun successMultipleEntries() {
-		testTty.writeHex("1b50312b72353337353d35373635374135343635373236443b3638363537393b3733373537303d1b5c")
+		testTty.write("${DCS}1+r5375=57657A5465726D;686579;737570=$ST")
 		assertThat(parser.next()).isEqualTo(
 			CapabilityQueryEvent(
 				success = true,
@@ -96,14 +96,14 @@ class EventParserDcsCapabilityQueryEventTest : BaseEventParserTest() {
 	}
 
 	@Test fun entryKeyOddNumberOfHex() {
-		testTty.writeHex("1b50312b723533371b5c")
+		testTty.write("${DCS}1+r537$ST")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b50312b723533371b5c".hexToByteArray()),
 		)
 	}
 
 	@Test fun entryValueOddNumberOfHex() {
-		testTty.writeHex("1b50312b72353337353d353736353741353436353732361b5c")
+		testTty.write("${DCS}1+r5375=57657A5465726$ST")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b50312b72353337353d353736353741353436353732361b5c".hexToByteArray()),
 		)

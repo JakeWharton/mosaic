@@ -7,12 +7,12 @@ import kotlin.test.Test
 
 class EventParserDcsEventVersionEventTest : BaseEventParserTest() {
 	@Test fun empty() {
-		testTty.writeHex("1b503e7c1b5c")
+		testTty.write("$DCS>|$ST")
 		assertThat(parser.next()).isEqualTo(TerminalVersionEvent(""))
 	}
 
 	@Test fun text() {
-		testTty.writeHex("1b503e7c68656c6c6f1b5c")
+		testTty.write("$DCS>|hello$ST")
 		assertThat(parser.next()).isEqualTo(TerminalVersionEvent("hello"))
 	}
 }

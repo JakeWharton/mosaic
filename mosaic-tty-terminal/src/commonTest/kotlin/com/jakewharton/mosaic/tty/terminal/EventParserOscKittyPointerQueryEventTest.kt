@@ -9,42 +9,42 @@ import kotlin.test.Test
 
 class EventParserOscKittyPointerQueryEventTest : BaseEventParserTest() {
 	@Test fun emptyFails() {
-		testTty.writeHex("1b5d32323b1b5c")
+		testTty.write("${OSC}22;$ST")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5d32323b1b5c".hexToByteArray()),
 		)
 	}
 
 	@Test fun valuesSingleFalse() {
-		testTty.writeHex("1b5d32323b301b5c")
+		testTty.write("${OSC}22;0$ST")
 		assertThat(parser.next()).isEqualTo(
 			KittyPointerQuerySupportEvent(booleanArrayOf(false)),
 		)
 	}
 
 	@Test fun valuesSingleTrue() {
-		testTty.writeHex("1b5d32323b311b5c")
+		testTty.write("${OSC}22;1$ST")
 		assertThat(parser.next()).isEqualTo(
 			KittyPointerQuerySupportEvent(booleanArrayOf(true)),
 		)
 	}
 
 	@Test fun valuesSingleValueTrailingCommaFails() {
-		testTty.writeHex("1b5d32323b312c1b5c")
+		testTty.write("${OSC}22;1,$ST")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5d32323b312c1b5c".hexToByteArray()),
 		)
 	}
 
 	@Test fun valuesMultiple() {
-		testTty.writeHex("1b5d32323b302c302c312c312c301b5c")
+		testTty.write("${OSC}22;0,0,1,1,0$ST")
 		assertThat(parser.next()).isEqualTo(
 			KittyPointerQuerySupportEvent(booleanArrayOf(false, false, true, true, false)),
 		)
 	}
 
 	@Test fun valuesTons() {
-		testTty.writeHex("1b5d32323b302c302c312c312c302c302c312c312c302c302c312c312c302c302c312c312c302c302c312c312c302c302c312c312c302c302c312c312c301b5c")
+		testTty.write("${OSC}22;0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0$ST")
 		assertThat(parser.next()).isEqualTo(
 			KittyPointerQuerySupportEvent(
 				booleanArrayOf(
@@ -62,28 +62,28 @@ class EventParserOscKittyPointerQueryEventTest : BaseEventParserTest() {
 	}
 
 	@Test fun nameSingleDigit() {
-		testTty.writeHex("1b5d32323b321b5c")
+		testTty.write("${OSC}22;2$ST")
 		assertThat(parser.next()).isEqualTo(
 			KittyPointerQueryNameEvent("2"),
 		)
 	}
 
 	@Test fun nameLeadingValueDigit() {
-		testTty.writeHex("1b5d32323b30611b5c")
+		testTty.write("${OSC}22;0a$ST")
 		assertThat(parser.next()).isEqualTo(
 			KittyPointerQueryNameEvent("0a"),
 		)
 	}
 
 	@Test fun nameValidRange() {
-		testTty.writeHex("1b5d32323b6162636465666768696a6b6c6d6e6f707172737475767778797a303132333435363738392d5f1b5c")
+		testTty.write("${OSC}22;abcdefghijklmnopqrstuvwxyz0123456789-_$ST")
 		assertThat(parser.next()).isEqualTo(
 			KittyPointerQueryNameEvent("abcdefghijklmnopqrstuvwxyz0123456789-_"),
 		)
 	}
 
 	@Test fun nameInvalidRange() {
-		testTty.writeHex("1b5d32323b6162633132334142431b5c")
+		testTty.write("${OSC}22;abc123ABC$ST")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5d32323b6162633132334142431b5c".hexToByteArray()),
 		)
@@ -91,7 +91,7 @@ class EventParserOscKittyPointerQueryEventTest : BaseEventParserTest() {
 
 	@Test fun brokenOldKitty() {
 		// Kitty 0.39.1 and older sent 'OSC 22 :' instead of 'OSC 22 ;'. We don't bother parsing it.
-		testTty.writeHex("1b5d32323a311b5c")
+		testTty.write("${OSC}22:1$ST")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5d32323a311b5c".hexToByteArray()),
 		)
