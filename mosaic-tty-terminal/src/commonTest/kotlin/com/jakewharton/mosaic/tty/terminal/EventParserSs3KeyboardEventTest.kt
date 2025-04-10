@@ -19,64 +19,64 @@ import kotlin.test.Test
 
 class EventParserSs3KeyboardEventTest : BaseEventParserTest() {
 	@Test fun up() {
-		testTty.writeHex("1b4f41")
+		testTty.write("${SS3}A")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up))
 	}
 
 	@Test fun down() {
-		testTty.writeHex("1b4f42")
+		testTty.write("${SS3}B")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Down))
 	}
 
 	@Test fun right() {
-		testTty.writeHex("1b4f43")
+		testTty.write("${SS3}C")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Right))
 	}
 
 	@Test fun left() {
-		testTty.writeHex("1b4f44")
+		testTty.write("${SS3}D")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Left))
 	}
 
 	@Test fun end() {
-		testTty.writeHex("1b4f46")
+		testTty.write("${SS3}F")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(End))
 	}
 
 	@Test fun home() {
-		testTty.writeHex("1b4f48")
+		testTty.write("${SS3}H")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Home))
 	}
 
 	@Test fun f1() {
-		testTty.writeHex("1b4f50")
+		testTty.write("${SS3}P")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(F1))
 	}
 
 	@Test fun f2() {
-		testTty.writeHex("1b4f51")
+		testTty.write("${SS3}Q")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(F2))
 	}
 
 	@Test fun f3() {
-		testTty.writeHex("1b4f52")
+		testTty.write("${SS3}R")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(F3))
 	}
 
 	@Test fun f4() {
-		testTty.writeHex("1b4f53")
+		testTty.write("${SS3}S")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(F4))
 	}
 
 	@Test fun invalidKey() {
-		testTty.writeHex("1b4f75")
+		testTty.write("${SS3}u")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b4f75".hexToByteArray()),
 		)
 	}
 
 	@Test fun keyIsEscapeDoesNotConsumeEscape() {
-		testTty.writeHex("1b4f1b5b306e")
+		testTty.write("${SS3}${CSI}0n")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b4f".hexToByteArray()),
 		)

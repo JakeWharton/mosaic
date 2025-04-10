@@ -25,4 +25,10 @@ abstract class BaseEventParserTest {
 		val written = write(buffer, 0, buffer.size)
 		assertThat(written).isEqualTo(buffer.size)
 	}
+
+	internal fun TestTty.write(s: String) {
+		val bytes = s.encodeToByteArray()
+		val written = write(bytes, 0, bytes.size)
+		assertThat(written).isEqualTo(bytes.size)
+	}
 }

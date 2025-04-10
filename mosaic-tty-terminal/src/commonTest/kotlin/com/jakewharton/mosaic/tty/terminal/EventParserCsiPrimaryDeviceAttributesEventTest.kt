@@ -8,31 +8,31 @@ import kotlin.test.Test
 
 class EventParserCsiPrimaryDeviceAttributesEventTest : BaseEventParserTest() {
 	@Test fun noLeadingQuestionMarkIsUnknown() {
-		testTty.writeHex("1b5b303063")
+		testTty.write("${CSI}00c")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b303063".hexToByteArray()),
 		)
 	}
 
 	@Test fun emptyDataFails() {
-		testTty.writeHex("1b5b3f63")
+		testTty.write("$CSI?c")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3f63".hexToByteArray()),
 		)
 	}
 
 	@Test fun idNoData() {
-		testTty.writeHex("1b5b3f3263")
+		testTty.write("$CSI?2c")
 		assertThat(parser.next()).isEqualTo(PrimaryDeviceAttributesEvent(id = 2, data = ""))
 	}
 
 	@Test fun idWithSemicolonNoData() {
-		testTty.writeHex("1b5b3f323b63")
+		testTty.write("$CSI?2;c")
 		assertThat(parser.next()).isEqualTo(PrimaryDeviceAttributesEvent(id = 2, data = ""))
 	}
 
 	@Test fun idAndData() {
-		testTty.writeHex("1b5b3f323b3263")
+		testTty.write("$CSI?2;2c")
 		assertThat(parser.next()).isEqualTo(PrimaryDeviceAttributesEvent(id = 2, data = "2"))
 	}
 }

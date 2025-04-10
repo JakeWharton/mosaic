@@ -8,65 +8,65 @@ import kotlin.test.Test
 
 class EventParserCsiResizeEventTest : BaseEventParserTest() {
 	@Test fun basic() {
-		testTty.writeHex("1b5b34383b313b323b333b3474")
+		testTty.write("${CSI}48;1;2;3;4t")
 		assertThat(parser.next()).isEqualTo(ResizeEvent(2, 1, 4, 3))
 	}
 
 	@Test fun pixelSizeAsZero() {
-		testTty.writeHex("1b5b34383b313b323b303b3074")
+		testTty.write("${CSI}48;1;2;0;0t")
 		assertThat(parser.next()).isEqualTo(ResizeEvent(2, 1, 0, 0))
 	}
 
 	@Test fun subparametersIgnored() {
-		testTty.writeHex("1b5b34383b313a39393b323a39383a39373b333a39393a3a39373b343a39393a74")
+		testTty.write("${CSI}48;1:99;2:98:97;3:99::97;4:99:t")
 		assertThat(parser.next()).isEqualTo(ResizeEvent(2, 1, 4, 3))
 	}
 
 	@Test fun emptySubparametersIgnored() {
-		testTty.writeHex("1b5b34383b313a3b323a3b333a3b343a74")
+		testTty.write("${CSI}48;1:;2:;3:;4:t")
 		assertThat(parser.next()).isEqualTo(ResizeEvent(2, 1, 4, 3))
 	}
 
 	@Test fun emptyModeFails() {
-		testTty.writeHex("1b5b3b313b323b333b3474")
+		testTty.write("$CSI;1;2;3;4t")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3b313b323b333b3474".hexToByteArray()),
 		)
 	}
 
 	@Test fun emptyParameterFails() {
-		testTty.writeHex("1b5b34383b3b323b333b3474")
+		testTty.write("${CSI}48;;2;3;4t")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b34383b3b323b333b3474".hexToByteArray()),
 		)
-		testTty.writeHex("1b5b34383b313b3b333b3474")
+		testTty.write("${CSI}48;1;;3;4t")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b34383b313b3b333b3474".hexToByteArray()),
 		)
-		testTty.writeHex("1b5b34383b313b323b3b3474")
+		testTty.write("${CSI}48;1;2;;4t")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b34383b313b323b3b3474".hexToByteArray()),
 		)
-		testTty.writeHex("1b5b34383b313b323b333b74")
+		testTty.write("${CSI}48;1;2;3;t")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b34383b313b323b333b74".hexToByteArray()),
 		)
 	}
 
 	@Test fun nonDigitParameterFails() {
-		testTty.writeHex("1b5b34383b312e303b323b333b3474")
+		testTty.write("${CSI}48;1.0;2;3;4t")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b34383b312e303b323b333b3474".hexToByteArray()),
 		)
-		testTty.writeHex("1b5b34383b313b322e303b333b3474")
+		testTty.write("${CSI}48;1;2.0;3;4t")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b34383b313b322e303b333b3474".hexToByteArray()),
 		)
-		testTty.writeHex("1b5b34383b313b323b332e303b3474")
+		testTty.write("${CSI}48;1;2;3.0;4t")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b34383b313b323b332e303b3474".hexToByteArray()),
 		)
-		testTty.writeHex("1b5b34383b313b323b333b342e3074")
+		testTty.write("${CSI}48;1;2;3;4.0t")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b34383b313b323b333b342e3074".hexToByteArray()),
 		)

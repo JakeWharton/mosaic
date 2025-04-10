@@ -7,12 +7,12 @@ import kotlin.test.Test
 
 class EventParserCsiFocusEventTest : BaseEventParserTest() {
 	@Test fun focusedTrue() {
-		testTty.writeHex("1b5b49")
+		testTty.write("${CSI}I")
 		assertThat(parser.next()).isEqualTo(FocusEvent(focused = true))
 	}
 
 	@Test fun focusedFalse() {
-		testTty.writeHex("1b5b4f")
+		testTty.write("${CSI}O")
 		assertThat(parser.next()).isEqualTo(FocusEvent(focused = false))
 	}
 }

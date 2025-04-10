@@ -13,7 +13,7 @@ import kotlin.test.Test
 
 class EventParserCsiDecModeReportEventTest : BaseEventParserTest() {
 	@Test fun settings() {
-		testTty.writeHex("1b5b3f313030343b302479")
+		testTty.write("$CSI?1004;0\$y")
 		assertThat(parser.next()).isEqualTo(
 			DecModeReportEvent(
 				mode = 1004,
@@ -21,7 +21,7 @@ class EventParserCsiDecModeReportEventTest : BaseEventParserTest() {
 			),
 		)
 
-		testTty.writeHex("1b5b3f313030343b312479")
+		testTty.write("$CSI?1004;1\$y")
 		assertThat(parser.next()).isEqualTo(
 			DecModeReportEvent(
 				mode = 1004,
@@ -29,7 +29,7 @@ class EventParserCsiDecModeReportEventTest : BaseEventParserTest() {
 			),
 		)
 
-		testTty.writeHex("1b5b3f313030343b322479")
+		testTty.write("$CSI?1004;2\$y")
 		assertThat(parser.next()).isEqualTo(
 			DecModeReportEvent(
 				mode = 1004,
@@ -37,7 +37,7 @@ class EventParserCsiDecModeReportEventTest : BaseEventParserTest() {
 			),
 		)
 
-		testTty.writeHex("1b5b3f313030343b332479")
+		testTty.write("$CSI?1004;3\$y")
 		assertThat(parser.next()).isEqualTo(
 			DecModeReportEvent(
 				mode = 1004,
@@ -45,7 +45,7 @@ class EventParserCsiDecModeReportEventTest : BaseEventParserTest() {
 			),
 		)
 
-		testTty.writeHex("1b5b3f313030343b342479")
+		testTty.write("$CSI?1004;4\$y")
 		assertThat(parser.next()).isEqualTo(
 			DecModeReportEvent(
 				mode = 1004,
@@ -55,7 +55,7 @@ class EventParserCsiDecModeReportEventTest : BaseEventParserTest() {
 	}
 
 	@Test fun minimal() {
-		testTty.writeHex("1b5b3f313b302479")
+		testTty.write("$CSI?1;0\$y")
 		assertThat(parser.next()).isEqualTo(
 			DecModeReportEvent(
 				mode = 1,
@@ -65,56 +65,56 @@ class EventParserCsiDecModeReportEventTest : BaseEventParserTest() {
 	}
 
 	@Test fun unknownSetting() {
-		testTty.writeHex("1b5b313030343b352479")
+		testTty.write("${CSI}1004;5\$y")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b313030343b352479".hexToByteArray()),
 		)
 	}
 
 	@Test fun noQuestion() {
-		testTty.writeHex("1b5b313030343b302479")
+		testTty.write("${CSI}1004;0\$y")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b313030343b302479".hexToByteArray()),
 		)
 	}
 
 	@Test fun noDollar() {
-		testTty.writeHex("1b5b3f313030343b3079")
+		testTty.write("$CSI?1004;0y")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3f313030343b3079".hexToByteArray()),
 		)
 	}
 
 	@Test fun noMode() {
-		testTty.writeHex("1b5b3f3b3130302479")
+		testTty.write("$CSI?;100\$y")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3f3b3130302479".hexToByteArray()),
 		)
 	}
 
 	@Test fun nonDigitMode() {
-		testTty.writeHex("1b5b3f31302d32343b302479")
+		testTty.write("$CSI?10-24;0\$y")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3f31302d32343b302479".hexToByteArray()),
 		)
 	}
 
 	@Test fun noSetting() {
-		testTty.writeHex("1b5b3f313030343b2479")
+		testTty.write("$CSI?1004;\$y")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3f313030343b2479".hexToByteArray()),
 		)
 	}
 
 	@Test fun nonDigitSetting() {
-		testTty.writeHex("1b5b3f313030343b312d322479")
+		testTty.write("$CSI?1004;1-2\$y")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3f313030343b312d322479".hexToByteArray()),
 		)
 	}
 
 	@Test fun noSemicolon() {
-		testTty.writeHex("1b5b3f313030342479")
+		testTty.write("$CSI?1004\$y")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3f313030342479".hexToByteArray()),
 		)

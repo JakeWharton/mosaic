@@ -8,38 +8,38 @@ import kotlin.test.Test
 
 class EventParserCsiSystemThemeEventTest : BaseEventParserTest() {
 	@Test fun dark() {
-		testTty.writeHex("1b5b3f3939373b316e")
+		testTty.write("$CSI?997;1n")
 		assertThat(parser.next()).isEqualTo(SystemThemeEvent(isDark = true))
 	}
 
 	@Test fun light() {
-		testTty.writeHex("1b5b3f3939373b326e")
+		testTty.write("$CSI?997;2n")
 		assertThat(parser.next()).isEqualTo(SystemThemeEvent(isDark = false))
 	}
 
 	@Test fun missingP2() {
-		testTty.writeHex("1b5b3f3939373b6e")
+		testTty.write("$CSI?997;n")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3f3939373b6e".hexToByteArray()),
 		)
 	}
 
 	@Test fun unknownP2() {
-		testTty.writeHex("1b5b3f3939373b346e")
+		testTty.write("$CSI?997;4n")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3f3939373b346e".hexToByteArray()),
 		)
 	}
 
 	@Test fun nonDigitP2() {
-		testTty.writeHex("1b5b3f3939373b2b6e")
+		testTty.write("$CSI?997;+n")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3f3939373b2b6e".hexToByteArray()),
 		)
 	}
 
 	@Test fun tooLongP2() {
-		testTty.writeHex("1b5b3f3939373b31316e")
+		testTty.write("$CSI?997;11n")
 		assertThat(parser.next()).isEqualTo(
 			UnknownEvent("1b5b3f3939373b31316e".hexToByteArray()),
 		)
