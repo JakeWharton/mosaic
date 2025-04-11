@@ -6,15 +6,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-static void throwIse(JNIEnv *env, uint32_t error) {
-	jclass ise = (*env)->FindClass(env, "java/lang/IllegalStateException");
+static void throwIoe(JNIEnv *env, uint32_t error) {
+	jclass ioe = (*env)->FindClass(env, "java/io/IOException");
 
 	// 11 == max unsigned digit length (10) + null termination byte (1)
 	char *message = malloc(11 * sizeof(char));
 	if (message) {
 		sprintf(message, "%u", error);
 	}
-	(*env)->ThrowNew(env, ise, message);
+	(*env)->ThrowNew(env, ioe, message);
 }
 
 typedef struct MosaicJniTtyCallback {
@@ -153,7 +153,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyInit(
 		jclass ise = (*env)->FindClass(env, "java/lang/IllegalStateException");
 		(*env)->ThrowNew(env, ise, "Tty already bound");
 	} else if (result.error) {
-		throwIse(env, result.error);
+		throwIoe(env, result.error);
 	} else {
 		jclass ise = (*env)->FindClass(env, "java/lang/OutOfMemoryException");
 		(*env)->ThrowNew(env, ise, NULL);
@@ -198,7 +198,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyRead(
 
 	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
 	// and should cause the program to try and exit cleanly. 0 is a valid return value.
-	throwIse(env, result.error);
+	throwIoe(env, result.error);
 	return -1;
 }
 
@@ -233,7 +233,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyReadWithTimeout(
 
 	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
 	// and should cause the program to try and exit cleanly. 0 is a valid return value.
-	throwIse(env, result.error);
+	throwIoe(env, result.error);
 	return -1;
 }
 
@@ -246,7 +246,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyInterruptRead(
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
 	uint32_t error = tty_interruptRead(tty);
 	if (unlikely(error)) {
-		throwIse(env, error);
+		throwIoe(env, error);
 	}
 }
 
@@ -275,7 +275,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyWrite(
 
 	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
 	// and should cause the program to try and exit cleanly. 0 is a valid return value.
-	throwIse(env, result.error);
+	throwIoe(env, result.error);
 	return -1;
 }
 
@@ -288,7 +288,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyEnableRawMode(
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
 	uint32_t error = tty_enableRawMode(tty);
 	if (unlikely(error)) {
-		throwIse(env, error);
+		throwIoe(env, error);
 	}
 }
 
@@ -301,7 +301,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyEnableWindowResizeEvents(
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
 	uint32_t error = tty_enableWindowResizeEvents(tty);
 	if (unlikely(error)) {
-		throwIse(env, error);
+		throwIoe(env, error);
 	}
 }
 
@@ -324,7 +324,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyCurrentSize(
 		return ints;
 	}
 
-	throwIse(env, result.error);
+	throwIoe(env, result.error);
 	return NULL;
 }
 
@@ -337,7 +337,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyReset(
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
 	uint32_t error = tty_reset(tty);
 	if (unlikely(error)) {
-		throwIse(env, error);
+		throwIoe(env, error);
 	}
 }
 
@@ -350,7 +350,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyFree(
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
 	uint32_t error = tty_free(tty);
 	if (unlikely(error)) {
-		throwIse(env, error);
+		throwIoe(env, error);
 	}
 }
 
@@ -366,7 +366,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyInit(
 
 	// This throw can fail, but the only condition that should cause that is OOM which
 	// will occur from returning 0 (which is otherwise ignored if the throw succeeds).
-	throwIse(env, result.error);
+	throwIoe(env, result.error);
 	return 0;
 }
 
@@ -395,7 +395,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyWrite(
 
 	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
 	// and should cause the program to try and exit cleanly.
-	throwIse(env, result.error);
+	throwIoe(env, result.error);
 	return -1;
 }
 
@@ -424,7 +424,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyRead(
 
 	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
 	// and should cause the program to try and exit cleanly.
-	throwIse(env, result.error);
+	throwIoe(env, result.error);
 	return -1;
 }
 
@@ -437,44 +437,53 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyInterruptRead(
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
 	uint32_t error = testTty_interruptRead(testTty);
 	if (unlikely(error)) {
-		throwIse(env, error);
+		throwIoe(env, error);
 	}
 }
 
 JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_testTtyFocusEvent(
-	JNIEnv *env UNUSED,
+	JNIEnv *env,
 	jclass type UNUSED,
 	jlong testTtyOpaque,
 	jboolean focused
 ) {
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
-	testTty_focusEvent(testTty, focused);
+	uint32_t error = testTty_focusEvent(testTty, focused);
+	if (unlikely(error)) {
+		throwIoe(env, error);
+	}
 }
 
 JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_testTtyKeyEvent(
-	JNIEnv *env UNUSED,
+	JNIEnv *env,
 	jclass type UNUSED,
 	jlong testTtyOpaque
 ) {
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
-	testTty_keyEvent(testTty);
+	uint32_t error = testTty_keyEvent(testTty);
+	if (unlikely(error)) {
+		throwIoe(env, error);
+	}
 }
 
 JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_testTtyMouseEvent(
-	JNIEnv *env UNUSED,
+	JNIEnv *env,
 	jclass type UNUSED,
 	jlong testTtyOpaque
 ) {
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
-	testTty_mouseEvent(testTty);
+	uint32_t error = testTty_mouseEvent(testTty);
+	if (unlikely(error)) {
+		throwIoe(env, error);
+	}
 }
 
 JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_testTtyResizeEvent(
-	JNIEnv *env UNUSED,
+	JNIEnv *env,
 	jclass type UNUSED,
 	jlong testTtyOpaque,
 	jint columns,
@@ -483,7 +492,10 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyResizeEvent(
 	jint height
 ) {
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
-	testTty_resizeEvent(testTty, columns, rows, width, height);
+	uint32_t error = testTty_resizeEvent(testTty, columns, rows, width, height);
+	if (unlikely(error)) {
+		throwIoe(env, error);
+	}
 }
 
 JNIEXPORT jlong JNICALL
@@ -505,6 +517,6 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyFree(
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
 	uint32_t error = testTty_free(testTty);
 	if (unlikely(error)) {
-		throwIse(env, error);
+		throwIoe(env, error);
 	}
 }

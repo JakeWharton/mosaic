@@ -30,7 +30,7 @@ public actual class Tty internal constructor(
 					throw IllegalStateException("Tty already bound")
 				}
 				if (error != 0U) {
-					throwIse(error)
+					throwIoe(error)
 				}
 				throw OutOfMemoryError()
 			}
@@ -62,7 +62,7 @@ public actual class Tty internal constructor(
 		buffer.asUByteArray().usePinned {
 			tty_read(ptr, it.addressOf(offset), count).useContents {
 				if (error == 0U) return this.count
-				throwIse(error)
+				throwIoe(error)
 			}
 		}
 	}
@@ -71,7 +71,7 @@ public actual class Tty internal constructor(
 		buffer.asUByteArray().usePinned {
 			tty_readWithTimeout(ptr, it.addressOf(offset), count, timeoutMillis).useContents {
 				if (error == 0U) return this.count
-				throwIse(error)
+				throwIoe(error)
 			}
 		}
 	}
@@ -79,14 +79,14 @@ public actual class Tty internal constructor(
 	public actual fun interruptRead() {
 		val error = tty_interruptRead(ptr)
 		if (error == 0U) return
-		throwIse(error)
+		throwIoe(error)
 	}
 
 	public actual fun write(buffer: ByteArray, offset: Int, count: Int): Int {
 		buffer.asUByteArray().usePinned {
 			tty_write(ptr, it.addressOf(offset), count).useContents {
 				if (error == 0U) return this.count
-				throwIse(error)
+				throwIoe(error)
 			}
 		}
 	}
@@ -94,13 +94,13 @@ public actual class Tty internal constructor(
 	public actual fun enableRawMode() {
 		val error = tty_enableRawMode(ptr)
 		if (error == 0U) return
-		throwIse(error)
+		throwIoe(error)
 	}
 
 	public actual fun enableWindowResizeEvents() {
 		val error = tty_enableWindowResizeEvents(ptr)
 		if (error == 0U) return
-		throwIse(error)
+		throwIoe(error)
 	}
 
 	public actual fun currentSize(): IntArray {
@@ -108,7 +108,7 @@ public actual class Tty internal constructor(
 			if (error == 0U) {
 				return intArrayOf(columns, rows, width, height)
 			}
-			throwIse(error)
+			throwIoe(error)
 		}
 	}
 
@@ -129,7 +129,7 @@ public actual class Tty internal constructor(
 			}
 
 			if (error == 0U) return
-			throwIse(error)
+			throwIoe(error)
 		}
 	}
 
@@ -141,8 +141,8 @@ public actual class Tty internal constructor(
 	}
 }
 
-internal fun throwIse(error: UInt): Nothing {
-	throw IllegalStateException(error.toString())
+internal fun throwIoe(error: UInt): Nothing {
+	throw IOException(error.toString())
 }
 
 internal fun StableRef<Tty.Callback>.toNativeAllocationIn(memory: NativePlacement): MosaicTtyCallback {

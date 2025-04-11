@@ -7,6 +7,9 @@ public expect class Tty : AutoCloseable {
 		 * application. Only a single [Tty] instance can be bound at a time. Subsequent calls will
 		 * throw an exception until [Tty.close] is called. Returns `null` if no TTY is available
 		 * for this process.
+		 *
+		 * @throws IOException If an error occurred binding to the TTY.
+		 * @throws IllegalStateException If another instance is already bound.
 		 */
 		public fun tryBind(): Tty?
 	}

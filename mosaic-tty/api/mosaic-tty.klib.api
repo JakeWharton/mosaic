@@ -6,6 +6,10 @@
 // - Show declarations: true
 
 // Library unique name: <com.jakewharton.mosaic:mosaic-tty>
+final class com.jakewharton.mosaic.tty/IOException : kotlin/Exception { // com.jakewharton.mosaic.tty/IOException|null[0]
+    constructor <init>(kotlin/String) // com.jakewharton.mosaic.tty/IOException.<init>|<init>(kotlin.String){}[0]
+}
+
 final class com.jakewharton.mosaic.tty/TestTty : kotlin/AutoCloseable { // com.jakewharton.mosaic.tty/TestTty|null[0]
     final val tty // com.jakewharton.mosaic.tty/TestTty.tty|{}tty[0]
         final fun <get-tty>(): com.jakewharton.mosaic.tty/Tty // com.jakewharton.mosaic.tty/TestTty.tty.<get-tty>|<get-tty>(){}[0]

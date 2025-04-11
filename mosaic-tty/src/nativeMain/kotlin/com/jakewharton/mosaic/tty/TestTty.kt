@@ -15,7 +15,7 @@ public actual class TestTty private constructor(
 				testTty?.let { return@useContents it }
 
 				if (error != 0U) {
-					throwIse(error)
+					throwIoe(error)
 				}
 				throw OutOfMemoryError()
 			}
@@ -32,7 +32,7 @@ public actual class TestTty private constructor(
 				if (error == 0U) {
 					return this.count
 				}
-				throwIse(error)
+				throwIoe(error)
 			}
 		}
 	}
@@ -43,29 +43,44 @@ public actual class TestTty private constructor(
 				if (error == 0U) {
 					return this.count
 				}
-				throwIse(error)
+				throwIoe(error)
 			}
 		}
 	}
 
 	public actual fun interruptRead() {
-		testTty_interruptRead(ptr)
+		val error = testTty_interruptRead(ptr)
+		if (error != 0U) {
+			throwIoe(error)
+		}
 	}
 
 	public actual fun focusEvent(focused: Boolean) {
-		testTty_focusEvent(ptr, focused)
+		val error = testTty_focusEvent(ptr, focused)
+		if (error != 0U) {
+			throwIoe(error)
+		}
 	}
 
 	public actual fun keyEvent() {
-		testTty_keyEvent(ptr)
+		val error = testTty_keyEvent(ptr)
+		if (error != 0U) {
+			throwIoe(error)
+		}
 	}
 
 	public actual fun mouseEvent() {
-		testTty_mouseEvent(ptr)
+		val error = testTty_mouseEvent(ptr)
+		if (error != 0U) {
+			throwIoe(error)
+		}
 	}
 
 	public actual fun resizeEvent(columns: Int, rows: Int, width: Int, height: Int) {
-		testTty_resizeEvent(ptr, columns, rows, width, height)
+		val error = testTty_resizeEvent(ptr, columns, rows, width, height)
+		if (error != 0U) {
+			throwIoe(error)
+		}
 	}
 
 	actual override fun close() {
@@ -77,7 +92,7 @@ public actual class TestTty private constructor(
 			val error = testTty_free(ref)
 
 			if (error == 0U) return
-			throwIse(error)
+			throwIoe(error)
 		}
 	}
 }
