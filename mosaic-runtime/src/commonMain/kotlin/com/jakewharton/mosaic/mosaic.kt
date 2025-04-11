@@ -15,17 +15,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import com.jakewharton.mosaic.NonInteractivePolicy.AssumeAndIgnore
 import com.jakewharton.mosaic.NonInteractivePolicy.Exit
-import com.jakewharton.mosaic.NonInteractivePolicy.Ignore
-import com.jakewharton.mosaic.NonInteractivePolicy.Return
-import com.jakewharton.mosaic.NonInteractivePolicy.Throw
 import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.terminal.KeyboardEvent
 import com.jakewharton.mosaic.terminal.Terminal
-import com.jakewharton.mosaic.tty.Tty
-import com.jakewharton.mosaic.tty.terminal.asTerminalIn
 import com.jakewharton.mosaic.ui.BoxMeasurePolicy
 import kotlin.concurrent.Volatile
 import kotlin.coroutines.CoroutineContext
@@ -38,7 +32,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -61,40 +54,22 @@ public fun runMosaicBlocking(
 public suspend fun runMosaic(
 	onNonInteractive: NonInteractivePolicy = Exit,
 	content: @Composable () -> Unit,
-): Boolean = coroutineScope {
-	val terminal = if (onNonInteractive != AssumeAndIgnore) {
-		Tty.tryBind()
-			?.asTerminalIn(this)
-			?: when (onNonInteractive) {
-				Exit -> nonInteractiveExit()
-				Throw -> throw IllegalStateException(NonInteractiveMessage)
-				Return -> return@coroutineScope false
-				Ignore -> NonInteractiveTerminal
-				AssumeAndIgnore -> throw AssertionError()
-			}
+): Boolean = withTerminal(onNonInteractive) { terminal ->
+	val rendering = if (env("MOSAIC_DEBUG_RENDERING") == "true") {
+		DebugRendering(
+			ansiLevel = terminal.capabilities.ansiLevel,
+			supportsKittyUnderlines = terminal.capabilities.kittyUnderline,
+			systemClock = TimeSource.Monotonic,
+		)
 	} else {
-		NonInteractiveTerminal
+		AnsiRendering(
+			ansiLevel = terminal.capabilities.ansiLevel,
+			synchronizedOutput = terminal.capabilities.synchronizedOutput,
+			supportsKittyUnderlines = terminal.capabilities.kittyUnderline,
+		)
 	}
 
-	terminal.use { terminal ->
-		val rendering = if (env("MOSAIC_DEBUG_RENDERING") == "true") {
-			DebugRendering(
-				ansiLevel = terminal.capabilities.ansiLevel,
-				supportsKittyUnderlines = terminal.capabilities.kittyUnderline,
-				systemClock = TimeSource.Monotonic,
-			)
-		} else {
-			AnsiRendering(
-				ansiLevel = terminal.capabilities.ansiLevel,
-				synchronizedOutput = terminal.capabilities.synchronizedOutput,
-				supportsKittyUnderlines = terminal.capabilities.kittyUnderline,
-			)
-		}
-
-		runMosaicComposition(terminal, rendering, content)
-	}
-
-	true
+	runMosaicComposition(terminal, rendering, content)
 }
 
 internal suspend fun runMosaicComposition(
