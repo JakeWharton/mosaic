@@ -15,24 +15,24 @@ final class Jni {
 	}
 
 	@SuppressWarnings("SameParameterValue") // Preserving copy/paste!
-	private static void loadEmbeddedNativeLibrary(String path, String name) {
+	private static void loadEmbeddedNativeLibrary(String relativePath, String library) {
 		String osName = System.getProperty("os.name").toLowerCase(US);
 		String osArch = System.getProperty("os.arch").toLowerCase(US);
 		StringBuilder nativeLibraryJarPathBuilder = new StringBuilder(50)
-			.append(path)
+			.append(relativePath)
 			.append('/')
 			.append(osArch)
 			.append('/');
 		if (osName.contains("linux")) {
 			nativeLibraryJarPathBuilder.append("lib")
-				.append(name)
+				.append(library)
 				.append(".so");
 		} else if (osName.contains("mac")) {
 			nativeLibraryJarPathBuilder.append("lib")
-				.append(name)
+				.append(library)
 				.append(".dylib");
 		} else if (osName.contains("windows")) {
-			nativeLibraryJarPathBuilder.append(name)
+			nativeLibraryJarPathBuilder.append(library)
 				.append(".dll");
 		} else {
 			throw new IllegalStateException("Unsupported OS: " + osName + ' ' + osArch);
@@ -45,7 +45,7 @@ final class Jni {
 
 		Path nativeLibraryFile;
 		try {
-			nativeLibraryFile = Files.createTempFile(name, null);
+			nativeLibraryFile = Files.createTempFile(library, null);
 
 			// File-based deleteOnExit() uses a special internal shutdown hook that always runs last.
 			nativeLibraryFile.toFile().deleteOnExit();
