@@ -1,12 +1,42 @@
 package com.jakewharton.mosaic
 
+import com.jakewharton.mosaic.NonInteractivePolicy.AssumeAndIgnore
+import com.jakewharton.mosaic.NonInteractivePolicy.Exit
+import com.jakewharton.mosaic.NonInteractivePolicy.Ignore
+import com.jakewharton.mosaic.NonInteractivePolicy.Return
+import com.jakewharton.mosaic.NonInteractivePolicy.Throw
 import com.jakewharton.mosaic.terminal.AnsiLevel
 import com.jakewharton.mosaic.terminal.Event
 import com.jakewharton.mosaic.terminal.Terminal
+import com.jakewharton.mosaic.tty.Tty
+import com.jakewharton.mosaic.tty.terminal.asTerminalIn
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+
+internal suspend fun withTerminal(
+	onNonInteractive: NonInteractivePolicy,
+	block: suspend (Terminal) -> Unit,
+): Boolean = coroutineScope {
+	val terminal = if (onNonInteractive != AssumeAndIgnore) {
+		Tty.tryBind()
+			?.asTerminalIn(this)
+			?: when (onNonInteractive) {
+				Exit -> nonInteractiveExit()
+				Throw -> throw IllegalStateException(NonInteractiveMessage)
+				Return -> return@coroutineScope false
+				Ignore -> NonInteractiveTerminal
+				AssumeAndIgnore -> throw AssertionError()
+			}
+	} else {
+		NonInteractiveTerminal
+	}
+
+	terminal.use { block(it) }
+	true
+}
 
 /** Behaviors when there is no interactive TTY. */
 public enum class NonInteractivePolicy {
