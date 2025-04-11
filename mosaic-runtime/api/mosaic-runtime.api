@@ -40,10 +40,6 @@ public final class com/jakewharton/mosaic/StaticLogger {
 	public final fun plusAssign (Ljava/lang/String;)V
 }
 
-public final class com/jakewharton/mosaic/TerminalKt {
-	public static final fun getLocalTerminalState ()Landroidx/compose/runtime/ProvidableCompositionLocal;
-}
-
 public final class com/jakewharton/mosaic/TerminalState {
 	public static final field $stable I
 	public fun <init> (ZLcom/jakewharton/mosaic/terminal/Terminal$Theme;Lcom/jakewharton/mosaic/terminal/Terminal$Size;)V
@@ -53,6 +49,10 @@ public final class com/jakewharton/mosaic/TerminalState {
 	public final fun getTheme ()Lcom/jakewharton/mosaic/terminal/Terminal$Theme;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/jakewharton/mosaic/TerminalStateKt {
+	public static final fun getLocalTerminalState ()Landroidx/compose/runtime/ProvidableCompositionLocal;
 }
 
 public abstract interface class com/jakewharton/mosaic/TextCanvas {
