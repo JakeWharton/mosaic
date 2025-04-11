@@ -24,7 +24,6 @@ import com.jakewharton.mosaic.ui.BoxMeasurePolicy
 import kotlin.concurrent.Volatile
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
-import kotlin.time.TimeSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Dispatchers.Unconfined
@@ -56,17 +55,9 @@ public suspend fun runMosaic(
 	content: @Composable () -> Unit,
 ): Boolean = withTerminal(onNonInteractive) { terminal ->
 	val rendering = if (env("MOSAIC_DEBUG_RENDERING") == "true") {
-		DebugRendering(
-			ansiLevel = terminal.capabilities.ansiLevel,
-			supportsKittyUnderlines = terminal.capabilities.kittyUnderline,
-			systemClock = TimeSource.Monotonic,
-		)
+		DebugRendering(terminal.capabilities)
 	} else {
-		AnsiRendering(
-			ansiLevel = terminal.capabilities.ansiLevel,
-			synchronizedOutput = terminal.capabilities.synchronizedOutput,
-			supportsKittyUnderlines = terminal.capabilities.kittyUnderline,
-		)
+		AnsiRendering(terminal.capabilities)
 	}
 
 	runMosaicComposition(terminal, rendering, content)

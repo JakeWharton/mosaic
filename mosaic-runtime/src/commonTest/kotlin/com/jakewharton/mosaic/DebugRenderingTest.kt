@@ -9,7 +9,7 @@ import assertk.assertions.isNotNull
 import assertk.assertions.message
 import com.jakewharton.mosaic.layout.drawBehind
 import com.jakewharton.mosaic.modifier.Modifier
-import com.jakewharton.mosaic.terminal.AnsiLevel
+import com.jakewharton.mosaic.testing.TestTerminal
 import com.jakewharton.mosaic.testing.runMosaicTest
 import com.jakewharton.mosaic.ui.Layout
 import com.jakewharton.mosaic.ui.Row
@@ -22,8 +22,7 @@ import kotlinx.coroutines.test.runTest
 class DebugRenderingTest {
 	private val timeSource = TestTimeSource()
 	private val rendering = DebugRendering(
-		ansiLevel = AnsiLevel.TRUECOLOR,
-		supportsKittyUnderlines = false,
+		capabilities = TestTerminal.Capabilities(),
 		systemClock = timeSource,
 	)
 

@@ -1,6 +1,6 @@
 package com.jakewharton.mosaic
 
-import com.jakewharton.mosaic.terminal.AnsiLevel
+import com.jakewharton.mosaic.terminal.Terminal
 import kotlin.time.TimeMark
 import kotlin.time.TimeSource
 
@@ -15,15 +15,14 @@ internal interface Rendering {
 }
 
 internal class DebugRendering(
-	private val ansiLevel: AnsiLevel,
-	private val supportsKittyUnderlines: Boolean,
-	private val systemClock: TimeSource,
+	private val capabilities: Terminal.Capabilities,
+	private val systemClock: TimeSource = TimeSource.Monotonic,
 ) : Rendering {
 	private var lastRender: TimeMark? = null
 
 	fun StringBuilder.appendSurface(canvas: TextCanvas) {
 		for (row in 0 until canvas.height) {
-			canvas.appendRowTo(this, row, ansiLevel, supportsKittyUnderlines)
+			canvas.appendRowTo(this, row, capabilities.ansiLevel, capabilities.kittyUnderline)
 			append("\r\n")
 		}
 	}
@@ -71,9 +70,7 @@ internal class DebugRendering(
 }
 
 internal class AnsiRendering(
-	private val ansiLevel: AnsiLevel,
-	private val synchronizedOutput: Boolean,
-	private val supportsKittyUnderlines: Boolean,
+	private val capabilities: Terminal.Capabilities,
 ) : Rendering {
 	private val stringBuilder = StringBuilder(100)
 	private var lastHeight = 0
@@ -82,7 +79,7 @@ internal class AnsiRendering(
 		return stringBuilder.apply {
 			clear()
 
-			if (synchronizedOutput) {
+			if (capabilities.synchronizedOutput) {
 				append(synchronizedOutputEnable)
 			}
 
@@ -101,7 +98,7 @@ internal class AnsiRendering(
 						// do not support synchronized rendering, this may allow seeing a partial row render.
 						append(clearLine)
 					}
-					canvas.appendRowTo(this, row, ansiLevel, supportsKittyUnderlines)
+					canvas.appendRowTo(this, row, capabilities.ansiLevel, capabilities.kittyUnderline)
 					append("\r\n")
 				}
 			}
@@ -127,7 +124,7 @@ internal class AnsiRendering(
 				append(clearDisplay)
 			}
 
-			if (synchronizedOutput) {
+			if (capabilities.synchronizedOutput) {
 				append(synchronizedOutputDisable)
 			}
 
