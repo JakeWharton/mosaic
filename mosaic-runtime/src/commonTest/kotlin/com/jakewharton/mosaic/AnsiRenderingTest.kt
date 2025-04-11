@@ -5,6 +5,7 @@ import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.layout.background
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.terminal.AnsiLevel
+import com.jakewharton.mosaic.testing.TestTerminal
 import com.jakewharton.mosaic.testing.runMosaicTest
 import com.jakewharton.mosaic.ui.Color
 import com.jakewharton.mosaic.ui.Column
@@ -14,11 +15,7 @@ import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
 class AnsiRenderingTest {
-	private val rendering = AnsiRendering(
-		ansiLevel = AnsiLevel.TRUECOLOR,
-		synchronizedOutput = true,
-		supportsKittyUnderlines = false,
-	)
+	private val rendering = AnsiRendering(TestTerminal.Capabilities())
 
 	@Test fun firstRender() = runTest {
 		runMosaicTest(RenderingSnapshots(rendering)) {
@@ -268,9 +265,7 @@ class AnsiRenderingTest {
 
 	@Test fun withoutTrailingSpacesInContainerWithAnsiNone() = runTest {
 		val rendering = AnsiRendering(
-			ansiLevel = AnsiLevel.NONE,
-			synchronizedOutput = true,
-			supportsKittyUnderlines = false,
+			TestTerminal.Capabilities(ansiLevel = AnsiLevel.NONE),
 		)
 		runMosaicTest(RenderingSnapshots(rendering)) {
 			val snapshot = setContentAndSnapshot {

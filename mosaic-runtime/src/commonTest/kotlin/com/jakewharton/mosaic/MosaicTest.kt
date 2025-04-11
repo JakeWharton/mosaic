@@ -18,7 +18,6 @@ import com.jakewharton.mosaic.layout.offset
 import com.jakewharton.mosaic.layout.size
 import com.jakewharton.mosaic.layout.width
 import com.jakewharton.mosaic.modifier.Modifier
-import com.jakewharton.mosaic.terminal.AnsiLevel
 import com.jakewharton.mosaic.testing.TestTerminal
 import com.jakewharton.mosaic.testing.runMosaicTest
 import com.jakewharton.mosaic.ui.Box
@@ -105,13 +104,10 @@ class MosaicTest {
 		var frameTimeA = 0L
 		var frameTimeB = 0L
 
+		val terminal = TestTerminal()
 		runMosaicComposition(
-			rendering = AnsiRendering(
-				ansiLevel = AnsiLevel.NONE,
-				synchronizedOutput = false,
-				supportsKittyUnderlines = false,
-			),
-			terminal = TestTerminal(),
+			rendering = AnsiRendering(terminal.capabilities),
+			terminal = terminal,
 		) {
 			LaunchedEffect(Unit) {
 				withFrameNanos { frameTimeNanos ->
