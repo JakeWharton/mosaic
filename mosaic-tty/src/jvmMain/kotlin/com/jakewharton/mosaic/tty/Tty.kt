@@ -36,38 +36,47 @@ public actual class Tty internal constructor(
 		Jni.ttySetCallback(ttyPtr, newCallbackPtr)
 	}
 
+	@Throws(IOException::class)
 	public actual fun read(buffer: ByteArray, offset: Int, count: Int): Int {
 		return Jni.ttyRead(ttyPtr, buffer, offset, count)
 	}
 
+	@Throws(IOException::class)
 	public actual fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
 		return Jni.ttyReadWithTimeout(ttyPtr, buffer, offset, count, timeoutMillis)
 	}
 
+	@Throws(IOException::class)
 	public actual fun interruptRead() {
 		Jni.ttyInterruptRead(ttyPtr)
 	}
 
+	@Throws(IOException::class)
 	public actual fun write(buffer: ByteArray, offset: Int, count: Int): Int {
 		return Jni.ttyWrite(ttyPtr, buffer, offset, count)
 	}
 
+	@Throws(IOException::class)
 	public actual fun enableRawMode() {
 		Jni.ttyEnableRawMode(ttyPtr)
 	}
 
+	@Throws(IOException::class)
 	public actual fun enableWindowResizeEvents() {
 		Jni.ttyEnableWindowResizeEvents(ttyPtr)
 	}
 
+	@Throws(IOException::class)
 	public actual fun currentSize(): IntArray {
 		return Jni.ttyCurrentSize(ttyPtr)
 	}
 
+	@Throws(IOException::class)
 	public actual fun reset() {
 		Jni.ttyReset(ttyPtr)
 	}
 
+	@Throws(IOException::class)
 	actual override fun close() {
 		if (ttyPtr != 0L) {
 			Jni.ttyFree(ttyPtr)
