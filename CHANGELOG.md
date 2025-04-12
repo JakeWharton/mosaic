@@ -7,7 +7,7 @@ Nothing yet!
 
 
 ## [0.17.0] - 2025-04-11
-[0.17.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.16.0
+[0.17.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.17.0
 
 New:
 - `Terminal` and `LocalTerminal` are now renamed to `TerminalState` and `LocalTerminalState`, respectively, along with some new capabilities:
