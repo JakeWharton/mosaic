@@ -1,0 +1,633 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>Companion</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../../styles/style.css" rel="Stylesheet">
+<link href="../../../../styles/main.css" rel="Stylesheet">
+<link href="../../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<link href="../../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../../ui-kit/ui-kit.min.js" defer></script>
+<script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+    <nav class="navigation theme-dark" id="navigation-wrapper">
+<a class="library-name--link" href="../../../../index.html">
+                    mosaic
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">0.17.0
+        </div>
+        <div class="navigation-controls">
+        <div class="filter-section filter-section_loading" id="filter-section">
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":mosaic-terminal:dokkaHtmlPartial/commonMain">common</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox">
+                    <div class="dropdown--header"><span>Platform filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close platform filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filter=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </div>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                    <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox">
+                        <div class="dropdown--header">
+                            <span>
+                                    mosaic
+                            </span>
+                            <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                                <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                            </button>
+                        </div>
+                        <div class="sidebar--inner" id="sideMenu"></div>
+                    </ul>
+                    <div class="dropdown--overlay"></div>
+                </div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="mosaic-terminal::com.jakewharton.mosaic.terminal/KeyboardEvent.Companion///PointingToDeclaration//1057001830">
+  <div class="breadcrumbs"><a href="../../../index.html">mosaic-terminal</a><span class="delimiter">/</span><a href="../../index.html">com.jakewharton.mosaic.terminal</a><span class="delimiter">/</span><a href="../index.html">KeyboardEvent</a><span class="delimiter">/</span><span class="current">Companion</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Companion</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="index.html">Companion</a></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="323150762%2FProperties%2F1057001830" anchor-label="Delete" id="323150762%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-delete.html"><span><span>Delete</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="323150762%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-delete.html">Delete</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">57349</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1741006483%2FProperties%2F1057001830" anchor-label="Down" id="1741006483%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-down.html"><span><span>Down</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1741006483%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-down.html">Down</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">57353</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1391502090%2FProperties%2F1057001830" anchor-label="End" id="1391502090%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-end.html"><span><span>End</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1391502090%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-end.html">End</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">57357</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-773248474%2FProperties%2F1057001830" anchor-label="EventTypePress" id="-773248474%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-event-type-press.html"><span>Event</span><wbr><span>Type</span><wbr><span><span>Press</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-773248474%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-event-type-press.html">EventTypePress</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1644136418%2FProperties%2F1057001830" anchor-label="EventTypeRelease" id="1644136418%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-event-type-release.html"><span>Event</span><wbr><span>Type</span><wbr><span><span>Release</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1644136418%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-event-type-release.html">EventTypeRelease</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">3</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2127211190%2FProperties%2F1057001830" anchor-label="EventTypeRepeat" id="2127211190%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-event-type-repeat.html"><span>Event</span><wbr><span>Type</span><wbr><span><span>Repeat</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2127211190%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-event-type-repeat.html">EventTypeRepeat</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">2</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1059769142%2FProperties%2F1057001830" anchor-label="F1" id="-1059769142%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-f1.html"><span><span>F1</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1059769142%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-f1.html">F1</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">57364</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="994822688%2FProperties%2F1057001830" anchor-label="F10" id="994822688%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-f10.html"><span><span>F10</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="994822688%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-f10.html">F10</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">57373</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1025842495%2FProperties%2F1057001830" anchor-label="F11" id="1025842495%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-f11.html"><span><span>F11</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1025842495%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-f11.html">F11</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">57374</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1056862302%2FProperties%2F1057001830" anchor-label="F12" id="1056862302%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-f12.html"><span><span>F12</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1056862302%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-f12.html">F12</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">57375</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1028749335%2FProperties%2F1057001830" anchor-label="F2" id="-1028749335%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-f2.html"><span><span>F2</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1028749335%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-f2.html">F2</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">57365</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-997729528%2FProperties%2F1057001830" anchor-label="F3" id="-997729528%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-f3.html"><span><span>F3</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-997729528%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-f3.html">F3</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">57366</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-966709721%2FProperties%2F1057001830" anchor-label="F4" id="-966709721%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-f4.html"><span><span>F4</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-966709721%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-f4.html">F4</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">57367</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-935689914%2FProperties%2F1057001830" anchor-label="F5" id="-935689914%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-f5.html"><span><span>F5</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-935689914%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-f5.html">F5</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">57368</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-904670107%2FProperties%2F1057001830" anchor-label="F6" id="-904670107%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-f6.html"><span><span>F6</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-904670107%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-f6.html">F6</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">57369</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-873650300%2FProperties%2F1057001830" anchor-label="F7" id="-873650300%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-f7.html"><span><span>F7</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-873650300%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-f7.html">F7</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">57370</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-842630493%2FProperties%2F1057001830" anchor-label="F8" id="-842630493%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-f8.html"><span><span>F8</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-842630493%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-f8.html">F8</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">57371</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-811610686%2FProperties%2F1057001830" anchor-label="F9" id="-811610686%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-f9.html"><span><span>F9</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-811610686%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-f9.html">F9</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">57372</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1086937866%2FProperties%2F1057001830" anchor-label="Home" id="-1086937866%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-home.html"><span><span>Home</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1086937866%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-home.html">Home</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">57356</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1277809244%2FProperties%2F1057001830" anchor-label="Insert" id="1277809244%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-insert.html"><span><span>Insert</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1277809244%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-insert.html">Insert</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">57348</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-690278975%2FProperties%2F1057001830" anchor-label="KpBegin" id="-690278975%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-kp-begin.html"><span>Kp</span><wbr><span><span>Begin</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-690278975%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-kp-begin.html">KpBegin</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">57427</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2033166642%2FProperties%2F1057001830" anchor-label="Left" id="-2033166642%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-left.html"><span><span>Left</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2033166642%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-left.html">Left</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">57350</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-829666189%2FProperties%2F1057001830" anchor-label="ModifierAlt" id="-829666189%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-modifier-alt.html"><span>Modifier</span><wbr><span><span>Alt</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-829666189%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-modifier-alt.html">ModifierAlt</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">2</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1685188274%2FProperties%2F1057001830" anchor-label="ModifierCapsLock" id="1685188274%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-modifier-caps-lock.html"><span>Modifier</span><wbr><span>Caps</span><wbr><span><span>Lock</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1685188274%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-modifier-caps-lock.html">ModifierCapsLock</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">64</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1175648941%2FProperties%2F1057001830" anchor-label="ModifierCtrl" id="-1175648941%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-modifier-ctrl.html"><span>Modifier</span><wbr><span><span>Ctrl</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1175648941%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-modifier-ctrl.html">ModifierCtrl</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">4</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1045087568%2FProperties%2F1057001830" anchor-label="ModifierHyper" id="1045087568%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-modifier-hyper.html"><span>Modifier</span><wbr><span><span>Hyper</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1045087568%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-modifier-hyper.html">ModifierHyper</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">16</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1726475527%2FProperties%2F1057001830" anchor-label="ModifierMeta" id="-1726475527%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-modifier-meta.html"><span>Modifier</span><wbr><span><span>Meta</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1726475527%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-modifier-meta.html">ModifierMeta</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">32</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-563095093%2FProperties%2F1057001830" anchor-label="ModifierNumLock" id="-563095093%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-modifier-num-lock.html"><span>Modifier</span><wbr><span>Num</span><wbr><span><span>Lock</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-563095093%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-modifier-num-lock.html">ModifierNumLock</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">128</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="783580154%2FProperties%2F1057001830" anchor-label="ModifierShift" id="783580154%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-modifier-shift.html"><span>Modifier</span><wbr><span><span>Shift</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="783580154%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-modifier-shift.html">ModifierShift</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1602841823%2FProperties%2F1057001830" anchor-label="ModifierSuper" id="-1602841823%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-modifier-super.html"><span>Modifier</span><wbr><span><span>Super</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1602841823%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-modifier-super.html">ModifierSuper</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">8</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-612207036%2FProperties%2F1057001830" anchor-label="PageDown" id="-612207036%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-page-down.html"><span>Page</span><wbr><span><span>Down</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-612207036%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-page-down.html">PageDown</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">57355</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1617931435%2FProperties%2F1057001830" anchor-label="PageUp" id="1617931435%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-page-up.html"><span>Page</span><wbr><span><span>Up</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1617931435%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-page-up.html">PageUp</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">57354</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1665215767%2FProperties%2F1057001830" anchor-label="Right" id="-1665215767%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-right.html"><span><span>Right</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1665215767%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-right.html">Right</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">57351</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1861180230%2FProperties%2F1057001830" anchor-label="Up" id="-1861180230%2FProperties%2F1057001830" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain"></a>
+          <div class="table-row" data-filterable-current=":mosaic-terminal:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-terminal:dokkaHtmlPartial/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-up.html"><span><span>Up</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1861180230%2FProperties%2F1057001830"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-terminal:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-up.html">Up</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">57352</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+        <span>© 2025 Copyright</span>
+        <span class="pull-right">
+            <span>Generated by </span>
+            <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                <span>dokka</span>
+            </a>
+        </span>
+    </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
