@@ -22,6 +22,10 @@ jobs:
       - uses: mlugg/setup-zig@v1
         with:
           version: 0.14.0
+
+      - name: Generate JNI header
+        run: ./gradlew :mosaic-tty:compileJvmMainJava
+
       - run: zig build -p src/jvmMain/resources
         working-directory: mosaic-tty
 
