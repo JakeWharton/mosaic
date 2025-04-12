@@ -3,18 +3,26 @@
 ## [Unreleased]
 [Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.16.0...HEAD
 
+Nothing yet!
+
+
+## [0.17.0] - 2025-04-11
+[0.17.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.16.0
+
 New:
-- Add `focused` and `darkTheme` booleans to `Terminal` (available through `LocalTerminal`). These default to true and false, respectively, but will be updated if the terminal supports sending change notifications.
-- Bind `Terminal.focused` to a `Lifecycle` and expose into the composition as `LocalLifecycleOwner`. This allows using Compose lifecycle helpers such as `LifecycleResumeEffect` and others.
-- Underline styles (single, double, dashed, dotted, curved) and colors can now be specified for text and annotated string spans.
-- `LocalStaticLogger` composition local provides access to `StaticLogger` which allows logging plain strings at arbitrary points for inclusion in the next frame. This can be used from effects, callback, state classes, etc.
+- `Terminal` and `LocalTerminal` are now renamed to `TerminalState` and `LocalTerminalState`, respectively, along with some new capabilities:
+  - Add `focused` boolean which defaults to true. If the terminal supports sending focus changes, this will be updated in real time.
+  - Add `theme` property which defaults to 'unknown'. If the terminal supports querying theme state, this will be 'light' or 'dark' and be updated in real time. Note: this is not the OS theme, but instead reflects the theme of the terminal color scheme.
+  - Size property now features the size in pixels in addition to cells. These values will be 0 if unsupported by the terminal.
+- Bind `TerminalState.focused` to a `Lifecycle` and expose into the composition as `LocalLifecycleOwner`. This allows using Compose lifecycle helpers such as `LifecycleResumeEffect` and others.
+- Fancy underline styles (single, double, dashed, dotted, curved) and colors can now be specified for text and annotated string spans.
+- `LocalStaticLogger` composition local provides access to `StaticLogger` which allows logging plain strings at arbitrary points for inclusion in the next frame. This can be used from effects, callback, state classes, etc. Support for logging `AnnotatedString`s will come in a future release.
 - `runMosaicMain` function replaces the existing `runMosaicBlocking` for use specifically in `fun main()` or main-like scenarios.
 
 Changed:
-- Switched to our own terminal integration library. Report any issues with keyboard input, incorrect size reporting, or garbled output.
+- Switched to our own terminal integration and parsing library. Report any issues with keyboard input, incorrect size reporting, or garbled output. This unlocks many of the features listed above, as well as many more planned in the future.
 - Only disable the cursor and emit synchronized rendering markers if the terminal reports support for those features.
 - `Static` function is now called `StaticEffect` to better indicate that it only renders its content once.
-- The runtime's `Terminal` was renamed to `TerminalState` to avoid conflict with new, lower-level `Terminal` type. Additionally, `TerminalState` now uses `Terminal.Theme` and `Terminal.Size` for exposing the theme and size, respectively.
 - `runMosaic` and `runMosaicBlocking` now accept a `NonInteractivePolicy` argument which dictates the behavior when Mosaic cannot connect directly to the TTY.
 
 Fixed:
