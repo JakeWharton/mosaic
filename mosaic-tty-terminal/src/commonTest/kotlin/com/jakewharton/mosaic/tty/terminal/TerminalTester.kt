@@ -75,25 +75,31 @@ class TerminalTester(
 
 		coroutineScope {
 			var readJob = launch(Dispatchers.IO) { readUntilInterrupted() }
-			testTty.tty.asTerminalIn(this).use { terminal ->
-				testTty.interruptRead()
-				readJob.cancelAndJoin()
-				assertThat(expects).isEmpty()
+			try {
+				testTty.tty.asTerminalIn(this).use { terminal ->
+					testTty.interruptRead()
+					readJob.cancelAndJoin()
 
-				val eventJob = launch(start = UNDISPATCHED) {
-					for (event in terminal.events) {
-						println(event)
+					try {
+						assertThat(expects).isEmpty()
+
+						val eventJob = launch(start = UNDISPATCHED) {
+							for (event in terminal.events) {
+								println(event)
+							}
+						}
+						val setup = buffer.readByteString()
+						terminal.block(setup)
+
+						eventJob.cancelAndJoin()
+					} finally {
+						readJob = launch(Dispatchers.IO) { readUntilInterrupted() }
 					}
 				}
-				val setup = buffer.readByteString()
-				terminal.block(setup)
-
-				eventJob.cancelAndJoin()
-
-				readJob = launch(Dispatchers.IO) { readUntilInterrupted() }
+			} finally {
+				testTty.interruptRead()
+				readJob.cancelAndJoin()
 			}
-			testTty.interruptRead()
-			readJob.cancelAndJoin()
 		}
 
 		return buffer.readByteString()
