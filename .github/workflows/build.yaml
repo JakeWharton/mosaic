@@ -96,6 +96,8 @@ jobs:
             target: mingwX64
           - os: windows-2025
             target: mingwX64
+          - os: windows-11-arm
+            target: skip
         tests:
           - type: native
           - type: java
@@ -108,6 +110,32 @@ jobs:
             version: 21
           - type: java
             version: latest
+        exclude:
+          # No Windows ARM Kotlin native target yet.
+          - platform:
+              os: windows-11-arm
+              target: skip
+            tests:
+              type: native
+          # No Windows ARM JDKs for these versions yet.
+          - platform:
+              os: windows-11-arm
+              target: skip
+            tests:
+              type: java
+              version: 8
+          - platform:
+              os: windows-11-arm
+              target: skip
+            tests:
+              type: java
+              version: 11
+          - platform:
+              os: windows-11-arm
+              target: skip
+            tests:
+              type: java
+              version: latest
 
     runs-on: ${{ matrix.platform.os }}
 
