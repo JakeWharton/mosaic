@@ -183,7 +183,7 @@ public suspend fun Tty.asTerminalIn(
 
 					when (event.mode) {
 						cursorMode -> {
-							cursorVisibility = event.setting.isSupported
+							cursorVisibility = event.setting.canBeChanged
 							if (event.setting == Setting.Set) {
 								toggleCursor = true
 								write(cursorDisable)
@@ -201,7 +201,7 @@ public suspend fun Tty.asTerminalIn(
 						}
 
 						synchronizedOutputMode -> {
-							synchronizedOutput = event.setting.isSupported
+							synchronizedOutput = event.setting.canBeChanged
 						}
 
 						systemThemeMode -> {
@@ -387,4 +387,20 @@ internal fun detectAnsiLevel(): AnsiLevel {
 		return AnsiLevel.ANSI16
 	}
 	return AnsiLevel.NONE
+}
+
+private val Setting.isSupported get() = when (this) {
+	Setting.NotRecognized -> false
+	Setting.Set -> true
+	Setting.Reset -> true
+	Setting.PermanentlySet -> true
+	Setting.PermanentlyReset -> false
+}
+
+private val Setting.canBeChanged get() = when (this) {
+	Setting.NotRecognized -> false
+	Setting.Set -> true
+	Setting.Reset -> true
+	Setting.PermanentlySet -> false
+	Setting.PermanentlyReset -> false
 }

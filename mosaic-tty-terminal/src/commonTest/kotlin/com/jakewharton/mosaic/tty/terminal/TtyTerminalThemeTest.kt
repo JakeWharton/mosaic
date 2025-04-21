@@ -13,11 +13,11 @@ class TtyTerminalThemeTest {
 		val teardown = withTerminal { setup ->
 			assertThat(capabilities.themeEvents).isFalse()
 
-			// Do not try to enable theme events.
+			// No attempt to enable theme events.
 			assertThat(setup).doesNotContain("$CSI?2031h")
 		}
 
-		// Do not try to disable theme events.
+		// No attempt to disable theme events.
 		assertThat(teardown).doesNotContain("$CSI?2031l")
 	}
 
@@ -30,11 +30,11 @@ class TtyTerminalThemeTest {
 		val teardown = withTerminal { setup ->
 			assertThat(capabilities.themeEvents).isTrue()
 
-			// Do not try to enable theme events.
+			// Theme events are not re-enabled.
 			assertThat(setup).doesNotContain("$CSI?2031h")
 		}
 
-		// Do not try to disable theme events.
+		// Theme events are left enabled.
 		assertThat(teardown).doesNotContain("$CSI?2031l")
 	}
 
@@ -53,5 +53,39 @@ class TtyTerminalThemeTest {
 
 		// Disable theme events.
 		assertThat(teardown).contains("$CSI?2031l")
+	}
+
+	@Test fun replyPermanentlySet() = terminalTest {
+		expect("${CSI}0c", reply = "$CSI?62;22c")
+		// Theme events are permanently set (i.e, always enabled).
+		expect("$CSI?2031\$p", reply = "$CSI?2031;3\$y")
+		expect("${CSI}5n", reply = "${CSI}0n")
+
+		val teardown = withTerminal { setup ->
+			assertThat(capabilities.themeEvents).isTrue()
+
+			// No attempt to enable theme events.
+			assertThat(setup).doesNotContain("$CSI?2031h")
+		}
+
+		// No attempt to disable theme events.
+		assertThat(teardown).doesNotContain("$CSI?2031l")
+	}
+
+	@Test fun replyPermanentlyReset() = terminalTest {
+		expect("${CSI}0c", reply = "$CSI?62;22c")
+		// Theme events are permanently reset (i.e, not supported).
+		expect("$CSI?2031\$p", reply = "$CSI?2031;4\$y")
+		expect("${CSI}5n", reply = "${CSI}0n")
+
+		val teardown = withTerminal { setup ->
+			assertThat(capabilities.themeEvents).isFalse()
+
+			// No attempt to enable theme events.
+			assertThat(setup).doesNotContain("$CSI?2031h")
+		}
+
+		// No attempt to disable theme events.
+		assertThat(teardown).doesNotContain("$CSI?2031l")
 	}
 }

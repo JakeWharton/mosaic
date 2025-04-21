@@ -220,15 +220,12 @@ public class DecModeReportEvent(
 	public val mode: Int,
 	public val setting: Setting,
 ) : Event {
-	public enum class Setting(
-		/** False if not recognized or permanently reset. */
-		public val isSupported: Boolean,
-	) {
-		NotRecognized(false),
-		Set(true),
-		Reset(true),
-		PermanentlySet(true),
-		PermanentlyReset(false),
+	public enum class Setting {
+		NotRecognized,
+		Set,
+		Reset,
+		PermanentlySet,
+		PermanentlyReset,
 	}
 }
 
