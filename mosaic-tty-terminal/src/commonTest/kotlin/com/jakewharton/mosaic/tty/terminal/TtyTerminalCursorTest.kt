@@ -13,11 +13,11 @@ class TtyTerminalCursorTest {
 		val teardown = withTerminal { setup ->
 			assertThat(capabilities.cursorVisibility).isFalse()
 
-			// Cursor is not hidden.
+			// No attempt to hide cursor.
 			assertThat(setup).doesNotContain("$CSI?25l")
 		}
 
-		// Cursor is left hidden.
+		// No attempt to show cursor.
 		assertThat(teardown).doesNotContain("$CSI?25h")
 	}
 
@@ -52,6 +52,40 @@ class TtyTerminalCursorTest {
 		}
 
 		// Cursor is left hidden.
+		assertThat(teardown).doesNotContain("$CSI?25h")
+	}
+
+	@Test fun replyPermanentlySet() = terminalTest {
+		expect("${CSI}0c", reply = "$CSI?62;22c")
+		// Cursor is permanently set (i.e, always visible).
+		expect("$CSI?25\$p", reply = "$CSI?25;3\$y")
+		expect("${CSI}5n", reply = "${CSI}0n")
+
+		val teardown = withTerminal { setup ->
+			assertThat(capabilities.cursorVisibility).isFalse()
+
+			// No attempt to hide cursor.
+			assertThat(setup).doesNotContain("$CSI?25l")
+		}
+
+		// No attempt to show cursor.
+		assertThat(teardown).doesNotContain("$CSI?25h")
+	}
+
+	@Test fun replyPermanentlyReset() = terminalTest {
+		expect("${CSI}0c", reply = "$CSI?62;22c")
+		// Cursor is permanently reset (i.e, always hidden).
+		expect("$CSI?25\$p", reply = "$CSI?25;4\$y")
+		expect("${CSI}5n", reply = "${CSI}0n")
+
+		val teardown = withTerminal { setup ->
+			assertThat(capabilities.cursorVisibility).isFalse()
+
+			// No attempt to hide cursor.
+			assertThat(setup).doesNotContain("$CSI?25l")
+		}
+
+		// No attempt to show cursor.
 		assertThat(teardown).doesNotContain("$CSI?25h")
 	}
 }

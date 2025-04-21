@@ -179,8 +179,6 @@ final class com.jakewharton.mosaic.terminal/DecModeReportEvent : com.jakewharton
 
         final val entries // com.jakewharton.mosaic.terminal/DecModeReportEvent.Setting.entries|#static{}entries[0]
             final fun <get-entries>(): kotlin.enums/EnumEntries<com.jakewharton.mosaic.terminal/DecModeReportEvent.Setting> // com.jakewharton.mosaic.terminal/DecModeReportEvent.Setting.entries.<get-entries>|<get-entries>#static(){}[0]
-        final val isSupported // com.jakewharton.mosaic.terminal/DecModeReportEvent.Setting.isSupported|{}isSupported[0]
-            final fun <get-isSupported>(): kotlin/Boolean // com.jakewharton.mosaic.terminal/DecModeReportEvent.Setting.isSupported.<get-isSupported>|<get-isSupported>(){}[0]
 
         final fun valueOf(kotlin/String): com.jakewharton.mosaic.terminal/DecModeReportEvent.Setting // com.jakewharton.mosaic.terminal/DecModeReportEvent.Setting.valueOf|valueOf#static(kotlin.String){}[0]
         final fun values(): kotlin/Array<com.jakewharton.mosaic.terminal/DecModeReportEvent.Setting> // com.jakewharton.mosaic.terminal/DecModeReportEvent.Setting.values|values#static(){}[0]

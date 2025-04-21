@@ -13,11 +13,11 @@ class TtyTerminalFocusTest {
 		val teardown = withTerminal { setup ->
 			assertThat(capabilities.focusEvents).isFalse()
 
-			// Do not try to enable focus events.
+			// No attempt to enable focus events.
 			assertThat(setup).doesNotContain("$CSI?1004h")
 		}
 
-		// Do not try to disable focus events.
+		// No attempt to disable focus events.
 		assertThat(teardown).doesNotContain("$CSI?1004l")
 	}
 
@@ -30,11 +30,11 @@ class TtyTerminalFocusTest {
 		val teardown = withTerminal { setup ->
 			assertThat(capabilities.focusEvents).isTrue()
 
-			// Do not try to enable focus events.
+			// Focus events are not re-enabled.
 			assertThat(setup).doesNotContain("$CSI?1004h")
 		}
 
-		// Do not try to disable focus events.
+		// Focus events are left enabled.
 		assertThat(teardown).doesNotContain("$CSI?1004l")
 	}
 
@@ -53,5 +53,39 @@ class TtyTerminalFocusTest {
 
 		// Disable focus events.
 		assertThat(teardown).contains("$CSI?1004l")
+	}
+
+	@Test fun replyPermanentlySet() = terminalTest {
+		expect("${CSI}0c", reply = "$CSI?62;22c")
+		// Focus events are permanently set (i.e, always enabled).
+		expect("$CSI?1004\$p", reply = "$CSI?1004;3\$y")
+		expect("${CSI}5n", reply = "${CSI}0n")
+
+		val teardown = withTerminal { setup ->
+			assertThat(capabilities.focusEvents).isTrue()
+
+			// No attempt to enable focus events.
+			assertThat(setup).doesNotContain("$CSI?1004h")
+		}
+
+		// No attempt to disable focus events.
+		assertThat(teardown).doesNotContain("$CSI?1004l")
+	}
+
+	@Test fun replyPermanentlyReset() = terminalTest {
+		expect("${CSI}0c", reply = "$CSI?62;22c")
+		// Focus events are permanently reset (i.e, not supported).
+		expect("$CSI?1004\$p", reply = "$CSI?1004;4\$y")
+		expect("${CSI}5n", reply = "${CSI}0n")
+
+		val teardown = withTerminal { setup ->
+			assertThat(capabilities.focusEvents).isFalse()
+
+			// No attempt to enable focus events.
+			assertThat(setup).doesNotContain("$CSI?1004h")
+		}
+
+		// No attempt to disable focus events.
+		assertThat(teardown).doesNotContain("$CSI?1004l")
 	}
 }
