@@ -30,7 +30,7 @@ repositories {
 
 dependencies {
 	proGuard 'com.guardsquare:proguard-base:7.7.0'
-	r8 'com.android.tools:r8:8.9.21'
+	r8 'com.android.tools:r8:8.9.35'
 }
 
 kotlin {
