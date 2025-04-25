@@ -19,16 +19,16 @@ abstract class BaseEventParserTest {
 		testTty.close()
 		assertThat(parser.copyBuffer().toHexString()).isEqualTo("")
 	}
+}
 
-	internal fun TestTty.writeHex(hex: String) {
-		val buffer = hex.hexToByteArray()
-		val written = write(buffer, 0, buffer.size)
-		assertThat(written).isEqualTo(buffer.size)
-	}
+fun TestTty.writeHex(hex: String) {
+	val buffer = hex.hexToByteArray()
+	val written = write(buffer, 0, buffer.size)
+	assertThat(written).isEqualTo(buffer.size)
+}
 
-	internal fun TestTty.write(s: String) {
-		val bytes = s.encodeToByteArray()
-		val written = write(bytes, 0, bytes.size)
-		assertThat(written).isEqualTo(bytes.size)
-	}
+fun TestTty.write(s: String) {
+	val bytes = s.encodeToByteArray()
+	val written = write(bytes, 0, bytes.size)
+	assertThat(written).isEqualTo(bytes.size)
 }
