@@ -4,7 +4,6 @@ import assertk.assertThat
 import assertk.assertions.isEmpty
 import com.jakewharton.mosaic.terminal.Terminal
 import com.jakewharton.mosaic.tty.TestTty
-import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.cancelAndJoin
@@ -14,7 +13,6 @@ import kotlinx.coroutines.channels.toList
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import kotlinx.io.Buffer
 import kotlinx.io.UnsafeIoApi
 import kotlinx.io.bytestring.ByteString
@@ -37,16 +35,18 @@ class TerminalTester(
 	private data class Expect(val output: ByteString, val reply: ByteString)
 	private val expects = Channel<Expect>(UNLIMITED)
 
-	fun expect(output: String, reply: String) {
-		expects.trySend(Expect(output.encodeToByteString(), reply.encodeToByteString())).getOrThrow()
+	suspend fun expect(output: String, reply: String) {
+		expects.send(Expect(output.encodeToByteString(), reply.encodeToByteString()))
 	}
+
+	fun ptyWrite(s: String) = testTty.write(s)
 
 	suspend fun withTerminal(block: suspend Terminal.(setup: ByteString) -> Unit): ByteString {
 		expects.close()
 		val expects = ArrayDeque(expects.toList())
 
 		val buffer = Buffer()
-		suspend fun readUntilInterrupted() = withContext(Dispatchers.IO) {
+		fun readUntilInterrupted() {
 			var expectStartIndex = 0L
 			while (true) {
 				expects.firstOrNull()?.let { expect ->
@@ -81,17 +81,15 @@ class TerminalTester(
 					readJob.cancelAndJoin()
 
 					try {
-						assertThat(expects).isEmpty()
-
-						val eventJob = launch(start = UNDISPATCHED) {
-							for (event in terminal.events) {
-								println(event)
-							}
+						// Print the events parsed during setup.
+						while (true) {
+							println(terminal.events.tryReceive().getOrNull() ?: break)
 						}
 						val setup = buffer.readByteString()
-						terminal.block(setup)
 
-						eventJob.cancelAndJoin()
+						assertThat(expects).isEmpty()
+
+						terminal.block(setup)
 					} finally {
 						readJob = launch(Dispatchers.IO) { readUntilInterrupted() }
 					}

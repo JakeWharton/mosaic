@@ -1,8 +1,10 @@
 package com.jakewharton.mosaic.tty.terminal
 
 import assertk.assertThat
+import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
 import assertk.assertions.isTrue
+import com.jakewharton.mosaic.terminal.FocusEvent
 import kotlin.test.Test
 
 class TtyTerminalFocusTest {
@@ -12,9 +14,15 @@ class TtyTerminalFocusTest {
 
 		val teardown = withTerminal { setup ->
 			assertThat(capabilities.focusEvents).isFalse()
+			assertThat(state.focused.value).isTrue()
 
 			// No attempt to enable focus events.
 			assertThat(setup).doesNotContain("$CSI?1004h")
+
+			// Write an unsolicited focus=false event which should be ignored.
+			ptyWrite("${CSI}O")
+			assertThat(events.receive()).isEqualTo(FocusEvent(focused = false))
+			assertThat(state.focused.value).isTrue()
 		}
 
 		// No attempt to disable focus events.
@@ -29,9 +37,18 @@ class TtyTerminalFocusTest {
 
 		val teardown = withTerminal { setup ->
 			assertThat(capabilities.focusEvents).isTrue()
+			assertThat(state.focused.value).isTrue()
 
 			// Focus events are not re-enabled.
 			assertThat(setup).doesNotContain("$CSI?1004h")
+
+			// Write focus events which should be honored.
+			ptyWrite("${CSI}O")
+			assertThat(events.receive()).isEqualTo(FocusEvent(focused = false))
+			assertThat(state.focused.value).isFalse()
+			ptyWrite("${CSI}I")
+			assertThat(events.receive()).isEqualTo(FocusEvent(focused = true))
+			assertThat(state.focused.value).isTrue()
 		}
 
 		// Focus events are left enabled.
@@ -46,9 +63,18 @@ class TtyTerminalFocusTest {
 
 		val teardown = withTerminal { setup ->
 			assertThat(capabilities.focusEvents).isTrue()
+			assertThat(state.focused.value).isTrue()
 
 			// Enable focus events.
 			assertThat(setup).contains("$CSI?1004h")
+
+			// Write focus events which should be honored.
+			ptyWrite("${CSI}O")
+			assertThat(events.receive()).isEqualTo(FocusEvent(focused = false))
+			assertThat(state.focused.value).isFalse()
+			ptyWrite("${CSI}I")
+			assertThat(events.receive()).isEqualTo(FocusEvent(focused = true))
+			assertThat(state.focused.value).isTrue()
 		}
 
 		// Disable focus events.
@@ -63,9 +89,18 @@ class TtyTerminalFocusTest {
 
 		val teardown = withTerminal { setup ->
 			assertThat(capabilities.focusEvents).isTrue()
+			assertThat(state.focused.value).isTrue()
 
 			// No attempt to enable focus events.
 			assertThat(setup).doesNotContain("$CSI?1004h")
+
+			// Write focus events which should be honored.
+			ptyWrite("${CSI}O")
+			assertThat(events.receive()).isEqualTo(FocusEvent(focused = false))
+			assertThat(state.focused.value).isFalse()
+			ptyWrite("${CSI}I")
+			assertThat(events.receive()).isEqualTo(FocusEvent(focused = true))
+			assertThat(state.focused.value).isTrue()
 		}
 
 		// No attempt to disable focus events.
@@ -80,9 +115,15 @@ class TtyTerminalFocusTest {
 
 		val teardown = withTerminal { setup ->
 			assertThat(capabilities.focusEvents).isFalse()
+			assertThat(state.focused.value).isTrue()
 
 			// No attempt to enable focus events.
 			assertThat(setup).doesNotContain("$CSI?1004h")
+
+			// Write an unsolicited focus=false event which should be ignored.
+			ptyWrite("${CSI}O")
+			assertThat(events.receive()).isEqualTo(FocusEvent(focused = false))
+			assertThat(state.focused.value).isTrue()
 		}
 
 		// No attempt to disable focus events.

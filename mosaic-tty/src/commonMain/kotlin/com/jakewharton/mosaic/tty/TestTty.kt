@@ -9,7 +9,7 @@ public expect class TestTty : AutoCloseable {
 
 	/**
 	 * Write up to [count] bytes into [buffer] at [offset] to the PTY.
-	 * The number of bytes read will be returned.
+	 * The number of bytes written will be returned.
 	 *
 	 * @see Tty.read
 	 * @see Tty.readWithTimeout

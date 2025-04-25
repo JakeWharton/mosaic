@@ -291,7 +291,11 @@ public suspend fun Tty.asTerminalIn(
 				}
 
 				is FocusEvent -> {
-					focused.value = event.focused
+					if (focusEvents) {
+						focused.value = event.focused
+					} else {
+						// TODO Report unsolicited focus events... somewhere.
+					}
 				}
 
 				is ResizeEvent -> {
