@@ -37,4 +37,3 @@ finalizationHook = "com.jakewharton.finalization:finalization-hook:0.1.0"
 
 junit4 = "junit:junit:4.13.2"
 assertk = "com.willowtreeapps.assertk:assertk:0.28.1"
-turbine = "app.cash.turbine:turbine:1.2.0"
