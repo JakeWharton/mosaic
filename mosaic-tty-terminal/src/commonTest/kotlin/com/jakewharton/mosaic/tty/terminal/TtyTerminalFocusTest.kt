@@ -34,13 +34,15 @@ class TtyTerminalFocusTest {
 		// Focus events are set (i.e, enabled).
 		expect("$CSI?1004\$p", reply = "$CSI?1004;1\$y")
 		expect("${CSI}5n", reply = "${CSI}0n")
+		// Second DSR is used to check for initial focus value.
+		expect("${CSI}5n", reply = "${CSI}0n")
 
 		val teardown = withTerminal { setup ->
 			assertThat(capabilities.focusEvents).isTrue()
 			assertThat(state.focused.value).isTrue()
 
-			// Focus events are not re-enabled.
-			assertThat(setup).doesNotContain("$CSI?1004h")
+			// Focus events re-enabled to possibly trigger initial value reply.
+			assertThat(setup).contains("$CSI?1004h")
 
 			// Write focus events which should be honored.
 			ptyWrite("${CSI}O")
@@ -55,10 +57,27 @@ class TtyTerminalFocusTest {
 		assertThat(teardown).doesNotContain("$CSI?1004l")
 	}
 
+	@Test fun replySetInitialValue() = terminalTest {
+		expect("${CSI}0c", reply = "$CSI?62;22c")
+		// Focus events are set (i.e, enabled).
+		expect("$CSI?1004\$p", reply = "$CSI?1004;1\$y")
+		expect("${CSI}5n", reply = "${CSI}0n")
+		// Terminal is not focused.
+		expect("$CSI?1004h", reply = "${CSI}O")
+		expect("${CSI}5n", reply = "${CSI}0n")
+
+		withTerminal {
+			assertThat(capabilities.focusEvents).isTrue()
+			assertThat(state.focused.value).isFalse()
+		}
+	}
+
 	@Test fun replyReset() = terminalTest {
 		expect("${CSI}0c", reply = "$CSI?62;22c")
 		// Focus events are reset (i.e, not enabled).
 		expect("$CSI?1004\$p", reply = "$CSI?1004;2\$y")
+		expect("${CSI}5n", reply = "${CSI}0n")
+		// Second DSR is used to check for initial focus value.
 		expect("${CSI}5n", reply = "${CSI}0n")
 
 		val teardown = withTerminal { setup ->
@@ -81,18 +100,35 @@ class TtyTerminalFocusTest {
 		assertThat(teardown).contains("$CSI?1004l")
 	}
 
+	@Test fun replyResetInitialValue() = terminalTest {
+		expect("${CSI}0c", reply = "$CSI?62;22c")
+		// Focus events are reset (i.e, not enabled).
+		expect("$CSI?1004\$p", reply = "$CSI?1004;2\$y")
+		expect("${CSI}5n", reply = "${CSI}0n")
+		// Terminal is not focused.
+		expect("$CSI?1004h", reply = "${CSI}O")
+		expect("${CSI}5n", reply = "${CSI}0n")
+
+		withTerminal {
+			assertThat(capabilities.focusEvents).isTrue()
+			assertThat(state.focused.value).isFalse()
+		}
+	}
+
 	@Test fun replyPermanentlySet() = terminalTest {
 		expect("${CSI}0c", reply = "$CSI?62;22c")
 		// Focus events are permanently set (i.e, always enabled).
 		expect("$CSI?1004\$p", reply = "$CSI?1004;3\$y")
+		expect("${CSI}5n", reply = "${CSI}0n")
+		// Second DSR is used to check for initial focus value.
 		expect("${CSI}5n", reply = "${CSI}0n")
 
 		val teardown = withTerminal { setup ->
 			assertThat(capabilities.focusEvents).isTrue()
 			assertThat(state.focused.value).isTrue()
 
-			// No attempt to enable focus events.
-			assertThat(setup).doesNotContain("$CSI?1004h")
+			// Focus events re-enabled to possibly trigger initial value reply.
+			assertThat(setup).contains("$CSI?1004h")
 
 			// Write focus events which should be honored.
 			ptyWrite("${CSI}O")
@@ -105,6 +141,21 @@ class TtyTerminalFocusTest {
 
 		// No attempt to disable focus events.
 		assertThat(teardown).doesNotContain("$CSI?1004l")
+	}
+
+	@Test fun replyPermanentlySetInitialValue() = terminalTest {
+		expect("${CSI}0c", reply = "$CSI?62;22c")
+		// Focus events are permanently set (i.e, always enabled).
+		expect("$CSI?1004\$p", reply = "$CSI?1004;3\$y")
+		expect("${CSI}5n", reply = "${CSI}0n")
+		// Terminal is not focused.
+		expect("$CSI?1004h", reply = "${CSI}O")
+		expect("${CSI}5n", reply = "${CSI}0n")
+
+		withTerminal {
+			assertThat(capabilities.focusEvents).isTrue()
+			assertThat(state.focused.value).isFalse()
+		}
 	}
 
 	@Test fun replyPermanentlyReset() = terminalTest {
