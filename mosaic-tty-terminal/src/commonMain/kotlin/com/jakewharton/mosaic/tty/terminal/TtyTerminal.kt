@@ -191,11 +191,11 @@ public suspend fun Tty.asTerminalIn(
 						}
 
 						focusMode -> {
-							focusEvents = event.setting.isSupported
-							if (event.setting == Setting.Reset) {
-								toggleFocus = true
-								// Enabling focus notification _might_ trigger an initial event. There is
-								// otherwise no explicit way to request the initial value.
+							if (event.setting.isSupported) {
+								focusEvents = true
+								toggleFocus = event.setting == Setting.Reset
+								// Enabling focus notification (even if already set) _might_ trigger an initial
+								// event. There is otherwise no explicit way to request the initial value.
 								write(focusEnable)
 							}
 						}
@@ -228,7 +228,7 @@ public suspend fun Tty.asTerminalIn(
 
 				is OperatingStatusResponseEvent -> {
 					if (stage == StageCapabilityQueries) {
-						if (toggleFocus or toggleInBandResize or toggleSystemTheme) {
+						if (focusEvents or toggleInBandResize or toggleSystemTheme) {
 							// By enabling these modes (or by sending an explicit default value query after
 							// enabling the mode) wait for a reply about the default with a second DSR.
 							stage = StageDefaultQueries
