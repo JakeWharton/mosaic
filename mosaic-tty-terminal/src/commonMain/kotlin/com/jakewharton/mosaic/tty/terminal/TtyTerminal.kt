@@ -167,6 +167,7 @@ public suspend fun Tty.asTerminalIn(
 							"$CSI?$synchronizedOutputMode\$p" +
 							"$CSI?$systemThemeMode\$p" +
 							"$CSI?$inBandResizeMode\$p" +
+							"$CSI?996n" + // Theme query
 							"${APC}Gi=31,s=1,v=1,a=q,t=d,f=24;AAAA$ST" + // Kitty graphics
 							"$CSI?u" + // Kitty keyboard
 							"${OSC}99;i=1:p=?$ST" + // Kitty notifications
@@ -208,10 +209,7 @@ public suspend fun Tty.asTerminalIn(
 							themeEvents = event.setting.isSupported
 							if (event.setting == Setting.Reset) {
 								toggleSystemTheme = true
-								write(
-									systemThemeEnable +
-										"$CSI?996n", // Current system theme query.
-								)
+								write(systemThemeEnable)
 							}
 						}
 
@@ -228,7 +226,7 @@ public suspend fun Tty.asTerminalIn(
 
 				is OperatingStatusResponseEvent -> {
 					if (stage == StageCapabilityQueries) {
-						if (focusEvents or toggleInBandResize or toggleSystemTheme) {
+						if (focusEvents or toggleInBandResize) {
 							// By enabling these modes (or by sending an explicit default value query after
 							// enabling the mode) wait for a reply about the default with a second DSR.
 							stage = StageDefaultQueries
@@ -303,10 +301,14 @@ public suspend fun Tty.asTerminalIn(
 				}
 
 				is SystemThemeEvent -> {
-					theme.value = if (event.isDark) {
-						Terminal.Theme.Dark
+					if (themeEvents || stage == StageCapabilityQueries) {
+						theme.value = if (event.isDark) {
+							Terminal.Theme.Dark
+						} else {
+							Terminal.Theme.Light
+						}
 					} else {
-						Terminal.Theme.Light
+						// TODO Report unsolicited theme events... somewhere.
 					}
 				}
 
