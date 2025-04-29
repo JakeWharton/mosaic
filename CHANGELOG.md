@@ -4,8 +4,9 @@
 [Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.16.0...HEAD
 
 Changed:
-- Unsolicited focus and theme events are now ignored unless the terminal has reported that it supports focus and theme, respectively.
-  This should have no real impact on anything, except that now the `Terminal.capabilities` value can now be trusted to indicate whether `Terminal.state` will ever change.
+- Unsolicited focus, theme, and resize events are now ignored unless the terminal has reported that it supports each of those modes.
+  This should have no real impact on anything, except that now the `Terminal.capabilities` value can now be trusted to indicate whether `Terminal.state` will ever change in the case of focus and theme.
+  For terminal size, a platform-specific fallback exists which will attempt to still correctly report the size, but asynchronously.
 - Terminal theme is now always queried for an initial value regardless of whether the terminal supports sending theme changes.
 - Java 11 is now the minimum-supported JVM version.
 

@@ -214,10 +214,10 @@ public suspend fun Tty.asTerminalIn(
 						}
 
 						inBandResizeMode -> {
-							inBandResizeEvents = event.setting.isSupported
-							if (event.setting == Setting.Reset) {
-								toggleInBandResize = true
-								// Enabling in-band resize will trigger an initial event.
+							if (event.setting.isSupported) {
+								inBandResizeEvents = true
+								toggleInBandResize = event.setting == Setting.Reset
+								// Enabling in-band resize (even if already set) should trigger an initial event.
 								write(inBandResizeEnable)
 							}
 						}
@@ -226,7 +226,7 @@ public suspend fun Tty.asTerminalIn(
 
 				is OperatingStatusResponseEvent -> {
 					if (stage == StageCapabilityQueries) {
-						if (focusEvents or toggleInBandResize) {
+						if (focusEvents or inBandResizeEvents) {
 							// By enabling these modes (or by sending an explicit default value query after
 							// enabling the mode) wait for a reply about the default with a second DSR.
 							stage = StageDefaultQueries
@@ -297,7 +297,11 @@ public suspend fun Tty.asTerminalIn(
 				}
 
 				is ResizeEvent -> {
-					size.value = Terminal.Size(event.columns, event.rows, event.width, event.height)
+					if (inBandResizeEvents) {
+						size.value = Terminal.Size(event.columns, event.rows, event.width, event.height)
+					} else {
+						// TODO Report unsolicited resize events... somewhere.
+					}
 				}
 
 				is SystemThemeEvent -> {
@@ -332,7 +336,7 @@ public suspend fun Tty.asTerminalIn(
 		write("\r\n")
 	}
 
-	if (!toggleInBandResize) {
+	if (!inBandResizeEvents) {
 		currentSize().let { (columns, rows) ->
 			size.value = Terminal.Size(columns, rows)
 		}
