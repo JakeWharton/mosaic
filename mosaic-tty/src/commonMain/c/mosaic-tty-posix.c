@@ -14,6 +14,8 @@
 #include <time.h>
 #include <unistd.h>
 
+static _Atomic(MosaicTty *) globalTty;
+
 MosaicTtyInitResult tty_initWithFd(int fd) {
 	MosaicTtyInitResult result = {};
 
@@ -35,29 +37,6 @@ MosaicTtyInitResult tty_initWithFd(int fd) {
 
 	result.tty = tty;
 
-	ret:
-	return result;
-
-	err:
-	free(tty);
-	goto ret;
-}
-
-static _Atomic(MosaicTty *) globalTty;
-
-MosaicTtyInitResult tty_init() {
-	MosaicTtyInitResult result = {};
-
-	int fd = open("/dev/tty", O_RDWR);
-	if (unlikely(fd == -1)) {
-		result.error = errno;
-		result.no_tty = true;
-		goto ret;
-	}
-
-	result = tty_initWithFd(fd);
-
-	MosaicTty *tty = result.tty;
 	MosaicTty *expected = NULL;
 	if (likely(tty) && !atomic_compare_exchange_strong(&globalTty, &expected, tty)) {
 		// We initialized an instance but there already was a global instance.
@@ -67,6 +46,22 @@ MosaicTtyInitResult tty_init() {
 	}
 
 	ret:
+	return result;
+
+	err:
+	free(tty);
+	goto ret;
+}
+
+MosaicTtyInitResult tty_init() {
+	int fd = open("/dev/tty", O_RDWR);
+	if (likely(fd != -1)) {
+		return tty_initWithFd(fd);
+	}
+
+	MosaicTtyInitResult result = {};
+	result.error = errno;
+	result.no_tty = true;
 	return result;
 }
 
@@ -173,6 +168,8 @@ void sigwinchHandler(int value UNUSED) {
 		} else {
 			// TODO Send errno somewhere? Maybe once we get debug logs working.
 		}
+	} else {
+		// TODO Send warning somewhere? Maybe once we get debug logs working.
 	}
 }
 

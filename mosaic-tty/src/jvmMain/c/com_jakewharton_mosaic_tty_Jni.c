@@ -360,14 +360,20 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyInit(
 	jclass type UNUSED
 ) {
 	MosaicTestTtyInitResult result = testTty_init();
-	if (likely(!result.error)) {
+	if (likely(result.testTty)) {
 		return (jlong) result.testTty;
 	}
 
-	// This throw can fail, but the only condition that should cause that is OOM which
-	// will occur from returning 0 (which is otherwise ignored if the throw succeeds).
-	throwIoe(env, result.error);
-	return 0;
+	if (result.already_bound) {
+		jclass ise = (*env)->FindClass(env, "java/lang/IllegalStateException");
+		(*env)->ThrowNew(env, ise, "TestTty or Tty already bound");
+	} else if (result.error) {
+		throwIoe(env, result.error);
+	} else {
+		jclass ise = (*env)->FindClass(env, "java/lang/OutOfMemoryException");
+		(*env)->ThrowNew(env, ise, NULL);
+	}
+	return 0; // Unused
 }
 
 JNIEXPORT jint JNICALL
