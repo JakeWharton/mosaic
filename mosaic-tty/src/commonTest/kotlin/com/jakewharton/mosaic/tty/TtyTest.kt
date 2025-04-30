@@ -1,9 +1,9 @@
 package com.jakewharton.mosaic.tty
 
 import assertk.assertThat
-import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isGreaterThan
+import assertk.assertions.isTrue
 import assertk.assertions.isZero
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -12,12 +12,16 @@ import kotlin.test.Test
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.measureTime
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class TtyTest {
-	private val events = ArrayDeque<String>()
+	private val events = Channel<String>(UNLIMITED)
 	private val testTty = TestTty.bind()
 	private val tty = testTty.tty
 
@@ -25,11 +29,16 @@ class TtyTest {
 		tty.enableRawMode()
 	}
 
-	@AfterTest fun after() {
+	@AfterTest fun after() = runTest {
 		// TestTty.close() will call Tty.close(), but we get a free idempotency test here.
 		tty.close()
 		testTty.close()
-		assertThat(events, name = "events").isEmpty()
+
+		assertEventsEmpty()
+	}
+
+	private fun assertEventsEmpty() {
+		assertThat(events.isEmpty, name = "events empty").isTrue()
 	}
 
 	@Test fun readWhatWasWritten() {
@@ -112,25 +121,25 @@ class TtyTest {
 		testTty.focusEvent(true)
 	}
 
-	@Test fun focusEventCallbackDeliveredOnWindows() {
-		if (!isWindows()) return
+	@Test fun focusEventCallbackDeliveredOnWindows() = runTest {
+		if (!isWindows()) return@runTest
 
 		tty.setCallback(MyCallback())
 
 		testTty.focusEvent(true)
 		doWriteReadRoundtrip()
 
-		assertThat(events.removeFirst()).isEqualTo("hey! onFocus true")
+		assertThat(events.receive()).isEqualTo("hey! onFocus true")
 	}
 
-	@Test fun focusEventCallbackIgnoredOnNonWindows() {
-		if (isWindows()) return
+	@Test fun focusEventCallbackIgnoredOnNonWindows() = runTest {
+		if (isWindows()) return@runTest
 
 		tty.setCallback(MyCallback())
 
 		testTty.focusEvent(true)
 
-		assertThat(events).isEmpty()
+		assertEventsEmpty()
 	}
 
 	@Test fun keyEventNoCallback() {
@@ -138,25 +147,25 @@ class TtyTest {
 	}
 
 	@Ignore // Event not delivered yet.
-	@Test fun keyEventCallback() {
-		if (!isWindows()) return
+	@Test fun keyEventCallback() = runTest {
+		if (!isWindows()) return@runTest
 
 		tty.setCallback(MyCallback())
 
 		testTty.keyEvent()
 		doWriteReadRoundtrip()
 
-		assertThat(events.removeFirst()).isEqualTo("hey! onKey")
+		assertThat(events.receive()).isEqualTo("hey! onKey")
 	}
 
-	@Test fun keyEventCallbackIgnoredOnNonWindows() {
-		if (isWindows()) return
+	@Test fun keyEventCallbackIgnoredOnNonWindows() = runTest {
+		if (isWindows()) return@runTest
 
 		tty.setCallback(MyCallback())
 
 		testTty.keyEvent()
 
-		assertThat(events).isEmpty()
+		assertEventsEmpty()
 	}
 
 	@Test fun mouseEventNoCallback() {
@@ -164,36 +173,33 @@ class TtyTest {
 	}
 
 	@Ignore // Event not delivered yet.
-	@Test fun mouseEventCallback() {
-		if (!isWindows()) return
+	@Test fun mouseEventCallback() = runTest {
+		if (!isWindows()) return@runTest
 
 		tty.setCallback(MyCallback())
 
 		testTty.mouseEvent()
 		doWriteReadRoundtrip()
 
-		assertThat(events.removeFirst()).isEqualTo("hey! onMouse")
+		assertThat(events.receive()).isEqualTo("hey! onMouse")
 	}
 
-	@Test fun mouseEventCallbackIgnoredOnNonWindows() {
-		if (isWindows()) return
+	@Test fun mouseEventCallbackIgnoredOnNonWindows() = runTest {
+		if (isWindows()) return@runTest
 
 		tty.setCallback(MyCallback())
 
 		testTty.mouseEvent()
 
-		assertThat(events).isEmpty()
+		assertEventsEmpty()
 	}
 
 	@Test fun resizeEventNoCallback() {
 		testTty.resizeEvent(1, 2, 3, 4)
 	}
 
-	@Test fun resizeEventCallback() {
-		if (isWindows()) {
-			// Resize events are not delivered unless we disable their filtering.
-			tty.enableWindowResizeEvents()
-		}
+	@Test fun resizeEventCallback() = runTest {
+		tty.enableWindowResizeEvents()
 		tty.setCallback(MyCallback())
 
 		testTty.resizeEvent(1, 2, 3, 4)
@@ -204,31 +210,28 @@ class TtyTest {
 		} else {
 			"hey! onResize 1 2 3 4"
 		}
-		assertThat(events.removeFirst()).isEqualTo(expected)
+		assertThat(events.receive()).isEqualTo(expected)
 	}
 
-	@Test fun callbackClear() {
+	@Test fun callbackClear() = runTest {
 		tty.setCallback(MyCallback())
 		tty.setCallback(null)
 
 		testTty.resizeEvent(1, 2, 3, 4)
 		doWriteReadRoundtrip()
 
-		assertThat(events).isEmpty()
+		assertEventsEmpty()
 	}
 
-	@Test fun callbackReplacementUsesNewInstance() {
-		if (isWindows()) {
-			tty.enableWindowResizeEvents()
-		}
-
+	@Test fun callbackReplacementUsesNewInstance() = runTest {
+		tty.enableWindowResizeEvents()
 		tty.setCallback(MyCallback())
 		tty.setCallback(MyCallback("hello!"))
 
 		testTty.resizeEvent(1, 2, 0, 0)
 		doWriteReadRoundtrip()
 
-		assertThat(events.removeFirst()).isEqualTo("hello! onResize 1 2 0 0")
+		assertThat(events.receive()).isEqualTo("hello! onResize 1 2 0 0")
 	}
 
 	@Keep // Ensure reference doesn't leak to a local.
@@ -256,6 +259,15 @@ class TtyTest {
 		callbackRef.assertGc()
 	}
 
+	@Test fun sizeAndResize() {
+		assertThat(tty.currentSize()).isEqualTo(intArrayOf(80, 24, 0, 0))
+
+		if (isWindows()) return
+
+		testTty.resizeEvent(90, 30, 0, 0)
+		assertThat(tty.currentSize()).isEqualTo(intArrayOf(90, 30, 0, 0))
+	}
+
 	/**
 	 * On Windows events are only delivered during reads. Call this after an event to perform a
 	 * write-read round-trip to ensure all events were processed.
@@ -270,16 +282,16 @@ class TtyTest {
 		private val prefix: String = "hey!",
 	) : Tty.Callback {
 		override fun onFocus(focused: Boolean) {
-			events += "$prefix onFocus $focused"
+			events.trySend("$prefix onFocus $focused")
 		}
 		override fun onKey() {
-			events += "$prefix onKey"
+			events.trySend("$prefix onKey")
 		}
 		override fun onMouse() {
-			events += "$prefix onMouse"
+			events.trySend("$prefix onMouse")
 		}
 		override fun onResize(columns: Int, rows: Int, width: Int, height: Int) {
-			events += "$prefix onResize $columns $rows $width $height"
+			events.trySend("$prefix onResize $columns $rows $width $height")
 		}
 	}
 }
