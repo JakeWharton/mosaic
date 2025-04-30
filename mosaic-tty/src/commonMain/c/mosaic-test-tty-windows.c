@@ -14,10 +14,10 @@ typedef struct MosaicTestTtyImpl {
 	atomic_bool interrupt;
 } MosaicTestTtyImpl;
 
+static atomic_flag globalTestTty = ATOMIC_FLAG_INIT;
+
 MosaicTestTtyInitResult testTty_init() {
 	MosaicTestTtyInitResult result = {};
-
-	// TODO Atomic boolean guaranteeing single instance
 
 	MosaicTestTtyImpl *testTty = calloc(1, sizeof(MosaicTestTtyImpl));
 	if (unlikely(testTty == NULL)) {
@@ -46,10 +46,9 @@ MosaicTestTtyInitResult testTty_init() {
 	}
 
 	MosaicTtyInitResult ttyInitResult = tty_initWithHandles(conin, conoutWrite, true);
-	if (unlikely(ttyInitResult.error)) {
-		CloseHandle(conoutRead);
-		CloseHandle(conoutWrite);
+	if (unlikely(!ttyInitResult.tty)) {
 		result.error = ttyInitResult.error;
+		result.already_bound = ttyInitResult.already_bound;
 		goto err_conout;
 	}
 
@@ -58,6 +57,14 @@ MosaicTestTtyInitResult testTty_init() {
 	testTty->conout_write = conoutWrite;
 
 	result.testTty = testTty;
+
+	if (unlikely(atomic_flag_test_and_set(&globalTestTty))) {
+		// We initialized an instance but there already was a global instance.
+		result.testTty = NULL;
+		result.error = tty_free(ttyInitResult.tty);
+		result.already_bound = true;
+		goto err_conout;
+	}
 
 	ret:
 	return result;
@@ -188,6 +195,7 @@ uint32_t testTty_free(MosaicTestTty *testTty) {
 		result = GetLastError();
 	}
 
+	atomic_flag_clear(&globalTestTty);
 	free(testTty);
 	return result;
 }

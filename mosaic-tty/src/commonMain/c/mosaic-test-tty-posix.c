@@ -49,8 +49,9 @@ MosaicTestTtyInitResult testTty_init() {
 	}
 
 	MosaicTtyInitResult ttyInitResult = tty_initWithFd(childFd);
-	if (unlikely(ttyInitResult.error)) {
+	if (unlikely(!ttyInitResult.tty)) {
 		result.error = ttyInitResult.error;
+		result.already_bound = ttyInitResult.already_bound;
 		goto err_child;
 	}
 

@@ -10,10 +10,13 @@ public actual class TestTty private constructor(
 	public actual val tty: Tty,
 ) : AutoCloseable {
 	public actual companion object {
-		public actual fun create(): TestTty {
+		public actual fun bind(): TestTty {
 			val testTtyPtr = testTty_init().useContents {
 				testTty?.let { return@useContents it }
 
+				if (already_bound) {
+					throw IllegalStateException("TestTty or Tty already bound")
+				}
 				if (error != 0U) {
 					throwIoe(error)
 				}

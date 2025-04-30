@@ -1,7 +1,10 @@
 package com.jakewharton.mosaic.tty
 
+import assertk.assertFailure
 import assertk.assertThat
+import assertk.assertions.hasMessage
 import assertk.assertions.isEqualTo
+import assertk.assertions.isInstanceOf
 import assertk.assertions.isZero
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -13,7 +16,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 
 class TestTtyTest {
-	private val testTty = TestTty.create()
+	private val testTty = TestTty.bind()
 	private val tty = testTty.tty
 
 	@BeforeTest fun before() {
@@ -26,15 +29,11 @@ class TestTtyTest {
 		testTty.close()
 	}
 
-	@Test fun canCreateMultiple() {
-		if (isWindows()) return // TODO Not currently supported.
-
-		TestTty.create().use { testTty2 ->
-			testTty.write("hey\n")
-			testTty2.write("bye\n")
-			assertThat(testTty2.tty.read(4)).isEqualTo("bye\n")
-			assertThat(testTty.tty.read(4)).isEqualTo("hey\n")
-		}
+	@Test fun onlyOne() {
+		assertFailure {
+			TestTty.bind()
+		}.isInstanceOf<IllegalStateException>()
+			.hasMessage("TestTty or Tty already bound")
 	}
 
 	@Test fun multipleRawModeResetCycles() {

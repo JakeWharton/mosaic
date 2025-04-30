@@ -23,7 +23,7 @@ import kotlinx.io.unsafe.UnsafeBufferOperations
 
 fun terminalTest(block: suspend TerminalTester.() -> Unit) {
 	runBlocking {
-		TestTty.create().use { testTty ->
+		TestTty.bind().use { testTty ->
 			TerminalTester(testTty).block()
 		}
 	}

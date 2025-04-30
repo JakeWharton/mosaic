@@ -2,7 +2,16 @@ package com.jakewharton.mosaic.tty
 
 public expect class TestTty : AutoCloseable {
 	public companion object {
-		public fun create(): TestTty
+
+		/**
+		 * Initialize a [TestTty] instance. Only a single [TestTty] instance can be bound at a time,
+		 * and only when a [Tty] is not also bound. Subsequent calls will throw an exception until
+		 * [TestTty.close] is called.
+		 *
+		 * @throws IOException If an error occurred creating the PTY.
+		 * @throws IllegalStateException If another instance is already bound.
+		 */
+		public fun bind(): TestTty
 	}
 
 	public val tty: Tty

@@ -18,7 +18,7 @@ import kotlinx.coroutines.test.runTest
 
 class TtyTest {
 	private val events = ArrayDeque<String>()
-	private val testTty = TestTty.create()
+	private val testTty = TestTty.bind()
 	private val tty = testTty.tty
 
 	@BeforeTest fun before() {

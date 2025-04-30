@@ -7,7 +7,7 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 
 abstract class BaseEventParserTest {
-	internal val testTty = TestTty.create()
+	internal val testTty = TestTty.bind()
 	private val tty = testTty.tty
 	internal val parser = EventParser(tty)
 

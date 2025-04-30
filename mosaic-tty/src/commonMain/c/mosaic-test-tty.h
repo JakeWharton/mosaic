@@ -10,6 +10,7 @@ typedef struct MosaicTestTtyImpl MosaicTestTty;
 typedef struct MosaicTestTtyInitResult {
 	MosaicTestTty *testTty;
 	uint32_t error;
+	bool already_bound;
 } MosaicTestTtyInitResult;
 
 MosaicTestTtyInitResult testTty_init();
