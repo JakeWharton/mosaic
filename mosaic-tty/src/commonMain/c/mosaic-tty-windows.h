@@ -8,8 +8,9 @@ enum { recordsCount = 64 };
 
 typedef struct MosaicTtyImpl {
 	HANDLE conin;
-	HANDLE conout;
-	bool conout_fake;
+	HANDLE conout_for_write;
+	bool conout_for_write_fake;
+	HANDLE conout_for_size;
 	HANDLE interrupt_event;
 	INPUT_RECORD records[recordsCount];
 	MosaicTtyCallback *callback;
@@ -21,8 +22,9 @@ typedef struct MosaicTtyImpl {
 
 MosaicTtyInitResult tty_initWithHandles(
 	HANDLE conin,
-	HANDLE conout,
-	bool conoutFake
+	HANDLE conoutForWrite,
+	bool conoutForWriteFake,
+	HANDLE conoutForSize
 );
 
 #endif // MOSAIC_TTY_WINDOWS_H

@@ -9,8 +9,9 @@
 
 MosaicTtyInitResult tty_initWithHandles(
 	HANDLE conin,
-	HANDLE conout,
-	bool conoutFake
+	HANDLE conoutForWrite,
+	bool conoutForWriteFake,
+	HANDLE conoutForSize
 ) {
 	MosaicTtyInitResult result = {};
 
@@ -20,15 +21,6 @@ MosaicTtyInitResult tty_initWithHandles(
 		goto ret;
 	}
 
-	if (unlikely(conin == INVALID_HANDLE_VALUE)) {
-		result.error = GetLastError();
-		goto err;
-	}
-	if (unlikely(conout == INVALID_HANDLE_VALUE)) {
-		result.error = GetLastError();
-		goto err;
-	}
-
 	HANDLE interruptEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 	if (unlikely(interruptEvent == NULL)) {
 		result.error = GetLastError();
@@ -36,8 +28,9 @@ MosaicTtyInitResult tty_initWithHandles(
 	}
 
 	tty->conin = conin;
-	tty->conout = conout;
-	tty->conout_fake = conoutFake;
+	tty->conout_for_write = conoutForWrite;
+	tty->conout_for_write_fake = conoutForWriteFake;
+	tty->conout_for_size = conoutForSize;
 	tty->interrupt_event = interruptEvent;
 
 	result.tty = tty;
@@ -53,9 +46,17 @@ MosaicTtyInitResult tty_initWithHandles(
 static _Atomic(MosaicTty *) globalTty;
 
 MosaicTtyInitResult tty_init() {
+	MosaicTtyInitResult result;
+
 	HANDLE conin = CreateFile(TEXT("CONIN$"), GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, 0, 0);
+	if (unlikely(conin == INVALID_HANDLE_VALUE)) {
+		goto err;
+	}
 	HANDLE conout = CreateFile(TEXT("CONOUT$"), GENERIC_WRITE, FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
-	MosaicTtyInitResult result = tty_initWithHandles(conin, conout, false);
+	if (unlikely(conout == INVALID_HANDLE_VALUE)) {
+		goto err;
+	}
+	result = tty_initWithHandles(conin, conout, false, conout);
 
 	MosaicTty *tty = result.tty;
 	MosaicTty *expected = NULL;
@@ -66,7 +67,14 @@ MosaicTtyInitResult tty_init() {
 		result.already_bound = true;
 	}
 
+	ret:
 	return result;
+
+	err:
+	// From https://stackoverflow.com/a/6892019/132047
+	result = (const MosaicTtyInitResult){ 0 };
+	result.error = GetLastError();
+	goto ret;
 }
 
 void tty_setCallback(MosaicTty *tty, MosaicTtyCallback *callback) {
@@ -159,7 +167,7 @@ MosaicTtyIoResult tty_write(MosaicTty *tty, uint8_t *buffer, int count) {
 	MosaicTtyIoResult result = {};
 
 	DWORD written;
-	if (WriteFile(tty->conout, buffer, count, &written, NULL)) {
+	if (WriteFile(tty->conout_for_write, buffer, count, &written, NULL)) {
 		result.count = written;
 	} else {
 		result.error = GetLastError();
@@ -182,8 +190,8 @@ uint32_t tty_enableRawMode(MosaicTty *tty) {
 		result = GetLastError();
 		goto ret;
 	}
-	if (!tty->conout_fake) {
-		if (unlikely(GetConsoleMode(tty->conout, &output_mode) == 0)) {
+	if (!tty->conout_for_write_fake) {
+		if (unlikely(GetConsoleMode(tty->conout_for_write, &output_mode) == 0)) {
 			result = GetLastError();
 			goto ret;
 		}
@@ -221,8 +229,8 @@ uint32_t tty_enableRawMode(MosaicTty *tty) {
 		result = GetLastError();
 		goto ret;
 	}
-	if (!tty->conout_fake) {
-		if (unlikely(SetConsoleMode(tty->conout, conoutMode) == 0)) {
+	if (!tty->conout_for_write_fake) {
+		if (unlikely(SetConsoleMode(tty->conout_for_write, conoutMode) == 0)) {
 			result = GetLastError();
 			SetConsoleMode(tty->conin, input_mode);
 			goto ret;
@@ -230,7 +238,7 @@ uint32_t tty_enableRawMode(MosaicTty *tty) {
 		if (unlikely(SetConsoleOutputCP(conoutCp) == 0)) {
 			result = GetLastError();
 			SetConsoleMode(tty->conin, input_mode);
-			SetConsoleMode(tty->conout, output_mode);
+			SetConsoleMode(tty->conout_for_write, output_mode);
 			goto ret;
 		}
 	}
@@ -252,7 +260,7 @@ MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty) {
 	MosaicTtyTerminalSizeResult result = {};
 
 	CONSOLE_SCREEN_BUFFER_INFO info;
-	if (likely(GetConsoleScreenBufferInfo(tty->conout, &info))) {
+	if (likely(GetConsoleScreenBufferInfo(tty->conout_for_size, &info))) {
 		result.columns = info.dwSize.X;
 		result.rows = info.dwSize.Y;
 	} else {
@@ -269,8 +277,8 @@ uint32_t tty_reset(MosaicTty *tty) {
 		if (unlikely(!SetConsoleMode(tty->conin, tty->saved_input_mode))) {
 			result = GetLastError();
 		}
-		if (!tty->conout_fake) {
-			if (unlikely(!SetConsoleMode(tty->conout, tty->saved_output_mode) && result == 0)) {
+		if (!tty->conout_for_write_fake) {
+			if (unlikely(!SetConsoleMode(tty->conout_for_write, tty->saved_output_mode) && result == 0)) {
 				result = GetLastError();
 			}
 			if (unlikely(!SetConsoleOutputCP(tty->saved_output_code_page) && result == 0)) {
