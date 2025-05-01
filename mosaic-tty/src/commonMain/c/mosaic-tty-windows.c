@@ -117,7 +117,7 @@ MosaicTtyIoResult tty_readWithTimeout(
 				if (callback) {
 					callback->onFocus(callback->opaque, record.Event.FocusEvent.bSetFocus);
 				}
-			} else if (record.EventType == WINDOW_BUFFER_SIZE_EVENT && tty->windowResizeEvents) {
+			} else if (record.EventType == WINDOW_BUFFER_SIZE_EVENT && tty->window_resize_events) {
 				if (callback) {
 					callback->onResize(
 						callback->opaque,
@@ -244,7 +244,7 @@ uint32_t tty_enableRawMode(MosaicTty *tty) {
 }
 
 uint32_t tty_enableWindowResizeEvents(MosaicTty *tty) {
-	tty->windowResizeEvents = true;
+	tty->window_resize_events = true;
 	return 0;
 }
 

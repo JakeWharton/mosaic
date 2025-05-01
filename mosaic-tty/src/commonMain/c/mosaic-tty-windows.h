@@ -13,7 +13,7 @@ typedef struct MosaicTtyImpl {
 	HANDLE interrupt_event;
 	INPUT_RECORD records[recordsCount];
 	MosaicTtyCallback *callback;
-	bool windowResizeEvents;
+	bool window_resize_events;
 	DWORD saved_input_mode;
 	DWORD saved_output_mode;
 	UINT saved_output_code_page;
