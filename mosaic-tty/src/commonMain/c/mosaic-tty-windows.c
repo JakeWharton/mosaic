@@ -46,7 +46,7 @@ MosaicTtyInitResult tty_initWithHandles(
 static _Atomic(MosaicTty *) globalTty;
 
 MosaicTtyInitResult tty_init() {
-	MosaicTtyInitResult result;
+	MosaicTtyInitResult result = {};
 
 	HANDLE conin = CreateFile(TEXT("CONIN$"), GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, 0, 0);
 	if (unlikely(conin == INVALID_HANDLE_VALUE)) {
@@ -71,8 +71,6 @@ MosaicTtyInitResult tty_init() {
 	return result;
 
 	err:
-	// From https://stackoverflow.com/a/6892019/132047
-	result = (const MosaicTtyInitResult){ 0 };
 	result.error = GetLastError();
 	goto ret;
 }

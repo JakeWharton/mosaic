@@ -38,7 +38,7 @@ MosaicTestTtyInitResult testTty_init() {
 	// Ensure we don't start with existing records in the buffer.
 	FlushConsoleInputBuffer(conin);
 
-	HANDLE conout = CreateFile(TEXT("CONOUT$"), GENERIC_WRITE, FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
+	HANDLE conout = CreateFile(TEXT("CONOUT$"), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
 	if (unlikely(conout == INVALID_HANDLE_VALUE)) {
 		result.error = GetLastError();
 		goto err_conin;
