@@ -44,6 +44,15 @@ MosaicTestTtyInitResult testTty_init() {
 		goto err_conin;
 	}
 
+	// Give the TTY a reasonable "default" size.
+	SMALL_RECT windowSize = {};
+	windowSize.Right = 80;
+	windowSize.Bottom = 24;
+	if (unlikely(!SetConsoleWindowInfo(conout, FALSE, &windowSize))) {
+		result.error = GetLastError();
+		goto err_conout;
+	}
+
 	HANDLE conoutPipeRead;
 	HANDLE conoutPipeWrite;
 	if (unlikely(!CreatePipe(&conoutPipeRead, &conoutPipeWrite, NULL, 0))) {
