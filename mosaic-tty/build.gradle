@@ -65,7 +65,7 @@ kotlin {
 					if (files.size() != 6) {
 						throw new RuntimeException("""Native library mismatch!
 							|
-							|Run `zig build -p $jniDir`.
+							|Run `zig build -p ${jniDir.parentFile}`.
 							|
 							|Expected 6 files, found:
 							|- """.stripMargin() + files.collect { jniDir.relativePath(it) }.sort().join('\n -'))
