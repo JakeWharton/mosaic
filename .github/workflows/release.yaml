@@ -19,7 +19,7 @@ jobs:
           distribution: 'zulu'
           java-version-file: .github/workflows/.java-version
 
-      - uses: mlugg/setup-zig@v1
+      - uses: mlugg/setup-zig@v2
         with:
           version: 0.14.0
 
