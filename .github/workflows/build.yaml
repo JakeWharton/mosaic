@@ -101,8 +101,6 @@ jobs:
         tests:
           - type: native
           - type: java
-            version: 8
-          - type: java
             version: 11
           - type: java
             version: 17
