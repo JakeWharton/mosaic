@@ -7,6 +7,7 @@ Changed:
 - Unsolicited focus and theme events are now ignored unless the terminal has reported that it supports focus and theme, respectively.
   This should have no real impact on anything, except that now the `Terminal.capabilities` value can now be trusted to indicate whether `Terminal.state` will ever change.
 - Terminal theme is now always queried for an initial value regardless of whether the terminal supports sending theme changes.
+- Java 11 is now the minimum-supported JVM version.
 
 
 ## [0.17.0] - 2025-04-11
