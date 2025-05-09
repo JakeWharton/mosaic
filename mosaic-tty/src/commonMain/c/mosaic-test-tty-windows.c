@@ -188,24 +188,7 @@ static uint32_t writeRecord(HANDLE h, INPUT_RECORD *record) {
 	return GetLastError();
 }
 
-uint32_t testTty_focusEvent(MosaicTestTty *testTty, bool focused) {
-	INPUT_RECORD record;
-	record.EventType = FOCUS_EVENT;
-	record.Event.FocusEvent.bSetFocus = focused;
-	return writeRecord(testTty->tty->conin, &record);
-}
-
-uint32_t testTty_keyEvent(MosaicTestTty *testTty UNUSED) {
-	// TODO
-	return 0;
-}
-
-uint32_t testTty_mouseEvent(MosaicTestTty *testTty UNUSED) {
-	// TODO
-	return 0;
-}
-
-uint32_t testTty_resizeEvent(MosaicTestTty *testTty, int columns, int rows, int width UNUSED, int height UNUSED) {
+uint32_t testTty_resize(MosaicTestTty *testTty, int columns, int rows, int width UNUSED, int height UNUSED) {
 	uint32_t sizeResult = testTty_resizeInternal(testTty->tty->conout_for_size, columns, rows);
 	if (unlikely(sizeResult)) {
 		return sizeResult;
@@ -216,6 +199,23 @@ uint32_t testTty_resizeEvent(MosaicTestTty *testTty, int columns, int rows, int 
 	record.Event.WindowBufferSizeEvent.dwSize.X = columns;
 	record.Event.WindowBufferSizeEvent.dwSize.Y = rows;
 	return writeRecord(testTty->tty->conin, &record);
+}
+
+uint32_t testTty_sendFocusEvent(MosaicTestTty *testTty, bool focused) {
+	INPUT_RECORD record;
+	record.EventType = FOCUS_EVENT;
+	record.Event.FocusEvent.bSetFocus = focused;
+	return writeRecord(testTty->tty->conin, &record);
+}
+
+uint32_t testTty_sendKeyEvent(MosaicTestTty *testTty UNUSED) {
+	// TODO
+	return 0;
+}
+
+uint32_t testTty_sendMouseEvent(MosaicTestTty *testTty UNUSED) {
+	// TODO
+	return 0;
 }
 
 uint32_t testTty_free(MosaicTestTty *testTty) {
