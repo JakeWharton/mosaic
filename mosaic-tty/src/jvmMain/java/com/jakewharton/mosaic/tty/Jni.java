@@ -114,19 +114,19 @@ final class Jni {
 
 	static native void testTtyInterruptRead(long testTtyPtr);
 
-	static native void testTtyFocusEvent(long testTtyPtr, boolean focused);
-
-	static native void testTtyKeyEvent(long testTtyPtr);
-
-	static native void testTtyMouseEvent(long testTtyPtr);
-
-	static native void testTtyResizeEvent(
+	static native void testTtyResize(
 		long testTtyPtr,
 		int columns,
 		int rows,
 		int width,
 		int height
 	);
+
+	static native void testTtySendFocusEvent(long testTtyPtr, boolean focused);
+
+	static native void testTtySendKeyEvent(long testTtyPtr);
+
+	static native void testTtySendMouseEvent(long testTtyPtr);
 
 	static native void testTtyFree(long testTtyPtr);
 

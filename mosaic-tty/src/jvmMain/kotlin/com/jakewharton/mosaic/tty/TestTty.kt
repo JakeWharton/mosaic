@@ -34,23 +34,23 @@ public actual class TestTty private constructor(
 	}
 
 	@Throws(IOException::class)
-	public actual fun focusEvent(focused: Boolean) {
-		Jni.testTtyFocusEvent(testTtyPtr, focused)
+	public actual fun resize(columns: Int, rows: Int, width: Int, height: Int) {
+		Jni.testTtyResize(testTtyPtr, columns, rows, width, height)
 	}
 
 	@Throws(IOException::class)
-	public actual fun keyEvent() {
-		Jni.testTtyKeyEvent(testTtyPtr)
+	public actual fun sendFocusEvent(focused: Boolean) {
+		Jni.testTtySendFocusEvent(testTtyPtr, focused)
 	}
 
 	@Throws(IOException::class)
-	public actual fun mouseEvent() {
-		Jni.testTtyMouseEvent(testTtyPtr)
+	public actual fun sendKeyEvent() {
+		Jni.testTtySendKeyEvent(testTtyPtr)
 	}
 
 	@Throws(IOException::class)
-	public actual fun resizeEvent(columns: Int, rows: Int, width: Int, height: Int) {
-		Jni.testTtyResizeEvent(testTtyPtr, columns, rows, width, height)
+	public actual fun sendMouseEvent() {
+		Jni.testTtySendMouseEvent(testTtyPtr)
 	}
 
 	@Throws(IOException::class)

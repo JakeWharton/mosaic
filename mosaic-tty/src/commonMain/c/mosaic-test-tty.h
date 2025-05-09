@@ -18,10 +18,10 @@ MosaicTty *testTty_getTty(MosaicTestTty *testTty);
 MosaicTtyIoResult testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int count);
 MosaicTtyIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffer, int count);
 uint32_t testTty_interruptRead(MosaicTestTty *testTty);
-uint32_t testTty_focusEvent(MosaicTestTty *testTty, bool focused);
-uint32_t testTty_keyEvent(MosaicTestTty *testTty);
-uint32_t testTty_mouseEvent(MosaicTestTty *testTty);
-uint32_t testTty_resizeEvent(MosaicTestTty *testTty, int columns, int rows, int width, int height);
+uint32_t testTty_resize(MosaicTestTty *testTty, int columns, int rows, int width, int height);
+uint32_t testTty_sendFocusEvent(MosaicTestTty *testTty, bool focused);
+uint32_t testTty_sendKeyEvent(MosaicTestTty *testTty);
+uint32_t testTty_sendMouseEvent(MosaicTestTty *testTty);
 uint32_t testTty_free(MosaicTestTty *testTty);
 
 #endif // MOSAIC_TEST_TTY_H

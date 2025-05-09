@@ -9,6 +9,9 @@ Changed:
 - Terminal theme is now always queried for an initial value regardless of whether the terminal supports sending theme changes.
 - Java 11 is now the minimum-supported JVM version.
 
+Fixed:
+- Windows now reports the terminal size correctly. Previously it reported the buffer size instead of the window size.
+
 
 ## [0.17.0] - 2025-04-11
 [0.17.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.17.0

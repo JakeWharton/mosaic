@@ -448,47 +448,47 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyInterruptRead(
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_testTtyFocusEvent(
+Java_com_jakewharton_mosaic_tty_Jni_testTtySendFocusEvent(
 	JNIEnv *env,
 	jclass type UNUSED,
 	jlong testTtyOpaque,
 	jboolean focused
 ) {
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
-	uint32_t error = testTty_focusEvent(testTty, focused);
+	uint32_t error = testTty_sendFocusEvent(testTty, focused);
 	if (unlikely(error)) {
 		throwIoe(env, error);
 	}
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_testTtyKeyEvent(
+Java_com_jakewharton_mosaic_tty_Jni_testTtySendKeyEvent(
 	JNIEnv *env,
 	jclass type UNUSED,
 	jlong testTtyOpaque
 ) {
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
-	uint32_t error = testTty_keyEvent(testTty);
+	uint32_t error = testTty_sendKeyEvent(testTty);
 	if (unlikely(error)) {
 		throwIoe(env, error);
 	}
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_testTtyMouseEvent(
+Java_com_jakewharton_mosaic_tty_Jni_testTtySendMouseEvent(
 	JNIEnv *env,
 	jclass type UNUSED,
 	jlong testTtyOpaque
 ) {
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
-	uint32_t error = testTty_mouseEvent(testTty);
+	uint32_t error = testTty_sendMouseEvent(testTty);
 	if (unlikely(error)) {
 		throwIoe(env, error);
 	}
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_testTtyResizeEvent(
+Java_com_jakewharton_mosaic_tty_Jni_testTtyResize(
 	JNIEnv *env,
 	jclass type UNUSED,
 	jlong testTtyOpaque,
@@ -498,7 +498,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyResizeEvent(
 	jint height
 ) {
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
-	uint32_t error = testTty_resizeEvent(testTty, columns, rows, width, height);
+	uint32_t error = testTty_resize(testTty, columns, rows, width, height);
 	if (unlikely(error)) {
 		throwIoe(env, error);
 	}

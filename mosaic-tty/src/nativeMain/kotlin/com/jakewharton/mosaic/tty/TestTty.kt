@@ -58,29 +58,29 @@ public actual class TestTty private constructor(
 		}
 	}
 
-	public actual fun focusEvent(focused: Boolean) {
-		val error = testTty_focusEvent(ptr, focused)
+	public actual fun resize(columns: Int, rows: Int, width: Int, height: Int) {
+		val error = testTty_resize(ptr, columns, rows, width, height)
 		if (error != 0U) {
 			throwIoe(error)
 		}
 	}
 
-	public actual fun keyEvent() {
-		val error = testTty_keyEvent(ptr)
+	public actual fun sendFocusEvent(focused: Boolean) {
+		val error = testTty_sendFocusEvent(ptr, focused)
 		if (error != 0U) {
 			throwIoe(error)
 		}
 	}
 
-	public actual fun mouseEvent() {
-		val error = testTty_mouseEvent(ptr)
+	public actual fun sendKeyEvent() {
+		val error = testTty_sendKeyEvent(ptr)
 		if (error != 0U) {
 			throwIoe(error)
 		}
 	}
 
-	public actual fun resizeEvent(columns: Int, rows: Int, width: Int, height: Int) {
-		val error = testTty_resizeEvent(ptr, columns, rows, width, height)
+	public actual fun sendMouseEvent() {
+		val error = testTty_sendMouseEvent(ptr)
 		if (error != 0U) {
 			throwIoe(error)
 		}

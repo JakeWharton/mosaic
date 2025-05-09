@@ -37,12 +37,21 @@ public expect class TestTty : AutoCloseable {
 	public fun interruptRead()
 
 	/**
+	 * Resize the TTY.
+	 *
+	 * This will change the value returned by [Tty.currentSize].
+	 * If [Tty.enableWindowResizeEvents] was enabled, this will also cause [Tty.Callback.onResize]
+	 * to be invoked.
+	 */
+	public fun resize(columns: Int, rows: Int, width: Int, height: Int)
+
+	/**
 	 * Send a focus event to [tty]'s callback.
 	 *
 	 * On Windows this event can only be observed by during calls to [Tty.read] or
 	 * [Tty.readWithTimeout]. This event is not supported on other platforms.
 	 */
-	public fun focusEvent(focused: Boolean)
+	public fun sendFocusEvent(focused: Boolean)
 
 	/**
 	 * Send a key event to [tty]'s callback.
@@ -52,7 +61,7 @@ public expect class TestTty : AutoCloseable {
 	 * On Windows this event can only be observed by during calls to [Tty.read] or
 	 * [Tty.readWithTimeout]. This event is not supported on other platforms.
 	 */
-	public fun keyEvent()
+	public fun sendKeyEvent()
 
 	/**
 	 * Send a mouse event to [tty]'s callback.
@@ -62,15 +71,7 @@ public expect class TestTty : AutoCloseable {
 	 * On Windows this event can only be observed by during calls to [Tty.read] or
 	 * [Tty.readWithTimeout]. This event is not supported on other platforms.
 	 */
-	public fun mouseEvent()
-
-	/**
-	 * Send a resize event to [tty]'s callback.
-	 *
-	 * On Windows this event can only be observed by during calls to [Tty.read] or
-	 * [Tty.readWithTimeout]. On other platforms this is delivered to the callback synchronously.
-	 */
-	public fun resizeEvent(columns: Int, rows: Int, width: Int, height: Int)
+	public fun sendMouseEvent()
 
 	override fun close()
 }

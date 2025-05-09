@@ -3,13 +3,13 @@ public final class com/jakewharton/mosaic/tty/TestTty : java/lang/AutoCloseable 
 	public synthetic fun <init> (JLcom/jakewharton/mosaic/tty/Tty;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public static final fun bind ()Lcom/jakewharton/mosaic/tty/TestTty;
 	public fun close ()V
-	public final fun focusEvent (Z)V
 	public final fun getTty ()Lcom/jakewharton/mosaic/tty/Tty;
 	public final fun interruptRead ()V
-	public final fun keyEvent ()V
-	public final fun mouseEvent ()V
 	public final fun read ([BII)I
-	public final fun resizeEvent (IIII)V
+	public final fun resize (IIII)V
+	public final fun sendFocusEvent (Z)V
+	public final fun sendKeyEvent ()V
+	public final fun sendMouseEvent ()V
 	public final fun write ([BII)I
 }
 

@@ -118,7 +118,7 @@ class TtyTest {
 	}
 
 	@Test fun focusEventNoCallback() {
-		testTty.focusEvent(true)
+		testTty.sendFocusEvent(true)
 	}
 
 	@Test fun focusEventCallbackDeliveredOnWindows() = runTest {
@@ -126,7 +126,7 @@ class TtyTest {
 
 		tty.setCallback(MyCallback())
 
-		testTty.focusEvent(true)
+		testTty.sendFocusEvent(true)
 		doWriteReadRoundtrip()
 
 		assertThat(events.receive()).isEqualTo("hey! onFocus true")
@@ -137,13 +137,13 @@ class TtyTest {
 
 		tty.setCallback(MyCallback())
 
-		testTty.focusEvent(true)
+		testTty.sendFocusEvent(true)
 
 		assertEventsEmpty()
 	}
 
 	@Test fun keyEventNoCallback() {
-		testTty.keyEvent()
+		testTty.sendKeyEvent()
 	}
 
 	@Ignore // Event not delivered yet.
@@ -152,7 +152,7 @@ class TtyTest {
 
 		tty.setCallback(MyCallback())
 
-		testTty.keyEvent()
+		testTty.sendKeyEvent()
 		doWriteReadRoundtrip()
 
 		assertThat(events.receive()).isEqualTo("hey! onKey")
@@ -163,13 +163,13 @@ class TtyTest {
 
 		tty.setCallback(MyCallback())
 
-		testTty.keyEvent()
+		testTty.sendKeyEvent()
 
 		assertEventsEmpty()
 	}
 
 	@Test fun mouseEventNoCallback() {
-		testTty.mouseEvent()
+		testTty.sendMouseEvent()
 	}
 
 	@Ignore // Event not delivered yet.
@@ -178,7 +178,7 @@ class TtyTest {
 
 		tty.setCallback(MyCallback())
 
-		testTty.mouseEvent()
+		testTty.sendMouseEvent()
 		doWriteReadRoundtrip()
 
 		assertThat(events.receive()).isEqualTo("hey! onMouse")
@@ -189,20 +189,20 @@ class TtyTest {
 
 		tty.setCallback(MyCallback())
 
-		testTty.mouseEvent()
+		testTty.sendMouseEvent()
 
 		assertEventsEmpty()
 	}
 
-	@Test fun resizeEventNoCallback() {
-		testTty.resizeEvent(1, 2, 3, 4)
+	@Test fun resizeNoCallback() {
+		testTty.resize(1, 2, 3, 4)
 	}
 
-	@Test fun resizeEventCallback() = runTest {
+	@Test fun resizeCallback() = runTest {
 		tty.enableWindowResizeEvents()
 		tty.setCallback(MyCallback())
 
-		testTty.resizeEvent(1, 2, 3, 4)
+		testTty.resize(1, 2, 3, 4)
 		doWriteReadRoundtrip()
 
 		val expected = if (isWindows()) {
@@ -217,7 +217,7 @@ class TtyTest {
 		tty.setCallback(MyCallback())
 		tty.setCallback(null)
 
-		testTty.resizeEvent(1, 2, 3, 4)
+		testTty.resize(1, 2, 3, 4)
 		doWriteReadRoundtrip()
 
 		assertEventsEmpty()
@@ -228,7 +228,7 @@ class TtyTest {
 		tty.setCallback(MyCallback())
 		tty.setCallback(MyCallback("hello!"))
 
-		testTty.resizeEvent(1, 2, 0, 0)
+		testTty.resize(1, 2, 0, 0)
 		doWriteReadRoundtrip()
 
 		assertThat(events.receive()).isEqualTo("hello! onResize 1 2 0 0")
@@ -259,10 +259,12 @@ class TtyTest {
 		callbackRef.assertGc()
 	}
 
-	@Test fun sizeAndResize() {
+	@Test fun defaultSize() {
 		assertThat(tty.currentSize()).isEqualTo(intArrayOf(80, 24, 0, 0))
+	}
 
-		testTty.resizeEvent(90, 30, 0, 0)
+	@Test fun resizeAffectsSize() {
+		testTty.resize(90, 30, 0, 0)
 		assertThat(tty.currentSize()).isEqualTo(intArrayOf(90, 30, 0, 0))
 	}
 
