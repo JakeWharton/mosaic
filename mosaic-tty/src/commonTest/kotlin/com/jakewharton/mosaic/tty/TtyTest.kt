@@ -262,8 +262,6 @@ class TtyTest {
 	@Test fun sizeAndResize() {
 		assertThat(tty.currentSize()).isEqualTo(intArrayOf(80, 24, 0, 0))
 
-		if (isWindows()) return
-
 		testTty.resizeEvent(90, 30, 0, 0)
 		assertThat(tty.currentSize()).isEqualTo(intArrayOf(90, 30, 0, 0))
 	}

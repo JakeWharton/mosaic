@@ -125,12 +125,13 @@ MosaicTtyIoResult tty_readWithTimeout(
 				}
 			} else if (record.EventType == WINDOW_BUFFER_SIZE_EVENT && tty->window_resize_events) {
 				if (callback) {
-					callback->onResize(
-						callback->opaque,
-						record.Event.WindowBufferSizeEvent.dwSize.X,
-						record.Event.WindowBufferSizeEvent.dwSize.Y,
-						0, 0
-					);
+					CONSOLE_SCREEN_BUFFER_INFO info;
+					if (unlikely(!GetConsoleScreenBufferInfo(tty->conout_for_size, &info))) {
+						goto err;
+					}
+					int columns = info.srWindow.Right - info.srWindow.Left + 1;
+					int rows = info.srWindow.Bottom - info.srWindow.Top + 1;
+					callback->onResize(callback->opaque, columns, rows, 0, 0);
 				}
 			}
 		}

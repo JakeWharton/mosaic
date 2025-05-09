@@ -16,6 +16,18 @@ typedef struct MosaicTestTtyImpl {
 
 static atomic_flag globalTestTty = ATOMIC_FLAG_INIT;
 
+uint32_t testTty_resizeInternal(HANDLE conout, int columns, int rows) {
+	SMALL_RECT windowSize = {};
+	windowSize.Left = 0;
+	windowSize.Right = columns - 1;
+	windowSize.Top = 0;
+	windowSize.Bottom = rows - 1;
+	if (likely(SetConsoleWindowInfo(conout, TRUE, &windowSize) == 0)) {
+		return 0;
+	}
+	return GetLastError();
+}
+
 MosaicTestTtyInitResult testTty_init() {
 	MosaicTestTtyInitResult result = {};
 
@@ -45,13 +57,9 @@ MosaicTestTtyInitResult testTty_init() {
 	}
 
 	// Give the TTY a reasonable "default" size.
-	SMALL_RECT windowSize = {};
-	windowSize.Left = 0;
-	windowSize.Right = 79;
-	windowSize.Top = 0;
-	windowSize.Bottom = 23;
-	if (unlikely(SetConsoleWindowInfo(conout, TRUE, &windowSize) == 0)) {
-		result.error = GetLastError();
+	uint32_t sizeResult = testTty_resizeInternal(conout, 80, 24);
+	if (unlikely(sizeResult)) {
+		result.error = sizeResult;
 		goto err_conout;
 	}
 
@@ -198,6 +206,11 @@ uint32_t testTty_mouseEvent(MosaicTestTty *testTty UNUSED) {
 }
 
 uint32_t testTty_resizeEvent(MosaicTestTty *testTty, int columns, int rows, int width UNUSED, int height UNUSED) {
+	uint32_t sizeResult = testTty_resizeInternal(testTty->tty->conout_for_size, 80, 24);
+	if (unlikely(sizeResult)) {
+		return sizeResult;
+	}
+
 	INPUT_RECORD record;
 	record.EventType = WINDOW_BUFFER_SIZE_EVENT;
 	record.Event.WindowBufferSizeEvent.dwSize.X = columns;
