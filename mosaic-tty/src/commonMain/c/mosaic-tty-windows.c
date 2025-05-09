@@ -259,8 +259,8 @@ MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty) {
 
 	CONSOLE_SCREEN_BUFFER_INFO info;
 	if (likely(GetConsoleScreenBufferInfo(tty->conout_for_size, &info))) {
-		result.columns = info.dwSize.X;
-		result.rows = info.dwSize.Y;
+		result.columns = info.srWindow.Right - info.srWindow.Left + 1;
+		result.rows = info.srWindow.Bottom - info.srWindow.Top + 1;
 	} else {
 		result.error = GetLastError();
 	}
