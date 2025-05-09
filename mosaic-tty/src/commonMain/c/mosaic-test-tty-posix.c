@@ -8,7 +8,10 @@
 #include "cutils.h"
 #include <errno.h>
 #include <fcntl.h>
+#include <signal.h>
 #include <stdlib.h>
+#include <sys/ioctl.h>
+#include <termios.h>
 #include <unistd.h>
 
 typedef struct MosaicTestTtyImpl {
@@ -17,6 +20,18 @@ typedef struct MosaicTestTtyImpl {
 	int interrupt_write_fd;
 	MosaicTty *tty;
 } MosaicTestTtyImpl;
+
+uint32_t testTty_resizeInternal(int parentFd, int columns, int rows, int width, int height) {
+	struct winsize size = {};
+	size.ws_col = columns;
+	size.ws_row = rows;
+	size.ws_xpixel = width;
+	size.ws_ypixel = height;
+	if (likely(ioctl(parentFd, TIOCSWINSZ, &size) != -1)) {
+		return 0;
+	}
+	return errno;
+}
 
 MosaicTestTtyInitResult testTty_init() {
 	MosaicTestTtyInitResult result = {};
@@ -45,6 +60,13 @@ MosaicTestTtyInitResult testTty_init() {
 	int childFd = open(childName, O_RDWR | O_NOCTTY);
 	if (unlikely(childFd == -1)) {
 		result.error = errno;
+		goto err_parent;
+	}
+
+	// Give the TTY a reasonable "default" size.
+	uint32_t sizeResult = testTty_resizeInternal(parentFd, 80, 24, 0, 0);
+	if (unlikely(sizeResult)) {
+		result.error = sizeResult;
 		goto err_parent;
 	}
 
@@ -114,10 +136,16 @@ uint32_t testTty_mouseEvent(MosaicTestTty *testTty UNUSED) {
 }
 
 uint32_t testTty_resizeEvent(MosaicTestTty *testTty, int columns, int rows, int width, int height) {
-	MosaicTtyCallback *callback = testTty->tty->callback;
-	if (callback) {
-		callback->onResize(callback->opaque, columns, rows, width, height);
+	uint32_t sizeResult = testTty_resizeInternal(testTty->fd, columns, rows, width, height);
+	if (unlikely(sizeResult)) {
+		return sizeResult;
 	}
+
+	// TODO Why can't I reference SIGWINCH here but I can in mosaic-tty-posix.c?
+	if (unlikely(raise(28))) {
+		return errno;
+	}
+
 	return 0;
 }
 

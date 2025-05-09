@@ -9,12 +9,24 @@
 
 typedef struct MosaicTestTtyImpl {
 	MosaicTty *tty;
-	HANDLE conout_read;
-	HANDLE conout_write;
+	HANDLE conout_pipe_read;
+	HANDLE conout_pipe_write;
 	atomic_bool interrupt;
 } MosaicTestTtyImpl;
 
 static atomic_flag globalTestTty = ATOMIC_FLAG_INIT;
+
+uint32_t testTty_resizeInternal(HANDLE conout, int columns, int rows) {
+	SMALL_RECT windowSize = {};
+	windowSize.Left = 0;
+	windowSize.Right = columns - 1;
+	windowSize.Top = 0;
+	windowSize.Bottom = rows - 1;
+	if (likely(SetConsoleWindowInfo(conout, TRUE, &windowSize) == 0)) {
+		return 0;
+	}
+	return GetLastError();
+}
 
 MosaicTestTtyInitResult testTty_init() {
 	MosaicTestTtyInitResult result = {};
@@ -38,23 +50,36 @@ MosaicTestTtyInitResult testTty_init() {
 	// Ensure we don't start with existing records in the buffer.
 	FlushConsoleInputBuffer(conin);
 
-	HANDLE conoutRead;
-	HANDLE conoutWrite;
-	if (unlikely(!CreatePipe(&conoutRead, &conoutWrite, NULL, 0))) {
+	HANDLE conout = CreateFile(TEXT("CONOUT$"), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
+	if (unlikely(conout == INVALID_HANDLE_VALUE)) {
 		result.error = GetLastError();
 		goto err_conin;
 	}
 
-	MosaicTtyInitResult ttyInitResult = tty_initWithHandles(conin, conoutWrite, true);
-	if (unlikely(!ttyInitResult.tty)) {
-		result.error = ttyInitResult.error;
-		result.already_bound = ttyInitResult.already_bound;
+	// Give the TTY a reasonable "default" size.
+	uint32_t sizeResult = testTty_resizeInternal(conout, 80, 24);
+	if (unlikely(sizeResult)) {
+		result.error = sizeResult;
 		goto err_conout;
 	}
 
+	HANDLE conoutPipeRead;
+	HANDLE conoutPipeWrite;
+	if (unlikely(!CreatePipe(&conoutPipeRead, &conoutPipeWrite, NULL, 0))) {
+		result.error = GetLastError();
+		goto err_conout;
+	}
+
+	MosaicTtyInitResult ttyInitResult = tty_initWithHandles(conin, conoutPipeWrite, true, conout);
+	if (unlikely(!ttyInitResult.tty)) {
+		result.error = ttyInitResult.error;
+		result.already_bound = ttyInitResult.already_bound;
+		goto err_conout_pipe;
+	}
+
 	testTty->tty = ttyInitResult.tty;
-	testTty->conout_read = conoutRead;
-	testTty->conout_write = conoutWrite;
+	testTty->conout_pipe_read = conoutPipeRead;
+	testTty->conout_pipe_write = conoutPipeWrite;
 
 	result.testTty = testTty;
 
@@ -69,9 +94,12 @@ MosaicTestTtyInitResult testTty_init() {
 	ret:
 	return result;
 
+	err_conout_pipe:
+	CloseHandle(conoutPipeRead);
+	CloseHandle(conoutPipeWrite);
+
 	err_conout:
-	CloseHandle(conoutRead);
-	CloseHandle(conoutWrite);
+	CloseHandle(conout);
 
 	err_conin:
 	CloseHandle(conin);
@@ -118,12 +146,12 @@ MosaicTtyIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffer, int coun
 	// do not signal properly. Since this is only for testing, the busy wait isn't a huge deal.
 	for (;;) {
 		DWORD available;
-		if (!PeekNamedPipe(testTty->conout_read, NULL, 0, NULL, &available, NULL)) {
+		if (!PeekNamedPipe(testTty->conout_pipe_read, NULL, 0, NULL, &available, NULL)) {
 			goto err;
 		}
 		if (available) {
 			DWORD c;
-			if (!ReadFile(testTty->conout_read, buffer, count, &c, NULL)) {
+			if (!ReadFile(testTty->conout_pipe_read, buffer, count, &c, NULL)) {
 				goto err;
 			}
 			result.count = c;
@@ -178,6 +206,11 @@ uint32_t testTty_mouseEvent(MosaicTestTty *testTty UNUSED) {
 }
 
 uint32_t testTty_resizeEvent(MosaicTestTty *testTty, int columns, int rows, int width UNUSED, int height UNUSED) {
+	uint32_t sizeResult = testTty_resizeInternal(testTty->tty->conout_for_size, columns, rows);
+	if (unlikely(sizeResult)) {
+		return sizeResult;
+	}
+
 	INPUT_RECORD record;
 	record.EventType = WINDOW_BUFFER_SIZE_EVENT;
 	record.Event.WindowBufferSizeEvent.dwSize.X = columns;
@@ -188,10 +221,10 @@ uint32_t testTty_resizeEvent(MosaicTestTty *testTty, int columns, int rows, int 
 uint32_t testTty_free(MosaicTestTty *testTty) {
 	uint32_t result = 0;
 
-	if (!CloseHandle(testTty->conout_read)) {
+	if (!CloseHandle(testTty->conout_pipe_read)) {
 		result = GetLastError();
 	}
-	if (!CloseHandle(testTty->conout_write) && result == 0) {
+	if (!CloseHandle(testTty->conout_pipe_write) && result == 0) {
 		result = GetLastError();
 	}
 
