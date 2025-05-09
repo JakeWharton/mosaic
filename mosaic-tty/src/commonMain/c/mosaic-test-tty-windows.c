@@ -206,7 +206,7 @@ uint32_t testTty_mouseEvent(MosaicTestTty *testTty UNUSED) {
 }
 
 uint32_t testTty_resizeEvent(MosaicTestTty *testTty, int columns, int rows, int width UNUSED, int height UNUSED) {
-	uint32_t sizeResult = testTty_resizeInternal(testTty->tty->conout_for_size, 80, 24);
+	uint32_t sizeResult = testTty_resizeInternal(testTty->tty->conout_for_size, columns, rows);
 	if (unlikely(sizeResult)) {
 		return sizeResult;
 	}
