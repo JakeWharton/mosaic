@@ -30,7 +30,7 @@ fun terminalTest(block: suspend TerminalTester.() -> Unit) {
 }
 
 class TerminalTester(
-	private val testTty: TestTty,
+	val testTty: TestTty,
 ) {
 	private data class Expect(val output: ByteString, val reply: ByteString)
 	private val expects = Channel<Expect>(UNLIMITED)
