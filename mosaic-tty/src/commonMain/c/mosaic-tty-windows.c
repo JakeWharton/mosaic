@@ -48,11 +48,11 @@ static _Atomic(MosaicTty *) globalTty;
 MosaicTtyInitResult tty_init() {
 	MosaicTtyInitResult result = {};
 
-	HANDLE conin = CreateFile(TEXT("CONIN$"), GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, 0, 0);
+	HANDLE conin = CreateFile(TEXT("CONIN$"), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
 	if (unlikely(conin == INVALID_HANDLE_VALUE)) {
 		goto err;
 	}
-	HANDLE conout = CreateFile(TEXT("CONOUT$"), GENERIC_WRITE, FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
+	HANDLE conout = CreateFile(TEXT("CONOUT$"), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
 	if (unlikely(conout == INVALID_HANDLE_VALUE)) {
 		goto err;
 	}
