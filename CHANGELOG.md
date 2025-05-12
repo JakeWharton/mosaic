@@ -9,6 +9,7 @@ Changed:
   For terminal size, a platform-specific fallback exists which will attempt to still correctly report the size, but asynchronously.
 - Terminal theme is now always queried for an initial value regardless of whether the terminal supports sending theme changes.
 - Java 11 is now the minimum-supported JVM version.
+- In-development snapshots of Mosaic are now published to the Central Portal Snapshots repository at https://central.sonatype.com/repository/maven-snapshots/.
 
 Fixed:
 - Windows now reports the terminal size correctly. Previously it reported the buffer size instead of the window size.
