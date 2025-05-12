@@ -268,15 +268,22 @@ jobs:
           if-no-files-found: error
 
   samples:
-    runs-on: macos-15
     needs:
       - tty-zig
     strategy:
       fail-fast: false
       matrix:
+        platform:
+          - os: macOS-15
+            target: macosArm64
+          - os: ubuntu-24.04
+            target: linuxX64
+          - os: windows-2025
+            target: mingwX64
         sample:
           - counter
           - jest
+    runs-on: ${{ matrix.platform.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -290,9 +297,11 @@ jobs:
           java-version-file: .github/workflows/.java-version
       - uses: gradle/actions/setup-gradle@v4
 
-      - run: ./gradlew -p samples/${{ matrix.sample }} linkReleaseExecutableMacosArm64 installJvmDist
-      - run: ./samples/${{ matrix.sample }}/build/install/${{ matrix.sample }}-jvm/bin/${{ matrix.sample }}
-      - run: ./samples/${{ matrix.sample }}/build/bin/macosArm64/releaseExecutable/${{ matrix.sample }}.kexe
+      - run: |
+          ./gradlew -p samples/${{ matrix.sample }} installJvmDist linkReleaseExecutable${{ matrix.platform.target }}
+          ./samples/${{ matrix.sample }}/build/install/${{ matrix.sample }}-jvm/bin/${{ matrix.sample }}
+          ./samples/${{ matrix.sample }}/build/bin/${{ matrix.platform.target }}/releaseExecutable/${{ matrix.sample }}.*
+        shell: bash
 
   final-status:
     if: always()
