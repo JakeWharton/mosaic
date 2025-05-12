@@ -72,14 +72,14 @@ dependencies {
 Documentation is available at [jakewharton.github.io/mosaic/docs/0.x/](https://jakewharton.github.io/mosaic/docs/0.x/).
 
 <details>
-<summary>Snapshots of the development version are available in Sonatype's snapshots repository.</summary>
+<summary>Snapshots of the development version are available in the Central Portal Snapshots repository.</summary>
 <p>
 
 ```groovy
 repository {
   mavenCentral()
   maven {
-    url 'https://oss.sonatype.org/content/repositories/snapshots/'
+    url 'https://central.sonatype.com/repository/maven-snapshots/'
   }
 }
 dependencies {
