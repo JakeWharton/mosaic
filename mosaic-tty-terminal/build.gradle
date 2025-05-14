@@ -1,6 +1,11 @@
 apply plugin: 'org.jetbrains.kotlin.multiplatform'
 apply from: "$rootDir/addAllTargets.gradle"
 apply from: "$rootDir/publish.gradle"
+apply plugin: 'com.jakewharton.mosaic.build'
+
+mosaicBuild {
+	patchJavaModuleWithKotlinClasses('mosaic.tty.terminal')
+}
 
 kotlin {
 	explicitApi()
