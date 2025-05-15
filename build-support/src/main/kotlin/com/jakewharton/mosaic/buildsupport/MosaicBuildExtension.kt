@@ -2,4 +2,5 @@ package com.jakewharton.mosaic.buildsupport
 
 public interface MosaicBuildExtension {
 	public fun jvmTestDistribution()
+	public fun patchJavaModuleWithKotlinClasses(name: String)
 }

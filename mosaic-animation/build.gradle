@@ -3,6 +3,11 @@ apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 apply from: "$rootDir/addAllTargets.gradle"
 apply from: "$rootDir/publish.gradle"
 apply plugin: 'dev.drewhamilton.poko'
+apply plugin: 'com.jakewharton.mosaic.build'
+
+mosaicBuild {
+	patchJavaModuleWithKotlinClasses('mosaic.animation')
+}
 
 kotlin {
 	applyDefaultHierarchyTemplate {
@@ -21,7 +26,7 @@ kotlin {
 	sourceSets {
 		commonMain {
 			dependencies {
-				implementation projects.mosaicRuntime
+				api projects.mosaicRuntime
 				implementation libs.androidx.collection
 				implementation libs.androidx.annotation
 			}

@@ -3,6 +3,9 @@
 ## [Unreleased]
 [Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.16.0...HEAD
 
+New:
+- JVM artifacts can now be used as modules in the Java module system.
+
 Changed:
 - Unsolicited focus, theme, and resize events are now ignored unless the terminal has reported that it supports each of those modes.
   This should have no real impact on anything, except that now the `Terminal.capabilities` value can now be trusted to indicate whether `Terminal.state` will ever change in the case of focus and theme.
