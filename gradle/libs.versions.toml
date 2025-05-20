@@ -1,5 +1,5 @@
 [versions]
-jetbrains-compose = "1.8.0"
+jetbrains-compose = "1.8.1"
 kotlin = "2.1.21"
 kotlinx-coroutines = "1.10.2"
 
