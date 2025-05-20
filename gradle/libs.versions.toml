@@ -32,7 +32,7 @@ ktlint-core = "com.pinterest.ktlint:ktlint-cli:1.3.1"
 ktlint-composeRules = "io.nlopez.compose.rules:ktlint:0.4.22"
 
 clikt = "com.github.ajalt.clikt:clikt:5.0.3"
-codepoints = "de.cketti.unicode:kotlin-codepoints:0.9.0"
+codepoints = "de.cketti.unicode:kotlin-codepoints:0.10.0"
 finalizationHook = "com.jakewharton.finalization:finalization-hook:0.1.0"
 
 junit4 = "junit:junit:4.13.2"
