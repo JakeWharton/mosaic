@@ -2,6 +2,7 @@ import java.nio.file.FileSystems
 import java.nio.file.Files
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
+import com.jakewharton.mosaic.buildsupport.ZigDownloadTask
 
 import static co.touchlab.cklib.gradle.CompileToBitcode.Language.C
 import static org.gradle.language.base.plugins.LifecycleBasePlugin.BUILD_GROUP
@@ -35,6 +36,11 @@ dependencies {
 	r8 'com.android.tools:r8:8.9.35'
 }
 
+def zigDownload = tasks.register('zigDownload', ZigDownloadTask) {
+	version = '0.14.1'
+	outputDir = layout.buildDirectory.dir('zig')
+}
+
 kotlin {
 	explicitApi()
 
@@ -60,20 +66,23 @@ kotlin {
 		def testCompilation = target.compilations.named(TEST_COMPILATION_NAME)
 
 		mainCompilation.configure { main ->
-			tasks.named(main.processResourcesTaskName).configure {
-				doFirst {
-					def jniDir = file("src/${target.name}Main/resources/com")
-					def files = project.fileTree(jniDir).files
-					if (files.size() != 6) {
-						throw new RuntimeException("""Native library mismatch!
-							|
-							|Run `zig build -p ${jniDir.parentFile}`.
-							|
-							|Expected 6 files, found:
-							|- """.stripMargin() + files.collect { jniDir.relativePath(it) }.sort().join('\n -'))
-					}
-				}
+			def headers = main.compileJavaTaskProvider.flatMap { it.options.headerOutputDirectory }
+			def jniTask = tasks.register("${target.name}JniZigBuild", Exec) {
+				inputs.file('build.zig')
+				inputs.dir('src/commonMain/c')
+				inputs.dir("src/${target.name}Main/c")
+				inputs.dir("src/${target.name}Main/include")
+
+				def jniDir = layout.buildDirectory.dir("zigJni/${target.name}")
+				outputs.dir(jniDir)
+
+				dependsOn(headers)
+				args('build', '-p', jniDir.get().asFile.absolutePath, "-Djavah=${projectDir.relativePath(headers.get().asFile)}")
+
+				dependsOn(zigDownload)
+				executable(zigDownload.get().zigExecutable.path)
 			}
+			main.defaultSourceSet.resources.srcDir(jniTask)
 		}
 
 		def mainJar = tasks.named(target.artifactsTaskName, Jar).flatMap { it.archiveFile }

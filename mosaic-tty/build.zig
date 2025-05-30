@@ -1,19 +1,25 @@
 const std = @import("std");
 
 pub fn build(b: *std.Build) !void {
+	const javaHeaders = b.option([]const u8, "javah", "Path to generated Java headers") orelse {
+		std.log.err("javah option is required", .{});
+		b.invalid_user_input = true;
+		return;
+	};
+
 	// The Windows builds create a .lib file in the lib/ directory which we don't need.
 	const deleteLib = b.addRemoveDirTree(.{ .cwd_relative = b.getInstallPath(.prefix, "lib") });
 	b.getInstallStep().dependOn(&deleteLib.step);
 
-	setupMosaicTarget(b, &deleteLib.step, .linux, .aarch64, "com/jakewharton/mosaic/tty/jni/aarch64");
-	setupMosaicTarget(b, &deleteLib.step, .linux, .x86_64, "com/jakewharton/mosaic/tty/jni/amd64");
-	setupMosaicTarget(b, &deleteLib.step, .macos, .aarch64, "com/jakewharton/mosaic/tty/jni/aarch64");
-	setupMosaicTarget(b, &deleteLib.step, .macos, .x86_64, "com/jakewharton/mosaic/tty/jni/x86_64");
-	setupMosaicTarget(b, &deleteLib.step, .windows, .aarch64, "com/jakewharton/mosaic/tty/jni/aarch64");
-	setupMosaicTarget(b, &deleteLib.step, .windows, .x86_64, "com/jakewharton/mosaic/tty/jni/amd64");
+	setupMosaicTarget(b, &deleteLib.step, javaHeaders, .linux, .aarch64, "com/jakewharton/mosaic/tty/jni/aarch64");
+	setupMosaicTarget(b, &deleteLib.step, javaHeaders, .linux, .x86_64, "com/jakewharton/mosaic/tty/jni/amd64");
+	setupMosaicTarget(b, &deleteLib.step, javaHeaders, .macos, .aarch64, "com/jakewharton/mosaic/tty/jni/aarch64");
+	setupMosaicTarget(b, &deleteLib.step, javaHeaders, .macos, .x86_64, "com/jakewharton/mosaic/tty/jni/x86_64");
+	setupMosaicTarget(b, &deleteLib.step, javaHeaders, .windows, .aarch64, "com/jakewharton/mosaic/tty/jni/aarch64");
+	setupMosaicTarget(b, &deleteLib.step, javaHeaders, .windows, .x86_64, "com/jakewharton/mosaic/tty/jni/amd64");
 }
 
-fn setupMosaicTarget(b: *std.Build, step: *std.Build.Step, tag: std.Target.Os.Tag, arch: std.Target.Cpu.Arch, dir: []const u8) void {
+fn setupMosaicTarget(b: *std.Build, step: *std.Build.Step, headers: []const u8, tag: std.Target.Os.Tag, arch: std.Target.Cpu.Arch, dir: []const u8) void {
 	const lib = b.addSharedLibrary(.{
 		.name = "mosaic",
 		.target = b.resolveTargetQuery(.{
@@ -29,7 +35,7 @@ fn setupMosaicTarget(b: *std.Build, step: *std.Build.Step, tag: std.Target.Os.Ta
 	lib.linkLibC();
 
 	lib.addIncludePath(b.path("src/commonMain/c"));
-	lib.addIncludePath(b.path("build/generated/sources/headers/java/jvmMain"));
+	lib.addIncludePath(b.path(headers));
 	lib.addIncludePath(b.path("src/jvmMain/include/share"));
 	lib.addIncludePath(
 		switch (tag) {
