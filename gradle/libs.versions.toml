@@ -34,6 +34,7 @@ ktlint-composeRules = "io.nlopez.compose.rules:ktlint:0.4.22"
 clikt = "com.github.ajalt.clikt:clikt:5.0.3"
 codepoints = "de.cketti.unicode:kotlin-codepoints:0.10.0"
 finalizationHook = "com.jakewharton.finalization:finalization-hook:0.1.0"
+apache-compress = "org.apache.commons:commons-compress:1.27.1"
 
 junit4 = "junit:junit:4.13.2"
 assertk = "com.willowtreeapps.assertk:assertk:0.28.1"
