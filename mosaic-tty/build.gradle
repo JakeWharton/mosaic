@@ -65,6 +65,8 @@ kotlin {
 		def mainCompilation = target.compilations.named(MAIN_COMPILATION_NAME)
 		def testCompilation = target.compilations.named(TEST_COMPILATION_NAME)
 
+		def jdk22Compilation = target.compilations.create("jdk22")
+
 		mainCompilation.configure { main ->
 			def headers = main.compileJavaTaskProvider.flatMap { it.options.headerOutputDirectory }
 			def jniTask = tasks.register("${target.name}JniZigBuild", Exec) {
@@ -85,7 +87,16 @@ kotlin {
 			main.defaultSourceSet.resources.srcDir(jniTask)
 		}
 
-		def mainJar = tasks.named(target.artifactsTaskName, Jar).flatMap { it.archiveFile }
+		def mainJarTask = tasks.named(target.artifactsTaskName, Jar) {
+			from(jdk22Compilation.output.allOutputs) {
+				into('META-INF/versions/22')
+			}
+			manifest {
+				attributes(['Multi-Release': 'true'])
+			}
+		}
+
+		def mainJar = mainJarTask.flatMap { it.archiveFile }
 		def testJar = tasks.register("${target.name}TestJar", Jar) {
 			from(testCompilation.map { it.output.allOutputs })
 			archiveBaseName = base.archivesName.map { it + '-' + target.name }
