@@ -69,7 +69,7 @@ private class PaddingModifier(
 	val bottom: Int = 0,
 ) : LayoutModifier {
 	init {
-		require(left >= 0 && top >= 0f && right >= 0f && bottom >= 0f) {
+		require(left >= 0 && top >= 0 && right >= 0 && bottom >= 0) {
 			"Padding must be non-negative"
 		}
 	}
