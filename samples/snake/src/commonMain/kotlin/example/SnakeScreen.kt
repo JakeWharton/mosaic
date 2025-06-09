@@ -6,6 +6,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.jakewharton.mosaic.layout.DrawStyle
 import com.jakewharton.mosaic.layout.drawBehind
+import com.jakewharton.mosaic.layout.focusable
 import com.jakewharton.mosaic.layout.height
 import com.jakewharton.mosaic.layout.padding
 import com.jakewharton.mosaic.layout.size
@@ -33,7 +34,7 @@ import example.models.y
 fun SnakeScreen(viewModel: SnakeViewModel) {
 	val uiState by viewModel.uiStateFlow.collectAsState()
 	CompositionLocalProvider(LocalSnakeColorsPalette provides AsciiSnakeColorsPalette) {
-		Row(modifier = Modifier.onSnakeKeyEvent(viewModel::doAction)) {
+		Row(modifier = Modifier.focusable().onSnakeKeyEvent(viewModel::doAction)) {
 			Box(contentAlignment = Alignment.Center) {
 				GameField(uiState)
 				GameOverTitle(uiState)

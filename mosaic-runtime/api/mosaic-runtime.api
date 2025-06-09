@@ -62,6 +62,38 @@ public abstract interface class com/jakewharton/mosaic/TextCanvas {
 	public abstract fun render (Lcom/jakewharton/mosaic/terminal/AnsiLevel;Z)Ljava/lang/String;
 }
 
+public final class com/jakewharton/mosaic/focus/FocusDirection {
+	public static final field Companion Lcom/jakewharton/mosaic/focus/FocusDirection$Companion;
+	public static final synthetic fun box-impl (I)Lcom/jakewharton/mosaic/focus/FocusDirection;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (ILjava/lang/Object;)Z
+	public static final fun equals-impl0 (II)Z
+	public fun hashCode ()I
+	public static fun hashCode-impl (I)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (I)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()I
+}
+
+public final class com/jakewharton/mosaic/focus/FocusDirection$Companion {
+	public final fun getNext-s_gprhM ()I
+	public final fun getPrevious-s_gprhM ()I
+}
+
+public abstract interface class com/jakewharton/mosaic/focus/FocusManager {
+	public abstract fun clearFocus ()V
+	public abstract fun moveFocus-kMQ9Pt8 (I)Z
+}
+
+public final class com/jakewharton/mosaic/focus/FocusManagerKt {
+	public static final fun getLocalFocusManager ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public abstract interface class com/jakewharton/mosaic/focus/FocusState {
+	public abstract fun getHasFocus ()Z
+	public abstract fun isFocused ()Z
+}
+
 public final class com/jakewharton/mosaic/layout/AspectRatioKt {
 	public static final fun aspectRatio (Lcom/jakewharton/mosaic/modifier/Modifier;FZ)Lcom/jakewharton/mosaic/modifier/Modifier;
 	public static synthetic fun aspectRatio$default (Lcom/jakewharton/mosaic/modifier/Modifier;FZILjava/lang/Object;)Lcom/jakewharton/mosaic/modifier/Modifier;
@@ -116,6 +148,15 @@ public final class com/jakewharton/mosaic/layout/DrawStyle$Stroke : com/jakewhar
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/jakewharton/mosaic/layout/FocusModifier : com/jakewharton/mosaic/modifier/Modifier$Element {
+	public abstract fun onFocusStateChanged (Lcom/jakewharton/mosaic/focus/FocusState;)V
+}
+
+public final class com/jakewharton/mosaic/layout/FocusModifierKt {
+	public static final fun focusable (Lcom/jakewharton/mosaic/modifier/Modifier;Lkotlin/jvm/functions/Function1;)Lcom/jakewharton/mosaic/modifier/Modifier;
+	public static synthetic fun focusable$default (Lcom/jakewharton/mosaic/modifier/Modifier;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/jakewharton/mosaic/modifier/Modifier;
 }
 
 public final class com/jakewharton/mosaic/layout/IntrinsicKt {

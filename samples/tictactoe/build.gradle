@@ -1,0 +1,36 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
+
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
+apply from: "$rootDir/addAllTargets.gradle"
+
+kotlin {
+	sourceSets {
+		commonMain {
+			dependencies {
+				implementation projects.mosaicRuntime
+				implementation projects.mosaicAnimation
+			}
+		}
+	}
+
+	jvm {
+		binaries {
+			executable {
+				mainClass = 'example.TictactoeKt'
+			}
+		}
+	}
+
+	targets.withType(KotlinNativeTarget).configureEach { target ->
+		target.binaries.executable {
+			entryPoint = 'example.main'
+			if (buildType == NativeBuildType.DEBUG) {
+				linkTaskProvider.configure {
+					enabled = false
+				}
+			}
+		}
+	}
+}

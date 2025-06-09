@@ -8,6 +8,7 @@ import com.jakewharton.mosaic.LocalTerminalState
 import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.layout.background
 import com.jakewharton.mosaic.layout.fillMaxWidth
+import com.jakewharton.mosaic.layout.focusable
 import com.jakewharton.mosaic.layout.height
 import com.jakewharton.mosaic.layout.onKeyEvent
 import com.jakewharton.mosaic.layout.padding
@@ -35,6 +36,7 @@ fun RrtopApp(rrtopViewModel: RrtopViewModel, colorsPalette: RrtopColorsPalette) 
 				.width(terminal.size.columns)
 				.height(terminal.size.rows - 1) // subtraction of one is necessary, because there is a line with a cursor at the bottom, which moves up all the content
 				.background(LocalRrtopColorsPalette.current.mainBg)
+				.focusable()
 				.onKeyEvent {
 					when (it) {
 						KeyEvent("ArrowLeft") -> rrtopViewModel.onArrowLeftPress()

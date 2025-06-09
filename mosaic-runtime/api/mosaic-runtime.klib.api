@@ -92,6 +92,18 @@ abstract fun interface com.jakewharton.mosaic.ui/Alignment { // com.jakewharton.
     }
 }
 
+abstract interface com.jakewharton.mosaic.focus/FocusManager { // com.jakewharton.mosaic.focus/FocusManager|null[0]
+    abstract fun clearFocus() // com.jakewharton.mosaic.focus/FocusManager.clearFocus|clearFocus(){}[0]
+    abstract fun moveFocus(com.jakewharton.mosaic.focus/FocusDirection): kotlin/Boolean // com.jakewharton.mosaic.focus/FocusManager.moveFocus|moveFocus(com.jakewharton.mosaic.focus.FocusDirection){}[0]
+}
+
+abstract interface com.jakewharton.mosaic.focus/FocusState { // com.jakewharton.mosaic.focus/FocusState|null[0]
+    abstract val hasFocus // com.jakewharton.mosaic.focus/FocusState.hasFocus|{}hasFocus[0]
+        abstract fun <get-hasFocus>(): kotlin/Boolean // com.jakewharton.mosaic.focus/FocusState.hasFocus.<get-hasFocus>|<get-hasFocus>(){}[0]
+    abstract val isFocused // com.jakewharton.mosaic.focus/FocusState.isFocused|{}isFocused[0]
+        abstract fun <get-isFocused>(): kotlin/Boolean // com.jakewharton.mosaic.focus/FocusState.isFocused.<get-isFocused>|<get-isFocused>(){}[0]
+}
+
 abstract interface com.jakewharton.mosaic.layout/ContentDrawScope : com.jakewharton.mosaic.layout/DrawScope { // com.jakewharton.mosaic.layout/ContentDrawScope|null[0]
     abstract fun drawContent() // com.jakewharton.mosaic.layout/ContentDrawScope.drawContent|drawContent(){}[0]
 }
@@ -111,6 +123,10 @@ abstract interface com.jakewharton.mosaic.layout/DrawScope { // com.jakewharton.
     abstract fun drawRect(kotlin/Int = ..., com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/TextStyle = ..., com.jakewharton.mosaic.ui.unit/IntOffset = ..., com.jakewharton.mosaic.ui.unit/IntSize = ..., com.jakewharton.mosaic.layout/DrawStyle = ...) // com.jakewharton.mosaic.layout/DrawScope.drawRect|drawRect(kotlin.Int;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle;com.jakewharton.mosaic.ui.unit.IntOffset;com.jakewharton.mosaic.ui.unit.IntSize;com.jakewharton.mosaic.layout.DrawStyle){}[0]
     abstract fun drawText(kotlin/Int, kotlin/Int, com.jakewharton.mosaic.text/AnnotatedString, com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/TextStyle = ..., com.jakewharton.mosaic.ui/UnderlineStyle = ..., com.jakewharton.mosaic.ui/Color = ...) // com.jakewharton.mosaic.layout/DrawScope.drawText|drawText(kotlin.Int;kotlin.Int;com.jakewharton.mosaic.text.AnnotatedString;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle;com.jakewharton.mosaic.ui.UnderlineStyle;com.jakewharton.mosaic.ui.Color){}[0]
     abstract fun drawText(kotlin/Int, kotlin/Int, kotlin/String, com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/Color = ..., com.jakewharton.mosaic.ui/TextStyle = ..., com.jakewharton.mosaic.ui/UnderlineStyle = ..., com.jakewharton.mosaic.ui/Color = ...) // com.jakewharton.mosaic.layout/DrawScope.drawText|drawText(kotlin.Int;kotlin.Int;kotlin.String;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.Color;com.jakewharton.mosaic.ui.TextStyle;com.jakewharton.mosaic.ui.UnderlineStyle;com.jakewharton.mosaic.ui.Color){}[0]
+}
+
+abstract interface com.jakewharton.mosaic.layout/FocusModifier : com.jakewharton.mosaic.modifier/Modifier.Element { // com.jakewharton.mosaic.layout/FocusModifier|null[0]
+    abstract fun onFocusStateChanged(com.jakewharton.mosaic.focus/FocusState) // com.jakewharton.mosaic.layout/FocusModifier.onFocusStateChanged|onFocusStateChanged(com.jakewharton.mosaic.focus.FocusState){}[0]
 }
 
 abstract interface com.jakewharton.mosaic.layout/IntrinsicMeasurable { // com.jakewharton.mosaic.layout/IntrinsicMeasurable|null[0]
@@ -416,6 +432,19 @@ final class com.jakewharton.mosaic/TerminalState { // com.jakewharton.mosaic/Ter
     final fun toString(): kotlin/String // com.jakewharton.mosaic/TerminalState.toString|toString(){}[0]
 }
 
+final value class com.jakewharton.mosaic.focus/FocusDirection { // com.jakewharton.mosaic.focus/FocusDirection|null[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jakewharton.mosaic.focus/FocusDirection.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jakewharton.mosaic.focus/FocusDirection.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jakewharton.mosaic.focus/FocusDirection.toString|toString(){}[0]
+
+    final object Companion { // com.jakewharton.mosaic.focus/FocusDirection.Companion|null[0]
+        final val Next // com.jakewharton.mosaic.focus/FocusDirection.Companion.Next|{}Next[0]
+            final fun <get-Next>(): com.jakewharton.mosaic.focus/FocusDirection // com.jakewharton.mosaic.focus/FocusDirection.Companion.Next.<get-Next>|<get-Next>(){}[0]
+        final val Previous // com.jakewharton.mosaic.focus/FocusDirection.Companion.Previous|{}Previous[0]
+            final fun <get-Previous>(): com.jakewharton.mosaic.focus/FocusDirection // com.jakewharton.mosaic.focus/FocusDirection.Companion.Previous.<get-Previous>|<get-Previous>(){}[0]
+    }
+}
+
 final value class com.jakewharton.mosaic.ui.unit/Constraints { // com.jakewharton.mosaic.ui.unit/Constraints|null[0]
     constructor <init>(kotlin/Long) // com.jakewharton.mosaic.ui.unit/Constraints.<init>|<init>(kotlin.Long){}[0]
 
@@ -672,8 +701,12 @@ final const val com.jakewharton.mosaic.ui/UnspecifiedTextStyle // com.jakewharto
 final const val com.jakewharton.mosaic.ui/UnspecifiedUnderlineStyle // com.jakewharton.mosaic.ui/UnspecifiedUnderlineStyle|{}UnspecifiedUnderlineStyle[0]
     final fun <get-UnspecifiedUnderlineStyle>(): kotlin/Int // com.jakewharton.mosaic.ui/UnspecifiedUnderlineStyle.<get-UnspecifiedUnderlineStyle>|<get-UnspecifiedUnderlineStyle>(){}[0]
 
+final val com.jakewharton.mosaic.focus/LocalFocusManager // com.jakewharton.mosaic.focus/LocalFocusManager|{}LocalFocusManager[0]
+    final fun <get-LocalFocusManager>(): androidx.compose.runtime/ProvidableCompositionLocal<com.jakewharton.mosaic.focus/FocusManager> // com.jakewharton.mosaic.focus/LocalFocusManager.<get-LocalFocusManager>|<get-LocalFocusManager>(){}[0]
+final val com.jakewharton.mosaic.focus/com_jakewharton_mosaic_focus_MosaicFocusManager$stableprop // com.jakewharton.mosaic.focus/com_jakewharton_mosaic_focus_MosaicFocusManager$stableprop|#static{}com_jakewharton_mosaic_focus_MosaicFocusManager$stableprop[0]
 final val com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_DrawStyle_Fill$stableprop // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_DrawStyle_Fill$stableprop|#static{}com_jakewharton_mosaic_layout_DrawStyle_Fill$stableprop[0]
 final val com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_DrawStyle_Stroke$stableprop // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_DrawStyle_Stroke$stableprop|#static{}com_jakewharton_mosaic_layout_DrawStyle_Stroke$stableprop[0]
+final val com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_FocusElement$stableprop // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_FocusElement$stableprop|#static{}com_jakewharton_mosaic_layout_FocusElement$stableprop[0]
 final val com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_KeyEvent$stableprop // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_KeyEvent$stableprop|#static{}com_jakewharton_mosaic_layout_KeyEvent$stableprop[0]
 final val com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_MosaicNode$stableprop // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_MosaicNode$stableprop|#static{}com_jakewharton_mosaic_layout_MosaicNode$stableprop[0]
 final val com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_MosaicNodeLayer$stableprop // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_MosaicNodeLayer$stableprop|#static{}com_jakewharton_mosaic_layout_MosaicNodeLayer$stableprop[0]
@@ -750,6 +783,7 @@ final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layo
 final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/fillMaxHeight(kotlin/Float = ...): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/fillMaxHeight|fillMaxHeight@com.jakewharton.mosaic.modifier.Modifier(kotlin.Float){}[0]
 final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/fillMaxSize(kotlin/Float = ...): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/fillMaxSize|fillMaxSize@com.jakewharton.mosaic.modifier.Modifier(kotlin.Float){}[0]
 final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/fillMaxWidth(kotlin/Float = ...): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/fillMaxWidth|fillMaxWidth@com.jakewharton.mosaic.modifier.Modifier(kotlin.Float){}[0]
+final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/focusable(kotlin/Function1<com.jakewharton.mosaic.focus/FocusState, kotlin/Unit>? = ...): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/focusable|focusable@com.jakewharton.mosaic.modifier.Modifier(kotlin.Function1<com.jakewharton.mosaic.focus.FocusState,kotlin.Unit>?){}[0]
 final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/height(com.jakewharton.mosaic.layout/IntrinsicSize): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/height|height@com.jakewharton.mosaic.modifier.Modifier(com.jakewharton.mosaic.layout.IntrinsicSize){}[0]
 final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/height(kotlin/Int): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/height|height@com.jakewharton.mosaic.modifier.Modifier(kotlin.Int){}[0]
 final fun (com.jakewharton.mosaic.modifier/Modifier).com.jakewharton.mosaic.layout/heightIn(kotlin/Int = ..., kotlin/Int = ...): com.jakewharton.mosaic.modifier/Modifier // com.jakewharton.mosaic.layout/heightIn|heightIn@com.jakewharton.mosaic.modifier.Modifier(kotlin.Int;kotlin.Int){}[0]
@@ -793,8 +827,10 @@ final fun (com.jakewharton.mosaic.ui.unit/Constraints).com.jakewharton.mosaic.ui
 final fun (com.jakewharton.mosaic.ui.unit/Constraints).com.jakewharton.mosaic.ui.unit/constrainWidth(kotlin/Int): kotlin/Int // com.jakewharton.mosaic.ui.unit/constrainWidth|constrainWidth@com.jakewharton.mosaic.ui.unit.Constraints(kotlin.Int){}[0]
 final fun (com.jakewharton.mosaic.ui.unit/Constraints).com.jakewharton.mosaic.ui.unit/isSatisfiedBy(com.jakewharton.mosaic.ui.unit/IntSize): kotlin/Boolean // com.jakewharton.mosaic.ui.unit/isSatisfiedBy|isSatisfiedBy@com.jakewharton.mosaic.ui.unit.Constraints(com.jakewharton.mosaic.ui.unit.IntSize){}[0]
 final fun (com.jakewharton.mosaic.ui.unit/Constraints).com.jakewharton.mosaic.ui.unit/offset(kotlin/Int = ..., kotlin/Int = ...): com.jakewharton.mosaic.ui.unit/Constraints // com.jakewharton.mosaic.ui.unit/offset|offset@com.jakewharton.mosaic.ui.unit.Constraints(kotlin.Int;kotlin.Int){}[0]
+final fun com.jakewharton.mosaic.focus/com_jakewharton_mosaic_focus_MosaicFocusManager$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.focus/com_jakewharton_mosaic_focus_MosaicFocusManager$stableprop_getter|com_jakewharton_mosaic_focus_MosaicFocusManager$stableprop_getter(){}[0]
 final fun com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_DrawStyle_Fill$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_DrawStyle_Fill$stableprop_getter|com_jakewharton_mosaic_layout_DrawStyle_Fill$stableprop_getter(){}[0]
 final fun com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_DrawStyle_Stroke$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_DrawStyle_Stroke$stableprop_getter|com_jakewharton_mosaic_layout_DrawStyle_Stroke$stableprop_getter(){}[0]
+final fun com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_FocusElement$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_FocusElement$stableprop_getter|com_jakewharton_mosaic_layout_FocusElement$stableprop_getter(){}[0]
 final fun com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_KeyEvent$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_KeyEvent$stableprop_getter|com_jakewharton_mosaic_layout_KeyEvent$stableprop_getter(){}[0]
 final fun com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_MosaicNode$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_MosaicNode$stableprop_getter|com_jakewharton_mosaic_layout_MosaicNode$stableprop_getter(){}[0]
 final fun com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_MosaicNodeLayer$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.layout/com_jakewharton_mosaic_layout_MosaicNodeLayer$stableprop_getter|com_jakewharton_mosaic_layout_MosaicNodeLayer$stableprop_getter(){}[0]

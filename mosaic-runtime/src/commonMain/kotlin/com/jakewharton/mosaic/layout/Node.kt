@@ -2,6 +2,8 @@ package com.jakewharton.mosaic.layout
 
 import com.jakewharton.mosaic.TextCanvas
 import com.jakewharton.mosaic.TextSurface
+import com.jakewharton.mosaic.focus.FocusState
+import com.jakewharton.mosaic.focus.FocusStateImpl
 import com.jakewharton.mosaic.layout.Placeable.PlacementScope
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.ui.unit.Constraints
@@ -74,6 +76,13 @@ internal abstract class MosaicNodeLayer :
 	override fun maxIntrinsicHeight(width: Int): Int {
 		return next?.maxIntrinsicHeight(width) ?: 0
 	}
+
+	open val isFocusable: Boolean
+		get() = next?.isFocusable ?: false
+
+	open fun changeFocus(state: FocusState) {
+		next?.changeFocus(state)
+	}
 }
 
 internal object NotMeasured : MeasureResult {
@@ -99,6 +108,16 @@ internal class MosaicNode(
 	var testTag: String? = null
 		private set
 
+	var focusState: FocusStateImpl = FocusStateImpl.Inactive
+		set(value) {
+			if (field != value) {
+				field = value
+				topLayer.changeFocus(value)
+			}
+		}
+
+	val isFocusable get() = topLayer.isFocusable
+
 	fun setModifier(modifier: Modifier) {
 		topLayer = modifier.foldOut(bottomLayer) { element, nextLayer ->
 			var nextLayer = nextLayer
@@ -112,6 +131,9 @@ internal class MosaicNode(
 			}
 			if (element is KeyModifier) {
 				nextLayer = KeyLayer(element, nextLayer)
+			}
+			if (element is FocusModifier) {
+				nextLayer = FocusLayer(element, nextLayer)
 			}
 			if (element is ParentDataModifier) {
 				parentData = element.modifyParentData(parentData)
@@ -187,12 +209,7 @@ private class BottomLayer(
 	}
 
 	override fun sendKeyEvent(keyEvent: KeyEvent): Boolean {
-		for (child in node.children) {
-			if (child.sendKeyEvent(keyEvent)) {
-				return true
-			}
-		}
-		return false
+		return node.children.singleOrNull { it.focusState.hasFocus }?.sendKeyEvent(keyEvent) ?: false
 	}
 
 	override fun minIntrinsicWidth(height: Int): Int {
@@ -265,4 +282,17 @@ private class KeyLayer(
 		element.onPreKeyEvent(keyEvent) ||
 			next.sendKeyEvent(keyEvent) ||
 			element.onKeyEvent(keyEvent)
+}
+
+private class FocusLayer(
+	private val element: FocusModifier,
+	override val next: MosaicNodeLayer,
+) : MosaicNodeLayer() {
+
+	override val isFocusable: Boolean = true
+
+	override fun changeFocus(state: FocusState) {
+		element.onFocusStateChanged(state)
+		next.changeFocus(state)
+	}
 }

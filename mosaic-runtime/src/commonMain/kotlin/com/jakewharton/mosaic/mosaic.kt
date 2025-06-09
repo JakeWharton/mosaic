@@ -6,6 +6,7 @@ import androidx.compose.runtime.BroadcastFrameClock
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Composition
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MonotonicFrameClock
 import androidx.compose.runtime.Recomposer
 import androidx.compose.runtime.mutableStateOf
@@ -16,6 +17,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.jakewharton.mosaic.NonInteractivePolicy.Exit
+import com.jakewharton.mosaic.focus.FocusDirection
+import com.jakewharton.mosaic.focus.LocalFocusManager
+import com.jakewharton.mosaic.focus.MosaicFocusManager
 import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.terminal.KeyboardEvent
@@ -137,6 +141,8 @@ internal class MosaicComposition(
 	private val staticLogger = StaticLogger(staticLogs) { needDraw = true }
 
 	override val lifecycle = LifecycleRegistry.createUnsafe(this)
+
+	val focusManager = MosaicFocusManager(rootNode)
 
 	private var terminalState = mutableStateOf(
 		TerminalState(
@@ -306,8 +312,14 @@ internal class MosaicComposition(
 				LocalTerminalState provides terminalState.value,
 				LocalStaticLogger provides staticLogger,
 				LocalLifecycleOwner provides this,
-				content = content,
-			)
+				LocalFocusManager provides focusManager,
+			) {
+				content()
+				DisposableEffect(Unit) {
+					focusManager.moveFocus(FocusDirection.Next)
+					onDispose { }
+				}
+			}
 		}
 		performLayout()
 	}
