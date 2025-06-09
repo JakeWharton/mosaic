@@ -5,6 +5,7 @@
 
 New:
 - JVM artifacts can now be used as modules in the Java module system.
+- Added `focusable` modifier and `FocusManager`
 
 Changed:
 - Unsolicited focus, theme, and resize events are now ignored unless the terminal has reported that it supports each of those modes.
