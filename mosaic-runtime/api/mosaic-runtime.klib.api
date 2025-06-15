@@ -139,7 +139,7 @@ abstract interface com.jakewharton.mosaic.layout/IntrinsicMeasurable { // com.ja
     abstract fun minIntrinsicWidth(kotlin/Int): kotlin/Int // com.jakewharton.mosaic.layout/IntrinsicMeasurable.minIntrinsicWidth|minIntrinsicWidth(kotlin.Int){}[0]
 }
 
-abstract interface com.jakewharton.mosaic.layout/KeyModifier : com.jakewharton.mosaic.modifier/Modifier.Element { // com.jakewharton.mosaic.layout/KeyModifier|null[0]
+abstract interface com.jakewharton.mosaic.layout/KeyModifier : com.jakewharton.mosaic.layout/FocusModifier { // com.jakewharton.mosaic.layout/KeyModifier|null[0]
     abstract fun onKeyEvent(com.jakewharton.mosaic.layout/KeyEvent): kotlin/Boolean // com.jakewharton.mosaic.layout/KeyModifier.onKeyEvent|onKeyEvent(com.jakewharton.mosaic.layout.KeyEvent){}[0]
     abstract fun onPreKeyEvent(com.jakewharton.mosaic.layout/KeyEvent): kotlin/Boolean // com.jakewharton.mosaic.layout/KeyModifier.onPreKeyEvent|onPreKeyEvent(com.jakewharton.mosaic.layout.KeyEvent){}[0]
 }

@@ -195,7 +195,7 @@ public final class com/jakewharton/mosaic/layout/KeyEvent {
 	public fun toString ()Ljava/lang/String;
 }
 
-public abstract interface class com/jakewharton/mosaic/layout/KeyModifier : com/jakewharton/mosaic/modifier/Modifier$Element {
+public abstract interface class com/jakewharton/mosaic/layout/KeyModifier : com/jakewharton/mosaic/layout/FocusModifier {
 	public abstract fun onKeyEvent (Lcom/jakewharton/mosaic/layout/KeyEvent;)Z
 	public abstract fun onPreKeyEvent (Lcom/jakewharton/mosaic/layout/KeyEvent;)Z
 }
