@@ -98,6 +98,10 @@ internal class MosaicFocusManager(private val rootNode: MosaicNode) : FocusManag
 				// What if active moved out?
 				val focusChild = children.indexOfFirst { it.focusState.hasFocus }
 				if (searchFromStart) {
+					if (isFocusable) {
+						changeFocus(this, FocusStateImpl.Active)
+						return true
+					}
 					for (childIndex in 0..if (focusChild != -1) focusChild else children.lastIndex) {
 						if (children[childIndex].forwardMarkFocus(searchFromStart, changeFocus)) {
 							changeFocus(this, null)
@@ -129,7 +133,16 @@ internal class MosaicFocusManager(private val rootNode: MosaicNode) : FocusManag
 		return when (focusState) {
 			FocusStateImpl.Active -> {
 				if (searchFromStart) {
-					if (!isFocusable) changeFocus(null, null)
+					if (isFocusable) {
+						for (childIndex in children.lastIndex downTo 0) {
+							if (children[childIndex].backwardMarkFocus(searchFromStart, changeFocus)) {
+								changeFocus(this, FocusStateImpl.ActiveParent)
+								return true
+							}
+						}
+					} else {
+						changeFocus(null, null)
+					}
 					return false
 				}
 				if (this === rootNode) {

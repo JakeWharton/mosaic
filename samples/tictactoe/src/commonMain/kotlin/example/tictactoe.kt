@@ -50,7 +50,6 @@ fun main() = runMosaicMain {
 					Modifier
 						.align(Alignment.Center)
 						.border('•')
-						.focusable()
 						.onKeyEvent {
 							if (it.key == "Enter") {
 								game.newGame()
@@ -99,11 +98,8 @@ fun MarkCell(game: Game, position: Position) {
 		focused = false
 		Modifier
 	} else {
-		Modifier.focusable { focused = it.isFocused }
-	}
-	Text(
-		" ${mark?.name ?: " "} ",
-		modifier = focusModifier
+		Modifier
+			.focusable { focused = it.isFocused }
 			.onKeyEvent {
 				if (it.key == "Enter") {
 					game.markPosition(position)
@@ -112,7 +108,11 @@ fun MarkCell(game: Game, position: Position) {
 				} else {
 					false
 				}
-			}.border(borderChar),
+			}
+	}
+	Text(
+		" ${mark?.name ?: " "} ",
+		modifier = focusModifier.border(borderChar),
 	)
 }
 

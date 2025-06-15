@@ -9,7 +9,6 @@ import androidx.compose.runtime.setValue
 import com.jakewharton.mosaic.layout.DrawStyle
 import com.jakewharton.mosaic.layout.KeyEvent
 import com.jakewharton.mosaic.layout.drawBehind
-import com.jakewharton.mosaic.layout.focusable
 import com.jakewharton.mosaic.layout.height
 import com.jakewharton.mosaic.layout.offset
 import com.jakewharton.mosaic.layout.onKeyEvent
@@ -39,7 +38,7 @@ fun main() = runMosaicMain {
 	var exit by remember { mutableStateOf(false) }
 
 	Column(
-		modifier = Modifier.focusable().onKeyEvent {
+		modifier = Modifier.onKeyEvent {
 			when (it) {
 				KeyEvent("ArrowUp") -> y = (y - 1).coerceAtLeast(0)
 				KeyEvent("ArrowDown") -> y = (y + 1).coerceAtMost(worldHeight - robotHeight)
