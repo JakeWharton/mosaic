@@ -1,10 +1,11 @@
 package com.jakewharton.mosaic.layout
 
 import androidx.compose.runtime.Immutable
+import com.jakewharton.mosaic.focus.FocusState
 import com.jakewharton.mosaic.modifier.Modifier
 import dev.drewhamilton.poko.Poko
 
-public interface KeyModifier : Modifier.Element {
+public interface KeyModifier : FocusModifier {
 	/**
 	 * This function is called when a [KeyEvent] is received by this node during the downward pass.
 	 * It gives ancestors of a focused component the chance to intercept an event. Return true to
@@ -62,4 +63,5 @@ private class KeyModifierElement(
 ) : KeyModifier {
 	override fun onPreKeyEvent(event: KeyEvent) = onPreEvent?.invoke(event) ?: false
 	override fun onKeyEvent(event: KeyEvent) = onEvent?.invoke(event) ?: false
+	override fun onFocusStateChanged(state: FocusState) = Unit
 }
