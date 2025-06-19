@@ -1,10 +1,23 @@
 package com.jakewharton.mosaic.tty
 
+import com.jakewharton.mosaic.tty.Libmosaic.tty_currentTerminalSize
+import com.jakewharton.mosaic.tty.Libmosaic.tty_enableRawMode
+import com.jakewharton.mosaic.tty.Libmosaic.tty_enableWindowResizeEvents
+import com.jakewharton.mosaic.tty.Libmosaic.tty_free
+import com.jakewharton.mosaic.tty.Libmosaic.tty_init
+import com.jakewharton.mosaic.tty.Libmosaic.tty_interruptRead
+import com.jakewharton.mosaic.tty.Libmosaic.tty_read
+import com.jakewharton.mosaic.tty.Libmosaic.tty_readWithTimeout
+import com.jakewharton.mosaic.tty.Libmosaic.tty_reset
+import com.jakewharton.mosaic.tty.Libmosaic.tty_setCallback
+import com.jakewharton.mosaic.tty.Libmosaic.tty_write
 import java.lang.foreign.Arena
 import java.lang.foreign.FunctionDescriptor
 import java.lang.foreign.Linker
 import java.lang.foreign.MemorySegment
 import java.lang.foreign.ValueLayout
+import java.lang.foreign.ValueLayout.JAVA_BOOLEAN
+import java.lang.foreign.ValueLayout.JAVA_INT
 import java.lang.invoke.MethodHandles
 import java.lang.invoke.MethodType
 
@@ -14,7 +27,9 @@ public class Tty internal constructor(
 	public companion object {
 		@JvmStatic
 		public fun tryBind(): Tty? {
-			val result = Libmosaic.tty_init.makeInvoker().apply(Arena.global())
+			NativeLibrary.ensureLoaded()
+
+			val result = tty_init.makeInvoker().apply(Arena.global())
 			MosaicTtyInitResult.tty(result)?.let { tty ->
 				return Tty(tty)
 			}
@@ -30,127 +45,152 @@ public class Tty internal constructor(
 			}
 			throw OutOfMemoryError()
 		}
-
-		private fun throwIoe(error: Int): Nothing {
-			throw IOException(error.toString())
-		}
 	}
 
 	private var ttyPtr: MemorySegment? = ttyPtr
 	private var callbackPtr: MemorySegment? = null
 
 	public fun setCallback(callback: Callback?) {
-		val arena = Arena.global()
-		val linker = Linker.nativeLinker()
-		val callback = MosaicTtyCallback.allocate(arena)
-		MosaicTtyCallback.onFocus(callback, run {
-			val descriptor = FunctionDescriptor.ofVoid(
-				ValueLayout.JAVA_BOOLEAN,
-			)
-			val handle = MethodHandles.lookup()
-				.findVirtual(
-					Callback::class.java,
-					"onFocus",
-				MethodType.methodType(
-					Void.TYPE,
-					Boolean::class.javaPrimitiveType,
-				))
-			linker.upcallStub(handle, descriptor, arena)
-		})
-		MosaicTtyCallback.onKey(callback, run {
-			val descriptor = FunctionDescriptor.ofVoid()
-			val handle = MethodHandles.lookup()
-				.findVirtual(
-					Callback::class.java,
-					"onKey",
-					MethodType.methodType(Void.TYPE))
-			linker.upcallStub(handle, descriptor, arena)
-		})
-		MosaicTtyCallback.onMouse(callback, run {
-			val descriptor = FunctionDescriptor.ofVoid()
-			val handle = MethodHandles.lookup()
-				.findVirtual(
-					Callback::class.java,
-					"onMouse",
-					MethodType.methodType(Void.TYPE))
-			linker.upcallStub(handle, descriptor, arena)
-		})
-		MosaicTtyCallback.onMouse(callback, run {
-			val descriptor = FunctionDescriptor.ofVoid(
-				ValueLayout.JAVA_INT,
-				ValueLayout.JAVA_INT,
-				ValueLayout.JAVA_INT,
-				ValueLayout.JAVA_INT,
-			)
-			val handle = MethodHandles.lookup()
-				.findVirtual(
-					Callback::class.java,
-					"onResize",
-					MethodType.methodType(
-						Void.TYPE,
-						Int::class.javaPrimitiveType,
-						Int::class.javaPrimitiveType,
-						Int::class.javaPrimitiveType,
-						Int::class.javaPrimitiveType,
-					))
-			linker.upcallStub(handle, descriptor, arena)
-		})
+		val ttyCallback = if (callback == null) {
+			MemorySegment.NULL
+		} else {
+			val arena = Arena.global()
+			val linker = Linker.nativeLinker()
+			MosaicTtyCallback.allocate(arena).also { ttyCallback ->
+				MosaicTtyCallback.onFocus(
+					ttyCallback,
+					run {
+						val descriptor = FunctionDescriptor.ofVoid(JAVA_BOOLEAN)
+						val handle = MethodHandles.lookup()
+							.findVirtual(
+								Callback::class.java,
+								"onFocus",
+								MethodType.methodType(
+									Void.TYPE,
+									Boolean::class.javaPrimitiveType,
+								),
+							)
+							.bindTo(callback)
+						linker.upcallStub(handle, descriptor, arena)
+					},
+				)
+				MosaicTtyCallback.onKey(
+					ttyCallback,
+					run {
+						val descriptor = FunctionDescriptor.ofVoid()
+						val handle = MethodHandles.lookup()
+							.findVirtual(
+								Callback::class.java,
+								"onKey",
+								MethodType.methodType(Void.TYPE),
+							)
+							.bindTo(callback)
+						linker.upcallStub(handle, descriptor, arena)
+					},
+				)
+				MosaicTtyCallback.onMouse(
+					ttyCallback,
+					run {
+						val descriptor = FunctionDescriptor.ofVoid()
+						val handle = MethodHandles.lookup()
+							.findVirtual(
+								Callback::class.java,
+								"onMouse",
+								MethodType.methodType(Void.TYPE),
+							)
+							.bindTo(callback)
+						linker.upcallStub(handle, descriptor, arena)
+					},
+				)
+				MosaicTtyCallback.onMouse(
+					ttyCallback,
+					run {
+						val descriptor = FunctionDescriptor.ofVoid(JAVA_INT, JAVA_INT, JAVA_INT, JAVA_INT)
+						val handle = MethodHandles.lookup()
+							.findVirtual(
+								Callback::class.java,
+								"onResize",
+								MethodType.methodType(
+									Void.TYPE,
+									Int::class.javaPrimitiveType,
+									Int::class.javaPrimitiveType,
+									Int::class.javaPrimitiveType,
+									Int::class.javaPrimitiveType,
+								),
+							)
+							.bindTo(callback)
+						linker.upcallStub(handle, descriptor, arena)
+					},
+				)
+			}
+		}
 
-		callbackPtr = callback
-		Libmosaic.tty_setCallback(ttyPtr, callback)
+		callbackPtr = ttyCallback
+		tty_setCallback(ttyPtr, ttyCallback)
 	}
 
 	@Throws(IOException::class)
 	public fun read(buffer: ByteArray, offset: Int, count: Int): Int {
-		val segment = MemorySegment.ofArray(buffer).asSlice(offset.toLong())
-		val result = Libmosaic.tty_read(Arena.global(), ttyPtr, segment, count)
+		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
+		val result = tty_read(Arena.global(), ttyPtr, segment, count)
 		val error = MosaicTtyIoResult.error(result)
-		if (error == 0) return MosaicTtyIoResult.count(result)
+		if (error == 0) {
+			val read = MosaicTtyIoResult.count(result)
+			MemorySegment.copy(segment, ValueLayout.JAVA_BYTE, 0L, buffer, offset, read)
+			return read
+		}
 		throwIoe(error)
 	}
 
 	@Throws(IOException::class)
 	public fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
-		val segment = MemorySegment.ofArray(buffer).asSlice(offset.toLong())
-		val result = Libmosaic.tty_readWithTimeout(Arena.global(), ttyPtr, segment, count, timeoutMillis)
+		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
+		val result = tty_readWithTimeout(Arena.global(), ttyPtr, segment, count, timeoutMillis)
 		val error = MosaicTtyIoResult.error(result)
-		if (error == 0) return MosaicTtyIoResult.count(result)
+		if (error == 0) {
+			val read = MosaicTtyIoResult.count(result)
+			MemorySegment.copy(segment, ValueLayout.JAVA_BYTE, 0L, buffer, offset, read)
+			return read
+		}
 		throwIoe(error)
 	}
 
 	@Throws(IOException::class)
 	public fun interruptRead() {
-		val error = Libmosaic.tty_interruptRead(ttyPtr)
+		val error = tty_interruptRead(ttyPtr)
 		if (error == 0) return
 		throwIoe(error)
 	}
 
 	@Throws(IOException::class)
 	public fun write(buffer: ByteArray, offset: Int, count: Int): Int {
-		val segment = MemorySegment.ofArray(buffer).asSlice(offset.toLong())
-		val result = Libmosaic.tty_write(Arena.global(), ttyPtr, segment, count)
+		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
+		MemorySegment.copy(buffer, offset, segment, ValueLayout.JAVA_BYTE, 0, count)
+		val result = tty_write(Arena.global(), ttyPtr, segment, count)
 		val error = MosaicTtyIoResult.error(result)
-		if (error == 0) return MosaicTtyIoResult.count(result)
+		if (error == 0) {
+			return MosaicTtyIoResult.count(result)
+		}
 		throwIoe(error)
 	}
 
 	@Throws(IOException::class)
 	public fun enableRawMode() {
-		val error = Libmosaic.tty_enableRawMode(ttyPtr)
+		val error = tty_enableRawMode(ttyPtr)
 		if (error == 0) return
 		throwIoe(error)
 	}
 
 	@Throws(IOException::class)
 	public fun enableWindowResizeEvents() {
-		val error = Libmosaic.tty_enableWindowResizeEvents(ttyPtr)
+		val error = tty_enableWindowResizeEvents(ttyPtr)
 		if (error == 0) return
 		throwIoe(error)
 	}
 
 	@Throws(IOException::class)
 	public fun currentSize(): IntArray {
-		val result = Libmosaic.tty_currentTerminalSize(Arena.global(), ttyPtr)
+		val result = tty_currentTerminalSize(Arena.global(), ttyPtr)
 		val error = MosaicTtyTerminalSizeResult.error(result)
 		if (error == 0) {
 			return intArrayOf(
@@ -165,7 +205,7 @@ public class Tty internal constructor(
 
 	@Throws(IOException::class)
 	public fun reset() {
-		val error = Libmosaic.tty_reset(ttyPtr)
+		val error = tty_reset(ttyPtr)
 		if (error == 0) return
 		throwIoe(error)
 	}
@@ -176,7 +216,7 @@ public class Tty internal constructor(
 			this.ttyPtr = null
 			callbackPtr = null
 
-			val error = Libmosaic.tty_free(ttyPtr)
+			val error = tty_free(ttyPtr)
 			if (error == 0) return
 			throwIoe(error)
 		}
@@ -188,4 +228,8 @@ public class Tty internal constructor(
 		public fun onMouse()
 		public fun onResize(columns: Int, rows: Int, width: Int, height: Int)
 	}
+}
+
+internal fun throwIoe(error: Int): Nothing {
+	throw IOException(error.toString())
 }

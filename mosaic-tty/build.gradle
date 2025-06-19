@@ -1,3 +1,7 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+
 import java.nio.file.FileSystems
 import java.nio.file.Files
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
@@ -65,7 +69,18 @@ kotlin {
 		def mainCompilation = target.compilations.named(MAIN_COMPILATION_NAME)
 		def testCompilation = target.compilations.named(TEST_COMPILATION_NAME)
 
-		def jdk22Compilation = target.compilations.create("jdk22")
+		def jdk22Compilation = target.compilations.create("jdk22") {
+			compileTaskProvider.configure { task ->
+				task.compilerOptions { KotlinJvmCompilerOptions options ->
+					options.jvmTarget = JvmTarget.JVM_22
+				}
+			}
+			compileJavaTaskProvider.configure { task ->
+				task.sourceCompatibility = '22'
+				task.targetCompatibility = '22'
+			}
+			associateWith(mainCompilation.get())
+		}
 
 		mainCompilation.configure { main ->
 			def headers = main.compileJavaTaskProvider.flatMap { it.options.headerOutputDirectory }
