@@ -94,8 +94,8 @@ kotlin {
 		}
 
 		def jdk22Compilation = target.compilations.create('jdk22') {
-			// I can't find a way to add a Java srcDir, so we have to add it both to Kotlin so its sources
-			// compile and to Java so its classes actually end up in the final jar.
+			// I can't find a way to add a Java srcDir, so we have to add it both to Kotlin task so its
+			// sources can link and to Java task so the files are actually compiled to classes.
 			def mosaicFfmJava = tasks.named('jextract')
 			defaultSourceSet.kotlin.srcDir(mosaicFfmJava)
 			compileJavaTaskProvider.configure { task ->
@@ -116,7 +116,7 @@ kotlin {
 		}
 
 		def mainJarTask = tasks.named(target.artifactsTaskName, Jar) {
-			from(jdk22Compilation.output.allOutputs) {
+			from(jdk22Compilation.output) {
 				into('META-INF/versions/22')
 				// Don't add a nested .kotlin_module file.
 				exclude('META-INF')
