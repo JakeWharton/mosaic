@@ -2,7 +2,6 @@ import com.jakewharton.mosaic.buildsupport.ZigDownloadTask
 import java.nio.file.FileSystems
 import java.nio.file.Files
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 
