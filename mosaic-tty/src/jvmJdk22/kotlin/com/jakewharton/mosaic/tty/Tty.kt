@@ -58,13 +58,13 @@ public class Tty internal constructor(
 				)
 				MosaicTtyCallback.onKey(
 					ttyCallback,
-					MosaicTtyCallbackOnKey.allocate({ _ ->
+					MosaicTtyCallbackOnKey.allocate({
 						callback.onKey()
 					}, arena),
 				)
 				MosaicTtyCallback.onMouse(
 					ttyCallback,
-					MosaicTtyCallbackOnMouse.allocate({ _ ->
+					MosaicTtyCallbackOnMouse.allocate({
 						callback.onMouse()
 					}, arena),
 				)
