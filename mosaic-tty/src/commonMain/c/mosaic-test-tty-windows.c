@@ -28,7 +28,7 @@ uint32_t testTty_resizeInternal(HANDLE conout, int columns, int rows) {
 	return GetLastError();
 }
 
-MosaicTestTtyInitResult testTty_init() {
+MOSAIC_EXPORT MosaicTestTtyInitResult testTty_init() {
 	MosaicTestTtyInitResult result = {};
 
 	MosaicTestTtyImpl *testTty = calloc(1, sizeof(MosaicTestTtyImpl));
@@ -109,11 +109,11 @@ MosaicTestTtyInitResult testTty_init() {
 	goto ret;
 }
 
-MosaicTty *testTty_getTty(MosaicTestTty *testTty) {
+MOSAIC_EXPORT MosaicTty *testTty_getTty(MosaicTestTty *testTty) {
 	return testTty->tty;
 }
 
-MosaicTtyIoResult testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int count) {
+MOSAIC_EXPORT MosaicTtyIoResult testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int count) {
 	MosaicTtyIoResult result = {};
 
 	INPUT_RECORD *records = calloc(count, sizeof(INPUT_RECORD));
@@ -139,7 +139,7 @@ MosaicTtyIoResult testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int cou
 	return result;
 }
 
-MosaicTtyIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffer, int count) {
+MOSAIC_EXPORT MosaicTtyIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffer, int count) {
 	MosaicTtyIoResult result = {};
 
 	// Perform a spin loop to check for data or interrupt. We can't do a normal wait because pipes
@@ -172,7 +172,7 @@ MosaicTtyIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffer, int coun
 	goto ret;
 }
 
-uint32_t testTty_interruptRead(MosaicTestTty *testTty) {
+MOSAIC_EXPORT uint32_t testTty_interruptRead(MosaicTestTty *testTty) {
 	atomic_store(&testTty->interrupt, true);
 	return 0;
 }
@@ -188,7 +188,7 @@ static uint32_t writeRecord(HANDLE h, INPUT_RECORD *record) {
 	return GetLastError();
 }
 
-uint32_t testTty_resize(MosaicTestTty *testTty, int columns, int rows, int width UNUSED, int height UNUSED) {
+MOSAIC_EXPORT uint32_t testTty_resize(MosaicTestTty *testTty, int columns, int rows, int width UNUSED, int height UNUSED) {
 	uint32_t sizeResult = testTty_resizeInternal(testTty->tty->conout_for_size, columns, rows);
 	if (unlikely(sizeResult)) {
 		return sizeResult;
@@ -201,24 +201,24 @@ uint32_t testTty_resize(MosaicTestTty *testTty, int columns, int rows, int width
 	return writeRecord(testTty->tty->conin, &record);
 }
 
-uint32_t testTty_sendFocusEvent(MosaicTestTty *testTty, bool focused) {
+MOSAIC_EXPORT uint32_t testTty_sendFocusEvent(MosaicTestTty *testTty, bool focused) {
 	INPUT_RECORD record;
 	record.EventType = FOCUS_EVENT;
 	record.Event.FocusEvent.bSetFocus = focused;
 	return writeRecord(testTty->tty->conin, &record);
 }
 
-uint32_t testTty_sendKeyEvent(MosaicTestTty *testTty UNUSED) {
+MOSAIC_EXPORT uint32_t testTty_sendKeyEvent(MosaicTestTty *testTty UNUSED) {
 	// TODO
 	return 0;
 }
 
-uint32_t testTty_sendMouseEvent(MosaicTestTty *testTty UNUSED) {
+MOSAIC_EXPORT uint32_t testTty_sendMouseEvent(MosaicTestTty *testTty UNUSED) {
 	// TODO
 	return 0;
 }
 
-uint32_t testTty_free(MosaicTestTty *testTty) {
+MOSAIC_EXPORT uint32_t testTty_free(MosaicTestTty *testTty) {
 	uint32_t result = 0;
 
 	if (!CloseHandle(testTty->conout_pipe_read)) {

@@ -5,6 +5,7 @@
 
 New:
 - JVM artifacts can now be used as modules in the Java module system.
+- On Java 22 and newer, Mosaic now uses the [foreign function & memory API](https://docs.oracle.com/en/java/javase/22/core/foreign-function-and-memory-api.html) to call into its native library instead of JNI.
 
 Changed:
 - Unsolicited focus, theme, and resize events are now ignored unless the terminal has reported that it supports each of those modes.

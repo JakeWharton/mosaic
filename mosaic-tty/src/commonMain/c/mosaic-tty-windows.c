@@ -45,7 +45,7 @@ MosaicTtyInitResult tty_initWithHandles(
 
 static _Atomic(MosaicTty *) globalTty;
 
-MosaicTtyInitResult tty_init() {
+MOSAIC_EXPORT MosaicTtyInitResult tty_init() {
 	MosaicTtyInitResult result = {};
 
 	HANDLE conin = CreateFile(TEXT("CONIN$"), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
@@ -75,11 +75,11 @@ MosaicTtyInitResult tty_init() {
 	goto ret;
 }
 
-void tty_setCallback(MosaicTty *tty, MosaicTtyCallback *callback) {
+MOSAIC_EXPORT void tty_setCallback(MosaicTty *tty, MosaicTtyCallback *callback) {
 	tty->callback = callback;
 }
 
-MosaicTtyIoResult tty_read(
+MOSAIC_EXPORT MosaicTtyIoResult tty_read(
 	MosaicTty *tty,
 	uint8_t *buffer,
 	int count
@@ -87,7 +87,7 @@ MosaicTtyIoResult tty_read(
 	return tty_readWithTimeout(tty, buffer, count, INFINITE);
 }
 
-MosaicTtyIoResult tty_readWithTimeout(
+MOSAIC_EXPORT MosaicTtyIoResult tty_readWithTimeout(
 	MosaicTty *tty,
 	uint8_t *buffer,
 	int count,
@@ -156,13 +156,13 @@ MosaicTtyIoResult tty_readWithTimeout(
 	goto ret;
 }
 
-uint32_t tty_interruptRead(MosaicTty *tty) {
+MOSAIC_EXPORT uint32_t tty_interruptRead(MosaicTty *tty) {
 	return likely(SetEvent(tty->interrupt_event) != 0)
 		? 0
 		: GetLastError();
 }
 
-MosaicTtyIoResult tty_write(MosaicTty *tty, uint8_t *buffer, int count) {
+MOSAIC_EXPORT MosaicTtyIoResult tty_write(MosaicTty *tty, uint8_t *buffer, int count) {
 	MosaicTtyIoResult result = {};
 
 	DWORD written;
@@ -175,7 +175,7 @@ MosaicTtyIoResult tty_write(MosaicTty *tty, uint8_t *buffer, int count) {
 	return result;
 }
 
-uint32_t tty_enableRawMode(MosaicTty *tty) {
+MOSAIC_EXPORT uint32_t tty_enableRawMode(MosaicTty *tty) {
 	uint32_t result = 0;
 
 	if (tty->saved_input_mode) {
@@ -250,12 +250,12 @@ uint32_t tty_enableRawMode(MosaicTty *tty) {
 	return result;
 }
 
-uint32_t tty_enableWindowResizeEvents(MosaicTty *tty) {
+MOSAIC_EXPORT uint32_t tty_enableWindowResizeEvents(MosaicTty *tty) {
 	tty->window_resize_events = true;
 	return 0;
 }
 
-MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty) {
+MOSAIC_EXPORT MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty) {
 	MosaicTtyTerminalSizeResult result = {};
 
 	CONSOLE_SCREEN_BUFFER_INFO info;
@@ -269,7 +269,7 @@ MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty) {
 	return result;
 }
 
-uint32_t tty_reset(MosaicTty *tty) {
+MOSAIC_EXPORT uint32_t tty_reset(MosaicTty *tty) {
 	uint32_t result = 0;
 
 	if (tty->saved_input_mode) {
@@ -292,7 +292,7 @@ uint32_t tty_reset(MosaicTty *tty) {
 	return result;
 }
 
-uint32_t tty_free(MosaicTty *tty) {
+MOSAIC_EXPORT uint32_t tty_free(MosaicTty *tty) {
 	uint32_t result = 0;
 
 	if (unlikely(CloseHandle(tty->interrupt_event) == 0)) {

@@ -1,8 +1,10 @@
+import com.jakewharton.mosaic.buildsupport.ZigDownloadTask
 import java.nio.file.FileSystems
 import java.nio.file.Files
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
-import com.jakewharton.mosaic.buildsupport.ZigDownloadTask
 
 import static co.touchlab.cklib.gradle.CompileToBitcode.Language.C
 import static org.gradle.language.base.plugins.LifecycleBasePlugin.BUILD_GROUP
@@ -14,6 +16,7 @@ apply from: "$rootDir/addAllTargets.gradle"
 apply from: "$rootDir/publish.gradle"
 apply plugin: 'co.touchlab.cklib'
 apply plugin: 'com.jakewharton.mosaic.build'
+apply plugin: 'de.infolektuell.jextract'
 
 mosaicBuild {
 	jvmTestDistribution()
@@ -39,6 +42,12 @@ dependencies {
 def zigDownload = tasks.register('zigDownload', ZigDownloadTask) {
 	version = '0.14.1'
 	outputDir = layout.buildDirectory.dir('zig')
+}
+
+jextract.libraries.create('mosaic') {
+	header = file('src/commonMain/c/mosaic.h')
+	headerClassName = 'Libmosaic'
+	targetPackage = 'com.jakewharton.mosaic.tty'
 }
 
 kotlin {
@@ -85,7 +94,39 @@ kotlin {
 			main.defaultSourceSet.resources.srcDir(jniTask)
 		}
 
-		def mainJar = tasks.named(target.artifactsTaskName, Jar).flatMap { it.archiveFile }
+		def jdk22Compilation = target.compilations.create('jdk22') {
+			// I can't find a way to add a Java srcDir, so we have to add it both to Kotlin so its sources
+			// compile and to Java so its classes actually end up in the final jar.
+			def mosaicFfmJava = tasks.named('jextract')
+			defaultSourceSet.kotlin.srcDir(mosaicFfmJava)
+			compileJavaTaskProvider.get().source(mosaicFfmJava)
+
+			compileTaskProvider.configure { task ->
+				task.compilerOptions { options ->
+					options.jvmTarget = JvmTarget.JVM_22
+				}
+			}
+			compileJavaTaskProvider.configure { task ->
+				task.sourceCompatibility = '22'
+				task.targetCompatibility = '22'
+			}
+			associateWith(mainCompilation.get())
+		}
+
+		def mainJarTask = tasks.named(target.artifactsTaskName, Jar) {
+			from(jdk22Compilation.output.allOutputs) {
+				into('META-INF/versions/22')
+				// Don't add a nested .kotlin_module file.
+				exclude('META-INF')
+				// Empty class noise produced by jextract.
+				exclude('**/_*.class')
+			}
+			manifest {
+				attributes(['Multi-Release': 'true'])
+			}
+		}
+
+		def mainJar = mainJarTask.flatMap { it.archiveFile }
 		def testJar = tasks.register("${target.name}TestJar", Jar) {
 			from(testCompilation.map { it.output.allOutputs })
 			archiveBaseName = base.archivesName.map { it + '-' + target.name }
