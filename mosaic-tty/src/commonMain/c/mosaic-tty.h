@@ -1,7 +1,12 @@
 #ifndef MOSAIC_TTY_H
 #define MOSAIC_TTY_H
 
-#include "cutils.h"
+#if defined(_WIN32)
+#define MOSAIC_EXPORT __declspec(dllexport)
+#else
+#define MOSAIC_EXPORT
+#endif
+
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -40,16 +45,16 @@ typedef struct MosaicTtyTerminalSizeResult {
 	uint32_t error;
 } MosaicTtyTerminalSizeResult;
 
- MOSAIC_EXPORT MosaicTtyInitResult MOSAIC_STDCALL tty_init();
- MOSAIC_EXPORT void MOSAIC_STDCALL tty_setCallback(MosaicTty *tty, MosaicTtyCallback *callback);
- MOSAIC_EXPORT MosaicTtyIoResult MOSAIC_STDCALL tty_read(MosaicTty *tty, uint8_t *buffer, int count);
- MOSAIC_EXPORT MosaicTtyIoResult MOSAIC_STDCALL tty_readWithTimeout(MosaicTty *tty, uint8_t *buffer, int count, int timeoutMillis);
- MOSAIC_EXPORT uint32_t MOSAIC_STDCALL tty_interruptRead(MosaicTty *tty);
- MOSAIC_EXPORT MosaicTtyIoResult MOSAIC_STDCALL tty_write(MosaicTty *tty, uint8_t *buffer, int count);
- MOSAIC_EXPORT uint32_t MOSAIC_STDCALL tty_enableRawMode(MosaicTty *tty);
- MOSAIC_EXPORT uint32_t MOSAIC_STDCALL tty_enableWindowResizeEvents(MosaicTty *tty);
+ MOSAIC_EXPORT MosaicTtyInitResult tty_init();
+ MOSAIC_EXPORT void tty_setCallback(MosaicTty *tty, MosaicTtyCallback *callback);
+ MOSAIC_EXPORT MosaicTtyIoResult tty_read(MosaicTty *tty, uint8_t *buffer, int count);
+ MOSAIC_EXPORT MosaicTtyIoResult tty_readWithTimeout(MosaicTty *tty, uint8_t *buffer, int count, int timeoutMillis);
+ MOSAIC_EXPORT uint32_t tty_interruptRead(MosaicTty *tty);
+ MOSAIC_EXPORT MosaicTtyIoResult tty_write(MosaicTty *tty, uint8_t *buffer, int count);
+ MOSAIC_EXPORT uint32_t tty_enableRawMode(MosaicTty *tty);
+ MOSAIC_EXPORT uint32_t tty_enableWindowResizeEvents(MosaicTty *tty);
  MOSAIC_EXPORT MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty);
- MOSAIC_EXPORT uint32_t MOSAIC_STDCALL tty_reset(MosaicTty *tty);
- MOSAIC_EXPORT uint32_t MOSAIC_STDCALL tty_free(MosaicTty *tty);
+ MOSAIC_EXPORT uint32_t tty_reset(MosaicTty *tty);
+ MOSAIC_EXPORT uint32_t tty_free(MosaicTty *tty);
 
 #endif // MOSAIC_TTY_H
