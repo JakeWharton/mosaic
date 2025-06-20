@@ -42,13 +42,20 @@ public class Tty internal constructor(
 		}
 	}
 
-	private var callbackPtr: MemorySegment = MemorySegment.NULL
+	private var callbackArena: Arena? = null
 
 	public fun setCallback(callback: Callback?) {
+		callbackArena?.let { arena ->
+			arena.close()
+			callbackArena = null
+		}
+
 		val ttyCallback = if (callback == null) {
 			MemorySegment.NULL
 		} else {
-			val arena = Arena.global()
+			val arena = Arena.ofConfined()
+			callbackArena = arena
+
 			MosaicTtyCallback.allocate(arena).also { ttyCallback ->
 				MosaicTtyCallback.onFocus(
 					ttyCallback,
@@ -77,7 +84,6 @@ public class Tty internal constructor(
 			}
 		}
 
-		callbackPtr = ttyCallback
 		tty_setCallback(ttyPtr, ttyCallback)
 	}
 
@@ -167,7 +173,9 @@ public class Tty internal constructor(
 		val ttyPtr = ttyPtr
 		if (ttyPtr != MemorySegment.NULL) {
 			this.ttyPtr = MemorySegment.NULL
-			callbackPtr = MemorySegment.NULL
+
+			callbackArena?.close()
+			callbackArena = null
 
 			val error = tty_free(ttyPtr)
 			if (error == 0) return
