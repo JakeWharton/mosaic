@@ -12,17 +12,11 @@ import com.jakewharton.mosaic.tty.Libmosaic.tty_reset
 import com.jakewharton.mosaic.tty.Libmosaic.tty_setCallback
 import com.jakewharton.mosaic.tty.Libmosaic.tty_write
 import java.lang.foreign.Arena
-import java.lang.foreign.FunctionDescriptor
-import java.lang.foreign.Linker
 import java.lang.foreign.MemorySegment
 import java.lang.foreign.ValueLayout
-import java.lang.foreign.ValueLayout.JAVA_BOOLEAN
-import java.lang.foreign.ValueLayout.JAVA_INT
-import java.lang.invoke.MethodHandles
-import java.lang.invoke.MethodType
 
 public class Tty internal constructor(
-	ttyPtr: MemorySegment,
+	private var ttyPtr: MemorySegment,
 ) : AutoCloseable {
 	public companion object {
 		@JvmStatic
@@ -30,8 +24,9 @@ public class Tty internal constructor(
 			NativeLibrary.ensureLoaded()
 
 			val result = tty_init.makeInvoker().apply(Arena.global())
-			MosaicTtyInitResult.tty(result)?.let { tty ->
-				return Tty(tty)
+			val ttyPtr = MosaicTtyInitResult.tty(result)
+			if (ttyPtr != MemorySegment.NULL) {
+				return Tty(ttyPtr)
 			}
 			if (MosaicTtyInitResult.no_tty(result)) {
 				return null
@@ -47,80 +42,37 @@ public class Tty internal constructor(
 		}
 	}
 
-	private var ttyPtr: MemorySegment? = ttyPtr
-	private var callbackPtr: MemorySegment? = null
+	private var callbackPtr: MemorySegment = MemorySegment.NULL
 
 	public fun setCallback(callback: Callback?) {
 		val ttyCallback = if (callback == null) {
 			MemorySegment.NULL
 		} else {
 			val arena = Arena.global()
-			val linker = Linker.nativeLinker()
 			MosaicTtyCallback.allocate(arena).also { ttyCallback ->
 				MosaicTtyCallback.onFocus(
 					ttyCallback,
-					run {
-						val descriptor = FunctionDescriptor.ofVoid(JAVA_BOOLEAN)
-						val handle = MethodHandles.lookup()
-							.findVirtual(
-								Callback::class.java,
-								"onFocus",
-								MethodType.methodType(
-									Void.TYPE,
-									Boolean::class.javaPrimitiveType,
-								),
-							)
-							.bindTo(callback)
-						linker.upcallStub(handle, descriptor, arena)
-					},
+					MosaicTtyCallbackOnFocus.allocate({ _, focused ->
+						callback.onFocus(focused)
+					}, arena),
 				)
 				MosaicTtyCallback.onKey(
 					ttyCallback,
-					run {
-						val descriptor = FunctionDescriptor.ofVoid()
-						val handle = MethodHandles.lookup()
-							.findVirtual(
-								Callback::class.java,
-								"onKey",
-								MethodType.methodType(Void.TYPE),
-							)
-							.bindTo(callback)
-						linker.upcallStub(handle, descriptor, arena)
-					},
+					MosaicTtyCallbackOnKey.allocate({ _ ->
+						callback.onKey()
+					}, arena),
 				)
 				MosaicTtyCallback.onMouse(
 					ttyCallback,
-					run {
-						val descriptor = FunctionDescriptor.ofVoid()
-						val handle = MethodHandles.lookup()
-							.findVirtual(
-								Callback::class.java,
-								"onMouse",
-								MethodType.methodType(Void.TYPE),
-							)
-							.bindTo(callback)
-						linker.upcallStub(handle, descriptor, arena)
-					},
+					MosaicTtyCallbackOnMouse.allocate({ _ ->
+						callback.onMouse()
+					}, arena),
 				)
-				MosaicTtyCallback.onMouse(
+				MosaicTtyCallback.onResize(
 					ttyCallback,
-					run {
-						val descriptor = FunctionDescriptor.ofVoid(JAVA_INT, JAVA_INT, JAVA_INT, JAVA_INT)
-						val handle = MethodHandles.lookup()
-							.findVirtual(
-								Callback::class.java,
-								"onResize",
-								MethodType.methodType(
-									Void.TYPE,
-									Int::class.javaPrimitiveType,
-									Int::class.javaPrimitiveType,
-									Int::class.javaPrimitiveType,
-									Int::class.javaPrimitiveType,
-								),
-							)
-							.bindTo(callback)
-						linker.upcallStub(handle, descriptor, arena)
-					},
+					MosaicTtyCallbackOnResize.allocate({ _, columns, rows, width, height ->
+						callback.onResize(columns, rows, width, height)
+					}, arena),
 				)
 			}
 		}
@@ -212,9 +164,10 @@ public class Tty internal constructor(
 
 	@Throws(IOException::class)
 	override fun close() {
-		ttyPtr?.let { ttyPtr ->
-			this.ttyPtr = null
-			callbackPtr = null
+		val ttyPtr = ttyPtr
+		if (ttyPtr != MemorySegment.NULL) {
+			this.ttyPtr = MemorySegment.NULL
+			callbackPtr = MemorySegment.NULL
 
 			val error = tty_free(ttyPtr)
 			if (error == 0) return

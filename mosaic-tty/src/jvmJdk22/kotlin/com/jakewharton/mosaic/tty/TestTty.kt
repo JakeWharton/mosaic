@@ -15,7 +15,7 @@ import java.lang.foreign.MemorySegment
 import java.lang.foreign.ValueLayout
 
 public class TestTty private constructor(
-	private var ptr: MemorySegment?,
+	private var ptr: MemorySegment,
 	public val tty: Tty,
 ) : AutoCloseable {
 	public companion object {
@@ -23,7 +23,8 @@ public class TestTty private constructor(
 			NativeLibrary.ensureLoaded()
 
 			val result = testTty_init.makeInvoker().apply(Arena.global())
-			MosaicTestTtyInitResult.testTty(result)?.let { testTtyPtr ->
+			val testTtyPtr = MosaicTestTtyInitResult.testTty(result)
+			if (testTtyPtr != MemorySegment.NULL) {
 				val ttyPtr = testTty_getTty(testTtyPtr)
 				val tty = Tty(ttyPtr)
 				return TestTty(testTtyPtr, tty)
@@ -93,12 +94,13 @@ public class TestTty private constructor(
 	}
 
 	override fun close() {
-		ptr?.let { ref ->
-			this.ptr = null
+		val ptr = ptr
+		if (ptr != MemorySegment.NULL) {
+			this.ptr = MemorySegment.NULL
 
 			tty.close()
 
-			val error = testTty_free(ref)
+			val error = testTty_free(ptr)
 			if (error == 0) return
 			throwIoe(error)
 		}
