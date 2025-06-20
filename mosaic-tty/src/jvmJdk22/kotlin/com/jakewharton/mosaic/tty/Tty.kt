@@ -53,7 +53,7 @@ public class Tty internal constructor(
 		val ttyCallback = if (callback == null) {
 			MemorySegment.NULL
 		} else {
-			val arena = Arena.ofConfined()
+			val arena = Arena.ofShared()
 			callbackArena = arena
 
 			MosaicTtyCallback.allocate(arena).also { ttyCallback ->
