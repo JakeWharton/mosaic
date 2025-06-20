@@ -28,7 +28,7 @@ uint32_t testTty_resizeInternal(HANDLE conout, int columns, int rows) {
 	return GetLastError();
 }
 
-MosaicTestTtyInitResult testTty_init() {
+extern MosaicTestTtyInitResult testTty_init() {
 	MosaicTestTtyInitResult result = {};
 
 	MosaicTestTtyImpl *testTty = calloc(1, sizeof(MosaicTestTtyImpl));
