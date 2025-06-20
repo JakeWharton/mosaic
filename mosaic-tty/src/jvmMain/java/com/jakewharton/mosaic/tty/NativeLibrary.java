@@ -14,14 +14,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 final class NativeLibrary {
 	private static final AtomicBoolean loaded = new AtomicBoolean();
 
-	static void ensureLoaded() {
+	static Path ensureLoaded() {
 		if (loaded.compareAndSet(false, true)) {
-			loadEmbeddedNativeLibrary("jni", "mosaic");
+			return loadEmbeddedNativeLibrary("jni", "mosaic");
 		}
+		return null;
 	}
 
 	@SuppressWarnings("SameParameterValue") // Preserving copy/paste!
-	private static void loadEmbeddedNativeLibrary(String relativePath, String library) {
+	private static Path loadEmbeddedNativeLibrary(String relativePath, String library) {
 		String osName = System.getProperty("os.name").toLowerCase(US);
 		String osArch = System.getProperty("os.arch").toLowerCase(US);
 		StringBuilder nativeLibraryJarPathBuilder = new StringBuilder(50)
@@ -62,6 +63,8 @@ final class NativeLibrary {
 			throw new UncheckedIOException("Unable to extract native library from JAR", e);
 		}
 		System.load(nativeLibraryFile.toAbsolutePath().toString());
+
+		return nativeLibraryFile;
 	}
 
 	private NativeLibrary() {}
