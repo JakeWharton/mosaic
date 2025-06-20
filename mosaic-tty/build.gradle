@@ -102,7 +102,7 @@ kotlin {
 			compileJavaTaskProvider.get().source(mosaicFfmJava)
 
 			compileTaskProvider.configure { task ->
-				task.compilerOptions { KotlinJvmCompilerOptions options ->
+				task.compilerOptions { options ->
 					options.jvmTarget = JvmTarget.JVM_22
 				}
 			}
