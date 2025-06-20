@@ -1,6 +1,7 @@
 #ifndef MOSAIC_TTY_H
 #define MOSAIC_TTY_H
 
+#include "cutils.h"
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -39,16 +40,16 @@ typedef struct MosaicTtyTerminalSizeResult {
 	uint32_t error;
 } MosaicTtyTerminalSizeResult;
 
-extern MosaicTtyInitResult tty_init();
-extern void tty_setCallback(MosaicTty *tty, MosaicTtyCallback *callback);
-extern MosaicTtyIoResult tty_read(MosaicTty *tty, uint8_t *buffer, int count);
-extern MosaicTtyIoResult tty_readWithTimeout(MosaicTty *tty, uint8_t *buffer, int count, int timeoutMillis);
-extern uint32_t tty_interruptRead(MosaicTty *tty);
-extern MosaicTtyIoResult tty_write(MosaicTty *tty, uint8_t *buffer, int count);
-extern uint32_t tty_enableRawMode(MosaicTty *tty);
-extern uint32_t tty_enableWindowResizeEvents(MosaicTty *tty);
-extern MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty);
-extern uint32_t tty_reset(MosaicTty *tty);
-extern uint32_t tty_free(MosaicTty *tty);
+MosaicTtyInitResult tty_init();
+void tty_setCallback(MosaicTty *tty, MosaicTtyCallback *callback);
+MosaicTtyIoResult tty_read(MosaicTty *tty, uint8_t *buffer, int count);
+MosaicTtyIoResult tty_readWithTimeout(MosaicTty *tty, uint8_t *buffer, int count, int timeoutMillis);
+uint32_t tty_interruptRead(MosaicTty *tty);
+MosaicTtyIoResult tty_write(MosaicTty *tty, uint8_t *buffer, int count);
+uint32_t tty_enableRawMode(MosaicTty *tty);
+uint32_t tty_enableWindowResizeEvents(MosaicTty *tty);
+MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty);
+uint32_t tty_reset(MosaicTty *tty);
+uint32_t tty_free(MosaicTty *tty);
 
 #endif // MOSAIC_TTY_H

@@ -1,6 +1,7 @@
 #ifndef MOSAIC_TEST_TTY_H
 #define MOSAIC_TEST_TTY_H
 
+#include "cutils.h"
 #include "mosaic-tty.h"
 #include <stdbool.h>
 #include <stdint.h>
@@ -13,7 +14,7 @@ typedef struct MosaicTestTtyInitResult {
 	bool already_bound;
 } MosaicTestTtyInitResult;
 
-MosaicTestTtyInitResult testTty_init();
+MOSAIC_EXPORT MosaicTestTtyInitResult MOSAIC_STDCALL testTty_init();
 MosaicTty *testTty_getTty(MosaicTestTty *testTty);
 MosaicTtyIoResult testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int count);
 MosaicTtyIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffer, int count);
