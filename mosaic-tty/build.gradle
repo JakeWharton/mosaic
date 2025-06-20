@@ -99,11 +99,14 @@ kotlin {
 			// compile and to Java so its classes actually end up in the final jar.
 			def mosaicFfmJava = tasks.named('jextract')
 			defaultSourceSet.kotlin.srcDir(mosaicFfmJava)
-			compileJavaTaskProvider.get().source(mosaicFfmJava)
+			compileJavaTaskProvider.configure { task ->
+				task.source(mosaicFfmJava)
+			}
 
 			compileTaskProvider.configure { task ->
 				task.compilerOptions { options ->
 					options.jvmTarget = JvmTarget.JVM_22
+					options.freeCompilerArgs.add('-Xexplicit-api=strict')
 				}
 			}
 			compileJavaTaskProvider.configure { task ->
