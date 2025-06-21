@@ -12,7 +12,6 @@ import com.jakewharton.mosaic.tty.Libmosaic.testTty_sendMouseEvent
 import com.jakewharton.mosaic.tty.Libmosaic.testTty_write
 import java.lang.foreign.Arena
 import java.lang.foreign.MemorySegment
-import java.lang.foreign.SymbolLookup
 import java.lang.foreign.ValueLayout
 
 public class TestTty private constructor(
@@ -21,10 +20,7 @@ public class TestTty private constructor(
 ) : AutoCloseable {
 	public companion object {
 		public fun bind(): TestTty {
-			val libPath = NativeLibrary.ensureLoaded()
-			if (libPath != null) {
-				SymbolLookup.libraryLookup(libPath, Arena.global()).findOrThrow("tty_init")
-			}
+			NativeLibrary.ensureLoaded()
 
 			val result = testTty_init.makeInvoker().apply(Arena.global())
 			val testTtyPtr = MosaicTestTtyInitResult.testTty(result)
