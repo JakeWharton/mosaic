@@ -1,6 +1,6 @@
 [versions]
 jetbrains-compose = "1.8.2"
-kotlin = "2.1.21"
+kotlin = "2.2.0"
 kotlinx-coroutines = "1.10.2"
 
 [libraries]
