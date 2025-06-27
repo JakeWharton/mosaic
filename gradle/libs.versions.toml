@@ -24,7 +24,7 @@ maven-publish-gradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.33.0"
 dokka-gradlePlugin = "org.jetbrains.dokka:dokka-gradle-plugin:2.0.0"
 cite-gradlePlugin = "com.jakewharton.cite:cite-gradle-plugin:0.6.1"
 poko-gradlePlugin = "dev.drewhamilton.poko:poko-gradle-plugin:0.18.7"
-binary-compatibility-validator-gradlePlugin = "org.jetbrains.kotlinx:binary-compatibility-validator:0.17.0"
+binary-compatibility-validator-gradlePlugin = "org.jetbrains.kotlinx:binary-compatibility-validator:0.18.0"
 cklib-gradlePlugin = "co.touchlab:cklib-gradle-plugin:0.3.4"
 jextract-gradlePlugin = "de.infolektuell:gradle-plugin-jextract:0.5.0"
 
