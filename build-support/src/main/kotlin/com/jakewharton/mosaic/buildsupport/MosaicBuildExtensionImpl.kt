@@ -24,6 +24,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation.Companion.MAIN_COMPI
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation.Companion.TEST_COMPILATION_NAME
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 internal class MosaicBuildExtensionImpl(
 	private val project: Project,
@@ -134,9 +135,10 @@ internal class MosaicBuildExtensionImpl(
 			kotlin.targets.withType(KotlinJvmTarget::class.java).configureEach { target ->
 				target.compilations.named(MAIN_COMPILATION_NAME).configure { main ->
 					main.compileJavaTaskProvider!!.configure { javaCompile: JavaCompile ->
+						val kotlinCompile = project.tasks.getByName(main.compileKotlinTaskName) as KotlinCompile
 						javaCompile.options.compilerArgumentProviders.add(object : CommandLineArgumentProvider {
 							@CompileClasspath
-							val classes = main.compileKotlinTask.destinationDirectory
+							val classes = kotlinCompile.destinationDirectory
 
 							override fun asArguments(): Iterable<String> {
 								return listOf(
