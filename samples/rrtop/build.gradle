@@ -7,6 +7,10 @@ apply from: "$rootDir/addAllTargets.gradle"
 
 kotlin {
 	sourceSets {
+		configureEach {
+			languageSettings.optIn('kotlin.time.ExperimentalTime')
+		}
+
 		commonMain {
 			dependencies {
 				implementation projects.mosaicRuntime
