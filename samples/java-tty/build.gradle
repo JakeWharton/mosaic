@@ -1,0 +1,15 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+application {
+	mainClass = 'example.JavaTty'
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_11
+	targetCompatibility = JavaVersion.VERSION_11
+}
+
+dependencies {
+	implementation(projects.mosaicTty)
+}

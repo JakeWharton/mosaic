@@ -25,6 +25,7 @@ include ':mosaic-tty-terminal'
 
 include ':samples:counter'
 include ':samples:demo'
+include ':samples:java-tty'
 include ':samples:jest'
 include ':samples:robot'
 include ':samples:rrtop'

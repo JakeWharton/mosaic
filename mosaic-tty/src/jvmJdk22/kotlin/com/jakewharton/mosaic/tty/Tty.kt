@@ -11,6 +11,8 @@ import com.jakewharton.mosaic.tty.Libmosaic.tty_readWithTimeout
 import com.jakewharton.mosaic.tty.Libmosaic.tty_reset
 import com.jakewharton.mosaic.tty.Libmosaic.tty_setCallback
 import com.jakewharton.mosaic.tty.Libmosaic.tty_write
+import java.io.InputStream
+import java.io.OutputStream
 import java.lang.foreign.Arena
 import java.lang.foreign.MemorySegment
 import java.lang.foreign.ValueLayout
@@ -41,6 +43,10 @@ public class Tty internal constructor(
 			throw OutOfMemoryError()
 		}
 	}
+
+	public fun asInputStream(): InputStream = TtyInputStream(this)
+
+	public fun asOutputStream(): OutputStream = TtyOutputStream(this)
 
 	private var callbackArena: Arena? = null
 
