@@ -11,7 +11,10 @@ MosaicTtyInitResult tty_initWithHandles(
 	HANDLE conin,
 	HANDLE conoutForWrite,
 	bool conoutForWriteFake,
-	HANDLE conoutForSize
+	HANDLE conoutForSize,
+	HANDLE stdin,
+	HANDLE stdout,
+	HANDLE stderr
 ) {
 	MosaicTtyInitResult result = {};
 
@@ -32,6 +35,9 @@ MosaicTtyInitResult tty_initWithHandles(
 	tty->conout_for_write_fake = conoutForWriteFake;
 	tty->conout_for_size = conoutForSize;
 	tty->interrupt_event = interruptEvent;
+	tty->stdin = stdin;
+	tty->stdout = stdout;
+	tty->stderr = stderr;
 
 	result.tty = tty;
 
@@ -56,7 +62,21 @@ MOSAIC_EXPORT MosaicTtyInitResult tty_init() {
 	if (unlikely(conout == INVALID_HANDLE_VALUE)) {
 		goto err;
 	}
-	result = tty_initWithHandles(conin, conout, false, conout);
+
+	HANDLE stdin = GetStdHandle(STD_INPUT_HANDLE);
+	if (unlikely(stdin == INVALID_HANDLE_VALUE)) {
+		goto err;
+	}
+	HANDLE stdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	if (unlikely(stdout == INVALID_HANDLE_VALUE)) {
+		goto err;
+	}
+	HANDLE stderr = GetStdHandle(STD_ERROR_HANDLE);
+	if (unlikely(stderr == INVALID_HANDLE_VALUE)) {
+		goto err;
+	}
+
+	result = tty_initWithHandles(conin, conout, false, conout, stdin, stdout, stderr);
 
 	MosaicTty *tty = result.tty;
 	MosaicTty *expected = NULL;
@@ -173,6 +193,32 @@ MOSAIC_EXPORT MosaicTtyIoResult tty_write(MosaicTty *tty, uint8_t *buffer, int c
 	}
 
 	return result;
+}
+
+MosaicTtyIsTtyResult tty_handle_is_tty(HANDLE h) {
+	MosaicTtyIsTtyResult result = {};
+	DWORD type = GetFileType(h);
+	if (type == FILE_TYPE_CHAR) {
+		result.is_tty = true;
+	} else if (type == FILE_TYPE_UNKNOWN) {
+		DWORD error = GetLastError();
+		if (error != NO_ERROR) {
+			result.error = error;
+		}
+	}
+	return result;
+}
+
+MOSAIC_EXPORT MosaicTtyIsTtyResult tty_stdin_is_tty(MosaicTty *tty) {
+	return tty_handle_is_tty(tty->stdin);
+}
+
+MOSAIC_EXPORT MosaicTtyIsTtyResult tty_stdout_is_tty(MosaicTty *tty) {
+	return tty_handle_is_tty(tty->stdout);
+}
+
+MOSAIC_EXPORT MosaicTtyIsTtyResult tty_stderr_is_tty(MosaicTty *tty) {
+	return tty_handle_is_tty(tty->stderr);
 }
 
 MOSAIC_EXPORT uint32_t tty_enableRawMode(MosaicTty *tty) {

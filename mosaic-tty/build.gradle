@@ -45,6 +45,7 @@ def zigDownload = tasks.register('zigDownload', ZigDownloadTask) {
 
 jextract.libraries.create('mosaic') {
 	header = file('src/commonMain/c/mosaic.h')
+	includes.add(layout.projectDirectory.dir('src/commonMain/c'))
 	headerClassName = 'Libmosaic'
 	targetPackage = 'com.jakewharton.mosaic.tty'
 }

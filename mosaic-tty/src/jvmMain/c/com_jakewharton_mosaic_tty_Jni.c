@@ -161,6 +161,51 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyInit(
 	return 0; // Unused.
 }
 
+JNIEXPORT jboolean JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_ttyStdinIsTty(
+	JNIEnv *env,
+	jclass type UNUSED,
+	jlong ttyOpaque
+) {
+	MosaicTty *tty = (MosaicTty *) ttyOpaque;
+	MosaicTtyIsTtyResult result = tty_stdin_is_tty(tty);
+	if (likely(result.error == 0)) {
+		return result.is_tty;
+	}
+	throwIoe(env, result.error);
+	return false; // Unused.
+}
+
+JNIEXPORT jboolean JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_ttyStdoutIsTty(
+	JNIEnv *env,
+	jclass type UNUSED,
+	jlong ttyOpaque
+) {
+	MosaicTty *tty = (MosaicTty *) ttyOpaque;
+	MosaicTtyIsTtyResult result = tty_stdout_is_tty(tty);
+	if (likely(result.error == 0)) {
+		return result.is_tty;
+	}
+	throwIoe(env, result.error);
+	return false; // Unused.
+}
+
+JNIEXPORT jboolean JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_ttyStderrIsTty(
+	JNIEnv *env,
+	jclass type UNUSED,
+	jlong ttyOpaque
+) {
+	MosaicTty *tty = (MosaicTty *) ttyOpaque;
+	MosaicTtyIsTtyResult result = tty_stderr_is_tty(tty);
+	if (likely(result.error == 0)) {
+		return result.is_tty;
+	}
+	throwIoe(env, result.error);
+	return false; // Unused.
+}
+
 JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_ttySetCallback(
 	JNIEnv *env UNUSED,
