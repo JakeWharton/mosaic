@@ -15,10 +15,10 @@ apply from: "$rootDir/addAllTargets.gradle"
 apply from: "$rootDir/publish.gradle"
 apply plugin: 'co.touchlab.cklib'
 apply plugin: 'com.jakewharton.mosaic.build'
+apply plugin: 'com.jakewharton.test-distribution'
 apply plugin: 'de.infolektuell.jextract'
 
 mosaicBuild {
-	jvmTestDistribution()
 	patchJavaModuleWithKotlinClasses('mosaic.tty')
 }
 

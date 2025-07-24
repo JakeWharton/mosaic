@@ -6,14 +6,15 @@ buildscript {
 	dependencies {
 		classpath libs.kotlin.plugin.core
 		classpath libs.kotlin.plugin.compose
-		classpath libs.maven.publish.gradlePlugin
-		classpath libs.dokka.gradlePlugin
-		classpath libs.cite.gradlePlugin
-		classpath libs.poko.gradlePlugin
-		classpath libs.spotless.gradlePlugin
-		classpath libs.binary.compatibility.validator.gradlePlugin
-		classpath libs.cklib.gradlePlugin
-		classpath libs.jextract.gradlePlugin
+		classpath libs.mavenPublishGradlePlugin
+		classpath libs.dokkaGradlePlugin
+		classpath libs.citeGradlePlugin
+		classpath libs.pokoGradlePlugin
+		classpath libs.spotlessGradlePlugin
+		classpath libs.binaryCompatibilityValidatorGradlePlugin
+		classpath libs.cklibGradlePlugin
+		classpath libs.jextractGradlePlugin
+		classpath libs.testDistributionGradlePlugin
 		classpath 'com.jakewharton.mosaic.build:gradle-plugin'
 	}
 	repositories {
