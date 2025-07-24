@@ -37,6 +37,22 @@ MOSAIC_EXPORT MosaicTestTtyInitResult testTty_init() {
 		goto ret;
 	}
 
+	HANDLE stdin = GetStdHandle(STD_INPUT_HANDLE);
+	if (unlikely(stdin == INVALID_HANDLE_VALUE)) {
+		result.error = GetLastError();
+		goto err_free;
+	}
+	HANDLE stdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	if (unlikely(stdout == INVALID_HANDLE_VALUE)) {
+		result.error = GetLastError();
+		goto err_free;
+	}
+	HANDLE stderr = GetStdHandle(STD_ERROR_HANDLE);
+	if (unlikely(stderr == INVALID_HANDLE_VALUE)) {
+		result.error = GetLastError();
+		goto err_free;
+	}
+
 	HANDLE conin = CreateFile(TEXT("CONIN$"), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
 	if (unlikely(conin == INVALID_HANDLE_VALUE)) {
 		result.error = GetLastError();
@@ -70,7 +86,7 @@ MOSAIC_EXPORT MosaicTestTtyInitResult testTty_init() {
 		goto err_conout;
 	}
 
-	MosaicTtyInitResult ttyInitResult = tty_initWithHandles(conin, conoutPipeWrite, true, conout);
+	MosaicTtyInitResult ttyInitResult = tty_initWithHandles(conin, conoutPipeWrite, true, conout, stdin, stdout, stderr);
 	if (unlikely(!ttyInitResult.tty)) {
 		result.error = ttyInitResult.error;
 		result.already_bound = ttyInitResult.already_bound;

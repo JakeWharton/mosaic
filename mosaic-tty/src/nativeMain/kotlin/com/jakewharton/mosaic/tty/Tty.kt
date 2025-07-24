@@ -37,6 +37,27 @@ public actual class Tty internal constructor(
 		}
 	}
 
+	public actual fun isStdinTty(): Boolean {
+		tty_stdin_is_tty(ptr).useContents {
+			if (error == 0U) return is_tty
+			throwIoe(error)
+		}
+	}
+
+	public actual fun isStdoutTty(): Boolean {
+		tty_stdout_is_tty(ptr).useContents {
+			if (error == 0U) return is_tty
+			throwIoe(error)
+		}
+	}
+
+	public actual fun isStderrTty(): Boolean {
+		tty_stderr_is_tty(ptr).useContents {
+			if (error == 0U) return is_tty
+			throwIoe(error)
+		}
+	}
+
 	private var ptr: CPointer<MosaicTty>? = ptr
 	private var callbackPtrAndRef: Pair<CPointer<MosaicTtyCallback>, StableRef<Callback>>? = null
 

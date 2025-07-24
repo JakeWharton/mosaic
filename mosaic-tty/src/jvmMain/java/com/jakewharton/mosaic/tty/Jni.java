@@ -11,6 +11,12 @@ final class Jni {
 
 	static native long ttyInit();
 
+	static native boolean ttyStdinIsTty(long ttyPtr);
+
+	static native boolean ttyStdoutIsTty(long ttyPtr);
+
+	static native boolean ttyStderrIsTty(long ttyPtr);
+
 	static native void ttySetCallback(long ttyPtr, long callbackPtr);
 
 	static native int ttyRead(

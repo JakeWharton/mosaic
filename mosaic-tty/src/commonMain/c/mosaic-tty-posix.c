@@ -154,6 +154,31 @@ MosaicTtyIoResult tty_write(MosaicTty *tty, uint8_t *buffer, int count) {
 	return tty_writeInternal(tty->fd, buffer, count);
 }
 
+MosaicTtyIsTtyResult tty_fd_is_tty(int fd) {
+	MosaicTtyIsTtyResult result = {};
+	if (isatty(fd)) {
+		result.is_tty = true;
+	} else {
+		int error = errno;
+		if (error != ENOTTY || error != EINVAL) {
+			result.error = error;
+		}
+	}
+	return result;
+}
+
+MosaicTtyIsTtyResult tty_stdin_is_tty(MosaicTty *tty UNUSED) {
+	return tty_fd_is_tty(STDIN_FILENO);
+}
+
+MosaicTtyIsTtyResult tty_stdout_is_tty(MosaicTty *tty UNUSED) {
+	return tty_fd_is_tty(STDOUT_FILENO);
+}
+
+MosaicTtyIsTtyResult tty_stderr_is_tty(MosaicTty *tty UNUSED) {
+	return tty_fd_is_tty(STDERR_FILENO);
+}
+
 void sigwinchHandler(int value UNUSED) {
 	MosaicTty *tty = atomic_load(&globalTty);
 	if (likely(tty)) {

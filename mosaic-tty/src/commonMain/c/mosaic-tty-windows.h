@@ -11,6 +11,9 @@ typedef struct MosaicTtyImpl {
 	HANDLE conout_for_write;
 	bool conout_for_write_fake;
 	HANDLE conout_for_size;
+	HANDLE stdin;
+	HANDLE stdout;
+	HANDLE stderr;
 	HANDLE interrupt_event;
 	INPUT_RECORD records[recordsCount];
 	MosaicTtyCallback *callback;
@@ -24,7 +27,10 @@ MosaicTtyInitResult tty_initWithHandles(
 	HANDLE conin,
 	HANDLE conoutForWrite,
 	bool conoutForWriteFake,
-	HANDLE conoutForSize
+	HANDLE conoutForSize,
+	HANDLE stdin,
+	HANDLE stdout,
+	HANDLE stderr
 );
 
 #endif // MOSAIC_TTY_WINDOWS_H
