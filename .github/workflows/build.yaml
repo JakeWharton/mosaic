@@ -105,7 +105,7 @@ jobs:
     steps:
       ### NATIVE
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         if: matrix.tests.type == 'native'
         with:
           name: mosaic-tty-native-tests
@@ -137,7 +137,7 @@ jobs:
           distribution: 'zulu'
           java-version: ${{ matrix.tests.version }}
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         if: matrix.tests.type == 'java'
         with:
           name: mosaic-tty-jvm-tests
@@ -278,7 +278,7 @@ jobs:
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.GPG_PRIVATE_KEY }}
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           name: html-docs
           path: html-docs
