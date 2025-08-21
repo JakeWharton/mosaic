@@ -39,7 +39,7 @@ dependencies {
 }
 
 def zigDownload = tasks.register('zigDownload', ZigDownloadTask) {
-	version = '0.14.1'
+	version = '0.15.1'
 	outputDir = layout.buildDirectory.dir('zig')
 }
 
