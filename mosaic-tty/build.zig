@@ -20,16 +20,19 @@ pub fn build(b: *std.Build) !void {
 }
 
 fn setupMosaicTarget(b: *std.Build, step: *std.Build.Step, headers: []const u8, tag: std.Target.Os.Tag, arch: std.Target.Cpu.Arch, dir: []const u8) void {
-	const lib = b.addSharedLibrary(.{
+	const lib = b.addLibrary(.{
 		.name = "mosaic",
-		.target = b.resolveTargetQuery(.{
-			.cpu_arch = arch,
-			.os_tag = tag,
-			// We need to explicitly specify gnu for linux, as otherwise it defaults to musl.
-			// See https://github.com/ziglang/zig/issues/16624#issuecomment-1801175600.
+		.linkage = .dynamic,
+		.root_module = b.createModule(.{
+			.target = b.resolveTargetQuery(.{
+				.cpu_arch = arch,
+				.os_tag = tag,
+				// We need to explicitly specify gnu for linux, as otherwise it defaults to musl.
+				// See https://github.com/ziglang/zig/issues/16624#issuecomment-1801175600.
 			.abi = if (tag == .linux) .gnu else null,
+			}),
+			.optimize = .ReleaseSmall,
 		}),
-		.optimize = .ReleaseSmall,
 	});
 
 	lib.linkLibC();
