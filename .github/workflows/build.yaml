@@ -17,7 +17,7 @@ jobs:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.java-version
@@ -125,13 +125,13 @@ jobs:
         with:
           sparse-checkout: .github/workflows/.java-version
           sparse-checkout-cone-mode: false
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         if: ${{ matrix.tests.type == 'java' && matrix.tests.version == 'latest' }}
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.java-version
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         if: ${{ matrix.tests.type == 'java' && matrix.tests.version != 'latest' }}
         with:
           distribution: 'zulu'
@@ -156,7 +156,7 @@ jobs:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.java-version
@@ -171,7 +171,7 @@ jobs:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.java-version
@@ -197,7 +197,7 @@ jobs:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.java-version
@@ -228,7 +228,7 @@ jobs:
     runs-on: ${{ matrix.platform.os }}
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.java-version
@@ -266,7 +266,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.java-version
