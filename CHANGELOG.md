@@ -17,6 +17,7 @@ Changed:
 
 Fixed:
 - Windows now reports the terminal size correctly. Previously it reported the buffer size instead of the window size.
+- Windows Terminal and ConEmu are now correctly detected as supporting color.
 
 
 ## [0.17.0] - 2025-04-11

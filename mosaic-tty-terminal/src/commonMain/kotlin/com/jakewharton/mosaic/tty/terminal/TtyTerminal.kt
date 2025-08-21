@@ -396,6 +396,14 @@ internal fun detectAnsiLevel(): AnsiLevel {
 	if (term != "dumb") {
 		return AnsiLevel.ANSI16
 	}
+	// https://github.com/microsoft/terminal/issues/1040#issuecomment-496691842
+	if (env("WT_SESSION") != null) {
+		return AnsiLevel.TRUECOLOR
+	}
+	// Per https://conemu.github.io/en/ConEmuEnvironment.html
+	if (env("ConEmuANSI") == "ON") {
+		return AnsiLevel.TRUECOLOR
+	}
 	return AnsiLevel.NONE
 }
 
