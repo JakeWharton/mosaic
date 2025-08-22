@@ -1,7 +1,20 @@
 # Change log
 
 ## [Unreleased]
-[Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.16.0...HEAD
+[Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.18.0...HEAD
+
+New:
+- Nothing yet
+
+Changed:
+- Nothing yet
+
+Fixed:
+- Nothing yet
+
+
+## [0.18.0] - 2025-08-21
+[0.18.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.18.0
 
 New:
 - JVM artifacts can now be used as modules in the Java module system.

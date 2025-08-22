@@ -65,7 +65,7 @@ Mosaic itself can then be added like any other dependency:
 
 ```groovy
 dependencies {
-  implementation("com.jakewharton.mosaic:mosaic-runtime:0.17.0")
+  implementation("com.jakewharton.mosaic:mosaic-runtime:0.18.0")
 }
 ```
 
@@ -83,7 +83,7 @@ repository {
   }
 }
 dependencies {
-  implementation("com.jakewharton.mosaic:mosaic-runtime:0.18.0-SNAPSHOT")
+  implementation("com.jakewharton.mosaic:mosaic-runtime:0.19.0-SNAPSHOT")
 }
 ```
 
