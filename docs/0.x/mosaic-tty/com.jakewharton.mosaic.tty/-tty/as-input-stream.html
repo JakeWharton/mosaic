@@ -2,7 +2,7 @@
 <html class="no-js">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-    <title>mouseEvent</title>
+    <title>asInputStream</title>
 <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
     <script>document.documentElement.classList.replace("no-js","js");</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
@@ -41,13 +41,11 @@
             </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
         </button>
         <div class="navigation-controls--break ui-kit_mobile-only"></div>
-        <div class="library-version" id="library-version">0.17.0
+        <div class="library-version" id="library-version">0.18.0
         </div>
         <div class="navigation-controls">
         <div class="filter-section filter-section_loading" id="filter-section">
-                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":mosaic-tty:dokkaHtmlPartial/commonMain">common</button>
                 <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":mosaic-tty:dokkaHtmlPartial/jvmMain">jvm</button>
-                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":mosaic-tty:dokkaHtmlPartial/nativeMain">native</button>
             <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
                 <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
                 <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox">
@@ -56,25 +54,11 @@
                             <i class="ui-kit-icon ui-kit-icon_cross"></i>
                         </button>
                     </div>
-                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
-                            <label class="checkbox">
-                                <input type="checkbox" class="checkbox--input" id=":mosaic-tty:dokkaHtmlPartial/commonMain" data-filter=":mosaic-tty:dokkaHtmlPartial/commonMain">
-                                <span class="checkbox--icon"></span>
-                                common
-                            </label>
-                        </li>
                         <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
                             <label class="checkbox">
                                 <input type="checkbox" class="checkbox--input" id=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-filter=":mosaic-tty:dokkaHtmlPartial/jvmMain">
                                 <span class="checkbox--icon"></span>
                                 jvm
-                            </label>
-                        </li>
-                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
-                            <label class="checkbox">
-                                <input type="checkbox" class="checkbox--input" id=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-filter=":mosaic-tty:dokkaHtmlPartial/nativeMain">
-                                <span class="checkbox--icon"></span>
-                                native
                             </label>
                         </li>
                 </ul>
@@ -106,14 +90,14 @@
                 </div>
             </div>
             <div id="main">
-<div class="main-content" data-page-type="member" id="content" pageids="mosaic-tty::com.jakewharton.mosaic.tty/TestTty/mouseEvent/#/PointingToDeclaration//-742055585">
-  <div class="breadcrumbs"><a href="../../index.html">mosaic-tty</a><span class="delimiter">/</span><a href="../index.html">com.jakewharton.mosaic.tty</a><span class="delimiter">/</span><a href="index.html">TestTty</a><span class="delimiter">/</span><span class="current">mouseEvent</span></div>
+<div class="main-content" data-page-type="member" id="content" pageids="mosaic-tty::com.jakewharton.mosaic.tty/Tty/asInputStream/#/PointingToDeclaration//-2090211271">
+  <div class="breadcrumbs"><a href="../../index.html">mosaic-tty</a><span class="delimiter">/</span><a href="../index.html">com.jakewharton.mosaic.tty</a><span class="delimiter">/</span><a href="index.html">Tty</a><span class="delimiter">/</span><span class="current">asInputStream</span></div>
   <div class="cover ">
-    <h1 class="cover"><span>mouse</span><wbr><span><span>Event</span></span></h1>
+    <h1 class="cover"><span>as</span><wbr><span>Input</span><wbr><span><span>Stream</span></span></h1>
   </div>
   <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
-    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/commonMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/commonMain" data-active="" data-toggle=":mosaic-tty:dokkaHtmlPartial/commonMain">common</button><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-toggle=":mosaic-tty:dokkaHtmlPartial/jvmMain">jvm</button><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/nativeMain" data-toggle=":mosaic-tty:dokkaHtmlPartial/nativeMain">native</button></div>
-<div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-tty:dokkaHtmlPartial/commonMain"><div class="symbol monospace"><span class="token keyword">expect </span><span class="token keyword">fun </span><a href="mouse-event.html"><span class="token function">mouseEvent</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><p class="paragraph">Send a mouse event to <a href="tty.html">tty</a>'s callback.</p><p class="paragraph">Note: Currently this does not work.</p><p class="paragraph">On Windows this event can only be observed by during calls to <a href="../-tty/read.html">Tty.read</a> or <a href="../-tty/read-with-timeout.html">Tty.readWithTimeout</a>. This event is not supported on other platforms.</p></div><div class="content sourceset-dependent-content" data-togglable=":mosaic-tty:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">fun </span><a href="mouse-event.html"><span class="token function">mouseEvent</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div><div class="content sourceset-dependent-content" data-togglable=":mosaic-tty:dokkaHtmlPartial/nativeMain"><div class="symbol monospace"><span class="token keyword">actual </span><span class="token keyword">fun </span><a href="mouse-event.html"><span class="token function">mouseEvent</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div>  </div>
+    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-filterable-set=":mosaic-tty:dokkaHtmlPartial/jvmMain" data-active="" data-toggle=":mosaic-tty:dokkaHtmlPartial/jvmMain">jvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":mosaic-tty:dokkaHtmlPartial/jvmMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="as-input-stream.html"><span class="token function">asInputStream</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html">InputStream</a></div><p class="paragraph">Read from the TTY using a regular <a href="https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html">InputStream</a>.</p></div>  </div>
 </div>
     <div class="footer">
         <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
