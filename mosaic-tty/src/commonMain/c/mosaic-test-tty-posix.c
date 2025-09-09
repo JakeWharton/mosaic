@@ -15,10 +15,10 @@
 #include <unistd.h>
 
 typedef struct MosaicTestTtyImpl {
-	int fd;
-	int interrupt_read_fd;
-	int interrupt_write_fd;
 	MosaicTty *tty;
+	int fd;
+	int interrupt_fd_reader;
+	int interrupt_fd_writer;
 } MosaicTestTtyImpl;
 
 uint32_t testTty_resizeInternal(int parentFd, int columns, int rows, int width, int height) {
@@ -77,10 +77,10 @@ MosaicTestTtyInitResult testTty_init() {
 		goto err_child;
 	}
 
-	testTty->fd = parentFd;
-	testTty->interrupt_read_fd = interrupt_pipe[0];
-	testTty->interrupt_write_fd = interrupt_pipe[1];
 	testTty->tty = ttyInitResult.tty;
+	testTty->fd = parentFd;
+	testTty->interrupt_fd_reader = interrupt_pipe[0];
+	testTty->interrupt_fd_writer = interrupt_pipe[1];
 
 	result.testTty = testTty;
 
@@ -111,12 +111,12 @@ MosaicTtyIoResult testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int cou
 }
 
 MosaicTtyIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffer, int count) {
-	return tty_readInternal(testTty->fd, testTty->interrupt_read_fd, buffer, count, NULL);
+	return tty_readInternal(testTty->fd, testTty->interrupt_fd_reader, buffer, count, NULL);
 }
 
 uint32_t testTty_interruptRead(MosaicTestTty *testTty) {
 	uint8_t space = ' ';
-	MosaicTtyIoResult result = tty_writeInternal(testTty->interrupt_write_fd, &space, 1);
+	MosaicTtyIoResult result = tty_writeInternal(testTty->interrupt_fd_writer, &space, 1);
 	return result.error;
 }
 
@@ -156,10 +156,10 @@ uint32_t testTty_free(MosaicTestTty *testTty) {
 		result = errno;
 	}
 
-	if (unlikely(close(testTty->interrupt_read_fd) != 0 && result == 0)) {
+	if (unlikely(close(testTty->interrupt_fd_reader) != 0 && result == 0)) {
 		result = errno;
 	}
-	if (unlikely(close(testTty->interrupt_write_fd) != 0 && result == 0)) {
+	if (unlikely(close(testTty->interrupt_fd_writer) != 0 && result == 0)) {
 		result = errno;
 	}
 
