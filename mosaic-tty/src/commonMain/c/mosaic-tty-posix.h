@@ -6,8 +6,8 @@
 
 typedef struct MosaicTtyImpl {
 	int fd;
-	int interrupt_read_fd;
-	int interrupt_write_fd;
+	int interrupt_fd_reader;
+	int interrupt_fd_writer;
 	MosaicTtyCallback *callback;
 	bool sigwinch;
 	struct termios *saved;
@@ -17,7 +17,7 @@ MosaicTtyInitResult tty_initWithFd(int fd);
 
 MosaicTtyIoResult tty_readInternal(
 	int fd,
-	int interruptReadFd,
+	int interruptFd,
 	uint8_t *buffer,
 	int count,
 	struct timeval *timeout
