@@ -217,8 +217,8 @@ MOSAIC_EXPORT MosaicTtyIoResult testTty_read(MosaicTestTty *testTty, uint8_t *bu
 			result.count = c;
 			break;
 		}
-		if (atomic_load(&testTty->interrupt)) {
-			atomic_store(&testTty->interrupt, false);
+		if (atomic_load(&testTty->conout_interrupt)) {
+			atomic_store(&testTty->conout_interrupt, false);
 			// result.count will be 0
 			break;
 		}
