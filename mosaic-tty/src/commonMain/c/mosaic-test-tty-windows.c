@@ -82,7 +82,7 @@ MOSAIC_EXPORT MosaicTestTtyInitResult testTty_init(bool stdinIsTty, bool stdoutI
 		stdinPipeRead = conoutPipeRead;
 		stdinPipeWrite = conoutPipeWrite;
 	} else {
-		if (unlikely(!CreatePipe(&stdoutPipeRead, &stdoutPipeWrite, NULL, 0))) {
+		if (unlikely(!CreatePipe(&stdinPipeRead, &stdinPipeWrite, NULL, 0))) {
 			result.error = GetLastError();
 			goto err_stdin;
 		}
