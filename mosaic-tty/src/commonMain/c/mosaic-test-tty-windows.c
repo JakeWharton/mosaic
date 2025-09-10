@@ -73,7 +73,7 @@ MOSAIC_EXPORT MosaicTestTtyInitResult testTty_init(bool stdinIsTty, bool stdoutI
 	HANDLE conoutPipeWrite;
 	if (unlikely(!CreatePipe(&conoutPipeRead, &conoutPipeWrite, NULL, 0))) {
 		result.error = GetLastError();
-		goto err_conout;
+		goto err_conout_pipe;
 	}
 
 	HANDLE stdinPipeRead;
@@ -84,7 +84,7 @@ MOSAIC_EXPORT MosaicTestTtyInitResult testTty_init(bool stdinIsTty, bool stdoutI
 	} else {
 		if (unlikely(!CreatePipe(&stdinPipeRead, &stdinPipeWrite, NULL, 0))) {
 			result.error = GetLastError();
-			goto err_stdin;
+			goto err_stdin_pipe;
 		}
 	}
 
@@ -96,7 +96,7 @@ MOSAIC_EXPORT MosaicTestTtyInitResult testTty_init(bool stdinIsTty, bool stdoutI
 	} else {
 		if (unlikely(!CreatePipe(&stdoutPipeRead, &stdoutPipeWrite, NULL, 0))) {
 			result.error = GetLastError();
-			goto err_stdout;
+			goto err_stdout_pipe;
 		}
 	}
 
@@ -108,7 +108,7 @@ MOSAIC_EXPORT MosaicTestTtyInitResult testTty_init(bool stdinIsTty, bool stdoutI
 	} else {
 		if (unlikely(!CreatePipe(&stderrPipeRead, &stderrPipeWrite, NULL, 0))) {
 			result.error = GetLastError();
-			goto err_stderr;
+			goto err_stderr_pipe;
 		}
 	}
 
@@ -116,7 +116,7 @@ MOSAIC_EXPORT MosaicTestTtyInitResult testTty_init(bool stdinIsTty, bool stdoutI
 	if (unlikely(!ttyInitResult.tty)) {
 		result.error = ttyInitResult.error;
 		result.already_bound = ttyInitResult.already_bound;
-		goto err_conout_pipe;
+		goto err_stderr_pipe;
 	}
 
 	testTty->tty = ttyInitResult.tty;
@@ -233,7 +233,7 @@ MOSAIC_EXPORT MosaicTtyIoResult testTty_read(MosaicTestTty *testTty, uint8_t *bu
 }
 
 MOSAIC_EXPORT uint32_t testTty_interruptRead(MosaicTestTty *testTty) {
-	atomic_store(&testTty->interrupt, true);
+	atomic_store(&testTty->conout_interrupt, true);
 	return 0;
 }
 
