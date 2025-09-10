@@ -402,9 +402,12 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyFree(
 JNIEXPORT jlong JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_testTtyInit(
 	JNIEnv *env,
-	jclass type UNUSED
+	jclass type UNUSED,
+	jboolean stdinIsTty,
+	jboolean stdoutIsTty,
+	jboolean stderrIsTty
 ) {
-	MosaicTestTtyInitResult result = testTty_init();
+	MosaicTestTtyInitResult result = testTty_init(stdinIsTty, stdoutIsTty, stderrIsTty);
 	if (likely(result.testTty)) {
 		return (jlong) result.testTty;
 	}

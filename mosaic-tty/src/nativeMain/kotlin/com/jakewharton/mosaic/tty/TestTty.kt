@@ -10,8 +10,12 @@ public actual class TestTty private constructor(
 	public actual val tty: Tty,
 ) : AutoCloseable {
 	public actual companion object {
-		public actual fun bind(): TestTty {
-			val testTtyPtr = testTty_init().useContents {
+		public actual fun bind(
+			stdinIsTty: Boolean,
+			stdoutIsTty: Boolean,
+			stderrIsTty: Boolean,
+		): TestTty {
+			val testTtyPtr = testTty_init(stdinIsTty, stdoutIsTty, stderrIsTty).useContents {
 				testTty?.let { return@useContents it }
 
 				if (already_bound) {

@@ -16,9 +16,12 @@
 
 typedef struct MosaicTestTtyImpl {
 	MosaicTty *tty;
-	int fd;
-	int interrupt_fd_reader;
-	int interrupt_fd_writer;
+	int tty_fd_parent;
+	int tty_interrupt_fd_reader;
+	int tty_interrupt_fd_writer;
+	int stdin_fd_writer;
+	int stdout_fd_reader;
+	int stderr_fd_reader;
 } MosaicTestTtyImpl;
 
 uint32_t testTty_resizeInternal(int parentFd, int columns, int rows, int width, int height) {
@@ -33,7 +36,7 @@ uint32_t testTty_resizeInternal(int parentFd, int columns, int rows, int width, 
 	return errno;
 }
 
-MosaicTestTtyInitResult testTty_init() {
+MosaicTestTtyInitResult testTty_init(bool stdinIsTty, bool stdoutIsTty, bool stderrIsTty) {
 	MosaicTestTtyInitResult result = {};
 
 	MosaicTestTtyImpl *testTty = calloc(1, sizeof(MosaicTestTtyImpl));
@@ -42,60 +45,111 @@ MosaicTestTtyInitResult testTty_init() {
 		goto ret;
 	}
 
-	int interrupt_pipe[2];
-	if (unlikely(pipe(interrupt_pipe)) != 0) {
+	// Note: the terms of art here appear to be "master" and "slave".
+	// We use "parent" and "child" instead, respectively.
+	int ttyParentFd = posix_openpt(O_RDWR | O_NOCTTY);
+	if (unlikely(ttyParentFd == -1)) {
 		result.error = errno;
 		goto err_free;
 	}
-
-	// Note: the terms of art here appear to be "master" and "slave".
-	// We use "parent" and "child" instead, respectively.
-	int parentFd = posix_openpt(O_RDWR | O_NOCTTY);
-	if (unlikely(parentFd == -1 || grantpt(parentFd) || unlockpt(parentFd))) {
-		result.error = errno;
-		goto err_pipes;
+	if (unlikely(grantpt(ttyParentFd) || unlockpt(ttyParentFd))) {
+		goto err_tty_parent;
 	}
 
-	char *childName = ptsname(parentFd);
-	int childFd = open(childName, O_RDWR | O_NOCTTY);
-	if (unlikely(childFd == -1)) {
+	char *childName = ptsname(ttyParentFd);
+	int ttyChildFd = open(childName, O_RDWR | O_NOCTTY);
+	if (unlikely(ttyChildFd == -1)) {
 		result.error = errno;
-		goto err_parent;
+		goto err_tty_parent;
 	}
 
 	// Give the TTY a reasonable "default" size.
-	uint32_t sizeResult = testTty_resizeInternal(parentFd, 80, 24, 0, 0);
+	uint32_t sizeResult = testTty_resizeInternal(ttyParentFd, 80, 24, 0, 0);
 	if (unlikely(sizeResult)) {
 		result.error = sizeResult;
-		goto err_parent;
+		goto err_tty_child;
 	}
 
-	MosaicTtyInitResult ttyInitResult = tty_initWithFd(childFd);
+	int ttyInterruptPipe[2];
+	if (unlikely(pipe(ttyInterruptPipe) != 0)) {
+		result.error = errno;
+		goto err_tty_child;
+	}
+
+	int stdinPipe[2];
+	if (stdinIsTty) {
+		stdinPipe[0] = ttyParentFd;
+		stdinPipe[1] = ttyChildFd;
+	} else {
+		if (unlikely(pipe(stdinPipe) != 0)) {
+			result.error = errno;
+			goto err_tty_interrupt_pipe;
+		}
+	}
+
+	int stdoutPipe[2];
+	if (stdoutIsTty) {
+		stdoutPipe[0] = ttyParentFd;
+		stdoutPipe[1] = ttyChildFd;
+	} else {
+		if (unlikely(pipe(stdoutPipe) != 0)) {
+			result.error = errno;
+			goto err_stdin_pipe;
+		}
+	}
+
+	int stderrPipe[2];
+	if (stderrIsTty) {
+		stderrPipe[0] = ttyParentFd;
+		stderrPipe[1] = ttyChildFd;
+	} else {
+		if (unlikely(pipe(stderrPipe) != 0)) {
+			result.error = errno;
+			goto err_stdout_pipe;
+		}
+	}
+
+	MosaicTtyInitResult ttyInitResult = tty_initWithFd(ttyChildFd, stdinPipe[0], stdoutPipe[1], stderrPipe[1]);
 	if (unlikely(!ttyInitResult.tty)) {
 		result.error = ttyInitResult.error;
 		result.already_bound = ttyInitResult.already_bound;
-		goto err_child;
+		goto err_stderr_pipe;
 	}
 
 	testTty->tty = ttyInitResult.tty;
-	testTty->fd = parentFd;
-	testTty->interrupt_fd_reader = interrupt_pipe[0];
-	testTty->interrupt_fd_writer = interrupt_pipe[1];
+	testTty->tty_fd_parent = ttyParentFd;
+	testTty->tty_interrupt_fd_reader = ttyInterruptPipe[0];
+	testTty->tty_interrupt_fd_writer = ttyInterruptPipe[1];
+	testTty->stdin_fd_writer = stdinPipe[1];
+	testTty->stdout_fd_reader = stdoutPipe[0];
+	testTty->stderr_fd_reader = stderrPipe[0];
 
 	result.testTty = testTty;
 
 	ret:
 	return result;
 
-	err_child:
-	close(childFd);
+	err_stderr_pipe:
+	close(stderrPipe[0]);
+	close(stderrPipe[1]);
 
-	err_parent:
-	close(parentFd);
+	err_stdout_pipe:
+	close(stdoutPipe[0]);
+	close(stdoutPipe[1]);
 
-	err_pipes:
-	close(interrupt_pipe[0]);
-	close(interrupt_pipe[1]);
+	err_stdin_pipe:
+	close(stdinPipe[0]);
+	close(stdinPipe[1]);
+
+	err_tty_interrupt_pipe:
+	close(ttyInterruptPipe[0]);
+	close(ttyInterruptPipe[1]);
+
+	err_tty_child:
+	close(ttyChildFd);
+
+	err_tty_parent:
+	close(ttyParentFd);
 
 	err_free:
 	free(testTty);
@@ -107,21 +161,21 @@ MosaicTty *testTty_getTty(MosaicTestTty *testTty) {
 }
 
 MosaicTtyIoResult testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int count) {
-	return tty_writeInternal(testTty->fd, buffer, count);
+	return tty_writeInternal(testTty->tty_fd_parent, buffer, count);
 }
 
 MosaicTtyIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffer, int count) {
-	return tty_readInternal(testTty->fd, testTty->interrupt_fd_reader, buffer, count, NULL);
+	return tty_readInternal(testTty->tty_fd_parent, testTty->tty_interrupt_fd_reader, buffer, count, NULL);
 }
 
 uint32_t testTty_interruptRead(MosaicTestTty *testTty) {
 	uint8_t space = ' ';
-	MosaicTtyIoResult result = tty_writeInternal(testTty->interrupt_fd_writer, &space, 1);
+	MosaicTtyIoResult result = tty_writeInternal(testTty->tty_interrupt_fd_writer, &space, 1);
 	return result.error;
 }
 
 uint32_t testTty_resize(MosaicTestTty *testTty, int columns, int rows, int width, int height) {
-	uint32_t sizeResult = testTty_resizeInternal(testTty->fd, columns, rows, width, height);
+	uint32_t sizeResult = testTty_resizeInternal(testTty->tty_fd_parent, columns, rows, width, height);
 	if (unlikely(sizeResult)) {
 		return sizeResult;
 	}
@@ -152,15 +206,24 @@ uint32_t testTty_sendMouseEvent(MosaicTestTty *testTty UNUSED) {
 uint32_t testTty_free(MosaicTestTty *testTty) {
 	uint32_t result = 0;
 
-	if (unlikely(close(testTty->fd) != 0)) {
+	if (unlikely(close(testTty->tty_fd_parent) != 0)) {
 		result = errno;
 	}
-
-	if (unlikely(close(testTty->interrupt_fd_reader) != 0 && result == 0)) {
+	if (unlikely(close(testTty->tty_interrupt_fd_reader) != 0 && result == 0)) {
 		result = errno;
 	}
-	if (unlikely(close(testTty->interrupt_fd_writer) != 0 && result == 0)) {
+	if (unlikely(close(testTty->tty_interrupt_fd_writer) != 0 && result == 0)) {
 		result = errno;
+	}
+	if (testTty->stdout_fd_reader != testTty->tty_fd_parent) {
+		if (unlikely(close(testTty->stdout_fd_reader) != 0)) {
+			result = errno;
+		}
+	}
+	if (testTty->stderr_fd_reader != testTty->tty_fd_parent) {
+		if (unlikely(close(testTty->stderr_fd_reader) != 0)) {
+			result = errno;
+		}
 	}
 
 	free(testTty);

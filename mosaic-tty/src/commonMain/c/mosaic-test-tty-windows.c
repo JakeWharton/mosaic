@@ -11,7 +11,9 @@ typedef struct MosaicTestTtyImpl {
 	MosaicTty *tty;
 	HANDLE conout_pipe_read;
 	HANDLE conout_pipe_write;
-	atomic_bool interrupt;
+	atomic_bool conout_interrupt;
+	HANDLE stdout_pipe_write;
+	HANDLE stderr_pipe_write;
 } MosaicTestTtyImpl;
 
 static atomic_flag globalTestTty = ATOMIC_FLAG_INIT;
@@ -28,7 +30,7 @@ uint32_t testTty_resizeInternal(HANDLE conout, int columns, int rows) {
 	return GetLastError();
 }
 
-MOSAIC_EXPORT MosaicTestTtyInitResult testTty_init() {
+MOSAIC_EXPORT MosaicTestTtyInitResult testTty_init(bool stdinIsTty, bool stdoutIsTty, bool stderrIsTty) {
 	MosaicTestTtyInitResult result = {};
 
 	MosaicTestTtyImpl *testTty = calloc(1, sizeof(MosaicTestTtyImpl));
@@ -39,16 +41,6 @@ MOSAIC_EXPORT MosaicTestTtyInitResult testTty_init() {
 
 	HANDLE stdin = GetStdHandle(STD_INPUT_HANDLE);
 	if (unlikely(stdin == INVALID_HANDLE_VALUE)) {
-		result.error = GetLastError();
-		goto err_free;
-	}
-	HANDLE stdout = GetStdHandle(STD_OUTPUT_HANDLE);
-	if (unlikely(stdout == INVALID_HANDLE_VALUE)) {
-		result.error = GetLastError();
-		goto err_free;
-	}
-	HANDLE stderr = GetStdHandle(STD_ERROR_HANDLE);
-	if (unlikely(stderr == INVALID_HANDLE_VALUE)) {
 		result.error = GetLastError();
 		goto err_free;
 	}
@@ -86,7 +78,31 @@ MOSAIC_EXPORT MosaicTestTtyInitResult testTty_init() {
 		goto err_conout;
 	}
 
-	MosaicTtyInitResult ttyInitResult = tty_initWithHandles(conin, conoutPipeWrite, true, conout, stdin, stdout, stderr);
+	HANDLE stdoutPipeRead;
+	HANDLE stdoutPipeWrite;
+	if (stdoutIsTty) {
+		stdoutPipeRead = conoutPipeRead;
+		stderrPipeWrite = conoutPipeWrite;
+	} else {
+		if (unlikely(!CreatePipe(&stdoutPipeRead, &stdoutPipeWrite, NULL, 0))) {
+			result.error = GetLastError();
+			goto err_stdout;
+		}
+	}
+
+	HANDLE stderrPipeRead;
+	HANDLE stderrPipeWrite;
+	if (stderrIsTty) {
+		stdoutPipeRead = conoutPipeRead;
+		stderrPipeWrite = conoutPipeWrite;
+	} else {
+		if (unlikely(!CreatePipe(&stderrPipeRead, &stderrPipeWrite, NULL, 0))) {
+			result.error = GetLastError();
+			goto err_stderr;
+		}
+	}
+
+	MosaicTtyInitResult ttyInitResult = tty_initWithHandles(conin, conoutPipeWrite, true, conout, stdin, stdoutPipeWrite, stderrPipeWrite);
 	if (unlikely(!ttyInitResult.tty)) {
 		result.error = ttyInitResult.error;
 		result.already_bound = ttyInitResult.already_bound;
@@ -109,6 +125,14 @@ MOSAIC_EXPORT MosaicTestTtyInitResult testTty_init() {
 
 	ret:
 	return result;
+
+	err_stderr_pipe:
+	CloseHandle(stderrPipeRead);
+	CloseHandle(stderrPipeWrite);
+
+	err_stdout_pipe:
+	CloseHandle(stdoutPipeRead);
+	CloseHandle(stdoutPipeWrite);
 
 	err_conout_pipe:
 	CloseHandle(conoutPipeRead);
@@ -241,6 +265,18 @@ MOSAIC_EXPORT uint32_t testTty_free(MosaicTestTty *testTty) {
 		result = GetLastError();
 	}
 	if (!CloseHandle(testTty->conout_pipe_write) && result == 0) {
+		result = GetLastError();
+	}
+	if (!CloseHandle(testTty->stdout_pipe_read) && result == 0) {
+		result = GetLastError();
+	}
+	if (!CloseHandle(testTty->stdout_pipe_write) && result == 0) {
+		result = GetLastError();
+	}
+	if (!CloseHandle(testTty->stderr_pipe_read) && result == 0) {
+		result = GetLastError();
+	}
+	if (!CloseHandle(testTty->stderr_pipe_write) && result == 0) {
 		result = GetLastError();
 	}
 

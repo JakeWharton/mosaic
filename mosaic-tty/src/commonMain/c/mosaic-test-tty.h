@@ -13,7 +13,7 @@ typedef struct MosaicTestTtyInitResult {
 	bool already_bound;
 } MosaicTestTtyInitResult;
 
-MOSAIC_EXPORT MosaicTestTtyInitResult testTty_init();
+MOSAIC_EXPORT MosaicTestTtyInitResult testTty_init(bool stdinIsTty, bool stdoutIsTty, bool stderrIsTty);
 MOSAIC_EXPORT MosaicTty *testTty_getTty(MosaicTestTty *testTty);
 MOSAIC_EXPORT MosaicTtyIoResult testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int count);
 MOSAIC_EXPORT MosaicTtyIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffer, int count);

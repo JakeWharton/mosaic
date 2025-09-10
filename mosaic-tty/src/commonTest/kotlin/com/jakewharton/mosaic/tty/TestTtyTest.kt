@@ -1,5 +1,6 @@
 package com.jakewharton.mosaic.tty
 
+import app.cash.burst.Burst
 import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.hasMessage
@@ -7,7 +8,6 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isZero
 import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.Dispatchers
@@ -15,21 +15,32 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 
+@Burst
 class TestTtyTest {
-	private val testTty = TestTty.bind()
-	private val tty = testTty.tty
+	private var _testTty: TestTty? = null
+	private var testTty: TestTty
+		get() {
+			return _testTty ?: TestTty.bind().also {
+				it.tty.enableRawMode()
+				_testTty = it
+			}
+		}
+		set(value) {
+			check(_testTty == null) { "TestTty already created" }
+			_testTty = value
+			value.tty.enableRawMode()
+		}
 
-	@BeforeTest fun before() {
-		tty.enableRawMode()
-	}
+	private val tty: Tty get() = testTty.tty
 
 	@AfterTest fun after() {
-		// TestTty.close() will call Tty.close(), but we get a free idempotency test here.
-		tty.close()
 		testTty.close()
 	}
 
 	@Test fun onlyOne() {
+		// Force read to trigger initialization.
+		testTty
+
 		assertFailure {
 			TestTty.bind()
 		}.isInstanceOf<IllegalStateException>()
@@ -123,5 +134,20 @@ class TestTtyTest {
 		val read = tty.read(buffer, 0, 10)
 		assertThat(read).isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("fghijxxxxx")
+	}
+
+	@Test fun stdinIsTtySetting(value: Boolean) {
+		testTty = TestTty.bind(stdinIsTty = value)
+		assertThat(testTty.tty.isStdinTty()).isEqualTo(value)
+	}
+
+	@Test fun stdOutIsTtySetting(value: Boolean) {
+		testTty = TestTty.bind(stdoutIsTty = value)
+		assertThat(testTty.tty.isStdoutTty()).isEqualTo(value)
+	}
+
+	@Test fun stdinErrTtySetting(value: Boolean) {
+		testTty = TestTty.bind(stderrIsTty = value)
+		assertThat(testTty.tty.isStderrTty()).isEqualTo(value)
 	}
 }
