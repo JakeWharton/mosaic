@@ -16,7 +16,7 @@
 
 static _Atomic(MosaicTty *) globalTty;
 
-MosaicTtyInitResult tty_initWithFd(int fd) {
+MosaicTtyInitResult tty_initWithFd(int ttyFd, int stdinFd, int stdoutFd, int stderrFd) {
 	MosaicTtyInitResult result = {};
 
 	MosaicTtyImpl *tty = calloc(1, sizeof(MosaicTtyImpl));
@@ -25,15 +25,18 @@ MosaicTtyInitResult tty_initWithFd(int fd) {
 		goto ret;
 	}
 
-	int interrupt_pipe[2];
-	if (unlikely(pipe(interrupt_pipe)) != 0) {
+	int ttyInterruptPipe[2];
+	if (unlikely(pipe(ttyInterruptPipe)) != 0) {
 		result.error = errno;
 		goto err;
 	}
 
-	tty->fd = fd;
-	tty->interrupt_fd_reader = interrupt_pipe[0];
-	tty->interrupt_fd_writer = interrupt_pipe[1];
+	tty->fd = ttyFd;
+	tty->interrupt_fd_reader = ttyInterruptPipe[0];
+	tty->interrupt_fd_writer = ttyInterruptPipe[1];
+	tty->stdin_fd = stdinFd;
+	tty->stdout_fd = stdoutFd;
+	tty->stderr_fd = stderrFd;
 
 	result.tty = tty;
 
@@ -54,9 +57,9 @@ MosaicTtyInitResult tty_initWithFd(int fd) {
 }
 
 MosaicTtyInitResult tty_init() {
-	int fd = open("/dev/tty", O_RDWR);
-	if (likely(fd != -1)) {
-		return tty_initWithFd(fd);
+	int ttyFd = open("/dev/tty", O_RDWR);
+	if (likely(ttyFd != -1)) {
+		return tty_initWithFd(ttyFd, STDIN_FILENO, STDOUT_FILENO, STDERR_FILENO);
 	}
 
 	MosaicTtyInitResult result = {};
@@ -160,23 +163,23 @@ MosaicTtyIsTtyResult tty_fd_is_tty(int fd) {
 		result.is_tty = true;
 	} else {
 		int error = errno;
-		if (error != ENOTTY || error != EINVAL) {
+		if (error != ENOTTY && error != EINVAL) {
 			result.error = error;
 		}
 	}
 	return result;
 }
 
-MosaicTtyIsTtyResult tty_stdin_is_tty(MosaicTty *tty UNUSED) {
-	return tty_fd_is_tty(STDIN_FILENO);
+MosaicTtyIsTtyResult tty_stdin_is_tty(MosaicTty *tty) {
+	return tty_fd_is_tty(tty->stdin_fd);
 }
 
-MosaicTtyIsTtyResult tty_stdout_is_tty(MosaicTty *tty UNUSED) {
-	return tty_fd_is_tty(STDOUT_FILENO);
+MosaicTtyIsTtyResult tty_stdout_is_tty(MosaicTty *tty) {
+	return tty_fd_is_tty(tty->stdout_fd);
 }
 
-MosaicTtyIsTtyResult tty_stderr_is_tty(MosaicTty *tty UNUSED) {
-	return tty_fd_is_tty(STDERR_FILENO);
+MosaicTtyIsTtyResult tty_stderr_is_tty(MosaicTty *tty) {
+	return tty_fd_is_tty(tty->stderr_fd);
 }
 
 void sigwinchHandler(int value UNUSED) {

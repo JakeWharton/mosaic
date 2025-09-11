@@ -57,7 +57,7 @@ final class Jni {
 
 	static native void ttyFree(long ttyPtr);
 
-	static native long testTtyInit();
+	static native long testTtyInit(boolean stdinIsTty, boolean stdoutIsTty, boolean stderrIsTty);
 
 	static native long testTtyGetTty(long testTtyPtr);
 

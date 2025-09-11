@@ -19,10 +19,15 @@ public class TestTty private constructor(
 	public val tty: Tty,
 ) : AutoCloseable {
 	public companion object {
-		public fun bind(): TestTty {
+		@JvmStatic
+		public fun bind(
+			stdinIsTty: Boolean = false,
+			stdoutIsTty: Boolean = false,
+			stderrIsTty: Boolean = false,
+		): TestTty {
 			NativeLibrary.ensureLoaded()
 
-			val result = testTty_init.makeInvoker().apply(Arena.global())
+			val result = testTty_init(Arena.global(), stdinIsTty, stdoutIsTty, stderrIsTty)
 			val testTtyPtr = MosaicTestTtyInitResult.testTty(result)
 			if (testTtyPtr != MemorySegment.NULL) {
 				val ttyPtr = testTty_getTty(testTtyPtr)

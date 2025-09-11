@@ -17,6 +17,7 @@ apply plugin: 'co.touchlab.cklib'
 apply plugin: 'com.jakewharton.mosaic.build'
 apply plugin: 'com.jakewharton.test-distribution'
 apply plugin: 'de.infolektuell.jextract'
+apply plugin: 'app.cash.burst'
 
 mosaicBuild {
 	patchJavaModuleWithKotlinClasses('mosaic.tty')

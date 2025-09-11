@@ -8,10 +8,17 @@ public expect class TestTty : AutoCloseable {
 		 * and only when a [Tty] is not also bound. Subsequent calls will throw an exception until
 		 * [TestTty.close] is called.
 		 *
+		 * @param stdinIsTty The return value of [Tty.isStdinTty].
+		 * @param stdoutIsTty The return value of [Tty.isStdoutTty].
+		 * @param stderrIsTty The return value of [Tty.isStderrTty].
 		 * @throws IOException If an error occurred creating the PTY.
 		 * @throws IllegalStateException If another instance is already bound.
 		 */
-		public fun bind(): TestTty
+		public fun bind(
+			stdinIsTty: Boolean = false,
+			stdoutIsTty: Boolean = false,
+			stderrIsTty: Boolean = false,
+		): TestTty
 	}
 
 	public val tty: Tty

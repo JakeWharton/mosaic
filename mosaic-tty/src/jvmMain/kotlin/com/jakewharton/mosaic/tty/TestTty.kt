@@ -10,8 +10,12 @@ public actual class TestTty private constructor(
 	public actual companion object {
 		@JvmStatic
 		@Throws(IOException::class)
-		public actual fun bind(): TestTty {
-			val testTtyPtr = testTtyInit()
+		public actual fun bind(
+			stdinIsTty: Boolean,
+			stdoutIsTty: Boolean,
+			stderrIsTty: Boolean,
+		): TestTty {
+			val testTtyPtr = testTtyInit(stdinIsTty, stdoutIsTty, stderrIsTty)
 			val ttyPtr = testTtyGetTty(testTtyPtr)
 			val tty = Tty(ttyPtr)
 			return TestTty(testTtyPtr, tty)
