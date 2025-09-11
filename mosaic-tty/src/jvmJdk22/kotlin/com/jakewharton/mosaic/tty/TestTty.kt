@@ -19,10 +19,11 @@ public class TestTty private constructor(
 	public val tty: Tty,
 ) : AutoCloseable {
 	public companion object {
+		@JvmStatic
 		public fun bind(
-			stdinIsTty: Boolean,
-			stdoutIsTty: Boolean,
-			stderrIsTty: Boolean,
+			stdinIsTty: Boolean = false,
+			stdoutIsTty: Boolean = false,
+			stderrIsTty: Boolean = false,
 		): TestTty {
 			NativeLibrary.ensureLoaded()
 
