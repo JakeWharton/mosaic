@@ -234,7 +234,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyRead(
 	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
 
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	MosaicTtyIoResult result = tty_read(tty, nativeBufferAtOffset, count);
+	MosaicIoResult result = tty_read(tty, nativeBufferAtOffset, count);
 
 	(*env)->ReleaseByteArrayElements(env, buffer, bufferElements, 0);
 
@@ -264,7 +264,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyReadWithTimeout(
 	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
 
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	MosaicTtyIoResult result = tty_readWithTimeout(
+	MosaicIoResult result = tty_readWithTimeout(
 		tty,
 		nativeBufferAtOffset,
 		count,
@@ -311,7 +311,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyWrite(
 	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
 
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	MosaicTtyIoResult result = tty_write(tty, nativeBufferAtOffset, count);
+	MosaicIoResult result = tty_write(tty, nativeBufferAtOffset, count);
 
 	(*env)->ReleaseByteArrayElements(env, buffer, bufferElements, 0);
 
@@ -440,7 +440,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyWrite(
 	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
 
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
-	MosaicTtyIoResult result = testTty_write(testTty, nativeBufferAtOffset, count);
+	MosaicIoResult result = testTty_write(testTty, nativeBufferAtOffset, count);
 
 	(*env)->ReleaseByteArrayElements(env, buffer, bufferElements, 0);
 
@@ -469,7 +469,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyRead(
 	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
 
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
-	MosaicTtyIoResult result = testTty_read(testTty, nativeBufferAtOffset, count);
+	MosaicIoResult result = testTty_read(testTty, nativeBufferAtOffset, count);
 
 	(*env)->ReleaseByteArrayElements(env, buffer, bufferElements, 0);
 

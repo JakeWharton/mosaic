@@ -99,7 +99,7 @@ MOSAIC_EXPORT void tty_setCallback(MosaicTty *tty, MosaicTtyCallback *callback) 
 	tty->callback = callback;
 }
 
-MOSAIC_EXPORT MosaicTtyIoResult tty_read(
+MOSAIC_EXPORT MosaicIoResult tty_read(
 	MosaicTty *tty,
 	uint8_t *buffer,
 	int count
@@ -107,13 +107,13 @@ MOSAIC_EXPORT MosaicTtyIoResult tty_read(
 	return tty_readWithTimeout(tty, buffer, count, INFINITE);
 }
 
-MOSAIC_EXPORT MosaicTtyIoResult tty_readWithTimeout(
+MOSAIC_EXPORT MosaicIoResult tty_readWithTimeout(
 	MosaicTty *tty,
 	uint8_t *buffer,
 	int count,
 	int timeoutMillis
 ) {
-	MosaicTtyIoResult result = {};
+	MosaicIoResult result = {};
 
 	DWORD waitResult;
 	HANDLE waitHandles[2] = { tty->conin, tty->interrupt_event };
@@ -182,8 +182,8 @@ MOSAIC_EXPORT uint32_t tty_interruptRead(MosaicTty *tty) {
 		: GetLastError();
 }
 
-MOSAIC_EXPORT MosaicTtyIoResult tty_write(MosaicTty *tty, uint8_t *buffer, int count) {
-	MosaicTtyIoResult result = {};
+MOSAIC_EXPORT MosaicIoResult tty_write(MosaicTty *tty, uint8_t *buffer, int count) {
+	MosaicIoResult result = {};
 
 	DWORD written;
 	if (WriteFile(tty->conout_for_write, buffer, count, &written, NULL)) {

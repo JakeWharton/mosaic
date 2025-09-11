@@ -188,8 +188,8 @@ MOSAIC_EXPORT MosaicTty *testTty_getTty(MosaicTestTty *testTty) {
 	return testTty->tty;
 }
 
-MOSAIC_EXPORT MosaicTtyIoResult testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int count) {
-	MosaicTtyIoResult result = {};
+MOSAIC_EXPORT MosaicIoResult testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int count) {
+	MosaicIoResult result = {};
 
 	INPUT_RECORD *records = calloc(count, sizeof(INPUT_RECORD));
 	if (!records) {
@@ -214,8 +214,8 @@ MOSAIC_EXPORT MosaicTtyIoResult testTty_write(MosaicTestTty *testTty, uint8_t *b
 	return result;
 }
 
-MOSAIC_EXPORT MosaicTtyIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffer, int count) {
-	MosaicTtyIoResult result = {};
+MOSAIC_EXPORT MosaicIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffer, int count) {
+	MosaicIoResult result = {};
 
 	// Perform a spin loop to check for data or interrupt. We can't do a normal wait because pipes
 	// do not signal properly. Since this is only for testing, the busy wait isn't a huge deal.

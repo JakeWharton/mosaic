@@ -49,9 +49,9 @@ public class TestTty private constructor(
 		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
 		MemorySegment.copy(buffer, offset, segment, ValueLayout.JAVA_BYTE, 0, count)
 		val result = testTty_write(Arena.global(), ptr, segment, count)
-		val error = MosaicTtyIoResult.error(result)
+		val error = MosaicIoResult.error(result)
 		if (error == 0) {
-			return MosaicTtyIoResult.count(result)
+			return MosaicIoResult.count(result)
 		}
 		throwIoe(error)
 	}
@@ -59,9 +59,9 @@ public class TestTty private constructor(
 	public fun read(buffer: ByteArray, offset: Int, count: Int): Int {
 		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
 		val result = testTty_read(Arena.global(), ptr, segment, count)
-		val error = MosaicTtyIoResult.error(result)
+		val error = MosaicIoResult.error(result)
 		if (error == 0) {
-			val read = MosaicTtyIoResult.count(result)
+			val read = MosaicIoResult.count(result)
 			MemorySegment.copy(segment, ValueLayout.JAVA_BYTE, 0L, buffer, offset, read)
 			return read
 		}

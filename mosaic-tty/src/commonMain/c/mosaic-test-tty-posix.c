@@ -172,17 +172,17 @@ MosaicTty *testTty_getTty(MosaicTestTty *testTty) {
 	return testTty->tty;
 }
 
-MosaicTtyIoResult testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int count) {
+MosaicIoResult testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int count) {
 	return tty_writeInternal(testTty->tty_fd_parent, buffer, count);
 }
 
-MosaicTtyIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffer, int count) {
+MosaicIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffer, int count) {
 	return tty_readInternal(testTty->tty_fd_parent, testTty->tty_interrupt_fd_reader, buffer, count, NULL);
 }
 
 uint32_t testTty_interruptRead(MosaicTestTty *testTty) {
 	uint8_t space = ' ';
-	MosaicTtyIoResult result = tty_writeInternal(testTty->tty_interrupt_fd_writer, &space, 1);
+	MosaicIoResult result = tty_writeInternal(testTty->tty_interrupt_fd_writer, &space, 1);
 	return result.error;
 }
 
