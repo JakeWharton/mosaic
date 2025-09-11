@@ -17,17 +17,17 @@ import kotlinx.coroutines.test.runTest
 
 @Burst
 class TestTtyTest {
-	private var _testTty: TestTty? = null
+	private var rawTestTty: TestTty? = null
 	private var testTty: TestTty
 		get() {
-			return _testTty ?: TestTty.bind().also {
+			return rawTestTty ?: TestTty.bind().also {
 				it.tty.enableRawMode()
-				_testTty = it
+				rawTestTty = it
 			}
 		}
 		set(value) {
-			check(_testTty == null) { "TestTty already created" }
-			_testTty = value
+			check(rawTestTty == null) { "TestTty already created" }
+			rawTestTty = value
 			value.tty.enableRawMode()
 		}
 
