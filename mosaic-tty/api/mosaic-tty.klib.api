@@ -24,7 +24,7 @@ final class com.jakewharton.mosaic.tty/TestTty : kotlin/AutoCloseable { // com.j
     final fun write(kotlin/ByteArray, kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.tty/TestTty.write|write(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
 
     final object Companion { // com.jakewharton.mosaic.tty/TestTty.Companion|null[0]
-        final fun bind(): com.jakewharton.mosaic.tty/TestTty // com.jakewharton.mosaic.tty/TestTty.Companion.bind|bind(){}[0]
+        final fun bind(kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Boolean = ...): com.jakewharton.mosaic.tty/TestTty // com.jakewharton.mosaic.tty/TestTty.Companion.bind|bind(kotlin.Boolean;kotlin.Boolean;kotlin.Boolean){}[0]
     }
 }
 

@@ -19,8 +19,11 @@ typedef struct MosaicTestTtyImpl {
 	int tty_fd_parent;
 	int tty_interrupt_fd_reader;
 	int tty_interrupt_fd_writer;
+	bool stdin_is_tty;
 	int stdin_fd_writer;
+	bool stdout_is_tty;
 	int stdout_fd_reader;
+	bool stderr_is_tty;
 	int stderr_fd_reader;
 } MosaicTestTtyImpl;
 
@@ -120,8 +123,11 @@ MosaicTestTtyInitResult testTty_init(bool stdinIsTty, bool stdoutIsTty, bool std
 	testTty->tty_fd_parent = ttyParentFd;
 	testTty->tty_interrupt_fd_reader = ttyInterruptPipe[0];
 	testTty->tty_interrupt_fd_writer = ttyInterruptPipe[1];
+	testTty->stdin_is_tty = stdinIsTty;
 	testTty->stdin_fd_writer = stdinPipe[1];
+	testTty->stdout_is_tty = stdoutIsTty;
 	testTty->stdout_fd_reader = stdoutPipe[0];
+	testTty->stderr_is_tty = stderrIsTty;
 	testTty->stderr_fd_reader = stderrPipe[0];
 
 	result.testTty = testTty;
@@ -130,16 +136,22 @@ MosaicTestTtyInitResult testTty_init(bool stdinIsTty, bool stdoutIsTty, bool std
 	return result;
 
 	err_stderr_pipe:
-	close(stderrPipe[0]);
-	close(stderrPipe[1]);
+	if (!stderrIsTty) {
+		close(stderrPipe[0]);
+		close(stderrPipe[1]);
+	}
 
 	err_stdout_pipe:
-	close(stdoutPipe[0]);
-	close(stdoutPipe[1]);
+	if (!stdoutIsTty) {
+		close(stdoutPipe[0]);
+		close(stdoutPipe[1]);
+	}
 
 	err_stdin_pipe:
-	close(stdinPipe[0]);
-	close(stdinPipe[1]);
+	if (!stdinIsTty) {
+		close(stdinPipe[0]);
+		close(stdinPipe[1]);
+	}
 
 	err_tty_interrupt_pipe:
 	close(ttyInterruptPipe[0]);
@@ -215,12 +227,17 @@ uint32_t testTty_free(MosaicTestTty *testTty) {
 	if (unlikely(close(testTty->tty_interrupt_fd_writer) != 0 && result == 0)) {
 		result = errno;
 	}
-	if (testTty->stdout_fd_reader != testTty->tty_fd_parent) {
+	if (!testTty->stdin_is_tty) {
+		if (unlikely(close(testTty->stdin_fd_writer) != 0)) {
+			result = errno;
+		}
+	}
+	if (!testTty->stdout_is_tty) {
 		if (unlikely(close(testTty->stdout_fd_reader) != 0)) {
 			result = errno;
 		}
 	}
-	if (testTty->stderr_fd_reader != testTty->tty_fd_parent) {
+	if (!testTty->stderr_is_tty) {
 		if (unlikely(close(testTty->stderr_fd_reader) != 0)) {
 			result = errno;
 		}
