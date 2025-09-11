@@ -29,7 +29,7 @@ cklibGradlePlugin = "co.touchlab:cklib-gradle-plugin:0.3.4"
 jextractGradlePlugin = "de.infolektuell:gradle-plugin-jextract:0.5.0"
 testDistributionGradlePlugin = "com.jakewharton.gradle:test-distribution-gradle-plugin:0.1.0"
 spotlessGradlePlugin = "com.diffplug.spotless:spotless-plugin-gradle:7.2.1"
-burstGradlePlugin = "app.cash.burst:burst-gradle-plugin:2.8.1"
+burstGradlePlugin = "app.cash.burst:burst-gradle-plugin:2.9.0"
 
 ktlint-core = "com.pinterest.ktlint:ktlint-cli:1.3.1"
 ktlint-composeRules = "io.nlopez.compose.rules:ktlint:0.4.27"
