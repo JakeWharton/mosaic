@@ -1,8 +1,8 @@
 #if defined(__APPLE__) || defined(__linux__)
 
 #include "mosaic-tty-posix.h"
+#include "mosaic-utils.h"
 
-#include "cutils.h"
 #include <errno.h>
 #include <fcntl.h>
 #include <signal.h>

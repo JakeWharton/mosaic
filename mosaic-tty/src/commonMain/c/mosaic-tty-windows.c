@@ -1,8 +1,8 @@
 #if defined(_WIN32)
 
 #include "mosaic-tty-windows.h"
+#include "mosaic-utils.h"
 
-#include "cutils.h"
 #include <assert.h>
 #include <stdatomic.h>
 #include <windows.h>

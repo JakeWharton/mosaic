@@ -2,10 +2,10 @@
 
 #define _XOPEN_SOURCE 600
 
-#include "mosaic-tty-posix.h"
 #include "mosaic-test-tty.h"
+#include "mosaic-tty-posix.h"
+#include "mosaic-utils.h"
 
-#include "cutils.h"
 #include <errno.h>
 #include <fcntl.h>
 #include <signal.h>

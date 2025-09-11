@@ -1,11 +1,7 @@
 #ifndef MOSAIC_TTY_H
 #define MOSAIC_TTY_H
 
-#if defined(_WIN32)
-#define MOSAIC_EXPORT __declspec(dllexport)
-#else
-#define MOSAIC_EXPORT
-#endif
+#include "mosaic-utils.h"
 
 #include <stdbool.h>
 #include <stdint.h>

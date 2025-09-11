@@ -2,6 +2,7 @@
 #define MOSAIC_TTY_WINDOWS_H
 
 #include "mosaic-tty.h"
+
 #include <windows.h>
 
 enum { recordsCount = 64 };
