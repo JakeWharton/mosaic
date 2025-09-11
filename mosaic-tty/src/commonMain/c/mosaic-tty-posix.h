@@ -19,7 +19,7 @@ typedef struct MosaicTtyImpl {
 
 MosaicTtyInitResult tty_initWithFd(int ttyFd, int stdinFd, int stdoutFd, int stderrFd);
 
-MosaicTtyIoResult tty_readInternal(
+MosaicIoResult tty_readInternal(
 	int fd,
 	int interruptFd,
 	uint8_t *buffer,
@@ -27,6 +27,6 @@ MosaicTtyIoResult tty_readInternal(
 	struct timeval *timeout
 );
 
-MosaicTtyIoResult tty_writeInternal(int writeFd, uint8_t *buffer, int count);
+MosaicIoResult tty_writeInternal(int writeFd, uint8_t *buffer, int count);
 
 #endif // MOSAIC_TTY_POSIX_H

@@ -72,14 +72,14 @@ void tty_setCallback(MosaicTty *tty, MosaicTtyCallback *callback) {
 	tty->callback = callback;
 }
 
-MosaicTtyIoResult tty_readInternal(
+MosaicIoResult tty_readInternal(
 	int fd,
 	int interruptFd,
 	uint8_t *buffer,
 	int count,
 	struct timeval *timeout
 ) {
-	MosaicTtyIoResult result = {};
+	MosaicIoResult result = {};
 
 	fd_set fds;
 	FD_ZERO(&fds);
@@ -117,11 +117,11 @@ MosaicTtyIoResult tty_readInternal(
 	goto ret;
 }
 
-MosaicTtyIoResult tty_read(MosaicTty *tty, uint8_t *buffer, int count) {
+MosaicIoResult tty_read(MosaicTty *tty, uint8_t *buffer, int count) {
 	return tty_readInternal(tty->fd, tty->interrupt_fd_reader, buffer, count, NULL);
 }
 
-MosaicTtyIoResult tty_readWithTimeout(
+MosaicIoResult tty_readWithTimeout(
 	MosaicTty *tty,
 	uint8_t *buffer,
 	int count,
@@ -134,8 +134,8 @@ MosaicTtyIoResult tty_readWithTimeout(
 	return tty_readInternal(tty->fd, tty->interrupt_fd_reader, buffer, count, &timeout);
 }
 
-MosaicTtyIoResult tty_writeInternal(int writeFd, uint8_t *buffer, int count) {
-	MosaicTtyIoResult result = {};
+MosaicIoResult tty_writeInternal(int writeFd, uint8_t *buffer, int count) {
+	MosaicIoResult result = {};
 
 	int written = write(writeFd, buffer, count);
 	if (written != -1) {
@@ -149,11 +149,11 @@ MosaicTtyIoResult tty_writeInternal(int writeFd, uint8_t *buffer, int count) {
 
 uint32_t tty_interruptRead(MosaicTty *tty) {
 	uint8_t space = ' ';
-	MosaicTtyIoResult result = tty_writeInternal(tty->interrupt_fd_writer, &space, 1);
+	MosaicIoResult result = tty_writeInternal(tty->interrupt_fd_writer, &space, 1);
 	return result.error;
 }
 
-MosaicTtyIoResult tty_write(MosaicTty *tty, uint8_t *buffer, int count) {
+MosaicIoResult tty_write(MosaicTty *tty, uint8_t *buffer, int count) {
 	return tty_writeInternal(tty->fd, buffer, count);
 }
 
