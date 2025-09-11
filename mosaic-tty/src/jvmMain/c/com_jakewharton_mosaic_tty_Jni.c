@@ -1,8 +1,9 @@
 #include "com_jakewharton_mosaic_tty_Jni.h"
 
-#include "cutils.h"
 #include "jni.h"
 #include "mosaic.h"
+#include "mosaic-utils.h"
+
 #include <stdlib.h>
 #include <string.h>
 

@@ -2,6 +2,8 @@
 #define MOSAIC_TEST_TTY_H
 
 #include "mosaic-tty.h"
+#include "mosaic-utils.h"
+
 #include <stdbool.h>
 #include <stdint.h>
 

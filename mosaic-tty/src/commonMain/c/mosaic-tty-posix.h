@@ -2,6 +2,7 @@
 #define MOSAIC_TTY_POSIX_H
 
 #include "mosaic-tty.h"
+
 #include <sys/select.h>
 
 typedef struct MosaicTtyImpl {
