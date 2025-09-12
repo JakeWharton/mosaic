@@ -138,16 +138,16 @@ class TestTtyTest {
 
 	@Test fun stdinIsTtySetting(value: Boolean) {
 		testTty = TestTty.bind(stdinIsTty = value)
-		assertThat(testTty.tty.isStdinTty()).isEqualTo(value)
+		assertThat(testTty.streams.isInputTty()).isEqualTo(value)
 	}
 
 	@Test fun stdOutIsTtySetting(value: Boolean) {
 		testTty = TestTty.bind(stdoutIsTty = value)
-		assertThat(testTty.tty.isStdoutTty()).isEqualTo(value)
+		assertThat(testTty.streams.isOutputTty()).isEqualTo(value)
 	}
 
 	@Test fun stdinErrTtySetting(value: Boolean) {
 		testTty = TestTty.bind(stderrIsTty = value)
-		assertThat(testTty.tty.isStderrTty()).isEqualTo(value)
+		assertThat(testTty.streams.isErrorTty()).isEqualTo(value)
 	}
 }

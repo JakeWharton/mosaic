@@ -9,12 +9,9 @@
 
 MosaicTtyInitResult tty_initWithHandles(
 	HANDLE conin,
-	HANDLE conoutForWrite,
-	bool conoutForWriteFake,
 	HANDLE conoutForSize,
-	HANDLE stdin,
-	HANDLE stdout,
-	HANDLE stderr
+	HANDLE conoutForWrite,
+	bool conoutForWriteFake
 ) {
 	MosaicTtyInitResult result = {};
 
@@ -24,27 +21,24 @@ MosaicTtyInitResult tty_initWithHandles(
 		goto ret;
 	}
 
-	HANDLE interruptEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-	if (unlikely(interruptEvent == NULL)) {
+	HANDLE coninInterruptEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+	if (unlikely(coninInterruptEvent == NULL)) {
 		result.error = GetLastError();
-		goto err;
+		goto err_free;
 	}
 
 	tty->conin = conin;
+	tty->conin_interrupt_event = coninInterruptEvent;
 	tty->conout_for_write = conoutForWrite;
 	tty->conout_for_write_fake = conoutForWriteFake;
 	tty->conout_for_size = conoutForSize;
-	tty->interrupt_event = interruptEvent;
-	tty->stdin = stdin;
-	tty->stdout = stdout;
-	tty->stderr = stderr;
 
 	result.tty = tty;
 
 	ret:
 	return result;
 
-	err:
+	err_free:
 	free(tty);
 	goto ret;
 }
@@ -76,7 +70,7 @@ MOSAIC_EXPORT MosaicTtyInitResult tty_init() {
 		goto err;
 	}
 
-	result = tty_initWithHandles(conin, conout, false, conout, stdin, stdout, stderr);
+	result = tty_initWithHandles(conin, conout, conout, false);
 
 	MosaicTty *tty = result.tty;
 	MosaicTty *expected = NULL;
@@ -116,7 +110,7 @@ MOSAIC_EXPORT MosaicIoResult tty_readWithTimeout(
 	MosaicIoResult result = {};
 
 	DWORD waitResult;
-	HANDLE waitHandles[2] = { tty->conin, tty->interrupt_event };
+	HANDLE waitHandles[2] = { tty->conin, tty->conin_interrupt_event };
 
 	loop:
 	waitResult = WaitForMultipleObjects(2, waitHandles, FALSE, timeoutMillis);
@@ -177,7 +171,7 @@ MOSAIC_EXPORT MosaicIoResult tty_readWithTimeout(
 }
 
 MOSAIC_EXPORT uint32_t tty_interruptRead(MosaicTty *tty) {
-	return likely(SetEvent(tty->interrupt_event) != 0)
+	return likely(SetEvent(tty->conin_interrupt_event) != 0)
 		? 0
 		: GetLastError();
 }
@@ -193,32 +187,6 @@ MOSAIC_EXPORT MosaicIoResult tty_write(MosaicTty *tty, uint8_t *buffer, int coun
 	}
 
 	return result;
-}
-
-MosaicTtyIsTtyResult tty_handle_is_tty(HANDLE h) {
-	MosaicTtyIsTtyResult result = {};
-	DWORD type = GetFileType(h);
-	if (type == FILE_TYPE_CHAR) {
-		result.is_tty = true;
-	} else if (type == FILE_TYPE_UNKNOWN) {
-		DWORD error = GetLastError();
-		if (error != NO_ERROR) {
-			result.error = error;
-		}
-	}
-	return result;
-}
-
-MOSAIC_EXPORT MosaicTtyIsTtyResult tty_stdin_is_tty(MosaicTty *tty) {
-	return tty_handle_is_tty(tty->stdin);
-}
-
-MOSAIC_EXPORT MosaicTtyIsTtyResult tty_stdout_is_tty(MosaicTty *tty) {
-	return tty_handle_is_tty(tty->stdout);
-}
-
-MOSAIC_EXPORT MosaicTtyIsTtyResult tty_stderr_is_tty(MosaicTty *tty) {
-	return tty_handle_is_tty(tty->stderr);
 }
 
 MOSAIC_EXPORT uint32_t tty_enableRawMode(MosaicTty *tty) {
@@ -341,7 +309,7 @@ MOSAIC_EXPORT uint32_t tty_reset(MosaicTty *tty) {
 MOSAIC_EXPORT uint32_t tty_free(MosaicTty *tty) {
 	uint32_t result = 0;
 
-	if (unlikely(CloseHandle(tty->interrupt_event) == 0)) {
+	if (unlikely(CloseHandle(tty->conin_interrupt_event) == 0)) {
 		result = GetLastError();
 	}
 

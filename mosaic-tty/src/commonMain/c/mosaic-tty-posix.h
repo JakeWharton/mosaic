@@ -9,15 +9,12 @@ typedef struct MosaicTtyImpl {
 	int fd;
 	int interrupt_fd_reader;
 	int interrupt_fd_writer;
-	int stdin_fd;
-	int stdout_fd;
-	int stderr_fd;
 	MosaicTtyCallback *callback;
 	bool sigwinch;
 	struct termios *saved;
 } MosaicTtyImpl;
 
-MosaicTtyInitResult tty_initWithFd(int ttyFd, int stdinFd, int stdoutFd, int stderrFd);
+MosaicTtyInitResult tty_initWithFd(int ttyFd);
 
 MosaicIoResult tty_readInternal(
 	int fd,

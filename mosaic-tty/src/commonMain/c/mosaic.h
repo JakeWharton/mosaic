@@ -1,6 +1,7 @@
 #ifndef MOSAIC_H
 #define MOSAIC_H
 
+#include "mosaic-streams.h"
 #include "mosaic-tty.h"
 #include "mosaic-test-tty.h"
 

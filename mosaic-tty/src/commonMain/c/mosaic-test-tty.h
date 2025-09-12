@@ -17,13 +17,19 @@ typedef struct MosaicTestTtyInitResult {
 
 MOSAIC_EXPORT MosaicTestTtyInitResult testTty_init(bool stdinIsTty, bool stdoutIsTty, bool stderrIsTty);
 MOSAIC_EXPORT MosaicTty *testTty_getTty(MosaicTestTty *testTty);
+MOSAIC_EXPORT MosaicStreams *testTty_getStreams(MosaicTestTty *testTty);
+
 MOSAIC_EXPORT MosaicIoResult testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int count);
+
 MOSAIC_EXPORT MosaicIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffer, int count);
 MOSAIC_EXPORT uint32_t testTty_interruptRead(MosaicTestTty *testTty);
+
 MOSAIC_EXPORT uint32_t testTty_resize(MosaicTestTty *testTty, int columns, int rows, int width, int height);
+
 MOSAIC_EXPORT uint32_t testTty_sendFocusEvent(MosaicTestTty *testTty, bool focused);
 MOSAIC_EXPORT uint32_t testTty_sendKeyEvent(MosaicTestTty *testTty);
 MOSAIC_EXPORT uint32_t testTty_sendMouseEvent(MosaicTestTty *testTty);
+
 MOSAIC_EXPORT uint32_t testTty_free(MosaicTestTty *testTty);
 
 #endif // MOSAIC_TEST_TTY_H
