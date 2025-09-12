@@ -7,6 +7,7 @@ import kotlinx.cinterop.usePinned
 
 public actual class TestTty private constructor(
 	private var ptr: CPointer<MosaicTestTty>?,
+	public actual val streams: StandardStreams,
 	public actual val tty: Tty,
 ) : AutoCloseable {
 	public actual companion object {
@@ -27,9 +28,11 @@ public actual class TestTty private constructor(
 				throw OutOfMemoryError()
 			}
 
+			val streamsPtr = testTty_getStreams(testTtyPtr)!!
+			val streams = StandardStreams(streamsPtr)
 			val ttyPtr = testTty_getTty(testTtyPtr)!!
 			val tty = Tty(ttyPtr)
-			return TestTty(testTtyPtr, tty)
+			return TestTty(testTtyPtr, streams, tty)
 		}
 	}
 

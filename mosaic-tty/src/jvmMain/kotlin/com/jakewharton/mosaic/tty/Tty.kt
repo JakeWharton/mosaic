@@ -23,21 +23,6 @@ public actual class Tty internal constructor(
 	/** Write to the TTY using a regular [OutputStream]. */
 	public fun asOutputStream(): OutputStream = TtyOutputStream(this)
 
-	@Throws(IOException::class)
-	public actual fun isStdinTty(): Boolean {
-		return Jni.ttyStdinIsTty(ttyPtr)
-	}
-
-	@Throws(IOException::class)
-	public actual fun isStdoutTty(): Boolean {
-		return Jni.ttyStdoutIsTty(ttyPtr)
-	}
-
-	@Throws(IOException::class)
-	public actual fun isStderrTty(): Boolean {
-		return Jni.ttyStderrIsTty(ttyPtr)
-	}
-
 	private var callbackPtr = 0L
 
 	public actual fun setCallback(callback: Callback?) {

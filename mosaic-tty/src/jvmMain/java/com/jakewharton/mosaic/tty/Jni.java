@@ -5,17 +5,21 @@ final class Jni {
 		NativeLibrary.ensureLoaded();
 	}
 
+	static native long streamsInit();
+
+	static native boolean streamsInputIsTty(long streamsPtr);
+
+	static native boolean streamsOutputIsTty(long streamsPtr);
+
+	static native boolean streamsErrorIsTty(long streamsPtr);
+
+	static native void streamsFree(long streamsPtr);
+
 	static native long ttyCallbackInit(Tty.Callback callback);
 
 	static native void ttyCallbackFree(long callbackPtr);
 
 	static native long ttyInit();
-
-	static native boolean ttyStdinIsTty(long ttyPtr);
-
-	static native boolean ttyStdoutIsTty(long ttyPtr);
-
-	static native boolean ttyStderrIsTty(long ttyPtr);
 
 	static native void ttySetCallback(long ttyPtr, long callbackPtr);
 
@@ -58,6 +62,8 @@ final class Jni {
 	static native void ttyFree(long ttyPtr);
 
 	static native long testTtyInit(boolean stdinIsTty, boolean stdoutIsTty, boolean stderrIsTty);
+
+	static native long testTtyGetStreams(long testTtyPtr);
 
 	static native long testTtyGetTty(long testTtyPtr);
 

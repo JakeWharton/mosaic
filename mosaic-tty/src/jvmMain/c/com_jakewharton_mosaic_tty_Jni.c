@@ -18,6 +18,87 @@ static void throwIoe(JNIEnv *env, uint32_t error) {
 	(*env)->ThrowNew(env, ioe, message);
 }
 
+static void throwOom(JNIEnv *env) {
+	jclass oom = (*env)->FindClass(env, "java/lang/OutOfMemoryException");
+	(*env)->ThrowNew(env, oom, NULL);
+}
+
+JNIEXPORT jlong JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_streamsInit(
+	JNIEnv *env,
+	jclass type UNUSED
+) {
+	MosaicStreamsInitResult result = mosaic_streams_init();
+	if (likely(result.streams)) {
+		return (jlong) result.streams;
+	}
+
+	if (result.error) {
+		throwIoe(env, result.error);
+	} else {
+		throwOom(env);
+	}
+	return 0; // Unused.
+}
+
+JNIEXPORT jboolean JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_streamsInputIsTty(
+	JNIEnv *env,
+	jclass type UNUSED,
+	jlong streamsOpaque
+) {
+	MosaicStreams *streams = (MosaicStreams *) streamsOpaque;
+	MosaicStreamsTtyResult result = mosaic_streams_is_stdin_tty(streams);
+	if (likely(result.error == 0)) {
+		return result.is_tty;
+	}
+	throwIoe(env, result.error);
+	return false; // Unused.
+}
+
+JNIEXPORT jboolean JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_streamsOutputIsTty(
+	JNIEnv *env,
+	jclass type UNUSED,
+	jlong streamsOpaque
+) {
+	MosaicStreams *streams = (MosaicStreams *) streamsOpaque;
+	MosaicStreamsTtyResult result = mosaic_streams_is_stdout_tty(streams);
+	if (likely(result.error == 0)) {
+		return result.is_tty;
+	}
+	throwIoe(env, result.error);
+	return false; // Unused.
+}
+
+JNIEXPORT jboolean JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_streamsErrorIsTty(
+	JNIEnv *env,
+	jclass type UNUSED,
+	jlong streamsOpaque
+) {
+	MosaicStreams *streams = (MosaicStreams *) streamsOpaque;
+	MosaicStreamsTtyResult result = mosaic_streams_is_stderr_tty(streams);
+	if (likely(result.error == 0)) {
+		return result.is_tty;
+	}
+	throwIoe(env, result.error);
+	return false; // Unused.
+}
+
+JNIEXPORT void JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_streamsFree(
+	JNIEnv *env,
+	jclass type UNUSED,
+	jlong streamsOpaque
+) {
+	MosaicStreams *streams = (MosaicStreams *) streamsOpaque;
+	uint32_t error = mosaic_streams_free(streams);
+	if (unlikely(error)) {
+		throwIoe(env, error);
+	}
+}
+
 typedef struct MosaicJniTtyCallback {
 	JNIEnv *env;
 	jobject instance;
@@ -156,55 +237,9 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyInit(
 	} else if (result.error) {
 		throwIoe(env, result.error);
 	} else {
-		jclass ise = (*env)->FindClass(env, "java/lang/OutOfMemoryException");
-		(*env)->ThrowNew(env, ise, NULL);
+		throwOom(env);
 	}
 	return 0; // Unused.
-}
-
-JNIEXPORT jboolean JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_ttyStdinIsTty(
-	JNIEnv *env,
-	jclass type UNUSED,
-	jlong ttyOpaque
-) {
-	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	MosaicTtyIsTtyResult result = tty_stdin_is_tty(tty);
-	if (likely(result.error == 0)) {
-		return result.is_tty;
-	}
-	throwIoe(env, result.error);
-	return false; // Unused.
-}
-
-JNIEXPORT jboolean JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_ttyStdoutIsTty(
-	JNIEnv *env,
-	jclass type UNUSED,
-	jlong ttyOpaque
-) {
-	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	MosaicTtyIsTtyResult result = tty_stdout_is_tty(tty);
-	if (likely(result.error == 0)) {
-		return result.is_tty;
-	}
-	throwIoe(env, result.error);
-	return false; // Unused.
-}
-
-JNIEXPORT jboolean JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_ttyStderrIsTty(
-	JNIEnv *env,
-	jclass type UNUSED,
-	jlong ttyOpaque
-) {
-	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	MosaicTtyIsTtyResult result = tty_stderr_is_tty(tty);
-	if (likely(result.error == 0)) {
-		return result.is_tty;
-	}
-	throwIoe(env, result.error);
-	return false; // Unused.
 }
 
 JNIEXPORT void JNICALL
@@ -419,8 +454,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyInit(
 	} else if (result.error) {
 		throwIoe(env, result.error);
 	} else {
-		jclass ise = (*env)->FindClass(env, "java/lang/OutOfMemoryException");
-		(*env)->ThrowNew(env, ise, NULL);
+		throwOom(env);
 	}
 	return 0; // Unused
 }
@@ -561,6 +595,16 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyGetTty(
 ) {
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
 	return (jlong) testTty_getTty(testTty);
+}
+
+JNIEXPORT jlong JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_testTtyGetStreams(
+	JNIEnv *env UNUSED,
+	jclass type UNUSED,
+	jlong testTtyOpaque
+) {
+	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
+	return (jlong) testTty_getStreams(testTty);
 }
 
 JNIEXPORT void JNICALL

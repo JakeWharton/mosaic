@@ -1,10 +1,12 @@
 package com.jakewharton.mosaic.tty
 
+import com.jakewharton.mosaic.tty.Jni.testTtyGetStreams
 import com.jakewharton.mosaic.tty.Jni.testTtyGetTty
 import com.jakewharton.mosaic.tty.Jni.testTtyInit
 
 public actual class TestTty private constructor(
 	private var testTtyPtr: Long,
+	public actual val streams: StandardStreams,
 	public actual val tty: Tty,
 ) : AutoCloseable {
 	public actual companion object {
@@ -16,9 +18,11 @@ public actual class TestTty private constructor(
 			stderrIsTty: Boolean,
 		): TestTty {
 			val testTtyPtr = testTtyInit(stdinIsTty, stdoutIsTty, stderrIsTty)
+			val streamsPtr = testTtyGetStreams(testTtyPtr)
+			val streams = StandardStreams(streamsPtr)
 			val ttyPtr = testTtyGetTty(testTtyPtr)
 			val tty = Tty(ttyPtr)
-			return TestTty(testTtyPtr, tty)
+			return TestTty(testTtyPtr, streams, tty)
 		}
 	}
 

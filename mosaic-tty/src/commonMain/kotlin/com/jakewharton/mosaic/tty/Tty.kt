@@ -14,15 +14,6 @@ public expect class Tty : AutoCloseable {
 		public fun tryBind(): Tty?
 	}
 
-	/** Returns true if the standard input stream is a TTY as opposed to a file, pipe, etc. */
-	public fun isStdinTty(): Boolean
-
-	/** Returns true if the standard output stream is a TTY as opposed to a file, pipe, etc. */
-	public fun isStdoutTty(): Boolean
-
-	/** Returns true if the standard error stream is a TTY as opposed to a file, pipe, etc. */
-	public fun isStderrTty(): Boolean
-
 	/**
 	 * Set or clear the callback used for reporting events about the terminal using platform-specific
 	 * integration. The callback may be invoked on any thread and must never throw an exception.

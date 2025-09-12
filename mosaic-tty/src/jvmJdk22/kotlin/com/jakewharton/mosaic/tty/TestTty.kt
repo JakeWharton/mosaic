@@ -1,6 +1,7 @@
 package com.jakewharton.mosaic.tty
 
 import com.jakewharton.mosaic.tty.Libmosaic.testTty_free
+import com.jakewharton.mosaic.tty.Libmosaic.testTty_getStreams
 import com.jakewharton.mosaic.tty.Libmosaic.testTty_getTty
 import com.jakewharton.mosaic.tty.Libmosaic.testTty_init
 import com.jakewharton.mosaic.tty.Libmosaic.testTty_interruptRead
@@ -16,6 +17,7 @@ import java.lang.foreign.ValueLayout
 
 public class TestTty private constructor(
 	private var ptr: MemorySegment,
+	public val streams: StandardStreams,
 	public val tty: Tty,
 ) : AutoCloseable {
 	public companion object {
@@ -30,9 +32,11 @@ public class TestTty private constructor(
 			val result = testTty_init(Arena.global(), stdinIsTty, stdoutIsTty, stderrIsTty)
 			val testTtyPtr = MosaicTestTtyInitResult.testTty(result)
 			if (testTtyPtr != MemorySegment.NULL) {
+				val streamsPtr = testTty_getStreams(testTtyPtr)
+				val streams = StandardStreams(streamsPtr)
 				val ttyPtr = testTty_getTty(testTtyPtr)
 				val tty = Tty(ttyPtr)
-				return TestTty(testTtyPtr, tty)
+				return TestTty(testTtyPtr, streams, tty)
 			}
 			if (MosaicTestTtyInitResult.already_bound(result)) {
 				throw IllegalStateException("TestTty or Tty already bound")

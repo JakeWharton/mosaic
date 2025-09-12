@@ -1,8 +1,22 @@
+public final class com/jakewharton/mosaic/tty/StandardStreams : java/lang/AutoCloseable {
+	public static final field Companion Lcom/jakewharton/mosaic/tty/StandardStreams$Companion;
+	public static final fun bind ()Lcom/jakewharton/mosaic/tty/StandardStreams;
+	public fun close ()V
+	public final fun isErrorTty ()Z
+	public final fun isInputTty ()Z
+	public final fun isOutputTty ()Z
+}
+
+public final class com/jakewharton/mosaic/tty/StandardStreams$Companion {
+	public final fun bind ()Lcom/jakewharton/mosaic/tty/StandardStreams;
+}
+
 public final class com/jakewharton/mosaic/tty/TestTty : java/lang/AutoCloseable {
 	public static final field Companion Lcom/jakewharton/mosaic/tty/TestTty$Companion;
-	public synthetic fun <init> (JLcom/jakewharton/mosaic/tty/Tty;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (JLcom/jakewharton/mosaic/tty/StandardStreams;Lcom/jakewharton/mosaic/tty/Tty;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public static final fun bind (ZZZ)Lcom/jakewharton/mosaic/tty/TestTty;
 	public fun close ()V
+	public final fun getStreams ()Lcom/jakewharton/mosaic/tty/StandardStreams;
 	public final fun getTty ()Lcom/jakewharton/mosaic/tty/Tty;
 	public final fun interruptRead ()V
 	public final fun read ([BII)I
@@ -27,9 +41,6 @@ public final class com/jakewharton/mosaic/tty/Tty : java/lang/AutoCloseable {
 	public final fun enableRawMode ()V
 	public final fun enableWindowResizeEvents ()V
 	public final fun interruptRead ()V
-	public final fun isStderrTty ()Z
-	public final fun isStdinTty ()Z
-	public final fun isStdoutTty ()Z
 	public final fun read ([BII)I
 	public final fun readWithTimeout ([BIII)I
 	public final fun reset ()V

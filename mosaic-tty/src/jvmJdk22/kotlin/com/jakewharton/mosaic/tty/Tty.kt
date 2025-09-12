@@ -10,9 +10,6 @@ import com.jakewharton.mosaic.tty.Libmosaic.tty_read
 import com.jakewharton.mosaic.tty.Libmosaic.tty_readWithTimeout
 import com.jakewharton.mosaic.tty.Libmosaic.tty_reset
 import com.jakewharton.mosaic.tty.Libmosaic.tty_setCallback
-import com.jakewharton.mosaic.tty.Libmosaic.tty_stderr_is_tty
-import com.jakewharton.mosaic.tty.Libmosaic.tty_stdin_is_tty
-import com.jakewharton.mosaic.tty.Libmosaic.tty_stdout_is_tty
 import com.jakewharton.mosaic.tty.Libmosaic.tty_write
 import java.io.InputStream
 import java.io.OutputStream
@@ -50,42 +47,6 @@ public class Tty internal constructor(
 	public fun asInputStream(): InputStream = TtyInputStream(this)
 
 	public fun asOutputStream(): OutputStream = TtyOutputStream(this)
-
-	@Throws(IOException::class)
-	public fun isStdinTty(): Boolean {
-		Arena.ofConfined().use { arena ->
-			val result = tty_stdin_is_tty(arena, ttyPtr)
-			val error = MosaicTtyIsTtyResult.error(result)
-			if (error == 0) {
-				return MosaicTtyIsTtyResult.is_tty(result)
-			}
-			throwIoe(error)
-		}
-	}
-
-	@Throws(IOException::class)
-	public fun isStdoutTty(): Boolean {
-		Arena.ofConfined().use { arena ->
-			val result = tty_stdout_is_tty(arena, ttyPtr)
-			val error = MosaicTtyIsTtyResult.error(result)
-			if (error == 0) {
-				return MosaicTtyIsTtyResult.is_tty(result)
-			}
-			throwIoe(error)
-		}
-	}
-
-	@Throws(IOException::class)
-	public fun isStderrTty(): Boolean {
-		Arena.ofConfined().use { arena ->
-			val result = tty_stderr_is_tty(arena, ttyPtr)
-			val error = MosaicTtyIsTtyResult.error(result)
-			if (error == 0) {
-				return MosaicTtyIsTtyResult.is_tty(result)
-			}
-			throwIoe(error)
-		}
-	}
 
 	private var callbackArena: Arena? = null
 
