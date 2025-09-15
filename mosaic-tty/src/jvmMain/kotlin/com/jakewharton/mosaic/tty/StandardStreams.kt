@@ -26,6 +26,31 @@ public actual class StandardStreams internal constructor(
 	}
 
 	@Throws(IOException::class)
+	public actual fun readInput(buffer: ByteArray, offset: Int, count: Int): Int {
+		return Jni.streamsReadInput(ptr, buffer, offset, count)
+	}
+
+	@Throws(IOException::class)
+	public actual fun readInputWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
+		return Jni.streamsReadInputWithTimeout(ptr, buffer, offset, count, timeoutMillis)
+	}
+
+	@Throws(IOException::class)
+	public actual fun interruptInputRead() {
+		return Jni.streamsInterruptInputRead(ptr)
+	}
+
+	@Throws(IOException::class)
+	public actual fun writeOutput(buffer: ByteArray, offset: Int, count: Int): Int {
+		return Jni.streamsWriteOutput(ptr, buffer, offset, count)
+	}
+
+	@Throws(IOException::class)
+	public actual fun writeError(buffer: ByteArray, offset: Int, count: Int): Int {
+		return Jni.streamsWriteError(ptr, buffer, offset, count)
+	}
+
+	@Throws(IOException::class)
 	actual override fun close() {
 		val ptr = ptr
 		if (ptr != 0L) {

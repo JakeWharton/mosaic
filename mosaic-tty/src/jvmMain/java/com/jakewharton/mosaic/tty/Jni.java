@@ -13,6 +13,37 @@ final class Jni {
 
 	static native boolean streamsErrorIsTty(long streamsPtr);
 
+	static native int streamsReadInput(
+		long streamsPtr,
+		byte[] buffer,
+		int offset,
+		int count
+	);
+
+	static native int streamsReadInputWithTimeout(
+		long streamsPtr,
+		byte[] buffer,
+		int offset,
+		int count,
+		int timeout
+	);
+
+	static native void streamsInterruptInputRead(long streamsPtr);
+
+	static native int streamsWriteOutput(
+		long streamsPtr,
+		byte[] buffer,
+		int offset,
+		int count
+	);
+
+	static native int streamsWriteError(
+		long streamsPtr,
+		byte[] buffer,
+		int offset,
+		int count
+	);
+
 	static native void streamsFree(long streamsPtr);
 
 	static native long ttyCallbackInit(Tty.Callback callback);

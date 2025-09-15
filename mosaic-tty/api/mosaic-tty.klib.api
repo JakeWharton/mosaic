@@ -12,9 +12,14 @@ final class com.jakewharton.mosaic.tty/IOException : kotlin/Exception { // com.j
 
 final class com.jakewharton.mosaic.tty/StandardStreams : kotlin/AutoCloseable { // com.jakewharton.mosaic.tty/StandardStreams|null[0]
     final fun close() // com.jakewharton.mosaic.tty/StandardStreams.close|close(){}[0]
+    final fun interruptInputRead() // com.jakewharton.mosaic.tty/StandardStreams.interruptInputRead|interruptInputRead(){}[0]
     final fun isErrorTty(): kotlin/Boolean // com.jakewharton.mosaic.tty/StandardStreams.isErrorTty|isErrorTty(){}[0]
     final fun isInputTty(): kotlin/Boolean // com.jakewharton.mosaic.tty/StandardStreams.isInputTty|isInputTty(){}[0]
     final fun isOutputTty(): kotlin/Boolean // com.jakewharton.mosaic.tty/StandardStreams.isOutputTty|isOutputTty(){}[0]
+    final fun readInput(kotlin/ByteArray, kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.tty/StandardStreams.readInput|readInput(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
+    final fun readInputWithTimeout(kotlin/ByteArray, kotlin/Int, kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.tty/StandardStreams.readInputWithTimeout|readInputWithTimeout(kotlin.ByteArray;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
+    final fun writeError(kotlin/ByteArray, kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.tty/StandardStreams.writeError|writeError(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
+    final fun writeOutput(kotlin/ByteArray, kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.tty/StandardStreams.writeOutput|writeOutput(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
 
     final object Companion { // com.jakewharton.mosaic.tty/StandardStreams.Companion|null[0]
         final fun bind(): com.jakewharton.mosaic.tty/StandardStreams // com.jakewharton.mosaic.tty/StandardStreams.Companion.bind|bind(){}[0]

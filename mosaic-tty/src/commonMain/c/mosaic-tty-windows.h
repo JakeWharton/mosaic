@@ -28,4 +28,6 @@ MosaicTtyInitResult tty_initWithHandles(
 	bool conoutForWriteFake
 );
 
+MosaicIoResult tty_writeInternal(HANDLE h, uint8_t *buffer, int count);
+
 #endif // MOSAIC_TTY_WINDOWS_H

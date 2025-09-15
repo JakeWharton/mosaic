@@ -1,9 +1,11 @@
 #if defined(_WIN32)
 
 #include "mosaic-streams-windows.h"
+#include "mosaic-tty-windows.h"
 
 typedef struct MosaicStreamsImpl {
 	HANDLE stdin;
+	HANDLE stdin_interrupt_event;
 	HANDLE stdout;
 	HANDLE stderr;
 } MosaicStreamsImpl;
@@ -17,7 +19,14 @@ MosaicStreamsInitResult mosaic_streams_init_internal(HANDLE stdin, HANDLE stdout
 		goto ret;
 	}
 
+	HANDLE stdinInterruptEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+	if (unlikely(stdinInterruptEvent == NULL)) {
+		result.error = GetLastError();
+		goto err_free;
+	}
+
 	streams->stdin = stdin;
+	streams->stdin_interrupt_event = stdinInterruptEvent;
 	streams->stdout = stdout;
 	streams->stderr = stderr;
 
@@ -25,6 +34,10 @@ MosaicStreamsInitResult mosaic_streams_init_internal(HANDLE stdin, HANDLE stdout
 
 	ret:
 	return result;
+
+	err_free:
+	free(streams);
+	goto ret;
 }
 
 MOSAIC_EXPORT MosaicStreamsInitResult mosaic_streams_init() {
@@ -76,9 +89,61 @@ MOSAIC_EXPORT MosaicStreamsTtyResult mosaic_streams_is_stderr_tty(MosaicStreams 
 	return mosaic_streams_is_tty(streams->stderr);
 }
 
+MOSAIC_EXPORT MosaicIoResult mosaic_streams_read_input(MosaicStreams *streams, uint8_t *buffer, int count) {
+	return mosaic_streams_read_input_with_timeout(streams, buffer, count, INFINITE);
+}
+
+MOSAIC_EXPORT MosaicIoResult mosaic_streams_read_input_with_timeout(MosaicStreams *streams, uint8_t *buffer, int count, int timeoutMillis) {
+	MosaicIoResult result = {};
+
+	HANDLE waitHandles[2] = { streams->stdin, streams->stdin_interrupt_event };
+
+	DWORD waitResult = WaitForMultipleObjects(2, waitHandles, FALSE, timeoutMillis);
+	if (likely(waitResult == WAIT_OBJECT_0)) {
+		DWORD c;
+		if (!ReadFile(streams->stdin, buffer, count, &c, NULL)) {
+			goto err;
+		}
+		result.count = c;
+	} else if (unlikely(waitResult == WAIT_FAILED)) {
+		goto err;
+	}
+	// Else return a count of 0 because either:
+	// - The interrupt event was selected (which auto resets its state).
+	// - The user-supplied, non-infinite timeout ran out.
+
+	ret:
+	return result;
+
+	err:
+	result.error = GetLastError();
+	goto ret;
+}
+
+MOSAIC_EXPORT uint32_t mosaic_streams_interrupt_input_read(MosaicStreams *streams) {
+	return likely(SetEvent(streams->stdin_interrupt_event) != 0)
+		? 0
+		: GetLastError();
+}
+
+MOSAIC_EXPORT MosaicIoResult mosaic_streams_write_output(MosaicStreams *streams, uint8_t *buffer, int count) {
+	return tty_writeInternal(streams->stdout, buffer, count);
+}
+
+MOSAIC_EXPORT MosaicIoResult mosaic_streams_write_error(MosaicStreams *streams, uint8_t *buffer, int count) {
+	return tty_writeInternal(streams->stderr, buffer, count);
+}
+
 uint32_t mosaic_streams_free(MosaicStreams *streams) {
+	DWORD result = 0;
+
+	if (unlikely(CloseHandle(streams->stdin_interrupt_event) == 0)) {
+		result = GetLastError();
+	}
+
 	free(streams);
-	return 0;
+
+	return result;
 }
 
 #endif
