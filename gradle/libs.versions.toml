@@ -16,8 +16,8 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 kotlinx-io-core = "org.jetbrains.kotlinx:kotlinx-io-core:0.8.0"
 
 androidx-annotation = "androidx.annotation:annotation:1.9.1"
-androidx-collection = { module = "org.jetbrains.compose.collection-internal:collection", version.ref = "jetbrains-compose" }
-androidx-compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "jetbrains-compose" }
+androidx-collection = "androidx.collection:collection:1.5.0"
+androidx-compose-runtime = "androidx.compose.runtime:runtime:1.9.1"
 androidx-lifecycle-compose = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose:2.9.3"
 
 mavenPublishGradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.34.0"
