@@ -42,3 +42,11 @@ kotlin {
 	compilerOptions.freeCompilerArgs.add('-Xnon-local-break-continue')
 	compilerOptions.freeCompilerArgs.add('-Xwhen-guards')
 }
+
+dependencies {
+	constraints {
+		commonMainApi("org.jetbrains.compose.runtime:runtime:1.9.0") {
+			because('AndroidX publishes multiplatform runtime. The JetBrains artifact is now empty.')
+		}
+	}
+}
