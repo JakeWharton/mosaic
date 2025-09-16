@@ -176,17 +176,21 @@ MOSAIC_EXPORT uint32_t tty_interruptRead(MosaicTty *tty) {
 		: GetLastError();
 }
 
-MOSAIC_EXPORT MosaicIoResult tty_write(MosaicTty *tty, uint8_t *buffer, int count) {
+MosaicIoResult tty_writeInternal(HANDLE h, uint8_t *buffer, int count) {
 	MosaicIoResult result = {};
 
 	DWORD written;
-	if (WriteFile(tty->conout_for_write, buffer, count, &written, NULL)) {
+	if (WriteFile(h, buffer, count, &written, NULL)) {
 		result.count = written;
 	} else {
 		result.error = GetLastError();
 	}
 
 	return result;
+}
+
+MOSAIC_EXPORT MosaicIoResult tty_write(MosaicTty *tty, uint8_t *buffer, int count) {
+	return tty_writeInternal(tty->conout_for_write, buffer, count);
 }
 
 MOSAIC_EXPORT uint32_t tty_enableRawMode(MosaicTty *tty) {

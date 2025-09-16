@@ -1,6 +1,7 @@
 #if defined(__APPLE__) || defined(__linux__)
 
 #include "mosaic-streams-posix.h"
+#include "mosaic-tty-posix.h"
 
 #include <errno.h>
 #include <stdlib.h>
@@ -8,6 +9,8 @@
 
 typedef struct MosaicStreamsImpl {
 	int stdin;
+	int interrupt_stdin_reader;
+	int interrupt_stdin_writer;
 	int stdout;
 	int stderr;
 } MosaicStreamsImpl;
@@ -21,7 +24,15 @@ MosaicStreamsInitResult mosaic_streams_init_internal(int stdin, int stdout, int 
 		goto ret;
 	}
 
+	int interruptPipe[2];
+	if (unlikely(pipe(interruptPipe)) != 0) {
+		result.error = errno;
+		goto err_free;
+	}
+
 	streams->stdin = stdin;
+	streams->interrupt_stdin_reader = interruptPipe[0];
+	streams->interrupt_stdin_writer = interruptPipe[1];
 	streams->stdout = stdout;
 	streams->stderr = stderr;
 
@@ -29,6 +40,10 @@ MosaicStreamsInitResult mosaic_streams_init_internal(int stdin, int stdout, int 
 
 	ret:
 	return result;
+
+	err_free:
+	free(streams);
+	goto ret;
 }
 
 MosaicStreamsInitResult mosaic_streams_init() {
@@ -58,6 +73,32 @@ MosaicStreamsTtyResult mosaic_streams_is_stdout_tty(MosaicStreams *streams) {
 
 MosaicStreamsTtyResult mosaic_streams_is_stderr_tty(MosaicStreams *streams) {
 	return mosaic_streams_is_tty(streams->stderr);
+}
+
+MosaicIoResult mosaic_streams_read_input(MosaicStreams *streams, uint8_t *buffer, int count) {
+	return tty_readInternal(streams->stdin, streams->interrupt_stdin_reader, buffer, count, NULL);
+}
+
+MosaicIoResult mosaic_streams_read_input_with_timeout(MosaicStreams *streams, uint8_t *buffer, int count, int timeoutMillis) {
+	struct timeval timeout;
+	timeout.tv_sec = 0;
+	timeout.tv_usec = timeoutMillis * 1000;
+
+	return tty_readInternal(streams->stdin, streams->interrupt_stdin_reader, buffer, count, &timeout);
+}
+
+uint32_t mosaic_streams_interrupt_input_read(MosaicStreams *streams) {
+	uint8_t space = ' ';
+	MosaicIoResult result = tty_writeInternal(streams->interrupt_stdin_writer, &space, 1);
+	return result.error;
+}
+
+MosaicIoResult mosaic_streams_write_output(MosaicStreams *streams, uint8_t *buffer, int count) {
+	return tty_writeInternal(streams->stdout, buffer, count);
+}
+
+MosaicIoResult mosaic_streams_write_error(MosaicStreams *streams, uint8_t *buffer, int count) {
+	return tty_writeInternal(streams->stderr, buffer, count);
 }
 
 uint32_t mosaic_streams_free(MosaicStreams *streams) {

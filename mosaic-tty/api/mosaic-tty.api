@@ -2,9 +2,14 @@ public final class com/jakewharton/mosaic/tty/StandardStreams : java/lang/AutoCl
 	public static final field Companion Lcom/jakewharton/mosaic/tty/StandardStreams$Companion;
 	public static final fun bind ()Lcom/jakewharton/mosaic/tty/StandardStreams;
 	public fun close ()V
+	public final fun interruptInputRead ()V
 	public final fun isErrorTty ()Z
 	public final fun isInputTty ()Z
 	public final fun isOutputTty ()Z
+	public final fun readInput ([BII)I
+	public final fun readInputWithTimeout ([BIII)I
+	public final fun writeError ([BII)I
+	public final fun writeOutput ([BII)I
 }
 
 public final class com/jakewharton/mosaic/tty/StandardStreams$Companion {
