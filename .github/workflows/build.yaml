@@ -49,6 +49,8 @@ jobs:
             target: macosArm64
           - os: macOS-15
             target: macosArm64
+          - os: macOS-26
+            target: macosArm64
           - os: ubuntu-22.04
             target: linuxX64
           - os: ubuntu-22.04-arm
