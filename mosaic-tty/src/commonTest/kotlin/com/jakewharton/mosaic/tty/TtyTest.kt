@@ -2,21 +2,14 @@ package com.jakewharton.mosaic.tty
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import assertk.assertions.isGreaterThan
 import assertk.assertions.isTrue
-import assertk.assertions.isZero
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Ignore
 import kotlin.test.Test
-import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.measureTime
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -39,82 +32,6 @@ class TtyTest {
 
 	private fun assertEventsEmpty() {
 		assertThat(events.isEmpty, name = "events empty").isTrue()
-	}
-
-	@Test fun readWhatWasWritten() {
-		val buffer = ByteArray(10) { 'x'.code.toByte() }
-
-		testTty.write("hello")
-		val readA = tty.read(buffer, 0, 10)
-		assertThat(readA, "readA").isEqualTo(5)
-		assertThat(buffer.decodeToString()).isEqualTo("helloxxxxx")
-
-		testTty.write("world")
-		val readB = tty.read(buffer, 0, 10)
-		assertThat(readB, "readB").isEqualTo(5)
-		assertThat(buffer.decodeToString()).isEqualTo("worldxxxxx")
-	}
-
-	@Test fun readOnlyUpToCount() {
-		val buffer = ByteArray(10) { 'x'.code.toByte() }
-
-		testTty.write("hello")
-		val read = tty.read(buffer, 0, 4)
-		assertThat(read).isEqualTo(4)
-		assertThat(buffer.decodeToString()).isEqualTo("hellxxxxxx")
-	}
-
-	@Test fun readUnderflow() {
-		val buffer = ByteArray(10) { 'x'.code.toByte() }
-
-		testTty.write("hello")
-		val read = tty.read(buffer, 0, 10)
-		assertThat(read).isEqualTo(5)
-		assertThat(buffer.decodeToString()).isEqualTo("helloxxxxx")
-	}
-
-	@Test fun readAtOffset() {
-		val buffer = ByteArray(10) { 'x'.code.toByte() }
-
-		testTty.write("hello")
-		val read = tty.read(buffer, 5, 5)
-		assertThat(read).isEqualTo(5)
-		assertThat(buffer.decodeToString()).isEqualTo("xxxxxhello")
-	}
-
-	@Test fun readCanBeInterrupted() = runTest {
-		backgroundScope.launch(Dispatchers.Default) {
-			delay(150.milliseconds)
-			tty.interruptRead()
-		}
-		val readA = tty.read(ByteArray(10), 0, 10)
-		assertThat(readA).isZero()
-
-		backgroundScope.launch(Dispatchers.Default) {
-			delay(150.milliseconds)
-			tty.interruptRead()
-		}
-		val readB = tty.read(ByteArray(10), 0, 10)
-		assertThat(readB).isZero()
-	}
-
-	@Test fun readWithTimeoutReturnsZeroOnTimeout() {
-		// Windows appears to be happy to return a few milliseconds early, so we just validate a
-		// conservative lower bound which indicates that there was at least _some_ waiting.
-
-		val readA: Int
-		val tookA = measureTime {
-			readA = tty.readWithTimeout(ByteArray(10), 0, 10, 100)
-		}
-		assertThat(readA).isZero()
-		assertThat(tookA).isGreaterThan(50.milliseconds)
-
-		val readB: Int
-		val tookB = measureTime {
-			readB = tty.readWithTimeout(ByteArray(10), 0, 10, 100)
-		}
-		assertThat(readB).isZero()
-		assertThat(tookB).isGreaterThan(50.milliseconds)
 	}
 
 	@Test fun focusEventNoCallback() {

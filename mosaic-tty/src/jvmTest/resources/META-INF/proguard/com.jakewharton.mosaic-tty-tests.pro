@@ -3,6 +3,12 @@
 	@org.junit.* public void *(...);
 }
 
+# Burst appends class-parameters to test name after an underscore.
+-keep class **.*Test_* {
+	public <init>();
+	@org.junit.* public void *(...);
+}
+
 # Gradle does A LOT of reflection to invoke JUnit. Just keep it all.
 -keep,includedescriptorclasses class org.junit.** {
 	*** *(...);
