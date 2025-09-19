@@ -35,11 +35,26 @@ public expect class TestTty : AutoCloseable {
 
 	/**
 	 * Read up to [count] bytes into [buffer] at [offset] from the PTY.
-	 * The number of bytes read will be returned.
+	 * The number of bytes read will be returned. 0 will be returned if [interruptRead] is called
+	 * while waiting for data.
 	 *
+	 * @see readWithTimeout
 	 * @see Tty.write
 	 */
 	public fun read(buffer: ByteArray, offset: Int, count: Int): Int
+
+	/**
+	 * Read up to [count] bytes into [buffer] at [offset] from the PTY.
+	 * The number of bytes read will be returned. 0 will be returned if [interruptRead] is called
+	 * while waiting for data, or if at least [timeoutMillis] have passed without data.
+	 *
+	 * @param timeoutMillis A value of 0 will perform a non-blocking read. Otherwise, valid values
+	 * are 1 to 999 which represent a maximum time (in milliseconds) to wait for data. Note: This
+	 * value is not validated.
+	 * @see read
+	 * @see Tty.write
+	 */
+	public fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int
 
 	/** Signal blocking calls to [read] to wake up and return 0. */
 	public fun interruptRead()

@@ -102,6 +102,8 @@ final class Jni {
 
 	static native int testTtyRead(long testTtyPtr, byte[] buffer, int offset, int count);
 
+	static native int testTtyReadWithTimeout(long testTtyPtr, byte[] buffer, int offset, int count, int timeoutMillis);
+
 	static native void testTtyInterruptRead(long testTtyPtr);
 
 	static native void testTtyResize(

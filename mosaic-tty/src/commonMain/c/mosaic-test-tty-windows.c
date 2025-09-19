@@ -158,7 +158,13 @@ MOSAIC_EXPORT MosaicIoResult testTty_write(MosaicTestTty *testTty, uint8_t *buff
 }
 
 MOSAIC_EXPORT MosaicIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffer, int count) {
+	return testTty_readWithTimeout(testTty, buffer, count, INFINITE);
+}
+
+MOSAIC_EXPORT MosaicIoResult testTty_readWithTimeout(MosaicTestTty *testTty, uint8_t *buffer, int count, int timeoutMillis) {
 	MosaicIoResult result = {};
+
+	ULONGLONG startMillis = GetTickCount64();
 
 	// Perform a spin loop to check for data or interrupt. We can't do a normal wait because pipes
 	// do not signal properly. Since this is only for testing, the busy wait isn't a huge deal.
@@ -177,6 +183,11 @@ MOSAIC_EXPORT MosaicIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffe
 		}
 		if (atomic_load(&testTty->conout_interrupt)) {
 			atomic_store(&testTty->conout_interrupt, false);
+			// result.count will be 0
+			break;
+		}
+		ULONGLONG elapsedMillis = GetTickCount64() - startMillis;
+		if (elapsedMillis >= (ULONGLONG) timeoutMillis) {
 			// result.count will be 0
 			break;
 		}

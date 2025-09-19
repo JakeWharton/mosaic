@@ -135,6 +135,14 @@ MosaicIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffer, int count) 
 	return tty_readInternal(testTty->parent_fd, testTty->parent_fd_interrupt_reader, buffer, count, NULL);
 }
 
+MosaicIoResult testTty_readWithTimeout(MosaicTestTty *testTty, uint8_t *buffer, int count, int timeoutMillis) {
+	struct timeval timeout;
+	timeout.tv_sec = 0;
+	timeout.tv_usec = timeoutMillis * 1000;
+
+	return tty_readInternal(testTty->parent_fd, testTty->parent_fd_interrupt_reader, buffer, count, &timeout);
+}
+
 uint32_t testTty_interruptRead(MosaicTestTty *testTty) {
 	uint8_t space = ' ';
 	MosaicIoResult result = tty_writeInternal(testTty->parent_fd_interrupt_writer, &space, 1);

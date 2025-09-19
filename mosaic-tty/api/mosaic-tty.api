@@ -25,6 +25,7 @@ public final class com/jakewharton/mosaic/tty/TestTty : java/lang/AutoCloseable 
 	public final fun getTty ()Lcom/jakewharton/mosaic/tty/Tty;
 	public final fun interruptRead ()V
 	public final fun read ([BII)I
+	public final fun readWithTimeout ([BIII)I
 	public final fun resize (IIII)V
 	public final fun sendFocusEvent (Z)V
 	public final fun sendKeyEvent ()V

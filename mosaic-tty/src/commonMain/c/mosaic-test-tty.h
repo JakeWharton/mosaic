@@ -22,6 +22,7 @@ MOSAIC_EXPORT MosaicStreams *testTty_getStreams(MosaicTestTty *testTty);
 MOSAIC_EXPORT MosaicIoResult testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int count);
 
 MOSAIC_EXPORT MosaicIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffer, int count);
+MOSAIC_EXPORT MosaicIoResult testTty_readWithTimeout(MosaicTestTty *testTty, uint8_t *buffer, int count, int timeoutMillis);
 MOSAIC_EXPORT uint32_t testTty_interruptRead(MosaicTestTty *testTty);
 
 MOSAIC_EXPORT uint32_t testTty_resize(MosaicTestTty *testTty, int columns, int rows, int width, int height);
