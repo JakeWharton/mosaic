@@ -43,10 +43,10 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-          - os: macOS-13
-            target: macosX64
           - os: macOS-14
             target: macosArm64
+          - os: macos-15-intel
+            target: macosX64
           - os: macOS-15
             target: macosArm64
           - os: macOS-26
