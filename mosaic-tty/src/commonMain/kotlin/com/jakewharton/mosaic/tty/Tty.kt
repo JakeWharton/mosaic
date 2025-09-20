@@ -25,7 +25,7 @@ public expect class Tty : AutoCloseable {
 	/**
 	 * Read up to [count] bytes into [buffer] at [offset] from the TTY.
 	 * The number of bytes read will be returned. 0 will be returned if [interruptRead] is called
-	 * while waiting for input. -1 will be returned if the TTY is not interactive.
+	 * while waiting for data. -1 will be returned if the TTY is not interactive.
 	 *
 	 * @see readWithTimeout
 	 */
@@ -34,7 +34,7 @@ public expect class Tty : AutoCloseable {
 	/**
 	 * Read up to [count] bytes into [buffer] at [offset] from the TTY.
 	 * The number of bytes read will be returned. 0 will be returned if [interruptRead] is called
-	 * while waiting for input, or if at least [timeoutMillis] have passed without data.
+	 * while waiting for data, or if at least [timeoutMillis] have passed without data.
 	 * -1 will be returned if the TTY is not interactive.
 	 *
 	 * @param timeoutMillis A value of 0 will perform a non-blocking read. Otherwise, valid values

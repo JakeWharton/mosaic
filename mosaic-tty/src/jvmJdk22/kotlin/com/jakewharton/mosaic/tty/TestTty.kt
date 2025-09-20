@@ -6,6 +6,7 @@ import com.jakewharton.mosaic.tty.Libmosaic.testTty_getTty
 import com.jakewharton.mosaic.tty.Libmosaic.testTty_init
 import com.jakewharton.mosaic.tty.Libmosaic.testTty_interruptRead
 import com.jakewharton.mosaic.tty.Libmosaic.testTty_read
+import com.jakewharton.mosaic.tty.Libmosaic.testTty_readWithTimeout
 import com.jakewharton.mosaic.tty.Libmosaic.testTty_resize
 import com.jakewharton.mosaic.tty.Libmosaic.testTty_sendFocusEvent
 import com.jakewharton.mosaic.tty.Libmosaic.testTty_sendKeyEvent
@@ -63,6 +64,18 @@ public class TestTty private constructor(
 	public fun read(buffer: ByteArray, offset: Int, count: Int): Int {
 		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
 		val result = testTty_read(Arena.global(), ptr, segment, count)
+		val error = MosaicIoResult.error(result)
+		if (error == 0) {
+			val read = MosaicIoResult.count(result)
+			MemorySegment.copy(segment, ValueLayout.JAVA_BYTE, 0L, buffer, offset, read)
+			return read
+		}
+		throwIoe(error)
+	}
+
+	public fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
+		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
+		val result = testTty_readWithTimeout(Arena.global(), ptr, segment, count, timeoutMillis)
 		val error = MosaicIoResult.error(result)
 		if (error == 0) {
 			val read = MosaicIoResult.count(result)

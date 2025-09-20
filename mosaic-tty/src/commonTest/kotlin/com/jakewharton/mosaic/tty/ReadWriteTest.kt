@@ -86,8 +86,6 @@ class ReadWriteTest(
 	}
 
 	@Test fun readWithTimeoutReturnsZeroOnTimeout() {
-		if (readerAndWriter == ReaderAndWriter.TestAndTty) return // Unsupported
-
 		// Windows appears to be happy to return a few milliseconds early, so we just validate a
 		// conservative lower bound which indicates that there was at least _some_ waiting.
 
@@ -199,7 +197,7 @@ class ReadWriteTest(
 				}
 
 				override fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
-					throw UnsupportedOperationException()
+					return testTty.readWithTimeout(buffer, offset, count, timeoutMillis)
 				}
 
 				override fun interruptRead() {

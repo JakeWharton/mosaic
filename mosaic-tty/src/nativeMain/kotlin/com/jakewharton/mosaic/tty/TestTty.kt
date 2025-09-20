@@ -58,6 +58,17 @@ public actual class TestTty private constructor(
 		}
 	}
 
+	public actual fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
+		buffer.asUByteArray().usePinned {
+			testTty_readWithTimeout(ptr, it.addressOf(offset), count, timeoutMillis).useContents {
+				if (error == 0U) {
+					return this.count
+				}
+				throwIoe(error)
+			}
+		}
+	}
+
 	public actual fun interruptRead() {
 		val error = testTty_interruptRead(ptr)
 		if (error != 0U) {

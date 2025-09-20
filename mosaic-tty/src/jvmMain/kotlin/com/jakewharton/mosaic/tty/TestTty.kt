@@ -37,6 +37,11 @@ public actual class TestTty private constructor(
 	}
 
 	@Throws(IOException::class)
+	public actual fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
+		return Jni.testTtyReadWithTimeout(testTtyPtr, buffer, offset, count, timeoutMillis)
+	}
+
+	@Throws(IOException::class)
 	public actual fun interruptRead() {
 		Jni.testTtyInterruptRead(testTtyPtr)
 	}

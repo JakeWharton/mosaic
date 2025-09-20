@@ -35,6 +35,7 @@ final class com.jakewharton.mosaic.tty/TestTty : kotlin/AutoCloseable { // com.j
     final fun close() // com.jakewharton.mosaic.tty/TestTty.close|close(){}[0]
     final fun interruptRead() // com.jakewharton.mosaic.tty/TestTty.interruptRead|interruptRead(){}[0]
     final fun read(kotlin/ByteArray, kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.tty/TestTty.read|read(kotlin.ByteArray;kotlin.Int;kotlin.Int){}[0]
+    final fun readWithTimeout(kotlin/ByteArray, kotlin/Int, kotlin/Int, kotlin/Int): kotlin/Int // com.jakewharton.mosaic.tty/TestTty.readWithTimeout|readWithTimeout(kotlin.ByteArray;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
     final fun resize(kotlin/Int, kotlin/Int, kotlin/Int, kotlin/Int) // com.jakewharton.mosaic.tty/TestTty.resize|resize(kotlin.Int;kotlin.Int;kotlin.Int;kotlin.Int){}[0]
     final fun sendFocusEvent(kotlin/Boolean) // com.jakewharton.mosaic.tty/TestTty.sendFocusEvent|sendFocusEvent(kotlin.Boolean){}[0]
     final fun sendKeyEvent() // com.jakewharton.mosaic.tty/TestTty.sendKeyEvent|sendKeyEvent(){}[0]

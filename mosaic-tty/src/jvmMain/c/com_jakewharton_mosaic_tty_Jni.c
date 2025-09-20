@@ -517,6 +517,36 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyRead(
 	return -1;
 }
 
+JNIEXPORT jint JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_testTtyReadWithTimeout(
+	JNIEnv *env,
+	jclass type UNUSED,
+	jlong testTtyOpaque,
+	jbyteArray buffer,
+	jint offset,
+	jint count,
+	jint timeoutMillis
+) {
+	jbyte *bufferElements = (*env)->GetByteArrayElements(env, buffer, NULL);
+	jbyte *bufferElementsAtOffset = bufferElements + offset;
+	// Reinterpret JVM signed bytes as unsigned.
+	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
+
+	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
+	MosaicIoResult result = testTty_readWithTimeout(testTty, nativeBufferAtOffset, count, timeoutMillis);
+
+	(*env)->ReleaseByteArrayElements(env, buffer, bufferElements, 0);
+
+	if (likely(!result.error)) {
+		return result.count;
+	}
+
+	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
+	// and should cause the program to try and exit cleanly.
+	throwIoe(env, result.error);
+	return -1;
+}
+
 JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_testTtyInterruptRead(
 	JNIEnv *env,
