@@ -43,13 +43,13 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-          - os: macOS-14
+          - os: macos-14
             target: macosArm64
           - os: macos-15-intel
             target: macosX64
-          - os: macOS-15
+          - os: macos-15
             target: macosArm64
-          - os: macOS-26
+          - os: macos-26
             target: macosArm64
           - os: ubuntu-22.04
             target: linuxX64
@@ -218,7 +218,7 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-          - os: macOS-15
+          - os: macos-15
             target: macosArm64
           - os: ubuntu-24.04
             target: linuxX64
