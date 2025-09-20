@@ -26,7 +26,7 @@ pokoGradlePlugin = "dev.drewhamilton.poko:poko-gradle-plugin:0.20.0"
 binaryCompatibilityValidatorGradlePlugin = "org.jetbrains.kotlinx:binary-compatibility-validator:0.18.1"
 cklibGradlePlugin = "co.touchlab:cklib-gradle-plugin:0.3.4"
 jextractGradlePlugin = "de.infolektuell:gradle-plugin-jextract:0.5.0"
-testDistributionGradlePlugin = "com.jakewharton.gradle:test-distribution-gradle-plugin:0.1.0"
+testDistributionGradlePlugin = "com.jakewharton.gradle:test-distribution-gradle-plugin:0.1.1"
 spotlessGradlePlugin = "com.diffplug.spotless:spotless-plugin-gradle:7.2.1"
 burstGradlePlugin = "app.cash.burst:burst-gradle-plugin:2.9.0"
 
