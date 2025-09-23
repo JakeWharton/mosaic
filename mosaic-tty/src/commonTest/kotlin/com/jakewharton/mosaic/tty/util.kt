@@ -27,16 +27,3 @@ fun Tty.read(count: Int): String {
 	}
 	return incoming.decodeToString(endIndex = count)
 }
-
-fun TestTty.read(count: Int): String {
-	var offset = 0
-	val incoming = ByteArray(1024)
-	while (offset < count) {
-		val read = read(incoming, offset, count)
-		if (read == -1) {
-			throw RuntimeException("eof")
-		}
-		offset += read
-	}
-	return incoming.decodeToString(endIndex = count)
-}
