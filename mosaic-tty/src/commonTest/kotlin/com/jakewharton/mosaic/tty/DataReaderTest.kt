@@ -2,6 +2,7 @@ package com.jakewharton.mosaic.tty
 
 import app.cash.burst.Burst
 import app.cash.burst.InterceptTest
+import app.cash.burst.burstValues
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isGreaterThan
@@ -17,20 +18,23 @@ import kotlinx.coroutines.launch
 
 @Burst
 @OptIn(DelicateCoroutinesApi::class) // For simple fire-and-forget parallelism.
-class DataReaderTest(dataPipe: DataPipe) {
+class DataReaderTest(
 	@InterceptTest
-	private val rw = dataPipe.createInterceptor()
-
+	private val data: DataReader = burstValues(
+		TtyToTestTty,
+		TestTtyToTest,
+	),
+) {
 	@Test fun readWhatWasWritten() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		rw.write("hello")
-		val readA = rw.read(buffer, 0, 10)
+		data.write("hello")
+		val readA = data.read(buffer, 0, 10)
 		assertThat(readA, "readA").isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("helloxxxxx")
 
-		rw.write("world")
-		val readB = rw.read(buffer, 0, 10)
+		data.write("world")
+		val readB = data.read(buffer, 0, 10)
 		assertThat(readB, "readB").isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("worldxxxxx")
 	}
@@ -38,20 +42,20 @@ class DataReaderTest(dataPipe: DataPipe) {
 	@Test fun readOnlyUpToCount() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		rw.write("abcdefghij")
-		val read = rw.read(buffer, 0, 5)
+		data.write("abcdefghij")
+		val read = data.read(buffer, 0, 5)
 		assertThat(read).isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("abcdexxxxx")
 
 		// Drain the buffer, otherwise resetting raw mode will hang on its flush.
-		rw.read(buffer, 0, 5)
+		data.read(buffer, 0, 5)
 	}
 
 	@Test fun readUnderflow() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		rw.write("hello")
-		val read = rw.read(buffer, 0, 10)
+		data.write("hello")
+		val read = data.read(buffer, 0, 10)
 		assertThat(read).isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("helloxxxxx")
 	}
@@ -59,8 +63,8 @@ class DataReaderTest(dataPipe: DataPipe) {
 	@Test fun readAtOffset() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		rw.write("hello")
-		val read = rw.read(buffer, 5, 5)
+		data.write("hello")
+		val read = data.read(buffer, 5, 5)
 		assertThat(read).isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("xxxxxhello")
 	}
@@ -68,16 +72,16 @@ class DataReaderTest(dataPipe: DataPipe) {
 	@Test fun readCanBeInterrupted() {
 		GlobalScope.launch(Dispatchers.Default) {
 			delay(150.milliseconds)
-			rw.interruptRead()
+			data.interruptRead()
 		}
-		val readA = rw.read(ByteArray(10), 0, 10)
+		val readA = data.read(ByteArray(10), 0, 10)
 		assertThat(readA).isZero()
 
 		GlobalScope.launch(Dispatchers.Default) {
 			delay(150.milliseconds)
-			rw.interruptRead()
+			data.interruptRead()
 		}
-		val readB = rw.read(ByteArray(10), 0, 10)
+		val readB = data.read(ByteArray(10), 0, 10)
 		assertThat(readB).isZero()
 	}
 
@@ -87,14 +91,14 @@ class DataReaderTest(dataPipe: DataPipe) {
 
 		val readA: Int
 		val tookA = measureTime {
-			readA = rw.readWithTimeout(ByteArray(10), 0, 10, 100)
+			readA = data.readWithTimeout(ByteArray(10), 0, 10, 100)
 		}
 		assertThat(readA).isZero()
 		assertThat(tookA).isGreaterThan(50.milliseconds)
 
 		val readB: Int
 		val tookB = measureTime {
-			readB = rw.readWithTimeout(ByteArray(10), 0, 10, 100)
+			readB = data.readWithTimeout(ByteArray(10), 0, 10, 100)
 		}
 		assertThat(readB).isZero()
 		assertThat(tookB).isGreaterThan(50.milliseconds)
