@@ -223,7 +223,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyInit(
 	JNIEnv *env,
 	jclass type UNUSED
 ) {
-	MosaicTtyInitResult result = tty_init();
+	MosaicTtyInitResult result = mosaic_tty_init();
 	if (likely(result.tty)) {
 		return (jlong) result.tty;
 	}
@@ -251,7 +251,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttySetCallback(
 ) {
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
 	MosaicTtyCallback *callback = (MosaicTtyCallback *) callbackOpaque;
-	tty_setCallback(tty, callback);
+	mosaic_tty_set_callback(tty, callback);
 }
 
 JNIEXPORT jint JNICALL
@@ -269,7 +269,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyRead(
 	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
 
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	MosaicIoResult result = tty_read(tty, nativeBufferAtOffset, count);
+	MosaicIoResult result = mosaic_tty_read(tty, nativeBufferAtOffset, count);
 
 	(*env)->ReleaseByteArrayElements(env, buffer, bufferElements, 0);
 
@@ -299,7 +299,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyReadWithTimeout(
 	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
 
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	MosaicIoResult result = tty_readWithTimeout(
+	MosaicIoResult result = mosaic_tty_read_with_timeout(
 		tty,
 		nativeBufferAtOffset,
 		count,
@@ -325,7 +325,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyInterruptRead(
 	jlong ttyOpaque
 ) {
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	uint32_t error = tty_interruptRead(tty);
+	uint32_t error = mosaic_tty_interrupt_read(tty);
 	if (unlikely(error)) {
 		throwIoe(env, error);
 	}
@@ -346,7 +346,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyWrite(
 	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
 
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	MosaicIoResult result = tty_write(tty, nativeBufferAtOffset, count);
+	MosaicIoResult result = mosaic_tty_write(tty, nativeBufferAtOffset, count);
 
 	(*env)->ReleaseByteArrayElements(env, buffer, bufferElements, 0);
 
@@ -367,7 +367,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyEnableRawMode(
 	jlong ttyOpaque
 ) {
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	uint32_t error = tty_enableRawMode(tty);
+	uint32_t error = mosaic_tty_enable_raw_mode(tty);
 	if (unlikely(error)) {
 		throwIoe(env, error);
 	}
@@ -380,7 +380,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyEnableWindowResizeEvents(
 	jlong ttyOpaque
 ) {
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	uint32_t error = tty_enableWindowResizeEvents(tty);
+	uint32_t error = mosaic_tty_enable_window_resize_events(tty);
 	if (unlikely(error)) {
 		throwIoe(env, error);
 	}
@@ -393,7 +393,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyCurrentSize(
 	jlong ttyOpaque
 ) {
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	MosaicTtyTerminalSizeResult result = tty_currentTerminalSize(tty);
+	MosaicTtyTerminalSizeResult result = mosaic_tty_current_terminal_size(tty);
 	if (likely(!result.error)) {
 		jintArray ints = (*env)->NewIntArray(env, 4);
 		jint *intsPtr = (*env)->GetIntArrayElements(env, ints, NULL);
@@ -416,7 +416,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyReset(
 	jlong ttyOpaque
 ) {
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	uint32_t error = tty_reset(tty);
+	uint32_t error = mosaic_tty_reset(tty);
 	if (unlikely(error)) {
 		throwIoe(env, error);
 	}
@@ -429,7 +429,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyFree(
 	jlong ttyOpaque
 ) {
 	MosaicTty *tty = (MosaicTty *) ttyOpaque;
-	uint32_t error = tty_free(tty);
+	uint32_t error = mosaic_tty_free(tty);
 	if (unlikely(error)) {
 		throwIoe(env, error);
 	}

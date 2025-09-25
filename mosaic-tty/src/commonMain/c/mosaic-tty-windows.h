@@ -21,13 +21,13 @@ typedef struct MosaicTtyImpl {
 	UINT saved_output_code_page;
 } MosaicTtyImpl;
 
-MosaicTtyInitResult tty_initWithHandles(
+MosaicTtyInitResult mosaic_tty_init_with_handles(
 	HANDLE conin,
 	HANDLE conoutForSize,
 	HANDLE conoutForWrite,
 	bool conoutForWriteFake
 );
 
-MosaicIoResult tty_writeInternal(HANDLE h, uint8_t *buffer, int count);
+MosaicIoResult mosaic_tty_write_internal(HANDLE h, uint8_t *buffer, int count);
 
 #endif // MOSAIC_TTY_WINDOWS_H

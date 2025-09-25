@@ -77,7 +77,7 @@ MOSAIC_EXPORT MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool std
 	HANDLE stdout = stdoutIsTty ? conout : conoutPipeRead;
 	HANDLE stderr = stderrIsTty ? conout : conoutPipeRead;
 
-	MosaicTtyInitResult ttyInitResult = tty_initWithHandles(conin, conout, conoutPipeWrite, true);
+	MosaicTtyInitResult ttyInitResult = mosaic_tty_init_with_handles(conin, conout, conoutPipeWrite, true);
 	if (unlikely(!ttyInitResult.tty)) {
 		result.error = ttyInitResult.error;
 		result.already_bound = ttyInitResult.already_bound;
@@ -100,7 +100,7 @@ MOSAIC_EXPORT MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool std
 	if (unlikely(atomic_flag_test_and_set(&globalTestTty))) {
 		// We initialized an instance but there already was a global instance.
 		result.testTty = NULL;
-		result.error = tty_free(ttyInitResult.tty);
+		result.error = mosaic_tty_free(ttyInitResult.tty);
 		result.already_bound = true;
 		goto err_conout_pipe;
 	}

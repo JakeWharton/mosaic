@@ -80,7 +80,7 @@ MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool stdoutIsTty, bool
 	int stdout = stdoutIsTty ? childFd : interruptPipe[0];
 	int stderr = stderrIsTty ? childFd : interruptPipe[0];
 
-	MosaicTtyInitResult ttyInitResult = tty_initWithFd(childFd);
+	MosaicTtyInitResult ttyInitResult = mosaic_tty_init_with_fd(childFd);
 	if (unlikely(!ttyInitResult.tty)) {
 		result.error = ttyInitResult.error;
 		result.already_bound = ttyInitResult.already_bound;
@@ -128,11 +128,11 @@ MosaicStreams *mosaic_test_get_streams(MosaicTestTty *testTty) {
 }
 
 MosaicIoResult mosaic_test_write(MosaicTestTty *testTty, uint8_t *buffer, int count) {
-	return tty_writeInternal(testTty->parent_fd, buffer, count);
+	return mosaic_tty_write_internal(testTty->parent_fd, buffer, count);
 }
 
 MosaicIoResult mosaic_test_read(MosaicTestTty *testTty, uint8_t *buffer, int count) {
-	return tty_readInternal(testTty->parent_fd, testTty->parent_fd_interrupt_reader, buffer, count, NULL);
+	return mosaic_tty_read_internal(testTty->parent_fd, testTty->parent_fd_interrupt_reader, buffer, count, NULL);
 }
 
 MosaicIoResult mosaic_test_read_with_timeout(MosaicTestTty *testTty, uint8_t *buffer, int count, int timeoutMillis) {
@@ -140,12 +140,12 @@ MosaicIoResult mosaic_test_read_with_timeout(MosaicTestTty *testTty, uint8_t *bu
 	timeout.tv_sec = 0;
 	timeout.tv_usec = timeoutMillis * 1000;
 
-	return tty_readInternal(testTty->parent_fd, testTty->parent_fd_interrupt_reader, buffer, count, &timeout);
+	return mosaic_tty_read_internal(testTty->parent_fd, testTty->parent_fd_interrupt_reader, buffer, count, &timeout);
 }
 
 uint32_t mosaic_test_interrupt_read(MosaicTestTty *testTty) {
 	uint8_t space = ' ';
-	MosaicIoResult result = tty_writeInternal(testTty->parent_fd_interrupt_writer, &space, 1);
+	MosaicIoResult result = mosaic_tty_write_internal(testTty->parent_fd_interrupt_writer, &space, 1);
 	return result.error;
 }
 

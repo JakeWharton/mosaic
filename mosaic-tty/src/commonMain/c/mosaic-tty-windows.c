@@ -7,7 +7,7 @@
 #include <stdatomic.h>
 #include <windows.h>
 
-MosaicTtyInitResult tty_initWithHandles(
+MosaicTtyInitResult mosaic_tty_init_with_handles(
 	HANDLE conin,
 	HANDLE conoutForSize,
 	HANDLE conoutForWrite,
@@ -45,7 +45,7 @@ MosaicTtyInitResult tty_initWithHandles(
 
 static _Atomic(MosaicTty *) globalTty;
 
-MOSAIC_EXPORT MosaicTtyInitResult tty_init() {
+MOSAIC_EXPORT MosaicTtyInitResult mosaic_tty_init() {
 	MosaicTtyInitResult result = {};
 
 	HANDLE conin = CreateFile(TEXT("CONIN$"), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
@@ -70,14 +70,14 @@ MOSAIC_EXPORT MosaicTtyInitResult tty_init() {
 		goto err;
 	}
 
-	result = tty_initWithHandles(conin, conout, conout, false);
+	result = mosaic_tty_init_with_handles(conin, conout, conout, false);
 
 	MosaicTty *tty = result.tty;
 	MosaicTty *expected = NULL;
 	if (likely(tty) && !atomic_compare_exchange_strong(&globalTty, &expected, tty)) {
 		// We initialized an instance but there already was a global instance.
 		result.tty = NULL;
-		result.error = tty_free(tty);
+		result.error = mosaic_tty_free(tty);
 		result.already_bound = true;
 	}
 
@@ -89,19 +89,19 @@ MOSAIC_EXPORT MosaicTtyInitResult tty_init() {
 	goto ret;
 }
 
-MOSAIC_EXPORT void tty_setCallback(MosaicTty *tty, MosaicTtyCallback *callback) {
+MOSAIC_EXPORT void mosaic_tty_set_callback(MosaicTty *tty, MosaicTtyCallback *callback) {
 	tty->callback = callback;
 }
 
-MOSAIC_EXPORT MosaicIoResult tty_read(
+MOSAIC_EXPORT MosaicIoResult mosaic_tty_read(
 	MosaicTty *tty,
 	uint8_t *buffer,
 	int count
 ) {
-	return tty_readWithTimeout(tty, buffer, count, INFINITE);
+	return mosaic_tty_read_with_timeout(tty, buffer, count, INFINITE);
 }
 
-MOSAIC_EXPORT MosaicIoResult tty_readWithTimeout(
+MOSAIC_EXPORT MosaicIoResult mosaic_tty_read_with_timeout(
 	MosaicTty *tty,
 	uint8_t *buffer,
 	int count,
@@ -170,13 +170,13 @@ MOSAIC_EXPORT MosaicIoResult tty_readWithTimeout(
 	goto ret;
 }
 
-MOSAIC_EXPORT uint32_t tty_interruptRead(MosaicTty *tty) {
+MOSAIC_EXPORT uint32_t mosaic_tty_interrupt_read(MosaicTty *tty) {
 	return likely(SetEvent(tty->conin_interrupt_event) != 0)
 		? 0
 		: GetLastError();
 }
 
-MosaicIoResult tty_writeInternal(HANDLE h, uint8_t *buffer, int count) {
+MosaicIoResult mosaic_tty_write_internal(HANDLE h, uint8_t *buffer, int count) {
 	MosaicIoResult result = {};
 
 	DWORD written;
@@ -189,11 +189,11 @@ MosaicIoResult tty_writeInternal(HANDLE h, uint8_t *buffer, int count) {
 	return result;
 }
 
-MOSAIC_EXPORT MosaicIoResult tty_write(MosaicTty *tty, uint8_t *buffer, int count) {
-	return tty_writeInternal(tty->conout_for_write, buffer, count);
+MOSAIC_EXPORT MosaicIoResult mosaic_tty_write(MosaicTty *tty, uint8_t *buffer, int count) {
+	return mosaic_tty_write_internal(tty->conout_for_write, buffer, count);
 }
 
-MOSAIC_EXPORT uint32_t tty_enableRawMode(MosaicTty *tty) {
+MOSAIC_EXPORT uint32_t mosaic_tty_enable_raw_mode(MosaicTty *tty) {
 	uint32_t result = 0;
 
 	if (tty->saved_input_mode) {
@@ -268,12 +268,12 @@ MOSAIC_EXPORT uint32_t tty_enableRawMode(MosaicTty *tty) {
 	return result;
 }
 
-MOSAIC_EXPORT uint32_t tty_enableWindowResizeEvents(MosaicTty *tty) {
+MOSAIC_EXPORT uint32_t mosaic_tty_enable_window_resize_events(MosaicTty *tty) {
 	tty->window_resize_events = true;
 	return 0;
 }
 
-MOSAIC_EXPORT MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty) {
+MOSAIC_EXPORT MosaicTtyTerminalSizeResult mosaic_tty_current_terminal_size(MosaicTty *tty) {
 	MosaicTtyTerminalSizeResult result = {};
 
 	CONSOLE_SCREEN_BUFFER_INFO info;
@@ -287,7 +287,7 @@ MOSAIC_EXPORT MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty
 	return result;
 }
 
-MOSAIC_EXPORT uint32_t tty_reset(MosaicTty *tty) {
+MOSAIC_EXPORT uint32_t mosaic_tty_reset(MosaicTty *tty) {
 	uint32_t result = 0;
 
 	if (tty->saved_input_mode) {
@@ -310,14 +310,14 @@ MOSAIC_EXPORT uint32_t tty_reset(MosaicTty *tty) {
 	return result;
 }
 
-MOSAIC_EXPORT uint32_t tty_free(MosaicTty *tty) {
+MOSAIC_EXPORT uint32_t mosaic_tty_free(MosaicTty *tty) {
 	uint32_t result = 0;
 
 	if (unlikely(CloseHandle(tty->conin_interrupt_event) == 0)) {
 		result = GetLastError();
 	}
 
-	uint32_t resetResult = tty_reset(tty);
+	uint32_t resetResult = mosaic_tty_reset(tty);
 	if (resetResult != 0 && result == 0) {
 		result = resetResult;
 	}

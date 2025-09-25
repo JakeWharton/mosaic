@@ -1,16 +1,16 @@
 package com.jakewharton.mosaic.tty
 
-import com.jakewharton.mosaic.tty.Libmosaic.tty_currentTerminalSize
-import com.jakewharton.mosaic.tty.Libmosaic.tty_enableRawMode
-import com.jakewharton.mosaic.tty.Libmosaic.tty_enableWindowResizeEvents
-import com.jakewharton.mosaic.tty.Libmosaic.tty_free
-import com.jakewharton.mosaic.tty.Libmosaic.tty_init
-import com.jakewharton.mosaic.tty.Libmosaic.tty_interruptRead
-import com.jakewharton.mosaic.tty.Libmosaic.tty_read
-import com.jakewharton.mosaic.tty.Libmosaic.tty_readWithTimeout
-import com.jakewharton.mosaic.tty.Libmosaic.tty_reset
-import com.jakewharton.mosaic.tty.Libmosaic.tty_setCallback
-import com.jakewharton.mosaic.tty.Libmosaic.tty_write
+import com.jakewharton.mosaic.tty.Libmosaic.mosaic_tty_current_terminal_size
+import com.jakewharton.mosaic.tty.Libmosaic.mosaic_tty_enable_raw_mode
+import com.jakewharton.mosaic.tty.Libmosaic.mosaic_tty_enable_window_resize_events
+import com.jakewharton.mosaic.tty.Libmosaic.mosaic_tty_free
+import com.jakewharton.mosaic.tty.Libmosaic.mosaic_tty_init
+import com.jakewharton.mosaic.tty.Libmosaic.mosaic_tty_interrupt_read
+import com.jakewharton.mosaic.tty.Libmosaic.mosaic_tty_read
+import com.jakewharton.mosaic.tty.Libmosaic.mosaic_tty_read_with_timeout
+import com.jakewharton.mosaic.tty.Libmosaic.mosaic_tty_reset
+import com.jakewharton.mosaic.tty.Libmosaic.mosaic_tty_set_callback
+import com.jakewharton.mosaic.tty.Libmosaic.mosaic_tty_write
 import java.io.InputStream
 import java.io.OutputStream
 import java.lang.foreign.Arena
@@ -25,7 +25,7 @@ public class Tty internal constructor(
 		public fun tryBind(): Tty? {
 			NativeLibrary.ensureLoaded()
 
-			val result = tty_init.makeInvoker().apply(Arena.global())
+			val result = mosaic_tty_init.makeInvoker().apply(Arena.global())
 			val ttyPtr = MosaicTtyInitResult.tty(result)
 			if (ttyPtr != MemorySegment.NULL) {
 				return Tty(ttyPtr)
@@ -90,13 +90,13 @@ public class Tty internal constructor(
 			}
 		}
 
-		tty_setCallback(ttyPtr, ttyCallback)
+		mosaic_tty_set_callback(ttyPtr, ttyCallback)
 	}
 
 	@Throws(IOException::class)
 	public fun read(buffer: ByteArray, offset: Int, count: Int): Int {
 		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
-		val result = tty_read(Arena.global(), ttyPtr, segment, count)
+		val result = mosaic_tty_read(Arena.global(), ttyPtr, segment, count)
 		val error = MosaicIoResult.error(result)
 		if (error == 0) {
 			val read = MosaicIoResult.count(result)
@@ -109,7 +109,7 @@ public class Tty internal constructor(
 	@Throws(IOException::class)
 	public fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
 		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
-		val result = tty_readWithTimeout(Arena.global(), ttyPtr, segment, count, timeoutMillis)
+		val result = mosaic_tty_read_with_timeout(Arena.global(), ttyPtr, segment, count, timeoutMillis)
 		val error = MosaicIoResult.error(result)
 		if (error == 0) {
 			val read = MosaicIoResult.count(result)
@@ -121,7 +121,7 @@ public class Tty internal constructor(
 
 	@Throws(IOException::class)
 	public fun interruptRead() {
-		val error = tty_interruptRead(ttyPtr)
+		val error = mosaic_tty_interrupt_read(ttyPtr)
 		if (error == 0) return
 		throwIoe(error)
 	}
@@ -130,7 +130,7 @@ public class Tty internal constructor(
 	public fun write(buffer: ByteArray, offset: Int, count: Int): Int {
 		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
 		MemorySegment.copy(buffer, offset, segment, ValueLayout.JAVA_BYTE, 0, count)
-		val result = tty_write(Arena.global(), ttyPtr, segment, count)
+		val result = mosaic_tty_write(Arena.global(), ttyPtr, segment, count)
 		val error = MosaicIoResult.error(result)
 		if (error == 0) {
 			return MosaicIoResult.count(result)
@@ -140,21 +140,21 @@ public class Tty internal constructor(
 
 	@Throws(IOException::class)
 	public fun enableRawMode() {
-		val error = tty_enableRawMode(ttyPtr)
+		val error = mosaic_tty_enable_raw_mode(ttyPtr)
 		if (error == 0) return
 		throwIoe(error)
 	}
 
 	@Throws(IOException::class)
 	public fun enableWindowResizeEvents() {
-		val error = tty_enableWindowResizeEvents(ttyPtr)
+		val error = mosaic_tty_enable_window_resize_events(ttyPtr)
 		if (error == 0) return
 		throwIoe(error)
 	}
 
 	@Throws(IOException::class)
 	public fun currentSize(): IntArray {
-		val result = tty_currentTerminalSize(Arena.global(), ttyPtr)
+		val result = mosaic_tty_current_terminal_size(Arena.global(), ttyPtr)
 		val error = MosaicTtyTerminalSizeResult.error(result)
 		if (error == 0) {
 			return intArrayOf(
@@ -169,7 +169,7 @@ public class Tty internal constructor(
 
 	@Throws(IOException::class)
 	public fun reset() {
-		val error = tty_reset(ttyPtr)
+		val error = mosaic_tty_reset(ttyPtr)
 		if (error == 0) return
 		throwIoe(error)
 	}
@@ -183,7 +183,7 @@ public class Tty internal constructor(
 			callbackArena?.close()
 			callbackArena = null
 
-			val error = tty_free(ttyPtr)
+			val error = mosaic_tty_free(ttyPtr)
 			if (error == 0) return
 			throwIoe(error)
 		}
