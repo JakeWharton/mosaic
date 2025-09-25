@@ -86,6 +86,136 @@ Java_com_jakewharton_mosaic_tty_Jni_streamsErrorIsTty(
 	return false; // Unused.
 }
 
+JNIEXPORT jint JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_streamsReadInput(
+	JNIEnv *env,
+	jclass type UNUSED,
+	jlong streamsOpaque,
+	jbyteArray buffer,
+	jint offset,
+	jint count
+) {
+	jbyte *bufferElements = (*env)->GetByteArrayElements(env, buffer, NULL);
+	jbyte *bufferElementsAtOffset = bufferElements + offset;
+	// Reinterpret JVM signed bytes as unsigned.
+	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
+
+	MosaicStreams *streams = (MosaicStreams *) streamsOpaque;
+	MosaicIoResult result = mosaic_streams_read_input(streams, nativeBufferAtOffset, count);
+
+	(*env)->ReleaseByteArrayElements(env, buffer, bufferElements, 0);
+
+	if (likely(!result.error)) {
+		return result.count;
+	}
+
+	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
+	// and should cause the program to try and exit cleanly.
+	throwIoe(env, result.error);
+	return -1;
+}
+
+JNIEXPORT jint JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_streamsReadInputWithTimeout(
+	JNIEnv *env,
+	jclass type UNUSED,
+	jlong streamsOpaque,
+	jbyteArray buffer,
+	jint offset,
+	jint count,
+	jint timeoutMillis
+) {
+	jbyte *bufferElements = (*env)->GetByteArrayElements(env, buffer, NULL);
+	jbyte *bufferElementsAtOffset = bufferElements + offset;
+	// Reinterpret JVM signed bytes as unsigned.
+	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
+
+	MosaicStreams *streams = (MosaicStreams *) streamsOpaque;
+	MosaicIoResult result = mosaic_streams_read_input_with_timeout(streams, nativeBufferAtOffset, count, timeoutMillis);
+
+	(*env)->ReleaseByteArrayElements(env, buffer, bufferElements, 0);
+
+	if (likely(!result.error)) {
+		return result.count;
+	}
+
+	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
+	// and should cause the program to try and exit cleanly.
+	throwIoe(env, result.error);
+	return -1;
+}
+
+JNIEXPORT void JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_streamsInterruptInputRead(
+	JNIEnv *env,
+	jclass type UNUSED,
+	jlong streamsOpaque
+) {
+	MosaicStreams *streams = (MosaicStreams *) streamsOpaque;
+	uint32_t error = mosaic_streams_interrupt_input_read(streams);
+	if (unlikely(error)) {
+		throwIoe(env, error);
+	}
+}
+
+JNIEXPORT jint JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_streamsWriteOutput(
+	JNIEnv *env,
+	jclass type UNUSED,
+	jlong streamsOpaque,
+	jbyteArray buffer,
+	jint offset,
+	jint count
+) {
+	jbyte *bufferElements = (*env)->GetByteArrayElements(env, buffer, NULL);
+	jbyte *bufferElementsAtOffset = bufferElements + offset;
+	// Reinterpret JVM signed bytes as unsigned.
+	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
+
+	MosaicStreams *streams = (MosaicStreams *) streamsOpaque;
+	MosaicIoResult result = mosaic_streams_write_output(streams, nativeBufferAtOffset, count);
+
+	(*env)->ReleaseByteArrayElements(env, buffer, bufferElements, 0);
+
+	if (likely(!result.error)) {
+		return result.count;
+	}
+
+	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
+	// and should cause the program to try and exit cleanly.
+	throwIoe(env, result.error);
+	return -1;
+}
+
+JNIEXPORT jint JNICALL
+Java_com_jakewharton_mosaic_tty_Jni_streamsWriteError(
+	JNIEnv *env,
+	jclass type UNUSED,
+	jlong streamsOpaque,
+	jbyteArray buffer,
+	jint offset,
+	jint count
+) {
+	jbyte *bufferElements = (*env)->GetByteArrayElements(env, buffer, NULL);
+	jbyte *bufferElementsAtOffset = bufferElements + offset;
+	// Reinterpret JVM signed bytes as unsigned.
+	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
+
+	MosaicStreams *streams = (MosaicStreams *) streamsOpaque;
+	MosaicIoResult result = mosaic_streams_write_error(streams, nativeBufferAtOffset, count);
+
+	(*env)->ReleaseByteArrayElements(env, buffer, bufferElements, 0);
+
+	if (likely(!result.error)) {
+		return result.count;
+	}
+
+	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
+	// and should cause the program to try and exit cleanly.
+	throwIoe(env, result.error);
+	return -1;
+}
+
 JNIEXPORT void JNICALL
 Java_com_jakewharton_mosaic_tty_Jni_streamsFree(
 	JNIEnv *env,
