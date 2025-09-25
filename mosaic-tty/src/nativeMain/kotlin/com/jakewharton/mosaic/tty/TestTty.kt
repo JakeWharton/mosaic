@@ -16,7 +16,7 @@ public actual class TestTty private constructor(
 			stdoutIsTty: Boolean,
 			stderrIsTty: Boolean,
 		): TestTty {
-			val testTtyPtr = testTty_init(stdinIsTty, stdoutIsTty, stderrIsTty).useContents {
+			val testTtyPtr = mosaic_test_init(stdinIsTty, stdoutIsTty, stderrIsTty).useContents {
 				testTty?.let { return@useContents it }
 
 				if (already_bound) {
@@ -28,9 +28,9 @@ public actual class TestTty private constructor(
 				throw OutOfMemoryError()
 			}
 
-			val streamsPtr = testTty_getStreams(testTtyPtr)!!
+			val streamsPtr = mosaic_test_get_streams(testTtyPtr)!!
 			val streams = StandardStreams(streamsPtr)
-			val ttyPtr = testTty_getTty(testTtyPtr)!!
+			val ttyPtr = mosaic_test_get_tty(testTtyPtr)!!
 			val tty = Tty(ttyPtr)
 			return TestTty(testTtyPtr, streams, tty)
 		}
@@ -38,7 +38,7 @@ public actual class TestTty private constructor(
 
 	public actual fun write(buffer: ByteArray, offset: Int, count: Int): Int {
 		buffer.asUByteArray().usePinned {
-			testTty_write(ptr, it.addressOf(offset), count).useContents {
+			mosaic_test_write(ptr, it.addressOf(offset), count).useContents {
 				if (error == 0U) {
 					return this.count
 				}
@@ -49,7 +49,7 @@ public actual class TestTty private constructor(
 
 	public actual fun read(buffer: ByteArray, offset: Int, count: Int): Int {
 		buffer.asUByteArray().usePinned {
-			testTty_read(ptr, it.addressOf(offset), count).useContents {
+			mosaic_test_read(ptr, it.addressOf(offset), count).useContents {
 				if (error == 0U) {
 					return this.count
 				}
@@ -60,7 +60,7 @@ public actual class TestTty private constructor(
 
 	public actual fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
 		buffer.asUByteArray().usePinned {
-			testTty_readWithTimeout(ptr, it.addressOf(offset), count, timeoutMillis).useContents {
+			mosaic_test_read_with_timeout(ptr, it.addressOf(offset), count, timeoutMillis).useContents {
 				if (error == 0U) {
 					return this.count
 				}
@@ -70,35 +70,35 @@ public actual class TestTty private constructor(
 	}
 
 	public actual fun interruptRead() {
-		val error = testTty_interruptRead(ptr)
+		val error = mosaic_test_interrupt_read(ptr)
 		if (error != 0U) {
 			throwIoe(error)
 		}
 	}
 
 	public actual fun resize(columns: Int, rows: Int, width: Int, height: Int) {
-		val error = testTty_resize(ptr, columns, rows, width, height)
+		val error = mosaic_test_resize(ptr, columns, rows, width, height)
 		if (error != 0U) {
 			throwIoe(error)
 		}
 	}
 
 	public actual fun sendFocusEvent(focused: Boolean) {
-		val error = testTty_sendFocusEvent(ptr, focused)
+		val error = mosaic_test_send_focus_event(ptr, focused)
 		if (error != 0U) {
 			throwIoe(error)
 		}
 	}
 
 	public actual fun sendKeyEvent() {
-		val error = testTty_sendKeyEvent(ptr)
+		val error = mosaic_test_send_key_event(ptr)
 		if (error != 0U) {
 			throwIoe(error)
 		}
 	}
 
 	public actual fun sendMouseEvent() {
-		val error = testTty_sendMouseEvent(ptr)
+		val error = mosaic_test_send_mouse_event(ptr)
 		if (error != 0U) {
 			throwIoe(error)
 		}
@@ -110,7 +110,7 @@ public actual class TestTty private constructor(
 
 			tty.close()
 
-			val error = testTty_free(ref)
+			val error = mosaic_test_free(ref)
 
 			if (error == 0U) return
 			throwIoe(error)

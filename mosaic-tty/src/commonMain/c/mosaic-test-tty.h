@@ -15,22 +15,22 @@ typedef struct MosaicTestTtyInitResult {
 	bool already_bound;
 } MosaicTestTtyInitResult;
 
-MOSAIC_EXPORT MosaicTestTtyInitResult testTty_init(bool stdinIsTty, bool stdoutIsTty, bool stderrIsTty);
-MOSAIC_EXPORT MosaicTty *testTty_getTty(MosaicTestTty *testTty);
-MOSAIC_EXPORT MosaicStreams *testTty_getStreams(MosaicTestTty *testTty);
+MOSAIC_EXPORT MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool stdoutIsTty, bool stderrIsTty);
+MOSAIC_EXPORT MosaicTty *mosaic_test_get_tty(MosaicTestTty *testTty);
+MOSAIC_EXPORT MosaicStreams *mosaic_test_get_streams(MosaicTestTty *testTty);
 
-MOSAIC_EXPORT MosaicIoResult testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int count);
+MOSAIC_EXPORT MosaicIoResult mosaic_test_write(MosaicTestTty *testTty, uint8_t *buffer, int count);
 
-MOSAIC_EXPORT MosaicIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffer, int count);
-MOSAIC_EXPORT MosaicIoResult testTty_readWithTimeout(MosaicTestTty *testTty, uint8_t *buffer, int count, int timeoutMillis);
-MOSAIC_EXPORT uint32_t testTty_interruptRead(MosaicTestTty *testTty);
+MOSAIC_EXPORT MosaicIoResult mosaic_test_read(MosaicTestTty *testTty, uint8_t *buffer, int count);
+MOSAIC_EXPORT MosaicIoResult mosaic_test_read_with_timeout(MosaicTestTty *testTty, uint8_t *buffer, int count, int timeoutMillis);
+MOSAIC_EXPORT uint32_t mosaic_test_interrupt_read(MosaicTestTty *testTty);
 
-MOSAIC_EXPORT uint32_t testTty_resize(MosaicTestTty *testTty, int columns, int rows, int width, int height);
+MOSAIC_EXPORT uint32_t mosaic_test_resize(MosaicTestTty *testTty, int columns, int rows, int width, int height);
 
-MOSAIC_EXPORT uint32_t testTty_sendFocusEvent(MosaicTestTty *testTty, bool focused);
-MOSAIC_EXPORT uint32_t testTty_sendKeyEvent(MosaicTestTty *testTty);
-MOSAIC_EXPORT uint32_t testTty_sendMouseEvent(MosaicTestTty *testTty);
+MOSAIC_EXPORT uint32_t mosaic_test_send_focus_event(MosaicTestTty *testTty, bool focused);
+MOSAIC_EXPORT uint32_t mosaic_test_send_key_event(MosaicTestTty *testTty);
+MOSAIC_EXPORT uint32_t mosaic_test_send_mouse_event(MosaicTestTty *testTty);
 
-MOSAIC_EXPORT uint32_t testTty_free(MosaicTestTty *testTty);
+MOSAIC_EXPORT uint32_t mosaic_test_free(MosaicTestTty *testTty);
 
 #endif // MOSAIC_TEST_TTY_H

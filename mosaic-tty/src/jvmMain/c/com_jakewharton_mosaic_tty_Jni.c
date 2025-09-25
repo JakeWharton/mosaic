@@ -443,7 +443,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyInit(
 	jboolean stdoutIsTty,
 	jboolean stderrIsTty
 ) {
-	MosaicTestTtyInitResult result = testTty_init(stdinIsTty, stdoutIsTty, stderrIsTty);
+	MosaicTestTtyInitResult result = mosaic_test_init(stdinIsTty, stdoutIsTty, stderrIsTty);
 	if (likely(result.testTty)) {
 		return (jlong) result.testTty;
 	}
@@ -474,7 +474,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyWrite(
 	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
 
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
-	MosaicIoResult result = testTty_write(testTty, nativeBufferAtOffset, count);
+	MosaicIoResult result = mosaic_test_write(testTty, nativeBufferAtOffset, count);
 
 	(*env)->ReleaseByteArrayElements(env, buffer, bufferElements, 0);
 
@@ -503,7 +503,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyRead(
 	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
 
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
-	MosaicIoResult result = testTty_read(testTty, nativeBufferAtOffset, count);
+	MosaicIoResult result = mosaic_test_read(testTty, nativeBufferAtOffset, count);
 
 	(*env)->ReleaseByteArrayElements(env, buffer, bufferElements, 0);
 
@@ -533,7 +533,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyReadWithTimeout(
 	uint8_t *nativeBufferAtOffset = (uint8_t *) bufferElementsAtOffset;
 
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
-	MosaicIoResult result = testTty_readWithTimeout(testTty, nativeBufferAtOffset, count, timeoutMillis);
+	MosaicIoResult result = mosaic_test_read_with_timeout(testTty, nativeBufferAtOffset, count, timeoutMillis);
 
 	(*env)->ReleaseByteArrayElements(env, buffer, bufferElements, 0);
 
@@ -554,7 +554,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyInterruptRead(
 	jlong testTtyOpaque
 ) {
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
-	uint32_t error = testTty_interruptRead(testTty);
+	uint32_t error = mosaic_test_interrupt_read(testTty);
 	if (unlikely(error)) {
 		throwIoe(env, error);
 	}
@@ -568,7 +568,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtySendFocusEvent(
 	jboolean focused
 ) {
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
-	uint32_t error = testTty_sendFocusEvent(testTty, focused);
+	uint32_t error = mosaic_test_send_focus_event(testTty, focused);
 	if (unlikely(error)) {
 		throwIoe(env, error);
 	}
@@ -581,7 +581,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtySendKeyEvent(
 	jlong testTtyOpaque
 ) {
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
-	uint32_t error = testTty_sendKeyEvent(testTty);
+	uint32_t error = mosaic_test_send_key_event(testTty);
 	if (unlikely(error)) {
 		throwIoe(env, error);
 	}
@@ -594,7 +594,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtySendMouseEvent(
 	jlong testTtyOpaque
 ) {
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
-	uint32_t error = testTty_sendMouseEvent(testTty);
+	uint32_t error = mosaic_test_send_mouse_event(testTty);
 	if (unlikely(error)) {
 		throwIoe(env, error);
 	}
@@ -611,7 +611,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyResize(
 	jint height
 ) {
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
-	uint32_t error = testTty_resize(testTty, columns, rows, width, height);
+	uint32_t error = mosaic_test_resize(testTty, columns, rows, width, height);
 	if (unlikely(error)) {
 		throwIoe(env, error);
 	}
@@ -624,7 +624,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyGetTty(
 	jlong testTtyOpaque
 ) {
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
-	return (jlong) testTty_getTty(testTty);
+	return (jlong) mosaic_test_get_tty(testTty);
 }
 
 JNIEXPORT jlong JNICALL
@@ -634,7 +634,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyGetStreams(
 	jlong testTtyOpaque
 ) {
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
-	return (jlong) testTty_getStreams(testTty);
+	return (jlong) mosaic_test_get_streams(testTty);
 }
 
 JNIEXPORT void JNICALL
@@ -644,7 +644,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyFree(
 	jlong testTtyOpaque
 ) {
 	MosaicTestTty *testTty = (MosaicTestTty *) testTtyOpaque;
-	uint32_t error = testTty_free(testTty);
+	uint32_t error = mosaic_test_free(testTty);
 	if (unlikely(error)) {
 		throwIoe(env, error);
 	}
