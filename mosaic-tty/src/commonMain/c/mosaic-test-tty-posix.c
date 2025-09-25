@@ -23,7 +23,7 @@ typedef struct MosaicTestTtyImpl {
 	int parent_fd_interrupt_writer;
 } MosaicTestTtyImpl;
 
-uint32_t testTty_resizeInternal(int parentFd, int columns, int rows, int width, int height) {
+uint32_t mosaic_test_resize_internal(int parentFd, int columns, int rows, int width, int height) {
 	struct winsize size = {};
 	size.ws_col = columns;
 	size.ws_row = rows;
@@ -35,7 +35,7 @@ uint32_t testTty_resizeInternal(int parentFd, int columns, int rows, int width, 
 	return errno;
 }
 
-MosaicTestTtyInitResult testTty_init(bool stdinIsTty, bool stdoutIsTty, bool stderrIsTty) {
+MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool stdoutIsTty, bool stderrIsTty) {
 	MosaicTestTtyInitResult result = {};
 
 	MosaicTestTtyImpl *testTty = calloc(1, sizeof(MosaicTestTtyImpl));
@@ -63,7 +63,7 @@ MosaicTestTtyInitResult testTty_init(bool stdinIsTty, bool stdoutIsTty, bool std
 	}
 
 	// Give the TTY a reasonable "default" size.
-	uint32_t sizeResult = testTty_resizeInternal(parentFd, 80, 24, 0, 0);
+	uint32_t sizeResult = mosaic_test_resize_internal(parentFd, 80, 24, 0, 0);
 	if (unlikely(sizeResult)) {
 		result.error = sizeResult;
 		goto err_child;
@@ -119,23 +119,23 @@ MosaicTestTtyInitResult testTty_init(bool stdinIsTty, bool stdoutIsTty, bool std
 	goto ret;
 }
 
-MosaicTty *testTty_getTty(MosaicTestTty *testTty) {
+MosaicTty *mosaic_test_get_tty(MosaicTestTty *testTty) {
 	return testTty->tty;
 }
 
-MosaicStreams *testTty_getStreams(MosaicTestTty *testTty) {
+MosaicStreams *mosaic_test_get_streams(MosaicTestTty *testTty) {
 	return testTty->streams;
 }
 
-MosaicIoResult testTty_write(MosaicTestTty *testTty, uint8_t *buffer, int count) {
+MosaicIoResult mosaic_test_write(MosaicTestTty *testTty, uint8_t *buffer, int count) {
 	return tty_writeInternal(testTty->parent_fd, buffer, count);
 }
 
-MosaicIoResult testTty_read(MosaicTestTty *testTty, uint8_t *buffer, int count) {
+MosaicIoResult mosaic_test_read(MosaicTestTty *testTty, uint8_t *buffer, int count) {
 	return tty_readInternal(testTty->parent_fd, testTty->parent_fd_interrupt_reader, buffer, count, NULL);
 }
 
-MosaicIoResult testTty_readWithTimeout(MosaicTestTty *testTty, uint8_t *buffer, int count, int timeoutMillis) {
+MosaicIoResult mosaic_test_read_with_timeout(MosaicTestTty *testTty, uint8_t *buffer, int count, int timeoutMillis) {
 	struct timeval timeout;
 	timeout.tv_sec = 0;
 	timeout.tv_usec = timeoutMillis * 1000;
@@ -143,14 +143,14 @@ MosaicIoResult testTty_readWithTimeout(MosaicTestTty *testTty, uint8_t *buffer, 
 	return tty_readInternal(testTty->parent_fd, testTty->parent_fd_interrupt_reader, buffer, count, &timeout);
 }
 
-uint32_t testTty_interruptRead(MosaicTestTty *testTty) {
+uint32_t mosaic_test_interrupt_read(MosaicTestTty *testTty) {
 	uint8_t space = ' ';
 	MosaicIoResult result = tty_writeInternal(testTty->parent_fd_interrupt_writer, &space, 1);
 	return result.error;
 }
 
-uint32_t testTty_resize(MosaicTestTty *testTty, int columns, int rows, int width, int height) {
-	uint32_t sizeResult = testTty_resizeInternal(testTty->parent_fd, columns, rows, width, height);
+uint32_t mosaic_test_resize(MosaicTestTty *testTty, int columns, int rows, int width, int height) {
+	uint32_t sizeResult = mosaic_test_resize_internal(testTty->parent_fd, columns, rows, width, height);
 	if (unlikely(sizeResult)) {
 		return sizeResult;
 	}
@@ -163,22 +163,22 @@ uint32_t testTty_resize(MosaicTestTty *testTty, int columns, int rows, int width
 	return 0;
 }
 
-uint32_t testTty_sendFocusEvent(MosaicTestTty *testTty UNUSED, bool focused UNUSED) {
+uint32_t mosaic_test_send_focus_event(MosaicTestTty *testTty UNUSED, bool focused UNUSED) {
 	// Focus events are delivered through VT sequences.
 	return 0;
 }
 
-uint32_t testTty_sendKeyEvent(MosaicTestTty *testTty UNUSED) {
+uint32_t mosaic_test_send_key_event(MosaicTestTty *testTty UNUSED) {
 	// Key events are delivered through VT sequences.
 	return 0;
 }
 
-uint32_t testTty_sendMouseEvent(MosaicTestTty *testTty UNUSED) {
+uint32_t mosaic_test_send_mouse_event(MosaicTestTty *testTty UNUSED) {
 	// Mouse events are delivered through VT sequences.
 	return 0;
 }
 
-uint32_t testTty_free(MosaicTestTty *testTty) {
+uint32_t mosaic_test_free(MosaicTestTty *testTty) {
 	uint32_t result = 0;
 
 	if (unlikely(close(testTty->parent_fd) != 0)) {
