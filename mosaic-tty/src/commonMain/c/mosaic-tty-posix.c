@@ -16,7 +16,7 @@
 
 static _Atomic(MosaicTty *) globalTty;
 
-MosaicTtyInitResult tty_initWithFd(int fd) {
+MosaicTtyInitResult mosaic_tty_init_with_fd(int fd) {
 	MosaicTtyInitResult result = {};
 
 	MosaicTtyImpl *tty = calloc(1, sizeof(MosaicTtyImpl));
@@ -41,7 +41,7 @@ MosaicTtyInitResult tty_initWithFd(int fd) {
 	if (likely(tty) && !atomic_compare_exchange_strong(&globalTty, &expected, tty)) {
 		// We initialized an instance but there already was a global instance.
 		result.tty = NULL;
-		result.error = tty_free(tty);
+		result.error = mosaic_tty_free(tty);
 		result.already_bound = true;
 	}
 
@@ -53,10 +53,10 @@ MosaicTtyInitResult tty_initWithFd(int fd) {
 	goto ret;
 }
 
-MosaicTtyInitResult tty_init() {
+MosaicTtyInitResult mosaic_tty_init() {
 	int fd = open("/dev/tty", O_RDWR);
 	if (likely(fd != -1)) {
-		return tty_initWithFd(fd);
+		return mosaic_tty_init_with_fd(fd);
 	}
 
 	MosaicTtyInitResult result = {};
@@ -65,11 +65,11 @@ MosaicTtyInitResult tty_init() {
 	return result;
 }
 
-void tty_setCallback(MosaicTty *tty, MosaicTtyCallback *callback) {
+void mosaic_tty_set_callback(MosaicTty *tty, MosaicTtyCallback *callback) {
 	tty->callback = callback;
 }
 
-MosaicIoResult tty_readInternal(
+MosaicIoResult mosaic_tty_read_internal(
 	int fd,
 	int interruptFd,
 	uint8_t *buffer,
@@ -114,11 +114,11 @@ MosaicIoResult tty_readInternal(
 	goto ret;
 }
 
-MosaicIoResult tty_read(MosaicTty *tty, uint8_t *buffer, int count) {
-	return tty_readInternal(tty->fd, tty->interrupt_fd_reader, buffer, count, NULL);
+MosaicIoResult mosaic_tty_read(MosaicTty *tty, uint8_t *buffer, int count) {
+	return mosaic_tty_read_internal(tty->fd, tty->interrupt_fd_reader, buffer, count, NULL);
 }
 
-MosaicIoResult tty_readWithTimeout(
+MosaicIoResult mosaic_tty_read_with_timeout(
 	MosaicTty *tty,
 	uint8_t *buffer,
 	int count,
@@ -128,10 +128,10 @@ MosaicIoResult tty_readWithTimeout(
 	timeout.tv_sec = 0;
 	timeout.tv_usec = timeoutMillis * 1000;
 
-	return tty_readInternal(tty->fd, tty->interrupt_fd_reader, buffer, count, &timeout);
+	return mosaic_tty_read_internal(tty->fd, tty->interrupt_fd_reader, buffer, count, &timeout);
 }
 
-MosaicIoResult tty_writeInternal(int writeFd, uint8_t *buffer, int count) {
+MosaicIoResult mosaic_tty_write_internal(int writeFd, uint8_t *buffer, int count) {
 	MosaicIoResult result = {};
 
 	int written = write(writeFd, buffer, count);
@@ -144,17 +144,17 @@ MosaicIoResult tty_writeInternal(int writeFd, uint8_t *buffer, int count) {
 	return result;
 }
 
-uint32_t tty_interruptRead(MosaicTty *tty) {
+uint32_t mosaic_tty_interrupt_read(MosaicTty *tty) {
 	uint8_t space = ' ';
-	MosaicIoResult result = tty_writeInternal(tty->interrupt_fd_writer, &space, 1);
+	MosaicIoResult result = mosaic_tty_write_internal(tty->interrupt_fd_writer, &space, 1);
 	return result.error;
 }
 
-MosaicIoResult tty_write(MosaicTty *tty, uint8_t *buffer, int count) {
-	return tty_writeInternal(tty->fd, buffer, count);
+MosaicIoResult mosaic_tty_write(MosaicTty *tty, uint8_t *buffer, int count) {
+	return mosaic_tty_write_internal(tty->fd, buffer, count);
 }
 
-void sigwinchHandler(int value UNUSED) {
+void mosaic_tty_sigwinch_handler(int value UNUSED) {
 	MosaicTty *tty = atomic_load(&globalTty);
 	if (likely(tty)) {
 		struct winsize size;
@@ -173,7 +173,7 @@ void sigwinchHandler(int value UNUSED) {
 	}
 }
 
-uint32_t tty_enableRawMode(MosaicTty *tty) {
+uint32_t mosaic_tty_enable_raw_mode(MosaicTty *tty) {
 	uint32_t result = 0;
 
 	if (unlikely(tty->saved)) {
@@ -221,13 +221,13 @@ uint32_t tty_enableRawMode(MosaicTty *tty) {
 	goto ret;
 }
 
-uint32_t tty_enableWindowResizeEvents(MosaicTty *tty) {
+uint32_t mosaic_tty_enable_window_resize_events(MosaicTty *tty) {
 	if (tty->sigwinch) {
 		return 0; // Already installed.
 	}
 
 	struct sigaction action;
-	action.sa_handler = sigwinchHandler;
+	action.sa_handler = mosaic_tty_sigwinch_handler;
 	sigemptyset(&action.sa_mask);
 	action.sa_flags = 0;
 
@@ -238,7 +238,7 @@ uint32_t tty_enableWindowResizeEvents(MosaicTty *tty) {
 	return errno;
 }
 
-MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty) {
+MosaicTtyTerminalSizeResult mosaic_tty_current_terminal_size(MosaicTty *tty) {
 	MosaicTtyTerminalSizeResult result = {};
 
 	struct winsize size;
@@ -254,7 +254,7 @@ MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty) {
 	return result;
 }
 
-uint32_t tty_reset(MosaicTty *tty) {
+uint32_t mosaic_tty_reset(MosaicTty *tty) {
 	uint32_t result = 0;
 
 	if (tty->sigwinch) {
@@ -275,10 +275,10 @@ uint32_t tty_reset(MosaicTty *tty) {
 	return result;
 }
 
-uint32_t tty_free(MosaicTty *tty) {
+uint32_t mosaic_tty_free(MosaicTty *tty) {
 	uint32_t result = 0;
 
-	uint32_t resetResult = tty_reset(tty);
+	uint32_t resetResult = mosaic_tty_reset(tty);
 	if (resetResult != 0) {
 		result = resetResult;
 	}

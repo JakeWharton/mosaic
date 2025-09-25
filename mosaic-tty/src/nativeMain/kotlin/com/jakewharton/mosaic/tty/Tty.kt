@@ -19,7 +19,7 @@ public actual class Tty internal constructor(
 ) : AutoCloseable {
 	public actual companion object {
 		public actual fun tryBind(): Tty? {
-			tty_init().useContents {
+			mosaic_tty_init().useContents {
 				tty?.let { ttyPtr ->
 					return Tty(ttyPtr)
 				}
@@ -55,12 +55,12 @@ public actual class Tty internal constructor(
 			callbackPtr
 		}
 
-		tty_setCallback(ptr, callbackPtr)
+		mosaic_tty_set_callback(ptr, callbackPtr)
 	}
 
 	public actual fun read(buffer: ByteArray, offset: Int, count: Int): Int {
 		buffer.asUByteArray().usePinned {
-			tty_read(ptr, it.addressOf(offset), count).useContents {
+			mosaic_tty_read(ptr, it.addressOf(offset), count).useContents {
 				if (error == 0U) return this.count
 				throwIoe(error)
 			}
@@ -69,7 +69,7 @@ public actual class Tty internal constructor(
 
 	public actual fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
 		buffer.asUByteArray().usePinned {
-			tty_readWithTimeout(ptr, it.addressOf(offset), count, timeoutMillis).useContents {
+			mosaic_tty_read_with_timeout(ptr, it.addressOf(offset), count, timeoutMillis).useContents {
 				if (error == 0U) return this.count
 				throwIoe(error)
 			}
@@ -77,14 +77,14 @@ public actual class Tty internal constructor(
 	}
 
 	public actual fun interruptRead() {
-		val error = tty_interruptRead(ptr)
+		val error = mosaic_tty_interrupt_read(ptr)
 		if (error == 0U) return
 		throwIoe(error)
 	}
 
 	public actual fun write(buffer: ByteArray, offset: Int, count: Int): Int {
 		buffer.asUByteArray().usePinned {
-			tty_write(ptr, it.addressOf(offset), count).useContents {
+			mosaic_tty_write(ptr, it.addressOf(offset), count).useContents {
 				if (error == 0U) return this.count
 				throwIoe(error)
 			}
@@ -92,19 +92,19 @@ public actual class Tty internal constructor(
 	}
 
 	public actual fun enableRawMode() {
-		val error = tty_enableRawMode(ptr)
+		val error = mosaic_tty_enable_raw_mode(ptr)
 		if (error == 0U) return
 		throwIoe(error)
 	}
 
 	public actual fun enableWindowResizeEvents() {
-		val error = tty_enableWindowResizeEvents(ptr)
+		val error = mosaic_tty_enable_window_resize_events(ptr)
 		if (error == 0U) return
 		throwIoe(error)
 	}
 
 	public actual fun currentSize(): IntArray {
-		tty_currentTerminalSize(ptr).useContents {
+		mosaic_tty_current_terminal_size(ptr).useContents {
 			if (error == 0U) {
 				return intArrayOf(columns, rows, width, height)
 			}
@@ -113,14 +113,14 @@ public actual class Tty internal constructor(
 	}
 
 	public actual fun reset() {
-		tty_reset(ptr)
+		mosaic_tty_reset(ptr)
 	}
 
 	actual override fun close() {
 		ptr?.let { ptr ->
 			this.ptr = null
 
-			val error = tty_free(ptr)
+			val error = mosaic_tty_free(ptr)
 
 			callbackPtrAndRef?.let { (callbackPtr, callbackRef) ->
 				nativeHeap.free(callbackPtr)

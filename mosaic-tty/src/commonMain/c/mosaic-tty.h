@@ -36,21 +36,21 @@ typedef struct MosaicTtyTerminalSizeResult {
 	uint32_t error;
 } MosaicTtyTerminalSizeResult;
 
-MOSAIC_EXPORT MosaicTtyInitResult tty_init();
+MOSAIC_EXPORT MosaicTtyInitResult mosaic_tty_init();
 
-MOSAIC_EXPORT void tty_setCallback(MosaicTty *tty, MosaicTtyCallback *callback);
+MOSAIC_EXPORT void mosaic_tty_set_callback(MosaicTty *tty, MosaicTtyCallback *callback);
 
-MOSAIC_EXPORT MosaicIoResult tty_read(MosaicTty *tty, uint8_t *buffer, int count);
-MOSAIC_EXPORT MosaicIoResult tty_readWithTimeout(MosaicTty *tty, uint8_t *buffer, int count, int timeoutMillis);
-MOSAIC_EXPORT uint32_t tty_interruptRead(MosaicTty *tty);
+MOSAIC_EXPORT MosaicIoResult mosaic_tty_read(MosaicTty *tty, uint8_t *buffer, int count);
+MOSAIC_EXPORT MosaicIoResult mosaic_tty_read_with_timeout(MosaicTty *tty, uint8_t *buffer, int count, int timeoutMillis);
+MOSAIC_EXPORT uint32_t mosaic_tty_interrupt_read(MosaicTty *tty);
 
-MOSAIC_EXPORT MosaicIoResult tty_write(MosaicTty *tty, uint8_t *buffer, int count);
+MOSAIC_EXPORT MosaicIoResult mosaic_tty_write(MosaicTty *tty, uint8_t *buffer, int count);
 
-MOSAIC_EXPORT uint32_t tty_enableRawMode(MosaicTty *tty);
-MOSAIC_EXPORT uint32_t tty_enableWindowResizeEvents(MosaicTty *tty);
-MOSAIC_EXPORT MosaicTtyTerminalSizeResult tty_currentTerminalSize(MosaicTty *tty);
+MOSAIC_EXPORT uint32_t mosaic_tty_enable_raw_mode(MosaicTty *tty);
+MOSAIC_EXPORT uint32_t mosaic_tty_enable_window_resize_events(MosaicTty *tty);
+MOSAIC_EXPORT MosaicTtyTerminalSizeResult mosaic_tty_current_terminal_size(MosaicTty *tty);
 
-MOSAIC_EXPORT uint32_t tty_reset(MosaicTty *tty);
-MOSAIC_EXPORT uint32_t tty_free(MosaicTty *tty);
+MOSAIC_EXPORT uint32_t mosaic_tty_reset(MosaicTty *tty);
+MOSAIC_EXPORT uint32_t mosaic_tty_free(MosaicTty *tty);
 
 #endif // MOSAIC_TTY_H

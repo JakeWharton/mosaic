@@ -14,9 +14,9 @@ typedef struct MosaicTtyImpl {
 	struct termios *saved;
 } MosaicTtyImpl;
 
-MosaicTtyInitResult tty_initWithFd(int ttyFd);
+MosaicTtyInitResult mosaic_tty_init_with_fd(int ttyFd);
 
-MosaicIoResult tty_readInternal(
+MosaicIoResult mosaic_tty_read_internal(
 	int fd,
 	int interruptFd,
 	uint8_t *buffer,
@@ -24,6 +24,6 @@ MosaicIoResult tty_readInternal(
 	struct timeval *timeout
 );
 
-MosaicIoResult tty_writeInternal(int writeFd, uint8_t *buffer, int count);
+MosaicIoResult mosaic_tty_write_internal(int writeFd, uint8_t *buffer, int count);
 
 #endif // MOSAIC_TTY_POSIX_H

@@ -127,11 +127,11 @@ MOSAIC_EXPORT uint32_t mosaic_streams_interrupt_input_read(MosaicStreams *stream
 }
 
 MOSAIC_EXPORT MosaicIoResult mosaic_streams_write_output(MosaicStreams *streams, uint8_t *buffer, int count) {
-	return tty_writeInternal(streams->stdout, buffer, count);
+	return mosaic_tty_write_internal(streams->stdout, buffer, count);
 }
 
 MOSAIC_EXPORT MosaicIoResult mosaic_streams_write_error(MosaicStreams *streams, uint8_t *buffer, int count) {
-	return tty_writeInternal(streams->stderr, buffer, count);
+	return mosaic_tty_write_internal(streams->stderr, buffer, count);
 }
 
 uint32_t mosaic_streams_free(MosaicStreams *streams) {
