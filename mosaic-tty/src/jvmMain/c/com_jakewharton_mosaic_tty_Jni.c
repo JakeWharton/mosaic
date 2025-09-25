@@ -436,7 +436,7 @@ Java_com_jakewharton_mosaic_tty_Jni_ttyFree(
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_testTtyInit(
+Java_com_jakewharton_mosaic_tty_Jni_testInit(
 	JNIEnv *env,
 	jclass type UNUSED,
 	jboolean stdinIsTty,
@@ -460,7 +460,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyInit(
 }
 
 JNIEXPORT jint JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_testTtyWrite(
+Java_com_jakewharton_mosaic_tty_Jni_testWrite(
 	JNIEnv *env,
 	jclass type UNUSED,
 	jlong testTtyOpaque,
@@ -489,7 +489,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyWrite(
 }
 
 JNIEXPORT jint JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_testTtyRead(
+Java_com_jakewharton_mosaic_tty_Jni_testRead(
 	JNIEnv *env,
 	jclass type UNUSED,
 	jlong testTtyOpaque,
@@ -518,7 +518,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyRead(
 }
 
 JNIEXPORT jint JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_testTtyReadWithTimeout(
+Java_com_jakewharton_mosaic_tty_Jni_testReadWithTimeout(
 	JNIEnv *env,
 	jclass type UNUSED,
 	jlong testTtyOpaque,
@@ -548,7 +548,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyReadWithTimeout(
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_testTtyInterruptRead(
+Java_com_jakewharton_mosaic_tty_Jni_testInterruptRead(
 	JNIEnv *env,
 	jclass type UNUSED,
 	jlong testTtyOpaque
@@ -561,7 +561,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyInterruptRead(
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_testTtySendFocusEvent(
+Java_com_jakewharton_mosaic_tty_Jni_testSendFocusEvent(
 	JNIEnv *env,
 	jclass type UNUSED,
 	jlong testTtyOpaque,
@@ -575,7 +575,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtySendFocusEvent(
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_testTtySendKeyEvent(
+Java_com_jakewharton_mosaic_tty_Jni_testSendKeyEvent(
 	JNIEnv *env,
 	jclass type UNUSED,
 	jlong testTtyOpaque
@@ -588,7 +588,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtySendKeyEvent(
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_testTtySendMouseEvent(
+Java_com_jakewharton_mosaic_tty_Jni_testSendMouseEvent(
 	JNIEnv *env,
 	jclass type UNUSED,
 	jlong testTtyOpaque
@@ -601,7 +601,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtySendMouseEvent(
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_testTtyResize(
+Java_com_jakewharton_mosaic_tty_Jni_testResize(
 	JNIEnv *env,
 	jclass type UNUSED,
 	jlong testTtyOpaque,
@@ -618,7 +618,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyResize(
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_testTtyGetTty(
+Java_com_jakewharton_mosaic_tty_Jni_testGetTty(
 	JNIEnv *env UNUSED,
 	jclass type UNUSED,
 	jlong testTtyOpaque
@@ -628,7 +628,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyGetTty(
 }
 
 JNIEXPORT jlong JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_testTtyGetStreams(
+Java_com_jakewharton_mosaic_tty_Jni_testGetStreams(
 	JNIEnv *env UNUSED,
 	jclass type UNUSED,
 	jlong testTtyOpaque
@@ -638,7 +638,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testTtyGetStreams(
 }
 
 JNIEXPORT void JNICALL
-Java_com_jakewharton_mosaic_tty_Jni_testTtyFree(
+Java_com_jakewharton_mosaic_tty_Jni_testFree(
 	JNIEnv *env UNUSED,
 	jclass type UNUSED,
 	jlong testTtyOpaque

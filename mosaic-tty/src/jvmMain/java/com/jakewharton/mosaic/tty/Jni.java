@@ -92,21 +92,21 @@ final class Jni {
 
 	static native void ttyFree(long ttyPtr);
 
-	static native long testTtyInit(boolean stdinIsTty, boolean stdoutIsTty, boolean stderrIsTty);
+	static native long testInit(boolean stdinIsTty, boolean stdoutIsTty, boolean stderrIsTty);
 
-	static native long testTtyGetStreams(long testTtyPtr);
+	static native long testGetStreams(long testTtyPtr);
 
-	static native long testTtyGetTty(long testTtyPtr);
+	static native long testGetTty(long testTtyPtr);
 
-	static native int testTtyWrite(long testTtyPtr, byte[] buffer, int offset, int count);
+	static native int testWrite(long testTtyPtr, byte[] buffer, int offset, int count);
 
-	static native int testTtyRead(long testTtyPtr, byte[] buffer, int offset, int count);
+	static native int testRead(long testTtyPtr, byte[] buffer, int offset, int count);
 
-	static native int testTtyReadWithTimeout(long testTtyPtr, byte[] buffer, int offset, int count, int timeoutMillis);
+	static native int testReadWithTimeout(long testTtyPtr, byte[] buffer, int offset, int count, int timeoutMillis);
 
-	static native void testTtyInterruptRead(long testTtyPtr);
+	static native void testInterruptRead(long testTtyPtr);
 
-	static native void testTtyResize(
+	static native void testResize(
 		long testTtyPtr,
 		int columns,
 		int rows,
@@ -114,13 +114,13 @@ final class Jni {
 		int height
 	);
 
-	static native void testTtySendFocusEvent(long testTtyPtr, boolean focused);
+	static native void testSendFocusEvent(long testTtyPtr, boolean focused);
 
-	static native void testTtySendKeyEvent(long testTtyPtr);
+	static native void testSendKeyEvent(long testTtyPtr);
 
-	static native void testTtySendMouseEvent(long testTtyPtr);
+	static native void testSendMouseEvent(long testTtyPtr);
 
-	static native void testTtyFree(long testTtyPtr);
+	static native void testFree(long testTtyPtr);
 
 	private Jni() {}
 }
