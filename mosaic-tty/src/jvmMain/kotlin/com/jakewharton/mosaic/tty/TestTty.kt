@@ -1,8 +1,8 @@
 package com.jakewharton.mosaic.tty
 
-import com.jakewharton.mosaic.tty.Jni.testTtyGetStreams
-import com.jakewharton.mosaic.tty.Jni.testTtyGetTty
-import com.jakewharton.mosaic.tty.Jni.testTtyInit
+import com.jakewharton.mosaic.tty.Jni.testGetStreams
+import com.jakewharton.mosaic.tty.Jni.testGetTty
+import com.jakewharton.mosaic.tty.Jni.testInit
 
 public actual class TestTty private constructor(
 	private var testTtyPtr: Long,
@@ -17,10 +17,10 @@ public actual class TestTty private constructor(
 			stdoutIsTty: Boolean,
 			stderrIsTty: Boolean,
 		): TestTty {
-			val testTtyPtr = testTtyInit(stdinIsTty, stdoutIsTty, stderrIsTty)
-			val streamsPtr = testTtyGetStreams(testTtyPtr)
+			val testTtyPtr = testInit(stdinIsTty, stdoutIsTty, stderrIsTty)
+			val streamsPtr = testGetStreams(testTtyPtr)
 			val streams = StandardStreams(streamsPtr)
-			val ttyPtr = testTtyGetTty(testTtyPtr)
+			val ttyPtr = testGetTty(testTtyPtr)
 			val tty = Tty(ttyPtr)
 			return TestTty(testTtyPtr, streams, tty)
 		}
@@ -28,49 +28,49 @@ public actual class TestTty private constructor(
 
 	@Throws(IOException::class)
 	public actual fun write(buffer: ByteArray, offset: Int, count: Int): Int {
-		return Jni.testTtyWrite(testTtyPtr, buffer, offset, count)
+		return Jni.testWrite(testTtyPtr, buffer, offset, count)
 	}
 
 	@Throws(IOException::class)
 	public actual fun read(buffer: ByteArray, offset: Int, count: Int): Int {
-		return Jni.testTtyRead(testTtyPtr, buffer, offset, count)
+		return Jni.testRead(testTtyPtr, buffer, offset, count)
 	}
 
 	@Throws(IOException::class)
 	public actual fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
-		return Jni.testTtyReadWithTimeout(testTtyPtr, buffer, offset, count, timeoutMillis)
+		return Jni.testReadWithTimeout(testTtyPtr, buffer, offset, count, timeoutMillis)
 	}
 
 	@Throws(IOException::class)
 	public actual fun interruptRead() {
-		Jni.testTtyInterruptRead(testTtyPtr)
+		Jni.testInterruptRead(testTtyPtr)
 	}
 
 	@Throws(IOException::class)
 	public actual fun resize(columns: Int, rows: Int, width: Int, height: Int) {
-		Jni.testTtyResize(testTtyPtr, columns, rows, width, height)
+		Jni.testResize(testTtyPtr, columns, rows, width, height)
 	}
 
 	@Throws(IOException::class)
 	public actual fun sendFocusEvent(focused: Boolean) {
-		Jni.testTtySendFocusEvent(testTtyPtr, focused)
+		Jni.testSendFocusEvent(testTtyPtr, focused)
 	}
 
 	@Throws(IOException::class)
 	public actual fun sendKeyEvent() {
-		Jni.testTtySendKeyEvent(testTtyPtr)
+		Jni.testSendKeyEvent(testTtyPtr)
 	}
 
 	@Throws(IOException::class)
 	public actual fun sendMouseEvent() {
-		Jni.testTtySendMouseEvent(testTtyPtr)
+		Jni.testSendMouseEvent(testTtyPtr)
 	}
 
 	@Throws(IOException::class)
 	actual override fun close() {
 		if (testTtyPtr != 0L) {
 			tty.close()
-			Jni.testTtyFree(testTtyPtr)
+			Jni.testFree(testTtyPtr)
 			testTtyPtr = 0
 		}
 	}
