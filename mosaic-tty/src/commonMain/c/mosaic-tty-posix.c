@@ -154,7 +154,7 @@ MosaicIoResult mosaic_tty_write(MosaicTty *tty, uint8_t *buffer, int count) {
 	return mosaic_tty_write_internal(tty->fd, buffer, count);
 }
 
-void mosaic_tty_sigwinch_handler(int value UNUSED) {
+static void mosaic_tty_sigwinch_handler(int value UNUSED) {
 	MosaicTty *tty = atomic_load(&globalTty);
 	if (likely(tty)) {
 		struct winsize size;

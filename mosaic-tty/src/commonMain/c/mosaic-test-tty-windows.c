@@ -18,7 +18,7 @@ typedef struct MosaicTestTtyImpl {
 
 static atomic_flag globalTestTty = ATOMIC_FLAG_INIT;
 
-uint32_t mosaic_test_resize_internal(HANDLE conout, int columns, int rows) {
+static uint32_t mosaic_test_resize_internal(HANDLE conout, int columns, int rows) {
 	SMALL_RECT windowSize = {};
 	windowSize.Left = 0;
 	windowSize.Right = columns - 1;

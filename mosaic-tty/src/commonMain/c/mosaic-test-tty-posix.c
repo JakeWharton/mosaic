@@ -23,7 +23,7 @@ typedef struct MosaicTestTtyImpl {
 	int parent_fd_interrupt_writer;
 } MosaicTestTtyImpl;
 
-uint32_t mosaic_test_resize_internal(int parentFd, int columns, int rows, int width, int height) {
+static uint32_t mosaic_test_resize_internal(int parentFd, int columns, int rows, int width, int height) {
 	struct winsize size = {};
 	size.ws_col = columns;
 	size.ws_row = rows;
