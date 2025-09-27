@@ -169,7 +169,7 @@ jobs:
           :mosaic-tty:jvmProGuardTest
           :mosaic-tty:jvmR8Test
 
-  build:
+  check:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v5
@@ -184,7 +184,7 @@ jobs:
       - run: >
           ./gradlew
           --continue
-          build
+          check
           -x allTests
           -x jvmProGuardTest
           -x jvmR8Test
@@ -213,7 +213,44 @@ jobs:
           path: build/dokka/htmlMultiModule/
           if-no-files-found: error
 
+  samples-jvm-binaries:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version-file: .github/workflows/.java-version
+
+      - run: ./gradlew -p samples installDist installJvmDist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mosaic-jvm-samples
+          path: samples/*/build/install/**
+          if-no-files-found: error
+
+  samples-native-binaries:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version-file: .github/workflows/.java-version
+
+      - run: ./gradlew -p samples linkReleaseExecutables
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mosaic-native-samples
+          path: samples/*/build/bin/*/releaseExecutable/*exe
+          if-no-files-found: error
+
   samples:
+    needs:
+      - samples-jvm-binaries
+      - samples-native-binaries
     strategy:
       fail-fast: false
       matrix:
@@ -234,22 +271,27 @@ jobs:
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.java-version
-      - uses: gradle/actions/setup-gradle@v4
+
+      - uses: actions/download-artifact@v5
+        with:
+          name: mosaic-native-samples
+      - uses: actions/download-artifact@v5
+        with:
+          name: mosaic-jvm-samples
 
       - run: |
-          ./gradlew -p samples/${{ matrix.sample }} installJvmDist linkReleaseExecutable${{ matrix.platform.target }}
-          ./samples/${{ matrix.sample }}/build/install/${{ matrix.sample }}-jvm/bin/${{ matrix.sample }}
-          ./samples/${{ matrix.sample }}/build/bin/${{ matrix.platform.target }}/releaseExecutable/${{ matrix.sample }}.*
+          ./${{ matrix.sample }}/build/install/${{ matrix.sample }}-jvm/bin/${{ matrix.sample }}
+          ./${{ matrix.sample }}/build/bin/${{ matrix.platform.target }}/releaseExecutable/${{ matrix.sample }}.*
         shell: bash
 
   final-status:
-    if: always()
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     needs:
       - docs
       - tty-tests
       - tty-shrinker-tests
-      - build
+      - check
       - samples
     steps:
       - name: Check
