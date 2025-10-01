@@ -1,8 +1,8 @@
 package com.jakewharton.mosaic.tty
 
 import assertk.assertThat
+import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
-import assertk.assertions.isTrue
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Ignore
@@ -31,7 +31,17 @@ class TtyTest {
 	}
 
 	private fun assertEventsEmpty() {
-		assertThat(events.isEmpty, name = "events empty").isTrue()
+		val events = buildList {
+			while (true) {
+				val event = events.tryReceive()
+				if (event.isSuccess) {
+					add(event.getOrThrow())
+				} else {
+					break
+				}
+			}
+		}
+		assertThat(events).isEmpty()
 	}
 
 	@Test fun focusEventNoCallback() {
@@ -191,8 +201,8 @@ class TtyTest {
 	 */
 	private fun doWriteReadRoundtrip() {
 		val data = "roundtrip"
-		testTty.write(data)
-		assertThat(tty.read(data.length)).isEqualTo(data)
+		testTty.writeFully(data)
+		assertThat(tty.readExactly(data.length)).isEqualTo(data)
 	}
 
 	inner class MyCallback(
@@ -207,8 +217,22 @@ class TtyTest {
 		override fun onMouse() {
 			events.trySend("$prefix onMouse")
 		}
+		private var lastSize: Size? = null
 		override fun onResize(columns: Int, rows: Int, width: Int, height: Int) {
-			events.trySend("$prefix onResize $columns $rows $width $height")
+			// Newer Windows Terminal will automatically send two resize records after the resize. We also
+			// unconditionally send our own record for older terminals which have no automatic sending.
+			val size = Size(columns, rows, width, height)
+			if (size != lastSize) {
+				lastSize = size
+				events.trySend("$prefix onResize $columns $rows $width $height")
+			}
 		}
 	}
+
+	private data class Size(
+		val columns: Int,
+		val rows: Int,
+		val width: Int,
+		val height: Int,
+	)
 }

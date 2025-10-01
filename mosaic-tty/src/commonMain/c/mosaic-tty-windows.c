@@ -180,7 +180,7 @@ MosaicIoResult mosaic_tty_write_internal(HANDLE h, uint8_t *buffer, int count) {
 	MosaicIoResult result = {};
 
 	DWORD written;
-	if (WriteFile(h, buffer, count, &written, NULL)) {
+	if (likely(WriteFile(h, buffer, count, &written, NULL))) {
 		result.count = written;
 	} else {
 		result.error = GetLastError();
