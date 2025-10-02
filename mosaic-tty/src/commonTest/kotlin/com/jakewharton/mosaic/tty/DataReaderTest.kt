@@ -23,17 +23,20 @@ class DataReaderTest(
 	private val data: DataReader = burstValues(
 		TtyToTestTty,
 		TestTtyToTest,
+		TestTtyToStandardInput,
+		StandardOutputToTestTty,
+		StandardErrorToTestTty,
 	),
 ) {
 	@Test fun readWhatWasWritten() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		data.write("hello")
+		data.writeFully("hello")
 		val readA = data.read(buffer, 0, 10)
 		assertThat(readA, "readA").isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("helloxxxxx")
 
-		data.write("world")
+		data.writeFully("world")
 		val readB = data.read(buffer, 0, 10)
 		assertThat(readB, "readB").isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("worldxxxxx")
@@ -42,7 +45,7 @@ class DataReaderTest(
 	@Test fun readOnlyUpToCount() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		data.write("abcdefghij")
+		data.writeFully("abcdefghij")
 		val read = data.read(buffer, 0, 5)
 		assertThat(read).isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("abcdexxxxx")
@@ -54,7 +57,7 @@ class DataReaderTest(
 	@Test fun readUnderflow() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		data.write("hello")
+		data.writeFully("hello")
 		val read = data.read(buffer, 0, 10)
 		assertThat(read).isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("helloxxxxx")
@@ -63,7 +66,7 @@ class DataReaderTest(
 	@Test fun readAtOffset() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
-		data.write("hello")
+		data.writeFully("hello")
 		val read = data.read(buffer, 5, 5)
 		assertThat(read).isEqualTo(5)
 		assertThat(buffer.decodeToString()).isEqualTo("xxxxxhello")

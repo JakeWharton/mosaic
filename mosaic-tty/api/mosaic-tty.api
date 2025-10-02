@@ -23,14 +23,21 @@ public final class com/jakewharton/mosaic/tty/TestTty : java/lang/AutoCloseable 
 	public fun close ()V
 	public final fun getStreams ()Lcom/jakewharton/mosaic/tty/StandardStreams;
 	public final fun getTty ()Lcom/jakewharton/mosaic/tty/Tty;
-	public final fun interruptRead ()V
-	public final fun read ([BII)I
-	public final fun readWithTimeout ([BIII)I
+	public final fun interruptStandardErrorRead ()V
+	public final fun interruptStandardOutputRead ()V
+	public final fun interruptTtyRead ()V
+	public final fun readStandardError ([BII)I
+	public final fun readStandardErrorWithTimeout ([BIII)I
+	public final fun readStandardOutput ([BII)I
+	public final fun readStandardOutputWithTimeout ([BIII)I
+	public final fun readTty ([BII)I
+	public final fun readTtyWithTimeout ([BIII)I
 	public final fun resize (IIII)V
 	public final fun sendFocusEvent (Z)V
 	public final fun sendKeyEvent ()V
 	public final fun sendMouseEvent ()V
-	public final fun write ([BII)I
+	public final fun writeStandardInput ([BII)I
+	public final fun writeTty ([BII)I
 }
 
 public final class com/jakewharton/mosaic/tty/TestTty$Companion {

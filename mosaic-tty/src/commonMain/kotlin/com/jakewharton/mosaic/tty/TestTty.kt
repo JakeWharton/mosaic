@@ -8,9 +8,9 @@ public expect class TestTty : AutoCloseable {
 		 * and only when a [Tty] is not also bound. Subsequent calls will throw an exception until
 		 * [TestTty.close] is called.
 		 *
-		 * @param stdinIsTty The return value of [StandardStreams.isInputTty].
-		 * @param stdoutIsTty The return value of [StandardStreams.isOutputTty].
-		 * @param stderrIsTty The return value of [StandardStreams.isErrorTty].
+		 * @param stdinIsTty Whether the standard input stream is the TTY.
+		 * @param stdoutIsTty Whether the standard output stream is the TTY.
+		 * @param stderrIsTty Whether the standard error stream is the TTY.
 		 * @throws IOException If an error occurred creating the PTY.
 		 * @throws IllegalStateException If another instance is already bound.
 		 */
@@ -31,33 +31,101 @@ public expect class TestTty : AutoCloseable {
 	 * @see Tty.read
 	 * @see Tty.readWithTimeout
 	 */
-	public fun write(buffer: ByteArray, offset: Int, count: Int): Int
+	public fun writeTty(buffer: ByteArray, offset: Int, count: Int): Int
 
 	/**
 	 * Read up to [count] bytes into [buffer] at [offset] from the PTY.
-	 * The number of bytes read will be returned. 0 will be returned if [interruptRead] is called
+	 * The number of bytes read will be returned. 0 will be returned if [interruptTtyRead] is called
 	 * while waiting for data.
 	 *
-	 * @see readWithTimeout
+	 * @see readTtyWithTimeout
 	 * @see Tty.write
 	 */
-	public fun read(buffer: ByteArray, offset: Int, count: Int): Int
+	public fun readTty(buffer: ByteArray, offset: Int, count: Int): Int
 
 	/**
 	 * Read up to [count] bytes into [buffer] at [offset] from the PTY.
-	 * The number of bytes read will be returned. 0 will be returned if [interruptRead] is called
+	 * The number of bytes read will be returned. 0 will be returned if [interruptTtyRead] is called
 	 * while waiting for data, or if at least [timeoutMillis] have passed without data.
 	 *
 	 * @param timeoutMillis A value of 0 will perform a non-blocking read. Otherwise, valid values
 	 * are 1 to 999 which represent a maximum time (in milliseconds) to wait for data. Note: This
 	 * value is not validated.
-	 * @see read
+	 * @see readTty
 	 * @see Tty.write
 	 */
-	public fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int
+	public fun readTtyWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int
 
-	/** Signal blocking calls to [read] to wake up and return 0. */
-	public fun interruptRead()
+	/** Signal blocking calls to [readTty] or [readTtyWithTimeout] to wake up and return 0. */
+	public fun interruptTtyRead()
+
+	/**
+	 * Write up to [count] bytes into [buffer] at [offset] to the standard input stream.
+	 * If the standard input stream is set to the TTY, this is equivalent to [writeTty].
+	 * The number of bytes written will be returned.
+	 *
+	 * @see StandardStreams.readInput
+	 * @see StandardStreams.readInputWithTimeout
+	 */
+	public fun writeStandardInput(buffer: ByteArray, offset: Int, count: Int): Int
+
+	/**
+	 * Read up to [count] bytes into [buffer] at [offset] from the standard output stream.
+	 * The number of bytes read will be returned. 0 will be returned if [interruptStandardOutputRead]
+	 * is called while waiting for data.
+	 *
+	 * @see readStandardOutputWithTimeout
+	 * @see StandardStreams.writeOutput
+	 */
+	public fun readStandardOutput(buffer: ByteArray, offset: Int, count: Int): Int
+
+	/**
+	 * Read up to [count] bytes into [buffer] at [offset] from the standard output stream.
+	 * The number of bytes read will be returned. 0 will be returned if [interruptStandardOutputRead]
+	 * is called while waiting for data, or if at least [timeoutMillis] have passed without data.
+	 *
+	 * @param timeoutMillis A value of 0 will perform a non-blocking read. Otherwise, valid values
+	 * are 1 to 999 which represent a maximum time (in milliseconds) to wait for data. Note: This
+	 * value is not validated.
+	 * @see readStandardOutput
+	 * @see StandardStreams.writeOutput
+	 */
+	public fun readStandardOutputWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int
+
+	/**
+	 * Signal blocking calls to [readStandardOutput] or [readStandardOutputWithTimeout] to wake up
+	 * and return 0.
+	 */
+	public fun interruptStandardOutputRead()
+
+	/**
+	 * Read up to [count] bytes into [buffer] at [offset] from the standard error stream.
+	 * The number of bytes read will be returned. 0 will be returned if [interruptStandardErrorRead]
+	 * is called while waiting for data.
+	 *
+	 * @see readStandardErrorWithTimeout
+	 * @see StandardStreams.writeError
+	 */
+	public fun readStandardError(buffer: ByteArray, offset: Int, count: Int): Int
+
+	/**
+	 * Read up to [count] bytes into [buffer] at [offset] from the standard error stream.
+	 * The number of bytes read will be returned. 0 will be returned if [interruptStandardErrorRead]
+	 * is called while waiting for data, or if at least [timeoutMillis] have passed without data.
+	 *
+	 * @param timeoutMillis A value of 0 will perform a non-blocking read. Otherwise, valid values
+	 * are 1 to 999 which represent a maximum time (in milliseconds) to wait for data. Note: This
+	 * value is not validated.
+	 * @see readStandardError
+	 * @see StandardStreams.writeError
+	 */
+	public fun readStandardErrorWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int
+
+	/**
+	 * Signal blocking calls to [readStandardError] or [readStandardErrorWithTimeout] to wake up
+	 * and return 0.
+	 */
+	public fun interruptStandardErrorRead()
 
 	/**
 	 * Resize the TTY.

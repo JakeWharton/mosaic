@@ -23,12 +23,12 @@ abstract class BaseEventParserTest {
 
 fun TestTty.writeHex(hex: String) {
 	val buffer = hex.hexToByteArray()
-	val written = write(buffer, 0, buffer.size)
+	val written = writeTty(buffer, 0, buffer.size)
 	assertThat(written).isEqualTo(buffer.size)
 }
 
 fun TestTty.write(s: String) {
 	val bytes = s.encodeToByteArray()
-	val written = write(bytes, 0, bytes.size)
+	val written = writeTty(bytes, 0, bytes.size)
 	assertThat(written).isEqualTo(bytes.size)
 }

@@ -98,13 +98,27 @@ final class Jni {
 
 	static native long testGetTty(long testTtyPtr);
 
-	static native int testWrite(long testTtyPtr, byte[] buffer, int offset, int count);
+	static native int testWriteTty(long testTtyPtr, byte[] buffer, int offset, int count);
 
-	static native int testRead(long testTtyPtr, byte[] buffer, int offset, int count);
+	static native int testReadTty(long testTtyPtr, byte[] buffer, int offset, int count);
 
-	static native int testReadWithTimeout(long testTtyPtr, byte[] buffer, int offset, int count, int timeoutMillis);
+	static native int testReadTtyWithTimeout(long testTtyPtr, byte[] buffer, int offset, int count, int timeoutMillis);
 
-	static native void testInterruptRead(long testTtyPtr);
+	static native void testInterruptTtyRead(long testTtyPtr);
+
+	static native int testWriteInput(long testTtyPtr, byte[] buffer, int offset, int count);
+
+	static native int testReadOutput(long testTtyPtr, byte[] buffer, int offset, int count);
+
+	static native int testReadOutputWithTimeout(long testTtyPtr, byte[] buffer, int offset, int count, int timeoutMillis);
+
+	static native void testInterruptOutputRead(long testTtyPtr);
+
+	static native int testReadError(long testTtyPtr, byte[] buffer, int offset, int count);
+
+	static native int testReadErrorWithTimeout(long testTtyPtr, byte[] buffer, int offset, int count, int timeoutMillis);
+
+	static native void testInterruptErrorRead(long testTtyPtr);
 
 	static native void testResize(
 		long testTtyPtr,

@@ -1,7 +1,7 @@
 #if defined(_WIN32)
 
 #include "mosaic-tty-windows.h"
-#include "mosaic-utils.h"
+#include "mosaic-utils-windows.h"
 
 #include <assert.h>
 #include <stdatomic.h>
@@ -176,21 +176,8 @@ MOSAIC_EXPORT uint32_t mosaic_tty_interrupt_read(MosaicTty *tty) {
 		: GetLastError();
 }
 
-MosaicIoResult mosaic_tty_write_internal(HANDLE h, uint8_t *buffer, int count) {
-	MosaicIoResult result = {};
-
-	DWORD written;
-	if (likely(WriteFile(h, buffer, count, &written, NULL))) {
-		result.count = written;
-	} else {
-		result.error = GetLastError();
-	}
-
-	return result;
-}
-
 MOSAIC_EXPORT MosaicIoResult mosaic_tty_write(MosaicTty *tty, uint8_t *buffer, int count) {
-	return mosaic_tty_write_internal(tty->conout_for_write, buffer, count);
+	return mosaic_utils_write(tty->conout_for_write, buffer, count);
 }
 
 MOSAIC_EXPORT uint32_t mosaic_tty_enable_raw_mode(MosaicTty *tty) {

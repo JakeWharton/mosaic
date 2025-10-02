@@ -13,19 +13,22 @@ class DataWriterTest(
 	private val data: DataWriter = burstValues(
 		TtyToTestTty,
 		TestTtyToTest,
+		TestTtyToStandardInput,
+		StandardOutputToTestTty,
+		StandardErrorToTestTty,
 	),
 ) {
 	@Test fun writeOnlyUpToCount() {
 		val written = data.write("abcdefghij".encodeToByteArray(), 0, 5)
 		assertThat(written).isEqualTo(5)
 
-		assertThat(data.read(10)).isEqualTo("abcde")
+		assertThat(data.readAtMost(10).decodeToString()).isEqualTo("abcde")
 	}
 
 	@Test fun writeAtOffset() {
 		val written = data.write("abcdefghij".encodeToByteArray(), 5, 5)
 		assertThat(written).isEqualTo(5)
 
-		assertThat(data.read(10)).isEqualTo("fghij")
+		assertThat(data.readAtMost(5).decodeToString()).isEqualTo("fghij")
 	}
 }
