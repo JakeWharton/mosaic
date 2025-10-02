@@ -14,7 +14,7 @@ typedef struct MosaicTestTtyImpl {
 	MosaicTty *tty;
 	HANDLE conout_pipe_read;
 	HANDLE conout_pipe_write;
-	OVERLAPPED conout_overlapped;
+	HANDLE conout_overlapped_event;
 	HANDLE conout_interrupt_event;
 } MosaicTestTtyImpl;
 
@@ -68,12 +68,6 @@ MOSAIC_EXPORT MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool std
 	// Ensure we don't start with existing records in the buffer.
 	FlushConsoleInputBuffer(conin);
 
-	HANDLE conoutPipeEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-	if (unlikely(conoutPipeEvent == INVALID_HANDLE_VALUE)) {
-		result.error = GetLastError();
-		goto err_conout;
-	}
-
 	CHAR pipename[MAX_PATH];
 	sprintf(
 		pipename,
@@ -94,7 +88,7 @@ MOSAIC_EXPORT MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool std
 	);
 	if (unlikely(conoutPipeRead == INVALID_HANDLE_VALUE)) {
 		result.error = GetLastError();
-		goto err_conout_pipe_event;
+		goto err_conout;
 	}
 
 	HANDLE conoutPipeWrite = CreateFileA(
@@ -111,10 +105,16 @@ MOSAIC_EXPORT MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool std
 		goto err_conout_pipe_read;
 	}
 
+	HANDLE conoutOverlappedEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+	if (unlikely(conoutOverlappedEvent == INVALID_HANDLE_VALUE)) {
+		result.error = GetLastError();
+		goto err_conout_pipe_write;
+	}
+
 	HANDLE conoutInterruptEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 	if (unlikely(conoutInterruptEvent == NULL)) {
 		result.error = GetLastError();
-		goto err_conout_pipe_write;
+		goto err_conout_overlapped_event;
 	}
 
 	// Any non-char handle will do.
@@ -139,7 +139,7 @@ MOSAIC_EXPORT MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool std
 	testTty->tty = ttyInitResult.tty;
 	testTty->conout_pipe_read = conoutPipeRead;
 	testTty->conout_pipe_write = conoutPipeWrite;
-	testTty->conout_overlapped.hEvent = conoutPipeEvent;
+	testTty->conout_overlapped_event = conoutOverlappedEvent;
 	testTty->conout_interrupt_event = conoutInterruptEvent;
 
 	result.testTty = testTty;
@@ -158,14 +158,14 @@ MOSAIC_EXPORT MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool std
 	err_conout_interrupt_event:
 	CloseHandle(conoutInterruptEvent);
 
+	err_conout_overlapped_event:
+	CloseHandle(conoutOverlappedEvent);
+
 	err_conout_pipe_write:
 	CloseHandle(conoutPipeWrite);
 
 	err_conout_pipe_read:
 	CloseHandle(conoutPipeRead);
-
-	err_conout_pipe_event:
-	CloseHandle(conoutPipeEvent);
 
 	err_conout:
 	CloseHandle(conout);
@@ -219,8 +219,11 @@ MOSAIC_EXPORT MosaicIoResult mosaic_test_read(MosaicTestTty *testTty, uint8_t *b
 MOSAIC_EXPORT MosaicIoResult mosaic_test_read_with_timeout(MosaicTestTty *testTty, uint8_t *buffer, int count, int timeoutMillis) {
 	MosaicIoResult result = {};
 
+	OVERLAPPED overlapped = {};
+	overlapped.hEvent = testTty->conout_overlapped_event;
+
 	// Start the asynchronous read of the pipe. This should "fail" and return an error of pending.
-	if (unlikely(ReadFile(testTty->conout_pipe_read, buffer, count, NULL, &testTty->conout_overlapped))) {
+	if (unlikely(ReadFile(testTty->conout_pipe_read, buffer, count, NULL, &overlapped))) {
 		goto success;
 	}
 	DWORD error = GetLastError();
@@ -229,7 +232,7 @@ MOSAIC_EXPORT MosaicIoResult mosaic_test_read_with_timeout(MosaicTestTty *testTt
 		goto ret;
 	}
 
-	HANDLE waitHandles[2] = { testTty->conout_overlapped.hEvent, testTty->conout_interrupt_event };
+	HANDLE waitHandles[2] = { testTty->conout_overlapped_event, testTty->conout_interrupt_event };
 	DWORD waitResult = WaitForMultipleObjects(2, waitHandles, FALSE, timeoutMillis);
 	if (unlikely(waitResult != WAIT_OBJECT_0)) {
 		goto cancel_read;
@@ -238,7 +241,7 @@ MOSAIC_EXPORT MosaicIoResult mosaic_test_read_with_timeout(MosaicTestTty *testTt
 	success:
 	;
 	DWORD c;
-	if (unlikely(!GetOverlappedResult(testTty->conout_pipe_read, &testTty->conout_overlapped, &c, TRUE))) {
+	if (unlikely(!GetOverlappedResult(testTty->conout_pipe_read, &overlapped, &c, TRUE))) {
 		result.error = GetLastError();
 	} else {
 		result.count = c;
@@ -320,7 +323,7 @@ MOSAIC_EXPORT uint32_t mosaic_test_free(MosaicTestTty *testTty) {
 	if (!CloseHandle(testTty->conout_pipe_write) && result == 0) {
 		result = GetLastError();
 	}
-	if (!CloseHandle(testTty->conout_overlapped.hEvent) && result == 0) {
+	if (!CloseHandle(testTty->conout_overlapped_event) && result == 0) {
 		result = GetLastError();
 	}
 	if (!CloseHandle(testTty->conout_interrupt_event) && result == 0) {
