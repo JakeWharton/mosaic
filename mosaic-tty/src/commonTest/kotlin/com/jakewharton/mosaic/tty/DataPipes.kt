@@ -2,6 +2,8 @@ package com.jakewharton.mosaic.tty
 
 import app.cash.burst.TestFunction
 import app.cash.burst.TestInterceptor
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 
 interface DataReader : TestInterceptor {
 	fun write(message: String)
@@ -31,12 +33,19 @@ data object TtyToTestTty : DataReader, DataWriter {
 			tty = testTty.tty
 			tty.enableRawMode()
 
+			// There's a race condition(?) during setup where the initial resize event can put a record
+			// into the console input causing reads to be missing a single byte. In normal code this is
+			// tolerable as these records can come at _any_ time. However, we have tests which assert
+			// precise read counts, so do a write/read roundtrip to ensure that record is flushed out.
+			testTty.writeFully("dummy")
+			assertThat(tty.readExactly(5)).isEqualTo("dummy")
+
 			testFunction()
 		}
 	}
 
 	override fun write(message: String) {
-		return testTty.write(message)
+		return testTty.writeFully(message)
 	}
 
 	override fun write(buffer: ByteArray, offset: Int, count: Int): Int {
@@ -71,7 +80,7 @@ data object TestTtyToTest : DataReader, DataWriter {
 	}
 
 	override fun write(message: String) {
-		tty.write(message)
+		tty.writeFully(message)
 	}
 
 	override fun write(buffer: ByteArray, offset: Int, count: Int): Int {
