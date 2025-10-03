@@ -103,6 +103,7 @@ jobs:
               version: latest
 
     runs-on: ${{ matrix.platform.os }}
+    timeout-minutes: 5
 
     steps:
       ### NATIVE
