@@ -32,21 +32,21 @@ abstract class MosaicData :
 	}
 }
 
-data object TtyToTestTty : MosaicData() {
+data object TtyToTestTerminal : MosaicData() {
 	private lateinit var testTerminal: TestTerminal
 	private lateinit var tty: Tty
 
 	override fun intercept(testFunction: TestFunction) {
-		TestTerminal.bind().use { testTty ->
-			this.testTerminal = testTty
-			tty = testTty.tty
+		TestTerminal.bind().use { testTerminal ->
+			this.testTerminal = testTerminal
+			tty = testTerminal.tty
 			tty.enableRawMode()
 
 			// There's a race condition(?) during setup where the initial resize event can put a record
 			// into the console input causing reads to be missing a single byte. In normal code this is
 			// tolerable as these records can come at _any_ time. However, we have tests which assert
 			// precise read counts, so do a write/read roundtrip to ensure that record is flushed out.
-			"dummy".encodeToByteArray().writeFullyTo(testTty::writeTty)
+			"dummy".encodeToByteArray().writeFullyTo(testTerminal::writeTty)
 			val dummy = ByteArray(5).readFully(tty::read).decodeToString()
 			assertThat(dummy).isEqualTo("dummy")
 
@@ -71,14 +71,14 @@ data object TtyToTestTty : MosaicData() {
 	}
 }
 
-data object TestTtyToTest : MosaicData() {
+data object TestTerminalToTty : MosaicData() {
 	private lateinit var testTerminal: TestTerminal
 	private lateinit var tty: Tty
 
 	override fun intercept(testFunction: TestFunction) {
-		TestTerminal.bind().use { testTty ->
-			this.testTerminal = testTty
-			tty = testTty.tty
+		TestTerminal.bind().use { testTerminal ->
+			this.testTerminal = testTerminal
+			tty = testTerminal.tty
 			tty.enableRawMode()
 
 			testFunction()
@@ -107,14 +107,31 @@ data object TestTtyToTest : MosaicData() {
 	}
 }
 
-data object TestTtyToStandardInput : MosaicData() {
+data object TestTerminalToStandardInput : BaseTestTerminalToStandardInput(isTty = false)
+data object TestTerminalToStandardInputAsTty : BaseTestTerminalToStandardInput(isTty = true)
+abstract class BaseTestTerminalToStandardInput(
+	private val isTty: Boolean,
+) : MosaicData() {
 	private lateinit var testTerminal: TestTerminal
 	private lateinit var streams: StandardStreams
 
 	override fun intercept(testFunction: TestFunction) {
-		TestTerminal.bind().use { testTty ->
-			this.testTerminal = testTty
-			streams = testTty.streams
+		TestTerminal.bind(stdinIsTty = isTty).use { testTerminal ->
+			this.testTerminal = testTerminal
+			streams = testTerminal.streams
+			if (isTty) {
+				val tty = testTerminal.tty
+
+				tty.enableRawMode()
+
+				// There's a race condition(?) during setup where the initial resize event can put a record
+				// into the console input causing reads to be missing a single byte. In normal code this is
+				// tolerable as these records can come at _any_ time. However, we have tests which assert
+				// precise read counts, so do a write/read roundtrip to ensure that record is flushed out.
+				"dummy".encodeToByteArray().writeFullyTo(testTerminal::writeTty)
+				val dummy = ByteArray(5).readFully(tty::read).decodeToString()
+				assertThat(dummy).isEqualTo("dummy")
+			}
 
 			testFunction()
 		}
@@ -142,14 +159,21 @@ data object TestTtyToStandardInput : MosaicData() {
 	}
 }
 
-data object StandardOutputToTestTty : MosaicData() {
+data object StandardOutputToTestTerminal : BaseStandardOutputToTestTerminal(isTty = false)
+data object StandardOutputAsTtyToTestTerminal : BaseStandardOutputToTestTerminal(isTty = true)
+abstract class BaseStandardOutputToTestTerminal(
+	private val isTty: Boolean,
+) : MosaicData() {
 	private lateinit var testTerminal: TestTerminal
 	private lateinit var streams: StandardStreams
 
 	override fun intercept(testFunction: TestFunction) {
-		TestTerminal.bind().use { testTty ->
-			this.testTerminal = testTty
-			streams = testTty.streams
+		TestTerminal.bind(stdoutIsTty = isTty).use { testTerminal ->
+			this.testTerminal = testTerminal
+			streams = testTerminal.streams
+			if (isTty) {
+				testTerminal.tty.enableRawMode()
+			}
 
 			testFunction()
 		}
@@ -177,14 +201,21 @@ data object StandardOutputToTestTty : MosaicData() {
 	}
 }
 
-data object StandardErrorToTestTty : MosaicData() {
+data object StandardErrorToTestTerminal : BaseStandardErrorToTestTerminal(isTty = false)
+data object StandardErrorAsTtyToTestTerminal : BaseStandardErrorToTestTerminal(isTty = true)
+abstract class BaseStandardErrorToTestTerminal(
+	private val isTty: Boolean,
+) : MosaicData() {
 	private lateinit var testTerminal: TestTerminal
 	private lateinit var streams: StandardStreams
 
 	override fun intercept(testFunction: TestFunction) {
-		TestTerminal.bind().use { testTty ->
-			this.testTerminal = testTty
-			streams = testTty.streams
+		TestTerminal.bind(stderrIsTty = isTty).use { testTerminal ->
+			this.testTerminal = testTerminal
+			streams = testTerminal.streams
+			if (isTty) {
+				testTerminal.tty.enableRawMode()
+			}
 
 			testFunction()
 		}

@@ -11,11 +11,14 @@ import kotlin.test.Test
 class DataWriterTest(
 	@InterceptTest
 	private val data: DataWriter = burstValues(
-		TtyToTestTty,
-		TestTtyToTest,
-		TestTtyToStandardInput,
-		StandardOutputToTestTty,
-		StandardErrorToTestTty,
+		TtyToTestTerminal,
+		TestTerminalToTty,
+		TestTerminalToStandardInput,
+		TestTerminalToStandardInputAsTty,
+		StandardOutputToTestTerminal,
+		StandardOutputAsTtyToTestTerminal,
+		StandardErrorToTestTerminal,
+		StandardErrorAsTtyToTestTerminal,
 	),
 ) {
 	@Test fun writeOnlyUpToCount() {

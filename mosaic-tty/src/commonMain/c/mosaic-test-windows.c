@@ -11,6 +11,7 @@
 typedef struct MosaicTestTerminalImpl {
 	MosaicStreams *streams;
 	MosaicTty *tty;
+	bool stdin_is_tty;
 	HANDLE conin;
 	HANDLE conout;
 	HANDLE conout_pipe_read;
@@ -149,10 +150,6 @@ MOSAIC_EXPORT MosaicTestTerminalInitResult mosaic_test_init(bool stdinIsTty, boo
 		goto err_stderr_pipe;
 	}
 
-	HANDLE stdinRead = stdinIsTty ? conin : stdinPipeRead;
-	HANDLE stdoutWrite = stdoutIsTty ? conout : stdoutPipeWrite;
-	HANDLE stderrWrite = stderrIsTty ? conout : stderrPipeWrite;
-
 	MosaicTtyInitResult ttyInitResult = mosaic_tty_init_with_handles(conin, conout, conoutPipeWrite, true);
 	if (unlikely(!ttyInitResult.tty)) {
 		result.error = ttyInitResult.error;
@@ -160,7 +157,14 @@ MOSAIC_EXPORT MosaicTestTerminalInitResult mosaic_test_init(bool stdinIsTty, boo
 		goto err_stderr_events;
 	}
 
-	MosaicStreamsInitResult streamsInitResult = mosaic_streams_init_internal(stdinRead, stdoutWrite, stderrWrite, true);
+	MosaicStreamsInitResult streamsInitResult = mosaic_streams_init_internal(
+		stdinIsTty ? conin : stdinPipeRead,
+		stdoutIsTty ? conout : stdoutPipeWrite,
+		stdoutIsTty ? conoutPipeWrite : stdoutPipeWrite,
+		stderrIsTty ? conout : stderrPipeWrite,
+		stderrIsTty ? conoutPipeWrite : stderrPipeWrite,
+		true
+	);
 	if (unlikely(!streamsInitResult.streams)) {
 		result.error = streamsInitResult.error;
 		goto err_tty;
@@ -168,6 +172,7 @@ MOSAIC_EXPORT MosaicTestTerminalInitResult mosaic_test_init(bool stdinIsTty, boo
 
 	testTty->streams = streamsInitResult.streams;
 	testTty->tty = ttyInitResult.tty;
+	testTty->stdin_is_tty = stdinIsTty;
 	testTty->conin = conin;
 	testTty->conout = conout;
 	testTty->conout_pipe_read = conoutPipeRead;
@@ -297,7 +302,11 @@ MOSAIC_EXPORT uint32_t mosaic_test_interrupt_tty_read(MosaicTestTty *testTty) {
 }
 
 MOSAIC_EXPORT MosaicIoResult mosaic_test_write_input(MosaicTestTty *testTty, uint8_t *buffer, int count) {
-	return mosaic_utils_write(testTty->stdin_pipe_write, buffer, count);
+	// If stdin is TTY, just delegate to the TTY write because it uses the necessary input records.
+	return testTty->stdin_is_tty
+		? mosaic_test_write_tty(testTty, buffer, count)
+		: mosaic_utils_write(testTty->stdin_pipe_write, buffer, count)
+		;
 }
 
 MOSAIC_EXPORT MosaicIoResult mosaic_test_read_output(MosaicTestTty *testTty, uint8_t *buffer, int count) {
