@@ -218,7 +218,7 @@ MOSAIC_EXPORT MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool std
 	MosaicStreamsInitResult streamsInitResult = mosaic_streams_init_internal(stdinRead, stdoutWrite, stderrWrite);
 	if (unlikely(!streamsInitResult.streams)) {
 		result.error = streamsInitResult.error;
-		goto err_stderr_events;
+		goto err_tty;
 	}
 
 	testTty->streams = streamsInitResult.streams;
@@ -243,14 +243,18 @@ MOSAIC_EXPORT MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool std
 	if (unlikely(atomic_flag_test_and_set(&globalTestTty))) {
 		// We initialized an instance but there already was a global instance.
 		result.testTty = NULL;
-		// TODO free streams
-		result.error = mosaic_tty_free(ttyInitResult.tty);
 		result.already_bound = true;
-		goto err_stderr_events;
+		goto err_streams;
 	}
 
 	ret:
 	return result;
+
+	err_streams:
+	mosaic_streams_free(streamsInitResult.streams);
+
+	err_tty:
+	mosaic_tty_free(ttyInitResult.tty);
 
 	err_stderr_events:
 	CloseHandle(stderrInterruptEvent);
