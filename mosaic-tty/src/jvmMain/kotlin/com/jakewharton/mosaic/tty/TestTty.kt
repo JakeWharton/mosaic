@@ -27,23 +27,58 @@ public actual class TestTty private constructor(
 	}
 
 	@Throws(IOException::class)
-	public actual fun write(buffer: ByteArray, offset: Int, count: Int): Int {
-		return Jni.testWrite(testTtyPtr, buffer, offset, count)
+	public actual fun writeTty(buffer: ByteArray, offset: Int, count: Int): Int {
+		return Jni.testWriteTty(testTtyPtr, buffer, offset, count)
 	}
 
 	@Throws(IOException::class)
-	public actual fun read(buffer: ByteArray, offset: Int, count: Int): Int {
-		return Jni.testRead(testTtyPtr, buffer, offset, count)
+	public actual fun readTty(buffer: ByteArray, offset: Int, count: Int): Int {
+		return Jni.testReadTty(testTtyPtr, buffer, offset, count)
 	}
 
 	@Throws(IOException::class)
-	public actual fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
-		return Jni.testReadWithTimeout(testTtyPtr, buffer, offset, count, timeoutMillis)
+	public actual fun readTtyWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
+		return Jni.testReadTtyWithTimeout(testTtyPtr, buffer, offset, count, timeoutMillis)
 	}
 
 	@Throws(IOException::class)
-	public actual fun interruptRead() {
-		Jni.testInterruptRead(testTtyPtr)
+	public actual fun interruptTtyRead() {
+		Jni.testInterruptTtyRead(testTtyPtr)
+	}
+
+	@Throws(IOException::class)
+	public actual fun writeStandardInput(buffer: ByteArray, offset: Int, count: Int): Int {
+		return Jni.testWriteInput(testTtyPtr, buffer, offset, count)
+	}
+
+	@Throws(IOException::class)
+	public actual fun readStandardOutput(buffer: ByteArray, offset: Int, count: Int): Int {
+		return Jni.testReadOutput(testTtyPtr, buffer, offset, count)
+	}
+
+	@Throws(IOException::class)
+	public actual fun readStandardOutputWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
+		return Jni.testReadOutputWithTimeout(testTtyPtr, buffer, offset, count, timeoutMillis)
+	}
+
+	@Throws(IOException::class)
+	public actual fun interruptStandardOutputRead() {
+		Jni.testInterruptOutputRead(testTtyPtr)
+	}
+
+	@Throws(IOException::class)
+	public actual fun readStandardError(buffer: ByteArray, offset: Int, count: Int): Int {
+		return Jni.testReadError(testTtyPtr, buffer, offset, count)
+	}
+
+	@Throws(IOException::class)
+	public actual fun readStandardErrorWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
+		return Jni.testReadErrorWithTimeout(testTtyPtr, buffer, offset, count, timeoutMillis)
+	}
+
+	@Throws(IOException::class)
+	public actual fun interruptStandardErrorRead() {
+		Jni.testInterruptErrorRead(testTtyPtr)
 	}
 
 	@Throws(IOException::class)

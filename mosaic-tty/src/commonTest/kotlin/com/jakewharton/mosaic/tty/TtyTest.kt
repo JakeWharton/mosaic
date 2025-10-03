@@ -200,9 +200,11 @@ class TtyTest {
 	 * write-read round-trip to ensure all events were processed.
 	 */
 	private fun doWriteReadRoundtrip() {
-		val data = "roundtrip"
-		testTty.writeFully(data)
-		assertThat(tty.readExactly(data.length)).isEqualTo(data)
+		val outgoing = "roundtrip".encodeToByteArray()
+		outgoing.writeFullyTo(testTty::writeTty)
+
+		val incoming = ByteArray(outgoing.size).readFully(tty::read)
+		assertThat(incoming.decodeToString()).isEqualTo("roundtrip")
 	}
 
 	inner class MyCallback(

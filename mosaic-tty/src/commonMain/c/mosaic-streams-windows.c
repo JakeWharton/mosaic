@@ -2,9 +2,11 @@
 
 #include "mosaic-streams-windows.h"
 #include "mosaic-tty-windows.h"
+#include "mosaic-utils-windows.h"
 
 typedef struct MosaicStreamsImpl {
 	HANDLE stdin;
+	HANDLE stdin_overlapped_event;
 	HANDLE stdin_interrupt_event;
 	HANDLE stdout;
 	HANDLE stderr;
@@ -19,13 +21,16 @@ MosaicStreamsInitResult mosaic_streams_init_internal(HANDLE stdin, HANDLE stdout
 		goto ret;
 	}
 
-	HANDLE stdinInterruptEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-	if (unlikely(stdinInterruptEvent == NULL)) {
-		result.error = GetLastError();
+	HANDLE stdinOverlappedEvent;
+	HANDLE stdinInterruptEvent;
+	uint32_t stdinEventsResult = mosaic_utils_create_events(&stdinOverlappedEvent, &stdinInterruptEvent);
+	if (unlikely(stdinEventsResult)) {
+		result.error = stdinEventsResult;
 		goto err_free;
 	}
 
 	streams->stdin = stdin;
+	streams->stdin_overlapped_event = stdinOverlappedEvent;
 	streams->stdin_interrupt_event = stdinInterruptEvent;
 	streams->stdout = stdout;
 	streams->stderr = stderr;
@@ -94,30 +99,7 @@ MOSAIC_EXPORT MosaicIoResult mosaic_streams_read_input(MosaicStreams *streams, u
 }
 
 MOSAIC_EXPORT MosaicIoResult mosaic_streams_read_input_with_timeout(MosaicStreams *streams, uint8_t *buffer, int count, int timeoutMillis) {
-	MosaicIoResult result = {};
-
-	HANDLE waitHandles[2] = { streams->stdin, streams->stdin_interrupt_event };
-
-	DWORD waitResult = WaitForMultipleObjects(2, waitHandles, FALSE, timeoutMillis);
-	if (likely(waitResult == WAIT_OBJECT_0)) {
-		DWORD c;
-		if (!ReadFile(streams->stdin, buffer, count, &c, NULL)) {
-			goto err;
-		}
-		result.count = c;
-	} else if (unlikely(waitResult == WAIT_FAILED)) {
-		goto err;
-	}
-	// Else return a count of 0 because either:
-	// - The interrupt event was selected (which auto resets its state).
-	// - The user-supplied, non-infinite timeout ran out.
-
-	ret:
-	return result;
-
-	err:
-	result.error = GetLastError();
-	goto ret;
+	return mosaic_utils_read_overlapped(streams->stdin, streams->stdin_overlapped_event, streams->stdin_interrupt_event, buffer, count, timeoutMillis);
 }
 
 MOSAIC_EXPORT uint32_t mosaic_streams_interrupt_input_read(MosaicStreams *streams) {
@@ -127,11 +109,11 @@ MOSAIC_EXPORT uint32_t mosaic_streams_interrupt_input_read(MosaicStreams *stream
 }
 
 MOSAIC_EXPORT MosaicIoResult mosaic_streams_write_output(MosaicStreams *streams, uint8_t *buffer, int count) {
-	return mosaic_tty_write_internal(streams->stdout, buffer, count);
+	return mosaic_utils_write(streams->stdout, buffer, count);
 }
 
 MOSAIC_EXPORT MosaicIoResult mosaic_streams_write_error(MosaicStreams *streams, uint8_t *buffer, int count) {
-	return mosaic_tty_write_internal(streams->stderr, buffer, count);
+	return mosaic_utils_write(streams->stderr, buffer, count);
 }
 
 uint32_t mosaic_streams_free(MosaicStreams *streams) {

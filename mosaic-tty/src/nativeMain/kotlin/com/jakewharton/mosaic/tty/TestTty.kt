@@ -36,9 +36,9 @@ public actual class TestTty private constructor(
 		}
 	}
 
-	public actual fun write(buffer: ByteArray, offset: Int, count: Int): Int {
+	public actual fun writeTty(buffer: ByteArray, offset: Int, count: Int): Int {
 		buffer.asUByteArray().usePinned {
-			mosaic_test_write(ptr, it.addressOf(offset), count).useContents {
+			mosaic_test_write_tty(ptr, it.addressOf(offset), count).useContents {
 				if (error == 0U) {
 					return this.count
 				}
@@ -47,9 +47,9 @@ public actual class TestTty private constructor(
 		}
 	}
 
-	public actual fun read(buffer: ByteArray, offset: Int, count: Int): Int {
+	public actual fun readTty(buffer: ByteArray, offset: Int, count: Int): Int {
 		buffer.asUByteArray().usePinned {
-			mosaic_test_read(ptr, it.addressOf(offset), count).useContents {
+			mosaic_test_read_tty(ptr, it.addressOf(offset), count).useContents {
 				if (error == 0U) {
 					return this.count
 				}
@@ -58,9 +58,9 @@ public actual class TestTty private constructor(
 		}
 	}
 
-	public actual fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
+	public actual fun readTtyWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
 		buffer.asUByteArray().usePinned {
-			mosaic_test_read_with_timeout(ptr, it.addressOf(offset), count, timeoutMillis).useContents {
+			mosaic_test_read_tty_with_timeout(ptr, it.addressOf(offset), count, timeoutMillis).useContents {
 				if (error == 0U) {
 					return this.count
 				}
@@ -69,8 +69,77 @@ public actual class TestTty private constructor(
 		}
 	}
 
-	public actual fun interruptRead() {
-		val error = mosaic_test_interrupt_read(ptr)
+	public actual fun interruptTtyRead() {
+		val error = mosaic_test_interrupt_tty_read(ptr)
+		if (error != 0U) {
+			throwIoe(error)
+		}
+	}
+
+	public actual fun writeStandardInput(buffer: ByteArray, offset: Int, count: Int): Int {
+		buffer.asUByteArray().usePinned {
+			mosaic_test_write_input(ptr, it.addressOf(offset), count).useContents {
+				if (error == 0U) {
+					return this.count
+				}
+				throwIoe(error)
+			}
+		}
+	}
+
+	public actual fun readStandardOutput(buffer: ByteArray, offset: Int, count: Int): Int {
+		buffer.asUByteArray().usePinned {
+			mosaic_test_read_output(ptr, it.addressOf(offset), count).useContents {
+				if (error == 0U) {
+					return this.count
+				}
+				throwIoe(error)
+			}
+		}
+	}
+
+	public actual fun readStandardOutputWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
+		buffer.asUByteArray().usePinned {
+			mosaic_test_read_output_with_timeout(ptr, it.addressOf(offset), count, timeoutMillis).useContents {
+				if (error == 0U) {
+					return this.count
+				}
+				throwIoe(error)
+			}
+		}
+	}
+
+	public actual fun interruptStandardOutputRead() {
+		val error = mosaic_test_interrupt_output_read(ptr)
+		if (error != 0U) {
+			throwIoe(error)
+		}
+	}
+
+	public actual fun readStandardError(buffer: ByteArray, offset: Int, count: Int): Int {
+		buffer.asUByteArray().usePinned {
+			mosaic_test_read_error(ptr, it.addressOf(offset), count).useContents {
+				if (error == 0U) {
+					return this.count
+				}
+				throwIoe(error)
+			}
+		}
+	}
+
+	public actual fun readStandardErrorWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
+		buffer.asUByteArray().usePinned {
+			mosaic_test_read_error_with_timeout(ptr, it.addressOf(offset), count, timeoutMillis).useContents {
+				if (error == 0U) {
+					return this.count
+				}
+				throwIoe(error)
+			}
+		}
+	}
+
+	public actual fun interruptStandardErrorRead() {
+		val error = mosaic_test_interrupt_error_read(ptr)
 		if (error != 0U) {
 			throwIoe(error)
 		}

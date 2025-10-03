@@ -3,7 +3,7 @@
 #include "mosaic-streams-windows.h"
 #include "mosaic-test-tty.h"
 #include "mosaic-tty-windows.h"
-#include "mosaic-utils.h"
+#include "mosaic-utils-windows.h"
 
 #include <stdatomic.h>
 #include <stdio.h>
@@ -16,6 +16,16 @@ typedef struct MosaicTestTtyImpl {
 	HANDLE conout_pipe_write;
 	HANDLE conout_overlapped_event;
 	HANDLE conout_interrupt_event;
+	HANDLE stdin_pipe_read;
+	HANDLE stdin_pipe_write;
+	HANDLE stdout_pipe_read;
+	HANDLE stdout_pipe_write;
+	HANDLE stdout_overlapped_event;
+	HANDLE stdout_interrupt_event;
+	HANDLE stderr_pipe_read;
+	HANDLE stderr_pipe_write;
+	HANDLE stderr_overlapped_event;
+	HANDLE stderr_interrupt_event;
 } MosaicTestTtyImpl;
 
 static atomic_flag globalTestTty = ATOMIC_FLAG_INIT;
@@ -31,6 +41,61 @@ static uint32_t mosaic_test_resize_internal(HANDLE conout, int columns, int rows
 		return 0;
 	}
 	return GetLastError();
+}
+
+static uint32_t mosaic_test_create_pipe(
+	OUT LPHANDLE reader,
+	OUT LPHANDLE writer
+) {
+	uint32_t result = 0;
+
+	CHAR pipename[MAX_PATH];
+	sprintf(
+		pipename,
+		"\\\\.\\Pipe\\MosaicTest.%08lx.%08lx",
+		GetCurrentProcessId(),
+		InterlockedIncrement(&globalPipeNumber)
+	);
+
+	HANDLE newReader = CreateNamedPipeA(
+		pipename,
+		PIPE_ACCESS_INBOUND | FILE_FLAG_OVERLAPPED,
+		PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_WAIT,
+		1,
+		4096,
+		4096,
+		0,
+		NULL
+	);
+	if (unlikely(newReader == INVALID_HANDLE_VALUE)) {
+		result = GetLastError();
+		goto ret;
+	}
+
+	HANDLE newWriter = CreateFileA(
+		pipename,
+		GENERIC_WRITE,
+		0,
+		NULL,
+		OPEN_EXISTING,
+		FILE_ATTRIBUTE_NORMAL | FILE_FLAG_WRITE_THROUGH,
+		NULL
+	);
+	if (unlikely(newWriter == INVALID_HANDLE_VALUE)) {
+		result = GetLastError();
+		goto err_reader;
+	}
+
+	*reader = newReader;
+	*writer = newWriter;
+
+	ret:
+	return result;
+
+	err_reader:
+	CloseHandle(newReader);
+
+	goto ret;
 }
 
 MOSAIC_EXPORT MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool stdoutIsTty, bool stderrIsTty) {
@@ -68,71 +133,92 @@ MOSAIC_EXPORT MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool std
 	// Ensure we don't start with existing records in the buffer.
 	FlushConsoleInputBuffer(conin);
 
-	CHAR pipename[MAX_PATH];
-	sprintf(
-		pipename,
-		"\\\\.\\Pipe\\MosaicTest.%08lx.%08lx",
-		GetCurrentProcessId(),
-		InterlockedIncrement(&globalPipeNumber)
-	);
-
-	HANDLE conoutPipeRead = CreateNamedPipeA(
-		pipename,
-		PIPE_ACCESS_INBOUND | FILE_FLAG_OVERLAPPED,
-		PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_WAIT,
-		1,
-		4096,
-		4096,
-		0,
-		NULL
-	);
-	if (unlikely(conoutPipeRead == INVALID_HANDLE_VALUE)) {
-		result.error = GetLastError();
+	HANDLE conoutPipeRead;
+	HANDLE conoutPipeWrite;
+	uint32_t conoutPipeResult = mosaic_test_create_pipe(&conoutPipeRead, &conoutPipeWrite);
+	if (unlikely(conoutPipeResult)) {
+		result.error = conoutPipeResult;
 		goto err_conout;
 	}
 
-	HANDLE conoutPipeWrite = CreateFileA(
-		pipename,
-		GENERIC_WRITE,
-		0,
-		NULL,
-		OPEN_EXISTING,
-		FILE_ATTRIBUTE_NORMAL | FILE_FLAG_WRITE_THROUGH,
-		NULL
-	);
-	if (unlikely(conoutPipeWrite == INVALID_HANDLE_VALUE)) {
-		result.error = GetLastError();
-		goto err_conout_pipe_read;
+	HANDLE conoutOverlappedEvent;
+	HANDLE conoutInterruptEvent;
+	uint32_t conoutEventResult = mosaic_utils_create_events(&conoutOverlappedEvent, &conoutInterruptEvent);
+	if (unlikely(conoutEventResult)) {
+		result.error = conoutEventResult;
+		goto err_conout_pipe;
 	}
 
-	HANDLE conoutOverlappedEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-	if (unlikely(conoutOverlappedEvent == INVALID_HANDLE_VALUE)) {
-		result.error = GetLastError();
-		goto err_conout_pipe_write;
+	HANDLE stdinPipeRead;
+	HANDLE stdinPipeWrite;
+	if (stdinIsTty) {
+		stdinPipeRead = conin;
+		stdinPipeWrite = conin;
+	} else {
+		uint32_t stdinPipeResult = mosaic_test_create_pipe(&stdinPipeRead, &stdinPipeWrite);
+		if (unlikely(stdinPipeResult)) {
+			result.error = stdinPipeResult;
+			goto err_conout_events;
+		}
 	}
 
-	HANDLE conoutInterruptEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-	if (unlikely(conoutInterruptEvent == NULL)) {
-		result.error = GetLastError();
-		goto err_conout_overlapped_event;
+	HANDLE stdoutPipeRead;
+	HANDLE stdoutPipeWrite;
+	if (stdoutIsTty) {
+		stdoutPipeRead = conoutPipeRead;
+		stdoutPipeWrite = conoutPipeWrite;
+	} else {
+		uint32_t stdoutPipeResult = mosaic_test_create_pipe(&stdoutPipeRead, &stdoutPipeWrite);
+		if (unlikely(stdoutPipeResult)) {
+			result.error = stdoutPipeResult;
+			goto err_stdin_pipe;
+		}
 	}
 
-	// Any non-char handle will do.
-	HANDLE stdinRead = stdinIsTty ? conin : conoutPipeRead;
-	HANDLE stdoutWrite = stdoutIsTty ? conout : conoutPipeRead;
-	HANDLE stderrWrite = stderrIsTty ? conout : conoutPipeRead;
+	HANDLE stdoutOverlappedEvent;
+	HANDLE stdoutInterruptEvent;
+	uint32_t stdoutEventResult = mosaic_utils_create_events(&stdoutOverlappedEvent, &stdoutInterruptEvent);
+	if (unlikely(stdoutEventResult)) {
+		result.error = stdoutEventResult;
+		goto err_stdout_pipe;
+	}
+
+	HANDLE stderrPipeRead;
+	HANDLE stderrPipeWrite;
+	if (stderrIsTty) {
+		stderrPipeRead = conoutPipeRead;
+		stderrPipeWrite = conoutPipeWrite;
+	} else {
+		uint32_t stderrPipeResult = mosaic_test_create_pipe(&stderrPipeRead, &stderrPipeWrite);
+		if (unlikely(stderrPipeResult)) {
+			result.error = stderrPipeResult;
+			goto err_stdout_events;
+		}
+	}
+
+	HANDLE stderrOverlappedEvent;
+	HANDLE stderrInterruptEvent;
+	uint32_t stderrEventResult = mosaic_utils_create_events(&stderrOverlappedEvent, &stderrInterruptEvent);
+	if (unlikely(stderrEventResult)) {
+		result.error = stderrEventResult;
+		goto err_stderr_pipe;
+	}
+
+	HANDLE stdinRead = stdinIsTty ? conin : stdinPipeRead;
+	HANDLE stdoutWrite = stdoutIsTty ? conout : stdoutPipeWrite;
+	HANDLE stderrWrite = stderrIsTty ? conout : stderrPipeWrite;
 
 	MosaicTtyInitResult ttyInitResult = mosaic_tty_init_with_handles(conin, conout, conoutPipeWrite, true);
 	if (unlikely(!ttyInitResult.tty)) {
 		result.error = ttyInitResult.error;
 		result.already_bound = ttyInitResult.already_bound;
-		goto err_conout_interrupt_event;
+		goto err_stderr_events;
 	}
 
 	MosaicStreamsInitResult streamsInitResult = mosaic_streams_init_internal(stdinRead, stdoutWrite, stderrWrite);
 	if (unlikely(!streamsInitResult.streams)) {
 		result.error = streamsInitResult.error;
-		goto err_conout_interrupt_event;
+		goto err_stderr_events;
 	}
 
 	testTty->streams = streamsInitResult.streams;
@@ -141,30 +227,63 @@ MOSAIC_EXPORT MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool std
 	testTty->conout_pipe_write = conoutPipeWrite;
 	testTty->conout_overlapped_event = conoutOverlappedEvent;
 	testTty->conout_interrupt_event = conoutInterruptEvent;
+	testTty->stdin_pipe_read = stdinPipeRead;
+	testTty->stdin_pipe_write = stdinPipeWrite;
+	testTty->stdout_pipe_read = stdoutPipeRead;
+	testTty->stdout_pipe_write = stdoutPipeWrite;
+	testTty->stdout_overlapped_event = stdoutOverlappedEvent;
+	testTty->stdout_interrupt_event = stdoutInterruptEvent;
+	testTty->stderr_pipe_read = stderrPipeRead;
+	testTty->stderr_pipe_write = stderrPipeWrite;
+	testTty->stderr_overlapped_event = stderrOverlappedEvent;
+	testTty->stderr_interrupt_event = stderrInterruptEvent;
 
 	result.testTty = testTty;
 
 	if (unlikely(atomic_flag_test_and_set(&globalTestTty))) {
 		// We initialized an instance but there already was a global instance.
 		result.testTty = NULL;
+		// TODO free streams
 		result.error = mosaic_tty_free(ttyInitResult.tty);
 		result.already_bound = true;
-		goto err_conout_interrupt_event;
+		goto err_stderr_events;
 	}
 
 	ret:
 	return result;
 
-	err_conout_interrupt_event:
-	CloseHandle(conoutInterruptEvent);
+	err_stderr_events:
+	CloseHandle(stderrInterruptEvent);
+	CloseHandle(stderrOverlappedEvent);
 
-	err_conout_overlapped_event:
+	err_stderr_pipe:
+	if (!stderrIsTty) {
+		CloseHandle(stderrPipeWrite);
+		CloseHandle(stderrPipeRead);
+	}
+
+	err_stdout_events:
+	CloseHandle(stdoutInterruptEvent);
+	CloseHandle(stdoutOverlappedEvent);
+
+	err_stdout_pipe:
+	if (!stdoutIsTty) {
+		CloseHandle(stdoutPipeWrite);
+		CloseHandle(stdoutPipeRead);
+	}
+
+	err_stdin_pipe:
+	if (!stdinIsTty) {
+		CloseHandle(stdinPipeWrite);
+		CloseHandle(stdinPipeRead);
+	}
+
+	err_conout_events:
+	CloseHandle(conoutInterruptEvent);
 	CloseHandle(conoutOverlappedEvent);
 
-	err_conout_pipe_write:
+	err_conout_pipe:
 	CloseHandle(conoutPipeWrite);
-
-	err_conout_pipe_read:
 	CloseHandle(conoutPipeRead);
 
 	err_conout:
@@ -186,7 +305,7 @@ MOSAIC_EXPORT MosaicStreams *mosaic_test_get_streams(MosaicTestTty *testTty) {
 	return testTty->streams;
 }
 
-MOSAIC_EXPORT MosaicIoResult mosaic_test_write(MosaicTestTty *testTty, uint8_t *buffer, int count) {
+MOSAIC_EXPORT MosaicIoResult mosaic_test_write_tty(MosaicTestTty *testTty, uint8_t *buffer, int count) {
 	MosaicIoResult result = {};
 
 	INPUT_RECORD *records = calloc(count, sizeof(INPUT_RECORD));
@@ -212,68 +331,53 @@ MOSAIC_EXPORT MosaicIoResult mosaic_test_write(MosaicTestTty *testTty, uint8_t *
 	return result;
 }
 
-MOSAIC_EXPORT MosaicIoResult mosaic_test_read(MosaicTestTty *testTty, uint8_t *buffer, int count) {
-	return mosaic_test_read_with_timeout(testTty, buffer, count, INFINITE);
+MOSAIC_EXPORT MosaicIoResult mosaic_test_read_tty(MosaicTestTty *testTty, uint8_t *buffer, int count) {
+	return mosaic_test_read_tty_with_timeout(testTty, buffer, count, INFINITE);
 }
 
-MOSAIC_EXPORT MosaicIoResult mosaic_test_read_with_timeout(MosaicTestTty *testTty, uint8_t *buffer, int count, int timeoutMillis) {
-	MosaicIoResult result = {};
-
-	OVERLAPPED overlapped = {};
-	overlapped.hEvent = testTty->conout_overlapped_event;
-
-	// Start the asynchronous read of the pipe. This should "fail" and return an error of pending.
-	if (unlikely(ReadFile(testTty->conout_pipe_read, buffer, count, NULL, &overlapped))) {
-		goto success;
-	}
-	DWORD error = GetLastError();
-	if (unlikely(error != ERROR_IO_PENDING)) {
-		result.error = error;
-		goto ret;
-	}
-
-	HANDLE waitHandles[2] = { testTty->conout_overlapped_event, testTty->conout_interrupt_event };
-	DWORD waitResult = WaitForMultipleObjects(2, waitHandles, FALSE, timeoutMillis);
-	if (unlikely(waitResult != WAIT_OBJECT_0)) {
-		goto cancel_read;
-	}
-
-	success:
-	;
-	DWORD c;
-	if (unlikely(!GetOverlappedResult(testTty->conout_pipe_read, &overlapped, &c, TRUE))) {
-		result.error = GetLastError();
-	} else {
-		result.count = c;
-	}
-
-	ret:
-	return result;
-
-	cancel_read:
-	if (waitResult == WAIT_FAILED) {
-		// If the wait failed, we need to read the error before attempting to cancel overwrites it.
-		result.error = GetLastError();
-	}
-
-	// Whether interrupted, timed out, or failed to wait, cancel the read to avoid writing memory.
-	if (!CancelIo(testTty->conout_pipe_read)) {
-		// Don't overwrite a wait failure.
-		if (result.error == 0) {
-			result.error = GetLastError();
-		}
-	}
-
-	goto ret;
+MOSAIC_EXPORT MosaicIoResult mosaic_test_read_tty_with_timeout(MosaicTestTty *testTty, uint8_t *buffer, int count, int timeoutMillis) {
+	return mosaic_utils_read_overlapped(testTty->conout_pipe_read, testTty->conout_overlapped_event, testTty->conout_interrupt_event, buffer, count, timeoutMillis);
 }
 
-MOSAIC_EXPORT uint32_t mosaic_test_interrupt_read(MosaicTestTty *testTty) {
+MOSAIC_EXPORT uint32_t mosaic_test_interrupt_tty_read(MosaicTestTty *testTty) {
 	return likely(SetEvent(testTty->conout_interrupt_event) != 0)
 		? 0
 		: GetLastError();
 }
 
-static uint32_t mosaic_test_write_record(HANDLE h, INPUT_RECORD *record) {
+MOSAIC_EXPORT MosaicIoResult mosaic_test_write_input(MosaicTestTty *testTty, uint8_t *buffer, int count) {
+	return mosaic_utils_write(testTty->stdin_pipe_write, buffer, count);
+}
+
+MOSAIC_EXPORT MosaicIoResult mosaic_test_read_output(MosaicTestTty *testTty, uint8_t *buffer, int count) {
+	return mosaic_test_read_output_with_timeout(testTty, buffer, count, INFINITE);
+}
+
+MOSAIC_EXPORT MosaicIoResult mosaic_test_read_output_with_timeout(MosaicTestTty *testTty, uint8_t *buffer, int count, int timeoutMillis) {
+	return mosaic_utils_read_overlapped(testTty->stdout_pipe_read, testTty->stdout_overlapped_event, testTty->stdout_interrupt_event, buffer, count, timeoutMillis);
+}
+
+MOSAIC_EXPORT uint32_t mosaic_test_interrupt_output_read(MosaicTestTty *testTty) {
+	return likely(SetEvent(testTty->stdout_interrupt_event) != 0)
+  		? 0
+  		: GetLastError();
+}
+
+MOSAIC_EXPORT MosaicIoResult mosaic_test_read_error(MosaicTestTty *testTty, uint8_t *buffer, int count) {
+	return mosaic_test_read_error_with_timeout(testTty, buffer, count, INFINITE);
+}
+
+MOSAIC_EXPORT MosaicIoResult mosaic_test_read_error_with_timeout(MosaicTestTty *testTty, uint8_t *buffer, int count, int timeoutMillis) {
+	return mosaic_utils_read_overlapped(testTty->stderr_pipe_read, testTty->stderr_overlapped_event, testTty->stderr_interrupt_event, buffer, count, timeoutMillis);
+}
+
+MOSAIC_EXPORT uint32_t mosaic_test_interrupt_error_read(MosaicTestTty *testTty) {
+	return likely(SetEvent(testTty->stderr_interrupt_event) != 0)
+  		? 0
+  		: GetLastError();
+}
+
+static uint32_t mosaic_test_write_tty_record(HANDLE h, INPUT_RECORD *record) {
 	DWORD written;
 	if (likely(WriteConsoleInputW(h, record, 1, &written))) {
 		if (likely(written == 1)) {
@@ -294,14 +398,14 @@ MOSAIC_EXPORT uint32_t mosaic_test_resize(MosaicTestTty *testTty, int columns, i
 	// terminals, but for older ones the explicit send is required.
 	INPUT_RECORD record;
 	record.EventType = WINDOW_BUFFER_SIZE_EVENT;
-	return mosaic_test_write_record(testTty->tty->conin, &record);
+	return mosaic_test_write_tty_record(testTty->tty->conin, &record);
 }
 
 MOSAIC_EXPORT uint32_t mosaic_test_send_focus_event(MosaicTestTty *testTty, bool focused) {
 	INPUT_RECORD record;
 	record.EventType = FOCUS_EVENT;
 	record.Event.FocusEvent.bSetFocus = focused;
-	return mosaic_test_write_record(testTty->tty->conin, &record);
+	return mosaic_test_write_tty_record(testTty->tty->conin, &record);
 }
 
 MOSAIC_EXPORT uint32_t mosaic_test_send_key_event(MosaicTestTty *testTty UNUSED) {
@@ -317,6 +421,10 @@ MOSAIC_EXPORT uint32_t mosaic_test_send_mouse_event(MosaicTestTty *testTty UNUSE
 MOSAIC_EXPORT uint32_t mosaic_test_free(MosaicTestTty *testTty) {
 	uint32_t result = 0;
 
+	bool stdinIsTty = testTty->stdin_pipe_read == testTty->stdin_pipe_write;
+	bool stdoutIsTty = testTty->stdout_pipe_read == testTty->conout_pipe_read;
+	bool stderrIsTty = testTty->stderr_pipe_read == testTty->conout_pipe_read;
+
 	if (!CloseHandle(testTty->conout_pipe_read)) {
 		result = GetLastError();
 	}
@@ -327,6 +435,42 @@ MOSAIC_EXPORT uint32_t mosaic_test_free(MosaicTestTty *testTty) {
 		result = GetLastError();
 	}
 	if (!CloseHandle(testTty->conout_interrupt_event) && result == 0) {
+		result = GetLastError();
+	}
+	if (!stdinIsTty) {
+		if (!CloseHandle(testTty->stdin_pipe_read) && result == 0) {
+			result = GetLastError();
+		}
+		if (!CloseHandle(testTty->stdin_pipe_write) && result == 0) {
+			result = GetLastError();
+		}
+	}
+	if (!stdoutIsTty) {
+		if (!CloseHandle(testTty->stdout_pipe_read) && result == 0) {
+			result = GetLastError();
+		}
+		if (!CloseHandle(testTty->stdout_pipe_write) && result == 0) {
+			result = GetLastError();
+		}
+	}
+	if (!CloseHandle(testTty->stdout_overlapped_event) && result == 0) {
+		result = GetLastError();
+	}
+	if (!CloseHandle(testTty->stdout_interrupt_event) && result == 0) {
+		result = GetLastError();
+	}
+	if (!stderrIsTty) {
+		if (!CloseHandle(testTty->stderr_pipe_read) && result == 0) {
+			result = GetLastError();
+		}
+		if (!CloseHandle(testTty->stderr_pipe_write) && result == 0) {
+			result = GetLastError();
+		}
+	}
+	if (!CloseHandle(testTty->stderr_overlapped_event) && result == 0) {
+		result = GetLastError();
+	}
+	if (!CloseHandle(testTty->stderr_interrupt_event) && result == 0) {
 		result = GetLastError();
 	}
 

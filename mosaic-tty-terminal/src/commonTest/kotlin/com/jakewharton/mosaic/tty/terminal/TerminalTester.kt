@@ -56,7 +56,7 @@ class TerminalTester(
 						expectStartIndex = offset + expect.output.size
 
 						val replyBytes = expect.reply.toByteArray()
-						testTty.write(replyBytes, 0, replyBytes.size)
+						testTty.writeTty(replyBytes, 0, replyBytes.size)
 
 						continue // Look for additional expects before blocking on read.
 					}
@@ -67,7 +67,7 @@ class TerminalTester(
 					buffer = buffer,
 					minimumCapacity = UnsafeBufferOperations.maxSafeWriteCapacity,
 				) { bytes, startIndexInclusive, endIndexExclusive ->
-					testTty.read(bytes, startIndexInclusive, endIndexExclusive - startIndexInclusive)
+					testTty.readTty(bytes, startIndexInclusive, endIndexExclusive - startIndexInclusive)
 				}
 				if (read == 0) break
 			}
@@ -77,7 +77,7 @@ class TerminalTester(
 			var readJob = launch(Dispatchers.IO) { readUntilInterrupted() }
 			try {
 				testTty.tty.asTerminalIn(this).use { terminal ->
-					testTty.interruptRead()
+					testTty.interruptTtyRead()
 					readJob.cancelAndJoin()
 
 					try {
@@ -95,7 +95,7 @@ class TerminalTester(
 					}
 				}
 			} finally {
-				testTty.interruptRead()
+				testTty.interruptTtyRead()
 				readJob.cancelAndJoin()
 			}
 		}
