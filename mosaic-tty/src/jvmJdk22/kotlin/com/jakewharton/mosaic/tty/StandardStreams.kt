@@ -137,7 +137,7 @@ public class StandardStreams internal constructor(
 			if (MosaicStreamsInterceptResult.already_bound(result)) {
 				throw IllegalStateException("Standard streams already intercepted")
 			}
-			val error = MosaicStreamsInitResult.error(result)
+			val error = MosaicStreamsInterceptResult.error(result)
 			if (error != 0) {
 				throwIoe(error)
 			}
