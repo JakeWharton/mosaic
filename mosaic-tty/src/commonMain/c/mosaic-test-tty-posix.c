@@ -143,7 +143,7 @@ MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool stdoutIsTty, bool
 		goto err_stderr_interrupt_pipe;
 	}
 
-	MosaicStreamsInitResult streamsInitResult = mosaic_streams_init_internal(stdinPipe[0], stdoutPipe[1], stderrPipe[1]);
+	MosaicStreamsInitResult streamsInitResult = mosaic_streams_init_internal(stdinPipe[0], stdoutPipe[1], stderrPipe[1], true);
 	if (unlikely(!streamsInitResult.streams)) {
 		result.error = streamsInitResult.error;
 		goto err_tty;

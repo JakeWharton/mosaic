@@ -10,9 +10,10 @@ typedef struct MosaicStreamsImpl {
 	HANDLE stdin_interrupt_event;
 	HANDLE stdout;
 	HANDLE stderr;
+	bool is_test;
 } MosaicStreamsImpl;
 
-MosaicStreamsInitResult mosaic_streams_init_internal(HANDLE stdin, HANDLE stdout, HANDLE stderr) {
+MosaicStreamsInitResult mosaic_streams_init_internal(HANDLE stdin, HANDLE stdout, HANDLE stderr, bool isTest) {
 	MosaicStreamsInitResult result = {};
 
 	MosaicStreamsImpl *streams = calloc(1, sizeof(MosaicStreamsImpl));
@@ -34,6 +35,7 @@ MosaicStreamsInitResult mosaic_streams_init_internal(HANDLE stdin, HANDLE stdout
 	streams->stdin_interrupt_event = stdinInterruptEvent;
 	streams->stdout = stdout;
 	streams->stderr = stderr;
+	streams->is_test = isTest;
 
 	result.streams = streams;
 
@@ -59,7 +61,7 @@ MOSAIC_EXPORT MosaicStreamsInitResult mosaic_streams_init() {
 		goto err;
 	}
 
-	return mosaic_streams_init_internal(stdin, stdout, stderr);
+	return mosaic_streams_init_internal(stdin, stdout, stderr, false);
 
 	err:
 	;

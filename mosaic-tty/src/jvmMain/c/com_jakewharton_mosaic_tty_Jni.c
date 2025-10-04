@@ -182,7 +182,7 @@ Java_com_jakewharton_mosaic_tty_Jni_streamsWriteOutput(
 	}
 
 	// This throw can fail, but the only condition that should cause that is OOM. Return -1 (EOF)
-	// and should cause the program to try and exit cleanly.
+	// and should cause the program to try and exit cleanly. 0 is a valid return value.
 	throwIoe(env, result.error);
 	return -1;
 }

@@ -14,9 +14,10 @@ typedef struct MosaicStreamsImpl {
 	int interrupt_stdin_writer;
 	int stdout;
 	int stderr;
+	bool is_test;
 } MosaicStreamsImpl;
 
-MosaicStreamsInitResult mosaic_streams_init_internal(int stdin, int stdout, int stderr) {
+MosaicStreamsInitResult mosaic_streams_init_internal(int stdin, int stdout, int stderr, bool isTest) {
 	MosaicStreamsInitResult result = {};
 
 	MosaicStreamsImpl *streams = calloc(1, sizeof(MosaicStreamsImpl));
@@ -36,6 +37,7 @@ MosaicStreamsInitResult mosaic_streams_init_internal(int stdin, int stdout, int 
 	streams->interrupt_stdin_writer = interruptPipe[1];
 	streams->stdout = stdout;
 	streams->stderr = stderr;
+	streams->is_test = isTest;
 
 	result.streams = streams;
 
@@ -48,7 +50,7 @@ MosaicStreamsInitResult mosaic_streams_init_internal(int stdin, int stdout, int 
 }
 
 MosaicStreamsInitResult mosaic_streams_init() {
-	return mosaic_streams_init_internal(STDIN_FILENO, STDOUT_FILENO, STDERR_FILENO);
+	return mosaic_streams_init_internal(STDIN_FILENO, STDOUT_FILENO, STDERR_FILENO, false);
 }
 
 static MosaicStreamsTtyResult mosaic_streams_is_tty(int fd) {

@@ -158,7 +158,7 @@ MOSAIC_EXPORT MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool std
 		goto err_stderr_events;
 	}
 
-	MosaicStreamsInitResult streamsInitResult = mosaic_streams_init_internal(stdinRead, stdoutWrite, stderrWrite);
+	MosaicStreamsInitResult streamsInitResult = mosaic_streams_init_internal(stdinRead, stdoutWrite, stderrWrite, true);
 	if (unlikely(!streamsInitResult.streams)) {
 		result.error = streamsInitResult.error;
 		goto err_tty;
