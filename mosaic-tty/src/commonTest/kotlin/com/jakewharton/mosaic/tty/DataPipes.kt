@@ -4,6 +4,7 @@ import app.cash.burst.TestFunction
 import app.cash.burst.TestInterceptor
 import assertk.assertThat
 import assertk.assertions.isEqualTo
+import com.jakewharton.mosaic.tty.StandardStreams.InterceptedStreams
 
 interface DataReader : TestInterceptor {
 	fun writeFully(message: String)
@@ -208,5 +209,61 @@ data object StandardErrorToTestTty : MosaicData() {
 
 	override fun interruptRead() {
 		testTty.interruptStandardErrorRead()
+	}
+}
+
+data object PrintlnToInterceptedStdout : DataReader {
+	private lateinit var intercepted: InterceptedStreams
+
+	override fun intercept(testFunction: TestFunction) {
+		StandardStreams.bind().use { streams ->
+			streams.interceptOtherWrites().use { intercepted ->
+				this.intercepted = intercepted
+			}
+		}
+	}
+
+	override fun writeFully(message: String) {
+		println(message)
+	}
+
+	override fun read(buffer: ByteArray, offset: Int, count: Int): Int {
+		return intercepted.readOutput(buffer, offset, count)
+	}
+
+	override fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
+		return intercepted.readOutputWithTimeout(buffer, offset, count, timeoutMillis)
+	}
+
+	override fun interruptRead() {
+		intercepted.interruptOutputRead()
+	}
+}
+
+data object EprintlnToInterceptedStderr : DataReader {
+	private lateinit var intercepted: InterceptedStreams
+
+	override fun intercept(testFunction: TestFunction) {
+		StandardStreams.bind().use { streams ->
+			streams.interceptOtherWrites().use { intercepted ->
+				this.intercepted = intercepted
+			}
+		}
+	}
+
+	override fun writeFully(message: String) {
+		eprintln(message)
+	}
+
+	override fun read(buffer: ByteArray, offset: Int, count: Int): Int {
+		return intercepted.readError(buffer, offset, count)
+	}
+
+	override fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
+		return intercepted.readErrorWithTimeout(buffer, offset, count, timeoutMillis)
+	}
+
+	override fun interruptRead() {
+		intercepted.interruptErrorRead()
 	}
 }

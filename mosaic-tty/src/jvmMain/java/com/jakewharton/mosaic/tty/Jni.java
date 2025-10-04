@@ -44,6 +44,43 @@ final class Jni {
 		int count
 	);
 
+	static native void streamsInterceptStart(long streamsPtr);
+	static native void streamsInterceptStop(long streamsPtr);
+
+	static native int streamsReadInterceptedOutput(
+		long streamsPtr,
+		byte[] buffer,
+		int offset,
+		int count
+	);
+
+	static native int streamsReadInterceptedOutputWithTimeout(
+		long streamsPtr,
+		byte[] buffer,
+		int offset,
+		int count,
+		int timeout
+	);
+
+	static native void streamsInterruptInterceptedOutputRead(long streamsPtr);
+
+	static native int streamsReadInterceptedError(
+		long streamsPtr,
+		byte[] buffer,
+		int offset,
+		int count
+	);
+
+	static native int streamsReadInterceptedErrorWithTimeout(
+		long streamsPtr,
+		byte[] buffer,
+		int offset,
+		int count,
+		int timeout
+	);
+
+	static native void streamsInterruptInterceptedErrorRead(long streamsPtr);
+
 	static native void streamsFree(long streamsPtr);
 
 	static native long ttyCallbackInit(Tty.Callback callback);

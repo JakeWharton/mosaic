@@ -26,6 +26,8 @@ class DataReaderTest(
 		TestTtyToStandardInput,
 		StandardOutputToTestTty,
 		StandardErrorToTestTty,
+		PrintlnToInterceptedStdout,
+		EprintlnToInterceptedStderr,
 	),
 ) {
 	@Test fun readWhatWasWritten() {

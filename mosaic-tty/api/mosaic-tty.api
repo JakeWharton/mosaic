@@ -2,6 +2,7 @@ public final class com/jakewharton/mosaic/tty/StandardStreams : java/lang/AutoCl
 	public static final field Companion Lcom/jakewharton/mosaic/tty/StandardStreams$Companion;
 	public static final fun bind ()Lcom/jakewharton/mosaic/tty/StandardStreams;
 	public fun close ()V
+	public final fun interceptOtherWrites ()Lcom/jakewharton/mosaic/tty/StandardStreams$InterceptedStreams;
 	public final fun interruptInputRead ()V
 	public final fun isErrorTty ()Z
 	public final fun isInputTty ()Z
@@ -14,6 +15,16 @@ public final class com/jakewharton/mosaic/tty/StandardStreams : java/lang/AutoCl
 
 public final class com/jakewharton/mosaic/tty/StandardStreams$Companion {
 	public final fun bind ()Lcom/jakewharton/mosaic/tty/StandardStreams;
+}
+
+public final class com/jakewharton/mosaic/tty/StandardStreams$InterceptedStreams : java/lang/AutoCloseable {
+	public fun close ()V
+	public final fun interruptErrorRead ()V
+	public final fun interruptOutputRead ()V
+	public final fun readError ([BII)I
+	public final fun readErrorWithTimeout ([BIII)I
+	public final fun readOutput ([BII)I
+	public final fun readOutputWithTimeout ([BIII)I
 }
 
 public final class com/jakewharton/mosaic/tty/TestTty : java/lang/AutoCloseable {

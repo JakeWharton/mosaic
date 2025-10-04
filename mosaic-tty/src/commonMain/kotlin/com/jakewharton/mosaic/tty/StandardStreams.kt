@@ -16,5 +16,19 @@ public expect class StandardStreams : AutoCloseable {
 	public fun writeOutput(buffer: ByteArray, offset: Int, count: Int): Int
 	public fun writeError(buffer: ByteArray, offset: Int, count: Int): Int
 
+	public fun interceptOtherWrites(): InterceptedStreams
+
 	override fun close()
+
+	public class InterceptedStreams : AutoCloseable {
+		public fun readOutput(buffer: ByteArray, offset: Int, count: Int): Int
+		public fun readOutputWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int
+		public fun interruptOutputRead()
+
+		public fun readError(buffer: ByteArray, offset: Int, count: Int): Int
+		public fun readErrorWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int
+		public fun interruptErrorRead()
+
+		override fun close()
+	}
 }
