@@ -1,7 +1,7 @@
 #if defined(__APPLE__) || defined(__linux__)
 
 #include "mosaic-tty-posix.h"
-#include "mosaic-utils.h"
+#include "mosaic-utils-posix.h"
 
 #include <errno.h>
 #include <fcntl.h>
@@ -9,7 +9,6 @@
 #include <stdatomic.h>
 #include <stdlib.h>
 #include <sys/ioctl.h>
-#include <sys/select.h>
 #include <termios.h>
 #include <time.h>
 #include <unistd.h>
@@ -69,53 +68,8 @@ void mosaic_tty_set_callback(MosaicTty *tty, MosaicTtyCallback *callback) {
 	tty->callback = callback;
 }
 
-MosaicIoResult mosaic_tty_read_internal(
-	int fd,
-	int interruptFd,
-	uint8_t *buffer,
-	int count,
-	struct timeval *timeout
-) {
-	MosaicIoResult result = {};
-
-	fd_set fds;
-	FD_ZERO(&fds);
-	FD_SET(fd, &fds);
-	FD_SET(interruptFd, &fds);
-
-	int nfds = 1 + ((fd > interruptFd) ? fd : interruptFd);
-	if (likely(select(nfds, &fds, NULL, NULL, timeout) >= 0)) {
-		if (likely(FD_ISSET(fd, &fds) != 0)) {
-			int c = read(fd, buffer, count);
-			if (likely(c > 0)) {
-				result.count = c;
-			} else if (c == 0) {
-				result.count = -1; // EOF
-			} else {
-				goto err;
-			}
-		} else if (unlikely(FD_ISSET(interruptFd, &fds) != 0)) {
-			// Consume the single notification byte to clear the ready state for the next call.
-			uint8_t space;
-			if (unlikely(read(interruptFd, &space, 1) < 0)) {
-				goto err;
-			}
-		}
-		// Otherwise if the interrupt pipe was selected or we timed out, return a count of 0.
-	} else {
-		goto err;
-	}
-
-	ret:
-	return result;
-
-	err:
-	result.error = errno;
-	goto ret;
-}
-
 MosaicIoResult mosaic_tty_read(MosaicTty *tty, uint8_t *buffer, int count) {
-	return mosaic_tty_read_internal(tty->fd, tty->interrupt_fd_reader, buffer, count, NULL);
+	return mosaic_utils_read(tty->fd, tty->interrupt_fd_reader, buffer, count, NULL);
 }
 
 MosaicIoResult mosaic_tty_read_with_timeout(
@@ -128,30 +82,17 @@ MosaicIoResult mosaic_tty_read_with_timeout(
 	timeout.tv_sec = 0;
 	timeout.tv_usec = timeoutMillis * 1000;
 
-	return mosaic_tty_read_internal(tty->fd, tty->interrupt_fd_reader, buffer, count, &timeout);
-}
-
-MosaicIoResult mosaic_tty_write_internal(int writeFd, uint8_t *buffer, int count) {
-	MosaicIoResult result = {};
-
-	int written = write(writeFd, buffer, count);
-	if (written != -1) {
-		result.count = written;
-	} else {
-		result.error = errno;
-	}
-
-	return result;
+	return mosaic_utils_read(tty->fd, tty->interrupt_fd_reader, buffer, count, &timeout);
 }
 
 uint32_t mosaic_tty_interrupt_read(MosaicTty *tty) {
 	uint8_t space = ' ';
-	MosaicIoResult result = mosaic_tty_write_internal(tty->interrupt_fd_writer, &space, 1);
+	MosaicIoResult result = mosaic_utils_write(tty->interrupt_fd_writer, &space, 1);
 	return result.error;
 }
 
 MosaicIoResult mosaic_tty_write(MosaicTty *tty, uint8_t *buffer, int count) {
-	return mosaic_tty_write_internal(tty->fd, buffer, count);
+	return mosaic_utils_write(tty->fd, buffer, count);
 }
 
 static void mosaic_tty_sigwinch_handler(int value UNUSED) {

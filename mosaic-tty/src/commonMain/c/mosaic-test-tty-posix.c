@@ -5,7 +5,7 @@
 #include "mosaic-streams-posix.h"
 #include "mosaic-test-tty.h"
 #include "mosaic-tty-posix.h"
-#include "mosaic-utils.h"
+#include "mosaic-utils-posix.h"
 
 #include <errno.h>
 #include <fcntl.h>
@@ -227,11 +227,11 @@ MosaicStreams *mosaic_test_get_streams(MosaicTestTty *testTty) {
 }
 
 MosaicIoResult mosaic_test_write_tty(MosaicTestTty *testTty, uint8_t *buffer, int count) {
-	return mosaic_tty_write_internal(testTty->tty_parent_fd, buffer, count);
+	return mosaic_utils_write(testTty->tty_parent_fd, buffer, count);
 }
 
 MosaicIoResult mosaic_test_read_tty(MosaicTestTty *testTty, uint8_t *buffer, int count) {
-	return mosaic_tty_read_internal(testTty->tty_parent_fd, testTty->tty_parent_interrupt_reader_fd, buffer, count, NULL);
+	return mosaic_utils_read(testTty->tty_parent_fd, testTty->tty_parent_interrupt_reader_fd, buffer, count, NULL);
 }
 
 MosaicIoResult mosaic_test_read_tty_with_timeout(MosaicTestTty *testTty, uint8_t *buffer, int count, int timeoutMillis) {
@@ -239,21 +239,21 @@ MosaicIoResult mosaic_test_read_tty_with_timeout(MosaicTestTty *testTty, uint8_t
 	timeout.tv_sec = 0;
 	timeout.tv_usec = timeoutMillis * 1000;
 
-	return mosaic_tty_read_internal(testTty->tty_parent_fd, testTty->tty_parent_interrupt_reader_fd, buffer, count, &timeout);
+	return mosaic_utils_read(testTty->tty_parent_fd, testTty->tty_parent_interrupt_reader_fd, buffer, count, &timeout);
 }
 
 uint32_t mosaic_test_interrupt_tty_read(MosaicTestTty *testTty) {
 	uint8_t space = ' ';
-	MosaicIoResult result = mosaic_tty_write_internal(testTty->tty_parent_interrupt_writer_fd, &space, 1);
+	MosaicIoResult result = mosaic_utils_write(testTty->tty_parent_interrupt_writer_fd, &space, 1);
 	return result.error;
 }
 
 MosaicIoResult mosaic_test_write_input(MosaicTestTty *testTty, uint8_t *buffer, int count) {
-	return mosaic_tty_write_internal(testTty->stdin_writer_fd, buffer, count);
+	return mosaic_utils_write(testTty->stdin_writer_fd, buffer, count);
 }
 
 MosaicIoResult mosaic_test_read_output(MosaicTestTty *testTty, uint8_t *buffer, int count) {
-	return mosaic_tty_read_internal(testTty->stdout_reader_fd, testTty->stdout_interrupt_reader_fd, buffer, count, NULL);
+	return mosaic_utils_read(testTty->stdout_reader_fd, testTty->stdout_interrupt_reader_fd, buffer, count, NULL);
 }
 
 MosaicIoResult mosaic_test_read_output_with_timeout(MosaicTestTty *testTty, uint8_t *buffer, int count, int timeoutMillis) {
@@ -261,17 +261,17 @@ MosaicIoResult mosaic_test_read_output_with_timeout(MosaicTestTty *testTty, uint
 	timeout.tv_sec = 0;
 	timeout.tv_usec = timeoutMillis * 1000;
 
-	return mosaic_tty_read_internal(testTty->stdout_reader_fd, testTty->stdout_interrupt_reader_fd, buffer, count, &timeout);
+	return mosaic_utils_read(testTty->stdout_reader_fd, testTty->stdout_interrupt_reader_fd, buffer, count, &timeout);
 }
 
 uint32_t mosaic_test_interrupt_output_read(MosaicTestTty *testTty) {
 	uint8_t space = ' ';
-	MosaicIoResult result = mosaic_tty_write_internal(testTty->stdout_interrupt_writer_fd, &space, 1);
+	MosaicIoResult result = mosaic_utils_write(testTty->stdout_interrupt_writer_fd, &space, 1);
 	return result.error;
 }
 
 MosaicIoResult mosaic_test_read_error(MosaicTestTty *testTty, uint8_t *buffer, int count) {
-	return mosaic_tty_read_internal(testTty->stderr_reader_fd, testTty->stderr_interrupt_reader_fd, buffer, count, NULL);
+	return mosaic_utils_read(testTty->stderr_reader_fd, testTty->stderr_interrupt_reader_fd, buffer, count, NULL);
 }
 
 MosaicIoResult mosaic_test_read_error_with_timeout(MosaicTestTty *testTty, uint8_t *buffer, int count, int timeoutMillis) {
@@ -279,12 +279,12 @@ MosaicIoResult mosaic_test_read_error_with_timeout(MosaicTestTty *testTty, uint8
 	timeout.tv_sec = 0;
 	timeout.tv_usec = timeoutMillis * 1000;
 
-	return mosaic_tty_read_internal(testTty->stderr_reader_fd, testTty->stderr_interrupt_reader_fd, buffer, count, &timeout);
+	return mosaic_utils_read(testTty->stderr_reader_fd, testTty->stderr_interrupt_reader_fd, buffer, count, &timeout);
 }
 
 uint32_t mosaic_test_interrupt_error_read(MosaicTestTty *testTty) {
 	uint8_t space = ' ';
-	MosaicIoResult result = mosaic_tty_write_internal(testTty->stderr_interrupt_writer_fd, &space, 1);
+	MosaicIoResult result = mosaic_utils_write(testTty->stderr_interrupt_writer_fd, &space, 1);
 	return result.error;
 }
 
