@@ -5,6 +5,6 @@
 
 #include <windows.h>
 
-MosaicStreamsInitResult mosaic_streams_init_internal(HANDLE stdin, HANDLE stdout, HANDLE stderr);
+MosaicStreamsInitResult mosaic_streams_init_internal(HANDLE stdin, HANDLE stdout, HANDLE stderr, bool isTest);
 
 #endif // MOSAIC_STREAMS_WINDOWS_H
