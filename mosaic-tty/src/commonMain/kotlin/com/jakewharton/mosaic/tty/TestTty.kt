@@ -1,5 +1,6 @@
 package com.jakewharton.mosaic.tty
 
+// TODO rename this TestTerminal? TestHost? Something...
 public expect class TestTty : AutoCloseable {
 	public companion object {
 

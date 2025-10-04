@@ -4,12 +4,25 @@
 #include "mosaic-tty-windows.h"
 #include "mosaic-utils-windows.h"
 
+#include <stdatomic.h>
+#include <windows.h>
+
+static atomic_flag global_stream_intercept = ATOMIC_FLAG_INIT;
+
 typedef struct MosaicStreamsImpl {
 	HANDLE stdin;
 	HANDLE stdin_overlapped_event;
 	HANDLE stdin_interrupt_event;
 	HANDLE stdout;
 	HANDLE stderr;
+	HANDLE intercepted_stdout_read;
+	HANDLE intercepted_stdout_write;
+	HANDLE intercepted_stdout_overlapped_event;
+	HANDLE intercepted_stdout_interrupt_event;
+	HANDLE intercepted_stderr_read;
+	HANDLE intercepted_stderr_write;
+	HANDLE intercepted_stderr_overlapped_event;
+	HANDLE intercepted_stderr_interrupt_event;
 	bool is_test;
 } MosaicStreamsImpl;
 
@@ -118,10 +131,197 @@ MOSAIC_EXPORT MosaicIoResult mosaic_streams_write_error(MosaicStreams *streams, 
 	return mosaic_utils_write(streams->stderr, buffer, count);
 }
 
-uint32_t mosaic_streams_free(MosaicStreams *streams) {
+MOSAIC_EXPORT MosaicStreamsInterceptResult mosaic_streams_intercept_start(MosaicStreams *streams) {
+	MosaicStreamsInterceptResult result = {};
+
+	if (unlikely(streams->is_test)) {
+		result.is_test = true;
+		goto ret;
+	}
+	if (unlikely(atomic_flag_test_and_set(&global_stream_intercept))) {
+		result.already_bound = true;
+		goto ret;
+	}
+
+	HANDLE interceptedStdoutPipeRead;
+	HANDLE interceptedStdoutPipeWrite;
+	uint32_t interceptedStdoutPipeResult = mosaic_utils_create_pipe(&interceptedStdoutPipeRead, &interceptedStdoutPipeWrite);
+	if (unlikely(interceptedStdoutPipeResult)) {
+		result.error = interceptedStdoutPipeResult;
+		goto ret;
+	}
+
+	HANDLE interceptedStdoutOverlappedEvent;
+	HANDLE interceptedStdoutInterruptEvent;
+	uint32_t interceptedStdoutEventsResult = mosaic_utils_create_events(&interceptedStdoutOverlappedEvent, &interceptedStdoutInterruptEvent);
+	if (unlikely(interceptedStdoutEventsResult)) {
+		result.error = interceptedStdoutEventsResult;
+		goto err_intercepted_stdout_pipe;
+	}
+
+	HANDLE interceptedStderrPipeRead;
+	HANDLE interceptedStderrPipeWrite;
+	uint32_t interceptedStderrPipeResult = mosaic_utils_create_pipe(&interceptedStderrPipeRead, &interceptedStderrPipeWrite);
+	if (unlikely(interceptedStdoutPipeResult)) {
+		result.error = interceptedStderrPipeResult;
+		goto err_intercepted_stdout_events;
+	}
+
+	HANDLE interceptedStderrOverlappedEvent;
+	HANDLE interceptedStderrInterruptEvent;
+	uint32_t interceptedStderrEventsResult = mosaic_utils_create_events(&interceptedStderrOverlappedEvent, &interceptedStderrInterruptEvent);
+	if (unlikely(interceptedStderrEventsResult)) {
+		result.error = interceptedStderrEventsResult;
+		goto err_intercepted_stderr_pipe;
+	}
+
+	if (unlikely(SetStdHandle(STD_OUTPUT_HANDLE, interceptedStdoutPipeWrite) == 0)) {
+		result.error = GetLastError();
+		goto err_interrupt_stderr_events;
+	}
+	if (unlikely(SetStdHandle(STD_ERROR_HANDLE, interceptedStderrPipeWrite) == 0)) {
+		result.error = GetLastError();
+		goto err_set_stdout;
+	}
+
+	streams->intercepted_stdout_read = interceptedStdoutPipeRead;
+  streams->intercepted_stdout_write = interceptedStdoutPipeWrite;
+	streams->intercepted_stdout_overlapped_event = interceptedStdoutOverlappedEvent;
+	streams->intercepted_stdout_interrupt_event = interceptedStdoutInterruptEvent;
+	streams->intercepted_stderr_read = interceptedStderrPipeRead;
+  streams->intercepted_stderr_write = interceptedStderrPipeWrite;
+	streams->intercepted_stderr_overlapped_event = interceptedStderrOverlappedEvent;
+	streams->intercepted_stderr_interrupt_event = interceptedStderrInterruptEvent;
+
+	ret:
+	return result;
+
+	err_set_stdout:
+	SetStdHandle(STD_OUTPUT_HANDLE, streams->stdout);
+
+	err_interrupt_stderr_events:
+	CloseHandle(interceptedStderrOverlappedEvent);
+	CloseHandle(interceptedStderrInterruptEvent);
+
+	err_intercepted_stderr_pipe:
+	CloseHandle(interceptedStderrPipeRead);
+	CloseHandle(interceptedStderrPipeWrite);
+
+	err_intercepted_stdout_events:
+	CloseHandle(interceptedStdoutOverlappedEvent);
+	CloseHandle(interceptedStdoutInterruptEvent);
+
+	err_intercepted_stdout_pipe:
+	CloseHandle(interceptedStdoutPipeRead);
+	CloseHandle(interceptedStdoutPipeWrite);
+
+	atomic_flag_clear(&global_stream_intercept);
+	goto ret;
+}
+
+MOSAIC_EXPORT uint32_t mosaic_streams_intercept_stop(MosaicStreams *streams) {
+	DWORD result = 0;
+	if (streams->intercepted_stdout_read == NULL) {
+		goto ret;
+	}
+
+	if (unlikely(SetStdHandle(STD_OUTPUT_HANDLE, streams->stdout) == 0)) {
+		result = GetLastError();
+	}
+	if (unlikely(SetStdHandle(STD_ERROR_HANDLE, streams->stderr) == 0) && result == 0) {
+		result = GetLastError();
+	}
+
+	if (unlikely(CloseHandle(streams->intercepted_stdout_read) == 0 && result == 0)) {
+		result = GetLastError();
+	}
+	if (unlikely(CloseHandle(streams->intercepted_stdout_write) == 0 && result == 0)) {
+		result = GetLastError();
+	}
+	if (unlikely(CloseHandle(streams->intercepted_stdout_overlapped_event) == 0 && result == 0)) {
+		result = GetLastError();
+	}
+	if (unlikely(CloseHandle(streams->intercepted_stdout_interrupt_event) == 0 && result == 0)) {
+		result = GetLastError();
+	}
+	if (unlikely(CloseHandle(streams->intercepted_stderr_read) == 0 && result == 0)) {
+		result = GetLastError();
+	}
+	if (unlikely(CloseHandle(streams->intercepted_stderr_write) == 0 && result == 0)) {
+		result = GetLastError();
+	}
+	if (unlikely(CloseHandle(streams->intercepted_stderr_overlapped_event) == 0 && result == 0)) {
+		result = GetLastError();
+	}
+	if (unlikely(CloseHandle(streams->intercepted_stderr_interrupt_event) == 0 && result == 0)) {
+		result = GetLastError();
+	}
+
+	streams->intercepted_stdout_read = NULL;
+  streams->intercepted_stdout_write = NULL;
+	streams->intercepted_stdout_overlapped_event = NULL;
+	streams->intercepted_stdout_interrupt_event = NULL;
+	streams->intercepted_stderr_read = NULL;
+  streams->intercepted_stderr_write = NULL;
+	streams->intercepted_stderr_overlapped_event = NULL;
+	streams->intercepted_stderr_interrupt_event = NULL;
+
+	atomic_flag_clear(&global_stream_intercept);
+
+	ret:
+	return result;
+}
+
+MOSAIC_EXPORT MosaicIoResult mosaic_streams_read_intercepted_output(MosaicStreams *streams, uint8_t *buffer, int count) {
+	return mosaic_streams_read_intercepted_output_with_timeout(streams, buffer, count, INFINITE);
+}
+
+MOSAIC_EXPORT MosaicIoResult mosaic_streams_read_intercepted_output_with_timeout(MosaicStreams *streams, uint8_t *buffer, int count, int timeoutMillis) {
+	return mosaic_utils_read_overlapped(
+		streams->intercepted_stdout_read,
+		streams->intercepted_stdout_overlapped_event,
+		streams->intercepted_stdout_interrupt_event,
+		buffer,
+		count,
+		timeoutMillis
+	);
+}
+
+MOSAIC_EXPORT uint32_t mosaic_streams_interrupt_intercepted_output_read(MosaicStreams *streams) {
+	return likely(SetEvent(streams->intercepted_stdout_interrupt_event) != 0)
+		? 0
+		: GetLastError();
+}
+
+MOSAIC_EXPORT MosaicIoResult mosaic_streams_read_intercepted_error(MosaicStreams *streams, uint8_t *buffer, int count) {
+	return mosaic_streams_read_intercepted_error_with_timeout(streams, buffer, count, INFINITE);
+}
+
+MOSAIC_EXPORT MosaicIoResult mosaic_streams_read_intercepted_error_with_timeout(MosaicStreams *streams, uint8_t *buffer, int count, int timeoutMillis) {
+	return mosaic_utils_read_overlapped(
+		streams->intercepted_stderr_read,
+		streams->intercepted_stderr_overlapped_event,
+		streams->intercepted_stderr_interrupt_event,
+		buffer,
+		count,
+		timeoutMillis
+	);
+}
+
+MOSAIC_EXPORT uint32_t mosaic_streams_interrupt_intercepted_error_read(MosaicStreams *streams) {
+	return likely(SetEvent(streams->intercepted_stderr_interrupt_event) != 0)
+		? 0
+		: GetLastError();
+}
+
+MOSAIC_EXPORT uint32_t mosaic_streams_free(MosaicStreams *streams) {
 	DWORD result = 0;
 
-	if (unlikely(CloseHandle(streams->stdin_interrupt_event) == 0)) {
+	if (streams->intercepted_stdout_read != NULL) {
+		result = mosaic_streams_intercept_stop(streams);
+	}
+
+	if (unlikely(CloseHandle(streams->stdin_interrupt_event) == 0 && result == 0)) {
 		result = GetLastError();
 	}
 

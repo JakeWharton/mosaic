@@ -76,10 +76,83 @@ public actual class StandardStreams internal constructor(
 		}
 	}
 
+	public actual fun interceptOtherWrites(): InterceptedStreams {
+		mosaic_streams_intercept_start(ptr).useContents {
+			if (is_test) {
+				throw IllegalStateException("Cannot intercept test streams")
+			}
+			if (already_bound) {
+				throw IllegalStateException("Standard streams already intercepted")
+			}
+			if (error != 0U) {
+				throwIoe(error)
+			}
+			return InterceptedStreams(ptr)
+		}
+	}
+
 	actual override fun close() {
 		ptr?.let {
 			mosaic_streams_free(it)
 			ptr = null
+		}
+	}
+
+	public actual class InterceptedStreams internal constructor(
+		private val ptr: CValuesRef<MosaicStreams>?,
+	) : AutoCloseable {
+		public actual fun readOutput(buffer: ByteArray, offset: Int, count: Int): Int {
+			buffer.asUByteArray().usePinned {
+				mosaic_streams_read_intercepted_output(ptr, it.addressOf(offset), count).useContents {
+					if (error == 0U) return this.count
+					throwIoe(error)
+				}
+			}
+		}
+
+		public actual fun readOutputWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
+			buffer.asUByteArray().usePinned {
+				mosaic_streams_read_intercepted_output_with_timeout(ptr, it.addressOf(offset), count, timeoutMillis).useContents {
+					if (error == 0U) return this.count
+					throwIoe(error)
+				}
+			}
+		}
+
+		public actual fun interruptOutputRead() {
+			val error = mosaic_streams_interrupt_intercepted_output_read(ptr)
+			if (error == 0U) return
+			throwIoe(error)
+		}
+
+		public actual fun readError(buffer: ByteArray, offset: Int, count: Int): Int {
+			buffer.asUByteArray().usePinned {
+				mosaic_streams_read_intercepted_error(ptr, it.addressOf(offset), count).useContents {
+					if (error == 0U) return this.count
+					throwIoe(error)
+				}
+			}
+		}
+
+		public actual fun readErrorWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
+			buffer.asUByteArray().usePinned {
+				mosaic_streams_read_intercepted_error_with_timeout(ptr, it.addressOf(offset), count, timeoutMillis).useContents {
+					if (error == 0U) return this.count
+					throwIoe(error)
+				}
+			}
+		}
+
+		public actual fun interruptErrorRead() {
+			val error = mosaic_streams_interrupt_intercepted_error_read(ptr)
+			if (error == 0U) return
+			throwIoe(error)
+		}
+
+		actual override fun close() {
+			val error = mosaic_streams_intercept_stop(ptr)
+			if (error == 0U) return
+			throwIoe(error)
 		}
 	}
 }
