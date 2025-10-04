@@ -2,6 +2,7 @@
 
 #include "mosaic-streams-posix.h"
 #include "mosaic-tty-posix.h"
+#include "mosaic-utils-posix.h"
 
 #include <errno.h>
 #include <stdlib.h>
@@ -76,7 +77,7 @@ MosaicStreamsTtyResult mosaic_streams_is_stderr_tty(MosaicStreams *streams) {
 }
 
 MosaicIoResult mosaic_streams_read_input(MosaicStreams *streams, uint8_t *buffer, int count) {
-	return mosaic_tty_read_internal(streams->stdin, streams->interrupt_stdin_reader, buffer, count, NULL);
+	return mosaic_utils_read(streams->stdin, streams->interrupt_stdin_reader, buffer, count, NULL);
 }
 
 MosaicIoResult mosaic_streams_read_input_with_timeout(MosaicStreams *streams, uint8_t *buffer, int count, int timeoutMillis) {
@@ -84,21 +85,21 @@ MosaicIoResult mosaic_streams_read_input_with_timeout(MosaicStreams *streams, ui
 	timeout.tv_sec = 0;
 	timeout.tv_usec = timeoutMillis * 1000;
 
-	return mosaic_tty_read_internal(streams->stdin, streams->interrupt_stdin_reader, buffer, count, &timeout);
+	return mosaic_utils_read(streams->stdin, streams->interrupt_stdin_reader, buffer, count, &timeout);
 }
 
 uint32_t mosaic_streams_interrupt_input_read(MosaicStreams *streams) {
 	uint8_t space = ' ';
-	MosaicIoResult result = mosaic_tty_write_internal(streams->interrupt_stdin_writer, &space, 1);
+	MosaicIoResult result = mosaic_utils_write(streams->interrupt_stdin_writer, &space, 1);
 	return result.error;
 }
 
 MosaicIoResult mosaic_streams_write_output(MosaicStreams *streams, uint8_t *buffer, int count) {
-	return mosaic_tty_write_internal(streams->stdout, buffer, count);
+	return mosaic_utils_write(streams->stdout, buffer, count);
 }
 
 MosaicIoResult mosaic_streams_write_error(MosaicStreams *streams, uint8_t *buffer, int count) {
-	return mosaic_tty_write_internal(streams->stderr, buffer, count);
+	return mosaic_utils_write(streams->stderr, buffer, count);
 }
 
 uint32_t mosaic_streams_free(MosaicStreams *streams) {
