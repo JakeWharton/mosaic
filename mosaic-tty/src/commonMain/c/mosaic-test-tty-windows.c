@@ -6,7 +6,6 @@
 #include "mosaic-utils-windows.h"
 
 #include <stdatomic.h>
-#include <stdio.h>
 #include <windows.h>
 
 typedef struct MosaicTestTtyImpl {
@@ -29,7 +28,6 @@ typedef struct MosaicTestTtyImpl {
 } MosaicTestTtyImpl;
 
 static atomic_flag globalTestTty = ATOMIC_FLAG_INIT;
-static volatile long globalPipeNumber;
 
 static uint32_t mosaic_test_resize_internal(HANDLE conout, int columns, int rows) {
 	SMALL_RECT windowSize = {};
@@ -41,61 +39,6 @@ static uint32_t mosaic_test_resize_internal(HANDLE conout, int columns, int rows
 		return 0;
 	}
 	return GetLastError();
-}
-
-static uint32_t mosaic_test_create_pipe(
-	OUT LPHANDLE reader,
-	OUT LPHANDLE writer
-) {
-	uint32_t result = 0;
-
-	CHAR pipename[MAX_PATH];
-	sprintf(
-		pipename,
-		"\\\\.\\Pipe\\MosaicTest.%08lx.%08lx",
-		GetCurrentProcessId(),
-		InterlockedIncrement(&globalPipeNumber)
-	);
-
-	HANDLE newReader = CreateNamedPipeA(
-		pipename,
-		PIPE_ACCESS_INBOUND | FILE_FLAG_OVERLAPPED,
-		PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_WAIT,
-		1,
-		4096,
-		4096,
-		0,
-		NULL
-	);
-	if (unlikely(newReader == INVALID_HANDLE_VALUE)) {
-		result = GetLastError();
-		goto ret;
-	}
-
-	HANDLE newWriter = CreateFileA(
-		pipename,
-		GENERIC_WRITE,
-		0,
-		NULL,
-		OPEN_EXISTING,
-		FILE_ATTRIBUTE_NORMAL | FILE_FLAG_WRITE_THROUGH,
-		NULL
-	);
-	if (unlikely(newWriter == INVALID_HANDLE_VALUE)) {
-		result = GetLastError();
-		goto err_reader;
-	}
-
-	*reader = newReader;
-	*writer = newWriter;
-
-	ret:
-	return result;
-
-	err_reader:
-	CloseHandle(newReader);
-
-	goto ret;
 }
 
 MOSAIC_EXPORT MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool stdoutIsTty, bool stderrIsTty) {
@@ -135,7 +78,7 @@ MOSAIC_EXPORT MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool std
 
 	HANDLE conoutPipeRead;
 	HANDLE conoutPipeWrite;
-	uint32_t conoutPipeResult = mosaic_test_create_pipe(&conoutPipeRead, &conoutPipeWrite);
+	uint32_t conoutPipeResult = mosaic_utils_create_pipe(&conoutPipeRead, &conoutPipeWrite);
 	if (unlikely(conoutPipeResult)) {
 		result.error = conoutPipeResult;
 		goto err_conout;
@@ -155,7 +98,7 @@ MOSAIC_EXPORT MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool std
 		stdinPipeRead = conin;
 		stdinPipeWrite = conin;
 	} else {
-		uint32_t stdinPipeResult = mosaic_test_create_pipe(&stdinPipeRead, &stdinPipeWrite);
+		uint32_t stdinPipeResult = mosaic_utils_create_pipe(&stdinPipeRead, &stdinPipeWrite);
 		if (unlikely(stdinPipeResult)) {
 			result.error = stdinPipeResult;
 			goto err_conout_events;
@@ -168,7 +111,7 @@ MOSAIC_EXPORT MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool std
 		stdoutPipeRead = conoutPipeRead;
 		stdoutPipeWrite = conoutPipeWrite;
 	} else {
-		uint32_t stdoutPipeResult = mosaic_test_create_pipe(&stdoutPipeRead, &stdoutPipeWrite);
+		uint32_t stdoutPipeResult = mosaic_utils_create_pipe(&stdoutPipeRead, &stdoutPipeWrite);
 		if (unlikely(stdoutPipeResult)) {
 			result.error = stdoutPipeResult;
 			goto err_stdin_pipe;
@@ -189,7 +132,7 @@ MOSAIC_EXPORT MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool std
 		stderrPipeRead = conoutPipeRead;
 		stderrPipeWrite = conoutPipeWrite;
 	} else {
-		uint32_t stderrPipeResult = mosaic_test_create_pipe(&stderrPipeRead, &stderrPipeWrite);
+		uint32_t stderrPipeResult = mosaic_utils_create_pipe(&stderrPipeRead, &stderrPipeWrite);
 		if (unlikely(stderrPipeResult)) {
 			result.error = stderrPipeResult;
 			goto err_stdout_events;

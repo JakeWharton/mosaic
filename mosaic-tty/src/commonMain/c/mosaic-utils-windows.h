@@ -3,9 +3,16 @@
 
 #include "mosaic-utils.h"
 
+#include <windows.h>
+
 uint32_t mosaic_utils_create_events(
 	OUT LPHANDLE overlappedEvent,
 	OUT LPHANDLE interruptEvent
+);
+
+uint32_t mosaic_utils_create_pipe(
+	OUT LPHANDLE reader,
+	OUT LPHANDLE writer
 );
 
 MosaicIoResult mosaic_utils_read_overlapped(
