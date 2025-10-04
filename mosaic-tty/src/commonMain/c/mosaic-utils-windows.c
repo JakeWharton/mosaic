@@ -1,8 +1,9 @@
 #if defined(_WIN32)
 
-#include <windows.h>
-
 #include "mosaic-utils-windows.h"
+
+#include <stdio.h>
+#include <windows.h>
 
 uint32_t mosaic_utils_create_events(
 	OUT LPHANDLE overlappedEvent,
@@ -30,6 +31,63 @@ uint32_t mosaic_utils_create_events(
 
 	err_overlapped:
 	CloseHandle(newOverlappedEvent);
+
+	goto ret;
+}
+
+static volatile long globalPipeNumber;
+
+uint32_t mosaic_utils_create_pipe(
+	OUT LPHANDLE reader,
+	OUT LPHANDLE writer
+) {
+	uint32_t result = 0;
+
+	CHAR pipename[MAX_PATH];
+	sprintf(
+		pipename,
+		"\\\\.\\Pipe\\MosaicTest.%08lx.%08lx",
+		GetCurrentProcessId(),
+		InterlockedIncrement(&globalPipeNumber)
+	);
+
+	HANDLE newReader = CreateNamedPipeA(
+		pipename,
+		PIPE_ACCESS_INBOUND | FILE_FLAG_OVERLAPPED,
+		PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_WAIT,
+		1,
+		4096,
+		4096,
+		0,
+		NULL
+	);
+	if (unlikely(newReader == INVALID_HANDLE_VALUE)) {
+		result = GetLastError();
+		goto ret;
+	}
+
+	HANDLE newWriter = CreateFileA(
+		pipename,
+		GENERIC_WRITE,
+		0,
+		NULL,
+		OPEN_EXISTING,
+		FILE_ATTRIBUTE_NORMAL | FILE_FLAG_WRITE_THROUGH,
+		NULL
+	);
+	if (unlikely(newWriter == INVALID_HANDLE_VALUE)) {
+		result = GetLastError();
+		goto err_reader;
+	}
+
+	*reader = newReader;
+	*writer = newWriter;
+
+	ret:
+	return result;
+
+	err_reader:
+	CloseHandle(newReader);
 
 	goto ret;
 }
