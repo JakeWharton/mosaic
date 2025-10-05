@@ -10,7 +10,7 @@ private val dateTimeFormat = DateTimeComponents.Format {
 	char('-')
 	monthNumber()
 	char('-')
-	dayOfMonth()
+	day()
 	char(' ')
 	hour()
 	char(':')
