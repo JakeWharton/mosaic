@@ -7,12 +7,12 @@ import kotlin.test.Test
 
 class EventParserCsiBracketedPasteEventTest : BaseEventParserTest() {
 	@Test fun pasteStart() {
-		testTty.write("${CSI}200~")
+		testTerminal.write("${CSI}200~")
 		assertThat(parser.next()).isEqualTo(BracketedPasteEvent(start = true))
 	}
 
 	@Test fun pasteEnd() {
-		testTty.write("${CSI}201~")
+		testTerminal.write("${CSI}201~")
 		assertThat(parser.next()).isEqualTo(BracketedPasteEvent(start = false))
 	}
 }

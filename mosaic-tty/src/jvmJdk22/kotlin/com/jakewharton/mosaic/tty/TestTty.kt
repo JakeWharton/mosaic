@@ -23,7 +23,7 @@ import java.lang.foreign.Arena
 import java.lang.foreign.MemorySegment
 import java.lang.foreign.ValueLayout
 
-public class TestTty private constructor(
+public class TestTerminal private constructor(
 	private var ptr: MemorySegment,
 	public val streams: StandardStreams,
 	public val tty: Tty,
@@ -34,20 +34,20 @@ public class TestTty private constructor(
 			stdinIsTty: Boolean = false,
 			stdoutIsTty: Boolean = false,
 			stderrIsTty: Boolean = false,
-		): TestTty {
+		): TestTerminal {
 			NativeLibrary.ensureLoaded()
 
 			val result = mosaic_test_init(Arena.global(), stdinIsTty, stdoutIsTty, stderrIsTty)
-			val testTtyPtr = MosaicTestTtyInitResult.testTty(result)
-			if (testTtyPtr != MemorySegment.NULL) {
-				val streamsPtr = mosaic_test_get_streams(testTtyPtr)
+			val ptr = MosaicTestTtyInitResult.testTty(result)
+			if (ptr != MemorySegment.NULL) {
+				val streamsPtr = mosaic_test_get_streams(ptr)
 				val streams = StandardStreams(streamsPtr)
-				val ttyPtr = mosaic_test_get_tty(testTtyPtr)
+				val ttyPtr = mosaic_test_get_tty(ptr)
 				val tty = Tty(ttyPtr)
-				return TestTty(testTtyPtr, streams, tty)
+				return TestTerminal(ptr, streams, tty)
 			}
 			if (MosaicTestTtyInitResult.already_bound(result)) {
-				throw IllegalStateException("TestTty or Tty already bound")
+				throw IllegalStateException("TestTerminal or Tty already bound")
 			}
 			val error = MosaicTestTtyInitResult.error(result)
 			if (error != 0) {

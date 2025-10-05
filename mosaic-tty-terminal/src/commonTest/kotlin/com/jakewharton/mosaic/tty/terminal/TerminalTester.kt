@@ -3,7 +3,7 @@ package com.jakewharton.mosaic.tty.terminal
 import assertk.assertThat
 import assertk.assertions.isEmpty
 import com.jakewharton.mosaic.terminal.Terminal
-import com.jakewharton.mosaic.tty.TestTty
+import com.jakewharton.mosaic.tty.TestTerminal
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.cancelAndJoin
@@ -23,14 +23,14 @@ import kotlinx.io.unsafe.UnsafeBufferOperations
 
 fun terminalTest(block: suspend TerminalTester.() -> Unit) {
 	runBlocking {
-		TestTty.bind().use { testTty ->
+		TestTerminal.bind().use { testTty ->
 			TerminalTester(testTty).block()
 		}
 	}
 }
 
 class TerminalTester(
-	val testTty: TestTty,
+	val testTerminal: TestTerminal,
 ) {
 	private data class Expect(val output: ByteString, val reply: ByteString)
 	private val expects = Channel<Expect>(UNLIMITED)
@@ -39,7 +39,7 @@ class TerminalTester(
 		expects.send(Expect(output.encodeToByteString(), reply.encodeToByteString()))
 	}
 
-	fun ptyWrite(s: String) = testTty.write(s)
+	fun ptyWrite(s: String) = testTerminal.write(s)
 
 	suspend fun withTerminal(block: suspend Terminal.(setup: ByteString) -> Unit): ByteString {
 		expects.close()
@@ -56,7 +56,7 @@ class TerminalTester(
 						expectStartIndex = offset + expect.output.size
 
 						val replyBytes = expect.reply.toByteArray()
-						testTty.writeTty(replyBytes, 0, replyBytes.size)
+						testTerminal.writeTty(replyBytes, 0, replyBytes.size)
 
 						continue // Look for additional expects before blocking on read.
 					}
@@ -67,7 +67,7 @@ class TerminalTester(
 					buffer = buffer,
 					minimumCapacity = UnsafeBufferOperations.maxSafeWriteCapacity,
 				) { bytes, startIndexInclusive, endIndexExclusive ->
-					testTty.readTty(bytes, startIndexInclusive, endIndexExclusive - startIndexInclusive)
+					testTerminal.readTty(bytes, startIndexInclusive, endIndexExclusive - startIndexInclusive)
 				}
 				if (read == 0) break
 			}
@@ -76,8 +76,8 @@ class TerminalTester(
 		coroutineScope {
 			var readJob = launch(Dispatchers.IO) { readUntilInterrupted() }
 			try {
-				testTty.tty.asTerminalIn(this).use { terminal ->
-					testTty.interruptTtyRead()
+				testTerminal.tty.asTerminalIn(this).use { terminal ->
+					testTerminal.interruptTtyRead()
 					readJob.cancelAndJoin()
 
 					try {
@@ -95,7 +95,7 @@ class TerminalTester(
 					}
 				}
 			} finally {
-				testTty.interruptTtyRead()
+				testTerminal.interruptTtyRead()
 				readJob.cancelAndJoin()
 			}
 		}

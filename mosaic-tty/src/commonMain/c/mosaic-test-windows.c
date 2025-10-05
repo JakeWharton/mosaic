@@ -1,7 +1,7 @@
 #if defined(_WIN32)
 
 #include "mosaic-streams-windows.h"
-#include "mosaic-test-tty.h"
+#include "mosaic-test.h"
 #include "mosaic-tty-windows.h"
 #include "mosaic-utils-windows.h"
 

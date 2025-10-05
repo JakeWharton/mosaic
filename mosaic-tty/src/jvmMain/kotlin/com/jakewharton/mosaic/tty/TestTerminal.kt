@@ -4,8 +4,8 @@ import com.jakewharton.mosaic.tty.Jni.testGetStreams
 import com.jakewharton.mosaic.tty.Jni.testGetTty
 import com.jakewharton.mosaic.tty.Jni.testInit
 
-public actual class TestTty private constructor(
-	private var testTtyPtr: Long,
+public actual class TestTerminal private constructor(
+	private var ptr: Long,
 	public actual val streams: StandardStreams,
 	public actual val tty: Tty,
 ) : AutoCloseable {
@@ -16,97 +16,97 @@ public actual class TestTty private constructor(
 			stdinIsTty: Boolean,
 			stdoutIsTty: Boolean,
 			stderrIsTty: Boolean,
-		): TestTty {
+		): TestTerminal {
 			val testTtyPtr = testInit(stdinIsTty, stdoutIsTty, stderrIsTty)
 			val streamsPtr = testGetStreams(testTtyPtr)
 			val streams = StandardStreams(streamsPtr)
 			val ttyPtr = testGetTty(testTtyPtr)
 			val tty = Tty(ttyPtr)
-			return TestTty(testTtyPtr, streams, tty)
+			return TestTerminal(testTtyPtr, streams, tty)
 		}
 	}
 
 	@Throws(IOException::class)
 	public actual fun writeTty(buffer: ByteArray, offset: Int, count: Int): Int {
-		return Jni.testWriteTty(testTtyPtr, buffer, offset, count)
+		return Jni.testWriteTty(ptr, buffer, offset, count)
 	}
 
 	@Throws(IOException::class)
 	public actual fun readTty(buffer: ByteArray, offset: Int, count: Int): Int {
-		return Jni.testReadTty(testTtyPtr, buffer, offset, count)
+		return Jni.testReadTty(ptr, buffer, offset, count)
 	}
 
 	@Throws(IOException::class)
 	public actual fun readTtyWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
-		return Jni.testReadTtyWithTimeout(testTtyPtr, buffer, offset, count, timeoutMillis)
+		return Jni.testReadTtyWithTimeout(ptr, buffer, offset, count, timeoutMillis)
 	}
 
 	@Throws(IOException::class)
 	public actual fun interruptTtyRead() {
-		Jni.testInterruptTtyRead(testTtyPtr)
+		Jni.testInterruptTtyRead(ptr)
 	}
 
 	@Throws(IOException::class)
 	public actual fun writeStandardInput(buffer: ByteArray, offset: Int, count: Int): Int {
-		return Jni.testWriteInput(testTtyPtr, buffer, offset, count)
+		return Jni.testWriteInput(ptr, buffer, offset, count)
 	}
 
 	@Throws(IOException::class)
 	public actual fun readStandardOutput(buffer: ByteArray, offset: Int, count: Int): Int {
-		return Jni.testReadOutput(testTtyPtr, buffer, offset, count)
+		return Jni.testReadOutput(ptr, buffer, offset, count)
 	}
 
 	@Throws(IOException::class)
 	public actual fun readStandardOutputWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
-		return Jni.testReadOutputWithTimeout(testTtyPtr, buffer, offset, count, timeoutMillis)
+		return Jni.testReadOutputWithTimeout(ptr, buffer, offset, count, timeoutMillis)
 	}
 
 	@Throws(IOException::class)
 	public actual fun interruptStandardOutputRead() {
-		Jni.testInterruptOutputRead(testTtyPtr)
+		Jni.testInterruptOutputRead(ptr)
 	}
 
 	@Throws(IOException::class)
 	public actual fun readStandardError(buffer: ByteArray, offset: Int, count: Int): Int {
-		return Jni.testReadError(testTtyPtr, buffer, offset, count)
+		return Jni.testReadError(ptr, buffer, offset, count)
 	}
 
 	@Throws(IOException::class)
 	public actual fun readStandardErrorWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
-		return Jni.testReadErrorWithTimeout(testTtyPtr, buffer, offset, count, timeoutMillis)
+		return Jni.testReadErrorWithTimeout(ptr, buffer, offset, count, timeoutMillis)
 	}
 
 	@Throws(IOException::class)
 	public actual fun interruptStandardErrorRead() {
-		Jni.testInterruptErrorRead(testTtyPtr)
+		Jni.testInterruptErrorRead(ptr)
 	}
 
 	@Throws(IOException::class)
 	public actual fun resize(columns: Int, rows: Int, width: Int, height: Int) {
-		Jni.testResize(testTtyPtr, columns, rows, width, height)
+		Jni.testResize(ptr, columns, rows, width, height)
 	}
 
 	@Throws(IOException::class)
 	public actual fun sendFocusEvent(focused: Boolean) {
-		Jni.testSendFocusEvent(testTtyPtr, focused)
+		Jni.testSendFocusEvent(ptr, focused)
 	}
 
 	@Throws(IOException::class)
 	public actual fun sendKeyEvent() {
-		Jni.testSendKeyEvent(testTtyPtr)
+		Jni.testSendKeyEvent(ptr)
 	}
 
 	@Throws(IOException::class)
 	public actual fun sendMouseEvent() {
-		Jni.testSendMouseEvent(testTtyPtr)
+		Jni.testSendMouseEvent(ptr)
 	}
 
 	@Throws(IOException::class)
 	actual override fun close() {
-		if (testTtyPtr != 0L) {
+		if (ptr != 0L) {
 			tty.close()
-			Jni.testFree(testTtyPtr)
-			testTtyPtr = 0
+			Jni.testFree(ptr)
+			ptr = 0
 		}
 	}
 }

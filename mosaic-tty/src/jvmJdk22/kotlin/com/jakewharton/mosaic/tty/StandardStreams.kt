@@ -29,9 +29,9 @@ public class StandardStreams internal constructor(
 		@JvmStatic
 		public fun bind(): StandardStreams {
 			val result = mosaic_streams_init.makeInvoker().apply(Arena.global())
-			val streams = MosaicStreamsInitResult.streams(result)
-			if (streams != MemorySegment.NULL) {
-				return StandardStreams(streams)
+			val ptr = MosaicStreamsInitResult.streams(result)
+			if (ptr != MemorySegment.NULL) {
+				return StandardStreams(ptr)
 			}
 			val error = MosaicStreamsInitResult.error(result)
 			if (error != 0) {

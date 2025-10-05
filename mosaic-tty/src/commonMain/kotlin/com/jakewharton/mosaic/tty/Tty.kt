@@ -3,10 +3,9 @@ package com.jakewharton.mosaic.tty
 public expect class Tty : AutoCloseable {
 	public companion object {
 		/**
-		 * Initialize a [Tty] instance to the standard input, output, and error streams for this
-		 * application. Only a single [Tty] instance can be bound at a time. Subsequent calls will
-		 * throw an exception until [Tty.close] is called. Returns `null` if no TTY is available
-		 * for this process.
+		 * Initialize a [Tty] instance to the interactive terminal for this application. Only a single
+		 * [Tty] instance can be bound at a time. Subsequent calls will throw an exception until
+		 * [Tty.close] is called. Returns `null` if no TTY is available for this process.
 		 *
 		 * @throws IOException If an error occurred binding to the TTY.
 		 * @throws IllegalStateException If another instance is already bound.
@@ -28,6 +27,7 @@ public expect class Tty : AutoCloseable {
 	 * while waiting for data. -1 will be returned if the TTY is not interactive.
 	 *
 	 * @see readWithTimeout
+	 * @see interruptRead
 	 */
 	public fun read(buffer: ByteArray, offset: Int, count: Int): Int
 
@@ -41,6 +41,7 @@ public expect class Tty : AutoCloseable {
 	 * are 1 to 999 which represent a maximum time (in milliseconds) to wait for data. Note: This
 	 * value is not validated.
 	 * @see read
+	 * @see interruptRead
 	 */
 	public fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int
 

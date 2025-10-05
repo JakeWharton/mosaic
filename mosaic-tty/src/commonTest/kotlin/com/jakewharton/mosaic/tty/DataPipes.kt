@@ -33,12 +33,12 @@ abstract class MosaicData :
 }
 
 data object TtyToTestTty : MosaicData() {
-	private lateinit var testTty: TestTty
+	private lateinit var testTerminal: TestTerminal
 	private lateinit var tty: Tty
 
 	override fun intercept(testFunction: TestFunction) {
-		TestTty.bind().use { testTty ->
-			this.testTty = testTty
+		TestTerminal.bind().use { testTty ->
+			this.testTerminal = testTty
 			tty = testTty.tty
 			tty.enableRawMode()
 
@@ -55,7 +55,7 @@ data object TtyToTestTty : MosaicData() {
 	}
 
 	override fun write(buffer: ByteArray, offset: Int, count: Int): Int {
-		return testTty.writeTty(buffer, offset, count)
+		return testTerminal.writeTty(buffer, offset, count)
 	}
 
 	override fun read(buffer: ByteArray, offset: Int, count: Int): Int {
@@ -72,12 +72,12 @@ data object TtyToTestTty : MosaicData() {
 }
 
 data object TestTtyToTest : MosaicData() {
-	private lateinit var testTty: TestTty
+	private lateinit var testTerminal: TestTerminal
 	private lateinit var tty: Tty
 
 	override fun intercept(testFunction: TestFunction) {
-		TestTty.bind().use { testTty ->
-			this.testTty = testTty
+		TestTerminal.bind().use { testTty ->
+			this.testTerminal = testTty
 			tty = testTty.tty
 			tty.enableRawMode()
 
@@ -90,7 +90,7 @@ data object TestTtyToTest : MosaicData() {
 	}
 
 	override fun read(buffer: ByteArray, offset: Int, count: Int): Int {
-		return testTty.readTty(buffer, offset, count)
+		return testTerminal.readTty(buffer, offset, count)
 	}
 
 	override fun readWithTimeout(
@@ -99,21 +99,21 @@ data object TestTtyToTest : MosaicData() {
 		count: Int,
 		timeoutMillis: Int,
 	): Int {
-		return testTty.readTtyWithTimeout(buffer, offset, count, timeoutMillis)
+		return testTerminal.readTtyWithTimeout(buffer, offset, count, timeoutMillis)
 	}
 
 	override fun interruptRead() {
-		testTty.interruptTtyRead()
+		testTerminal.interruptTtyRead()
 	}
 }
 
 data object TestTtyToStandardInput : MosaicData() {
-	private lateinit var testTty: TestTty
+	private lateinit var testTerminal: TestTerminal
 	private lateinit var streams: StandardStreams
 
 	override fun intercept(testFunction: TestFunction) {
-		TestTty.bind().use { testTty ->
-			this.testTty = testTty
+		TestTerminal.bind().use { testTty ->
+			this.testTerminal = testTty
 			streams = testTty.streams
 
 			testFunction()
@@ -121,7 +121,7 @@ data object TestTtyToStandardInput : MosaicData() {
 	}
 
 	override fun write(buffer: ByteArray, offset: Int, count: Int): Int {
-		return testTty.writeStandardInput(buffer, offset, count)
+		return testTerminal.writeStandardInput(buffer, offset, count)
 	}
 
 	override fun read(buffer: ByteArray, offset: Int, count: Int): Int {
@@ -143,12 +143,12 @@ data object TestTtyToStandardInput : MosaicData() {
 }
 
 data object StandardOutputToTestTty : MosaicData() {
-	private lateinit var testTty: TestTty
+	private lateinit var testTerminal: TestTerminal
 	private lateinit var streams: StandardStreams
 
 	override fun intercept(testFunction: TestFunction) {
-		TestTty.bind().use { testTty ->
-			this.testTty = testTty
+		TestTerminal.bind().use { testTty ->
+			this.testTerminal = testTty
 			streams = testTty.streams
 
 			testFunction()
@@ -160,7 +160,7 @@ data object StandardOutputToTestTty : MosaicData() {
 	}
 
 	override fun read(buffer: ByteArray, offset: Int, count: Int): Int {
-		return testTty.readStandardOutput(buffer, offset, count)
+		return testTerminal.readStandardOutput(buffer, offset, count)
 	}
 
 	override fun readWithTimeout(
@@ -169,21 +169,21 @@ data object StandardOutputToTestTty : MosaicData() {
 		count: Int,
 		timeoutMillis: Int,
 	): Int {
-		return testTty.readStandardOutputWithTimeout(buffer, offset, count, timeoutMillis)
+		return testTerminal.readStandardOutputWithTimeout(buffer, offset, count, timeoutMillis)
 	}
 
 	override fun interruptRead() {
-		testTty.interruptStandardOutputRead()
+		testTerminal.interruptStandardOutputRead()
 	}
 }
 
 data object StandardErrorToTestTty : MosaicData() {
-	private lateinit var testTty: TestTty
+	private lateinit var testTerminal: TestTerminal
 	private lateinit var streams: StandardStreams
 
 	override fun intercept(testFunction: TestFunction) {
-		TestTty.bind().use { testTty ->
-			this.testTty = testTty
+		TestTerminal.bind().use { testTty ->
+			this.testTerminal = testTty
 			streams = testTty.streams
 
 			testFunction()
@@ -195,7 +195,7 @@ data object StandardErrorToTestTty : MosaicData() {
 	}
 
 	override fun read(buffer: ByteArray, offset: Int, count: Int): Int {
-		return testTty.readStandardError(buffer, offset, count)
+		return testTerminal.readStandardError(buffer, offset, count)
 	}
 
 	override fun readWithTimeout(
@@ -204,11 +204,11 @@ data object StandardErrorToTestTty : MosaicData() {
 		count: Int,
 		timeoutMillis: Int,
 	): Int {
-		return testTty.readStandardErrorWithTimeout(buffer, offset, count, timeoutMillis)
+		return testTerminal.readStandardErrorWithTimeout(buffer, offset, count, timeoutMillis)
 	}
 
 	override fun interruptRead() {
-		testTty.interruptStandardErrorRead()
+		testTerminal.interruptStandardErrorRead()
 	}
 }
 

@@ -18,7 +18,7 @@ import java.lang.foreign.MemorySegment
 import java.lang.foreign.ValueLayout
 
 public class Tty internal constructor(
-	private var ttyPtr: MemorySegment,
+	private var ptr: MemorySegment,
 ) : AutoCloseable {
 	public companion object {
 		@JvmStatic
@@ -26,9 +26,9 @@ public class Tty internal constructor(
 			NativeLibrary.ensureLoaded()
 
 			val result = mosaic_tty_init.makeInvoker().apply(Arena.global())
-			val ttyPtr = MosaicTtyInitResult.tty(result)
-			if (ttyPtr != MemorySegment.NULL) {
-				return Tty(ttyPtr)
+			val ptr = MosaicTtyInitResult.tty(result)
+			if (ptr != MemorySegment.NULL) {
+				return Tty(ptr)
 			}
 			if (MosaicTtyInitResult.no_tty(result)) {
 				return null
@@ -90,13 +90,13 @@ public class Tty internal constructor(
 			}
 		}
 
-		mosaic_tty_set_callback(ttyPtr, ttyCallback)
+		mosaic_tty_set_callback(ptr, ttyCallback)
 	}
 
 	@Throws(IOException::class)
 	public fun read(buffer: ByteArray, offset: Int, count: Int): Int {
 		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
-		val result = mosaic_tty_read(Arena.global(), ttyPtr, segment, count)
+		val result = mosaic_tty_read(Arena.global(), ptr, segment, count)
 		val error = MosaicIoResult.error(result)
 		if (error == 0) {
 			val read = MosaicIoResult.count(result)
@@ -109,7 +109,7 @@ public class Tty internal constructor(
 	@Throws(IOException::class)
 	public fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
 		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
-		val result = mosaic_tty_read_with_timeout(Arena.global(), ttyPtr, segment, count, timeoutMillis)
+		val result = mosaic_tty_read_with_timeout(Arena.global(), ptr, segment, count, timeoutMillis)
 		val error = MosaicIoResult.error(result)
 		if (error == 0) {
 			val read = MosaicIoResult.count(result)
@@ -121,7 +121,7 @@ public class Tty internal constructor(
 
 	@Throws(IOException::class)
 	public fun interruptRead() {
-		val error = mosaic_tty_interrupt_read(ttyPtr)
+		val error = mosaic_tty_interrupt_read(ptr)
 		if (error == 0) return
 		throwIoe(error)
 	}
@@ -130,7 +130,7 @@ public class Tty internal constructor(
 	public fun write(buffer: ByteArray, offset: Int, count: Int): Int {
 		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
 		MemorySegment.copy(buffer, offset, segment, ValueLayout.JAVA_BYTE, 0, count)
-		val result = mosaic_tty_write(Arena.global(), ttyPtr, segment, count)
+		val result = mosaic_tty_write(Arena.global(), ptr, segment, count)
 		val error = MosaicIoResult.error(result)
 		if (error == 0) {
 			return MosaicIoResult.count(result)
@@ -140,21 +140,21 @@ public class Tty internal constructor(
 
 	@Throws(IOException::class)
 	public fun enableRawMode() {
-		val error = mosaic_tty_enable_raw_mode(ttyPtr)
+		val error = mosaic_tty_enable_raw_mode(ptr)
 		if (error == 0) return
 		throwIoe(error)
 	}
 
 	@Throws(IOException::class)
 	public fun enableWindowResizeEvents() {
-		val error = mosaic_tty_enable_window_resize_events(ttyPtr)
+		val error = mosaic_tty_enable_window_resize_events(ptr)
 		if (error == 0) return
 		throwIoe(error)
 	}
 
 	@Throws(IOException::class)
 	public fun currentSize(): IntArray {
-		val result = mosaic_tty_current_terminal_size(Arena.global(), ttyPtr)
+		val result = mosaic_tty_current_terminal_size(Arena.global(), ptr)
 		val error = MosaicTtyTerminalSizeResult.error(result)
 		if (error == 0) {
 			return intArrayOf(
@@ -169,21 +169,21 @@ public class Tty internal constructor(
 
 	@Throws(IOException::class)
 	public fun reset() {
-		val error = mosaic_tty_reset(ttyPtr)
+		val error = mosaic_tty_reset(ptr)
 		if (error == 0) return
 		throwIoe(error)
 	}
 
 	@Throws(IOException::class)
 	override fun close() {
-		val ttyPtr = ttyPtr
-		if (ttyPtr != MemorySegment.NULL) {
-			this.ttyPtr = MemorySegment.NULL
+		val ptr = this.ptr
+		if (ptr != MemorySegment.NULL) {
+			this.ptr = MemorySegment.NULL
 
 			callbackArena?.close()
 			callbackArena = null
 
-			val error = mosaic_tty_free(ttyPtr)
+			val error = mosaic_tty_free(ptr)
 			if (error == 0) return
 			throwIoe(error)
 		}
