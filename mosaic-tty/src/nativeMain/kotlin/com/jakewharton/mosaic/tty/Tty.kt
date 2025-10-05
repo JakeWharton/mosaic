@@ -20,8 +20,8 @@ public actual class Tty internal constructor(
 	public actual companion object {
 		public actual fun tryBind(): Tty? {
 			mosaic_tty_init().useContents {
-				tty?.let { ttyPtr ->
-					return Tty(ttyPtr)
+				tty?.let { ptr ->
+					return Tty(ptr)
 				}
 				if (no_tty) {
 					return null

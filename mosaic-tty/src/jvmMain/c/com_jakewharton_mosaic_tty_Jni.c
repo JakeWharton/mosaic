@@ -766,7 +766,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testInit(
 
 	if (result.already_bound) {
 		jclass ise = (*env)->FindClass(env, "java/lang/IllegalStateException");
-		(*env)->ThrowNew(env, ise, "TestTty or Tty already bound");
+		(*env)->ThrowNew(env, ise, "TestTerminal or Tty already bound");
 	} else if (result.error) {
 		throwIoe(env, result.error);
 	} else {

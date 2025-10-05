@@ -27,7 +27,7 @@ class StandardStreamsTest {
 	}
 
 	@Test fun testStreamsCannotBeIntercepted() {
-		TestTty.bind().use {
+		TestTerminal.bind().use {
 			val streams = it.streams
 			assertFailure { streams.interceptOtherWrites() }
 				.isInstanceOf<IllegalStateException>()

@@ -4,7 +4,7 @@ import java.io.InputStream
 import java.io.OutputStream
 
 public actual class Tty internal constructor(
-	private var ttyPtr: Long,
+	private var ptr: Long,
 ) : AutoCloseable {
 	public actual companion object {
 		@JvmStatic
@@ -42,54 +42,54 @@ public actual class Tty internal constructor(
 		}
 
 		callbackPtr = newCallbackPtr
-		Jni.ttySetCallback(ttyPtr, newCallbackPtr)
+		Jni.ttySetCallback(ptr, newCallbackPtr)
 	}
 
 	@Throws(IOException::class)
 	public actual fun read(buffer: ByteArray, offset: Int, count: Int): Int {
-		return Jni.ttyRead(ttyPtr, buffer, offset, count)
+		return Jni.ttyRead(ptr, buffer, offset, count)
 	}
 
 	@Throws(IOException::class)
 	public actual fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
-		return Jni.ttyReadWithTimeout(ttyPtr, buffer, offset, count, timeoutMillis)
+		return Jni.ttyReadWithTimeout(ptr, buffer, offset, count, timeoutMillis)
 	}
 
 	@Throws(IOException::class)
 	public actual fun interruptRead() {
-		Jni.ttyInterruptRead(ttyPtr)
+		Jni.ttyInterruptRead(ptr)
 	}
 
 	@Throws(IOException::class)
 	public actual fun write(buffer: ByteArray, offset: Int, count: Int): Int {
-		return Jni.ttyWrite(ttyPtr, buffer, offset, count)
+		return Jni.ttyWrite(ptr, buffer, offset, count)
 	}
 
 	@Throws(IOException::class)
 	public actual fun enableRawMode() {
-		Jni.ttyEnableRawMode(ttyPtr)
+		Jni.ttyEnableRawMode(ptr)
 	}
 
 	@Throws(IOException::class)
 	public actual fun enableWindowResizeEvents() {
-		Jni.ttyEnableWindowResizeEvents(ttyPtr)
+		Jni.ttyEnableWindowResizeEvents(ptr)
 	}
 
 	@Throws(IOException::class)
 	public actual fun currentSize(): IntArray {
-		return Jni.ttyCurrentSize(ttyPtr)
+		return Jni.ttyCurrentSize(ptr)
 	}
 
 	@Throws(IOException::class)
 	public actual fun reset() {
-		Jni.ttyReset(ttyPtr)
+		Jni.ttyReset(ptr)
 	}
 
 	@Throws(IOException::class)
 	actual override fun close() {
-		if (ttyPtr != 0L) {
-			Jni.ttyFree(ttyPtr)
-			ttyPtr = 0
+		if (ptr != 0L) {
+			Jni.ttyFree(ptr)
+			ptr = 0
 
 			if (callbackPtr != 0L) {
 				Jni.ttyCallbackFree(callbackPtr)

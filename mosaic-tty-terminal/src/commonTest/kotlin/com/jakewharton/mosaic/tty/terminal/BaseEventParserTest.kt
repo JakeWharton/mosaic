@@ -2,13 +2,13 @@ package com.jakewharton.mosaic.tty.terminal
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.jakewharton.mosaic.tty.TestTty
+import com.jakewharton.mosaic.tty.TestTerminal
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 
 abstract class BaseEventParserTest {
-	internal val testTty = TestTty.bind()
-	private val tty = testTty.tty
+	internal val testTerminal = TestTerminal.bind()
+	private val tty = testTerminal.tty
 	internal val parser = EventParser(tty)
 
 	@BeforeTest fun before() {
@@ -16,18 +16,18 @@ abstract class BaseEventParserTest {
 	}
 
 	@AfterTest fun after() {
-		testTty.close()
+		testTerminal.close()
 		assertThat(parser.copyBuffer().toHexString()).isEqualTo("")
 	}
 }
 
-fun TestTty.writeHex(hex: String) {
+fun TestTerminal.writeHex(hex: String) {
 	val buffer = hex.hexToByteArray()
 	val written = writeTty(buffer, 0, buffer.size)
 	assertThat(written).isEqualTo(buffer.size)
 }
 
-fun TestTty.write(s: String) {
+fun TestTerminal.write(s: String) {
 	val bytes = s.encodeToByteArray()
 	val written = writeTty(bytes, 0, bytes.size)
 	assertThat(written).isEqualTo(bytes.size)

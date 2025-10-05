@@ -27,10 +27,10 @@ public final class com/jakewharton/mosaic/tty/StandardStreams$InterceptedStreams
 	public final fun readOutputWithTimeout ([BIII)I
 }
 
-public final class com/jakewharton/mosaic/tty/TestTty : java/lang/AutoCloseable {
-	public static final field Companion Lcom/jakewharton/mosaic/tty/TestTty$Companion;
+public final class com/jakewharton/mosaic/tty/TestTerminal : java/lang/AutoCloseable {
+	public static final field Companion Lcom/jakewharton/mosaic/tty/TestTerminal$Companion;
 	public synthetic fun <init> (JLcom/jakewharton/mosaic/tty/StandardStreams;Lcom/jakewharton/mosaic/tty/Tty;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public static final fun bind (ZZZ)Lcom/jakewharton/mosaic/tty/TestTty;
+	public static final fun bind (ZZZ)Lcom/jakewharton/mosaic/tty/TestTerminal;
 	public fun close ()V
 	public final fun getStreams ()Lcom/jakewharton/mosaic/tty/StandardStreams;
 	public final fun getTty ()Lcom/jakewharton/mosaic/tty/Tty;
@@ -51,9 +51,9 @@ public final class com/jakewharton/mosaic/tty/TestTty : java/lang/AutoCloseable 
 	public final fun writeTty ([BII)I
 }
 
-public final class com/jakewharton/mosaic/tty/TestTty$Companion {
-	public final fun bind (ZZZ)Lcom/jakewharton/mosaic/tty/TestTty;
-	public static synthetic fun bind$default (Lcom/jakewharton/mosaic/tty/TestTty$Companion;ZZZILjava/lang/Object;)Lcom/jakewharton/mosaic/tty/TestTty;
+public final class com/jakewharton/mosaic/tty/TestTerminal$Companion {
+	public final fun bind (ZZZ)Lcom/jakewharton/mosaic/tty/TestTerminal;
+	public static synthetic fun bind$default (Lcom/jakewharton/mosaic/tty/TestTerminal$Companion;ZZZILjava/lang/Object;)Lcom/jakewharton/mosaic/tty/TestTerminal;
 }
 
 public final class com/jakewharton/mosaic/tty/Tty : java/lang/AutoCloseable {

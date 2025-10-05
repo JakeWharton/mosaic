@@ -2,7 +2,7 @@
 #define MOSAIC_H
 
 #include "mosaic-streams.h"
+#include "mosaic-test.h"
 #include "mosaic-tty.h"
-#include "mosaic-test-tty.h"
 
 #endif // MOSAIC_H

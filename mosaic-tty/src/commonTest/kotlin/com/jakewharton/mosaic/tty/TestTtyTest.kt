@@ -11,34 +11,34 @@ import kotlin.test.Test
 
 @Burst
 class TestTtyTest {
-	private var rawTestTty: TestTty? = null
-	private var testTty: TestTty
+	private var rawTestTerminal: TestTerminal? = null
+	private var testTerminal: TestTerminal
 		get() {
-			return rawTestTty ?: TestTty.bind().also {
+			return rawTestTerminal ?: TestTerminal.bind().also {
 				it.tty.enableRawMode()
-				rawTestTty = it
+				rawTestTerminal = it
 			}
 		}
 		set(value) {
-			check(rawTestTty == null) { "TestTty already created" }
-			rawTestTty = value
+			check(rawTestTerminal == null) { "TestTty already created" }
+			rawTestTerminal = value
 			value.tty.enableRawMode()
 		}
 
-	private val tty: Tty get() = testTty.tty
+	private val tty: Tty get() = testTerminal.tty
 
 	@AfterTest fun after() {
-		testTty.close()
+		testTerminal.close()
 	}
 
 	@Test fun onlyOne() {
 		// Force read to trigger initialization.
-		testTty
+		testTerminal
 
 		assertFailure {
-			TestTty.bind()
+			TestTerminal.bind()
 		}.isInstanceOf<IllegalStateException>()
-			.hasMessage("TestTty or Tty already bound")
+			.hasMessage("TestTerminal or Tty already bound")
 	}
 
 	@Test fun multipleRawModeResetCycles() {
@@ -49,17 +49,17 @@ class TestTtyTest {
 	}
 
 	@Test fun stdinIsTtySetting(value: Boolean) {
-		testTty = TestTty.bind(stdinIsTty = value)
-		assertThat(testTty.streams.isInputTty()).isEqualTo(value)
+		testTerminal = TestTerminal.bind(stdinIsTty = value)
+		assertThat(testTerminal.streams.isInputTty()).isEqualTo(value)
 	}
 
 	@Test fun stdOutIsTtySetting(value: Boolean) {
-		testTty = TestTty.bind(stdoutIsTty = value)
-		assertThat(testTty.streams.isOutputTty()).isEqualTo(value)
+		testTerminal = TestTerminal.bind(stdoutIsTty = value)
+		assertThat(testTerminal.streams.isOutputTty()).isEqualTo(value)
 	}
 
 	@Test fun stdinErrTtySetting(value: Boolean) {
-		testTty = TestTty.bind(stderrIsTty = value)
-		assertThat(testTty.streams.isErrorTty()).isEqualTo(value)
+		testTerminal = TestTerminal.bind(stderrIsTty = value)
+		assertThat(testTerminal.streams.isErrorTty()).isEqualTo(value)
 	}
 }

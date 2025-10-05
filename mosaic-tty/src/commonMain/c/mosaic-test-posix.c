@@ -3,7 +3,7 @@
 #define _XOPEN_SOURCE 600
 
 #include "mosaic-streams-posix.h"
-#include "mosaic-test-tty.h"
+#include "mosaic-test.h"
 #include "mosaic-tty-posix.h"
 #include "mosaic-utils-posix.h"
 

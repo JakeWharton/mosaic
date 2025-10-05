@@ -5,7 +5,7 @@ import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.useContents
 import kotlinx.cinterop.usePinned
 
-public actual class TestTty private constructor(
+public actual class TestTerminal private constructor(
 	private var ptr: CPointer<MosaicTestTty>?,
 	public actual val streams: StandardStreams,
 	public actual val tty: Tty,
@@ -15,12 +15,12 @@ public actual class TestTty private constructor(
 			stdinIsTty: Boolean,
 			stdoutIsTty: Boolean,
 			stderrIsTty: Boolean,
-		): TestTty {
-			val testTtyPtr = mosaic_test_init(stdinIsTty, stdoutIsTty, stderrIsTty).useContents {
+		): TestTerminal {
+			val ptr = mosaic_test_init(stdinIsTty, stdoutIsTty, stderrIsTty).useContents {
 				testTty?.let { return@useContents it }
 
 				if (already_bound) {
-					throw IllegalStateException("TestTty or Tty already bound")
+					throw IllegalStateException("TestTerminal or Tty already bound")
 				}
 				if (error != 0U) {
 					throwIoe(error)
@@ -28,11 +28,11 @@ public actual class TestTty private constructor(
 				throw OutOfMemoryError()
 			}
 
-			val streamsPtr = mosaic_test_get_streams(testTtyPtr)!!
+			val streamsPtr = mosaic_test_get_streams(ptr)!!
 			val streams = StandardStreams(streamsPtr)
-			val ttyPtr = mosaic_test_get_tty(testTtyPtr)!!
+			val ttyPtr = mosaic_test_get_tty(ptr)!!
 			val tty = Tty(ttyPtr)
-			return TestTty(testTtyPtr, streams, tty)
+			return TestTerminal(ptr, streams, tty)
 		}
 	}
 

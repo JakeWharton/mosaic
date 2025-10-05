@@ -26,7 +26,7 @@ class TtyTerminalResizeTest {
 			assertThat(state.size.value).isEqualTo(Terminal.Size(80, 24, 0, 0))
 
 			// Platform-specific resize event should be honored.
-			testTty.resize(100, 40, 0, 0)
+			testTerminal.resize(100, 40, 0, 0)
 			assertThat(events.receive()).isEqualTo(ResizeEvent(100, 40, 0, 0))
 			assertThat(state.size.value).isEqualTo(Terminal.Size(100, 40, 0, 0))
 		}

@@ -7,12 +7,12 @@ import kotlin.test.Test
 
 class EventParserDcsEventVersionEventTest : BaseEventParserTest() {
 	@Test fun empty() {
-		testTty.write("$DCS>|$ST")
+		testTerminal.write("$DCS>|$ST")
 		assertThat(parser.next()).isEqualTo(TerminalVersionEvent(""))
 	}
 
 	@Test fun text() {
-		testTty.write("$DCS>|hello$ST")
+		testTerminal.write("$DCS>|hello$ST")
 		assertThat(parser.next()).isEqualTo(TerminalVersionEvent("hello"))
 	}
 }

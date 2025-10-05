@@ -15,8 +15,8 @@ import kotlinx.coroutines.test.runTest
 @OptIn(ExperimentalCoroutinesApi::class)
 class TtyTest {
 	private val events = Channel<String>(UNLIMITED)
-	private val testTty = TestTty.bind()
-	private val tty = testTty.tty
+	private val testTerminal = TestTerminal.bind()
+	private val tty = testTerminal.tty
 
 	@BeforeTest fun before() {
 		tty.enableRawMode()
@@ -25,7 +25,7 @@ class TtyTest {
 	@AfterTest fun after() = runTest {
 		// TestTty.close() will call Tty.close(), but we get a free idempotency test here.
 		tty.close()
-		testTty.close()
+		testTerminal.close()
 
 		assertEventsEmpty()
 	}
@@ -45,7 +45,7 @@ class TtyTest {
 	}
 
 	@Test fun focusEventNoCallback() {
-		testTty.sendFocusEvent(true)
+		testTerminal.sendFocusEvent(true)
 	}
 
 	@Test fun focusEventCallbackDeliveredOnWindows() = runTest {
@@ -53,7 +53,7 @@ class TtyTest {
 
 		tty.setCallback(MyCallback())
 
-		testTty.sendFocusEvent(true)
+		testTerminal.sendFocusEvent(true)
 		doWriteReadRoundtrip()
 
 		assertThat(events.receive()).isEqualTo("hey! onFocus true")
@@ -64,13 +64,13 @@ class TtyTest {
 
 		tty.setCallback(MyCallback())
 
-		testTty.sendFocusEvent(true)
+		testTerminal.sendFocusEvent(true)
 
 		assertEventsEmpty()
 	}
 
 	@Test fun keyEventNoCallback() {
-		testTty.sendKeyEvent()
+		testTerminal.sendKeyEvent()
 	}
 
 	@Ignore // Event not delivered yet.
@@ -79,7 +79,7 @@ class TtyTest {
 
 		tty.setCallback(MyCallback())
 
-		testTty.sendKeyEvent()
+		testTerminal.sendKeyEvent()
 		doWriteReadRoundtrip()
 
 		assertThat(events.receive()).isEqualTo("hey! onKey")
@@ -90,13 +90,13 @@ class TtyTest {
 
 		tty.setCallback(MyCallback())
 
-		testTty.sendKeyEvent()
+		testTerminal.sendKeyEvent()
 
 		assertEventsEmpty()
 	}
 
 	@Test fun mouseEventNoCallback() {
-		testTty.sendMouseEvent()
+		testTerminal.sendMouseEvent()
 	}
 
 	@Ignore // Event not delivered yet.
@@ -105,7 +105,7 @@ class TtyTest {
 
 		tty.setCallback(MyCallback())
 
-		testTty.sendMouseEvent()
+		testTerminal.sendMouseEvent()
 		doWriteReadRoundtrip()
 
 		assertThat(events.receive()).isEqualTo("hey! onMouse")
@@ -116,20 +116,20 @@ class TtyTest {
 
 		tty.setCallback(MyCallback())
 
-		testTty.sendMouseEvent()
+		testTerminal.sendMouseEvent()
 
 		assertEventsEmpty()
 	}
 
 	@Test fun resizeNoCallback() {
-		testTty.resize(1, 2, 3, 4)
+		testTerminal.resize(1, 2, 3, 4)
 	}
 
 	@Test fun resizeCallback() = runTest {
 		tty.enableWindowResizeEvents()
 		tty.setCallback(MyCallback())
 
-		testTty.resize(1, 2, 3, 4)
+		testTerminal.resize(1, 2, 3, 4)
 		doWriteReadRoundtrip()
 
 		val expected = if (isWindows()) {
@@ -144,7 +144,7 @@ class TtyTest {
 		tty.setCallback(MyCallback())
 		tty.setCallback(null)
 
-		testTty.resize(1, 2, 3, 4)
+		testTerminal.resize(1, 2, 3, 4)
 		doWriteReadRoundtrip()
 
 		assertEventsEmpty()
@@ -155,7 +155,7 @@ class TtyTest {
 		tty.setCallback(MyCallback())
 		tty.setCallback(MyCallback("hello!"))
 
-		testTty.resize(1, 2, 0, 0)
+		testTerminal.resize(1, 2, 0, 0)
 		doWriteReadRoundtrip()
 
 		assertThat(events.receive()).isEqualTo("hello! onResize 1 2 0 0")
@@ -191,7 +191,7 @@ class TtyTest {
 	}
 
 	@Test fun resizeAffectsSize() {
-		testTty.resize(90, 30, 0, 0)
+		testTerminal.resize(90, 30, 0, 0)
 		assertThat(tty.currentSize()).isEqualTo(intArrayOf(90, 30, 0, 0))
 	}
 
@@ -201,7 +201,7 @@ class TtyTest {
 	 */
 	private fun doWriteReadRoundtrip() {
 		val outgoing = "roundtrip".encodeToByteArray()
-		outgoing.writeFullyTo(testTty::writeTty)
+		outgoing.writeFullyTo(testTerminal::writeTty)
 
 		val incoming = ByteArray(outgoing.size).readFully(tty::read)
 		assertThat(incoming.decodeToString()).isEqualTo("roundtrip")
