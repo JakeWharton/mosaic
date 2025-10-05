@@ -44,7 +44,7 @@ def zigDownload = tasks.register('zigDownload', ZigDownloadTask) {
 	outputDir = layout.buildDirectory.dir('zig')
 }
 
-jextract.libraries.create('mosaic') {
+jextract.libraries.register('mosaic') {
 	header = file('src/commonMain/c/mosaic.h')
 	includes.add(layout.projectDirectory.dir('src/commonMain/c'))
 	headerClassName = 'Libmosaic'
@@ -98,7 +98,7 @@ kotlin {
 		def jdk22Compilation = target.compilations.create('jdk22') {
 			// I can't find a way to add a Java srcDir, so we have to add it both to Kotlin task so its
 			// sources can link and to Java task so the files are actually compiled to classes.
-			def mosaicFfmJava = tasks.named('jextract')
+			def mosaicFfmJava = tasks.named('mosaicJextractGenerateBindings')
 			defaultSourceSet.kotlin.srcDir(mosaicFfmJava)
 			compileJavaTaskProvider.configure { task ->
 				task.source(mosaicFfmJava)
