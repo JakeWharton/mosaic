@@ -2,7 +2,6 @@ package com.jakewharton.mosaic.animation
 
 import androidx.collection.IntList
 import androidx.collection.IntObjectMap
-import com.jakewharton.mosaic.animation.internal.binarySearch
 
 /** Implementation of [VectorizedMonoSplineKeyframesSpec] using [MonoSpline]. */
 internal class VectorizedMonoSplineKeyframesSpec<V : AnimationVector>(
