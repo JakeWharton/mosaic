@@ -168,11 +168,11 @@ internal class MosaicComposition(
 
 	private val applyObserverHandle: ObserverHandle
 
-	private val readingStatesOnLayout = mutableScatterSetOf<Any>()
-	private val readingStatesOnDraw = mutableScatterSetOf<Any>()
+	private val readStatesOnLayout = mutableScatterSetOf<Any>()
+	private val readStatesOnLayoutObserver: (Any) -> Unit = readStatesOnLayout::add
 
-	private val layoutBlockStateReadObserver: (Any) -> Unit = readingStatesOnLayout::add
-	private val drawBlockStateReadObserver: (Any) -> Unit = readingStatesOnDraw::add
+	private val readStatesOnDraw = mutableScatterSetOf<Any>()
+	private val readStatesOnDrawObserver: (Any) -> Unit = readStatesOnDraw::add
 
 	@Volatile
 	private var needLayout = false
@@ -189,9 +189,12 @@ internal class MosaicComposition(
 
 	private fun performLayout() {
 		needLayout = false
-		Snapshot.observe(readObserver = layoutBlockStateReadObserver) {
+
+		readStatesOnLayout.clear()
+		Snapshot.observe(readObserver = readStatesOnLayoutObserver) {
 			rootNode.measureAndPlace()
 		}
+
 		performDraw()
 	}
 
@@ -201,7 +204,8 @@ internal class MosaicComposition(
 	}
 
 	override fun draw(): TextCanvas {
-		return Snapshot.observe(readObserver = drawBlockStateReadObserver) {
+		readStatesOnDraw.clear()
+		return Snapshot.observe(readObserver = readStatesOnDrawObserver) {
 			rootNode.draw()
 		}
 	}
@@ -248,14 +252,14 @@ internal class MosaicComposition(
 			if (!needLayout) {
 				var setDraw = needDraw
 				for (state in changedStates) {
-					if (state in readingStatesOnLayout) {
+					if (state in readStatesOnLayout) {
 						needLayout = true
 						break
 					}
 					if (setDraw) {
 						continue
 					}
-					if (state in readingStatesOnDraw) {
+					if (state in readStatesOnDraw) {
 						setDraw = true
 						needDraw = true
 					}
