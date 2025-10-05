@@ -5,7 +5,6 @@ import androidx.collection.IntObjectMap
 import androidx.collection.MutableIntList
 import androidx.collection.MutableIntObjectMap
 import com.jakewharton.mosaic.animation.AnimationConstants.DefaultDurationMillis
-import com.jakewharton.mosaic.animation.internal.binarySearch
 import kotlin.jvm.JvmInline
 import kotlin.math.min
 

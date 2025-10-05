@@ -861,8 +861,3 @@ public final class com/jakewharton/mosaic/animation/VisibilityThresholdsKt {
 	public static final fun getVisibilityThreshold (Lkotlin/jvm/internal/IntCompanionObject;)I
 }
 
-public final class com/jakewharton/mosaic/animation/internal/IntListExtensionsKt {
-	public static final fun binarySearch (Landroidx/collection/IntList;I)I
-	public static final fun binarySearch (Landroidx/collection/IntList;II)I
-}
-
