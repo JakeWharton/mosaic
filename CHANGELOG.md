@@ -10,7 +10,7 @@ Changed:
 - Use the AndroidX Compose runtime which is now fully multiplatform. A dependency constraint to the JetBrains Compose runtime version 1.9.0 has been added, which is the first version that is empty and itself now points to AndroidX.
 
 Fixed:
-- Nothing yet
+- Clear the set of states which were read during layout and draw passes before each pass. Previously these sets grew infinitely, which was both a memory leak and a performance problem.
 
 
 ## [0.18.0] - 2025-08-21
