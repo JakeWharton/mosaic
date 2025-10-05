@@ -123,27 +123,27 @@ Run `./gradlew installDist` to build the sample binaries.
 
 ## FAQ
 
-### I thought Jetpack Compose was a UI toolkit for Android?
+### I thought Compose was a UI toolkit for Android?
 
-Compose is, at its core, a general-purpose runtime and compiler for tree and property manipulation
-which is trapped inside the AndroidX monorepo and under the Jetpack marketing department. This
-core can be used for _any_ tree on _any_ platform supported by Kotlin. It's an amazing piece of
-technology.
+Compose is, at its core, a general-purpose compiler and runtime to do state tracking and tree node
+and property manipulation. This can be used on any platform supported by Kotlin for any kind of
+state or with any tree. It's an amazing piece of technology.
 
-Compose UI is the new UI toolkit for Android (and maybe [Desktop](https://www.jetbrains.com/lp/compose/)?).
+Compose UI is the modern UI toolkit for Android which also runs on the desktop, iOS, and the web.
 The lack of differentiation between these two technologies has unfortunately caused Compose UI to
 overshadow the core under the single "Compose" moniker in an unforced marketing error.
 
-If you want another example of a non-Compose UI-based Compose project checkout JetBrains' [Compose for Web](https://blog.jetbrains.com/kotlin/2021/05/technology-preview-jetpack-compose-for-web/) project.
+Other examples of non-Compose UI-based Compose projects are Cash App's Redwood,
+JetBrains' Compose HTML, or Google's Jetpack Glance.
 
-### Output repeats with `./gradlew run` and/or inside IntelliJ IDEA
+### Broken output with `./gradlew run` and/or inside IntelliJ IDEA
 
-Running within Gradle or IntelliJ IDEA will not work. Both tools strip ANSI control characters,
-which prevent Mosaic from redrawing over a previous frame. The output will likely just render in
-successive lines instead.
+Running within Gradle or IntelliJ IDEA will not work. These tools do not provide access to the TTY
+in order to be interactive. And for non-interactive programs, both will strip ANSI control
+characters which prevent Mosaic from redrawing over a previous frame. The output will likely just
+render in successive lines instead.
 
-In the future Mosaic will detect this case and do... something. For now, we unconditionally emit
-ANSI control characters. Run your programs directly in a terminal emulator–no IDE and no Gradle.
+Run your programs directly in a terminal emulator–no IDE and no Gradle.
 
 
 # License
