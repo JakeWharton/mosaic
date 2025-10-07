@@ -323,7 +323,7 @@ MosaicIoResult mosaic_streams_read_intercepted_output_with_timeout(MosaicStreams
 
 uint32_t mosaic_streams_interrupt_intercepted_output_read(MosaicStreams *streams) {
 	uint8_t space = ' ';
-	MosaicIoResult result = mosaic_utils_write(streams->interrupt_intercepted_stderr_writer, &space, 1);
+	MosaicIoResult result = mosaic_utils_write(streams->interrupt_intercepted_stdout_writer, &space, 1);
 	return result.error;
 }
 
