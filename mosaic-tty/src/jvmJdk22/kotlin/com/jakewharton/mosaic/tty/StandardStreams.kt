@@ -28,6 +28,8 @@ public class StandardStreams internal constructor(
 	public companion object {
 		@JvmStatic
 		public fun bind(): StandardStreams {
+			NativeLibrary.ensureLoaded()
+
 			val result = mosaic_streams_init.makeInvoker().apply(Arena.global())
 			val ptr = MosaicStreamsInitResult.streams(result)
 			if (ptr != MemorySegment.NULL) {
