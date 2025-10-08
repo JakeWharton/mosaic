@@ -27,6 +27,7 @@ public class StandardStreams internal constructor(
 ) : AutoCloseable {
 	public companion object {
 		@JvmStatic
+		@Throws(IOException::class)
 		public fun bind(): StandardStreams {
 			NativeLibrary.ensureLoaded()
 
@@ -130,6 +131,7 @@ public class StandardStreams internal constructor(
 		throwIoe(error)
 	}
 
+	@Throws(IOException::class)
 	public fun interceptOtherWrites(): InterceptedStreams {
 		Arena.ofConfined().use { arena ->
 			val result = mosaic_streams_intercept_start(arena, ptr)
@@ -147,6 +149,7 @@ public class StandardStreams internal constructor(
 		return InterceptedStreams(ptr)
 	}
 
+	@Throws(IOException::class)
 	override fun close() {
 		val ptr = ptr
 		if (ptr != MemorySegment.NULL) {
@@ -159,6 +162,7 @@ public class StandardStreams internal constructor(
 	public class InterceptedStreams internal constructor(
 		private val ptr: MemorySegment,
 	) : AutoCloseable {
+		@Throws(IOException::class)
 		public fun readOutput(buffer: ByteArray, offset: Int, count: Int): Int {
 			val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
 			val result = mosaic_streams_read_intercepted_output(Arena.global(), ptr, segment, count)
@@ -171,6 +175,7 @@ public class StandardStreams internal constructor(
 			throwIoe(error)
 		}
 
+		@Throws(IOException::class)
 		public fun readOutputWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
 			val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
 			val result = mosaic_streams_read_intercepted_output_with_timeout(Arena.global(), ptr, segment, count, timeoutMillis)
@@ -183,12 +188,14 @@ public class StandardStreams internal constructor(
 			throwIoe(error)
 		}
 
+		@Throws(IOException::class)
 		public fun interruptOutputRead() {
 			val error = mosaic_streams_interrupt_intercepted_output_read(ptr)
 			if (error == 0) return
 			throwIoe(error)
 		}
 
+		@Throws(IOException::class)
 		public fun readError(buffer: ByteArray, offset: Int, count: Int): Int {
 			val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
 			val result = mosaic_streams_read_intercepted_error(Arena.global(), ptr, segment, count)
@@ -201,6 +208,7 @@ public class StandardStreams internal constructor(
 			throwIoe(error)
 		}
 
+		@Throws(IOException::class)
 		public fun readErrorWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
 			val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
 			val result = mosaic_streams_read_intercepted_error_with_timeout(Arena.global(), ptr, segment, count, timeoutMillis)
@@ -213,12 +221,14 @@ public class StandardStreams internal constructor(
 			throwIoe(error)
 		}
 
+		@Throws(IOException::class)
 		public fun interruptErrorRead() {
 			val error = mosaic_streams_interrupt_intercepted_error_read(ptr)
 			if (error == 0) return
 			throwIoe(error)
 		}
 
+		@Throws(IOException::class)
 		override fun close() {
 			val error = mosaic_streams_intercept_stop(ptr)
 			if (error == 0) return

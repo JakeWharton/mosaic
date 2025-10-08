@@ -30,6 +30,7 @@ public class TestTerminal private constructor(
 ) : AutoCloseable {
 	public companion object {
 		@JvmStatic
+		@Throws(IOException::class)
 		public fun bind(
 			stdinIsTty: Boolean = false,
 			stdoutIsTty: Boolean = false,
@@ -57,6 +58,7 @@ public class TestTerminal private constructor(
 		}
 	}
 
+	@Throws(IOException::class)
 	public fun writeTty(buffer: ByteArray, offset: Int, count: Int): Int {
 		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
 		MemorySegment.copy(buffer, offset, segment, ValueLayout.JAVA_BYTE, 0, count)
@@ -68,6 +70,7 @@ public class TestTerminal private constructor(
 		throwIoe(error)
 	}
 
+	@Throws(IOException::class)
 	public fun readTty(buffer: ByteArray, offset: Int, count: Int): Int {
 		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
 		val result = mosaic_test_read_tty(Arena.global(), ptr, segment, count)
@@ -80,6 +83,7 @@ public class TestTerminal private constructor(
 		throwIoe(error)
 	}
 
+	@Throws(IOException::class)
 	public fun readTtyWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
 		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
 		val result = mosaic_test_read_tty_with_timeout(Arena.global(), ptr, segment, count, timeoutMillis)
@@ -92,12 +96,14 @@ public class TestTerminal private constructor(
 		throwIoe(error)
 	}
 
+	@Throws(IOException::class)
 	public fun interruptTtyRead() {
 		val error = mosaic_test_interrupt_tty_read(ptr)
 		if (error == 0) return
 		throwIoe(error)
 	}
 
+	@Throws(IOException::class)
 	public fun writeStandardInput(buffer: ByteArray, offset: Int, count: Int): Int {
 		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
 		MemorySegment.copy(buffer, offset, segment, ValueLayout.JAVA_BYTE, 0, count)
@@ -109,6 +115,7 @@ public class TestTerminal private constructor(
 		throwIoe(error)
 	}
 
+	@Throws(IOException::class)
 	public fun readStandardOutput(buffer: ByteArray, offset: Int, count: Int): Int {
 		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
 		val result = mosaic_test_read_output(Arena.global(), ptr, segment, count)
@@ -121,6 +128,7 @@ public class TestTerminal private constructor(
 		throwIoe(error)
 	}
 
+	@Throws(IOException::class)
 	public fun readStandardOutputWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
 		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
 		val result = mosaic_test_read_output_with_timeout(Arena.global(), ptr, segment, count, timeoutMillis)
@@ -133,12 +141,14 @@ public class TestTerminal private constructor(
 		throwIoe(error)
 	}
 
+	@Throws(IOException::class)
 	public fun interruptStandardOutputRead() {
 		val error = mosaic_test_interrupt_output_read(ptr)
 		if (error == 0) return
 		throwIoe(error)
 	}
 
+	@Throws(IOException::class)
 	public fun readStandardError(buffer: ByteArray, offset: Int, count: Int): Int {
 		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
 		val result = mosaic_test_read_error(Arena.global(), ptr, segment, count)
@@ -151,6 +161,7 @@ public class TestTerminal private constructor(
 		throwIoe(error)
 	}
 
+	@Throws(IOException::class)
 	public fun readStandardErrorWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
 		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
 		val result = mosaic_test_read_error_with_timeout(Arena.global(), ptr, segment, count, timeoutMillis)
@@ -163,36 +174,42 @@ public class TestTerminal private constructor(
 		throwIoe(error)
 	}
 
+	@Throws(IOException::class)
 	public fun interruptStandardErrorRead() {
 		val error = mosaic_test_interrupt_error_read(ptr)
 		if (error == 0) return
 		throwIoe(error)
 	}
 
+	@Throws(IOException::class)
 	public fun resize(columns: Int, rows: Int, width: Int, height: Int) {
 		val error = mosaic_test_resize(ptr, columns, rows, width, height)
 		if (error == 0) return
 		throwIoe(error)
 	}
 
+	@Throws(IOException::class)
 	public fun sendFocusEvent(focused: Boolean) {
 		val error = mosaic_test_send_focus_event(ptr, focused)
 		if (error == 0) return
 		throwIoe(error)
 	}
 
+	@Throws(IOException::class)
 	public fun sendKeyEvent() {
 		val error = mosaic_test_send_key_event(ptr)
 		if (error == 0) return
 		throwIoe(error)
 	}
 
+	@Throws(IOException::class)
 	public fun sendMouseEvent() {
 		val error = mosaic_test_send_mouse_event(ptr)
 		if (error == 0) return
 		throwIoe(error)
 	}
 
+	@Throws(IOException::class)
 	override fun close() {
 		val ptr = ptr
 		if (ptr != MemorySegment.NULL) {

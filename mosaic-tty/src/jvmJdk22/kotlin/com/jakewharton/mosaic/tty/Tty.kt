@@ -22,6 +22,7 @@ public class Tty internal constructor(
 ) : AutoCloseable {
 	public companion object {
 		@JvmStatic
+		@Throws(IOException::class)
 		public fun tryBind(): Tty? {
 			NativeLibrary.ensureLoaded()
 
