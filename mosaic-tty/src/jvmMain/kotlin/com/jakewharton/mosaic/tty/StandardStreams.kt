@@ -50,6 +50,7 @@ public actual class StandardStreams internal constructor(
 		return Jni.streamsWriteError(ptr, buffer, offset, count)
 	}
 
+	@Throws(IOException::class)
 	public actual fun interceptOtherWrites(): InterceptedStreams {
 		Jni.streamsInterceptStart(ptr)
 		return InterceptedStreams(ptr)
@@ -67,30 +68,37 @@ public actual class StandardStreams internal constructor(
 	public actual class InterceptedStreams internal constructor(
 		private val ptr: Long,
 	) : AutoCloseable {
+		@Throws(IOException::class)
 		public actual fun readOutput(buffer: ByteArray, offset: Int, count: Int): Int {
 			return Jni.streamsReadInterceptedOutput(ptr, buffer, offset, count)
 		}
 
+		@Throws(IOException::class)
 		public actual fun readOutputWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
 			return Jni.streamsReadInterceptedOutputWithTimeout(ptr, buffer, offset, count, timeoutMillis)
 		}
 
+		@Throws(IOException::class)
 		public actual fun interruptOutputRead() {
 			Jni.streamsInterruptInterceptedOutputRead(ptr)
 		}
 
+		@Throws(IOException::class)
 		public actual fun readError(buffer: ByteArray, offset: Int, count: Int): Int {
 			return Jni.streamsReadInterceptedError(ptr, buffer, offset, count)
 		}
 
+		@Throws(IOException::class)
 		public actual fun readErrorWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
 			return Jni.streamsReadInterceptedErrorWithTimeout(ptr, buffer, offset, count, timeoutMillis)
 		}
 
+		@Throws(IOException::class)
 		public actual fun interruptErrorRead() {
 			Jni.streamsInterruptInterceptedErrorRead(ptr)
 		}
 
+		@Throws(IOException::class)
 		actual override fun close() {
 			Jni.streamsInterceptStop(ptr)
 		}

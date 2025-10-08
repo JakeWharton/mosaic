@@ -8,6 +8,7 @@ public actual class Tty internal constructor(
 ) : AutoCloseable {
 	public actual companion object {
 		@JvmStatic
+		@Throws(IOException::class)
 		public actual fun tryBind(): Tty? {
 			val ttyPtr = Jni.ttyInit()
 			if (ttyPtr != 0L) {
