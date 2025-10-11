@@ -15,7 +15,7 @@
 #include <termios.h>
 #include <unistd.h>
 
-typedef struct MosaicTestTtyImpl {
+typedef struct MosaicTestTerminalImpl {
 	MosaicStreams *streams;
 	MosaicTty *tty;
 
@@ -35,7 +35,7 @@ typedef struct MosaicTestTtyImpl {
 	int stderr_reader_fd;
 	int stderr_interrupt_reader_fd;
 	int stderr_interrupt_writer_fd;
-} MosaicTestTtyImpl;
+} MosaicTestTerminalImpl;
 
 static uint32_t mosaic_test_resize_internal(int parentFd, int columns, int rows, int width, int height) {
 	struct winsize size = {};
@@ -49,10 +49,10 @@ static uint32_t mosaic_test_resize_internal(int parentFd, int columns, int rows,
 	return errno;
 }
 
-MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool stdoutIsTty, bool stderrIsTty) {
-	MosaicTestTtyInitResult result = {};
+MosaicTestTerminalInitResult mosaic_test_init(bool stdinIsTty, bool stdoutIsTty, bool stderrIsTty) {
+	MosaicTestTerminalInitResult result = {};
 
-	MosaicTestTtyImpl *testTty = calloc(1, sizeof(MosaicTestTtyImpl));
+	MosaicTestTerminalImpl *testTty = calloc(1, sizeof(MosaicTestTerminalImpl));
 	if (unlikely(testTty == NULL)) {
 		// result.writer is set to 0 which will trigger OOM.
 		goto ret;

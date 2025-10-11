@@ -7,15 +7,15 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-typedef struct MosaicTestTtyImpl MosaicTestTty;
+typedef struct MosaicTestTerminalImpl MosaicTestTty;
 
-typedef struct MosaicTestTtyInitResult {
+typedef struct MosaicTestTerminalInitResult {
 	MosaicTestTty *testTty;
 	uint32_t error;
 	bool already_bound;
-} MosaicTestTtyInitResult;
+} MosaicTestTerminalInitResult;
 
-MOSAIC_EXPORT MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool stdoutIsTty, bool stderrIsTty);
+MOSAIC_EXPORT MosaicTestTerminalInitResult mosaic_test_init(bool stdinIsTty, bool stdoutIsTty, bool stderrIsTty);
 MOSAIC_EXPORT MosaicTty *mosaic_test_get_tty(MosaicTestTty *testTty);
 MOSAIC_EXPORT MosaicStreams *mosaic_test_get_streams(MosaicTestTty *testTty);
 

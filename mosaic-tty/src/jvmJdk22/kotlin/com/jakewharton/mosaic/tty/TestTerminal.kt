@@ -39,7 +39,7 @@ public class TestTerminal private constructor(
 			NativeLibrary.ensureLoaded()
 
 			val result = mosaic_test_init(Arena.global(), stdinIsTty, stdoutIsTty, stderrIsTty)
-			val ptr = MosaicTestTtyInitResult.testTty(result)
+			val ptr = MosaicTestTerminalInitResult.testTty(result)
 			if (ptr != MemorySegment.NULL) {
 				val streamsPtr = mosaic_test_get_streams(ptr)
 				val streams = StandardStreams(streamsPtr)
@@ -47,10 +47,10 @@ public class TestTerminal private constructor(
 				val tty = Tty(ttyPtr)
 				return TestTerminal(ptr, streams, tty)
 			}
-			if (MosaicTestTtyInitResult.already_bound(result)) {
+			if (MosaicTestTerminalInitResult.already_bound(result)) {
 				throw IllegalStateException("TestTerminal or Tty already bound")
 			}
-			val error = MosaicTestTtyInitResult.error(result)
+			val error = MosaicTestTerminalInitResult.error(result)
 			if (error != 0) {
 				throwIoe(error)
 			}
