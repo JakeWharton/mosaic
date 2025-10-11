@@ -759,7 +759,7 @@ Java_com_jakewharton_mosaic_tty_Jni_testInit(
 	jboolean stdoutIsTty,
 	jboolean stderrIsTty
 ) {
-	MosaicTestTtyInitResult result = mosaic_test_init(stdinIsTty, stdoutIsTty, stderrIsTty);
+	MosaicTestTerminalInitResult result = mosaic_test_init(stdinIsTty, stdoutIsTty, stderrIsTty);
 	if (likely(result.testTty)) {
 		return (jlong) result.testTty;
 	}

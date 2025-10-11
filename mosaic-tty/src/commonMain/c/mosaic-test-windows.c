@@ -8,7 +8,7 @@
 #include <stdatomic.h>
 #include <windows.h>
 
-typedef struct MosaicTestTtyImpl {
+typedef struct MosaicTestTerminalImpl {
 	MosaicStreams *streams;
 	MosaicTty *tty;
 	HANDLE conin;
@@ -27,7 +27,7 @@ typedef struct MosaicTestTtyImpl {
 	HANDLE stderr_pipe_write;
 	HANDLE stderr_overlapped_event;
 	HANDLE stderr_interrupt_event;
-} MosaicTestTtyImpl;
+} MosaicTestTerminalImpl;
 
 static atomic_flag globalTestTty = ATOMIC_FLAG_INIT;
 
@@ -43,10 +43,10 @@ static uint32_t mosaic_test_resize_internal(HANDLE conout, int columns, int rows
 	return GetLastError();
 }
 
-MOSAIC_EXPORT MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool stdoutIsTty, bool stderrIsTty) {
-	MosaicTestTtyInitResult result = {};
+MOSAIC_EXPORT MosaicTestTerminalInitResult mosaic_test_init(bool stdinIsTty, bool stdoutIsTty, bool stderrIsTty) {
+	MosaicTestTerminalInitResult result = {};
 
-	MosaicTestTtyImpl *testTty = calloc(1, sizeof(MosaicTestTtyImpl));
+	MosaicTestTerminalImpl *testTty = calloc(1, sizeof(MosaicTestTerminalImpl));
 	if (unlikely(testTty == NULL)) {
 		// result.testTty is set to 0 which will trigger OOM.
 		goto ret;
