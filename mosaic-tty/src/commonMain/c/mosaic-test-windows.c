@@ -11,6 +11,8 @@
 typedef struct MosaicTestTtyImpl {
 	MosaicStreams *streams;
 	MosaicTty *tty;
+	HANDLE conin;
+	HANDLE conout;
 	HANDLE conout_pipe_read;
 	HANDLE conout_pipe_write;
 	HANDLE conout_overlapped_event;
@@ -166,6 +168,8 @@ MOSAIC_EXPORT MosaicTestTtyInitResult mosaic_test_init(bool stdinIsTty, bool std
 
 	testTty->streams = streamsInitResult.streams;
 	testTty->tty = ttyInitResult.tty;
+	testTty->conin = conin;
+	testTty->conout = conout;
 	testTty->conout_pipe_read = conoutPipeRead;
 	testTty->conout_pipe_write = conoutPipeWrite;
 	testTty->conout_overlapped_event = conoutOverlappedEvent;
@@ -266,7 +270,7 @@ MOSAIC_EXPORT MosaicIoResult mosaic_test_write_tty(MosaicTestTty *testTty, uint8
 	}
 
 	DWORD written;
-	if (WriteConsoleInputW(testTty->tty->conin, records, count, &written)) {
+	if (WriteConsoleInputW(testTty->conin, records, count, &written)) {
 		result.count = written;
 	} else {
 		result.error = GetLastError();
@@ -336,7 +340,7 @@ static uint32_t mosaic_test_write_tty_record(HANDLE h, INPUT_RECORD *record) {
 }
 
 MOSAIC_EXPORT uint32_t mosaic_test_resize(MosaicTestTty *testTty, int columns, int rows, int width UNUSED, int height UNUSED) {
-	uint32_t sizeResult = mosaic_test_resize_internal(testTty->tty->conout_for_size, columns, rows);
+	uint32_t sizeResult = mosaic_test_resize_internal(testTty->conout, columns, rows);
 	if (unlikely(sizeResult)) {
 		return sizeResult;
 	}
@@ -345,14 +349,14 @@ MOSAIC_EXPORT uint32_t mosaic_test_resize(MosaicTestTty *testTty, int columns, i
 	// terminals, but for older ones the explicit send is required.
 	INPUT_RECORD record;
 	record.EventType = WINDOW_BUFFER_SIZE_EVENT;
-	return mosaic_test_write_tty_record(testTty->tty->conin, &record);
+	return mosaic_test_write_tty_record(testTty->conin, &record);
 }
 
 MOSAIC_EXPORT uint32_t mosaic_test_send_focus_event(MosaicTestTty *testTty, bool focused) {
 	INPUT_RECORD record;
 	record.EventType = FOCUS_EVENT;
 	record.Event.FocusEvent.bSetFocus = focused;
-	return mosaic_test_write_tty_record(testTty->tty->conin, &record);
+	return mosaic_test_write_tty_record(testTty->conin, &record);
 }
 
 MOSAIC_EXPORT uint32_t mosaic_test_send_key_event(MosaicTestTty *testTty UNUSED) {
