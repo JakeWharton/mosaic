@@ -92,6 +92,64 @@ uint32_t mosaic_utils_create_pipe(
 	goto ret;
 }
 
+MosaicIoResult mosaic_utils_read_console(
+	HANDLE console,
+	HANDLE interruptEvent,
+	uint8_t *buffer,
+	int count,
+	int timeoutMillis
+) {
+	// TODO This function mostly duplicates what's in mosaic-tty-windows.c. Dedupe somehow?
+
+	MosaicIoResult result = {};
+
+	INPUT_RECORD *records = calloc(count, sizeof(INPUT_RECORD));
+	if (!records) {
+		result.error = ERROR_NOT_ENOUGH_MEMORY;
+		goto ret;
+	}
+
+	DWORD waitResult;
+	HANDLE waitHandles[2] = { console, interruptEvent };
+
+	loop:
+	waitResult = WaitForMultipleObjects(2, waitHandles, FALSE, timeoutMillis);
+	if (likely(waitResult == WAIT_OBJECT_0)) {
+		DWORD recordsRead = 0;
+		if (unlikely(!ReadConsoleInputW(console, records, count, &recordsRead))) {
+			goto err;
+		}
+
+		int nextBufferIndex = 0;
+		for (int i = 0; i < (int) recordsRead; i++) {
+			INPUT_RECORD record = records[i];
+			if (record.EventType == KEY_EVENT) {
+				if (record.Event.KeyEvent.wVirtualKeyCode == 0) {
+					buffer[nextBufferIndex++] = record.Event.KeyEvent.uChar.AsciiChar;
+				}
+			}
+		}
+
+		// Returning 0 would indicate an interrupt, so loop if we haven't read any raw bytes.
+		if (nextBufferIndex == 0) {
+			goto loop;
+		}
+		result.count = nextBufferIndex;
+	} else if (unlikely(waitResult == WAIT_FAILED)) {
+		goto err;
+	}
+	// Else return a count of 0 because either:
+	// - The interrupt event was selected (which auto resets its state).
+	// - The user-supplied, non-infinite timeout ran out.
+
+	ret:
+	return result;
+
+	err:
+	result.error = GetLastError();
+	goto ret;
+}
+
 MosaicIoResult mosaic_utils_read_overlapped(
 	HANDLE h,
 	HANDLE overlappedEvent,

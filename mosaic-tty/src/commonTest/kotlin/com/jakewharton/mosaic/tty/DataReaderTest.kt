@@ -21,11 +21,14 @@ import kotlinx.coroutines.launch
 class DataReaderTest(
 	@InterceptTest
 	private val data: DataReader = burstValues(
-		TtyToTestTty,
-		TestTtyToTest,
-		TestTtyToStandardInput,
-		StandardOutputToTestTty,
-		StandardErrorToTestTty,
+		TtyToTestTerminal,
+		TestTerminalToTty,
+		TestTerminalToStandardInput,
+		TestTerminalToStandardInputAsTty,
+		StandardOutputToTestTerminal,
+		StandardOutputAsTtyToTestTerminal,
+		StandardErrorToTestTerminal,
+		StandardErrorAsTtyToTestTerminal,
 		PrintlnToInterceptedStdout,
 		EprintlnToInterceptedStderr,
 	),
