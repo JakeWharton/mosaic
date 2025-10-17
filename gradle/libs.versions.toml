@@ -20,7 +20,7 @@ androidx-compose-runtime = "androidx.compose.runtime:runtime:1.9.3"
 androidx-lifecycle-compose = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose:2.9.5"
 
 mavenPublishGradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.34.0"
-dokkaGradlePlugin = "org.jetbrains.dokka:dokka-gradle-plugin:2.0.0"
+dokkaGradlePlugin = "org.jetbrains.dokka:dokka-gradle-plugin:2.1.0"
 citeGradlePlugin = "com.jakewharton.cite:cite-gradle-plugin:0.7.0"
 pokoGradlePlugin = "dev.drewhamilton.poko:poko-gradle-plugin:0.20.1"
 binaryCompatibilityValidatorGradlePlugin = "org.jetbrains.kotlinx:binary-compatibility-validator:0.18.1"
