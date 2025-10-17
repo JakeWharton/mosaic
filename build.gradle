@@ -27,6 +27,15 @@ buildscript {
 
 apply plugin: 'org.jetbrains.dokka'
 
+dependencies {
+	dokka(projects.mosaicAnimation)
+	dokka(projects.mosaicRuntime)
+	dokka(projects.mosaicTerminal)
+	dokka(projects.mosaicTesting)
+	dokka(projects.mosaicTty)
+	dokka(projects.mosaicTtyTerminal)
+}
+
 allprojects {
 	group = GROUP
 	version = VERSION_NAME

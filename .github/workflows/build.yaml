@@ -206,12 +206,12 @@ jobs:
           java-version-file: .github/workflows/.java-version
       - uses: gradle/actions/setup-gradle@v5
 
-      - run: ./gradlew dokkaHtmlMultiModule
+      - run: ./gradlew dokkaGenerate
 
       - uses: actions/upload-artifact@v4
         with:
           name: html-docs
-          path: build/dokka/htmlMultiModule/
+          path: build/dokka/html/
           if-no-files-found: error
 
   samples:
