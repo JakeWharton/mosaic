@@ -162,15 +162,14 @@ internal constructor(
 	 * Creates an [AnimationState] that populates all the fields in [AnimationState] from
 	 * [AnimationScope].
 	 */
-	public fun toAnimationState(): AnimationState<T, V> =
-		AnimationState(
-			typeConverter,
-			value,
-			velocityVector,
-			lastFrameTimeNanos,
-			finishedTimeNanos,
-			isRunning,
-		)
+	public fun toAnimationState(): AnimationState<T, V> = AnimationState(
+		typeConverter,
+		value,
+		velocityVector,
+		lastFrameTimeNanos,
+		finishedTimeNanos,
+		isRunning,
+	)
 }
 
 /**
@@ -197,15 +196,14 @@ public fun <T, V : AnimationVector> AnimationState<T, V>.copy(
 	lastFrameTimeNanos: Long = this.lastFrameTimeNanos,
 	finishedTimeNanos: Long = this.finishedTimeNanos,
 	isRunning: Boolean = this.isRunning,
-): AnimationState<T, V> =
-	AnimationState(
-		this.typeConverter,
-		value,
-		velocityVector,
-		lastFrameTimeNanos,
-		finishedTimeNanos,
-		isRunning,
-	)
+): AnimationState<T, V> = AnimationState(
+	this.typeConverter,
+	value,
+	velocityVector,
+	lastFrameTimeNanos,
+	finishedTimeNanos,
+	isRunning,
+)
 
 /**
  * Creates a new [AnimationState] of Float [value] type from a given [AnimationState] of the same
@@ -230,15 +228,14 @@ public fun AnimationState<Float, AnimationVector1D>.copy(
 	lastFrameTimeNanos: Long = this.lastFrameTimeNanos,
 	finishedTimeNanos: Long = this.finishedTimeNanos,
 	isRunning: Boolean = this.isRunning,
-): AnimationState<Float, AnimationVector1D> =
-	AnimationState(
-		this.typeConverter,
-		value,
-		AnimationVector(velocity),
-		lastFrameTimeNanos,
-		finishedTimeNanos,
-		isRunning,
-	)
+): AnimationState<Float, AnimationVector1D> = AnimationState(
+	this.typeConverter,
+	value,
+	AnimationVector(velocity),
+	lastFrameTimeNanos,
+	finishedTimeNanos,
+	isRunning,
+)
 
 /**
  * Factory method for creating an [AnimationState] for Float [initialValue].
@@ -308,5 +305,4 @@ public fun <T, V : AnimationVector> AnimationState(
  *
  * @return a new AnimationVector instance of type [V].
  */
-public fun <T, V : AnimationVector> TwoWayConverter<T, V>.createZeroVectorFrom(value: T): V =
-	convertToVector(value).also { it.reset() }
+public fun <T, V : AnimationVector> TwoWayConverter<T, V>.createZeroVectorFrom(value: T): V = convertToVector(value).also { it.reset() }

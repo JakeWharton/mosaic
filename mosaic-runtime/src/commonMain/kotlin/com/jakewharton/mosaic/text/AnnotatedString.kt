@@ -440,8 +440,7 @@ public fun AnnotatedString(
  *
  * @param builder lambda to modify [AnnotatedString.Builder]
  */
-public inline fun buildAnnotatedString(builder: (Builder).() -> Unit): AnnotatedString =
-	Builder().apply(builder).toAnnotatedString()
+public inline fun buildAnnotatedString(builder: (Builder).() -> Unit): AnnotatedString = Builder().apply(builder).toAnnotatedString()
 
 /**
  * Helper function that checks if the range [baseStart, baseEnd) contains the range
@@ -450,9 +449,8 @@ public inline fun buildAnnotatedString(builder: (Builder).() -> Unit): Annotated
  * @return true if [baseStart, baseEnd) contains [targetStart, targetEnd), vice versa.
  * When [baseStart]==[baseEnd] it return true iff [targetStart]==[targetEnd]==[baseStart].
  */
-private fun contains(baseStart: Int, baseEnd: Int, targetStart: Int, targetEnd: Int) =
-	(baseStart <= targetStart && targetEnd <= baseEnd) &&
-		(baseEnd != targetEnd || (targetStart == targetEnd) == (baseStart == baseEnd))
+private fun contains(baseStart: Int, baseEnd: Int, targetStart: Int, targetEnd: Int) = (baseStart <= targetStart && targetEnd <= baseEnd) &&
+	(baseEnd != targetEnd || (targetStart == targetEnd) == (baseStart == baseEnd))
 
 /**
  * Helper function that checks if the range [lStart, lEnd) intersects with the range
@@ -460,10 +458,9 @@ private fun contains(baseStart: Int, baseEnd: Int, targetStart: Int, targetEnd: 
  *
  * @return [lStart, lEnd) intersects with range [rStart, rEnd), vice versa.
  */
-private fun intersect(lStart: Int, lEnd: Int, rStart: Int, rEnd: Int) =
-	maxOf(lStart, rStart) < minOf(lEnd, rEnd) ||
-		contains(lStart, lEnd, rStart, rEnd) ||
-		contains(rStart, rEnd, lStart, lEnd)
+private fun intersect(lStart: Int, lEnd: Int, rStart: Int, rEnd: Int) = maxOf(lStart, rStart) < minOf(lEnd, rEnd) ||
+	contains(lStart, lEnd, rStart, rEnd) ||
+	contains(rStart, rEnd, lStart, lEnd)
 
 private val EmptyAnnotatedString: AnnotatedString = AnnotatedString("")
 

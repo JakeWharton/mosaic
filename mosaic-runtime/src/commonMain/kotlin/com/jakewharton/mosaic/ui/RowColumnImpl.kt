@@ -127,14 +127,12 @@ internal sealed class CrossAxisAlignment {
 		/**
 		 * Align children with vertical alignment.
 		 */
-		internal fun vertical(vertical: Alignment.Vertical): CrossAxisAlignment =
-			VerticalCrossAxisAlignment(vertical)
+		internal fun vertical(vertical: Alignment.Vertical): CrossAxisAlignment = VerticalCrossAxisAlignment(vertical)
 
 		/**
 		 * Align children with horizontal alignment.
 		 */
-		internal fun horizontal(horizontal: Alignment.Horizontal): CrossAxisAlignment =
-			HorizontalCrossAxisAlignment(horizontal)
+		internal fun horizontal(horizontal: Alignment.Horizontal): CrossAxisAlignment = HorizontalCrossAxisAlignment(horizontal)
 	}
 
 	private data class VerticalCrossAxisAlignment(
@@ -194,25 +192,23 @@ internal value class OrientationIndependentConstraints private constructor(
 	)
 
 	// Given an orientation, resolves the current instance to traditional constraints.
-	fun toBoxConstraints(orientation: LayoutOrientation) =
-		if (orientation === Horizontal) {
-			Constraints(mainAxisMin, mainAxisMax, crossAxisMin, crossAxisMax)
-		} else {
-			Constraints(crossAxisMin, crossAxisMax, mainAxisMin, mainAxisMax)
-		}
+	fun toBoxConstraints(orientation: LayoutOrientation) = if (orientation === Horizontal) {
+		Constraints(mainAxisMin, mainAxisMax, crossAxisMin, crossAxisMax)
+	} else {
+		Constraints(crossAxisMin, crossAxisMax, mainAxisMin, mainAxisMax)
+	}
 
 	fun copy(
 		mainAxisMin: Int = this.mainAxisMin,
 		mainAxisMax: Int = this.mainAxisMax,
 		crossAxisMin: Int = this.crossAxisMin,
 		crossAxisMax: Int = this.crossAxisMax,
-	): OrientationIndependentConstraints =
-		OrientationIndependentConstraints(
-			mainAxisMin,
-			mainAxisMax,
-			crossAxisMin,
-			crossAxisMax,
-		)
+	): OrientationIndependentConstraints = OrientationIndependentConstraints(
+		mainAxisMin,
+		mainAxisMax,
+		crossAxisMin,
+		crossAxisMax,
+	)
 }
 
 internal val IntrinsicMeasurable.rowColumnParentData: RowColumnParentData?
@@ -224,33 +220,29 @@ internal val RowColumnParentData?.weight: Float
 internal val RowColumnParentData?.fill: Boolean
 	get() = this?.fill ?: true
 
-private fun minIntrinsicWidthMeasureBlock(orientation: LayoutOrientation) =
-	if (orientation == Horizontal) {
-		IntrinsicMeasureBlocks.HorizontalMinWidth
-	} else {
-		IntrinsicMeasureBlocks.VerticalMinWidth
-	}
+private fun minIntrinsicWidthMeasureBlock(orientation: LayoutOrientation) = if (orientation == Horizontal) {
+	IntrinsicMeasureBlocks.HorizontalMinWidth
+} else {
+	IntrinsicMeasureBlocks.VerticalMinWidth
+}
 
-private fun minIntrinsicHeightMeasureBlock(orientation: LayoutOrientation) =
-	if (orientation == Horizontal) {
-		IntrinsicMeasureBlocks.HorizontalMinHeight
-	} else {
-		IntrinsicMeasureBlocks.VerticalMinHeight
-	}
+private fun minIntrinsicHeightMeasureBlock(orientation: LayoutOrientation) = if (orientation == Horizontal) {
+	IntrinsicMeasureBlocks.HorizontalMinHeight
+} else {
+	IntrinsicMeasureBlocks.VerticalMinHeight
+}
 
-private fun maxIntrinsicWidthMeasureBlock(orientation: LayoutOrientation) =
-	if (orientation == Horizontal) {
-		IntrinsicMeasureBlocks.HorizontalMaxWidth
-	} else {
-		IntrinsicMeasureBlocks.VerticalMaxWidth
-	}
+private fun maxIntrinsicWidthMeasureBlock(orientation: LayoutOrientation) = if (orientation == Horizontal) {
+	IntrinsicMeasureBlocks.HorizontalMaxWidth
+} else {
+	IntrinsicMeasureBlocks.VerticalMaxWidth
+}
 
-private fun maxIntrinsicHeightMeasureBlock(orientation: LayoutOrientation) =
-	if (orientation == Horizontal) {
-		IntrinsicMeasureBlocks.HorizontalMaxHeight
-	} else {
-		IntrinsicMeasureBlocks.VerticalMaxHeight
-	}
+private fun maxIntrinsicHeightMeasureBlock(orientation: LayoutOrientation) = if (orientation == Horizontal) {
+	IntrinsicMeasureBlocks.HorizontalMaxHeight
+} else {
+	IntrinsicMeasureBlocks.VerticalMaxHeight
+}
 
 private object IntrinsicMeasureBlocks {
 	val HorizontalMinWidth: (List<IntrinsicMeasurable>, Int, Int) -> Int =

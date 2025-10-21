@@ -91,13 +91,12 @@ public interface VectorizedAnimationSpec<V : AnimationVector> {
 	 * @param targetValue end value of the animation
 	 * @param initialVelocity start velocity of the animation
 	 */
-	public fun getEndVelocity(initialValue: V, targetValue: V, initialVelocity: V): V =
-		getVelocityFromNanos(
-			getDurationNanos(initialValue, targetValue, initialVelocity),
-			initialValue,
-			targetValue,
-			initialVelocity,
-		)
+	public fun getEndVelocity(initialValue: V, targetValue: V, initialVelocity: V): V = getVelocityFromNanos(
+		getDurationNanos(initialValue, targetValue, initialVelocity),
+		initialValue,
+		targetValue,
+		initialVelocity,
+	)
 }
 
 /**
@@ -152,8 +151,7 @@ public interface VectorizedDurationBasedAnimationSpec<V : AnimationVector> : Vec
 	public val delayMillis: Int
 
 	@Suppress("MethodNameUnits")
-	override fun getDurationNanos(initialValue: V, targetValue: V, initialVelocity: V): Long =
-		(delayMillis + durationMillis) * MillisToNanos
+	override fun getDurationNanos(initialValue: V, targetValue: V, initialVelocity: V): Long = (delayMillis + durationMillis) * MillisToNanos
 }
 
 /**
@@ -594,19 +592,18 @@ public class VectorizedInfiniteRepeatableSpec<V : AnimationVector>(
 		start: V,
 		startVelocity: V,
 		end: V,
-	): V =
-		if (playTimeNanos + initialOffsetNanos > durationNanos) {
-			// Start velocity of the 2nd and subsequent iteration will be the velocity at the end
-			// of the first iteration, instead of the initial velocity.
-			animation.getVelocityFromNanos(
-				playTimeNanos = durationNanos - initialOffsetNanos,
-				initialValue = start,
-				targetValue = end,
-				initialVelocity = startVelocity,
-			)
-		} else {
-			startVelocity
-		}
+	): V = if (playTimeNanos + initialOffsetNanos > durationNanos) {
+		// Start velocity of the 2nd and subsequent iteration will be the velocity at the end
+		// of the first iteration, instead of the initial velocity.
+		animation.getVelocityFromNanos(
+			playTimeNanos = durationNanos - initialOffsetNanos,
+			initialValue = start,
+			targetValue = end,
+			initialVelocity = startVelocity,
+		)
+	} else {
+		startVelocity
+	}
 
 	override fun getValueFromNanos(
 		playTimeNanos: Long,
@@ -637,8 +634,7 @@ public class VectorizedInfiniteRepeatableSpec<V : AnimationVector>(
 	}
 
 	@Suppress("MethodNameUnits")
-	override fun getDurationNanos(initialValue: V, targetValue: V, initialVelocity: V): Long =
-		Long.MAX_VALUE
+	override fun getDurationNanos(initialValue: V, targetValue: V, initialVelocity: V): Long = Long.MAX_VALUE
 }
 
 /**
@@ -699,14 +695,13 @@ public class VectorizedRepeatableSpec<V : AnimationVector>(
 		start: V,
 		startVelocity: V,
 		end: V,
-	): V =
-		if (playTimeNanos + initialOffsetNanos > durationNanos) {
-			// Start velocity of the 2nd and subsequent iteration will be the velocity at the end
-			// of the first iteration, instead of the initial velocity.
-			getVelocityFromNanos(durationNanos - initialOffsetNanos, start, startVelocity, end)
-		} else {
-			startVelocity
-		}
+	): V = if (playTimeNanos + initialOffsetNanos > durationNanos) {
+		// Start velocity of the 2nd and subsequent iteration will be the velocity at the end
+		// of the first iteration, instead of the initial velocity.
+		getVelocityFromNanos(durationNanos - initialOffsetNanos, start, startVelocity, end)
+	} else {
+		startVelocity
+	}
 
 	override fun getValueFromNanos(
 		playTimeNanos: Long,

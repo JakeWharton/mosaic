@@ -39,11 +39,9 @@ internal class RowColumnMeasurementHelper(
 		measurables[it].rowColumnParentData
 	}
 
-	private fun Placeable.mainAxisSize() =
-		if (orientation == LayoutOrientation.Horizontal) width else height
+	private fun Placeable.mainAxisSize() = if (orientation == LayoutOrientation.Horizontal) width else height
 
-	private fun Placeable.crossAxisSize() =
-		if (orientation == LayoutOrientation.Horizontal) height else width
+	private fun Placeable.crossAxisSize() = if (orientation == LayoutOrientation.Horizontal) height else width
 
 	/**
 	 * Measures the row and column without placing, useful for reusing row/column logic

@@ -229,8 +229,7 @@ public object Arrangement {
 	 * @param space The space between adjacent children.
 	 */
 	@Stable
-	public fun spacedBy(space: Int): HorizontalOrVertical =
-		SpacedAligned(space) { size -> Alignment.Start.align(0, size) }
+	public fun spacedBy(space: Int): HorizontalOrVertical = SpacedAligned(space) { size -> Alignment.Start.align(0, size) }
 
 	/**
 	 * Place children horizontally such that each two adjacent ones are spaced by a fixed [space]
@@ -243,8 +242,7 @@ public object Arrangement {
 	 * @param alignment The alignment of the spaced children inside the parent.
 	 */
 	@Stable
-	public fun spacedBy(space: Int, alignment: Alignment.Horizontal): Horizontal =
-		SpacedAligned(space) { size -> alignment.align(0, size) }
+	public fun spacedBy(space: Int, alignment: Alignment.Horizontal): Horizontal = SpacedAligned(space) { size -> alignment.align(0, size) }
 
 	/**
 	 * Place children vertically such that each two adjacent ones are spaced by a fixed [space]
@@ -257,8 +255,7 @@ public object Arrangement {
 	 * @param alignment The alignment of the spaced children inside the parent.
 	 */
 	@Stable
-	public fun spacedBy(space: Int, alignment: Alignment.Vertical): Vertical =
-		SpacedAligned(space) { size -> alignment.align(0, size) }
+	public fun spacedBy(space: Int, alignment: Alignment.Vertical): Vertical = SpacedAligned(space) { size -> alignment.align(0, size) }
 
 	/**
 	 * Place children horizontally one next to the other and align the obtained group
@@ -267,8 +264,7 @@ public object Arrangement {
 	 * @param alignment The alignment of the children inside the parent.
 	 */
 	@Stable
-	public fun aligned(alignment: Alignment.Horizontal): Horizontal =
-		SpacedAligned(0) { size -> alignment.align(0, size) }
+	public fun aligned(alignment: Alignment.Horizontal): Horizontal = SpacedAligned(0) { size -> alignment.align(0, size) }
 
 	/**
 	 * Place children vertically one next to the other and align the obtained group
@@ -277,8 +273,7 @@ public object Arrangement {
 	 * @param alignment The alignment of the children inside the parent.
 	 */
 	@Stable
-	public fun aligned(alignment: Alignment.Vertical): Vertical =
-		SpacedAligned(0) { size -> alignment.align(0, size) }
+	public fun aligned(alignment: Alignment.Vertical): Vertical = SpacedAligned(0) { size -> alignment.align(0, size) }
 
 	@Immutable
 	public object Absolute {
@@ -392,8 +387,7 @@ public object Arrangement {
 		 * @param space The space between adjacent children.
 		 */
 		@Stable
-		public fun spacedBy(space: Int): HorizontalOrVertical =
-			SpacedAligned(space, null)
+		public fun spacedBy(space: Int): HorizontalOrVertical = SpacedAligned(space, null)
 
 		/**
 		 * Place children horizontally such that each two adjacent ones are spaced by a fixed [space]
@@ -405,8 +399,7 @@ public object Arrangement {
 		 * @param alignment The alignment of the spaced children inside the parent.
 		 */
 		@Stable
-		public fun spacedBy(space: Int, alignment: Alignment.Horizontal): Horizontal =
-			SpacedAligned(space) { size -> alignment.align(0, size) }
+		public fun spacedBy(space: Int, alignment: Alignment.Horizontal): Horizontal = SpacedAligned(space) { size -> alignment.align(0, size) }
 
 		/**
 		 * Place children vertically such that each two adjacent ones are spaced by a fixed [space]
@@ -418,8 +411,7 @@ public object Arrangement {
 		 * @param alignment The alignment of the spaced children inside the parent.
 		 */
 		@Stable
-		public fun spacedBy(space: Int, alignment: Alignment.Vertical): Vertical =
-			SpacedAligned(space) { size -> alignment.align(0, size) }
+		public fun spacedBy(space: Int, alignment: Alignment.Vertical): Vertical = SpacedAligned(space) { size -> alignment.align(0, size) }
 
 		/**
 		 * Place children horizontally one next to the other and align the obtained group
@@ -428,8 +420,7 @@ public object Arrangement {
 		 * @param alignment The alignment of the children inside the parent.
 		 */
 		@Stable
-		public fun aligned(alignment: Alignment.Horizontal): Horizontal =
-			SpacedAligned(0) { size -> alignment.align(0, size) }
+		public fun aligned(alignment: Alignment.Horizontal): Horizontal = SpacedAligned(0) { size -> alignment.align(0, size) }
 	}
 
 	/**

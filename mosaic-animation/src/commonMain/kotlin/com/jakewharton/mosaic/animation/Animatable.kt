@@ -392,8 +392,7 @@ public class Animatable<T, V : AnimationVector>(
 public fun Animatable(
 	initialValue: Float,
 	visibilityThreshold: Float = Spring.DefaultDisplacementThreshold,
-): Animatable<Float, AnimationVector1D> =
-	Animatable(initialValue, Float.Companion.VectorConverter, visibilityThreshold)
+): Animatable<Float, AnimationVector1D> = Animatable(initialValue, Float.Companion.VectorConverter, visibilityThreshold)
 
 /**
  * This [Animatable] function creates a Color value holder that automatically animates its value
@@ -413,10 +412,10 @@ public fun Animatable(
  *
  * @param initialValue initial value of the [Animatable]
  */
-public fun Animatable(initialValue: Color): Animatable<Color, AnimationVector3D> =
-	Animatable(initialValue, Color.VectorConverter)
+public fun Animatable(initialValue: Color): Animatable<Color, AnimationVector3D> = Animatable(initialValue, Color.VectorConverter)
 
 // TODO: Consider some version of @Composable fun<T, V: AnimationVector> Animatable<T, V>.animateTo
+
 /**
  * AnimationResult contains information about an animation at the end of the animation. [endState]
  * captures the value/velocity/frame time, etc of the animation at its last frame. It can be useful

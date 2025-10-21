@@ -87,8 +87,7 @@ public fun DecayAnimationSpec<Float>.calculateTargetValue(
 public fun <T> exponentialDecay(
 	@FloatRange(from = 0.0, fromInclusive = false) frictionMultiplier: Float = 1f,
 	@FloatRange(from = 0.0, fromInclusive = false) absVelocityThreshold: Float = 0.1f,
-): DecayAnimationSpec<T> =
-	FloatExponentialDecaySpec(frictionMultiplier, absVelocityThreshold).generateDecayAnimationSpec()
+): DecayAnimationSpec<T> = FloatExponentialDecaySpec(frictionMultiplier, absVelocityThreshold).generateDecayAnimationSpec()
 
 /**
  * Creates a [DecayAnimationSpec] from a [com.jakewharton.mosaic.animation.FloatDecayAnimationSpec] by applying the given

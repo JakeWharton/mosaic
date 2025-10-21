@@ -1044,8 +1044,7 @@ internal constructor(
 
 	internal fun removeTransition(transition: Transition<*>) = _transitions.remove(transition)
 
-	internal fun addAnimation(animation: TransitionAnimationState<*, *>) =
-		_animations.add(animation)
+	internal fun addAnimation(animation: TransitionAnimationState<*, *>) = _animations.add(animation)
 
 	internal fun removeAnimation(animation: TransitionAnimationState<*, *>) {
 		_animations.remove(animation)
@@ -1778,6 +1777,7 @@ internal fun <S, T, V : AnimationVector> Transition<S>.createTransitionAnimation
 }
 
 // TODO: Remove noinline when b/174814083 is fixed.
+
 /**
  * Creates a Float animation as a part of the given [Transition]. This means the states of this
  * animation will be managed by the [Transition].
@@ -1842,8 +1842,7 @@ public inline fun <S> Transition<S>.animateIntOffset(
 		},
 	label: String = "IntOffsetAnimation",
 	targetValueByState: @Composable (state: S) -> IntOffset,
-): State<IntOffset> =
-	animateValue(IntOffset.VectorConverter, transitionSpec, label, targetValueByState)
+): State<IntOffset> = animateValue(IntOffset.VectorConverter, transitionSpec, label, targetValueByState)
 
 /**
  * Creates a [Int] animation as a part of the given [Transition]. This means the states of this

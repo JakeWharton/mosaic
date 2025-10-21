@@ -123,8 +123,7 @@ internal class MosaicNode(
 		}
 	}
 
-	override fun measure(constraints: Constraints): Placeable =
-		topLayer.apply { measure(constraints) }
+	override fun measure(constraints: Constraints): Placeable = topLayer.apply { measure(constraints) }
 
 	val width: Int get() = topLayer.width
 	val height: Int get() = topLayer.height
@@ -261,8 +260,7 @@ private class KeyLayer(
 	private val element: KeyModifier,
 	override val next: MosaicNodeLayer,
 ) : MosaicNodeLayer() {
-	override fun sendKeyEvent(keyEvent: KeyEvent) =
-		element.onPreKeyEvent(keyEvent) ||
-			next.sendKeyEvent(keyEvent) ||
-			element.onKeyEvent(keyEvent)
+	override fun sendKeyEvent(keyEvent: KeyEvent) = element.onPreKeyEvent(keyEvent) ||
+		next.sendKeyEvent(keyEvent) ||
+		element.onKeyEvent(keyEvent)
 }

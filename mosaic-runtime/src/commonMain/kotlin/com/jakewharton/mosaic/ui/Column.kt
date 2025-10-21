@@ -39,21 +39,20 @@ internal val DefaultColumnMeasurePolicy: MeasurePolicy = RowColumnMeasurePolicy(
 internal fun columnMeasurePolicy(
 	verticalArrangement: Arrangement.Vertical,
 	horizontalAlignment: Alignment.Horizontal,
-): MeasurePolicy =
-	if (verticalArrangement == Arrangement.Top && horizontalAlignment == Alignment.Start) {
-		DefaultColumnMeasurePolicy
-	} else {
-		remember(verticalArrangement, horizontalAlignment) {
-			RowColumnMeasurePolicy(
-				orientation = LayoutOrientation.Vertical,
-				verticalArrangement = verticalArrangement,
-				horizontalArrangement = null,
-				arrangementSpacing = verticalArrangement.spacing,
-				crossAxisAlignment = CrossAxisAlignment.horizontal(horizontalAlignment),
-				crossAxisSize = SizeMode.Wrap,
-			)
-		}
+): MeasurePolicy = if (verticalArrangement == Arrangement.Top && horizontalAlignment == Alignment.Start) {
+	DefaultColumnMeasurePolicy
+} else {
+	remember(verticalArrangement, horizontalAlignment) {
+		RowColumnMeasurePolicy(
+			orientation = LayoutOrientation.Vertical,
+			verticalArrangement = verticalArrangement,
+			horizontalArrangement = null,
+			arrangementSpacing = verticalArrangement.spacing,
+			crossAxisAlignment = CrossAxisAlignment.horizontal(horizontalAlignment),
+			crossAxisSize = SizeMode.Wrap,
+		)
 	}
+}
 
 /**
  * Scope for the children of [Column].

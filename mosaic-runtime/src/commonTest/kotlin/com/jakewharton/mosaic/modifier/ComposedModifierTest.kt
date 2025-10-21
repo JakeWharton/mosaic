@@ -25,11 +25,10 @@ private class TestTagModifier<T>(val name: String, val value: T) : Modifier.Elem
 
 private fun <T> Modifier.testTag(name: String, value: T) = this then TestTagModifier(name, value)
 
-private fun <T> Modifier.getTestTag(name: String, default: T): T =
-	foldIn(default) { acc, element ->
-		@Suppress("UNCHECKED_CAST")
-		if (element is TestTagModifier<*> && element.name == name) element.value as T else acc
-	}
+private fun <T> Modifier.getTestTag(name: String, default: T): T = foldIn(default) { acc, element ->
+	@Suppress("UNCHECKED_CAST")
+	if (element is TestTagModifier<*> && element.name == name) element.value as T else acc
+}
 
 class ComposedModifierTest {
 

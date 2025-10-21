@@ -78,8 +78,7 @@ internal const val SecondsToMillis: Long = 1_000L
  *
  * @param playTimeNanos the play time that is used to calculate the velocity of the animation.
  */
-public fun <T, V : AnimationVector> Animation<T, V>.getVelocityFromNanos(playTimeNanos: Long): T =
-	typeConverter.convertFromVector(getVelocityVectorFromNanos(playTimeNanos))
+public fun <T, V : AnimationVector> Animation<T, V>.getVelocityFromNanos(playTimeNanos: Long): T = typeConverter.convertFromVector(getVelocityVectorFromNanos(playTimeNanos))
 
 /**
  * Creates a [TargetBasedAnimation] from a given [com.jakewharton.mosaic.animation.VectorizedAnimationSpec] of [AnimationVector]
@@ -95,14 +94,13 @@ public fun <V : AnimationVector> VectorizedAnimationSpec<V>.createAnimation(
 	initialValue: V,
 	targetValue: V,
 	initialVelocity: V,
-): TargetBasedAnimation<V, V> =
-	TargetBasedAnimation(
-		animationSpec = this,
-		initialValue = initialValue,
-		targetValue = targetValue,
-		initialVelocityVector = initialVelocity,
-		typeConverter = TwoWayConverter({ it }, { it }),
-	)
+): TargetBasedAnimation<V, V> = TargetBasedAnimation(
+	animationSpec = this,
+	initialValue = initialValue,
+	targetValue = targetValue,
+	initialVelocityVector = initialVelocity,
+	typeConverter = TwoWayConverter({ it }, { it }),
+)
 
 /**
  * Creates a [TargetBasedAnimation] with the given start/end conditions of the animation, and the
@@ -131,14 +129,13 @@ public fun <T, V : AnimationVector> TargetBasedAnimation(
 	initialValue: T,
 	targetValue: T,
 	initialVelocity: T,
-): TargetBasedAnimation<T, V> =
-	TargetBasedAnimation(
-		animationSpec,
-		typeConverter,
-		initialValue,
-		targetValue,
-		typeConverter.convertToVector(initialVelocity),
-	)
+): TargetBasedAnimation<T, V> = TargetBasedAnimation(
+	animationSpec,
+	typeConverter,
+	initialValue,
+	targetValue,
+	typeConverter.convertToVector(initialVelocity),
+)
 
 /**
  * This is a convenient animation wrapper class that works for all target based animations, i.e.
@@ -472,10 +469,9 @@ public fun DecayAnimation(
 	animationSpec: FloatDecayAnimationSpec,
 	initialValue: Float,
 	initialVelocity: Float = 0f,
-): DecayAnimation<Float, AnimationVector1D> =
-	DecayAnimation(
-		animationSpec.generateDecayAnimationSpec(),
-		Float.VectorConverter,
-		initialValue,
-		AnimationVector(initialVelocity),
-	)
+): DecayAnimation<Float, AnimationVector1D> = DecayAnimation(
+	animationSpec.generateDecayAnimationSpec(),
+	Float.VectorConverter,
+	initialValue,
+	AnimationVector(initialVelocity),
+)

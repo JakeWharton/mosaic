@@ -52,15 +52,14 @@ public fun Modifier.padding(
 )
 
 @Stable
-public fun Modifier.padding(all: Int): Modifier =
-	this.then(
-		PaddingModifier(
-			left = all,
-			top = all,
-			right = all,
-			bottom = all,
-		),
-	)
+public fun Modifier.padding(all: Int): Modifier = this.then(
+	PaddingModifier(
+		left = all,
+		top = all,
+		right = all,
+		bottom = all,
+	),
+)
 
 private class PaddingModifier(
 	val left: Int = 0,

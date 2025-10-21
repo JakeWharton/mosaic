@@ -269,5 +269,4 @@ public fun InfiniteTransition.animateFloat(
 	targetValue: Float,
 	animationSpec: InfiniteRepeatableSpec<Float>,
 	label: String = "FloatAnimation",
-): State<Float> =
-	animateValue(initialValue, targetValue, Float.VectorConverter, animationSpec, label)
+): State<Float> = animateValue(initialValue, targetValue, Float.VectorConverter, animationSpec, label)
