@@ -116,8 +116,7 @@ public interface DrawScope {
 	/**
 	 * Helper method to offset the provided size with the offset in box width and height
 	 */
-	private fun IntSize.offsetSize(offset: IntOffset): IntSize =
-		IntSize(this.width - offset.x, this.height - offset.y)
+	private fun IntSize.offsetSize(offset: IntOffset): IntSize = IntSize(this.width - offset.x, this.height - offset.y)
 }
 
 internal open class TextCanvasDrawScope(

@@ -11,8 +11,7 @@ import kotlin.math.roundToInt
  * Constructs a [IntOffset] from [x] and [y] position [Int] values.
  */
 @Stable
-public fun IntOffset(x: Int, y: Int): IntOffset =
-	IntOffset(packInts(x, y))
+public fun IntOffset(x: Int, y: Int): IntOffset = IntOffset(packInts(x, y))
 
 /**
  * A two-dimensional position using [Int] cells for units
@@ -51,15 +50,13 @@ public value class IntOffset internal constructor(@PublishedApi internal val pac
 	 * Subtract a [IntOffset] from another one.
 	 */
 	@Stable
-	public inline operator fun minus(other: IntOffset): IntOffset =
-		IntOffset(x - other.x, y - other.y)
+	public inline operator fun minus(other: IntOffset): IntOffset = IntOffset(x - other.x, y - other.y)
 
 	/**
 	 * Add a [IntOffset] to another one.
 	 */
 	@Stable
-	public inline operator fun plus(other: IntOffset): IntOffset =
-		IntOffset(x + other.x, y + other.y)
+	public inline operator fun plus(other: IntOffset): IntOffset = IntOffset(x + other.x, y + other.y)
 
 	/**
 	 * Returns a new [IntOffset] representing the negation of this point.

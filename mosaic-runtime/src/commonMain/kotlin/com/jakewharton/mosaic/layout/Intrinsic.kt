@@ -15,8 +15,7 @@ import com.jakewharton.mosaic.ui.unit.constrain
  * options to set the preferred width.
  */
 @Stable
-public fun Modifier.width(intrinsicSize: IntrinsicSize): Modifier =
-	this then IntrinsicWidthModifier(width = intrinsicSize, enforceIncoming = true)
+public fun Modifier.width(intrinsicSize: IntrinsicSize): Modifier = this then IntrinsicWidthModifier(width = intrinsicSize, enforceIncoming = true)
 
 /**
  * Declare the preferred height of the content to be the same as the min or max intrinsic height of
@@ -27,8 +26,7 @@ public fun Modifier.width(intrinsicSize: IntrinsicSize): Modifier =
  * other options to set the preferred height.
  */
 @Stable
-public fun Modifier.height(intrinsicSize: IntrinsicSize): Modifier =
-	this then IntrinsicHeightModifier(height = intrinsicSize, enforceIncoming = true)
+public fun Modifier.height(intrinsicSize: IntrinsicSize): Modifier = this then IntrinsicHeightModifier(height = intrinsicSize, enforceIncoming = true)
 
 /**
  * Declare the width of the content to be exactly the same as the min or max intrinsic width of the
@@ -43,8 +41,7 @@ public fun Modifier.height(intrinsicSize: IntrinsicSize): Modifier =
  * required width.
  */
 @Stable
-public fun Modifier.requiredWidth(intrinsicSize: IntrinsicSize): Modifier =
-	this then IntrinsicWidthModifier(width = intrinsicSize, enforceIncoming = false)
+public fun Modifier.requiredWidth(intrinsicSize: IntrinsicSize): Modifier = this then IntrinsicWidthModifier(width = intrinsicSize, enforceIncoming = false)
 
 /**
  * Declare the height of the content to be exactly the same as the min or max intrinsic height of
@@ -59,8 +56,7 @@ public fun Modifier.requiredWidth(intrinsicSize: IntrinsicSize): Modifier =
  * the required height.
  */
 @Stable
-public fun Modifier.requiredHeight(intrinsicSize: IntrinsicSize): Modifier =
-	this then IntrinsicHeightModifier(height = intrinsicSize, enforceIncoming = false)
+public fun Modifier.requiredHeight(intrinsicSize: IntrinsicSize): Modifier = this then IntrinsicHeightModifier(height = intrinsicSize, enforceIncoming = false)
 
 /** Intrinsic size used in [width] or [height] which can refer to width or height. */
 public enum class IntrinsicSize {
@@ -91,22 +87,20 @@ private class IntrinsicWidthModifier(
 	override fun minIntrinsicWidth(
 		measurable: IntrinsicMeasurable,
 		height: Int,
-	) =
-		if (width == IntrinsicSize.Min) {
-			measurable.minIntrinsicWidth(height)
-		} else {
-			measurable.maxIntrinsicWidth(height)
-		}
+	) = if (width == IntrinsicSize.Min) {
+		measurable.minIntrinsicWidth(height)
+	} else {
+		measurable.maxIntrinsicWidth(height)
+	}
 
 	override fun maxIntrinsicWidth(
 		measurable: IntrinsicMeasurable,
 		height: Int,
-	) =
-		if (width == IntrinsicSize.Min) {
-			measurable.minIntrinsicWidth(height)
-		} else {
-			measurable.maxIntrinsicWidth(height)
-		}
+	) = if (width == IntrinsicSize.Min) {
+		measurable.minIntrinsicWidth(height)
+	} else {
+		measurable.maxIntrinsicWidth(height)
+	}
 
 	override fun toString(): String {
 		return "IntrinsicWidthModifier(width=$width, enforceIncoming=$enforceIncoming)"
@@ -136,22 +130,20 @@ private class IntrinsicHeightModifier(
 	override fun minIntrinsicHeight(
 		measurable: IntrinsicMeasurable,
 		width: Int,
-	) =
-		if (height == IntrinsicSize.Min) {
-			measurable.minIntrinsicHeight(width)
-		} else {
-			measurable.maxIntrinsicHeight(width)
-		}
+	) = if (height == IntrinsicSize.Min) {
+		measurable.minIntrinsicHeight(width)
+	} else {
+		measurable.maxIntrinsicHeight(width)
+	}
 
 	override fun maxIntrinsicHeight(
 		measurable: IntrinsicMeasurable,
 		width: Int,
-	) =
-		if (height == IntrinsicSize.Min) {
-			measurable.minIntrinsicHeight(width)
-		} else {
-			measurable.maxIntrinsicHeight(width)
-		}
+	) = if (height == IntrinsicSize.Min) {
+		measurable.minIntrinsicHeight(width)
+	} else {
+		measurable.maxIntrinsicHeight(width)
+	}
 
 	override fun toString(): String {
 		return "IntrinsicHeightModifier(height=$height, enforceIncoming=$enforceIncoming)"

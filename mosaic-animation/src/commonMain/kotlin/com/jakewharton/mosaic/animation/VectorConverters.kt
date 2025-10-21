@@ -47,8 +47,7 @@ private class TwoWayConverterImpl<T, V : AnimationVector>(
 	override val convertFromVector: (V) -> T,
 ) : TwoWayConverter<T, V>
 
-internal inline fun lerp(start: Float, stop: Float, fraction: Float) =
-	(start * (1 - fraction) + stop * fraction)
+internal inline fun lerp(start: Float, stop: Float, fraction: Float) = (start * (1 - fraction) + stop * fraction)
 
 /** A [TwoWayConverter] that converts [Float] from and to [AnimationVector1D] */
 public val Float.Companion.VectorConverter: TwoWayConverter<Float, AnimationVector1D>

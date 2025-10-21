@@ -86,14 +86,13 @@ public class TweenSpec<T>(
 		converter: TwoWayConverter<T, V>,
 	): VectorizedTweenSpec<V> = VectorizedTweenSpec<V>(durationMillis, delay, easing)
 
-	override fun equals(other: Any?): Boolean =
-		if (other is TweenSpec<*>) {
-			other.durationMillis == this.durationMillis &&
-				other.delay == this.delay &&
-				other.easing == this.easing
-		} else {
-			false
-		}
+	override fun equals(other: Any?): Boolean = if (other is TweenSpec<*>) {
+		other.durationMillis == this.durationMillis &&
+			other.delay == this.delay &&
+			other.easing == this.easing
+	} else {
+		false
+	}
 
 	override fun hashCode(): Int {
 		return (durationMillis * 31 + easing.hashCode()) * 31 + delay
@@ -130,20 +129,17 @@ public class SpringSpec<T>(
 
 	override fun <V : AnimationVector> vectorize(
 		converter: TwoWayConverter<T, V>,
-	): VectorizedSpringSpec<V> =
-		VectorizedSpringSpec(dampingRatio, stiffness, converter.convert(visibilityThreshold))
+	): VectorizedSpringSpec<V> = VectorizedSpringSpec(dampingRatio, stiffness, converter.convert(visibilityThreshold))
 
-	override fun equals(other: Any?): Boolean =
-		if (other is SpringSpec<*>) {
-			other.dampingRatio == this.dampingRatio &&
-				other.stiffness == this.stiffness &&
-				other.visibilityThreshold == this.visibilityThreshold
-		} else {
-			false
-		}
+	override fun equals(other: Any?): Boolean = if (other is SpringSpec<*>) {
+		other.dampingRatio == this.dampingRatio &&
+			other.stiffness == this.stiffness &&
+			other.visibilityThreshold == this.visibilityThreshold
+	} else {
+		false
+	}
 
-	override fun hashCode(): Int =
-		(visibilityThreshold.hashCode() * 31 + dampingRatio.hashCode()) * 31 + stiffness.hashCode()
+	override fun hashCode(): Int = (visibilityThreshold.hashCode() * 31 + dampingRatio.hashCode()) * 31 + stiffness.hashCode()
 }
 
 private fun <T, V : AnimationVector> TwoWayConverter<T, V>.convert(data: T?): V? {
@@ -193,15 +189,14 @@ public class ArcAnimationSpec<T>(
 ) : DurationBasedAnimationSpec<T> {
 	override fun <V : AnimationVector> vectorize(
 		converter: TwoWayConverter<T, V>,
-	): VectorizedDurationBasedAnimationSpec<V> =
-		VectorizedKeyframesSpec(
-			timestamps = intListOf(0, durationMillis),
-			keyframes = emptyIntObjectMap(),
-			durationMillis = durationMillis,
-			delayMillis = delayMillis,
-			defaultEasing = easing,
-			initialArcMode = mode,
-		)
+	): VectorizedDurationBasedAnimationSpec<V> = VectorizedKeyframesSpec(
+		timestamps = intListOf(0, durationMillis),
+		keyframes = emptyIntObjectMap(),
+		durationMillis = durationMillis,
+		delayMillis = delayMillis,
+		defaultEasing = easing,
+		initialArcMode = mode,
+	)
 
 	override fun equals(other: Any?): Boolean {
 		if (this === other) return true
@@ -320,15 +315,14 @@ public class RepeatableSpec<T>(
 		)
 	}
 
-	override fun equals(other: Any?): Boolean =
-		if (other is RepeatableSpec<*>) {
-			other.iterations == this.iterations &&
-				other.animation == this.animation &&
-				other.repeatMode == this.repeatMode &&
-				other.initialStartOffset == this.initialStartOffset
-		} else {
-			false
-		}
+	override fun equals(other: Any?): Boolean = if (other is RepeatableSpec<*>) {
+		other.iterations == this.iterations &&
+			other.animation == this.animation &&
+			other.repeatMode == this.repeatMode &&
+			other.initialStartOffset == this.initialStartOffset
+	} else {
+		false
+	}
 
 	override fun hashCode(): Int {
 		return ((iterations * 31 + animation.hashCode()) * 31 + repeatMode.hashCode()) * 31 +
@@ -371,14 +365,13 @@ public class InfiniteRepeatableSpec<T>(
 		)
 	}
 
-	override fun equals(other: Any?): Boolean =
-		if (other is InfiniteRepeatableSpec<*>) {
-			other.animation == this.animation &&
-				other.repeatMode == this.repeatMode &&
-				other.initialStartOffset == this.initialStartOffset
-		} else {
-			false
-		}
+	override fun equals(other: Any?): Boolean = if (other is InfiniteRepeatableSpec<*>) {
+		other.animation == this.animation &&
+			other.repeatMode == this.repeatMode &&
+			other.initialStartOffset == this.initialStartOffset
+	} else {
+		false
+	}
 
 	override fun hashCode(): Int {
 		return (animation.hashCode() * 31 + repeatMode.hashCode()) * 31 +
@@ -408,12 +401,11 @@ public class SnapSpec<T>(public val delay: Int = 0) : DurationBasedAnimationSpec
 		converter: TwoWayConverter<T, V>,
 	): VectorizedDurationBasedAnimationSpec<V> = VectorizedSnapSpec(delay)
 
-	override fun equals(other: Any?): Boolean =
-		if (other is SnapSpec<*>) {
-			other.delay == this.delay
-		} else {
-			false
-		}
+	override fun equals(other: Any?): Boolean = if (other is SnapSpec<*>) {
+		other.delay == this.delay
+	} else {
+		false
+	}
 
 	override fun hashCode(): Int {
 		return delay
@@ -485,8 +477,7 @@ public sealed class KeyframesSpecBaseConfig<T, E : KeyframeBaseEntity<T>> {
 
 /** Base holder class for building a keyframes animation. */
 public sealed class KeyframeBaseEntity<T>(internal val value: T, internal var easing: Easing) {
-	internal fun <V : AnimationVector> toPair(convertToVector: (T) -> V) =
-		convertToVector.invoke(value) to easing
+	internal fun <V : AnimationVector> toPair(convertToVector: (T) -> V) = convertToVector.invoke(value) to easing
 }
 
 /**
@@ -677,8 +668,7 @@ public class KeyframesWithSplineSpec<T>(
 	 */
 	public class KeyframesWithSplineSpecConfig<T> : KeyframesSpecBaseConfig<T, KeyframesSpec.KeyframeEntity<T>>() {
 
-		override fun createEntityFor(value: T): KeyframesSpec.KeyframeEntity<T> =
-			KeyframesSpec.KeyframeEntity(value)
+		override fun createEntityFor(value: T): KeyframesSpec.KeyframeEntity<T> = KeyframesSpec.KeyframeEntity(value)
 	}
 
 	override fun <V : AnimationVector> vectorize(
@@ -773,10 +763,9 @@ public fun <T> keyframes(init: KeyframesSpecConfig<T>.() -> Unit): KeyframesSpec
  */
 public fun <T> keyframesWithSpline(
 	init: KeyframesWithSplineSpec.KeyframesWithSplineSpecConfig<T>.() -> Unit,
-): KeyframesWithSplineSpec<T> =
-	KeyframesWithSplineSpec(
-		config = KeyframesWithSplineSpec.KeyframesWithSplineSpecConfig<T>().apply(init),
-	)
+): KeyframesWithSplineSpec<T> = KeyframesWithSplineSpec(
+	config = KeyframesWithSplineSpec.KeyframesWithSplineSpecConfig<T>().apply(init),
+)
 
 /**
  * Creates a *periodic* [KeyframesWithSplineSpec] animation, initialized with [init].
@@ -800,11 +789,10 @@ public fun <T> keyframesWithSpline(
 public fun <T> keyframesWithSpline(
 	@FloatRange(0.0, 1.0) periodicBias: Float,
 	init: KeyframesWithSplineSpec.KeyframesWithSplineSpecConfig<T>.() -> Unit,
-): KeyframesWithSplineSpec<T> =
-	KeyframesWithSplineSpec(
-		config = KeyframesWithSplineSpec.KeyframesWithSplineSpecConfig<T>().apply(init),
-		periodicBias = periodicBias,
-	)
+): KeyframesWithSplineSpec<T> = KeyframesWithSplineSpec(
+	config = KeyframesWithSplineSpec.KeyframesWithSplineSpecConfig<T>().apply(init),
+	periodicBias = periodicBias,
+)
 
 /**
  * Creates a [RepeatableSpec] that plays a [DurationBasedAnimationSpec] (e.g. [TweenSpec],
@@ -868,8 +856,7 @@ public fun <T> infiniteRepeatable(
  * Returns an [AnimationSpec] that is the same as [animationSpec] with a delay of [startDelayNanos].
  */
 @Stable
-internal fun <T> delayed(animationSpec: AnimationSpec<T>, startDelayNanos: Long): AnimationSpec<T> =
-	StartDelayAnimationSpec(animationSpec, startDelayNanos)
+internal fun <T> delayed(animationSpec: AnimationSpec<T>, startDelayNanos: Long): AnimationSpec<T> = StartDelayAnimationSpec(animationSpec, startDelayNanos)
 
 /**
  * A [com.jakewharton.mosaic.animation.VectorizedAnimationSpec] that wraps [vectorizedAnimationSpec], giving it a start delay of
@@ -883,46 +870,43 @@ private class StartDelayVectorizedAnimationSpec<V : AnimationVector>(
 	override val isInfinite: Boolean
 		get() = vectorizedAnimationSpec.isInfinite
 
-	override fun getDurationNanos(initialValue: V, targetValue: V, initialVelocity: V): Long =
-		vectorizedAnimationSpec.getDurationNanos(
-			initialValue = initialValue,
-			targetValue = targetValue,
-			initialVelocity = initialVelocity,
-		) + startDelayNanos
+	override fun getDurationNanos(initialValue: V, targetValue: V, initialVelocity: V): Long = vectorizedAnimationSpec.getDurationNanos(
+		initialValue = initialValue,
+		targetValue = targetValue,
+		initialVelocity = initialVelocity,
+	) + startDelayNanos
 
 	override fun getVelocityFromNanos(
 		playTimeNanos: Long,
 		initialValue: V,
 		targetValue: V,
 		initialVelocity: V,
-	): V =
-		if (playTimeNanos < startDelayNanos) {
-			initialVelocity
-		} else {
-			vectorizedAnimationSpec.getVelocityFromNanos(
-				playTimeNanos = playTimeNanos - startDelayNanos,
-				initialValue = initialValue,
-				targetValue = targetValue,
-				initialVelocity = initialVelocity,
-			)
-		}
+	): V = if (playTimeNanos < startDelayNanos) {
+		initialVelocity
+	} else {
+		vectorizedAnimationSpec.getVelocityFromNanos(
+			playTimeNanos = playTimeNanos - startDelayNanos,
+			initialValue = initialValue,
+			targetValue = targetValue,
+			initialVelocity = initialVelocity,
+		)
+	}
 
 	override fun getValueFromNanos(
 		playTimeNanos: Long,
 		initialValue: V,
 		targetValue: V,
 		initialVelocity: V,
-	): V =
-		if (playTimeNanos < startDelayNanos) {
-			initialValue
-		} else {
-			vectorizedAnimationSpec.getValueFromNanos(
-				playTimeNanos = playTimeNanos - startDelayNanos,
-				initialValue = initialValue,
-				targetValue = targetValue,
-				initialVelocity = initialVelocity,
-			)
-		}
+	): V = if (playTimeNanos < startDelayNanos) {
+		initialValue
+	} else {
+		vectorizedAnimationSpec.getValueFromNanos(
+			playTimeNanos = playTimeNanos - startDelayNanos,
+			initialValue = initialValue,
+			targetValue = targetValue,
+			initialVelocity = initialVelocity,
+		)
+	}
 
 	override fun hashCode(): Int {
 		return 31 * vectorizedAnimationSpec.hashCode() + startDelayNanos.hashCode()

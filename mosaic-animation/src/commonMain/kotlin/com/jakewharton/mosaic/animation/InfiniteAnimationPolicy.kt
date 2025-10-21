@@ -35,11 +35,10 @@ public interface InfiniteAnimationPolicy : CoroutineContext.Element {
  * Like [withFrameNanos], but applies the [InfiniteAnimationPolicy] from the calling
  * [CoroutineContext] if there is one.
  */
-public suspend fun <R> withInfiniteAnimationFrameNanos(onFrame: (frameTimeNanos: Long) -> R): R =
-	when (val policy = coroutineContext[InfiniteAnimationPolicy]) {
-		null -> withFrameNanos(onFrame)
-		else -> policy.onInfiniteOperation { withFrameNanos(onFrame) }
-	}
+public suspend fun <R> withInfiniteAnimationFrameNanos(onFrame: (frameTimeNanos: Long) -> R): R = when (val policy = coroutineContext[InfiniteAnimationPolicy]) {
+	null -> withFrameNanos(onFrame)
+	else -> policy.onInfiniteOperation { withFrameNanos(onFrame) }
+}
 
 /**
  * Like [withFrameMillis], but applies the [InfiniteAnimationPolicy] from the calling

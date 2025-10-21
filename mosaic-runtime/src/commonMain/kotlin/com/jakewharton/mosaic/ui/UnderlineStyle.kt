@@ -59,5 +59,4 @@ public inline val UnderlineStyle.isUnspecifiedUnderlineStyle: Boolean get() = va
  * If this text style [isSpecifiedUnderlineStyle] then this is returned, otherwise [block] is executed and its result
  * is returned.
  */
-public inline fun UnderlineStyle.takeOrElse(block: () -> UnderlineStyle): UnderlineStyle =
-	if (isSpecifiedUnderlineStyle) this else block()
+public inline fun UnderlineStyle.takeOrElse(block: () -> UnderlineStyle): UnderlineStyle = if (isSpecifiedUnderlineStyle) this else block()

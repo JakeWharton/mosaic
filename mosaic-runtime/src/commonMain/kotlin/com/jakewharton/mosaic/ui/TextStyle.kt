@@ -136,5 +136,4 @@ public inline val TextStyle.isEmptyTextStyle: Boolean get() = bits == EmptyTextS
  * If this text style [isSpecifiedTextStyle] then this is returned, otherwise [block] is executed and its result
  * is returned.
  */
-public inline fun TextStyle.takeOrElse(block: () -> TextStyle): TextStyle =
-	if (isSpecifiedTextStyle) this else block()
+public inline fun TextStyle.takeOrElse(block: () -> TextStyle): TextStyle = if (isSpecifiedTextStyle) this else block()

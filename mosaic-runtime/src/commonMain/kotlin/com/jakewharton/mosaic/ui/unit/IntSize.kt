@@ -43,15 +43,13 @@ public value class IntSize internal constructor(@PublishedApi internal val packe
 	 * Returns an IntSize scaled by multiplying [width] and [height] by [other]
 	 */
 	@Stable
-	public operator fun times(other: Int): IntSize =
-		IntSize(width = width * other, height = height * other)
+	public operator fun times(other: Int): IntSize = IntSize(width = width * other, height = height * other)
 
 	/**
 	 * Returns an IntSize scaled by dividing [width] and [height] by [other]
 	 */
 	@Stable
-	public operator fun div(other: Int): IntSize =
-		IntSize(width = width / other, height = height / other)
+	public operator fun div(other: Int): IntSize = IntSize(width = width / other, height = height / other)
 
 	@Stable
 	override fun toString(): String = "$width x $height"

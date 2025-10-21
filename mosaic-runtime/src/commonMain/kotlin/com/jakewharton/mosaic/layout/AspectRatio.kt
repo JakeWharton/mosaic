@@ -94,8 +94,7 @@ private class AspectRatioModifier(
 		measurable.maxIntrinsicHeight(width)
 	}
 
-	override fun toString(): String =
-		"AspectRatio($aspectRatio, matchHeightConstraintsFirst=$matchHeightConstraintsFirst)"
+	override fun toString(): String = "AspectRatio($aspectRatio, matchHeightConstraintsFirst=$matchHeightConstraintsFirst)"
 
 	private fun Constraints.findSize(): IntSize {
 		if (!matchHeightConstraintsFirst) {

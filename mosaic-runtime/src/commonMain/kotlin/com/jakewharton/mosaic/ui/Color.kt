@@ -192,5 +192,4 @@ public inline val Color.isUnspecifiedColor: Boolean get() = value == Unspecified
  * If this color [isSpecifiedColor] then this is returned, otherwise [block] is executed and its result
  * is returned.
  */
-public inline fun Color.takeOrElse(block: () -> Color): Color =
-	if (isSpecifiedColor) this else block()
+public inline fun Color.takeOrElse(block: () -> Color): Color = if (isSpecifiedColor) this else block()

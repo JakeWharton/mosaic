@@ -64,13 +64,12 @@ public interface FloatAnimationSpec : AnimationSpec<Float> {
 		initialValue: Float,
 		targetValue: Float,
 		initialVelocity: Float,
-	): Float =
-		getVelocityFromNanos(
-			getDurationNanos(initialValue, targetValue, initialVelocity),
-			initialValue,
-			targetValue,
-			initialVelocity,
-		)
+	): Float = getVelocityFromNanos(
+		getDurationNanos(initialValue, targetValue, initialVelocity),
+		initialValue,
+		targetValue,
+		initialVelocity,
+	)
 
 	/**
 	 * Calculates the duration of an animation. For duration-based animations, this will return the
@@ -158,14 +157,13 @@ public class FloatSpringSpec(
 		initialValue: Float,
 		targetValue: Float,
 		initialVelocity: Float,
-	): Long =
-		estimateAnimationDurationMillis(
-			stiffness = spring.stiffness,
-			dampingRatio = spring.dampingRatio,
-			initialDisplacement = (initialValue - targetValue) / visibilityThreshold,
-			initialVelocity = initialVelocity / visibilityThreshold,
-			delta = 1f,
-		) * MillisToNanos
+	): Long = estimateAnimationDurationMillis(
+		stiffness = spring.stiffness,
+		dampingRatio = spring.dampingRatio,
+		initialDisplacement = (initialValue - targetValue) / visibilityThreshold,
+		initialVelocity = initialVelocity / visibilityThreshold,
+		delta = 1f,
+	) * MillisToNanos
 }
 
 /**

@@ -46,8 +46,7 @@ public fun AnimationVector(v1: Float, v2: Float): AnimationVector2D = AnimationV
  * @param v3 value to set on the third dimension
  */
 @Suppress("FunctionName")
-public fun AnimationVector(v1: Float, v2: Float, v3: Float): AnimationVector3D =
-	AnimationVector3D(v1, v2, v3)
+public fun AnimationVector(v1: Float, v2: Float, v3: Float): AnimationVector3D = AnimationVector3D(v1, v2, v3)
 
 /**
  * Factory method to create an [AnimationVector4D]
@@ -58,8 +57,7 @@ public fun AnimationVector(v1: Float, v2: Float, v3: Float): AnimationVector3D =
  * @param v4 value to set on the fourth dimension
  */
 @Suppress("FunctionName")
-public fun AnimationVector(v1: Float, v2: Float, v3: Float, v4: Float): AnimationVector4D =
-	AnimationVector4D(v1, v2, v3, v4)
+public fun AnimationVector(v1: Float, v2: Float, v3: Float, v4: Float): AnimationVector4D = AnimationVector4D(v1, v2, v3, v4)
 
 internal fun <T : AnimationVector> T.newInstance(): T {
 	@Suppress("UNCHECKED_CAST")
@@ -167,8 +165,7 @@ public class AnimationVector2D(v1: Float, v2: Float) : AnimationVector() {
 		return "AnimationVector2D: v1 = $v1, v2 = $v2"
 	}
 
-	override fun equals(other: Any?): Boolean =
-		other is AnimationVector2D && other.v1 == v1 && other.v2 == v2
+	override fun equals(other: Any?): Boolean = other is AnimationVector2D && other.v1 == v1 && other.v2 == v2
 
 	override fun hashCode(): Int = v1.hashCode() * 31 + v2.hashCode()
 }
@@ -226,8 +223,7 @@ public class AnimationVector3D(v1: Float, v2: Float, v3: Float) : AnimationVecto
 		return "AnimationVector3D: v1 = $v1, v2 = $v2, v3 = $v3"
 	}
 
-	override fun equals(other: Any?): Boolean =
-		other is AnimationVector3D && other.v1 == v1 && other.v2 == v2 && other.v3 == v3
+	override fun equals(other: Any?): Boolean = other is AnimationVector3D && other.v1 == v1 && other.v2 == v2 && other.v3 == v3
 
 	override fun hashCode(): Int = (v1.hashCode() * 31 + v2.hashCode()) * 31 + v3.hashCode()
 }
@@ -292,13 +288,11 @@ public class AnimationVector4D(v1: Float, v2: Float, v3: Float, v4: Float) : Ani
 		return "AnimationVector4D: v1 = $v1, v2 = $v2, v3 = $v3, v4 = $v4"
 	}
 
-	override fun equals(other: Any?): Boolean =
-		other is AnimationVector4D &&
-			other.v1 == v1 &&
-			other.v2 == v2 &&
-			other.v3 == v3 &&
-			other.v4 == v4
+	override fun equals(other: Any?): Boolean = other is AnimationVector4D &&
+		other.v1 == v1 &&
+		other.v2 == v2 &&
+		other.v3 == v3 &&
+		other.v4 == v4
 
-	override fun hashCode(): Int =
-		((v1.hashCode() * 31 + v2.hashCode()) * 31 + v3.hashCode()) * 31 + v4.hashCode()
+	override fun hashCode(): Int = ((v1.hashCode() * 31 + v2.hashCode()) * 31 + v3.hashCode()) * 31 + v4.hashCode()
 }

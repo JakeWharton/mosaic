@@ -230,8 +230,7 @@ private fun findQuadraticRoots(
  * points. The root, if any, is written in the [roots] array at [index]. Returns 1 if a root was
  * found, 0 otherwise.
  */
-private inline fun findLineRoot(p0: Float, p1: Float, roots: FloatArray, index: Int = 0) =
-	writeValidRootInUnitRange(-p0 / (p1 - p0), roots, index)
+private inline fun findLineRoot(p0: Float, p1: Float, roots: FloatArray, index: Int = 0) = writeValidRootInUnitRange(-p0 / (p1 - p0), roots, index)
 
 /**
  * Writes [r] in the [roots] array at [index], if it's in the [0..1] range. To account for numerical

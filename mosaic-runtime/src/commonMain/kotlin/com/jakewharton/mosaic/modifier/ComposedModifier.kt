@@ -56,8 +56,7 @@ public fun Modifier.composed(
 	key1: Any?,
 	key2: Any?,
 	factory: @Composable Modifier.() -> Modifier,
-): Modifier =
-	this.then(KeyedComposedModifier2(fullyQualifiedName, key1, key2, factory))
+): Modifier = this.then(KeyedComposedModifier2(fullyQualifiedName, key1, key2, factory))
 
 /**
  * Declare a just-in-time composition of a [Modifier] that will be composed for each element it
@@ -79,8 +78,7 @@ public fun Modifier.composed(
 	key2: Any?,
 	key3: Any?,
 	factory: @Composable Modifier.() -> Modifier,
-): Modifier =
-	this.then(KeyedComposedModifier3(fullyQualifiedName, key1, key2, key3, factory))
+): Modifier = this.then(KeyedComposedModifier3(fullyQualifiedName, key1, key2, key3, factory))
 
 /**
  * Declare a just-in-time composition of a [Modifier] that will be composed for each element it
@@ -112,8 +110,7 @@ private class KeyedComposedModifier1(
 	val key1: Any?,
 	factory: @Composable Modifier.() -> Modifier,
 ) : ComposedModifier(factory) {
-	override fun equals(other: Any?) =
-		other is KeyedComposedModifier1 && fqName == other.fqName && key1 == other.key1
+	override fun equals(other: Any?) = other is KeyedComposedModifier1 && fqName == other.fqName && key1 == other.key1
 
 	override fun hashCode(): Int = 31 * fqName.hashCode() + key1.hashCode()
 }
@@ -125,11 +122,10 @@ private class KeyedComposedModifier2(
 	val key2: Any?,
 	factory: @Composable Modifier.() -> Modifier,
 ) : ComposedModifier(factory) {
-	override fun equals(other: Any?) =
-		other is KeyedComposedModifier2 &&
-			fqName == other.fqName &&
-			key1 == other.key1 &&
-			key2 == other.key2
+	override fun equals(other: Any?) = other is KeyedComposedModifier2 &&
+		fqName == other.fqName &&
+		key1 == other.key1 &&
+		key2 == other.key2
 
 	override fun hashCode(): Int {
 		var result = fqName.hashCode()
@@ -147,12 +143,11 @@ private class KeyedComposedModifier3(
 	val key3: Any?,
 	factory: @Composable Modifier.() -> Modifier,
 ) : ComposedModifier(factory) {
-	override fun equals(other: Any?) =
-		other is KeyedComposedModifier3 &&
-			fqName == other.fqName &&
-			key1 == other.key1 &&
-			key2 == other.key2 &&
-			key3 == other.key3
+	override fun equals(other: Any?) = other is KeyedComposedModifier3 &&
+		fqName == other.fqName &&
+		key1 == other.key1 &&
+		key2 == other.key2 &&
+		key3 == other.key3
 
 	override fun hashCode(): Int {
 		var result = fqName.hashCode()
@@ -169,8 +164,7 @@ private class KeyedComposedModifierN(
 	val keys: Array<out Any?>,
 	factory: @Composable Modifier.() -> Modifier,
 ) : ComposedModifier(factory) {
-	override fun equals(other: Any?) =
-		other is KeyedComposedModifierN && fqName == other.fqName && keys.contentEquals(other.keys)
+	override fun equals(other: Any?) = other is KeyedComposedModifierN && fqName == other.fqName && keys.contentEquals(other.keys)
 
 	override fun hashCode() = 31 * fqName.hashCode() + keys.contentHashCode()
 }
