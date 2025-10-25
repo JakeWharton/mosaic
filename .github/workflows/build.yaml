@@ -24,13 +24,13 @@ jobs:
 
       - run: ./gradlew :mosaic-tty:installJvmTestDistribution :mosaic-tty:linkNativeDebugTests
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: mosaic-tty-jvm-tests
           path: mosaic-tty/build/install/jvmTest
           if-no-files-found: error
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: mosaic-tty-native-tests
           path: mosaic-tty/build/bin
@@ -108,7 +108,7 @@ jobs:
     steps:
       ### NATIVE
 
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v6
         if: matrix.tests.type == 'native'
         with:
           name: mosaic-tty-native-tests
@@ -140,7 +140,7 @@ jobs:
           distribution: 'zulu'
           java-version: ${{ matrix.tests.version }}
 
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v6
         if: matrix.tests.type == 'java'
         with:
           name: mosaic-tty-jvm-tests
@@ -208,7 +208,7 @@ jobs:
 
       - run: ./gradlew dokkaGenerate
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: html-docs
           path: build/dokka/html/
@@ -281,7 +281,7 @@ jobs:
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.GPG_PRIVATE_KEY }}
 
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v6
         with:
           name: html-docs
           path: html-docs
