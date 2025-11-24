@@ -1,6 +1,7 @@
 package example.screens
 
 import androidx.compose.runtime.Composable
+import com.jakewharton.mosaic.WindowTitle
 import com.jakewharton.mosaic.modifier.Modifier
 import example.LocalRrtopColorsPalette
 import example.RawScreenUiState
@@ -11,6 +12,7 @@ import example.common.TableData
 
 @Composable
 fun RawScreen(uiState: RawScreenUiState, modifier: Modifier = Modifier) {
+	WindowTitle("rrtop - raw")
 	BorderedTitledBox(
 		title = "raw info",
 		titleColor = LocalRrtopColorsPalette.current.rawTitleFg,

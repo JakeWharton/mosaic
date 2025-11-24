@@ -5,6 +5,7 @@ public abstract interface class com/jakewharton/mosaic/Mosaic {
 	public abstract fun dumpNodes ()Ljava/lang/String;
 	public abstract fun setContent (Lkotlin/jvm/functions/Function2;)V
 	public abstract fun static ()Ljava/lang/String;
+	public abstract fun title ()Ljava/lang/String;
 }
 
 public final class com/jakewharton/mosaic/MosaicKt {
@@ -60,6 +61,10 @@ public abstract interface class com/jakewharton/mosaic/TextCanvas {
 	public abstract fun getHeight ()I
 	public abstract fun getWidth ()I
 	public abstract fun render (Lcom/jakewharton/mosaic/terminal/AnsiLevel;Z)Ljava/lang/String;
+}
+
+public final class com/jakewharton/mosaic/WindowTitleKt {
+	public static final fun WindowTitle (Ljava/lang/String;Landroidx/compose/runtime/Composer;I)V
 }
 
 public final class com/jakewharton/mosaic/layout/AspectRatioKt {

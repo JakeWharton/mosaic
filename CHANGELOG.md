@@ -4,7 +4,7 @@
 [Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.18.0...HEAD
 
 New:
-- Nothing yet
+- Add `WindowTitle` composable, that allows setting the terminal window title.
 
 Changed:
 - Use the AndroidX Compose runtime which is now fully multiplatform. A dependency constraint to the JetBrains Compose runtime version 1.9.0 has been added, which is the first version that is empty and itself now points to AndroidX.

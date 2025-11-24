@@ -6,7 +6,7 @@ import kotlin.time.TimeSource
 
 internal interface Rendering {
 	/**
-	 * Render [node] to a single string for display.
+	 * Render [mosaic] to a single string for display.
 	 *
 	 * Note: The returned [CharSequence] is only valid until the next call to this function,
 	 * as implementations are free to reuse buffers across invocations.
@@ -37,6 +37,12 @@ internal class DebugRendering(
 				append("\r\n")
 			}
 			lastRender = systemClock.markNow()
+
+			mosaic.title()?.let { title ->
+				append("TITLE: ")
+				append(title)
+				append("\r\n")
+			}
 
 			append("NODES:\r\n")
 			append(mosaic.dumpNodes().replace("\n", "\r\n"))
@@ -74,6 +80,7 @@ internal class AnsiRendering(
 ) : Rendering {
 	private val stringBuilder = StringBuilder(100)
 	private var lastHeight = 0
+	private var lastTitle: String? = null
 
 	override fun render(mosaic: Mosaic): CharSequence {
 		return stringBuilder.apply {
@@ -81,6 +88,15 @@ internal class AnsiRendering(
 
 			if (capabilities.synchronizedOutput) {
 				append(synchronizedOutputEnable)
+			}
+
+			val currentTitle = mosaic.title()
+			if (currentTitle != lastTitle) {
+				lastTitle = currentTitle
+				append(OSC)
+				append("0;")
+				append(currentTitle ?: "")
+				append(BEL)
 			}
 
 			var staleLines = lastHeight

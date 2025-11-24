@@ -5,6 +5,8 @@ import kotlin.math.roundToInt
 
 internal const val ESC = "\u001B"
 internal const val CSI = "$ESC["
+internal const val OSC = "$ESC]"
+internal const val BEL = "\u0007"
 
 internal const val synchronizedOutputMode = 2026
 internal const val synchronizedOutputEnable = "$CSI?${synchronizedOutputMode}h"

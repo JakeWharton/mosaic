@@ -1,6 +1,7 @@
 package example.screens
 
 import androidx.compose.runtime.Composable
+import com.jakewharton.mosaic.WindowTitle
 import com.jakewharton.mosaic.modifier.Modifier
 import example.LocalRrtopColorsPalette
 import example.SlowScreenUiState
@@ -11,6 +12,7 @@ import example.common.TableData
 
 @Composable
 fun SlowScreen(uiState: SlowScreenUiState, modifier: Modifier = Modifier) {
+	WindowTitle("rrtop - slow")
 	BorderedTitledBox(
 		title = "slow log",
 		titleColor = LocalRrtopColorsPalette.current.slowTitleFg,
