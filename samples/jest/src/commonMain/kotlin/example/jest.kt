@@ -76,6 +76,7 @@ fun main() {
 							// Flip a coin biased 60% to pass to produce the final state of the test.
 							tests[nextIndex] = when {
 								random.nextFloat() < .7f -> tests[nextIndex].copy(state = Pass)
+
 								else -> {
 									val test = tests[nextIndex]
 									val failures = buildList {
