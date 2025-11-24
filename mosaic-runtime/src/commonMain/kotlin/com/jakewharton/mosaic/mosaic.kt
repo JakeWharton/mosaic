@@ -222,6 +222,7 @@ internal class MosaicComposition(
 						append(static)
 						append("\r\n")
 					}
+
 					is TextCanvas -> {
 						for (row in 0 until static.height) {
 							static.appendRowTo(
