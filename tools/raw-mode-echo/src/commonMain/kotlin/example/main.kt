@@ -131,7 +131,9 @@ private class RawModeEchoCommand : CliktCommand("raw-mode-echo") {
 
 					when (mode) {
 						Mode.Hex -> printHex()
+
 						Mode.Event -> printDebug()
+
 						Mode.Both -> {
 							printNewline()
 							printHex()
