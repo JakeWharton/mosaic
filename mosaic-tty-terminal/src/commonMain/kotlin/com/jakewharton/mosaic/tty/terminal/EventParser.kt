@@ -717,7 +717,9 @@ public class EventParser(
 						}
 						true
 					}
+
 					'0'.code -> false
+
 					else -> return@parseUntilStringTerminator null
 				}
 				val data = buildMap {

@@ -152,12 +152,14 @@ internal inline fun ByteArray.parseUtf8(
 			nextIndex = b2Index
 			codepoint = b1
 		}
+
 		b1 and 0b11100000 == 0b11000000 -> {
 			if (b2Index == limit) onUnderflow()
 			nextIndex = start + 2
 			codepoint = b1.and(0b00011111).shl(6) or
 				this[b2Index].toInt().and(0b00111111)
 		}
+
 		b1 and 0b11110000 == 0b11100000 -> {
 			val b3Index = start + 2
 			if (b3Index >= limit) onUnderflow()
@@ -166,6 +168,7 @@ internal inline fun ByteArray.parseUtf8(
 				this[b2Index].toInt().and(0b00111111).shl(6) or
 				this[b3Index].toInt().and(0b00111111)
 		}
+
 		b1 and 0b11111000 == 0b11110000 -> {
 			val b4Index = start + 3
 			if (b4Index >= limit) onUnderflow()
@@ -175,6 +178,7 @@ internal inline fun ByteArray.parseUtf8(
 				this[start + 2].toInt().and(0b00111111).shl(6) or
 				this[b4Index].toInt().and(0b00111111)
 		}
+
 		else -> onError()
 	}
 	onSuccess(nextIndex)

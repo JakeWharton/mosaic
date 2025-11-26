@@ -46,7 +46,9 @@ internal class ArcSpline(arcModes: IntArray, timePoints: FloatArray, y: Array<Fl
 					}
 
 					ArcSplineArcStartLinear -> mode = StartLinear
+
 					ArcSplineArcAbove -> mode = UpArc
+
 					ArcSplineArcBelow -> mode = DownArc
 				}
 

@@ -147,14 +147,15 @@ internal open class TextCanvasDrawScope(
 	) {
 		if (codePoint.isUnspecifiedCodePoint &&
 			foreground.isUnspecifiedColor &&
-			background.isUnspecifiedColor &&
-			textStyle.isUnspecifiedTextStyle ||
-			size.width <= 0 ||
-			size.height <= 0 ||
-			topLeft.x >= width ||
-			topLeft.y >= height ||
-			topLeft.x + size.width < 0 ||
-			topLeft.y + size.height < 0
+			background.isUnspecifiedColor && (
+				textStyle.isUnspecifiedTextStyle ||
+					size.width <= 0 ||
+					size.height <= 0 ||
+					topLeft.x >= width ||
+					topLeft.y >= height ||
+					topLeft.x + size.width < 0 ||
+					topLeft.y + size.height < 0
+				)
 		) {
 			// exit: rectangle with the specified parameters cannot be seen
 			return
@@ -162,6 +163,7 @@ internal open class TextCanvasDrawScope(
 
 		when (drawStyle) {
 			DrawStyle.Fill -> drawSolidRect(codePoint, foreground, background, textStyle, topLeft, size)
+
 			is DrawStyle.Stroke -> {
 				val strokeWidth = max(1, drawStyle.width)
 				if (strokeWidth * 2 >= size.width || strokeWidth * 2 >= size.height) {
