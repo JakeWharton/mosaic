@@ -172,12 +172,19 @@ public class EventParser(
 
 			when (val b2 = buffer[b2Index].toInt()) {
 				0x4F -> return parseSs3(buffer, start, limit)
+
 				0x50 -> return parseDcs(buffer, start, limit)
+
 				0x58 -> return parseSos(buffer, start, limit)
+
 				0x5B -> return parseCsi(buffer, start, limit)
+
 				0x5D -> return parseOsc(buffer, start, limit)
+
 				0x5E -> return parsePm(buffer, start, limit)
+
 				0x5F -> return parseApc(buffer, start, limit)
+
 				else -> {
 					offset = start + 2
 					return KeyboardEvent(b2, modifiers = KeyboardEvent.ModifierAlt)
@@ -257,11 +264,17 @@ public class EventParser(
 		error@ do {
 			when (buffer[finalIndex].toInt()) {
 				'A'.code -> return parseCsiLegacyKeyboard(buffer, start, end, KeyboardEvent.Up)
+
 				'B'.code -> return parseCsiLegacyKeyboard(buffer, start, end, KeyboardEvent.Down)
+
 				'C'.code -> return parseCsiLegacyKeyboard(buffer, start, end, KeyboardEvent.Right)
+
 				'D'.code -> return parseCsiLegacyKeyboard(buffer, start, end, KeyboardEvent.Left)
+
 				'E'.code -> return parseCsiLegacyKeyboard(buffer, start, end, KeyboardEvent.KpBegin)
+
 				'F'.code -> return parseCsiLegacyKeyboard(buffer, start, end, KeyboardEvent.End)
+
 				'H'.code -> return parseCsiLegacyKeyboard(buffer, start, end, KeyboardEvent.Home)
 
 				'~'.code -> {
@@ -298,6 +311,7 @@ public class EventParser(
 				}
 
 				'I'.code -> return FocusEvent(focused = true)
+
 				'O'.code -> return FocusEvent(focused = false)
 
 				'R'.code -> {
@@ -430,6 +444,7 @@ public class EventParser(
 							}
 							return PrimaryDeviceAttributesEvent(id, data)
 						}
+
 						'>'.code -> {
 							// CSI > Pp ; Pv ; Pc c
 							//  Pp denotes the terminal type
@@ -491,6 +506,7 @@ public class EventParser(
 
 							return XtermPixelSizeEvent(height, width)
 						}
+
 						8 -> {
 							// CSI 8 ; height ; width t
 							// https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h4-Functions-using-CSI-_-ordered-by-the-final-character-lparen-s-rparen:CSI-Ps;Ps;Ps-t:Ps-=-1-8.2068
@@ -504,6 +520,7 @@ public class EventParser(
 
 							return XtermCharacterSizeEvent(rows, columns)
 						}
+
 						48 -> {
 							// CSI 48 ; height_chars ; width_chars ; height_pix ; width_pix t
 							// https://gist.github.com/rockorager/e695fb2924d36b2bcf1fff4a3704bd83
@@ -700,7 +717,9 @@ public class EventParser(
 						}
 						true
 					}
+
 					'0'.code -> false
+
 					else -> return@parseUntilStringTerminator null
 				}
 				val data = buildMap {
@@ -748,6 +767,7 @@ public class EventParser(
 								value = buffer.decodeToString(cDelimiter + 1, stIndex),
 							)
 						}
+
 						10 -> {
 							// TODO Actually decode color spec.
 							return@parseUntilStringTerminator TerminalColorEvent(
@@ -755,6 +775,7 @@ public class EventParser(
 								value = buffer.decodeToString(ptIndex, stIndex),
 							)
 						}
+
 						11 -> {
 							// TODO Actually decode color spec.
 							return@parseUntilStringTerminator TerminalColorEvent(
@@ -762,6 +783,7 @@ public class EventParser(
 								value = buffer.decodeToString(ptIndex, stIndex),
 							)
 						}
+
 						12 -> {
 							// TODO Actually decode color spec.
 							return@parseUntilStringTerminator TerminalColorEvent(
@@ -769,6 +791,7 @@ public class EventParser(
 								value = buffer.decodeToString(ptIndex, stIndex),
 							)
 						}
+
 						22 -> {
 							name@ do {
 								var i = ptIndex
@@ -808,6 +831,7 @@ public class EventParser(
 							}
 							return@parseUntilStringTerminator KittyPointerQueryNameEvent(name.toString())
 						}
+
 						99 -> {
 							// TODO Actually decode notification spec.
 							return@parseUntilStringTerminator KittyNotificationEvent(
@@ -846,15 +870,25 @@ public class EventParser(
 		error@ do {
 			val codepoint = when (buffer[b3Index].toInt()) {
 				'A'.code -> KeyboardEvent.Up
+
 				'B'.code -> KeyboardEvent.Down
+
 				'C'.code -> KeyboardEvent.Right
+
 				'D'.code -> KeyboardEvent.Left
+
 				'F'.code -> KeyboardEvent.End
+
 				'H'.code -> KeyboardEvent.Home
+
 				'P'.code -> KeyboardEvent.F1
+
 				'Q'.code -> KeyboardEvent.F2
+
 				'R'.code -> KeyboardEvent.F3
+
 				'S'.code -> KeyboardEvent.F4
+
 				0x1b -> {
 					// libvaxis added a guard against this case
 					// https://github.com/rockorager/libvaxis/commit/b68864c3babf2767c15c52911179e8ee9158e1d2

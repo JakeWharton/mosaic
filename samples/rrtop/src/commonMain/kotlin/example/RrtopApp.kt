@@ -38,7 +38,9 @@ fun RrtopApp(rrtopViewModel: RrtopViewModel, colorsPalette: RrtopColorsPalette) 
 				.onKeyEvent {
 					when (it) {
 						KeyEvent("ArrowLeft") -> rrtopViewModel.onArrowLeftPress()
+
 						KeyEvent("ArrowRight") -> rrtopViewModel.onArrowRightPress()
+
 						KeyEvent("Tab") -> rrtopViewModel.onTabPress()
 
 						KeyEvent("q"),
@@ -55,18 +57,22 @@ fun RrtopApp(rrtopViewModel: RrtopViewModel, colorsPalette: RrtopColorsPalette) 
 					rrtopUiState.screenUiState as MainScreenUiState,
 					modifier = Modifier.padding(bottom = 1),
 				)
+
 				RrtopUiState.Screen.Cmd -> CmdScreen(
 					rrtopUiState.screenUiState as CmdScreenUiState,
 					modifier = Modifier.padding(bottom = 1),
 				)
+
 				RrtopUiState.Screen.Stat -> StatScreen(
 					rrtopUiState.screenUiState as StatScreenUiState,
 					modifier = Modifier.padding(bottom = 1),
 				)
+
 				RrtopUiState.Screen.Slow -> SlowScreen(
 					rrtopUiState.screenUiState as SlowScreenUiState,
 					modifier = Modifier.padding(bottom = 1),
 				)
+
 				RrtopUiState.Screen.Raw -> RawScreen(
 					rrtopUiState.screenUiState as RawScreenUiState,
 					modifier = Modifier.padding(bottom = 1),

@@ -307,6 +307,7 @@ private fun estimateDurationInternal(
 		when {
 			dampingRatio > 1.0 ->
 				estimateOverDamped(firstRootReal, secondRootReal, p0 = p0, v0 = v0, delta = delta)
+
 			dampingRatio < 1.0 ->
 				estimateUnderDamped(
 					firstRootReal,
@@ -315,6 +316,7 @@ private fun estimateDurationInternal(
 					p0 = p0,
 					delta = delta,
 				)
+
 			else -> estimateCriticallyDamped(firstRootReal, p0 = p0, v0 = v0, delta = delta)
 		} * 1000.0
 		)

@@ -163,7 +163,9 @@ public val EaseInElastic: Easing = Easing { fraction: Float ->
 
 	return@Easing when (fraction) {
 		0f -> 0f
+
 		1f -> 1f
+
 		else ->
 			(-(2.0f).pow(10f * fraction - 10.0f) * sin((fraction * 10f - 10.75f) * c4)).toFloat()
 	}
@@ -189,7 +191,9 @@ public val EaseInOutElastic: Easing = Easing { fraction ->
 	val c5 = (2f * PI) / 4.5f
 	return@Easing when (fraction) {
 		0f -> 0f
+
 		1f -> 1f
+
 		in 0f..0.5f ->
 			(-(2.0f.pow(20.0f * fraction - 10.0f) * sin((20.0f * fraction - 11.125f) * c5)) / 2.0f)
 				.toFloat()

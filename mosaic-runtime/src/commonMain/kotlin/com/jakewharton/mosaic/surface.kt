@@ -166,6 +166,7 @@ internal class TextSurface(
 		}
 		when (ansiLevel) {
 			AnsiLevel.NONE -> add(reset.toString())
+
 			AnsiLevel.ANSI16 -> {
 				val ansi16Code = color.toAnsi16Code()
 				if (ansi16Code == ansiFgColorReset || ansi16Code == ansiBgColorReset) {
@@ -174,11 +175,13 @@ internal class TextSurface(
 					add((ansi16Code + offset).toString())
 				}
 			}
+
 			AnsiLevel.ANSI256 -> {
 				add(select.toString())
 				add(ansiSelectorColor256)
 				add(color.toAnsi256Code().toString())
 			}
+
 			AnsiLevel.TRUECOLOR -> {
 				add(select.toString())
 				add(ansiSelectorColorRgb)

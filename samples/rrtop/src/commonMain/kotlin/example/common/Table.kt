@@ -98,6 +98,7 @@ fun <T> Table(tableData: TableData<T>, tableConfig: TableConfig<T>, modifier: Mo
 									foreground = columnConfig.valueColor,
 								)
 							}
+
 							is TableConfig.ColumnConfig.ProgressColumnConfig -> {
 								drawText(
 									row = index + 1,

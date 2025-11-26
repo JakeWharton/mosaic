@@ -7,7 +7,8 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
-/** * This is an internal copy of androidx.compose.foundation.MutatorMutex. Do not modify. ** */
+// This is an internal copy of androidx.compose.foundation.MutatorMutex. Do not modify.
+
 /**
  * Priorities for performing mutation on state.
  *

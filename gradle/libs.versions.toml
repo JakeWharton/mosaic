@@ -30,8 +30,8 @@ testDistributionGradlePlugin = "com.jakewharton.gradle:test-distribution-gradle-
 spotlessGradlePlugin = "com.diffplug.spotless:spotless-plugin-gradle:8.1.0"
 burstGradlePlugin = "app.cash.burst:burst-gradle-plugin:2.10.2"
 
-ktlint-core = "com.pinterest.ktlint:ktlint-cli:1.7.1"
-ktlint-composeRules = "io.nlopez.compose.rules:ktlint:0.4.27"
+ktlint-core = "com.pinterest.ktlint:ktlint-cli:1.8.0"
+ktlint-composeRules = "io.nlopez.compose.rules:ktlint:0.4.28"
 
 clikt = "com.github.ajalt.clikt:clikt:5.0.3"
 codepoints = "de.cketti.unicode:kotlin-codepoints:0.11.0"
