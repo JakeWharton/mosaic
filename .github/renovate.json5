@@ -23,12 +23,4 @@
 			extractVersionTemplate: '^(?<version>\\d+)',
 		},
 	],
-	packageRules: [
-		{
-			packagePatterns: [
-				'^org.jetbrains.compose.runtime:runtime',
-			],
-			enabled: false,
-		},
-	]
 }
