@@ -1,6 +1,7 @@
 package example.screens
 
 import androidx.compose.runtime.Composable
+import com.jakewharton.mosaic.WindowTitle
 import com.jakewharton.mosaic.modifier.Modifier
 import example.LocalRrtopColorsPalette
 import example.StatScreenUiState
@@ -11,6 +12,7 @@ import example.common.TableData
 
 @Composable
 fun StatScreen(uiState: StatScreenUiState, modifier: Modifier = Modifier) {
+	WindowTitle("rrtop - stat")
 	BorderedTitledBox(
 		title = "stat",
 		titleColor = LocalRrtopColorsPalette.current.statTitleFg,

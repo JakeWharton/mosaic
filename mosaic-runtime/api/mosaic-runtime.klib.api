@@ -203,6 +203,7 @@ abstract interface com.jakewharton.mosaic/Mosaic { // com.jakewharton.mosaic/Mos
     abstract fun dumpNodes(): kotlin/String // com.jakewharton.mosaic/Mosaic.dumpNodes|dumpNodes(){}[0]
     abstract fun setContent(kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>) // com.jakewharton.mosaic/Mosaic.setContent|setContent(kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>){}[0]
     abstract fun static(): kotlin/String? // com.jakewharton.mosaic/Mosaic.static|static(){}[0]
+    abstract fun title(): kotlin/String? // com.jakewharton.mosaic/Mosaic.title|title(){}[0]
     abstract suspend fun awaitComplete() // com.jakewharton.mosaic/Mosaic.awaitComplete|awaitComplete(){}[0]
 }
 
@@ -798,6 +799,7 @@ final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_BiasAlignment_Hori
 final fun com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_BiasAlignment_Vertical$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic.ui/com_jakewharton_mosaic_ui_BiasAlignment_Vertical$stableprop_getter|com_jakewharton_mosaic_ui_BiasAlignment_Vertical$stableprop_getter(){}[0]
 final fun com.jakewharton.mosaic/Mosaic(kotlin.coroutines/CoroutineContext, kotlin/Function1<com.jakewharton.mosaic/Mosaic, kotlin/Unit>, com.jakewharton.mosaic.terminal/Terminal): com.jakewharton.mosaic/Mosaic // com.jakewharton.mosaic/Mosaic|Mosaic(kotlin.coroutines.CoroutineContext;kotlin.Function1<com.jakewharton.mosaic.Mosaic,kotlin.Unit>;com.jakewharton.mosaic.terminal.Terminal){}[0]
 final fun com.jakewharton.mosaic/StaticEffect(kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>, androidx.compose.runtime/Composer?, kotlin/Int) // com.jakewharton.mosaic/StaticEffect|StaticEffect(kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>;androidx.compose.runtime.Composer?;kotlin.Int){}[0]
+final fun com.jakewharton.mosaic/WindowTitle(kotlin/String, androidx.compose.runtime/Composer?, kotlin/Int) // com.jakewharton.mosaic/WindowTitle|WindowTitle(kotlin.String;androidx.compose.runtime.Composer?;kotlin.Int){}[0]
 final fun com.jakewharton.mosaic/com_jakewharton_mosaic_StaticLogger$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_StaticLogger$stableprop_getter|com_jakewharton_mosaic_StaticLogger$stableprop_getter(){}[0]
 final fun com.jakewharton.mosaic/com_jakewharton_mosaic_TerminalState$stableprop_getter(): kotlin/Int // com.jakewharton.mosaic/com_jakewharton_mosaic_TerminalState$stableprop_getter|com_jakewharton_mosaic_TerminalState$stableprop_getter(){}[0]
 final fun com.jakewharton.mosaic/runMosaicBlocking(com.jakewharton.mosaic/NonInteractivePolicy = ..., kotlin/Function2<androidx.compose.runtime/Composer, kotlin/Int, kotlin/Unit>): kotlin/Boolean // com.jakewharton.mosaic/runMosaicBlocking|runMosaicBlocking(com.jakewharton.mosaic.NonInteractivePolicy;kotlin.Function2<androidx.compose.runtime.Composer,kotlin.Int,kotlin.Unit>){}[0]

@@ -1,6 +1,7 @@
 package example.screens
 
 import androidx.compose.runtime.Composable
+import com.jakewharton.mosaic.WindowTitle
 import com.jakewharton.mosaic.modifier.Modifier
 import example.CmdScreenUiState
 import example.LocalRrtopColorsPalette
@@ -11,6 +12,7 @@ import example.common.TableData
 
 @Composable
 fun CmdScreen(uiState: CmdScreenUiState, modifier: Modifier = Modifier) {
+	WindowTitle("rrtop - cmd")
 	BorderedTitledBox(
 		title = "by calls",
 		titleColor = LocalRrtopColorsPalette.current.callsTitleFg,

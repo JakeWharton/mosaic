@@ -23,7 +23,6 @@ import com.jakewharton.mosaic.terminal.Terminal
 import com.jakewharton.mosaic.ui.BoxMeasurePolicy
 import kotlin.concurrent.Volatile
 import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.coroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Dispatchers.Unconfined
@@ -31,6 +30,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -70,7 +70,7 @@ internal suspend fun runMosaicComposition(
 ) {
 	val clock = BroadcastFrameClock()
 	val mosaicComposition = MosaicComposition(
-		coroutineContext = coroutineContext + clock,
+		coroutineContext = currentCoroutineContext() + clock,
 		onDraw = { rootNode ->
 			print(rendering.render(rootNode).toString())
 		},
@@ -100,6 +100,7 @@ public interface Mosaic {
 	public fun draw(): TextCanvas
 	public fun static(): String?
 	public fun dumpNodes(): String
+	public fun title(): String?
 
 	public suspend fun awaitComplete()
 	public fun cancel()
@@ -135,6 +136,8 @@ internal class MosaicComposition(
 
 	private val staticLogs = Channel<Any>(UNLIMITED)
 	private val staticLogger = StaticLogger(staticLogs) { needDraw = true }
+
+	private val windowTitleManager = WindowTitleManager()
 
 	override val lifecycle = LifecycleRegistry.createUnsafe(this)
 
@@ -248,6 +251,10 @@ internal class MosaicComposition(
 		return rootNode.toString()
 	}
 
+	override fun title(): String? {
+		return windowTitleManager.title
+	}
+
 	private fun registerSnapshotApplyObserver(): ObserverHandle {
 		return Snapshot.registerApplyObserver { changedStates, _ ->
 			if (!needLayout) {
@@ -310,6 +317,7 @@ internal class MosaicComposition(
 			CompositionLocalProvider(
 				LocalTerminalState provides terminalState.value,
 				LocalStaticLogger provides staticLogger,
+				LocalWindowTitleManager provides windowTitleManager,
 				LocalLifecycleOwner provides this,
 				content = content,
 			)

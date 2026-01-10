@@ -3,6 +3,7 @@ package example.screens
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import com.jakewharton.mosaic.LocalTerminalState
+import com.jakewharton.mosaic.WindowTitle
 import com.jakewharton.mosaic.layout.drawBehind
 import com.jakewharton.mosaic.layout.fillMaxHeight
 import com.jakewharton.mosaic.layout.fillMaxSize
@@ -31,6 +32,7 @@ import example.common.TableData
 
 @Composable
 fun MainScreen(uiState: MainScreenUiState, modifier: Modifier = Modifier) {
+	WindowTitle("rrtop")
 	Column(modifier = modifier) {
 		val withStatSection = LocalTerminalState.current.size.rows > 30
 		CpuSection(

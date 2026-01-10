@@ -108,6 +108,7 @@ public suspend fun Tty.asTerminalIn(
 				if (toggleInBandResize) write(inBandResizeDisable)
 				if (toggleFocus) write(focusDisable)
 				if (toggleCursor) write(cursorEnable)
+				write("${OSC}0;$BEL") // Reset window title
 				reset()
 			},
 			block = {
