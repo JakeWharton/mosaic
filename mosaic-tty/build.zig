@@ -12,6 +12,7 @@ pub fn build(b: *std.Build) !void {
 	b.getInstallStep().dependOn(&deleteLib.step);
 
 	setupMosaicTarget(b, &deleteLib.step, javaHeaders, .linux, .aarch64, "com/jakewharton/mosaic/tty/jni/aarch64");
+	setupMosaicTarget(b, &deleteLib.step, javaHeaders, .linux, .riscv64, "com/jakewharton/mosaic/tty/jni/riscv64");
 	setupMosaicTarget(b, &deleteLib.step, javaHeaders, .linux, .x86_64, "com/jakewharton/mosaic/tty/jni/amd64");
 	setupMosaicTarget(b, &deleteLib.step, javaHeaders, .macos, .aarch64, "com/jakewharton/mosaic/tty/jni/aarch64");
 	setupMosaicTarget(b, &deleteLib.step, javaHeaders, .macos, .x86_64, "com/jakewharton/mosaic/tty/jni/x86_64");
