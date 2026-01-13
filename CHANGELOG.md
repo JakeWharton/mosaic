@@ -7,7 +7,7 @@ New:
 - JVM support for RISC-V!
 
 Changed:
-- Use the AndroidX Compose runtime which is now fully multiplatform. A dependency constraint to the JetBrains Compose runtime version 1.9.0 has been added, which is the first version that is empty and itself now points to AndroidX.
+- Use the AndroidX versions of the Compose runtime and lifecycle dependencies which are now fully multiplatform. Dependency constraints to the corresponding JetBrains artifacts (which are now empty) are present to prevent symbol duplication.
 
 Fixed:
 - Clear the set of states which were read during layout and draw passes before each pass. Previously these sets grew infinitely, which was both a memory leak and a performance problem.
