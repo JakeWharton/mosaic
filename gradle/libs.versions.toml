@@ -33,7 +33,7 @@ burstGradlePlugin = "app.cash.burst:burst-gradle-plugin:2.11.0"
 ktlint-core = "com.pinterest.ktlint:ktlint-cli:1.8.0"
 ktlint-composeRules = "io.nlopez.compose.rules:ktlint:0.5.3"
 
-clikt = "com.github.ajalt.clikt:clikt:5.0.3"
+clikt = "com.github.ajalt.clikt:clikt:5.1.0"
 codepoints = "de.cketti.unicode:kotlin-codepoints:0.11.0"
 finalizationHook = "com.jakewharton.finalization:finalization-hook:0.1.0"
 apache-compress = "org.apache.commons:commons-compress:1.28.0"
