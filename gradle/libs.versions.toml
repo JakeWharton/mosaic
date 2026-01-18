@@ -19,7 +19,7 @@ androidx-collection = "androidx.collection:collection:1.5.0"
 androidx-compose-runtime = "androidx.compose.runtime:runtime:1.10.1"
 androidx-lifecycle-compose = "androidx.lifecycle:lifecycle-runtime-compose:2.10.0"
 
-mavenPublishGradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.35.0"
+mavenPublishGradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.36.0"
 dokkaGradlePlugin = "org.jetbrains.dokka:dokka-gradle-plugin:2.1.0"
 citeGradlePlugin = "com.jakewharton.cite:cite-gradle-plugin:0.8.0"
 pokoGradlePlugin = "dev.drewhamilton.poko:poko-gradle-plugin:0.21.1"
