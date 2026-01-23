@@ -245,7 +245,7 @@ jobs:
 
   final-status:
     if: always()
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     needs:
       - docs
       - tty-tests
