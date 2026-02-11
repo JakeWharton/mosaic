@@ -13,7 +13,6 @@ internal fun KeyboardEvent.toKeyEventOrNull(): KeyEvent? {
 			9 -> "Tab"
 			13 -> "Enter"
 			27 -> "Escape"
-			in 32..126 -> codepoint.toChar().toString()
 			127 -> "Backspace"
 			57350 -> "ArrowLeft"
 			57351 -> "ArrowRight"
@@ -26,7 +25,15 @@ internal fun KeyboardEvent.toKeyEventOrNull(): KeyEvent? {
 			57356 -> "Home"
 			57357 -> "End"
 			in 57364..57398 -> "F" + (codepoint - 57363)
-			else -> throw UnsupportedOperationException(toString())
+			else -> {
+				val codepoint = codepoint.toCodepoint()
+
+				if (UnicodeBlocks.latin.any { codepoint in it }) {
+					codepoint.toChar().toString()
+				} else {
+					throw UnsupportedOperationException(toString())
+				}
+			}
 		},
 		alt = alt,
 		ctrl = ctrl,
