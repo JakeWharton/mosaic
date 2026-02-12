@@ -22,6 +22,8 @@ import com.jakewharton.mosaic.terminal.KeyboardEvent
 import com.jakewharton.mosaic.terminal.Terminal
 import com.jakewharton.mosaic.ui.BoxMeasurePolicy
 import kotlin.concurrent.Volatile
+import kotlin.concurrent.atomics.AtomicBoolean
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
 import kotlinx.coroutines.CoroutineScope
@@ -382,21 +384,22 @@ internal class MosaicNodeApplier(
 	}
 }
 
+@OptIn(ExperimentalAtomicApi::class)
 internal class GlobalSnapshotManager {
-	private val started = atomicBooleanOf(false)
-	private val sent = atomicBooleanOf(false)
+	private val started = AtomicBoolean(false)
+	private val sent = AtomicBoolean(false)
 
 	fun ensureStarted(scope: CoroutineScope) {
-		if (started.compareAndSet(expect = false, update = true)) {
+		if (started.compareAndSet(expectedValue = false, newValue = true)) {
 			val channel = Channel<Unit>(1)
 			scope.launch {
 				channel.consumeEach {
-					sent.set(false)
+					sent.store(false)
 					Snapshot.sendApplyNotifications()
 				}
 			}
 			Snapshot.registerGlobalWriteObserver {
-				if (sent.compareAndSet(expect = false, update = true)) {
+				if (sent.compareAndSet(expectedValue = false, newValue = true)) {
 					channel.trySend(Unit)
 				}
 			}
