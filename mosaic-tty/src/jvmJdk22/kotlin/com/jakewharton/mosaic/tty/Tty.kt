@@ -98,28 +98,32 @@ public class Tty internal constructor(
 
 	@Throws(IOException::class)
 	public fun read(buffer: ByteArray, offset: Int, count: Int): Int {
-		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
-		val result = mosaic_tty_read(Arena.global(), ptr, segment, count)
-		val error = MosaicIoResult.error(result)
-		if (error == 0) {
-			val read = MosaicIoResult.count(result)
-			MemorySegment.copy(segment, ValueLayout.JAVA_BYTE, 0L, buffer, offset, read)
-			return read
+		Arena.ofConfined().use { arena ->
+			val segment = arena.allocate(count.toLong())
+			val result = mosaic_tty_read(arena, ptr, segment, count)
+			val error = MosaicIoResult.error(result)
+			if (error == 0) {
+				val read = MosaicIoResult.count(result)
+				MemorySegment.copy(segment, ValueLayout.JAVA_BYTE, 0L, buffer, offset, read)
+				return read
+			}
+			throwIoe(error)
 		}
-		throwIoe(error)
 	}
 
 	@Throws(IOException::class)
 	public fun readWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
-		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
-		val result = mosaic_tty_read_with_timeout(Arena.global(), ptr, segment, count, timeoutMillis)
-		val error = MosaicIoResult.error(result)
-		if (error == 0) {
-			val read = MosaicIoResult.count(result)
-			MemorySegment.copy(segment, ValueLayout.JAVA_BYTE, 0L, buffer, offset, read)
-			return read
+		Arena.ofConfined().use { arena ->
+			val segment = arena.allocate(count.toLong())
+			val result = mosaic_tty_read_with_timeout(arena, ptr, segment, count, timeoutMillis)
+			val error = MosaicIoResult.error(result)
+			if (error == 0) {
+				val read = MosaicIoResult.count(result)
+				MemorySegment.copy(segment, ValueLayout.JAVA_BYTE, 0L, buffer, offset, read)
+				return read
+			}
+			throwIoe(error)
 		}
-		throwIoe(error)
 	}
 
 	@Throws(IOException::class)
@@ -131,14 +135,16 @@ public class Tty internal constructor(
 
 	@Throws(IOException::class)
 	public fun write(buffer: ByteArray, offset: Int, count: Int): Int {
-		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
-		MemorySegment.copy(buffer, offset, segment, ValueLayout.JAVA_BYTE, 0, count)
-		val result = mosaic_tty_write(Arena.global(), ptr, segment, count)
-		val error = MosaicIoResult.error(result)
-		if (error == 0) {
-			return MosaicIoResult.count(result)
+		Arena.ofConfined().use { arena ->
+			val segment = arena.allocate(count.toLong())
+			MemorySegment.copy(buffer, offset, segment, ValueLayout.JAVA_BYTE, 0, count)
+			val result = mosaic_tty_write(arena, ptr, segment, count)
+			val error = MosaicIoResult.error(result)
+			if (error == 0) {
+				return MosaicIoResult.count(result)
+			}
+			throwIoe(error)
 		}
-		throwIoe(error)
 	}
 
 	@Throws(IOException::class)
@@ -157,17 +163,19 @@ public class Tty internal constructor(
 
 	@Throws(IOException::class)
 	public fun currentSize(): IntArray {
-		val result = mosaic_tty_current_terminal_size(Arena.global(), ptr)
-		val error = MosaicTtyTerminalSizeResult.error(result)
-		if (error == 0) {
-			return intArrayOf(
-				MosaicTtyTerminalSizeResult.columns(result),
-				MosaicTtyTerminalSizeResult.rows(result),
-				MosaicTtyTerminalSizeResult.width(result),
-				MosaicTtyTerminalSizeResult.height(result),
-			)
+		Arena.ofConfined().use { arena ->
+			val result = mosaic_tty_current_terminal_size(arena, ptr)
+			val error = MosaicTtyTerminalSizeResult.error(result)
+			if (error == 0) {
+				return intArrayOf(
+					MosaicTtyTerminalSizeResult.columns(result),
+					MosaicTtyTerminalSizeResult.rows(result),
+					MosaicTtyTerminalSizeResult.width(result),
+					MosaicTtyTerminalSizeResult.height(result),
+				)
+			}
+			throwIoe(error)
 		}
-		throwIoe(error)
 	}
 
 	@Throws(IOException::class)

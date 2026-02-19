@@ -78,28 +78,32 @@ public class StandardStreams internal constructor(
 
 	@Throws(IOException::class)
 	public fun readInput(buffer: ByteArray, offset: Int, count: Int): Int {
-		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
-		val result = mosaic_streams_read_input(Arena.global(), ptr, segment, count)
-		val error = MosaicIoResult.error(result)
-		if (error == 0) {
-			val read = MosaicIoResult.count(result)
-			MemorySegment.copy(segment, ValueLayout.JAVA_BYTE, 0L, buffer, offset, read)
-			return read
+		Arena.ofConfined().use { arena ->
+			val segment = arena.allocate(count.toLong())
+			val result = mosaic_streams_read_input(arena, ptr, segment, count)
+			val error = MosaicIoResult.error(result)
+			if (error == 0) {
+				val read = MosaicIoResult.count(result)
+				MemorySegment.copy(segment, ValueLayout.JAVA_BYTE, 0L, buffer, offset, read)
+				return read
+			}
+			throwIoe(error)
 		}
-		throwIoe(error)
 	}
 
 	@Throws(IOException::class)
 	public fun readInputWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
-		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
-		val result = mosaic_streams_read_input_with_timeout(Arena.global(), ptr, segment, count, timeoutMillis)
-		val error = MosaicIoResult.error(result)
-		if (error == 0) {
-			val read = MosaicIoResult.count(result)
-			MemorySegment.copy(segment, ValueLayout.JAVA_BYTE, 0L, buffer, offset, read)
-			return read
+		Arena.ofConfined().use { arena ->
+			val segment = arena.allocate(count.toLong())
+			val result = mosaic_streams_read_input_with_timeout(arena, ptr, segment, count, timeoutMillis)
+			val error = MosaicIoResult.error(result)
+			if (error == 0) {
+				val read = MosaicIoResult.count(result)
+				MemorySegment.copy(segment, ValueLayout.JAVA_BYTE, 0L, buffer, offset, read)
+				return read
+			}
+			throwIoe(error)
 		}
-		throwIoe(error)
 	}
 
 	@Throws(IOException::class)
@@ -111,26 +115,30 @@ public class StandardStreams internal constructor(
 
 	@Throws(IOException::class)
 	public fun writeOutput(buffer: ByteArray, offset: Int, count: Int): Int {
-		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
-		MemorySegment.copy(buffer, offset, segment, ValueLayout.JAVA_BYTE, 0, count)
-		val result = mosaic_streams_write_output(Arena.global(), ptr, segment, count)
-		val error = MosaicIoResult.error(result)
-		if (error == 0) {
-			return MosaicIoResult.count(result)
+		Arena.ofConfined().use { arena ->
+			val segment = arena.allocate(count.toLong())
+			MemorySegment.copy(buffer, offset, segment, ValueLayout.JAVA_BYTE, 0, count)
+			val result = mosaic_streams_write_output(arena, ptr, segment, count)
+			val error = MosaicIoResult.error(result)
+			if (error == 0) {
+				return MosaicIoResult.count(result)
+			}
+			throwIoe(error)
 		}
-		throwIoe(error)
 	}
 
 	@Throws(IOException::class)
 	public fun writeError(buffer: ByteArray, offset: Int, count: Int): Int {
-		val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
-		MemorySegment.copy(buffer, offset, segment, ValueLayout.JAVA_BYTE, 0, count)
-		val result = mosaic_streams_write_error(Arena.global(), ptr, segment, count)
-		val error = MosaicIoResult.error(result)
-		if (error == 0) {
-			return MosaicIoResult.count(result)
+		Arena.ofConfined().use { arena ->
+			val segment = arena.allocate(count.toLong())
+			MemorySegment.copy(buffer, offset, segment, ValueLayout.JAVA_BYTE, 0, count)
+			val result = mosaic_streams_write_error(arena, ptr, segment, count)
+			val error = MosaicIoResult.error(result)
+			if (error == 0) {
+				return MosaicIoResult.count(result)
+			}
+			throwIoe(error)
 		}
-		throwIoe(error)
 	}
 
 	@Throws(IOException::class)
@@ -166,28 +174,32 @@ public class StandardStreams internal constructor(
 	) : AutoCloseable {
 		@Throws(IOException::class)
 		public fun readOutput(buffer: ByteArray, offset: Int, count: Int): Int {
-			val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
-			val result = mosaic_streams_read_intercepted_output(Arena.global(), ptr, segment, count)
-			val error = MosaicIoResult.error(result)
-			if (error == 0) {
-				val read = MosaicIoResult.count(result)
-				MemorySegment.copy(segment, ValueLayout.JAVA_BYTE, 0L, buffer, offset, read)
-				return read
+			Arena.ofConfined().use { arena ->
+				val segment = arena.allocate(count.toLong())
+				val result = mosaic_streams_read_intercepted_output(arena, ptr, segment, count)
+				val error = MosaicIoResult.error(result)
+				if (error == 0) {
+					val read = MosaicIoResult.count(result)
+					MemorySegment.copy(segment, ValueLayout.JAVA_BYTE, 0L, buffer, offset, read)
+					return read
+				}
+				throwIoe(error)
 			}
-			throwIoe(error)
 		}
 
 		@Throws(IOException::class)
 		public fun readOutputWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
-			val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
-			val result = mosaic_streams_read_intercepted_output_with_timeout(Arena.global(), ptr, segment, count, timeoutMillis)
-			val error = MosaicIoResult.error(result)
-			if (error == 0) {
-				val read = MosaicIoResult.count(result)
-				MemorySegment.copy(segment, ValueLayout.JAVA_BYTE, 0L, buffer, offset, read)
-				return read
+			Arena.ofConfined().use { arena ->
+				val segment = arena.allocate(count.toLong())
+				val result = mosaic_streams_read_intercepted_output_with_timeout(arena, ptr, segment, count, timeoutMillis)
+				val error = MosaicIoResult.error(result)
+				if (error == 0) {
+					val read = MosaicIoResult.count(result)
+					MemorySegment.copy(segment, ValueLayout.JAVA_BYTE, 0L, buffer, offset, read)
+					return read
+				}
+				throwIoe(error)
 			}
-			throwIoe(error)
 		}
 
 		@Throws(IOException::class)
@@ -199,28 +211,32 @@ public class StandardStreams internal constructor(
 
 		@Throws(IOException::class)
 		public fun readError(buffer: ByteArray, offset: Int, count: Int): Int {
-			val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
-			val result = mosaic_streams_read_intercepted_error(Arena.global(), ptr, segment, count)
-			val error = MosaicIoResult.error(result)
-			if (error == 0) {
-				val read = MosaicIoResult.count(result)
-				MemorySegment.copy(segment, ValueLayout.JAVA_BYTE, 0L, buffer, offset, read)
-				return read
+			Arena.ofConfined().use { arena ->
+				val segment = arena.allocate(count.toLong())
+				val result = mosaic_streams_read_intercepted_error(arena, ptr, segment, count)
+				val error = MosaicIoResult.error(result)
+				if (error == 0) {
+					val read = MosaicIoResult.count(result)
+					MemorySegment.copy(segment, ValueLayout.JAVA_BYTE, 0L, buffer, offset, read)
+					return read
+				}
+				throwIoe(error)
 			}
-			throwIoe(error)
 		}
 
 		@Throws(IOException::class)
 		public fun readErrorWithTimeout(buffer: ByteArray, offset: Int, count: Int, timeoutMillis: Int): Int {
-			val segment = Libmosaic.LIBRARY_ARENA.allocate(count.toLong())
-			val result = mosaic_streams_read_intercepted_error_with_timeout(Arena.global(), ptr, segment, count, timeoutMillis)
-			val error = MosaicIoResult.error(result)
-			if (error == 0) {
-				val read = MosaicIoResult.count(result)
-				MemorySegment.copy(segment, ValueLayout.JAVA_BYTE, 0L, buffer, offset, read)
-				return read
+			Arena.ofConfined().use { arena ->
+				val segment = arena.allocate(count.toLong())
+				val result = mosaic_streams_read_intercepted_error_with_timeout(arena, ptr, segment, count, timeoutMillis)
+				val error = MosaicIoResult.error(result)
+				if (error == 0) {
+					val read = MosaicIoResult.count(result)
+					MemorySegment.copy(segment, ValueLayout.JAVA_BYTE, 0L, buffer, offset, read)
+					return read
+				}
+				throwIoe(error)
 			}
-			throwIoe(error)
 		}
 
 		@Throws(IOException::class)
