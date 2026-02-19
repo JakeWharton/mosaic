@@ -24,7 +24,7 @@ typedef struct MosaicStreamsInterceptResult {
 	uint32_t error;
 } MosaicStreamsInterceptResult;
 
-MOSAIC_EXPORT MosaicStreamsInitResult mosaic_streams_init();
+MOSAIC_EXPORT MosaicStreamsInitResult mosaic_streams_init(void);
 MOSAIC_EXPORT uint32_t mosaic_streams_free(MosaicStreams *streams);
 
 MOSAIC_EXPORT MosaicStreamsTtyResult mosaic_streams_is_stdin_tty(MosaicStreams *streams);

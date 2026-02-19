@@ -36,7 +36,7 @@ typedef struct MosaicTtyTerminalSizeResult {
 	uint32_t error;
 } MosaicTtyTerminalSizeResult;
 
-MOSAIC_EXPORT MosaicTtyInitResult mosaic_tty_init();
+MOSAIC_EXPORT MosaicTtyInitResult mosaic_tty_init(void);
 
 MOSAIC_EXPORT void mosaic_tty_set_callback(MosaicTty *tty, MosaicTtyCallback *callback);
 

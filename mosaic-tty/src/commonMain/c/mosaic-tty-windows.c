@@ -45,7 +45,7 @@ MosaicTtyInitResult mosaic_tty_init_with_handles(
 
 static _Atomic(MosaicTty *) globalTty;
 
-MOSAIC_EXPORT MosaicTtyInitResult mosaic_tty_init() {
+MOSAIC_EXPORT MosaicTtyInitResult mosaic_tty_init(void) {
 	MosaicTtyInitResult result = {};
 
 	HANDLE conin = CreateFile(TEXT("CONIN$"), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
