@@ -190,11 +190,11 @@ MOSAIC_EXPORT MosaicTestTerminalInitResult mosaic_test_init(bool stdinIsTty, boo
 	testTty->stderr_overlapped_event = stderrOverlappedEvent;
 	testTty->stderr_interrupt_event = stderrInterruptEvent;
 
-	result.testTty = testTty;
+	result.test_tty = testTty;
 
 	if (unlikely(atomic_flag_test_and_set(&globalTestTty))) {
 		// We initialized an instance but there already was a global instance.
-		result.testTty = NULL;
+		result.test_tty = NULL;
 		result.already_bound = true;
 		goto err_streams;
 	}

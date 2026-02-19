@@ -40,7 +40,7 @@ public class TestTerminal private constructor(
 
 			Arena.ofConfined().use { arena ->
 				val result = mosaic_test_init(arena, stdinIsTty, stdoutIsTty, stderrIsTty)
-				val ptr = MosaicTestTerminalInitResult.testTty(result)
+				val ptr = MosaicTestTerminalInitResult.test_tty(result)
 				if (ptr != MemorySegment.NULL) {
 					val streamsPtr = mosaic_test_get_streams(ptr)
 					val streams = StandardStreams(streamsPtr)

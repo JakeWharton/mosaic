@@ -165,7 +165,7 @@ MosaicTestTerminalInitResult mosaic_test_init(bool stdinIsTty, bool stdoutIsTty,
 	testTty->stderr_interrupt_reader_fd = stderrInterruptPipe[0];
 	testTty->stderr_interrupt_writer_fd = stderrInterruptPipe[1];
 
-	result.testTty = testTty;
+	result.test_tty = testTty;
 
 	ret:
 	return result;

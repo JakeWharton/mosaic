@@ -17,7 +17,7 @@ public actual class TestTerminal private constructor(
 			stderrIsTty: Boolean,
 		): TestTerminal {
 			val ptr = mosaic_test_init(stdinIsTty, stdoutIsTty, stderrIsTty).useContents {
-				testTty?.let { return@useContents it }
+				test_tty?.let { return@useContents it }
 
 				if (already_bound) {
 					throw IllegalStateException("TestTerminal or Tty already bound")

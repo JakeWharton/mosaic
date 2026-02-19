@@ -10,7 +10,7 @@
 typedef struct MosaicTestTerminalImpl MosaicTestTty;
 
 typedef struct MosaicTestTerminalInitResult {
-	MosaicTestTty *testTty;
+	MosaicTestTty *test_tty;
 	uint32_t error;
 	bool already_bound;
 } MosaicTestTerminalInitResult;
