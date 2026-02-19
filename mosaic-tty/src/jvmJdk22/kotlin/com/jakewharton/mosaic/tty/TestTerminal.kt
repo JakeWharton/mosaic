@@ -38,23 +38,25 @@ public class TestTerminal private constructor(
 		): TestTerminal {
 			NativeLibrary.ensureLoaded()
 
-			val result = mosaic_test_init(Arena.global(), stdinIsTty, stdoutIsTty, stderrIsTty)
-			val ptr = MosaicTestTerminalInitResult.testTty(result)
-			if (ptr != MemorySegment.NULL) {
-				val streamsPtr = mosaic_test_get_streams(ptr)
-				val streams = StandardStreams(streamsPtr)
-				val ttyPtr = mosaic_test_get_tty(ptr)
-				val tty = Tty(ttyPtr)
-				return TestTerminal(ptr, streams, tty)
+			Arena.ofConfined().use { arena ->
+				val result = mosaic_test_init(arena, stdinIsTty, stdoutIsTty, stderrIsTty)
+				val ptr = MosaicTestTerminalInitResult.testTty(result)
+				if (ptr != MemorySegment.NULL) {
+					val streamsPtr = mosaic_test_get_streams(ptr)
+					val streams = StandardStreams(streamsPtr)
+					val ttyPtr = mosaic_test_get_tty(ptr)
+					val tty = Tty(ttyPtr)
+					return TestTerminal(ptr, streams, tty)
+				}
+				if (MosaicTestTerminalInitResult.already_bound(result)) {
+					throw IllegalStateException("TestTerminal or Tty already bound")
+				}
+				val error = MosaicTestTerminalInitResult.error(result)
+				if (error != 0) {
+					throwIoe(error)
+				}
+				throw OutOfMemoryError()
 			}
-			if (MosaicTestTerminalInitResult.already_bound(result)) {
-				throw IllegalStateException("TestTerminal or Tty already bound")
-			}
-			val error = MosaicTestTerminalInitResult.error(result)
-			if (error != 0) {
-				throwIoe(error)
-			}
-			throw OutOfMemoryError()
 		}
 	}
 

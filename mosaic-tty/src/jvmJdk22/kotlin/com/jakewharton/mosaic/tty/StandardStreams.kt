@@ -31,16 +31,18 @@ public class StandardStreams internal constructor(
 		public fun bind(): StandardStreams {
 			NativeLibrary.ensureLoaded()
 
-			val result = mosaic_streams_init.makeInvoker().apply(Arena.global())
-			val ptr = MosaicStreamsInitResult.streams(result)
-			if (ptr != MemorySegment.NULL) {
-				return StandardStreams(ptr)
+			Arena.ofConfined().use { arena ->
+				val result = mosaic_streams_init(arena)
+				val ptr = MosaicStreamsInitResult.streams(result)
+				if (ptr != MemorySegment.NULL) {
+					return StandardStreams(ptr)
+				}
+				val error = MosaicStreamsInitResult.error(result)
+				if (error != 0) {
+					throwIoe(error)
+				}
+				throw OutOfMemoryError()
 			}
-			val error = MosaicStreamsInitResult.error(result)
-			if (error != 0) {
-				throwIoe(error)
-			}
-			throw OutOfMemoryError()
 		}
 	}
 

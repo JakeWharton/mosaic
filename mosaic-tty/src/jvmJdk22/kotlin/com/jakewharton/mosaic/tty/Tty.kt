@@ -26,22 +26,24 @@ public class Tty internal constructor(
 		public fun tryBind(): Tty? {
 			NativeLibrary.ensureLoaded()
 
-			val result = mosaic_tty_init.makeInvoker().apply(Arena.global())
-			val ptr = MosaicTtyInitResult.tty(result)
-			if (ptr != MemorySegment.NULL) {
-				return Tty(ptr)
+			Arena.ofConfined().use { arena ->
+				val result = mosaic_tty_init(arena)
+				val ptr = MosaicTtyInitResult.tty(result)
+				if (ptr != MemorySegment.NULL) {
+					return Tty(ptr)
+				}
+				if (MosaicTtyInitResult.no_tty(result)) {
+					return null
+				}
+				if (MosaicTtyInitResult.already_bound(result)) {
+					throw IllegalStateException("Tty already bound")
+				}
+				val error = MosaicTtyInitResult.error(result)
+				if (error != 0) {
+					throwIoe(error)
+				}
+				throw OutOfMemoryError()
 			}
-			if (MosaicTtyInitResult.no_tty(result)) {
-				return null
-			}
-			if (MosaicTtyInitResult.already_bound(result)) {
-				throw IllegalStateException("Tty already bound")
-			}
-			val error = MosaicTtyInitResult.error(result)
-			if (error != 0) {
-				throwIoe(error)
-			}
-			throw OutOfMemoryError()
 		}
 	}
 

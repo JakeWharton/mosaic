@@ -108,7 +108,7 @@ MosaicStreamsInitResult mosaic_streams_init_internal(
 	goto ret;
 }
 
-MOSAIC_EXPORT MosaicStreamsInitResult mosaic_streams_init() {
+MOSAIC_EXPORT MosaicStreamsInitResult mosaic_streams_init(void) {
 	HANDLE stdin = GetStdHandle(STD_INPUT_HANDLE);
 	if (unlikely(stdin == INVALID_HANDLE_VALUE)) {
 		goto err;

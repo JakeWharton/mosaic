@@ -68,7 +68,7 @@ MosaicStreamsInitResult mosaic_streams_init_internal(int stdin, int stdout, int 
 	goto ret;
 }
 
-MosaicStreamsInitResult mosaic_streams_init() {
+MosaicStreamsInitResult mosaic_streams_init(void) {
 	return mosaic_streams_init_internal(STDIN_FILENO, STDOUT_FILENO, STDERR_FILENO, false);
 }
 

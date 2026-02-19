@@ -52,7 +52,7 @@ MosaicTtyInitResult mosaic_tty_init_with_fd(int fd) {
 	goto ret;
 }
 
-MosaicTtyInitResult mosaic_tty_init() {
+MosaicTtyInitResult mosaic_tty_init(void) {
 	int fd = open("/dev/tty", O_RDWR);
 	if (likely(fd != -1)) {
 		return mosaic_tty_init_with_fd(fd);
