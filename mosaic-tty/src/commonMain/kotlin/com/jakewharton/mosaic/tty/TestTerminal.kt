@@ -2,9 +2,14 @@ package com.jakewharton.mosaic.tty
 
 import com.jakewharton.mosaic.tty.TestTerminal.Companion.bind
 
+/**
+ * Represents the host-side of a terminal/TTY for testing purposes.
+ *
+ * On Unix-like systems this is a psuedo-TTY (PTY). On Windows it is the current process' Console augmented with
+ * some fake streams.
+ */
 public expect class TestTerminal : AutoCloseable {
 	public companion object {
-
 		/**
 		 * Initialize a [TestTerminal] instance. Only a single [TestTerminal] instance can be bound at
 		 * a time, and only when a [Tty] is not also bound. Subsequent calls will throw an exception
