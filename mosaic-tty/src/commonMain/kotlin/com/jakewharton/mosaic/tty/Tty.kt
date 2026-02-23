@@ -79,11 +79,11 @@ public expect class Tty : AutoCloseable {
 	 *
 	 * Note: Before enabling this, consider querying the terminal for support of
 	 * [mode 2048 in-band resize events](https://gist.github.com/rockorager/e695fb2924d36b2bcf1fff4a3704bd83)
-	 * which are more reliable. Mode 2048 events are also parsed and sent as [ResizeEvent]s.
+	 * which are more reliable.
 	 *
 	 * On Windows this enables receiving
 	 * [`WINDOW_BUFFER_SIZE_RECORD`](https://learn.microsoft.com/en-us/windows/console/window-buffer-size-record-str)
-	 * records from the console. Only the row and column values of the [ResizeEvent] will be present.
+	 * records from the console. Only the row and column values of the event will be present.
 	 * The width and height will always be 0.
 	 *
 	 * On Linux and macOS this installs a `SIGWINCH` signal handler which then queries `TIOCGWINSZ`
@@ -104,10 +104,18 @@ public expect class Tty : AutoCloseable {
 	/** Calls [reset] and then frees the resources associated with this instance. */
 	override fun close()
 
+	/** Platform-specific integration callbacks. */
 	public interface Callback {
+		/** Called when the window gains or loses focus. Only invoked on Windows. */
 		public fun onFocus(focused: Boolean)
+
+		/** Currently unused. */
 		public fun onKey()
+
+		/** Currently unused. */
 		public fun onMouse()
+
+		/** If [Tty.enableWindowResizeEvents] was invoked, this is called when the window is resized. */
 		public fun onResize(columns: Int, rows: Int, width: Int, height: Int)
 	}
 }
