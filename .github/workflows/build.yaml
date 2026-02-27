@@ -45,12 +45,14 @@ jobs:
         platform:
           - os: macos-14
             target: macosArm64
-          - os: macos-15-intel
-            target: macosX64
           - os: macos-15
             target: macosArm64
+          - os: macos-15-intel
+            target: macosX64
           - os: macos-26
             target: macosArm64
+          - os: macos-26-intel
+            target: macosX64
           - os: ubuntu-22.04
             target: linuxX64
           - os: ubuntu-22.04-arm
