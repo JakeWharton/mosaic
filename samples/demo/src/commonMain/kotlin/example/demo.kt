@@ -113,6 +113,7 @@ private fun TerminalInfo() {
 }
 
 @Composable
+@Suppress("ktlint:compose:state-param-check")
 private fun terminalSizeValueColorAsState(valueState: IntState): State<Color> {
 	var previousValue by remember { mutableIntStateOf(valueState.intValue) }
 	val valueColorAnimatable = remember { Animatable(BrightBlue) }
@@ -195,6 +196,7 @@ private fun ColumnScope.GradientsBlock() {
 }
 
 @Composable
+@Suppress("ktlint:compose:state-param-check")
 private fun Gradient(
 	repeatedWord: String,
 	widthState: State<Int>,
