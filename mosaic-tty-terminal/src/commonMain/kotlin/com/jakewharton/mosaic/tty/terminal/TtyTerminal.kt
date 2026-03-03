@@ -109,6 +109,7 @@ public suspend fun Tty.asTerminalIn(
 				if (toggleFocus) write(focusDisable)
 				if (toggleCursor) write(cursorEnable)
 				reset()
+				close()
 			},
 			block = {
 				try {
