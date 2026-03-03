@@ -11,7 +11,7 @@ Changed:
 
 Fixed:
 - Clear the set of states which were read during layout and draw passes before each pass. Previously these sets grew infinitely, which was both a memory leak and a performance problem.
-
+- Close the Tty when the Terminal is closed. This makes it possible to call `runMosaic {}` several times in the same process.
 
 ## [0.18.0] - 2025-08-21
 [0.18.0]: https://github.com/JakeWharton/mosaic/releases/tag/0.18.0
