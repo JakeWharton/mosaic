@@ -20,21 +20,24 @@ internal suspend fun withTerminal(
 	onNonInteractive: NonInteractivePolicy,
 	block: suspend (Terminal) -> Unit,
 ): Boolean = coroutineScope {
-	val terminal = if (onNonInteractive != AssumeAndIgnore) {
+	val tty = if (onNonInteractive != AssumeAndIgnore) {
 		Tty.tryBind()
-			?.asTerminalIn(this)
 			?: when (onNonInteractive) {
 				Exit -> nonInteractiveExit()
 				Throw -> throw IllegalStateException(NonInteractiveMessage)
 				Return -> return@coroutineScope false
-				Ignore -> NonInteractiveTerminal
+				Ignore -> null
 				AssumeAndIgnore -> throw AssertionError()
 			}
 	} else {
-		NonInteractiveTerminal
+		null
 	}
 
-	terminal.use { block(it) }
+	tty.use {
+		val terminal = tty?.asTerminalIn(this) ?: NonInteractiveTerminal
+		terminal.use { block(it) }
+	}
+
 	true
 }
 
