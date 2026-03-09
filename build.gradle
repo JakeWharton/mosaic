@@ -56,7 +56,7 @@ allprojects {
 	}
 
 	tasks.withType(KotlinNativeCompile).configureEach {
-		compilerOptions.freeCompilerArgs.add('-Xpartial-linkage=disable')
+		compilerOptions.freeCompilerArgs.add('-Xpartial-linkage-loglevel=ERROR')
 	}
 
 	tasks.withType(AbstractTestTask).configureEach {
