@@ -47,12 +47,8 @@ jobs:
             target: macosArm64
           - os: macos-15
             target: macosArm64
-          - os: macos-15-intel
-            target: macosX64
           - os: macos-26
             target: macosArm64
-          - os: macos-26-intel
-            target: macosX64
           - os: ubuntu-22.04
             target: linuxX64
           - os: ubuntu-22.04-arm
@@ -193,7 +189,6 @@ jobs:
           -x jvmR8Test
           -x linuxX64Test
           -x macosArm64Test
-          -x macosX64Test
           -x mingwX64Test
           jvmTest
           -x :mosaic-tty:jvmTest
