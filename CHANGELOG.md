@@ -8,6 +8,7 @@ New:
 
 Changed:
 - Use the AndroidX versions of the Compose runtime and lifecycle dependencies which are now fully multiplatform. Dependency constraints to the corresponding JetBrains artifacts (which are now empty) are present to prevent symbol duplication.
+- Remove support for x86 macOS targets. These have been deprecated for a bit, but support has been removed from the Compose runtime so we have no choice but to match.
 
 Fixed:
 - Clear the set of states which were read during layout and draw passes before each pass. Previously these sets grew infinitely, which was both a memory leak and a performance problem.

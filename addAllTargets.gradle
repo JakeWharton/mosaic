@@ -6,7 +6,6 @@ plugins.withId('org.jetbrains.kotlin.multiplatform') {
 		linuxX64()
 
 		macosArm64()
-		macosX64()
 
 		mingwX64()
 
