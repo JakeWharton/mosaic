@@ -176,7 +176,7 @@ jobs:
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.java-version
-      - uses: gradle/actions/setup-gradle@v5
+      - uses: gradle/actions/setup-gradle@v6
 
       # Disabling allTests should be enough, but https://youtrack.jetbrains.com/issue/KT-74509
       # mosaic-tty runs its tests above. We only run jvmTest otherwise as code is all common.
@@ -201,7 +201,7 @@ jobs:
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.java-version
-      - uses: gradle/actions/setup-gradle@v5
+      - uses: gradle/actions/setup-gradle@v6
 
       - run: ./gradlew dokkaGenerate
 
@@ -232,7 +232,7 @@ jobs:
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.java-version
-      - uses: gradle/actions/setup-gradle@v5
+      - uses: gradle/actions/setup-gradle@v6
 
       - run: |
           ./gradlew -p samples/${{ matrix.sample }} installJvmDist linkReleaseExecutable${{ matrix.platform.target }}
@@ -270,7 +270,7 @@ jobs:
         with:
           distribution: 'zulu'
           java-version-file: .github/workflows/.java-version
-      - uses: gradle/actions/setup-gradle@v5
+      - uses: gradle/actions/setup-gradle@v6
 
       - run: ./gradlew publish
         env:
