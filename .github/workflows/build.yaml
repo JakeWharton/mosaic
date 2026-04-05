@@ -241,7 +241,7 @@ jobs:
         shell: bash
 
   final-status:
-    if: always()
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-slim
     needs:
       - docs
