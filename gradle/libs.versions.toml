@@ -14,7 +14,7 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 
 kotlinx-io-core = "org.jetbrains.kotlinx:kotlinx-io-core:0.9.0"
 
-androidx-annotation = "androidx.annotation:annotation:1.9.1"
+androidx-annotation = "androidx.annotation:annotation:1.10.0"
 androidx-collection = "androidx.collection:collection:1.6.0"
 androidx-compose-runtime = "androidx.compose.runtime:runtime:1.10.6"
 androidx-lifecycle-compose = "androidx.lifecycle:lifecycle-runtime-compose:2.10.0"
