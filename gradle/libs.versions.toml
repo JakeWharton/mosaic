@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.3.21"
-kotlinx-coroutines = "1.10.2"
+kotlinx-coroutines = "1.11.0"
 
 [libraries]
 kotlin-plugin-core = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
