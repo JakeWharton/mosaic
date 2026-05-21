@@ -26,6 +26,7 @@ import com.jakewharton.mosaic.ui.Spacer
 import com.jakewharton.mosaic.ui.Text
 import com.jakewharton.mosaic.ui.unit.IntOffset
 import kotlin.test.Test
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 
@@ -40,7 +41,7 @@ class MosaicTest {
 				}
 
 				LaunchedEffect(Unit) {
-					delay(100L)
+					delay(100.milliseconds)
 					offsetX = 5
 				}
 			}
@@ -60,7 +61,7 @@ class MosaicTest {
 				}
 
 				LaunchedEffect(Unit) {
-					delay(100L)
+					delay(100.milliseconds)
 					offsetX = 5
 				}
 			}
@@ -90,7 +91,7 @@ class MosaicTest {
 				}
 
 				LaunchedEffect(Unit) {
-					delay(100L)
+					delay(100.milliseconds)
 					drawAnother = true
 				}
 			}

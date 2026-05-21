@@ -12,6 +12,7 @@ import com.jakewharton.mosaic.NonInteractivePolicy.Ignore
 import com.jakewharton.mosaic.runMosaicBlocking
 import com.jakewharton.mosaic.ui.Text
 import kotlin.jvm.JvmName
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 
 @Composable
@@ -22,7 +23,7 @@ fun Counter() {
 
 	LaunchedEffect(Unit) {
 		for (i in 1..20) {
-			delay(250)
+			delay(250.milliseconds)
 			count = i
 		}
 	}

@@ -7,6 +7,7 @@ import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.microseconds
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -78,7 +79,7 @@ object FakeDataGenerator {
 	val fakeDataItemFlow: Flow<FakeDataItem> = flow {
 		var lastItem: FakeDataItem? = null
 		while (true) {
-			delay(1000L) // update once per second
+			delay(1.seconds)
 			lastItem = generateFakeDataItem(lastItem).also { newItem -> emit(newItem) }
 		}
 	}

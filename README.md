@@ -35,7 +35,7 @@ suspend fun main() = runMosaic {
 
   LaunchedEffect(Unit) {
     for (i in 1..20) {
-      delay(250)
+      delay(250.milliseconds)
       count = i
     }
   }

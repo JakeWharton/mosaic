@@ -17,6 +17,7 @@ import com.jakewharton.mosaic.ui.Box
 import com.jakewharton.mosaic.ui.Column
 import com.jakewharton.mosaic.ui.Text
 import kotlin.test.Test
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 
@@ -42,7 +43,7 @@ class CounterTest {
 
 			// After changing the terminal size, we wait for the counter to increase before getting a
 			// new snapshot, otherwise there will be the previous value (9) and a different output size.
-			delay(250L)
+			delay(250.milliseconds)
 
 			for (count in 10..20) {
 				assertThat(awaitSnapshot()).isEqualTo("  The count is: $count")
@@ -76,7 +77,7 @@ class CounterTest {
 
 			LaunchedEffect(Unit) {
 				for (i in 1..20) {
-					delay(250L)
+					delay(250.milliseconds)
 					count = i
 				}
 			}
@@ -96,7 +97,7 @@ class CounterTest {
 
 			LaunchedEffect(Unit) {
 				for (i in 1..20) {
-					delay(250L)
+					delay(250.milliseconds)
 					count = i
 				}
 			}
@@ -115,13 +116,13 @@ class CounterTest {
 
 			LaunchedEffect(Unit) {
 				for (i in 1..20) {
-					delay(250L)
+					delay(250.milliseconds)
 					count = i
 				}
 			}
 			LaunchedEffect(Unit) {
 				for (i in 1..20) {
-					delay(250L)
+					delay(250.milliseconds)
 					secondCount = i
 				}
 			}

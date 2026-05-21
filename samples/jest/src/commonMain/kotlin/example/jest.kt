@@ -34,6 +34,8 @@ import example.TestState.Fail
 import example.TestState.Pass
 import example.TestState.Running
 import kotlin.random.Random
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -183,7 +185,7 @@ private fun Summary(totalTests: Int, tests: SnapshotStateList<Test>, exit: Boole
 	var elapsed by remember { mutableIntStateOf(0) }
 	LaunchedEffect(exit) {
 		while (!exit) {
-			delay(1_000L)
+			delay(1.seconds)
 			elapsed++
 		}
 	}
@@ -231,7 +233,7 @@ fun TestProgress(totalTests: Int, passed: Int, failed: Int, running: Int, exit: 
 	var showRunning by remember { mutableStateOf(true) }
 	LaunchedEffect(exit) {
 		while (!exit) {
-			delay(500L)
+			delay(500.milliseconds)
 			showRunning = !showRunning
 		}
 	}
