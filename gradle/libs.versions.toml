@@ -31,7 +31,7 @@ spotlessGradlePlugin = "com.diffplug.spotless:spotless-plugin-gradle:8.6.0"
 burstGradlePlugin = "app.cash.burst:burst-gradle-plugin:2.12.2"
 
 ktlint-core = "com.pinterest.ktlint:ktlint-cli:1.8.0"
-ktlint-composeRules = "io.nlopez.compose.rules:ktlint:0.6.0"
+ktlint-composeRules = "io.nlopez.compose.rules:ktlint:0.6.1"
 
 clikt = "com.github.ajalt.clikt:clikt:5.1.0"
 codepoints = "de.cketti.unicode:kotlin-codepoints:0.11.0"
