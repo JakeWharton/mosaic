@@ -12,7 +12,7 @@ kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 
-kotlinx-io-core = "org.jetbrains.kotlinx:kotlinx-io-core:0.9.0"
+kotlinx-io-core = "org.jetbrains.kotlinx:kotlinx-io-core:0.9.1"
 
 androidx-annotation = "androidx.annotation:annotation:1.10.0"
 androidx-collection = "androidx.collection:collection:1.6.0"
