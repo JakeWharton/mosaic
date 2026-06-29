@@ -4,7 +4,7 @@
 [Unreleased]: https://github.com/JakeWharton/mosaic/compare/0.18.0...HEAD
 
 New:
-- JVM support for RISC-V!
+- JVM support for RISC-V and s390x!
 
 Changed:
 - Use the AndroidX versions of the Compose runtime and lifecycle dependencies which are now fully multiplatform. Dependency constraints to the corresponding JetBrains artifacts (which are now empty) are present to prevent symbol duplication.
