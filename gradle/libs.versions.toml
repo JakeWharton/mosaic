@@ -27,7 +27,7 @@ binaryCompatibilityValidatorGradlePlugin = "org.jetbrains.kotlinx:binary-compati
 cklibGradlePlugin = "co.touchlab:cklib-gradle-plugin:0.3.5"
 jextractGradlePlugin = "de.infolektuell:gradle-plugin-jextract:1.0.0"
 testDistributionGradlePlugin = "com.jakewharton.gradle:test-distribution-gradle-plugin:0.3.0"
-spotlessGradlePlugin = "com.diffplug.spotless:spotless-plugin-gradle:8.7.0"
+spotlessGradlePlugin = "com.diffplug.spotless:spotless-plugin-gradle:8.8.0"
 burstGradlePlugin = "app.cash.burst:burst-gradle-plugin:2.12.2"
 
 ktlint-core = "com.pinterest.ktlint:ktlint-cli:1.8.0"
