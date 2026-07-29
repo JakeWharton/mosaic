@@ -26,10 +26,11 @@ internal fun KeyboardEvent.toKeyEventOrNull(): KeyEvent? {
 			57356 -> "Home"
 			57357 -> "End"
 			in 57364..57398 -> "F" + (codepoint - 57363)
-			else -> throw UnsupportedOperationException(toString())
+			else -> null
 		},
 		alt = alt,
 		ctrl = ctrl,
 		shift = shift,
+		codepoint = codepoint
 	)
 }
