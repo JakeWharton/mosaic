@@ -16,7 +16,7 @@ kotlinx-io-core = "org.jetbrains.kotlinx:kotlinx-io-core:0.9.1"
 
 androidx-annotation = "androidx.annotation:annotation:1.10.0"
 androidx-collection = "androidx.collection:collection:1.6.0"
-androidx-compose-runtime = "androidx.compose.runtime:runtime:1.11.4"
+androidx-compose-runtime = "androidx.compose.runtime:runtime:1.12.0"
 androidx-lifecycle-compose = "androidx.lifecycle:lifecycle-runtime-compose:2.11.0"
 
 mavenPublishGradlePlugin = "com.vanniktech:gradle-maven-publish-plugin:0.37.0"
