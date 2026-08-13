@@ -1,10 +1,13 @@
 package com.jakewharton.mosaic.tty
 
-import app.cash.burst.TestFunction
-import app.cash.burst.TestInterceptor
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.tty.StandardStreams.InterceptedStreams
+
+typealias TestFunction = () -> Unit
+interface TestInterceptor {
+	fun intercept(testFunction: TestFunction)
+}
 
 interface DataReader : TestInterceptor {
 	fun writeFully(message: String)

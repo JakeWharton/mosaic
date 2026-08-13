@@ -16,7 +16,7 @@ buildscript {
 		classpath libs.cklibGradlePlugin
 		classpath libs.jextractGradlePlugin
 		classpath libs.testDistributionGradlePlugin
-		classpath libs.burstGradlePlugin
+		classpath libs.testBalloon.gradlePlugin
 		classpath 'com.jakewharton.mosaic.build:gradle-plugin'
 	}
 	repositories {
