@@ -158,7 +158,7 @@ jobs:
   # up the additional test runs for use in the above matrix-based runner. For now, run them through
   # Gradle on a single OS and single JDK just to get some coverage.
   tty-shrinker-tests:
-    runs-on: macos-15
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-java@v5
