@@ -1,13 +1,10 @@
 package com.jakewharton.mosaic.tty
 
-import app.cash.burst.Burst
-import app.cash.burst.InterceptTest
-import app.cash.burst.burstValues
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isGreaterThan
 import assertk.assertions.isZero
-import kotlin.test.Test
+import de.infix.testBalloon.framework.core.testSuite
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.measureTime
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -16,11 +13,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@Burst
-@OptIn(DelicateCoroutinesApi::class) // For simple fire-and-forget parallelism.
-class DataReaderTest(
-	@InterceptTest
-	private val data: DataReader = burstValues(
+val DataReaderTests by testSuite {
+	val dataReaders = listOf(
 		TtyToTestTerminal,
 		TestTerminalToTty,
 		TestTerminalToStandardInput,
@@ -31,9 +25,35 @@ class DataReaderTest(
 		StandardErrorAsTtyToTestTerminal,
 		PrintlnToInterceptedStdout,
 		EprintlnToInterceptedStderr,
-	),
+	)
+	val functions = listOf(
+		DataReaderTest::readWhatWasWritten,
+		DataReaderTest::readOnlyUpToCount,
+		DataReaderTest::readUnderflow,
+		DataReaderTest::readAtOffset,
+		DataReaderTest::readCanBeInterrupted,
+		DataReaderTest::readWithTimeoutReturnsZeroOnTimeout,
+	)
+
+	for (dataReader in dataReaders) {
+		testSuite(dataReader.toString()) {
+			val subject = DataReaderTest(dataReader)
+			for (function in functions) {
+				test(function.name) {
+					dataReader.intercept {
+						function.invoke(subject)
+					}
+				}
+			}
+		}
+	}
+}
+
+@OptIn(DelicateCoroutinesApi::class) // For simple fire-and-forget parallelism.
+private class DataReaderTest(
+	private val data: DataReader,
 ) {
-	@Test fun readWhatWasWritten() {
+	fun readWhatWasWritten() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
 		data.writeFully("hello")
@@ -47,7 +67,7 @@ class DataReaderTest(
 		assertThat(buffer.decodeToString()).isEqualTo("worldxxxxx")
 	}
 
-	@Test fun readOnlyUpToCount() {
+	fun readOnlyUpToCount() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
 		data.writeFully("abcdefghij")
@@ -59,7 +79,7 @@ class DataReaderTest(
 		data.read(buffer, 0, 5)
 	}
 
-	@Test fun readUnderflow() {
+	fun readUnderflow() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
 		data.writeFully("hello")
@@ -68,7 +88,7 @@ class DataReaderTest(
 		assertThat(buffer.decodeToString()).isEqualTo("helloxxxxx")
 	}
 
-	@Test fun readAtOffset() {
+	fun readAtOffset() {
 		val buffer = ByteArray(10) { 'x'.code.toByte() }
 
 		data.writeFully("hello")
@@ -77,7 +97,7 @@ class DataReaderTest(
 		assertThat(buffer.decodeToString()).isEqualTo("xxxxxhello")
 	}
 
-	@Test fun readCanBeInterrupted() {
+	fun readCanBeInterrupted() {
 		GlobalScope.launch(Dispatchers.Default) {
 			delay(150.milliseconds)
 			data.interruptRead()
@@ -93,7 +113,7 @@ class DataReaderTest(
 		assertThat(readB).isZero()
 	}
 
-	@Test fun readWithTimeoutReturnsZeroOnTimeout() {
+	fun readWithTimeoutReturnsZeroOnTimeout() {
 		// Windows appears to be happy to return a few milliseconds early, so we just validate a
 		// conservative lower bound which indicates that there was at least _some_ waiting.
 

@@ -1,6 +1,7 @@
 [versions]
 kotlin = "2.3.21"
 kotlinx-coroutines = "1.11.0"
+testBalloon = "1.1.0-RC"
 
 [libraries]
 kotlin-plugin-core = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -28,7 +29,9 @@ cklibGradlePlugin = "co.touchlab:cklib-gradle-plugin:0.3.5"
 jextractGradlePlugin = "de.infolektuell:gradle-plugin-jextract:1.0.0"
 testDistributionGradlePlugin = "com.jakewharton.gradle:test-distribution-gradle-plugin:0.3.0"
 spotlessGradlePlugin = "com.diffplug.spotless:spotless-plugin-gradle:8.9.0"
-burstGradlePlugin = "app.cash.burst:burst-gradle-plugin:2.12.2"
+
+testBalloon-gradlePlugin = { module = "de.infix.testBalloon:testBalloon-gradle-plugin", version.ref = "testBalloon" }
+testBalloon-core = { module = "de.infix.testBalloon:testBalloon-framework-core", version.ref = "testBalloon" }
 
 ktlint-core = "com.pinterest.ktlint:ktlint-cli:1.8.0"
 ktlint-composeRules = "io.nlopez.compose.rules:ktlint:0.6.4"

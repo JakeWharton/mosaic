@@ -1,16 +1,11 @@
 package com.jakewharton.mosaic.tty
 
-import app.cash.burst.Burst
-import app.cash.burst.InterceptTest
-import app.cash.burst.burstValues
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import kotlin.test.Test
+import de.infix.testBalloon.framework.core.testSuite
 
-@Burst
-class DataWriterTest(
-	@InterceptTest
-	private val data: DataWriter = burstValues(
+val DataWriterTests by testSuite {
+	val dataWriters = listOf(
 		TtyToTestTerminal,
 		TestTerminalToTty,
 		TestTerminalToStandardInput,
@@ -19,16 +14,37 @@ class DataWriterTest(
 		StandardOutputAsTtyToTestTerminal,
 		StandardErrorToTestTerminal,
 		StandardErrorAsTtyToTestTerminal,
-	),
+	)
+	val functions = listOf(
+		DataWriterTest::writeOnlyUpToCount,
+		DataWriterTest::writeAtOffset,
+	)
+
+	for (dataWriter in dataWriters) {
+		testSuite(dataWriter.toString()) {
+			val subject = DataWriterTest(dataWriter)
+			for (function in functions) {
+				test(function.name) {
+					dataWriter.intercept {
+						function.invoke(subject)
+					}
+				}
+			}
+		}
+	}
+}
+
+private class DataWriterTest(
+	private val data: DataWriter,
 ) {
-	@Test fun writeOnlyUpToCount() {
+	fun writeOnlyUpToCount() {
 		val written = data.write("abcdefghij".encodeToByteArray(), 0, 5)
 		assertThat(written).isEqualTo(5)
 
 		assertThat(data.readAtMost(10).decodeToString()).isEqualTo("abcde")
 	}
 
-	@Test fun writeAtOffset() {
+	fun writeAtOffset() {
 		val written = data.write("abcdefghij".encodeToByteArray(), 5, 5)
 		assertThat(written).isEqualTo(5)
 

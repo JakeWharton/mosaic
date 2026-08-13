@@ -3,12 +3,6 @@
 	@org.junit.* public void *(...);
 }
 
-# Burst appends class-parameters to test name after an underscore.
--keep class **.*Test_* {
-	public <init>();
-	@org.junit.* public void *(...);
-}
-
 # Gradle does A LOT of reflection to invoke JUnit. Just keep it all.
 -keep,includedescriptorclasses class org.junit.** {
 	*;
@@ -19,6 +13,21 @@
 
 # Temporarily work around a ProGuard bug. https://github.com/Guardsquare/proguard/issues/460
 -optimizations !method/specialization/parametertype
+
+# JUnit 5 uses these annotations which are compile-only dependencies.
+-dontwarn org.apiguardian.**
+
+# Test Balloon depends on kotlinx.datetime which contains serializable types but no dependency
+# on kotlinx.serialization. They don't appear to be serializing datetime's types, so ignore it all.
+-dontwarn kotlinx.datetime.**
+
+# Test Balloon invoked via ServiceLoader
+-keep class de.infix.testBalloon.framework.core.internal.integration.TestBalloonJUnitPlatformTestEngine {
+	public <init>();
+}
+
+# Test Balloon's own reflection
+-keep class de.infix.testBalloon.framework.shared.internal.entryPoint.JvmEntryPoint
 
 # TODO These should be pulled from the jars, but for now this unblocks us.
 

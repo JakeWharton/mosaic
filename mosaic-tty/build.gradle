@@ -17,7 +17,7 @@ apply plugin: 'co.touchlab.cklib'
 apply plugin: 'com.jakewharton.mosaic.build'
 apply plugin: 'com.jakewharton.test-distribution'
 apply plugin: 'de.infolektuell.jextract'
-apply plugin: 'app.cash.burst'
+apply plugin: 'de.infix.testBalloon'
 
 mosaicBuild {
 	patchJavaModuleWithKotlinClasses('mosaic.tty')
@@ -67,6 +67,7 @@ kotlin {
 				implementation libs.assertk
 				implementation libs.kotlin.test
 				implementation libs.kotlinx.coroutines.test
+				implementation libs.testBalloon.core
 			}
 		}
 	}
@@ -227,6 +228,7 @@ kotlin {
 			mainClass = 'proguard.ProGuard'
 			args = [
 				'-libraryjars', '<java.home>/jmods/java.base.jmod(!**.jar;!module-info.class)',
+				'-libraryjars', '<java.home>/jmods/java.logging.jmod(!**.jar;!module-info.class)',
 				// TODO These should be pulled from the jars, but for now this unblocks us.
 				'@src/jvmMain/resources/META-INF/proguard/com.jakewharton.mosaic-tty.pro',
 				'@src/jvmTest/resources/META-INF/proguard/com.jakewharton.mosaic-tty-tests.pro',
@@ -250,14 +252,6 @@ kotlin {
 				project.files(proGuardJar.get()),
 				testDependencyFiles.get().filter { it.isDirectory() },
 			)
-		}
-
-		// Adding additional test runs somehow removes the configuration capabilities which allow
-		// automatic resolution of the junit test dependency. Add it explicitly instead.
-		testCompilation.configure {
-			dependencies {
-				implementation(libs.kotlin.test.junit)
-			}
 		}
 	}
 
