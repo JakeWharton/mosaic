@@ -11,7 +11,7 @@
 
 # Gradle does A LOT of reflection to invoke JUnit. Just keep it all.
 -keep,includedescriptorclasses class org.junit.** {
-	*** *(...);
+	*;
 }
 
 # Keep @Test, @Ignore annotations, etc.

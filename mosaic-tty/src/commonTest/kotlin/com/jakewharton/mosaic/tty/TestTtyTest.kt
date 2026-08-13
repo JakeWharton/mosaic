@@ -1,15 +1,14 @@
 package com.jakewharton.mosaic.tty
 
-import app.cash.burst.Burst
 import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.hasMessage
-import assertk.assertions.isEqualTo
+import assertk.assertions.isFalse
 import assertk.assertions.isInstanceOf
+import assertk.assertions.isTrue
 import kotlin.test.AfterTest
 import kotlin.test.Test
 
-@Burst
 class TestTtyTest {
 	private var rawTestTerminal: TestTerminal? = null
 	private var testTerminal: TestTerminal
@@ -48,18 +47,33 @@ class TestTtyTest {
 		}
 	}
 
-	@Test fun stdinIsTtySetting(value: Boolean) {
-		testTerminal = TestTerminal.bind(stdinIsTty = value)
-		assertThat(testTerminal.streams.isInputTty()).isEqualTo(value)
+	@Test fun stdinIsTtySettingTrue() {
+		testTerminal = TestTerminal.bind(stdinIsTty = true)
+		assertThat(testTerminal.streams.isInputTty()).isTrue()
 	}
 
-	@Test fun stdOutIsTtySetting(value: Boolean) {
-		testTerminal = TestTerminal.bind(stdoutIsTty = value)
-		assertThat(testTerminal.streams.isOutputTty()).isEqualTo(value)
+	@Test fun stdinIsTtySettingFalse() {
+		testTerminal = TestTerminal.bind(stdinIsTty = false)
+		assertThat(testTerminal.streams.isInputTty()).isFalse()
 	}
 
-	@Test fun stdinErrTtySetting(value: Boolean) {
-		testTerminal = TestTerminal.bind(stderrIsTty = value)
-		assertThat(testTerminal.streams.isErrorTty()).isEqualTo(value)
+	@Test fun stdOutIsTtySettingTrue() {
+		testTerminal = TestTerminal.bind(stdoutIsTty = true)
+		assertThat(testTerminal.streams.isOutputTty()).isTrue()
+	}
+
+	@Test fun stdOutIsTtySettingFalse() {
+		testTerminal = TestTerminal.bind(stdoutIsTty = false)
+		assertThat(testTerminal.streams.isOutputTty()).isFalse()
+	}
+
+	@Test fun stdinErrTtySettingTrue() {
+		testTerminal = TestTerminal.bind(stderrIsTty = true)
+		assertThat(testTerminal.streams.isErrorTty()).isTrue()
+	}
+
+	@Test fun stdinErrTtySettingFalse() {
+		testTerminal = TestTerminal.bind(stderrIsTty = true)
+		assertThat(testTerminal.streams.isErrorTty()).isTrue()
 	}
 }
