@@ -35,7 +35,7 @@ repositories {
 }
 
 dependencies {
-	proGuard 'com.guardsquare:proguard-base:7.9.1'
+	proGuard 'com.guardsquare:proguard-base:7.10.0'
 	r8 'com.android.tools:r8:9.4.14'
 }
 
