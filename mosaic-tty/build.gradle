@@ -1,4 +1,5 @@
-import com.jakewharton.mosaic.buildsupport.ZigDownloadTask
+import com.jakewharton.mosaic.buildsupport.ZigBuildService
+import com.jakewharton.mosaic.buildsupport.ZigBuildTask
 import java.nio.file.FileSystems
 import java.nio.file.Files
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -39,9 +40,12 @@ dependencies {
 	r8 'com.android.tools:r8:9.4.17'
 }
 
-def zigDownload = tasks.register('zigDownload', ZigDownloadTask) {
-	version = '0.15.1'
-	outputDir = layout.buildDirectory.dir('zig')
+// Zig is installed alongside the other Gradle caches rather than in the build directory so that
+// 'clean' does not force it to be downloaded again, and so that CI can cache it with the rest.
+def zigRelease = '0.15.1'
+def zigService = gradle.sharedServices.registerIfAbsent('zig', ZigBuildService) {
+	parameters.version = zigRelease
+	parameters.installDir = new File(gradle.gradleUserHomeDir, 'caches/zig')
 }
 
 jextract.libraries.register('mosaic') {
@@ -77,7 +81,7 @@ kotlin {
 
 		mainCompilation.configure { main ->
 			def headers = main.compileJavaTaskProvider.flatMap { it.options.headerOutputDirectory }
-			def jniTask = tasks.register("${target.name}JniZigBuild", Exec) {
+			def jniTask = tasks.register("${target.name}JniZigBuild", ZigBuildTask) {
 				inputs.file('build.zig')
 				inputs.dir('src/commonMain/c')
 				inputs.dir("src/${target.name}Main/c")
@@ -87,10 +91,14 @@ kotlin {
 				outputs.dir(jniDir)
 
 				dependsOn(headers)
-				args('build', '-p', jniDir.get().asFile.absolutePath, "-Djavah=${projectDir.relativePath(headers.get().asFile)}")
+				args.addAll('build', '-p')
+				args.add(jniDir.map { it.asFile.absolutePath })
+				args.add(headers.map { "-Djavah=${projectDir.relativePath(it.asFile)}" })
 
-				dependsOn(zigDownload)
-				executable(zigDownload.get().zigExecutable.path)
+				zig = zigService
+				usesService(zigService)
+				zigVersion = zigRelease
+				workingDir = layout.projectDirectory
 			}
 			main.defaultSourceSet.resources.srcDir(jniTask)
 		}
