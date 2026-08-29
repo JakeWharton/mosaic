@@ -16,7 +16,7 @@ jobs:
   tty-test-binaries:
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-java@v6
         with:
           distribution: 'zulu'
@@ -125,7 +125,7 @@ jobs:
 
       ### JAVA
 
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         if: ${{ matrix.tests.type == 'java' && matrix.tests.version == 'latest' }}
         with:
           sparse-checkout: .github/workflows/.java-version
@@ -160,7 +160,7 @@ jobs:
   tty-shrinker-tests:
     runs-on: ubuntu-26.04
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-java@v6
         with:
           distribution: 'zulu'
@@ -175,7 +175,7 @@ jobs:
   build:
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-java@v6
         with:
           distribution: 'zulu'
@@ -200,7 +200,7 @@ jobs:
   docs:
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-java@v6
         with:
           distribution: 'zulu'
@@ -231,7 +231,7 @@ jobs:
           - jest
     runs-on: ${{ matrix.platform.os }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-java@v6
         with:
           distribution: 'zulu'
@@ -269,7 +269,7 @@ jobs:
       - final-status
 
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-java@v6
         with:
           distribution: 'zulu'
