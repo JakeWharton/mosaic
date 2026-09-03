@@ -289,8 +289,7 @@ jobs:
 
       - uses: JamesIves/github-pages-deploy-action@fa24774553152dd7873cd16ebd8d959b010c5445 # v4.9.0
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: site
-          FOLDER: html-docs
-          TARGET_FOLDER: docs/latest/
-          CLEAN: true
+          branch: site
+          folder: html-docs
+          target-folder: docs/latest/
+          clean: true
