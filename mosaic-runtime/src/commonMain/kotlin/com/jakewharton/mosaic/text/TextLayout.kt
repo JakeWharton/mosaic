@@ -1,6 +1,6 @@
 package com.jakewharton.mosaic.text
 
-import de.cketti.codepoints.codePointCount
+import de.cketti.codepoints.codePointAt
 
 internal abstract class TextLayout<T : CharSequence>(initialValue: T) {
 
@@ -39,7 +39,16 @@ internal abstract class TextLayout<T : CharSequence>(initialValue: T) {
 		if (!dirty) return
 
 		val lines = value.splitByLines()
-		width = lines.maxOf { it.codePointCount(0, it.length) }
+		width = lines.maxOf { line ->
+			var w = 0
+			var i = 0
+			while (i < line.length) {
+				val cp = line.codePointAt(i)
+				w += charWidth(cp)
+				i += if (line[i].isHighSurrogate()) 2 else 1
+			}
+			w
+		}
 		height = lines.size
 		this.lines = lines
 		dirty = false
