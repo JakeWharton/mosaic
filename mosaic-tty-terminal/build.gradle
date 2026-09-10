@@ -40,6 +40,4 @@ kotlin {
 			}
 		}
 	}
-
-	compilerOptions.freeCompilerArgs.add('-Xnon-local-break-continue')
 }

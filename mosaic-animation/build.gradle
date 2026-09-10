@@ -34,5 +34,4 @@ kotlin {
 	}
 
 	compilerOptions.freeCompilerArgs.add('-Xexpect-actual-classes')
-	compilerOptions.freeCompilerArgs.add('-Xnon-local-break-continue')
 }
