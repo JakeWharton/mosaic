@@ -95,40 +95,46 @@ kotlin {
 			main.defaultSourceSet.resources.srcDir(jniTask)
 		}
 
-		def jdk22Compilation = target.compilations.create('jdk22') {
-			// I can't find a way to add a Java srcDir, so we have to add it both to Kotlin task so its
-			// sources can link and to Java task so the files are actually compiled to classes.
-			def mosaicFfmJava = tasks.named('mosaicJextractGenerateBindings')
-			defaultSourceSet.kotlin.srcDir(mosaicFfmJava)
-			compileJavaTaskProvider.configure { task ->
-				task.source(mosaicFfmJava)
+		if (JavaVersion.current().majorVersion.toInteger() < 22) {
+			project.logger.warn('JDK < 22. The resulting artifact will not contain the FFM implementation.')
+		} else {
+			def jdk22Compilation = target.compilations.create('jdk22') {
+				// I can't find a way to add a Java srcDir, so we have to add it both to Kotlin task so its
+				// sources can link and to Java task so the files are actually compiled to classes.
+				def mosaicFfmJava = tasks.named('mosaicJextractGenerateBindings')
+				defaultSourceSet.kotlin.srcDir(mosaicFfmJava)
+				compileJavaTaskProvider.configure { task ->
+					task.source(mosaicFfmJava)
+				}
+
+				compileTaskProvider.configure { task ->
+					task.compilerOptions { options ->
+						options.jvmTarget = JvmTarget.JVM_22
+						options.freeCompilerArgs.add('-Xexplicit-api=strict')
+					}
+				}
+				compileJavaTaskProvider.configure { task ->
+					task.sourceCompatibility = '22'
+					task.targetCompatibility = '22'
+				}
+				associateWith(mainCompilation.get())
 			}
 
-			compileTaskProvider.configure { task ->
-				task.compilerOptions { options ->
-					options.jvmTarget = JvmTarget.JVM_22
-					options.freeCompilerArgs.add('-Xexplicit-api=strict')
+			tasks.named(target.artifactsTaskName, Jar).configure {
+				from(jdk22Compilation.output) {
+					into('META-INF/versions/22')
+					// Don't add a nested .kotlin_module file.
+					exclude('META-INF')
+					// Empty class noise produced by jextract.
+					exclude('**/_*.class')
+				}
+				manifest {
+					attributes(['Multi-Release': 'true'])
 				}
 			}
-			compileJavaTaskProvider.configure { task ->
-				task.sourceCompatibility = '22'
-				task.targetCompatibility = '22'
-			}
-			associateWith(mainCompilation.get())
 		}
 
-		def mainJarTask = tasks.named(target.artifactsTaskName, Jar) {
-			from(jdk22Compilation.output) {
-				into('META-INF/versions/22')
-				// Don't add a nested .kotlin_module file.
-				exclude('META-INF')
-				// Empty class noise produced by jextract.
-				exclude('**/_*.class')
-			}
-			manifest {
-				attributes(['Multi-Release': 'true'])
-			}
-		}
+		def mainJarTask = tasks.named(target.artifactsTaskName, Jar)
 
 		def mainJar = mainJarTask.flatMap { it.archiveFile }
 		def testJar = tasks.register("${target.name}TestJar", Jar) {
@@ -156,7 +162,7 @@ kotlin {
 
 			doFirst {
 				// Defer resolving this until execution time since JavaExec lacks provider-based args.
-				testDependencyFiles.get().files.findAll {it.isFile() }.forEach {
+				testDependencyFiles.get().files.findAll { it.isFile() }.forEach {
 					args += it.absolutePath
 				}
 				args += mainJar.get().asFile.absolutePath
@@ -186,7 +192,7 @@ kotlin {
 			]
 			doFirst {
 				// Defer resolving this until execution time since JavaExec lacks provider-based args.
-				testDependencyFiles.get().files.findAll {it.isFile() }.forEach {
+				testDependencyFiles.get().files.findAll { it.isFile() }.forEach {
 					args += it.absolutePath
 				}
 				args += mainJar.get().asFile.absolutePath
