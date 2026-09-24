@@ -95,31 +95,35 @@ Snapshot documentation is available at [jakewharton.github.io/mosaic/docs/latest
 
 ## Samples
 
-Run `./gradlew installDist` to build the sample binaries.
+All samples can be built and run using the `./samples/runner.sh` script.
 
- * [Counter](samples/counter): A simple increasing number from 0 until 20.
+To build and run the Counter sample (defaults to `jvm` target):
 
-   `./samples/counter/build/install/counter/bin/counter`
+```sh
+$ ./samples/runner.sh counter
+```
 
- * [Demo](samples/demo): A playground for demonstrating many features of Mosaic.
+To specify a target (`jvm` or `native`):
 
-   `./samples/demo/build/install/demo/bin/demo`
+```sh
+$ ./samples/runner.sh counter native
+```
 
- * [Jest](samples/jest): Example output of a test framework (such as JS's 'Jest').
+The script also supports explicit `build` and `run` commands:
 
-   `./samples/jest/build/install/jest/bin/jest`
+```sh
+$ ./samples/runner.sh counter build
+$ ./samples/runner.sh counter run
+```
 
- * [Robot](samples/robot): An interactive, game-like program with keyboard control.
+The available samples are:
 
-   `./samples/robot/build/install/robot/bin/robot`
-
- * [rrtop](samples/rrtop): An example inspired by [rrtop](https://github.com/wojciech-zurek/rrtop).
-
-   `./samples/rrtop/build/install/rrtop/bin/rrtop`
-
- * [snake](samples/snake): Snake game.
-
-   `./samples/snake/build/install/snake/bin/snake`
+* [Counter](samples/counter): A simple increasing number from 0 until 20.
+* [Demo](samples/demo): A playground for demonstrating many features of Mosaic.
+* [Jest](samples/jest): Example output of a test framework (such as JS's 'Jest').
+* [Robot](samples/robot): An interactive, game-like program with keyboard control.
+* [rrtop](samples/rrtop): An example inspired by [rrtop](https://github.com/wojciech-zurek/rrtop).
+* [Snake](samples/snake): Snake game.
 
 ## FAQ
 
