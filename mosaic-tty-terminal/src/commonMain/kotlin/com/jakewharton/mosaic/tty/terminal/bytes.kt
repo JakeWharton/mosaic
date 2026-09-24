@@ -139,44 +139,60 @@ internal inline fun ByteArray.parseUtf8(
 	contract {
 		callsInPlace(onSuccess, EXACTLY_ONCE)
 	}
-	// TODO validate continuation bytes?
 
 	if (start == limit) onUnderflow()
-	val b1 = this[start].toInt()
+	val b1 = this[start].toInt() and 0xFF
 	val b2Index = start + 1
 
 	val codepoint: Int
 	val nextIndex: Int
 	when {
-		b1 and 0b10000000 == 0 -> {
+		b1 < 0x80 -> {
 			nextIndex = b2Index
 			codepoint = b1
 		}
 
-		b1 and 0b11100000 == 0b11000000 -> {
+		b1 in 0xC0..0xDF -> {
 			if (b2Index == limit) onUnderflow()
+			val b2 = this[b2Index].toInt() and 0xFF
+			if (b2 and 0b11000000 != 0b10000000) onError()
 			nextIndex = start + 2
 			codepoint = b1.and(0b00011111).shl(6) or
-				this[b2Index].toInt().and(0b00111111)
+				b2.and(0b00111111)
+			if (codepoint < 0x80) onError()
 		}
 
-		b1 and 0b11110000 == 0b11100000 -> {
+		b1 in 0xE0..0xEF -> {
 			val b3Index = start + 2
 			if (b3Index >= limit) onUnderflow()
+			val b2 = this[b2Index].toInt() and 0xFF
+			val b3 = this[b3Index].toInt() and 0xFF
+			if (b2 and 0b11000000 != 0b10000000) onError()
+			if (b3 and 0b11000000 != 0b10000000) onError()
 			nextIndex = start + 3
 			codepoint = b1.and(0b00001111).shl(12) or
-				this[b2Index].toInt().and(0b00111111).shl(6) or
-				this[b3Index].toInt().and(0b00111111)
+				b2.and(0b00111111).shl(6) or
+				b3.and(0b00111111)
+			if (codepoint < 0x800) onError()
+			if (codepoint in 0xD800..0xDFFF) onError()
 		}
 
-		b1 and 0b11111000 == 0b11110000 -> {
+		b1 in 0xF0..0xF7 -> {
 			val b4Index = start + 3
 			if (b4Index >= limit) onUnderflow()
+			val b2 = this[b2Index].toInt() and 0xFF
+			val b3 = this[start + 2].toInt() and 0xFF
+			val b4 = this[b4Index].toInt() and 0xFF
+			if (b2 and 0b11000000 != 0b10000000) onError()
+			if (b3 and 0b11000000 != 0b10000000) onError()
+			if (b4 and 0b11000000 != 0b10000000) onError()
 			nextIndex = start + 4
 			codepoint = b1.and(0b00000111).shl(18) or
-				this[b2Index].toInt().and(0b00111111).shl(12) or
-				this[start + 2].toInt().and(0b00111111).shl(6) or
-				this[b4Index].toInt().and(0b00111111)
+				b2.and(0b00111111).shl(12) or
+				b3.and(0b00111111).shl(6) or
+				b4.and(0b00111111)
+			if (codepoint < 0x10000) onError()
+			if (codepoint > 0x10FFFF) onError()
 		}
 
 		else -> onError()
