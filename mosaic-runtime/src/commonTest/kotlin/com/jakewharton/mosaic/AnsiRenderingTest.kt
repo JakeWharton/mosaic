@@ -304,4 +304,42 @@ class AnsiRenderingTest {
 			)
 		}
 	}
+
+	@Test fun unicodeWideTextIsMeasuredCorrectly() = runTest {
+		runMosaicTest(DumpSnapshots) {
+			setContent {
+				Column {
+					Text("ABC")
+					Text("A中B")
+				}
+			}
+
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|Column(arrangement=Arrangement#Top, alignment=Horizontal(bias=-1)) x=0 y=0 w=4 h=2
+				|  Text("ABC") x=0 y=0 w=3 h=1 DrawBehind
+				|  Text("A中B") x=0 y=1 w=4 h=1 DrawBehind
+				""".trimMargin(),
+			)
+		}
+	}
+
+	@Test fun unicodeWideTextRendersCorrectly() = runTest {
+		runMosaicTest(RenderingSnapshots(rendering)) {
+			setContent {
+				Column {
+					Text("ABC")
+					Text("A中B")
+				}
+			}
+
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|ABC
+				|A中B
+				|
+				""".trimMargin().wrapWithAnsiSynchronizedUpdate().replaceLineEndingsWithCRLF(),
+			)
+		}
+	}
 }
