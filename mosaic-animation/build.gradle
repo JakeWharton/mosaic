@@ -31,6 +31,12 @@ kotlin {
 				implementation libs.androidx.annotation
 			}
 		}
+		commonTest {
+			dependencies {
+				implementation libs.kotlin.test
+				implementation libs.assertk
+			}
+		}
 	}
 
 	compilerOptions.freeCompilerArgs.add('-Xexpect-actual-classes')
