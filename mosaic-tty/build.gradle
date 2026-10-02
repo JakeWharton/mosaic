@@ -69,6 +69,11 @@ kotlin {
 				implementation libs.kotlinx.coroutines.test
 			}
 		}
+		jvmTest {
+			dependencies {
+				runtimeOnly libs.junitPlatform.console
+			}
+		}
 	}
 
 	targets.withType(KotlinJvmTarget).configureEach { target ->
@@ -250,14 +255,6 @@ kotlin {
 				project.files(proGuardJar.get()),
 				testDependencyFiles.get().filter { it.isDirectory() },
 			)
-		}
-
-		// Adding additional test runs somehow removes the configuration capabilities which allow
-		// automatic resolution of the junit test dependency. Add it explicitly instead.
-		testCompilation.configure {
-			dependencies {
-				implementation(libs.kotlin.test.junit)
-			}
 		}
 	}
 
