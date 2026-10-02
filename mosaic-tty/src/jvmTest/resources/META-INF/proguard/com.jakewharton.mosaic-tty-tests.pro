@@ -10,7 +10,14 @@
 }
 
 # Gradle does A LOT of reflection to invoke JUnit. Just keep it all.
+-dontwarn org.junit.**
+-dontnote org.junit.**
 -keep,includedescriptorclasses class org.junit.** {
+	*;
+}
+
+-dontwarn org.opentest4j.**
+-keep,includedescriptorclasses class org.opentest4j.** {
 	*;
 }
 
