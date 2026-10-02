@@ -9,5 +9,5 @@ internal actual inline fun toRadians(value: Double): Double {
 
 @Suppress("NOTHING_TO_INLINE")
 internal actual inline fun binarySearch(array: FloatArray, position: Float): Int {
-	return array.indexOfFirst { it == position }
+	return array.asList().binarySearch(position)
 }
