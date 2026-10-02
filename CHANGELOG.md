@@ -14,6 +14,7 @@ Fixed:
 - Clear the set of states which were read during layout and draw passes before each pass. Previously these sets grew infinitely, which was both a memory leak and a performance problem.
 - Close the underlying TTY at the end of the `runMosaic*` family of functions.
 - Frame times on Linux and Windows no longer jump backwards once per second.
+- Fix arc-based animations on native targets, which built their lookup table incorrectly.
 
 
 ## [0.18.0] - 2025-08-21
