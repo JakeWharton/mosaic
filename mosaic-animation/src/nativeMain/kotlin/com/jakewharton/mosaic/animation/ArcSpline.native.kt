@@ -1,5 +1,6 @@
 package com.jakewharton.mosaic.animation
 
+import com.jakewharton.mosaic.animation.internal.binarySearch
 import kotlin.math.PI
 
 @Suppress("NOTHING_TO_INLINE")
@@ -9,5 +10,5 @@ internal actual inline fun toRadians(value: Double): Double {
 
 @Suppress("NOTHING_TO_INLINE")
 internal actual inline fun binarySearch(array: FloatArray, position: Float): Int {
-	return array.asList().binarySearch(position)
+	return array.binarySearch(position)
 }
