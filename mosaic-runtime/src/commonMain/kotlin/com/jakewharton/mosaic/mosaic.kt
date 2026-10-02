@@ -279,7 +279,7 @@ internal class MosaicComposition(
 
 	private fun startFrameListener() {
 		scope.launch(start = UNDISPATCHED) {
-			val ctrlC = KeyEvent("c", ctrl = true)
+			fun KeyEvent.isCtrlC() = this.key == "c" && this.ctrl == true
 
 			do {
 				externalClock.withFrameNanos { nanos ->
@@ -289,7 +289,7 @@ internal class MosaicComposition(
 						if (event !is KeyboardEvent) continue
 						val keyEvent = event.toKeyEventOrNull() ?: continue
 						val keyHandled = rootNode.sendKeyEvent(keyEvent)
-						if (!keyHandled && keyEvent == ctrlC) {
+						if (!keyHandled && keyEvent.isCtrlC()) {
 							job.cancel()
 							return@withFrameNanos
 						}
