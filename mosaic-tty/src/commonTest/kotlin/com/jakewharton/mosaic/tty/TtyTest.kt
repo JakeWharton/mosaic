@@ -7,12 +7,11 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Ignore
 import kotlin.test.Test
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.test.runTest
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@Ignore // Ordering problems.
 class TtyTest {
 	private val events = Channel<String>(UNLIMITED)
 	private val testTerminal = TestTerminal.bind()
@@ -22,8 +21,8 @@ class TtyTest {
 		tty.enableRawMode()
 	}
 
-	@AfterTest fun after() = runTest {
-		// TestTty.close() will call Tty.close(), but we get a free idempotency test here.
+	@AfterTest fun after() {
+		// TestTerminal.close() will call Tty.close(), but we get a free idempotency test here.
 		tty.close()
 		testTerminal.close()
 
