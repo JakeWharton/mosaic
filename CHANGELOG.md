@@ -15,6 +15,7 @@ Fixed:
 - Close the underlying TTY at the end of the `runMosaic*` family of functions.
 - Frame times on Linux and Windows no longer jump backwards once per second.
 - Fix arc-based animations on native targets, which built their lookup table incorrectly.
+- Report Shift+Tab as a key event when the terminal sends it as `CSI Z`.
 
 
 ## [0.18.0] - 2025-08-21

@@ -57,6 +57,16 @@ class EventParserCsiKeyboardEventTest : BaseEventParserTest() {
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Home))
 	}
 
+	@Test fun shiftTab() {
+		testTerminal.write("${CSI}Z")
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(0x09, modifiers = ModifierShift))
+	}
+
+	@Test fun shiftTabWithModifiers() {
+		testTerminal.write("${CSI}1;5Z")
+		assertThat(parser.next()).isEqualTo(KeyboardEvent(0x09, modifiers = ModifierShift or ModifierCtrl))
+	}
+
 	@Test fun modifierShiftUp() {
 		testTerminal.write("${CSI}1;2A")
 		assertThat(parser.next()).isEqualTo(KeyboardEvent(Up, modifiers = ModifierShift))
