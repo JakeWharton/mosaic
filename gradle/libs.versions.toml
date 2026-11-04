@@ -7,7 +7,6 @@ kotlin-plugin-core = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", ver
 kotlin-plugin-compose = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
-kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
@@ -38,5 +37,6 @@ codepoints = "de.cketti.unicode:kotlin-codepoints:0.11.0"
 finalizationHook = "com.jakewharton.finalization:finalization-hook:0.1.0"
 apache-compress = "org.apache.commons:commons-compress:1.28.0"
 
-junit4 = "junit:junit:4.13.2"
+junitPlatform-console = "org.junit.platform:junit-platform-console:1.14.4"
+
 assertk = "com.willowtreeapps.assertk:assertk:0.28.1"
