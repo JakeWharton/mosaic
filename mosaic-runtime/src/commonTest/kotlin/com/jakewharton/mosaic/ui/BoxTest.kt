@@ -9,38 +9,35 @@ import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.ConstrainedBox
 import com.jakewharton.mosaic.Container
 import com.jakewharton.mosaic.DumpSnapshots
-import com.jakewharton.mosaic.NodeSnapshots
-import com.jakewharton.mosaic.TestChar
 import com.jakewharton.mosaic.TestFiller
+import com.jakewharton.mosaic.fillWith
 import com.jakewharton.mosaic.layout.MeasurePolicy
 import com.jakewharton.mosaic.layout.aspectRatio
+import com.jakewharton.mosaic.layout.drawBehind
 import com.jakewharton.mosaic.layout.fillMaxSize
+import com.jakewharton.mosaic.layout.height
 import com.jakewharton.mosaic.layout.padding
 import com.jakewharton.mosaic.layout.requiredSize
 import com.jakewharton.mosaic.layout.requiredWidthIn
 import com.jakewharton.mosaic.layout.size
 import com.jakewharton.mosaic.layout.width
 import com.jakewharton.mosaic.modifier.Modifier
-import com.jakewharton.mosaic.position
-import com.jakewharton.mosaic.size
-import com.jakewharton.mosaic.terminal.AnsiLevel
 import com.jakewharton.mosaic.testIntrinsics
 import com.jakewharton.mosaic.testing.runMosaicTest
 import com.jakewharton.mosaic.ui.unit.Constraints
-import com.jakewharton.mosaic.ui.unit.IntOffset
-import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
 class BoxTest {
 	@Test fun boxWithAlignedAndPositionedChildren() = runTest {
-		val size = 6
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
+			val size = 6
+
 			setContent {
 				Container(alignment = Alignment.TopStart) {
-					Box {
+					Box(Modifier.fillWith('.')) {
 						Container(
-							modifier = Modifier.align(Alignment.BottomEnd),
+							modifier = Modifier.align(Alignment.BottomEnd).fillWith('A'),
 							width = size,
 							height = size,
 						)
@@ -49,46 +46,37 @@ class BoxTest {
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-
-			val boxNode = rootNode.children[0].children[0]
-
-			val alignedChildContainerNode = boxNode.children[0]
-			val positionedChildContainerNode = boxNode.children[1]
-
-			assertThat(alignedChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(alignedChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(positionedChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(positionedChildContainerNode.position).isEqualTo(IntOffset.Zero)
-
-			assertThat(rootNode.draw().render(AnsiLevel.NONE, false)).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|
-				|
-				|  $TestChar$TestChar
-				|  $TestChar$TestChar
-				|
-				|
+				|AAAAAA
+				|AAAAAA
+				|AAXXAA
+				|AAXXAA
+				|AAAAAA
+				|AAAAAA
 				""".trimMargin(),
 			)
 		}
 	}
 
 	@Test fun boxWithMultipleAlignedChildren() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 200
+		runMosaicTest {
+			val size = 3
 			val doubleSize = size * 2
+			val drawSecond = mutableStateOf(false)
 
 			setContent {
 				Container(alignment = Alignment.TopStart) {
-					Box {
+					Box(Modifier.fillWith('.')) {
 						Container(
-							modifier = Modifier.align(Alignment.BottomEnd),
+							modifier = Modifier.align(Alignment.BottomEnd).fillWith('A'),
 							width = size,
 							height = size,
 						)
 						Container(
-							modifier = Modifier.align(Alignment.BottomEnd),
+							modifier = Modifier.align(Alignment.BottomEnd).drawBehind {
+								if (drawSecond.value) drawRect('B')
+							},
 							width = doubleSize,
 							height = doubleSize,
 						)
@@ -96,30 +84,43 @@ class BoxTest {
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val boxNode = rootNode.children[0].children[0]
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|......
+				|......
+				|......
+				|...AAA
+				|...AAA
+				|...AAA
+				""".trimMargin(),
+			)
 
-			val firstChildContainerNode = boxNode.children[0]
-			val secondChildContainerNode = boxNode.children[1]
+			drawSecond.value = true
 
-			assertThat(boxNode.size).isEqualTo(IntSize(doubleSize, doubleSize))
-			assertThat(firstChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset(size, size))
-			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(doubleSize, doubleSize))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset.Zero)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|BBBBBB
+				|BBBBBB
+				|BBBBBB
+				|BBBBBB
+				|BBBBBB
+				|BBBBBB
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun boxWithStretchChildrenPaddingLeftTop() = runTest {
-		val size = 6
-		val halfSize = size / 2
-		val inset = 1
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
+			val size = 6
+			val halfSize = size / 2
+			val inset = 1
+
 			setContent {
 				Container(alignment = Alignment.TopStart) {
-					Box {
+					Box(Modifier.fillWith('.')) {
 						Container(
-							modifier = Modifier.align(Alignment.Center),
+							modifier = Modifier.align(Alignment.Center).fillWith('A'),
 							width = size,
 							height = size,
 						)
@@ -130,42 +131,30 @@ class BoxTest {
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-
-			val boxNode = rootNode.children[0].children[0]
-
-			val firstChildContainerNode = boxNode.children[0]
-			val secondChildContainerNode = boxNode.children[1]
-
-			assertThat(boxNode.size).isEqualTo(IntSize(size, size))
-			assertThat(firstChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset.Zero)
-
-			assertThat(rootNode.draw().render(AnsiLevel.NONE, false)).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|
-				| $TestChar$TestChar$TestChar$TestChar$TestChar
-				| $TestChar$TestChar$TestChar$TestChar$TestChar
-				| $TestChar$TestChar$TestChar$TestChar$TestChar
-				| $TestChar$TestChar$TestChar$TestChar$TestChar
-				| $TestChar$TestChar$TestChar$TestChar$TestChar
+				|AAAAAA
+				|AXXXXX
+				|AXXXXX
+				|AXXXXX
+				|AXXXXX
+				|AXXXXX
 				""".trimMargin(),
 			)
 		}
 	}
 
 	@Test fun boxWithStretchChildrenPaddingRightBottom() = runTest {
-		val size = 6
-		val halfSize = size / 2
-		val inset = 1
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
+			val size = 6
+			val halfSize = size / 2
+			val inset = 1
+
 			setContent {
 				Container(alignment = Alignment.TopStart) {
-					Box {
+					Box(Modifier.fillWith('.')) {
 						Container(
-							modifier = Modifier.align(Alignment.Center),
+							modifier = Modifier.align(Alignment.Center).fillWith('A'),
 							width = size,
 							height = size,
 						)
@@ -177,42 +166,30 @@ class BoxTest {
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-
-			val boxNode = rootNode.children[0].children[0]
-
-			val firstChildContainerNode = boxNode.children[0]
-			val secondChildContainerNode = boxNode.children[1]
-
-			assertThat(boxNode.size).isEqualTo(IntSize(size, size))
-			assertThat(firstChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset.Zero)
-
-			assertThat(rootNode.draw().render(AnsiLevel.NONE, false)).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|$TestChar$TestChar$TestChar$TestChar$TestChar
-				|$TestChar$TestChar$TestChar$TestChar$TestChar
-				|$TestChar$TestChar$TestChar$TestChar$TestChar
-				|$TestChar$TestChar$TestChar$TestChar$TestChar
-				|$TestChar$TestChar$TestChar$TestChar$TestChar
-				|
+				|XXXXXA
+				|XXXXXA
+				|XXXXXA
+				|XXXXXA
+				|XXXXXA
+				|AAAAAA
 				""".trimMargin(),
 			)
 		}
 	}
 
 	@Test fun boxWithStretchChildrenPaddingLeftRight() = runTest {
-		val size = 6
-		val halfSize = size / 2
-		val inset = 1
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
+			val size = 6
+			val halfSize = size / 2
+			val inset = 1
+
 			setContent {
 				Container(alignment = Alignment.TopStart) {
-					Box {
+					Box(Modifier.fillWith('.')) {
 						Container(
-							modifier = Modifier.align(Alignment.Center),
+							modifier = Modifier.align(Alignment.Center).fillWith('A'),
 							width = size,
 							height = size,
 						)
@@ -224,42 +201,30 @@ class BoxTest {
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-
-			val boxNode = rootNode.children[0].children[0]
-
-			val firstChildContainerNode = boxNode.children[0]
-			val secondChildContainerNode = boxNode.children[1]
-
-			assertThat(boxNode.size).isEqualTo(IntSize(size, size))
-			assertThat(firstChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset.Zero)
-
-			assertThat(rootNode.draw().render(AnsiLevel.NONE, false)).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				| $TestChar$TestChar$TestChar$TestChar
-				| $TestChar$TestChar$TestChar$TestChar
-				| $TestChar$TestChar$TestChar$TestChar
-				| $TestChar$TestChar$TestChar$TestChar
-				| $TestChar$TestChar$TestChar$TestChar
-				| $TestChar$TestChar$TestChar$TestChar
+				|AXXXXA
+				|AXXXXA
+				|AXXXXA
+				|AXXXXA
+				|AXXXXA
+				|AXXXXA
 				""".trimMargin(),
 			)
 		}
 	}
 
 	@Test fun boxWithStretchChildrenPaddingTopBottom() = runTest {
-		val size = 6
-		val halfSize = size / 2
-		val inset = 1
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
+			val size = 6
+			val halfSize = size / 2
+			val inset = 1
+
 			setContent {
 				Container(alignment = Alignment.TopStart) {
-					Box {
+					Box(Modifier.fillWith('.')) {
 						Container(
-							modifier = Modifier.align(Alignment.Center),
+							modifier = Modifier.align(Alignment.Center).fillWith('A'),
 							width = size,
 							height = size,
 						)
@@ -271,44 +236,31 @@ class BoxTest {
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-
-			val boxNode = rootNode.children[0].children[0]
-
-			val firstChildContainerNode = boxNode.children[0]
-			val secondChildContainerNode = boxNode.children[1]
-
-			assertThat(boxNode.size).isEqualTo(IntSize(size, size))
-			assertThat(firstChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset.Zero)
-
-			assertThat(rootNode.draw().render(AnsiLevel.NONE, false)).isEqualTo(
+			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|
-				|$TestChar$TestChar$TestChar$TestChar$TestChar$TestChar
-				|$TestChar$TestChar$TestChar$TestChar$TestChar$TestChar
-				|$TestChar$TestChar$TestChar$TestChar$TestChar$TestChar
-				|$TestChar$TestChar$TestChar$TestChar$TestChar$TestChar
-				|
+				|AAAAAA
+				|XXXXXX
+				|XXXXXX
+				|XXXXXX
+				|XXXXXX
+				|AAAAAA
 				""".trimMargin(),
 			)
 		}
 	}
 
 	@Test fun boxExpanded() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 250
-			val halfSize = 125
+		runMosaicTest {
+			val size = 6
+			val halfSize = 3
 
 			setContent {
 				Container(alignment = Alignment.TopStart) {
 					Container(modifier = Modifier.size(size)) {
-						Box {
-							Container(modifier = Modifier.fillMaxSize())
+						Box(Modifier.fillWith('.')) {
+							Container(modifier = Modifier.fillMaxSize().fillWith('A'))
 							Container(
-								modifier = Modifier.align(Alignment.BottomEnd),
+								modifier = Modifier.align(Alignment.BottomEnd).fillWith('B'),
 								width = halfSize,
 								height = halfSize,
 							)
@@ -317,71 +269,71 @@ class BoxTest {
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val outerContainerNode = rootNode.children[0].children[0]
-			val boxNode = outerContainerNode.children[0]
-
-			val firstChildContainerNode = boxNode.children[0]
-			val secondChildContainerNode = boxNode.children[1]
-
-			assertThat(outerContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(firstChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(halfSize, halfSize))
-			assertThat(secondChildContainerNode.position).isEqualTo(
-				IntOffset(
-					size - halfSize,
-					size - halfSize,
-				),
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AAAAAA
+				|AAAAAA
+				|AAAAAA
+				|AAABBB
+				|AAABBB
+				|AAABBB
+				""".trimMargin(),
 			)
 		}
 	}
 
 	@Test fun boxAlignmentParameter() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val outerSize = 50
-			val innerSize = 10
+		runMosaicTest {
+			val outerSize = 5
+			val innerSize = 2
 
 			setContent {
 				Box(
 					contentAlignment = Alignment.BottomEnd,
-					modifier = Modifier.requiredSize(outerSize),
+					modifier = Modifier.requiredSize(outerSize).fillWith('.'),
 				) {
-					Box(Modifier.requiredSize(innerSize))
+					Box(Modifier.requiredSize(innerSize).fillWith('A'))
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val innerBoxNode = rootNode.children[0].children[0]
-
-			assertThat(innerBoxNode.position)
-				.isEqualTo(IntOffset(outerSize - innerSize, outerSize - innerSize))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|.....
+				|.....
+				|.....
+				|...AA
+				|...AA
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun boxOutermostGravityWins() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 10
+		runMosaicTest {
+			val size = 3
 
 			setContent {
-				Box(Modifier.requiredSize(size)) {
-					Box(Modifier.align(Alignment.BottomEnd).align(Alignment.TopStart))
+				Box(Modifier.requiredSize(size).fillWith('.')) {
+					Box(Modifier.align(Alignment.BottomEnd).align(Alignment.TopStart).size(1).fillWith('A'))
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val innerBoxNode = rootNode.children[0].children[0]
-
-			assertThat(innerBoxNode.position).isEqualTo(IntOffset(size, size))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|...
+				|...
+				|..A
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun boxChildAffectsBoxSize() = runTest {
-		val size = mutableIntStateOf(10)
-		var measure = 0
-		var layout = 0
-
 		runMosaicTest {
+			val size = mutableIntStateOf(10)
+			var measure = 0
+			var layout = 0
+
 			setContent {
 				Box {
 					Layout(
@@ -420,43 +372,38 @@ class BoxTest {
 	}
 
 	@Test fun boxCanPropagateMinConstraints() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			setContent {
 				Box(
-					modifier = Modifier.requiredWidthIn(20, 40),
+					modifier = Modifier.requiredWidthIn(4, 8).fillWith('.'),
 					propagateMinConstraints = true,
 				) {
-					Box(modifier = Modifier.width(10))
+					Box(modifier = Modifier.width(2).height(1).fillWith('A'))
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val innerBoxNode = rootNode.children[0].children[0]
-
-			assertThat(innerBoxNode.width).isEqualTo(20)
+			assertThat(awaitSnapshot()).isEqualTo("AAAA")
 		}
 	}
 
 	@Test fun boxTracksPropagateMinConstraintsChanges() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			val pmc = mutableStateOf(true)
 
 			setContent {
 				Box(
-					modifier = Modifier.requiredWidthIn(20, 40),
+					modifier = Modifier.requiredWidthIn(4, 8).fillWith('.'),
 					propagateMinConstraints = pmc.value,
 					contentAlignment = Alignment.Center,
 				) {
-					Box(modifier = Modifier.width(10))
+					Box(modifier = Modifier.width(2).height(1).fillWith('A'))
 				}
 			}
 
-			val firstRootNode = awaitSnapshot()
-			assertThat(firstRootNode.children[0].children[0].width).isEqualTo(20)
+			assertThat(awaitSnapshot()).isEqualTo("AAAA")
 
 			pmc.value = false
-			val secondRootNode = awaitSnapshot()
-			assertThat(secondRootNode.children[0].children[0].width).isEqualTo(10)
+			assertThat(awaitSnapshot()).isEqualTo(".AA.")
 		}
 	}
 
