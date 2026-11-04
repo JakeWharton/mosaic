@@ -1,5 +1,6 @@
 package example
 
+import androidx.collection.LongList
 import androidx.compose.runtime.Immutable
 import example.models.Phase
 import example.models.Point
@@ -13,4 +14,5 @@ data class SnakeUiState(
 	val score: Int,
 	val snake: Snake,
 	val food: Point,
+	val eaten: LongList,
 )
