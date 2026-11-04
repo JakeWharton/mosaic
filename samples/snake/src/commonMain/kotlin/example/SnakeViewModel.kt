@@ -1,5 +1,6 @@
 package example
 
+import androidx.collection.MutableLongList
 import example.models.Direction
 import example.models.Food
 import example.models.GameState
@@ -44,7 +45,7 @@ private const val INITIAL_SNAKE_SIZE = 3
 @OptIn(ExperimentalAtomicApi::class, ExperimentalTime::class)
 class SnakeViewModel(
 	parentCoroutineScope: CoroutineScope,
-	private val fieldSize: Size = Size(60, 20),
+	private val fieldSize: Size = Size(60, 40),
 	private val updateDelayMs: Long = 200L,
 ) {
 	private val clock: Clock = Clock.System
@@ -74,6 +75,7 @@ class SnakeViewModel(
 	private var gameCycleJob: Job? = null
 
 	init {
+		require(fieldSize.height % 2 == 0) { "Field height must be even: ${fieldSize.height}" }
 		startGame()
 	}
 
@@ -184,6 +186,7 @@ class SnakeViewModel(
 			score = snake.size - INITIAL_SNAKE_SIZE,
 			snake = snake,
 			food = food,
+			eaten = eaten,
 			phase = phase,
 		)
 	}
@@ -210,14 +213,26 @@ class SnakeViewModel(
 			return gameState.copy(phase = Phase.GAME_OVER_LOSE)
 		}
 
+		val eaten = MutableLongList(gameState.eaten.size + 1)
+		gameState.eaten.forEach { point ->
+			if (point in snake) {
+				eaten.add(point)
+			}
+		}
 		if (isGrowing) {
+			eaten.add(food.asLong())
 			food = updateFood(snake, fieldSize)
 			if (food == INVALID_FOOD) {
 				return gameState.copy(phase = Phase.GAME_OVER_WIN)
 			}
 		}
 
-		return gameState.copy(snake = snake, food = food, lastUpdateMs = clock.now().toEpochMilliseconds())
+		return gameState.copy(
+			snake = snake,
+			food = food,
+			eaten = eaten,
+			lastUpdateMs = clock.now().toEpochMilliseconds(),
+		)
 	}
 
 	private fun checkGameOver(gameState: GameState) {
