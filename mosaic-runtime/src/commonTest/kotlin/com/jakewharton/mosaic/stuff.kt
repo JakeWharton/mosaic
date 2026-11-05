@@ -10,6 +10,8 @@ import com.jakewharton.mosaic.layout.MeasureResult
 import com.jakewharton.mosaic.layout.MeasureScope
 import com.jakewharton.mosaic.layout.MosaicNode
 import com.jakewharton.mosaic.layout.Placeable
+import com.jakewharton.mosaic.layout.drawBehind
+import com.jakewharton.mosaic.layout.size
 import com.jakewharton.mosaic.modifier.Modifier
 import com.jakewharton.mosaic.terminal.AnsiLevel.NONE
 import com.jakewharton.mosaic.testing.runMosaicTest
@@ -46,16 +48,15 @@ internal val MosaicNode.position: IntOffset
 
 class Holder<T>(var value: T)
 
-internal fun MosaicNode.nodeByTestTag(tag: String): MosaicNode {
-	val queue = ArrayDeque<MosaicNode>().also { it.add(this) }
-	while (queue.isNotEmpty()) {
-		val node = queue.removeFirst()
-		if (node.testTag == tag) {
-			return node
-		}
-		queue.addAll(node.children)
-	}
-	throw AssertionError("No node with test tag '$tag'")
+internal fun Modifier.fillWith(char: Char): Modifier = drawBehind { drawRect(char) }
+
+internal fun filledRect(width: Int, height: Int, char: Char = TestChar): String {
+	return List(height) { char.toString().repeat(width) }.joinToString("\n")
+}
+
+@Composable
+internal fun Marker() {
+	Filler('#', modifier = Modifier.size(1))
 }
 
 @Composable

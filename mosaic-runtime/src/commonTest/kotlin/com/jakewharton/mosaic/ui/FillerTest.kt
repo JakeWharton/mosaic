@@ -4,18 +4,16 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.Container
 import com.jakewharton.mosaic.DumpSnapshots
-import com.jakewharton.mosaic.NodeSnapshots
-import com.jakewharton.mosaic.TestChar
+import com.jakewharton.mosaic.Marker
 import com.jakewharton.mosaic.TestFiller
+import com.jakewharton.mosaic.filledRect
 import com.jakewharton.mosaic.layout.height
 import com.jakewharton.mosaic.layout.padding
 import com.jakewharton.mosaic.layout.size
 import com.jakewharton.mosaic.layout.width
 import com.jakewharton.mosaic.modifier.Modifier
-import com.jakewharton.mosaic.size
 import com.jakewharton.mosaic.testing.runMosaicTest
 import com.jakewharton.mosaic.ui.unit.Constraints
-import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
@@ -23,39 +21,41 @@ class FillerTest {
 	private val bigConstraints = Constraints(maxWidth = 5000, maxHeight = 5000)
 
 	@Test fun fillerFixed() = runTest {
-		val width = 4
-		val height = 6
 		runMosaicTest {
+			val width = 4
+			val height = 6
+
 			setContent {
 				TestFiller(Modifier.size(width = width, height = height))
 			}
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|$TestChar$TestChar$TestChar$TestChar
-				|$TestChar$TestChar$TestChar$TestChar
-				|$TestChar$TestChar$TestChar$TestChar
-				|$TestChar$TestChar$TestChar$TestChar
-				|$TestChar$TestChar$TestChar$TestChar
-				|$TestChar$TestChar$TestChar$TestChar
+				|XXXX
+				|XXXX
+				|XXXX
+				|XXXX
+				|XXXX
+				|XXXX
 				""".trimMargin(),
 			)
 		}
 	}
 
 	@Test fun fillerFixedWithPadding() = runTest {
-		val width = 4
-		val height = 6
 		runMosaicTest {
+			val width = 4
+			val height = 6
+
 			setContent {
 				TestFiller(Modifier.size(width = width, height = height).padding(1))
 			}
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
 				|
-				| $TestChar$TestChar
-				| $TestChar$TestChar
-				| $TestChar$TestChar
-				| $TestChar$TestChar
+				| XX
+				| XX
+				| XX
+				| XX
 				|
 				""".trimMargin(),
 			)
@@ -63,7 +63,7 @@ class FillerTest {
 	}
 
 	@Test fun fillerFixedSize() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			val width = 40
 			val height = 71
 
@@ -73,14 +73,12 @@ class FillerTest {
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val fillerNode = rootNode.children[0].children[0]
-			assertThat(fillerNode.size).isEqualTo(IntSize(width, height))
+			assertThat(awaitSnapshot()).isEqualTo(filledRect(width, height))
 		}
 	}
 
 	@Test fun fillerFixedWithSmallerContainer() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			val width = 40
 			val height = 71
 
@@ -100,93 +98,95 @@ class FillerTest {
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val fillerNode = rootNode.children[0].children[0].children[0]
-			assertThat(fillerNode.size).isEqualTo(IntSize(containerWidth, containerHeight))
+			assertThat(awaitSnapshot()).isEqualTo(filledRect(containerWidth, containerHeight))
 		}
 	}
 
 	@Test fun fillerWidth() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			val width = 71
 
 			setContent {
-				Container(constraints = bigConstraints) {
-					TestFiller(Modifier.width(width))
+				Row {
+					Container(constraints = bigConstraints) {
+						TestFiller(Modifier.width(width))
+					}
+					Marker()
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val fillerNode = rootNode.children[0].children[0]
-			assertThat(fillerNode.size).isEqualTo(IntSize(width, 0))
+			assertThat(awaitSnapshot()).isEqualTo(" ".repeat(width) + "#")
 		}
 	}
 
 	@Test fun fillerWidthWithSmallerContainer() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			val width = 40
 
 			val containerWidth = 5
 			val containerHeight = 7
 
 			setContent {
-				Box {
-					Container(
-						constraints = Constraints(
-							maxWidth = containerWidth,
-							maxHeight = containerHeight,
-						),
-					) {
-						TestFiller(Modifier.width(width))
+				Row {
+					Box {
+						Container(
+							constraints = Constraints(
+								maxWidth = containerWidth,
+								maxHeight = containerHeight,
+							),
+						) {
+							TestFiller(Modifier.width(width))
+						}
 					}
+					Marker()
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val fillerNode = rootNode.children[0].children[0].children[0]
-			assertThat(fillerNode.size).isEqualTo(IntSize(containerWidth, 0))
+			assertThat(awaitSnapshot()).isEqualTo(" ".repeat(containerWidth) + "#")
 		}
 	}
 
 	@Test fun fillerHeight() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			val height = 7
 
 			setContent {
-				Container(constraints = bigConstraints) {
-					TestFiller(Modifier.height(height))
+				Column {
+					Container(constraints = bigConstraints) {
+						TestFiller(Modifier.height(height))
+					}
+					Marker()
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val fillerNode = rootNode.children[0].children[0]
-			assertThat(fillerNode.size).isEqualTo(IntSize(0, height))
+			assertThat(awaitSnapshot()).isEqualTo("\n".repeat(height) + "#")
 		}
 	}
 
 	@Test fun fillerHeightWithSmallerContainer() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			val height = 23
 
 			val containerWidth = 5
 			val containerHeight = 7
 
 			setContent {
-				Box {
-					Container(
-						constraints = Constraints(
-							maxWidth = containerWidth,
-							maxHeight = containerHeight,
-						),
-					) {
-						TestFiller(Modifier.height(height))
+				Column {
+					Box {
+						Container(
+							constraints = Constraints(
+								maxWidth = containerWidth,
+								maxHeight = containerHeight,
+							),
+						) {
+							TestFiller(Modifier.height(height))
+						}
 					}
+					Marker()
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val fillerNode = rootNode.children[0].children[0].children[0]
-			assertThat(fillerNode.size).isEqualTo(IntSize(0, containerHeight))
+			assertThat(awaitSnapshot()).isEqualTo("\n".repeat(containerHeight) + "#")
 		}
 	}
 
@@ -197,7 +197,7 @@ class FillerTest {
 			}
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|Filler('$TestChar') x=0 y=0 w=0 h=0 DrawBehind
+				|Filler('X') x=0 y=0 w=0 h=0 DrawBehind
 				""".trimMargin(),
 			)
 		}
