@@ -37,6 +37,15 @@ dependencies {
 	dokka(projects.mosaicTtyTerminal)
 }
 
+dokka {
+	dokkaPublications.html {
+		includes.from('README.md')
+	}
+	pluginsConfiguration.html {
+		customAssets.from(fileTree('images'))
+	}
+}
+
 allprojects {
 	group = GROUP
 	version = VERSION_NAME

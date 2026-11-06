@@ -1,3 +1,3 @@
 # Example: jest
 
-<img src="demo.gif">
+<img src="../../images/jest.gif">
