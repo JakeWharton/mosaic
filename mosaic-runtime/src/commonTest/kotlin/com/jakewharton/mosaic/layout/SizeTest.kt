@@ -1,14 +1,15 @@
 package com.jakewharton.mosaic.layout
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotEqualTo
 import com.jakewharton.mosaic.Container
-import com.jakewharton.mosaic.NodeSnapshots
+import com.jakewharton.mosaic.Marker
+import com.jakewharton.mosaic.fillWith
+import com.jakewharton.mosaic.filledRect
 import com.jakewharton.mosaic.modifier.Modifier
-import com.jakewharton.mosaic.position
-import com.jakewharton.mosaic.size
 import com.jakewharton.mosaic.testIntrinsics
 import com.jakewharton.mosaic.testing.runMosaicTest
 import com.jakewharton.mosaic.ui.Alignment
@@ -17,204 +18,150 @@ import com.jakewharton.mosaic.ui.Column
 import com.jakewharton.mosaic.ui.Layout
 import com.jakewharton.mosaic.ui.Row
 import com.jakewharton.mosaic.ui.unit.Constraints
-import com.jakewharton.mosaic.ui.unit.IntOffset
-import com.jakewharton.mosaic.ui.unit.IntSize
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
 class SizeTest {
 	@Test fun testPreferredSize_withWidthSizeModifiers() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
 
 			setContent {
 				Box {
 					Column {
-						Container(Modifier.widthIn(min = size, max = size * 2).height(size))
-						Container(Modifier.widthIn(max = size * 2).height(size))
-						Container(Modifier.widthIn(min = size).height(size))
-						Container(Modifier.widthIn(max = size).widthIn(min = size * 2).height(size))
-						Container(Modifier.widthIn(min = size * 2).widthIn(max = size).height(size))
-						Container(Modifier.size(size))
+						Container(Modifier.fillWith('A').widthIn(min = size, max = size * 2).height(size))
+						Container(Modifier.fillWith('B').widthIn(max = size * 2).height(size))
+						Container(Modifier.fillWith('C').widthIn(min = size).height(size))
+						Container(Modifier.fillWith('D').widthIn(max = size).widthIn(min = size * 2).height(size))
+						Container(Modifier.fillWith('E').widthIn(min = size * 2).widthIn(max = size).height(size))
+						Container(Modifier.fillWith('F').size(size))
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val tempNode = rootNode.children[0].children[0]
-
-			val firstContainerNode = tempNode.children[0]
-			val secondContainerNode = tempNode.children[1]
-			val thirdContainerNode = tempNode.children[2]
-			val fourthContainerNode = tempNode.children[3]
-			val fifthContainerNode = tempNode.children[4]
-			val sixthContainerNode = tempNode.children[5]
-
-			assertThat(firstContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(firstContainerNode.position).isEqualTo(IntOffset.Zero)
-
-			assertThat(secondContainerNode.size).isEqualTo(IntSize(0, size))
-			assertThat(secondContainerNode.position).isEqualTo(IntOffset(0, size))
-
-			assertThat(thirdContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(thirdContainerNode.position).isEqualTo(IntOffset(0, size * 2))
-
-			assertThat(fourthContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(fourthContainerNode.position).isEqualTo(IntOffset(0, size * 3))
-
-			assertThat(fifthContainerNode.size).isEqualTo(IntSize((size * 2), size))
-			assertThat(fifthContainerNode.position).isEqualTo(IntOffset(0, size * 4))
-
-			assertThat(sixthContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(sixthContainerNode.position).isEqualTo(IntOffset(0, size * 5))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA
+				|AA
+				|
+				|
+				|CC
+				|CC
+				|DD
+				|DD
+				|EEEE
+				|EEEE
+				|FF
+				|FF
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testPreferredSize_withHeightSizeModifiers() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 10
+		runMosaicTest {
+			val size = 2
 
 			setContent {
 				Box {
 					Row {
-						Container(Modifier.heightIn(min = size, max = size * 2).width(size))
-						Container(Modifier.heightIn(max = size * 2).width(size))
-						Container(Modifier.heightIn(min = size).width(size))
-						Container(Modifier.heightIn(max = size).heightIn(min = size * 2).width(size))
-						Container(Modifier.heightIn(min = size * 2).heightIn(max = size).width(size))
-						Container(Modifier.height(size).then(Modifier.width(size)))
+						Container(Modifier.fillWith('A').heightIn(min = size, max = size * 2).width(size))
+						Container(Modifier.fillWith('B').heightIn(max = size * 2).width(size))
+						Container(Modifier.fillWith('C').heightIn(min = size).width(size))
+						Container(Modifier.fillWith('D').heightIn(max = size).heightIn(min = size * 2).width(size))
+						Container(Modifier.fillWith('E').heightIn(min = size * 2).heightIn(max = size).width(size))
+						Container(Modifier.fillWith('F').height(size).then(Modifier.width(size)))
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val tempNode = rootNode.children[0].children[0]
-
-			val firstContainerNode = tempNode.children[0]
-			val secondContainerNode = tempNode.children[1]
-			val thirdContainerNode = tempNode.children[2]
-			val fourthContainerNode = tempNode.children[3]
-			val fifthContainerNode = tempNode.children[4]
-			val sixthContainerNode = tempNode.children[5]
-
-			assertThat(firstContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(firstContainerNode.position).isEqualTo(IntOffset.Zero)
-
-			assertThat(secondContainerNode.size).isEqualTo(IntSize(size, 0))
-			assertThat(secondContainerNode.position).isEqualTo(IntOffset(size, 0))
-
-			assertThat(thirdContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(thirdContainerNode.position).isEqualTo(IntOffset(size * 2, 0))
-
-			assertThat(fourthContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(fourthContainerNode.position).isEqualTo(IntOffset(size * 3, 0))
-
-			assertThat(fifthContainerNode.size).isEqualTo(IntSize(size, (size * 2)))
-			assertThat(fifthContainerNode.position).isEqualTo(IntOffset(size * 4, 0))
-
-			assertThat(sixthContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(sixthContainerNode.position).isEqualTo(IntOffset(size * 5, 0))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA  CCDDEEFF
+				|AA  CCDDEEFF
+				|        EE
+				|        EE
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testPreferredSize_withSizeModifiers() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
 
 			setContent {
 				Box {
 					Row {
 						val maxSize = size * 2
 						Container(
-							Modifier.sizeIn(maxWidth = maxSize, maxHeight = maxSize)
+							Modifier.fillWith('A').sizeIn(maxWidth = maxSize, maxHeight = maxSize)
 								.sizeIn(minWidth = size, minHeight = size),
 						)
 						Container(
-							Modifier.sizeIn(maxWidth = size, maxHeight = size)
+							Modifier.fillWith('B').sizeIn(maxWidth = size, maxHeight = size)
 								.sizeIn(minWidth = size * 2, minHeight = size),
 						)
 						val maxSize1 = size * 2
 						Container(
-							Modifier.sizeIn(minWidth = size, minHeight = size)
+							Modifier.fillWith('C').sizeIn(minWidth = size, minHeight = size)
 								.sizeIn(maxWidth = maxSize1, maxHeight = maxSize1),
 						)
 						val minSize = size * 2
 						Container(
-							Modifier.sizeIn(minWidth = minSize, minHeight = minSize)
+							Modifier.fillWith('D').sizeIn(minWidth = minSize, minHeight = minSize)
 								.sizeIn(maxWidth = size, maxHeight = size),
 						)
-						Container(Modifier.size(size))
+						Container(Modifier.fillWith('E').size(size))
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val tempNode = rootNode.children[0].children[0]
-
-			val firstContainerNode = tempNode.children[0]
-			val secondContainerNode = tempNode.children[1]
-			val thirdContainerNode = tempNode.children[2]
-			val fourthContainerNode = tempNode.children[3]
-			val fifthContainerNode = tempNode.children[4]
-
-			assertThat(firstContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(firstContainerNode.position).isEqualTo(IntOffset.Zero)
-
-			assertThat(secondContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(secondContainerNode.position).isEqualTo(IntOffset(size, 0))
-
-			assertThat(thirdContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(thirdContainerNode.position).isEqualTo(IntOffset(size * 2, 0))
-
-			assertThat(fourthContainerNode.size).isEqualTo(IntSize(size * 2, size * 2))
-			assertThat(fourthContainerNode.position).isEqualTo(IntOffset(size * 3, 0))
-
-			assertThat(fifthContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(fifthContainerNode.position).isEqualTo(IntOffset(size * 5, 0))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AABBCCDDDDEE
+				|AABBCCDDDDEE
+				|      DDDD
+				|      DDDD
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testPreferredSizeModifiers_respectMaxConstraint() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			val size = 100
 
 			setContent {
 				Box {
-					Container(width = size, height = size) {
-						Container(Modifier.width(size * 2).height(size * 3)) {
+					Container(modifier = Modifier.fillWith('A'), width = size, height = size) {
+						Container(Modifier.fillWith('B').width(size * 2).height(size * 3)) {
 							Container(expanded = true)
 						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val tempNode = rootNode.children[0].children[0]
-
-			val parentContainerNode = tempNode.children[0]
-			val childContainerNode = parentContainerNode.children[0]
-
-			assertThat(parentContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(childContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(childContainerNode.position).isEqualTo(IntOffset.Zero)
+			assertThat(awaitSnapshot()).isEqualTo(filledRect(size, size, 'B'))
 		}
 	}
 
 	@Test fun testMaxModifiers_withInfiniteValue() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 20
+		runMosaicTest {
+			val size = 2
 
 			setContent {
 				Box {
 					Row {
 						Container(Modifier.widthIn(max = Constraints.Infinity)) {
-							Container(width = size, height = size)
+							Container(modifier = Modifier.fillWith('A'), width = size, height = size)
 						}
 						Container(Modifier.heightIn(max = Constraints.Infinity)) {
-							Container(width = size, height = size)
+							Container(modifier = Modifier.fillWith('B'), width = size, height = size)
 						}
 						Container(
-							Modifier.width(size)
+							Modifier.fillWith('C')
+								.width(size)
 								.height(size)
 								.widthIn(max = Constraints.Infinity)
 								.heightIn(max = Constraints.Infinity),
@@ -225,24 +172,18 @@ class SizeTest {
 								maxHeight = Constraints.Infinity,
 							),
 						) {
-							Container(width = size, height = size) {}
+							Container(modifier = Modifier.fillWith('D'), width = size, height = size) {}
 						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val tempNode = rootNode.children[0].children[0]
-
-			val firstContainerNode = tempNode.children[0].children[0]
-			val secondContainerNode = tempNode.children[1].children[0]
-			val thirdContainerNode = tempNode.children[2]
-			val fourthContainerNode = tempNode.children[3].children[0]
-
-			assertThat(firstContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(secondContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(thirdContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(fourthContainerNode.size).isEqualTo(IntSize(size, size))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AABBCCDD
+				|AABBCCDD
+				""".trimMargin(),
+			)
 		}
 	}
 
@@ -818,14 +759,14 @@ class SizeTest {
 		val childHeight = 30
 		val childModifier = Modifier.size(childWidth, childHeight)
 
-		assertThat(calculateSizeFor(parentModifier, childModifier))
-			.isEqualTo(IntSize(childWidth, childHeight))
-		assertThat(calculateSizeFor(parentModifier, Modifier.fillMaxWidth().then(childModifier)))
-			.isEqualTo(IntSize(parentWidth, childHeight))
-		assertThat(calculateSizeFor(parentModifier, Modifier.fillMaxHeight().then(childModifier)))
-			.isEqualTo(IntSize(childWidth, parentHeight))
-		assertThat(calculateSizeFor(parentModifier, Modifier.fillMaxSize().then(childModifier)))
-			.isEqualTo(IntSize(parentWidth, parentHeight))
+		assertThat(render(parentModifier, childModifier))
+			.isEqualTo(rectInParent(childWidth, childHeight, parentHeight))
+		assertThat(render(parentModifier, Modifier.fillMaxWidth().then(childModifier)))
+			.isEqualTo(rectInParent(parentWidth, childHeight, parentHeight))
+		assertThat(render(parentModifier, Modifier.fillMaxHeight().then(childModifier)))
+			.isEqualTo(rectInParent(childWidth, parentHeight, parentHeight))
+		assertThat(render(parentModifier, Modifier.fillMaxSize().then(childModifier)))
+			.isEqualTo(rectInParent(parentWidth, parentHeight, parentHeight))
 	}
 
 	@Test fun testFractionalFillModifier_correctSize_whenSmallerChild() = runTest {
@@ -836,14 +777,14 @@ class SizeTest {
 		val childHeight = 30
 		val childModifier = Modifier.size(childWidth, childHeight)
 
-		assertThat(calculateSizeFor(parentModifier, childModifier))
-			.isEqualTo(IntSize(childWidth, childHeight))
-		assertThat(calculateSizeFor(parentModifier, Modifier.fillMaxWidth(0.5f).then(childModifier)))
-			.isEqualTo(IntSize(parentWidth / 2, childHeight))
-		assertThat(calculateSizeFor(parentModifier, Modifier.fillMaxHeight(0.5f).then(childModifier)))
-			.isEqualTo(IntSize(childWidth, parentHeight / 2))
-		assertThat(calculateSizeFor(parentModifier, Modifier.fillMaxSize(0.5f).then(childModifier)))
-			.isEqualTo(IntSize(parentWidth / 2, parentHeight / 2))
+		assertThat(render(parentModifier, childModifier))
+			.isEqualTo(rectInParent(childWidth, childHeight, parentHeight))
+		assertThat(render(parentModifier, Modifier.fillMaxWidth(0.5f).then(childModifier)))
+			.isEqualTo(rectInParent(parentWidth / 2, childHeight, parentHeight))
+		assertThat(render(parentModifier, Modifier.fillMaxHeight(0.5f).then(childModifier)))
+			.isEqualTo(rectInParent(childWidth, parentHeight / 2, parentHeight))
+		assertThat(render(parentModifier, Modifier.fillMaxSize(0.5f).then(childModifier)))
+			.isEqualTo(rectInParent(parentWidth / 2, parentHeight / 2, parentHeight))
 	}
 
 	@Test fun testFractionalFillModifier_correctSize_whenLargerChild() = runTest {
@@ -854,14 +795,14 @@ class SizeTest {
 		val childHeight = 50
 		val childModifier = Modifier.size(childWidth, childHeight)
 
-		assertThat(calculateSizeFor(parentModifier, childModifier))
-			.isEqualTo(IntSize(childWidth, childHeight))
-		assertThat(calculateSizeFor(parentModifier, Modifier.fillMaxWidth(0.5f).then(childModifier)))
-			.isEqualTo(IntSize(parentWidth / 2, childHeight))
-		assertThat(calculateSizeFor(parentModifier, Modifier.fillMaxHeight(0.5f).then(childModifier)))
-			.isEqualTo(IntSize(childWidth, parentHeight / 2))
-		assertThat(calculateSizeFor(parentModifier, Modifier.fillMaxSize(0.5f).then(childModifier)))
-			.isEqualTo(IntSize(parentWidth / 2, parentHeight / 2))
+		assertThat(render(parentModifier, childModifier))
+			.isEqualTo(rectInParent(childWidth, childHeight, parentHeight))
+		assertThat(render(parentModifier, Modifier.fillMaxWidth(0.5f).then(childModifier)))
+			.isEqualTo(rectInParent(parentWidth / 2, childHeight, parentHeight))
+		assertThat(render(parentModifier, Modifier.fillMaxHeight(0.5f).then(childModifier)))
+			.isEqualTo(rectInParent(childWidth, parentHeight / 2, parentHeight))
+		assertThat(render(parentModifier, Modifier.fillMaxSize(0.5f).then(childModifier)))
+			.isEqualTo(rectInParent(parentWidth / 2, parentHeight / 2, parentHeight))
 	}
 
 	@Test fun testFractionalFillModifier_coerced() = runTest {
@@ -876,25 +817,28 @@ class SizeTest {
 			childMaxHeight,
 		)
 
-		assertThat(calculateSizeFor(Modifier, childModifier.then(Modifier.fillMaxSize(0.1f))))
-			.isEqualTo(IntSize(childMinWidth, childMinHeight))
-		assertThat(calculateSizeFor(Modifier, childModifier.then(Modifier.fillMaxSize(1.0f))))
-			.isEqualTo(IntSize(childMaxWidth, childMaxHeight))
+		assertThat(render(Modifier, childModifier.then(Modifier.fillMaxSize(0.1f))))
+			.isEqualTo(filledRect(childMinWidth, childMinHeight, 'X'))
+		assertThat(render(Modifier, childModifier.then(Modifier.fillMaxSize(1.0f))))
+			.isEqualTo(filledRect(childMaxWidth, childMaxHeight, 'X'))
 	}
 
-	private suspend fun calculateSizeFor(parentModifier: Modifier, modifier: Modifier): IntSize {
-		return runMosaicTest(NodeSnapshots) {
+	private suspend fun render(parentModifier: Modifier, modifier: Modifier): String {
+		lateinit var snapshot: String
+		runMosaicTest {
 			setContent {
 				Box(parentModifier) {
-					Box(modifier)
+					Box(Modifier.fillWith('X').then(modifier))
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val innerBoxNode = rootNode.children[0].children[0]
-
-			IntSize(innerBoxNode.width, innerBoxNode.height)
+			snapshot = awaitSnapshot()
 		}
+		return snapshot
+	}
+
+	private fun rectInParent(width: Int, height: Int, parentHeight: Int): String {
+		return filledRect(width, height, 'X') + "\n".repeat(parentHeight - height)
 	}
 
 	@Test fun testDefaultMinSizeModifier_hasCorrectIntrinsicMeasurements() = runTest {
@@ -962,11 +906,11 @@ class SizeTest {
 	}
 
 	@Test fun test2DWrapContentSize() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			val size = 50
 
 			setContent {
-				Container {
+				Container(Modifier.fillWith('A')) {
 					Container(
 						Modifier.fillMaxSize()
 							.wrapContentSize(Alignment.BottomEnd)
@@ -975,68 +919,63 @@ class SizeTest {
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val innerContainerNode = rootNode.children[0]
-
-			assertThat(rootNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(innerContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(innerContainerNode.position)
-				.isEqualTo(IntOffset(rootNode.width - size, rootNode.height - size))
+			assertThat(awaitSnapshot()).isEqualTo(filledRect(size, size, 'A'))
 		}
 	}
 
 	@Test fun test1DWrapContentSize() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			val size = 50
 
 			setContent {
-				Container {
-					Container(
-						Modifier.fillMaxSize()
-							.wrapContentWidth(Alignment.End)
-							.width(size),
-					)
+				Row {
+					Container(Modifier.fillWith('A')) {
+						Container(
+							Modifier.fillMaxSize()
+								.wrapContentWidth(Alignment.End)
+								.width(size),
+						)
+					}
+					Marker()
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val innerContainerNode = rootNode.children[0]
-
-			assertThat(rootNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(innerContainerNode.size).isEqualTo(IntSize(size, rootNode.height))
-			assertThat(innerContainerNode.position).isEqualTo(IntOffset(rootNode.width - size, 0))
+			assertThat(awaitSnapshot()).isEqualTo(" ".repeat(size) + "#")
 		}
 	}
 
 	@Test fun testModifier_wrapsContent() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			val contentSize = 50
 
 			setContent {
 				Container {
-					Container {
+					Container(Modifier.fillWith('A')) {
 						Container(Modifier.wrapContentSize(Alignment.TopStart).size(contentSize))
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val middleContainerNode = rootNode.children[0].children[0]
-
-			assertThat(middleContainerNode.size).isEqualTo(IntSize(contentSize, contentSize))
+			assertThat(awaitSnapshot()).isEqualTo(filledRect(contentSize, contentSize, 'A'))
 		}
 	}
 
 	@Test fun testWrapContentSize_wrapsContent_whenMeasuredWithInfiniteConstraints() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
+			val parentSize = 100
 			val size = 50
+			val drawChild = mutableStateOf(false)
 
 			setContent {
 				Layout(
-					modifier = Modifier.size(100),
+					modifier = Modifier.size(parentSize),
 					content = {
-						Container {
-							Container(Modifier.wrapContentSize(Alignment.BottomEnd).size(size))
+						Container(Modifier.fillWith('A')) {
+							Container(
+								Modifier.drawBehind { if (drawChild.value) drawRect('B') }
+									.wrapContentSize(Alignment.BottomEnd)
+									.size(size),
+							)
 						}
 					},
 					measurePolicy = { measurables, constraints ->
@@ -1048,14 +987,11 @@ class SizeTest {
 				)
 			}
 
-			val rootNode = awaitSnapshot()
-			val alignContainerNode = rootNode.children[0].children[0]
-			val childContainerNode = rootNode.children[0].children[0].children[0]
+			assertThat(awaitSnapshot()).isEqualTo(filledRect(size, size, 'A') + "\n".repeat(parentSize - size))
 
-			assertThat(alignContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(alignContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(childContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(childContainerNode.position).isEqualTo(IntOffset.Zero)
+			drawChild.value = true
+
+			assertThat(awaitSnapshot()).isEqualTo(filledRect(size, size, 'B') + "\n".repeat(parentSize - size))
 		}
 	}
 
