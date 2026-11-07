@@ -31,6 +31,11 @@
 <script type="text/javascript" src="scripts/main.js" defer="defer"></script>
 <script type="text/javascript" src="scripts/prism.js" async="async"></script>
 <script type="text/javascript" src="ui-kit/ui-kit.min.js" defer="defer"></script>
+<link href="images/robot.gif">
+<link href="images/rrtop.gif">
+<link href="images/jest.gif">
+<link href="images/counter.gif">
+<link href="images/demo.gif">
 </head>
 <body>
 <div class="root">
@@ -77,6 +82,99 @@
 <div class="main-content" id="content" pageIds="mosaic::.ext/allModules///PointingToDeclaration//0">
   <div class="breadcrumbs"></div>
   <div class="cover ">
+    <div class="cover ">
+      <h1 class="">Mosaic</h1>
+      <p class="paragraph">An experimental tool for building console UI in Kotlin using the Jetpack Compose compiler/runtime. Inspired by <a href="https://github.com/vadimdemedes/ink">Ink</a>.</p>
+<img src="images/jest.gif">      <p class="paragraph">Jump to: #Introduction | #Usage | #Samples | #FAQ | #License</p>
+      <h2 class="">Introduction</h2>
+      <p class="paragraph">The entrypoint to Mosaic is the <code class="lang-kotlin">runMosaicMain</code> function. The lambda passed to this function is responsible for both output and performing work.</p>
+      <div class="sample-container">
+        <pre><code class="block lang-kotlin" theme="idea">fun main() = runMosaicMain {<br>  Text(&quot;The count is: 0&quot;)<br>}</code></pre>
+<span class="copy-tooltip">
+          <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
+<span class="copy-icon"></span></span></div>
+      <p class="paragraph">To change the output dynamically we can use local properties to hold state. Let's update our counter to actually count to 20.</p>
+      <div class="sample-container">
+        <pre><code class="block lang-kotlin" theme="idea">fun main() = runMosaicMain {<br>  var count by remember { mutableIntStateOf(0) }<br><br>  Text(&quot;The count is: $count&quot;)<br><br>  LaunchedEffect(Unit) {<br>    for (i in 1..20) {<br>      delay(250.milliseconds)<br>      count = i<br>    }<br>  }<br>}</code></pre>
+<span class="copy-tooltip">
+          <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
+<span class="copy-icon"></span></span></div>
+      <p class="paragraph">(Note: You may need to add imports for <code class="lang-kotlin">androidx.compose.runtime.getValue</code> and <code class="lang-kotlin">androidx.compose.runtime.setValue</code> manually.)</p>
+<img src="images/counter.gif">      <p class="paragraph">That is the most basic sample of Mosaic. From there, the limit is only your imagination.</p>
+<img src="images/jest.gif"><img src="images/rrtop.gif">      <p class="paragraph"><i>(Note: graphs in the above have rendering problems due to asciinema/agg which do not appear in the real output)</i></p>
+      <h2 class="">Usage</h2>
+      <p class="paragraph">Mosaic is a library for Compose, and it relies on JetBrains' Kotlin Compose plugin to be present for use. Any module which wants to call <code class="lang-kotlin">runMosaic</code> or define <code class="lang-kotlin">@Composable</code> functions for use with Mosaic must have this plugin applied. For more information, see <a href="https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-compiler.html">the JetBrains Compose compiler documentation</a>.</p>
+      <p class="paragraph">Mosaic itself can then be added like any other dependency:</p>
+      <div class="sample-container">
+        <pre><code class="block lang-groovy" theme="idea">dependencies {<br>  implementation(&quot;com.jakewharton.mosaic:mosaic-runtime:0.18.0&quot;)<br>}</code></pre>
+<span class="copy-tooltip">
+          <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
+<span class="copy-icon"></span></span></div>
+      <p class="paragraph">Documentation is available at <a href="https://jakewharton.github.io/mosaic/docs/0.x/">jakewharton.github.io/mosaic/docs/0.x/</a>.</p>
+<details>
+<summary>Snapshots of the development version are available in the Central Portal Snapshots repository.</summary>
+<p>      <div class="sample-container">
+        <pre><code class="block lang-groovy" theme="idea">repositories {<br>  mavenCentral()<br>  maven {<br>    url 'https://central.sonatype.com/repository/maven-snapshots/'<br>  }<br>}<br>dependencies {<br>  implementation(&quot;com.jakewharton.mosaic:mosaic-runtime:0.19.0-SNAPSHOT&quot;)<br>}</code></pre>
+<span class="copy-tooltip">
+          <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
+<span class="copy-icon"></span></span></div>
+      <p class="paragraph">Snapshot documentation is available at <a href="https://jakewharton.github.io/mosaic/docs/latest/">jakewharton.github.io/mosaic/docs/latest/</a>.</p>
+</p>
+</details>      <h2 class="">Samples</h2>
+      <p class="paragraph">Run <code class="lang-kotlin">./gradlew installJvmDist</code> to build the sample binaries.</p>
+      <ul>
+        <li>
+          <p class="paragraph"><a href="https://github.com/JakeWharton/mosaic/tree/trunk/samples/counter">Counter</a>: A simple increasing number from 0 until 20.</p>
+          <p class="paragraph"><code class="lang-kotlin">./samples/counter/build/install/counter-jvm/bin/counter</code></p>
+        </li>
+        <li>
+          <p class="paragraph"><a href="https://github.com/JakeWharton/mosaic/tree/trunk/samples/demo">Demo</a>: A playground for demonstrating many features of Mosaic.</p>
+          <p class="paragraph"><code class="lang-kotlin">./samples/demo/build/install/demo-jvm/bin/demo</code></p>
+        </li>
+        <li>
+          <p class="paragraph"><a href="https://github.com/JakeWharton/mosaic/tree/trunk/samples/jest">Jest</a>: Example output of a test framework (such as JS's 'Jest').</p>
+          <p class="paragraph"><code class="lang-kotlin">./samples/jest/build/install/jest-jvm/bin/jest</code></p>
+        </li>
+        <li>
+          <p class="paragraph"><a href="https://github.com/JakeWharton/mosaic/tree/trunk/samples/robot">Robot</a>: An interactive, game-like program with keyboard control.</p>
+          <p class="paragraph"><code class="lang-kotlin">./samples/robot/build/install/robot-jvm/bin/robot</code></p>
+        </li>
+        <li>
+          <p class="paragraph"><a href="https://github.com/JakeWharton/mosaic/tree/trunk/samples/rrtop">rrtop</a>: An example inspired by <a href="https://github.com/wojciech-zurek/rrtop">rrtop</a>.</p>
+          <p class="paragraph"><code class="lang-kotlin">./samples/rrtop/build/install/rrtop-jvm/bin/rrtop</code></p>
+        </li>
+        <li>
+          <p class="paragraph"><a href="https://github.com/JakeWharton/mosaic/tree/trunk/samples/snake">snake</a>: Snake game.</p>
+          <p class="paragraph"><code class="lang-kotlin">./samples/snake/build/install/snake-jvm/bin/snake</code></p>
+        </li>
+      </ul>
+      <h2 class="">FAQ</h2>
+      <h3 class="">I thought Compose was a UI toolkit for Android?</h3>
+      <p class="paragraph">Compose is, at its core, a general-purpose compiler and runtime to do state tracking and tree node and property manipulation. This can be used on any platform supported by Kotlin for any kind of state or with any tree. It's an amazing piece of technology.</p>
+      <p class="paragraph">Compose UI is the modern UI toolkit for Android which also runs on the desktop, iOS, and the web. The lack of differentiation between these two technologies has unfortunately caused Compose UI to overshadow the core under the single &quot;Compose&quot; moniker in an unforced marketing error.</p>
+      <p class="paragraph">Other examples of non-Compose UI-based Compose projects are Cash App's Redwood, JetBrains' Compose HTML, or Google's Jetpack Glance.</p>
+      <h3 class="">Broken output with <code class="lang-kotlin">./gradlew run</code> and/or inside IntelliJ IDEA</h3>
+      <p class="paragraph">Running within Gradle or IntelliJ IDEA will not work. These tools do not provide access to the TTY in order to be interactive. And for non-interactive programs, both will strip ANSI control characters which prevent Mosaic from redrawing over a previous frame. The output will likely just render in successive lines instead.</p>
+      <p class="paragraph">Run your programs directly in a terminal emulator–no IDE and no Gradle.</p>
+      <h1 class="">License</h1>
+      <div class="sample-container">
+        <pre><code class="block lang-kotlin" theme="idea">Copyright 2020 Jake Wharton
+
+Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</code></pre>
+<span class="copy-tooltip">
+          <div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div>
+<span class="copy-icon"></span></span></div>
+    </div>
     <h2 class="">All modules:</h2>
     <div class="table"><a data-name="1890805620%2FMain%2F0" anchor-label="mosaic-animation" id="1890805620%2FMain%2F0" data-filterable-set=""></a>
       <div class="table-row table-row_multimodule">
@@ -86,7 +184,9 @@
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1890805620%2FMain%2F0"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div><span class="brief-comment"></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph">This is a Mosaic-adapted copy of the <a href="https://developer.android.com/reference/kotlin/androidx/compose/animation/core/package-summary">androidx.compose.animation-core</a> library source code.</p>
+            </span></div>
         </div>
       </div>
 <a data-name="-1851007136%2FMain%2F0" anchor-label="mosaic-runtime" id="-1851007136%2FMain%2F0" data-filterable-set=""></a>
@@ -97,7 +197,9 @@
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1851007136%2FMain%2F0"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div><span class="brief-comment"></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph">Core runtime and UI components.</p>
+            </span></div>
         </div>
       </div>
 <a data-name="1697362446%2FMain%2F0" anchor-label="mosaic-terminal" id="1697362446%2FMain%2F0" data-filterable-set=""></a>
@@ -108,7 +210,9 @@
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1697362446%2FMain%2F0"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div><span class="brief-comment"></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph">High-level terminal interface.</p>
+            </span></div>
         </div>
       </div>
 <a data-name="-1813844952%2FMain%2F0" anchor-label="mosaic-testing" id="-1813844952%2FMain%2F0" data-filterable-set=""></a>
@@ -119,7 +223,9 @@
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1813844952%2FMain%2F0"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div><span class="brief-comment"></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph">Utilities for testing Mosaic composables.</p>
+            </span></div>
         </div>
       </div>
 <a data-name="-2100953121%2FMain%2F0" anchor-label="mosaic-tty" id="-2100953121%2FMain%2F0" data-filterable-set=""></a>
@@ -130,7 +236,9 @@
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2100953121%2FMain%2F0"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div><span class="brief-comment"></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph">Low-level TTY manipulation library.</p>
+            </span></div>
         </div>
       </div>
 <a data-name="814881466%2FMain%2F0" anchor-label="mosaic-tty-terminal" id="814881466%2FMain%2F0" data-filterable-set=""></a>
@@ -141,7 +249,9 @@
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="814881466%2FMain%2F0"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div><span class="brief-comment"></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph">High-level terminal manipulation and parsing library.</p>
+            </span></div>
         </div>
       </div>
     </div>
