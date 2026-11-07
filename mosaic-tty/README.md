@@ -1,4 +1,4 @@
-# Mosaic TTY
+# Module mosaic-tty
 
 Low-level TTY manipulation library.
 

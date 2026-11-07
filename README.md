@@ -3,7 +3,7 @@
 An experimental tool for building console UI in Kotlin using the Jetpack Compose compiler/runtime.
 Inspired by [Ink](https://github.com/vadimdemedes/ink).
 
-<img src="samples/jest/demo.gif">
+<img src="images/jest.gif">
 
 Jump to:
 [Introduction](#Introduction) |
@@ -15,11 +15,11 @@ Jump to:
 
 ## Introduction
 
-The entrypoint to Mosaic is the `runMosaic` function.
+The entrypoint to Mosaic is the `runMosaicMain` function.
 The lambda passed to this function is responsible for both output and performing work.
 
 ```kotlin
-suspend fun main() = runMosaic {
+fun main() = runMosaicMain {
   Text("The count is: 0")
 }
 ```
@@ -28,7 +28,7 @@ To change the output dynamically we can use local properties to hold state.
 Let's update our counter to actually count to 20.
 
 ```kotlin
-suspend fun main() = runMosaic {
+fun main() = runMosaicMain {
   var count by remember { mutableIntStateOf(0) }
 
   Text("The count is: $count")
@@ -42,16 +42,16 @@ suspend fun main() = runMosaic {
 }
 ```
 
-(Note: You may need to add imports for `androidx.compose.runtime.getValue` and `import androidx.compose.runtime.setValue` manually.)
+(Note: You may need to add imports for `androidx.compose.runtime.getValue` and `androidx.compose.runtime.setValue` manually.)
 
-<img src="samples/counter/demo.gif">
+<img src="images/counter.gif">
 
 That is the most basic sample of Mosaic.
 From there, the limit is only your imagination.
 
-<img src="samples/jest/demo.gif">
+<img src="images/jest.gif">
 
-<img src="samples/rrtop/demo.gif">
+<img src="images/rrtop.gif">
 
 _(Note: graphs in the above have rendering problems due to asciinema/agg which do not appear in the real output)_
 
@@ -76,7 +76,7 @@ Documentation is available at [jakewharton.github.io/mosaic/docs/0.x/](https://j
 <p>
 
 ```groovy
-repository {
+repositories {
   mavenCentral()
   maven {
     url 'https://central.sonatype.com/repository/maven-snapshots/'
@@ -95,31 +95,31 @@ Snapshot documentation is available at [jakewharton.github.io/mosaic/docs/latest
 
 ## Samples
 
-Run `./gradlew installDist` to build the sample binaries.
+Run `./gradlew installJvmDist` to build the sample binaries.
 
- * [Counter](samples/counter): A simple increasing number from 0 until 20.
+ * [Counter](https://github.com/JakeWharton/mosaic/tree/trunk/samples/counter): A simple increasing number from 0 until 20.
 
-   `./samples/counter/build/install/counter/bin/counter`
+   `./samples/counter/build/install/counter-jvm/bin/counter`
 
- * [Demo](samples/demo): A playground for demonstrating many features of Mosaic.
+ * [Demo](https://github.com/JakeWharton/mosaic/tree/trunk/samples/demo): A playground for demonstrating many features of Mosaic.
 
-   `./samples/demo/build/install/demo/bin/demo`
+   `./samples/demo/build/install/demo-jvm/bin/demo`
 
- * [Jest](samples/jest): Example output of a test framework (such as JS's 'Jest').
+ * [Jest](https://github.com/JakeWharton/mosaic/tree/trunk/samples/jest): Example output of a test framework (such as JS's 'Jest').
 
-   `./samples/jest/build/install/jest/bin/jest`
+   `./samples/jest/build/install/jest-jvm/bin/jest`
 
- * [Robot](samples/robot): An interactive, game-like program with keyboard control.
+ * [Robot](https://github.com/JakeWharton/mosaic/tree/trunk/samples/robot): An interactive, game-like program with keyboard control.
 
-   `./samples/robot/build/install/robot/bin/robot`
+   `./samples/robot/build/install/robot-jvm/bin/robot`
 
- * [rrtop](samples/rrtop): An example inspired by [rrtop](https://github.com/wojciech-zurek/rrtop).
+ * [rrtop](https://github.com/JakeWharton/mosaic/tree/trunk/samples/rrtop): An example inspired by [rrtop](https://github.com/wojciech-zurek/rrtop).
 
-   `./samples/rrtop/build/install/rrtop/bin/rrtop`
+   `./samples/rrtop/build/install/rrtop-jvm/bin/rrtop`
 
- * [snake](samples/snake): Snake game.
+ * [snake](https://github.com/JakeWharton/mosaic/tree/trunk/samples/snake): Snake game.
 
-   `./samples/snake/build/install/snake/bin/snake`
+   `./samples/snake/build/install/snake-jvm/bin/snake`
 
 ## FAQ
 
