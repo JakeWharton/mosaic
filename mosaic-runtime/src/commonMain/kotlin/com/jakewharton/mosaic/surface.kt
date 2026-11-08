@@ -63,8 +63,14 @@ internal class TextSurface(
 		}
 
 		var lastPixel = blankPixel
-		for (columnIndex in rowStart until rowStop) {
+		var columnIndex = rowStart
+		while (columnIndex < rowStop) {
 			val pixel = cells[columnIndex]
+
+			if (pixel.isWideContinuation) {
+				columnIndex++
+				continue
+			}
 
 			if (ansiLevel != AnsiLevel.NONE) {
 				if (pixel.foreground != lastPixel.foreground) {
@@ -136,6 +142,7 @@ internal class TextSurface(
 
 			appendable.appendCodePoint(pixel.codePoint)
 			lastPixel = pixel
+			columnIndex++
 		}
 
 		if (
@@ -210,6 +217,7 @@ internal class TextPixel(var codePoint: Int) {
 	var textStyle: TextStyle = TextStyle.Empty
 	var underlineStyle: UnderlineStyle = UnderlineStyle.Unspecified
 	var underlineColor: Color = Color.Unspecified
+	var isWideContinuation: Boolean = false
 
 	fun isEmpty(): Boolean {
 		return codePoint == SpaceCharCodePoint &&

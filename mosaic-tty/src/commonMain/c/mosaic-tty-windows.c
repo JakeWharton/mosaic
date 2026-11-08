@@ -115,52 +115,67 @@ MOSAIC_EXPORT MosaicIoResult mosaic_tty_read_with_timeout(
 	loop:
 	waitResult = WaitForMultipleObjects(2, waitHandles, FALSE, timeoutMillis);
 	if (likely(waitResult == WAIT_OBJECT_0)) {
+		// Peek at pending events without consuming them, so that ReadFile
+		// can later consume keyboard/mouse INPUT_RECORDs as VT sequences.
+		// FOCUS_EVENT and WINDOW_BUFFER_SIZE_EVENT only exist as INPUT_RECORDs
+		// and are handled via callbacks.
 		INPUT_RECORD *records = tty->records;
-		int recordRequest = recordsCount > count ? count : recordsCount;
 		DWORD recordsRead = 0;
-		if (unlikely(!ReadConsoleInputW(tty->conin, records, recordRequest, &recordsRead))) {
+		if (unlikely(!PeekConsoleInputW(tty->conin, records, recordsCount, &recordsRead))) {
 			goto err;
 		}
 
 		MosaicTtyCallback *callback = tty->callback;
-		int nextBufferIndex = 0;
-		for (int i = 0; i < (int) recordsRead; i++) {
-			INPUT_RECORD record = records[i];
-			if (record.EventType == KEY_EVENT) {
-				if (record.Event.KeyEvent.wVirtualKeyCode == 0) {
-					buffer[nextBufferIndex++] = record.Event.KeyEvent.uChar.AsciiChar;
-				}
-				// TODO else other key shit
-			} else if (record.EventType == MOUSE_EVENT) {
-				// TODO mouse shit
-			} else if (record.EventType == FOCUS_EVENT) {
+		bool hadKeyboardEvents = false;
+
+		for (DWORD i = 0; i < recordsRead; i++) {
+			INPUT_RECORD *rec = &records[i];
+
+			switch (rec->EventType) {
+			case KEY_EVENT:
+			case MOUSE_EVENT:
+				hadKeyboardEvents = true;
+				break;
+
+			case FOCUS_EVENT:
 				if (callback) {
-					callback->onFocus(callback->opaque, record.Event.FocusEvent.bSetFocus);
+					callback->onFocus(callback->opaque, rec->Event.FocusEvent.bSetFocus);
 				}
-			} else if (record.EventType == WINDOW_BUFFER_SIZE_EVENT && tty->window_resize_events) {
-				if (callback) {
+				break;
+
+			case WINDOW_BUFFER_SIZE_EVENT:
+				if (tty->window_resize_events && callback) {
 					CONSOLE_SCREEN_BUFFER_INFO info;
-					if (unlikely(!GetConsoleScreenBufferInfo(tty->conout_for_size, &info))) {
-						goto err;
+					if (GetConsoleScreenBufferInfo(tty->conout_for_size, &info)) {
+						int columns = info.srWindow.Right - info.srWindow.Left + 1;
+						int rows = info.srWindow.Bottom - info.srWindow.Top + 1;
+						callback->onResize(callback->opaque, columns, rows, 0, 0);
 					}
-					int columns = info.srWindow.Right - info.srWindow.Left + 1;
-					int rows = info.srWindow.Bottom - info.srWindow.Top + 1;
-					callback->onResize(callback->opaque, columns, rows, 0, 0);
 				}
+				break;
 			}
 		}
 
-		// Returning 0 would indicate an interrupt, so loop if we haven't read any raw bytes.
-		if (nextBufferIndex == 0) {
+		if (hadKeyboardEvents) {
+			// Read VT sequences for keyboard input. With ENABLE_VIRTUAL_TERMINAL_INPUT,
+			// the console encodes key and mouse events as VT escape sequences in UTF-8,
+			// including full Unicode support for IME-composed characters.
+			// This call internally consumes the keyboard/mouse INPUT_RECORDs.
+			DWORD bytesRead = 0;
+			BOOL ok = ReadFile(tty->conin, buffer, count, &bytesRead, NULL);
+			if (ok && bytesRead > 0) {
+				result.count = bytesRead;
+			} else if (!ok) {
+				result.error = GetLastError();
+			}
+		}
+
+		if (result.count == 0 && result.error == 0) {
 			goto loop;
 		}
-		result.count = nextBufferIndex;
 	} else if (unlikely(waitResult == WAIT_FAILED)) {
 		goto err;
 	}
-	// Else return a count of 0 because either:
-	// - The interrupt event was selected (which auto resets its state).
-	// - The user-supplied, non-infinite timeout ran out.
 
 	ret:
 	return result;
