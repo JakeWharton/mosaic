@@ -37,7 +37,7 @@ class MosaicTest {
 				var offsetX by remember { mutableIntStateOf(0) }
 
 				Box(modifier = Modifier.width(10)) {
-					Filler(TestChar, modifier = Modifier.size(1).offset(offsetX, 0))
+					Filler('X', modifier = Modifier.size(1).offset(offsetX, 0))
 				}
 
 				LaunchedEffect(Unit) {
@@ -46,8 +46,8 @@ class MosaicTest {
 				}
 			}
 
-			assertThat(awaitSnapshot()).isEqualTo("$TestChar")
-			assertThat(awaitSnapshot()).isEqualTo("     $TestChar")
+			assertThat(awaitSnapshot()).isEqualTo("X")
+			assertThat(awaitSnapshot()).isEqualTo("     X")
 		}
 	}
 
@@ -57,7 +57,7 @@ class MosaicTest {
 				var offsetX by remember { mutableIntStateOf(0) }
 
 				Box(modifier = Modifier.width(10)) {
-					Filler(TestChar, modifier = Modifier.size(1).offset { IntOffset(offsetX, 0) })
+					Filler('X', modifier = Modifier.size(1).offset { IntOffset(offsetX, 0) })
 				}
 
 				LaunchedEffect(Unit) {
@@ -66,8 +66,8 @@ class MosaicTest {
 				}
 			}
 
-			assertThat(awaitSnapshot()).isEqualTo("$TestChar")
-			assertThat(awaitSnapshot()).isEqualTo("     $TestChar")
+			assertThat(awaitSnapshot()).isEqualTo("X")
+			assertThat(awaitSnapshot()).isEqualTo("     X")
 		}
 	}
 
@@ -82,9 +82,9 @@ class MosaicTest {
 							.size(1)
 							.drawBehind {
 								if (drawAnother) {
-									drawText(0, 0, "${TestChar + 1}")
+									drawText(0, 0, "Y")
 								} else {
-									drawText(0, 0, "$TestChar")
+									drawText(0, 0, "X")
 								}
 							},
 					)
@@ -96,8 +96,8 @@ class MosaicTest {
 				}
 			}
 
-			assertThat(awaitSnapshot()).isEqualTo("$TestChar")
-			assertThat(awaitSnapshot()).isEqualTo("${TestChar + 1}")
+			assertThat(awaitSnapshot()).isEqualTo("X")
+			assertThat(awaitSnapshot()).isEqualTo("Y")
 		}
 	}
 

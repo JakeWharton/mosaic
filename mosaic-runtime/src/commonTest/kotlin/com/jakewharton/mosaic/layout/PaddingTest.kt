@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.Container
-import com.jakewharton.mosaic.TestChar
 import com.jakewharton.mosaic.TestFiller
 import com.jakewharton.mosaic.assertFailure
 import com.jakewharton.mosaic.modifier.Modifier
@@ -41,7 +40,7 @@ class PaddingTest {
 			}
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|$TestChar
+				|X
 				""".trimMargin(),
 			)
 		}
@@ -54,7 +53,7 @@ class PaddingTest {
 			}
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|  $TestChar
+				|  X
 				""".trimMargin(),
 			)
 		}
@@ -78,7 +77,7 @@ class PaddingTest {
 			}
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|$TestChar
+				|X
 				""".trimMargin(),
 			)
 		}
@@ -93,7 +92,7 @@ class PaddingTest {
 				"""
 				|$s
 				|$s
-				|$TestChar
+				|X
 				""".trimMargin(),
 			)
 		}
@@ -117,7 +116,7 @@ class PaddingTest {
 			}
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|$TestChar
+				|X
 				""".trimMargin(),
 			)
 		}
@@ -130,7 +129,7 @@ class PaddingTest {
 			}
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|$TestChar $s
+				|X $s
 				""".trimMargin(),
 			)
 		}
@@ -154,7 +153,7 @@ class PaddingTest {
 			}
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|$TestChar
+				|X
 				""".trimMargin(),
 			)
 		}
@@ -167,7 +166,7 @@ class PaddingTest {
 			}
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|$TestChar
+				|X
 				|$s
 				|$s
 				""".trimMargin(),
@@ -193,7 +192,7 @@ class PaddingTest {
 			}
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|$TestChar
+				|X
 				""".trimMargin(),
 			)
 		}
@@ -206,7 +205,7 @@ class PaddingTest {
 			}
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				| $TestChar
+				| X
 				| $s
 				| $s
 				""".trimMargin(),
