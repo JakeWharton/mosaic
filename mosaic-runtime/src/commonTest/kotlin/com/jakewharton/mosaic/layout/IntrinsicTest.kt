@@ -4,18 +4,17 @@ import androidx.compose.runtime.Composable
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import com.jakewharton.mosaic.ConstrainedBox
-import com.jakewharton.mosaic.NodeSnapshots
+import com.jakewharton.mosaic.Marker
+import com.jakewharton.mosaic.fillWith
+import com.jakewharton.mosaic.filledRect
 import com.jakewharton.mosaic.modifier.Modifier
-import com.jakewharton.mosaic.position
-import com.jakewharton.mosaic.size
 import com.jakewharton.mosaic.testIntrinsics
 import com.jakewharton.mosaic.testing.runMosaicTest
 import com.jakewharton.mosaic.ui.Box
 import com.jakewharton.mosaic.ui.Column
 import com.jakewharton.mosaic.ui.Layout
+import com.jakewharton.mosaic.ui.Row
 import com.jakewharton.mosaic.ui.unit.Constraints
-import com.jakewharton.mosaic.ui.unit.IntOffset
-import com.jakewharton.mosaic.ui.unit.IntSize
 import com.jakewharton.mosaic.ui.unit.constrainHeight
 import com.jakewharton.mosaic.ui.unit.constrainWidth
 import kotlin.test.Test
@@ -23,71 +22,80 @@ import kotlinx.coroutines.test.runTest
 
 class IntrinsicTest {
 	@Test fun testMaxIntrinsic_HandleNegative() = runTest {
-		val measurePolicy = object : MeasurePolicy {
-			override fun MeasureScope.measure(
-				measurables: List<Measurable>,
-				constraints: Constraints,
-			): MeasureResult {
-				return layout(0, 0) {}
+		runMosaicTest {
+			val measurePolicy = object : MeasurePolicy {
+				override fun MeasureScope.measure(
+					measurables: List<Measurable>,
+					constraints: Constraints,
+				): MeasureResult {
+					return layout(0, 0) {}
+				}
+
+				override fun minIntrinsicHeight(
+					measurables: List<IntrinsicMeasurable>,
+					width: Int,
+				): Int {
+					return -1
+				}
+
+				override fun minIntrinsicWidth(
+					measurables: List<IntrinsicMeasurable>,
+					height: Int,
+				): Int {
+					return -1
+				}
+
+				override fun maxIntrinsicHeight(
+					measurables: List<IntrinsicMeasurable>,
+					width: Int,
+				): Int {
+					return -1
+				}
+
+				override fun maxIntrinsicWidth(
+					measurables: List<IntrinsicMeasurable>,
+					height: Int,
+				): Int {
+					return -1
+				}
+			}
+			val layouts: @Composable () -> Unit = {
+				Layout(
+					content = {},
+					modifier = Modifier.width(IntrinsicSize.Min).height(IntrinsicSize.Min),
+					measurePolicy = measurePolicy,
+				)
+				Layout(
+					content = {},
+					modifier = Modifier.width(IntrinsicSize.Max).height(IntrinsicSize.Max),
+					measurePolicy = measurePolicy,
+				)
 			}
 
-			override fun minIntrinsicHeight(
-				measurables: List<IntrinsicMeasurable>,
-				width: Int,
-			): Int {
-				return -1
-			}
-
-			override fun minIntrinsicWidth(
-				measurables: List<IntrinsicMeasurable>,
-				height: Int,
-			): Int {
-				return -1
-			}
-
-			override fun maxIntrinsicHeight(
-				measurables: List<IntrinsicMeasurable>,
-				width: Int,
-			): Int {
-				return -1
-			}
-
-			override fun maxIntrinsicWidth(
-				measurables: List<IntrinsicMeasurable>,
-				height: Int,
-			): Int {
-				return -1
-			}
-		}
-		runMosaicTest(NodeSnapshots) {
 			setContent {
 				Column {
-					Layout(
-						content = {},
-						modifier = Modifier.width(IntrinsicSize.Min).height(IntrinsicSize.Min),
-						measurePolicy = measurePolicy,
-					)
-					Layout(
-						content = {},
-						modifier = Modifier.width(IntrinsicSize.Max).height(IntrinsicSize.Max),
-						measurePolicy = measurePolicy,
-					)
+					Row {
+						layouts()
+						Marker()
+					}
+					Column {
+						layouts()
+						Marker()
+					}
 				}
 			}
 
-			val parent = awaitSnapshot().children[0]
-			val first = parent.children[0]
-			val second = parent.children[1]
-
-			assertThat(first.size).isEqualTo(IntSize.Zero)
-			assertThat(second.size).isEqualTo(IntSize.Zero)
-			assertThat(first.position).isEqualTo(IntOffset.Zero)
-			assertThat(second.position).isEqualTo(IntOffset.Zero)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|#
+				|#
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testMinIntrinsicWidth() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			setContent {
 				Box {
 					FixedIntrinsicsBox(
@@ -102,15 +110,12 @@ class IntrinsicTest {
 				}
 			}
 
-			val node = awaitSnapshot().children[0].children[0]
-
-			assertThat(node.size).isEqualTo(IntSize(10, 50))
-			assertThat(node.position).isEqualTo(IntOffset.Zero)
+			assertThat(awaitSnapshot()).isEqualTo(filledRect(10, 50, 'X'))
 		}
 	}
 
 	@Test fun testMinIntrinsicHeight() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			setContent {
 				Box {
 					FixedIntrinsicsBox(
@@ -125,15 +130,12 @@ class IntrinsicTest {
 				}
 			}
 
-			val node = awaitSnapshot().children[0].children[0]
-
-			assertThat(node.size).isEqualTo(IntSize(20, 40))
-			assertThat(node.position).isEqualTo(IntOffset.Zero)
+			assertThat(awaitSnapshot()).isEqualTo(filledRect(20, 40, 'X'))
 		}
 	}
 
 	@Test fun testMaxIntrinsicWidth() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			setContent {
 				Box {
 					FixedIntrinsicsBox(
@@ -148,15 +150,12 @@ class IntrinsicTest {
 				}
 			}
 
-			val node = awaitSnapshot().children[0].children[0]
-
-			assertThat(node.size).isEqualTo(IntSize(30, 50))
-			assertThat(node.position).isEqualTo(IntOffset.Zero)
+			assertThat(awaitSnapshot()).isEqualTo(filledRect(30, 50, 'X'))
 		}
 	}
 
 	@Test fun testMaxIntrinsicHeight() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			setContent {
 				Box {
 					FixedIntrinsicsBox(
@@ -171,15 +170,12 @@ class IntrinsicTest {
 				}
 			}
 
-			val node = awaitSnapshot().children[0].children[0]
-
-			assertThat(node.size).isEqualTo(IntSize(20, 60))
-			assertThat(node.position).isEqualTo(IntOffset.Zero)
+			assertThat(awaitSnapshot()).isEqualTo(filledRect(20, 60, 'X'))
 		}
 	}
 
 	@Test fun testMinIntrinsicWidth_respectsIncomingMaxConstraints() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			setContent {
 				Box {
 					ConstrainedBox(Constraints(maxWidth = 5)) {
@@ -196,15 +192,12 @@ class IntrinsicTest {
 				}
 			}
 
-			val node = awaitSnapshot().children[0].children[0].children[0]
-
-			assertThat(node.size).isEqualTo(IntSize(5, 50))
-			assertThat(node.position).isEqualTo(IntOffset.Zero)
+			assertThat(awaitSnapshot()).isEqualTo(filledRect(5, 50, 'X'))
 		}
 	}
 
 	@Test fun testMinIntrinsicWidth_respectsIncomingMinConstraints() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			setContent {
 				Box {
 					ConstrainedBox(Constraints(minWidth = 15)) {
@@ -221,15 +214,12 @@ class IntrinsicTest {
 				}
 			}
 
-			val node = awaitSnapshot().children[0].children[0].children[0]
-
-			assertThat(node.size).isEqualTo(IntSize(15, 50))
-			assertThat(node.position).isEqualTo(IntOffset.Zero)
+			assertThat(awaitSnapshot()).isEqualTo(filledRect(15, 50, 'X'))
 		}
 	}
 
 	@Test fun testMinIntrinsicHeight_respectsMaxIncomingConstraints() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			setContent {
 				Box {
 					ConstrainedBox(Constraints(maxHeight = 35)) {
@@ -246,15 +236,12 @@ class IntrinsicTest {
 				}
 			}
 
-			val node = awaitSnapshot().children[0].children[0].children[0]
-
-			assertThat(node.size).isEqualTo(IntSize(20, 35))
-			assertThat(node.position).isEqualTo(IntOffset.Zero)
+			assertThat(awaitSnapshot()).isEqualTo(filledRect(20, 35, 'X'))
 		}
 	}
 
 	@Test fun testMinIntrinsicHeight_respectsMinIncomingConstraints() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			setContent {
 				Box {
 					ConstrainedBox(Constraints(minHeight = 45)) {
@@ -271,15 +258,12 @@ class IntrinsicTest {
 				}
 			}
 
-			val node = awaitSnapshot().children[0].children[0].children[0]
-
-			assertThat(node.size).isEqualTo(IntSize(20, 45))
-			assertThat(node.position).isEqualTo(IntOffset.Zero)
+			assertThat(awaitSnapshot()).isEqualTo(filledRect(20, 45, 'X'))
 		}
 	}
 
 	@Test fun testMaxIntrinsicWidth_respectsMaxIncomingConstraints() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			setContent {
 				Box {
 					ConstrainedBox(Constraints(maxWidth = 25)) {
@@ -296,15 +280,12 @@ class IntrinsicTest {
 				}
 			}
 
-			val node = awaitSnapshot().children[0].children[0].children[0]
-
-			assertThat(node.size).isEqualTo(IntSize(25, 50))
-			assertThat(node.position).isEqualTo(IntOffset.Zero)
+			assertThat(awaitSnapshot()).isEqualTo(filledRect(25, 50, 'X'))
 		}
 	}
 
 	@Test fun testMaxIntrinsicWidth_respectsMinIncomingConstraints() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			setContent {
 				Box {
 					ConstrainedBox(Constraints(minWidth = 35)) {
@@ -321,15 +302,12 @@ class IntrinsicTest {
 				}
 			}
 
-			val node = awaitSnapshot().children[0].children[0].children[0]
-
-			assertThat(node.size).isEqualTo(IntSize(35, 50))
-			assertThat(node.position).isEqualTo(IntOffset.Zero)
+			assertThat(awaitSnapshot()).isEqualTo(filledRect(35, 50, 'X'))
 		}
 	}
 
 	@Test fun testMaxIntrinsicHeight_respectsMaxIncomingConstraints() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			setContent {
 				Box {
 					ConstrainedBox(Constraints(maxHeight = 55)) {
@@ -346,15 +324,12 @@ class IntrinsicTest {
 				}
 			}
 
-			val node = awaitSnapshot().children[0].children[0].children[0]
-
-			assertThat(node.size).isEqualTo(IntSize(20, 55))
-			assertThat(node.position).isEqualTo(IntOffset.Zero)
+			assertThat(awaitSnapshot()).isEqualTo(filledRect(20, 55, 'X'))
 		}
 	}
 
 	@Test fun testMaxIntrinsicHeight_respectsMinIncomingConstraints() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			setContent {
 				Box {
 					ConstrainedBox(Constraints(minHeight = 65)) {
@@ -371,15 +346,12 @@ class IntrinsicTest {
 				}
 			}
 
-			val node = awaitSnapshot().children[0].children[0].children[0]
-
-			assertThat(node.size).isEqualTo(IntSize(20, 65))
-			assertThat(node.position).isEqualTo(IntOffset.Zero)
+			assertThat(awaitSnapshot()).isEqualTo(filledRect(20, 65, 'X'))
 		}
 	}
 
 	@Test fun testRequiredMinIntrinsicWidth() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			setContent {
 				Box {
 					ConstrainedBox(Constraints.fixed(100, 100)) {
@@ -396,14 +368,12 @@ class IntrinsicTest {
 				}
 			}
 
-			val node = awaitSnapshot().children[0].children[0].children[0]
-
-			assertThat(node.size).isEqualTo(IntSize(10, 50))
+			assertThat(awaitSnapshot()).isEqualTo(filledRect(10, 50, 'X'))
 		}
 	}
 
 	@Test fun testRequiredMinIntrinsicHeight() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			setContent {
 				Box {
 					ConstrainedBox(Constraints.fixed(100, 100)) {
@@ -420,14 +390,12 @@ class IntrinsicTest {
 				}
 			}
 
-			val node = awaitSnapshot().children[0].children[0].children[0]
-
-			assertThat(node.size).isEqualTo(IntSize(20, 40))
+			assertThat(awaitSnapshot()).isEqualTo(filledRect(20, 40, 'X'))
 		}
 	}
 
 	@Test fun testRequiredMaxIntrinsicWidth() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			setContent {
 				Box {
 					ConstrainedBox(Constraints.fixed(100, 100)) {
@@ -444,14 +412,12 @@ class IntrinsicTest {
 				}
 			}
 
-			val node = awaitSnapshot().children[0].children[0].children[0]
-
-			assertThat(node.size).isEqualTo(IntSize(30, 50))
+			assertThat(awaitSnapshot()).isEqualTo(filledRect(30, 50, 'X'))
 		}
 	}
 
 	@Test fun testRequiredMaxIntrinsicHeight() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			setContent {
 				Box {
 					ConstrainedBox(Constraints.fixed(100, 100)) {
@@ -468,9 +434,7 @@ class IntrinsicTest {
 				}
 			}
 
-			val node = awaitSnapshot().children[0].children[0].children[0]
-
-			assertThat(node.size).isEqualTo(IntSize(20, 60))
+			assertThat(awaitSnapshot()).isEqualTo(filledRect(20, 60, 'X'))
 		}
 	}
 
@@ -593,5 +557,5 @@ private fun FixedIntrinsicsBox(
 				width: Int,
 			) = maxIntrinsicHeight
 		}
-	Layout(content = {}, modifier = modifier, measurePolicy = measurePolicy)
+	Layout(content = {}, modifier = Modifier.fillWith('X').then(modifier), measurePolicy = measurePolicy)
 }
