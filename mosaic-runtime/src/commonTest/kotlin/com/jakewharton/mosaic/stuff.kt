@@ -28,8 +28,6 @@ import kotlin.math.max
 
 const val s = " "
 
-const val TestChar = 'X'
-
 fun String.replaceLineEndingsWithCRLF(): String {
 	return this.replace("\n", "\r\n")
 }
@@ -50,7 +48,7 @@ class Holder<T>(var value: T)
 
 internal fun Modifier.fillWith(char: Char): Modifier = drawBehind { drawRect(char) }
 
-internal fun filledRect(width: Int, height: Int, char: Char = TestChar): String {
+internal fun filledRect(width: Int, height: Int, char: Char = 'X'): String {
 	return List(height) { char.toString().repeat(width) }.joinToString("\n")
 }
 
@@ -61,7 +59,7 @@ internal fun Marker() {
 
 @Composable
 inline fun TestFiller(modifier: Modifier = Modifier) {
-	Filler(TestChar, modifier = modifier)
+	Filler('X', modifier = modifier)
 }
 
 @Composable

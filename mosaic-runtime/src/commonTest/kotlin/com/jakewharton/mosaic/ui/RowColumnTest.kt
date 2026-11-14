@@ -7,8 +7,8 @@ import assertk.assertions.isZero
 import com.jakewharton.mosaic.ConstrainedBox
 import com.jakewharton.mosaic.Container
 import com.jakewharton.mosaic.Holder
-import com.jakewharton.mosaic.NodeSnapshots
 import com.jakewharton.mosaic.assertFailure
+import com.jakewharton.mosaic.fillWith
 import com.jakewharton.mosaic.layout.aspectRatio
 import com.jakewharton.mosaic.layout.fillMaxHeight
 import com.jakewharton.mosaic.layout.fillMaxWidth
@@ -22,88 +22,81 @@ import com.jakewharton.mosaic.layout.width
 import com.jakewharton.mosaic.layout.widthIn
 import com.jakewharton.mosaic.layout.wrapContentSize
 import com.jakewharton.mosaic.modifier.Modifier
-import com.jakewharton.mosaic.position
-import com.jakewharton.mosaic.size
 import com.jakewharton.mosaic.testIntrinsics
 import com.jakewharton.mosaic.testing.runMosaicTest
 import com.jakewharton.mosaic.ui.unit.Constraints
-import com.jakewharton.mosaic.ui.unit.IntOffset
 import com.jakewharton.mosaic.ui.unit.IntSize
-import kotlin.math.min
 import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 
 class RowColumnTest {
 	// region Size and position tests for Row and Column
 	@Test fun testRow() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
 
 			setContent {
 				Container(alignment = Alignment.TopStart) {
 					Row {
-						Container(width = size, height = size)
-						Container(width = size * 2, height = size * 2)
+						Container(modifier = Modifier.fillWith('A'), width = size, height = size)
+						Container(modifier = Modifier.fillWith('B'), width = size * 2, height = size * 2)
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val firstChildContainerNode = rootNode.children[0].children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[0].children[1]
-
-			assertThat(firstChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(size * 2, size * 2))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(size, 0))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AABBBB
+				|AABBBB
+				|  BBBB
+				|  BBBB
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_withChildrenWithWeight() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val width = 50
-			val height = 80
+		runMosaicTest {
+			val rowWidth = 6
+			val width = 3
+			val height = 2
 
 			setContent {
-				Container(alignment = Alignment.TopStart) {
+				Container(alignment = Alignment.TopStart, width = rowWidth) {
 					Row {
-						Container(modifier = Modifier.weight(1.0f), width = width, height = height)
-						Container(modifier = Modifier.weight(2.0f), width = width, height = height)
+						Container(modifier = Modifier.fillWith('A').weight(1.0f), width = width, height = height)
+						Container(modifier = Modifier.fillWith('B').weight(2.0f), width = width, height = height)
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rootWidth = rootNode.width
-
-			val firstChildContainerNode = rootNode.children[0].children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[0].children[1]
-
-			assertThat(firstChildContainerNode.size).isEqualTo(IntSize(rootWidth / 3, height))
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(rootWidth * 2 / 3, height))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(rootWidth / 3, 0))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AABBBB
+				|AABBBB
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_withChildrenWithWeightNonFilling() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val width = 50
-			val height = 80
+		runMosaicTest {
+			val width = 2
+			val height = 1
 
 			setContent {
 				Container(
-					modifier = Modifier.sizeIn(maxWidth = 300, maxHeight = 300),
+					modifier = Modifier.sizeIn(maxWidth = 12, maxHeight = 12),
 					alignment = Alignment.TopStart,
 				) {
 					Row {
 						Container(
-							modifier = Modifier.weight(1.0f, fill = false),
+							modifier = Modifier.fillWith('A').weight(1.0f, fill = false),
 							width = width,
 							height = height,
 						)
 						Container(
-							modifier = Modifier.weight(2.0f, fill = false),
+							modifier = Modifier.fillWith('B').weight(2.0f, fill = false),
 							width = width,
 							height = height * 2,
 						)
@@ -111,72 +104,64 @@ class RowColumnTest {
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val firstChildContainerNode = rootNode.children[0].children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[0].children[1]
-
-			assertThat(firstChildContainerNode.size).isEqualTo(IntSize(width, height))
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(width, height * 2))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(width, 0))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AABB
+				|  BB
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_withChildrenWithMaxValueWeight() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val width = 50
-			val height = 80
+		runMosaicTest {
+			val rowWidth = 6
+			val width = 3
+			val height = 2
 
 			setContent {
-				Container(alignment = Alignment.TopStart) {
+				Container(alignment = Alignment.TopStart, width = rowWidth) {
 					Row {
-						Container(modifier = Modifier.weight(Float.MAX_VALUE), width = width, height = height)
-						Container(modifier = Modifier.weight(1.0f), width = width, height = height)
+						Container(modifier = Modifier.fillWith('A').weight(Float.MAX_VALUE), width = width, height = height)
+						Container(modifier = Modifier.fillWith('B').weight(1.0f), width = width, height = height)
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rootWidth = rootNode.width
-
-			val firstChildContainerNode = rootNode.children[0].children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[0].children[1]
-
-			assertThat(firstChildContainerNode.size).isEqualTo(IntSize(rootWidth, height))
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(0, height))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(rootWidth, 0))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AAAAAA
+				|AAAAAA
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_withChildrenWithPositiveInfinityWeight() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val width = 50
-			val height = 80
+		runMosaicTest {
+			val rowWidth = 6
+			val width = 3
+			val height = 2
 
 			setContent {
-				Container(alignment = Alignment.TopStart) {
+				Container(alignment = Alignment.TopStart, width = rowWidth) {
 					Row {
 						Container(
-							modifier = Modifier.weight(Float.POSITIVE_INFINITY),
+							modifier = Modifier.fillWith('A').weight(Float.POSITIVE_INFINITY),
 							width = width,
 							height = height,
 						)
-						Container(modifier = Modifier.weight(1.0f), width = width, height = height)
+						Container(modifier = Modifier.fillWith('B').weight(1.0f), width = width, height = height)
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rootWidth = rootNode.width
-
-			val firstChildContainerNode = rootNode.children[0].children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[0].children[1]
-
-			assertThat(firstChildContainerNode.size).isEqualTo(IntSize(rootWidth, height))
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(0, height))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(rootWidth, 0))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AAAAAA
+				|AAAAAA
+				""".trimMargin(),
+			)
 		}
 	}
 
@@ -195,74 +180,77 @@ class RowColumnTest {
 	}
 
 	@Test fun testColumn() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
 
 			setContent {
 				Container(alignment = Alignment.TopStart) {
 					Column {
-						Container(width = size, height = size)
-						Container(width = (size * 2), height = (size * 2))
+						Container(modifier = Modifier.fillWith('A'), width = size, height = size)
+						Container(modifier = Modifier.fillWith('B'), width = (size * 2), height = (size * 2))
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val firstChildContainerNode = rootNode.children[0].children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[0].children[1]
-
-			assertThat(firstChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(size * 2, size * 2))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(0, size))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA
+				|AA
+				|BBBB
+				|BBBB
+				|BBBB
+				|BBBB
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_withChildrenWithWeight() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val width = 80
-			val height = 50
+		runMosaicTest {
+			val columnHeight = 6
+			val width = 2
+			val height = 3
 
 			setContent {
-				Container(alignment = Alignment.TopStart) {
+				Container(alignment = Alignment.TopStart, height = columnHeight) {
 					Column {
-						Container(modifier = Modifier.weight(1.0f), width = width, height = height)
-						Container(modifier = Modifier.weight(2.0f), width = width, height = height)
+						Container(modifier = Modifier.fillWith('A').weight(1.0f), width = width, height = height)
+						Container(modifier = Modifier.fillWith('B').weight(2.0f), width = width, height = height)
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rootHeight = rootNode.height
-
-			val firstChildContainerNode = rootNode.children[0].children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[0].children[1]
-
-			assertThat(firstChildContainerNode.size).isEqualTo(IntSize(width, rootHeight / 3))
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(width, rootHeight * 2 / 3))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(0, rootHeight / 3))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA
+				|AA
+				|BB
+				|BB
+				|BB
+				|BB
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_withChildrenWithWeightNonFilling() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val width = 80
-			val height = 50
+		runMosaicTest {
+			val width = 2
+			val height = 1
 
 			setContent {
 				Container(
-					modifier = Modifier.sizeIn(maxWidth = 300, maxHeight = 300),
+					modifier = Modifier.sizeIn(maxWidth = 12, maxHeight = 12),
 					alignment = Alignment.TopStart,
 				) {
 					Column {
 						Container(
-							modifier = Modifier.weight(1.0f, fill = false),
+							modifier = Modifier.fillWith('A').weight(1.0f, fill = false),
 							width = width,
 							height = height,
 						)
 						Container(
-							modifier = Modifier.weight(2.0f, fill = false),
+							modifier = Modifier.fillWith('B').weight(2.0f, fill = false),
 							width = width,
 							height = height,
 						)
@@ -270,72 +258,72 @@ class RowColumnTest {
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val firstChildContainerNode = rootNode.children[0].children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[0].children[1]
-
-			assertThat(firstChildContainerNode.size).isEqualTo(IntSize(width, height))
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(width, height))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(0, height))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA
+				|BB
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_withChildrenWithMaxValueWeight() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val width = 80
-			val height = 50
+		runMosaicTest {
+			val columnHeight = 6
+			val width = 2
+			val height = 3
 
 			setContent {
-				Container(alignment = Alignment.TopStart) {
+				Container(alignment = Alignment.TopStart, height = columnHeight) {
 					Column {
-						Container(modifier = Modifier.weight(Float.MAX_VALUE), width = width, height = height)
-						Container(modifier = Modifier.weight(1.0f), width = width, height = height)
+						Container(modifier = Modifier.fillWith('A').weight(Float.MAX_VALUE), width = width, height = height)
+						Container(modifier = Modifier.fillWith('B').weight(1.0f), width = width, height = height)
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rootHeight = rootNode.height
-
-			val firstChildContainerNode = rootNode.children[0].children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[0].children[1]
-
-			assertThat(firstChildContainerNode.size).isEqualTo(IntSize(width, rootHeight))
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(width, 0))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(0, rootHeight))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA
+				|AA
+				|AA
+				|AA
+				|AA
+				|AA
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_withChildrenWithPositiveInfinityWeight() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val width = 80
-			val height = 50
+		runMosaicTest {
+			val columnHeight = 6
+			val width = 2
+			val height = 3
 
 			setContent {
-				Container(alignment = Alignment.TopStart) {
+				Container(alignment = Alignment.TopStart, height = columnHeight) {
 					Column {
 						Container(
-							modifier = Modifier.weight(Float.POSITIVE_INFINITY),
+							modifier = Modifier.fillWith('A').weight(Float.POSITIVE_INFINITY),
 							width = width,
 							height = height,
 						)
-						Container(modifier = Modifier.weight(1.0f), width = width, height = height)
+						Container(modifier = Modifier.fillWith('B').weight(1.0f), width = width, height = height)
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rootHeight = rootNode.height
-
-			val firstChildContainerNode = rootNode.children[0].children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[0].children[1]
-
-			assertThat(firstChildContainerNode.size).isEqualTo(IntSize(width, rootHeight))
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(width, 0))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(0, rootHeight))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA
+				|AA
+				|AA
+				|AA
+				|AA
+				|AA
+				""".trimMargin(),
+			)
 		}
 	}
 
@@ -354,535 +342,577 @@ class RowColumnTest {
 	}
 
 	@Test fun testRow_doesNotPlaceChildrenOutOfBounds_becauseOfRoundings() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			val expectedRowWidth = 11
 			val leftPadding = 1
 
 			setContent {
 				Row(
-					Modifier.wrapContentSize(Alignment.TopStart)
+					Modifier.fillWith('.')
+						.wrapContentSize(Alignment.TopStart)
 						.padding(left = leftPadding)
 						.widthIn(max = expectedRowWidth),
 				) {
-					Container(Modifier.weight(1.0f))
-					Container(Modifier.weight(1.0f))
+					Container(Modifier.fillWith('A').weight(1.0f), height = 1)
+					Container(Modifier.fillWith('B').weight(1.0f), height = 1)
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rowNode = rootNode.children[0]
-
-			val firstChildContainerNode = rowNode.children[0]
-			val secondChildContainerNode = rowNode.children[1]
-
-			assertThat(rowNode.width - leftPadding).isEqualTo(expectedRowWidth)
-			assertThat(firstChildContainerNode.x).isEqualTo(leftPadding)
-			assertThat(secondChildContainerNode.x).isEqualTo(leftPadding + firstChildContainerNode.width)
-			assertThat(firstChildContainerNode.width + secondChildContainerNode.width)
-				.isEqualTo(rowNode.width - leftPadding)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|.AAAAABBBBBB
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_isNotLargerThanItsChildren_becauseOfRoundings() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			val expectedRowWidth = 8
 			val leftPadding = 1
 
 			setContent {
 				Row(
-					Modifier.wrapContentSize(Alignment.TopStart)
+					Modifier.fillWith('.')
+						.wrapContentSize(Alignment.TopStart)
 						.padding(left = leftPadding)
 						.widthIn(max = expectedRowWidth),
 				) {
-					Container(Modifier.weight(2.0f))
-					Container(Modifier.weight(2.0f))
-					Container(Modifier.weight(3.0f))
+					Container(Modifier.fillWith('A').weight(2.0f), height = 1)
+					Container(Modifier.fillWith('B').weight(2.0f), height = 1)
+					Container(Modifier.fillWith('C').weight(3.0f), height = 1)
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rowNode = rootNode.children[0]
-
-			val firstChildContainerNode = rowNode.children[0]
-			val secondChildContainerNode = rowNode.children[1]
-			val thirdChildContainerNode = rowNode.children[2]
-
-			assertThat(rowNode.width - leftPadding).isEqualTo(expectedRowWidth)
-			assertThat(firstChildContainerNode.x).isEqualTo(leftPadding)
-			assertThat(secondChildContainerNode.x).isEqualTo(leftPadding + firstChildContainerNode.width)
-			assertThat(thirdChildContainerNode.x)
-				.isEqualTo(leftPadding + firstChildContainerNode.width + secondChildContainerNode.width)
-			assertThat(rowNode.width - leftPadding)
-				.isEqualTo(firstChildContainerNode.width + secondChildContainerNode.width + thirdChildContainerNode.width)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|.AAABBCCC
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_isNotLargetThanItsChildren_becauseOfRoundings() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			val expectedColumnHeight = 8
 			val topPadding = 1
 
 			setContent {
 				Column(
-					Modifier.wrapContentSize(Alignment.TopStart)
+					Modifier.fillWith('.')
+						.wrapContentSize(Alignment.TopStart)
 						.padding(top = topPadding)
 						.heightIn(max = expectedColumnHeight),
 				) {
-					Container(Modifier.weight(1.0f))
-					Container(Modifier.weight(1.0f))
-					Container(Modifier.weight(1.0f))
+					Container(Modifier.fillWith('A').weight(1.0f), width = 1)
+					Container(Modifier.fillWith('B').weight(1.0f), width = 1)
+					Container(Modifier.fillWith('C').weight(1.0f), width = 1)
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val columnNode = rootNode.children[0]
-
-			val firstChildContainerNode = columnNode.children[0]
-			val secondChildContainerNode = columnNode.children[1]
-			val thirdChildContainerNode = columnNode.children[2]
-
-			assertThat(columnNode.height - topPadding).isEqualTo(expectedColumnHeight)
-			assertThat(firstChildContainerNode.y).isEqualTo(topPadding)
-			assertThat(secondChildContainerNode.y).isEqualTo(topPadding + firstChildContainerNode.height)
-			assertThat(thirdChildContainerNode.y)
-				.isEqualTo(topPadding + firstChildContainerNode.height + secondChildContainerNode.height)
-			assertThat(columnNode.height - topPadding)
-				.isEqualTo(firstChildContainerNode.height + secondChildContainerNode.height + thirdChildContainerNode.height)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|.
+				|A
+				|A
+				|B
+				|B
+				|B
+				|C
+				|C
+				|C
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_doesNotPlaceChildrenOutOfBounds_becauseOfRoundings() = runTest {
-		runMosaicTest(NodeSnapshots) {
+		runMosaicTest {
 			val expectedColumnHeight = 11
 			val topPadding = 1
 
 			setContent {
 				Column(
-					Modifier.wrapContentSize(Alignment.TopStart)
+					Modifier.fillWith('.')
+						.wrapContentSize(Alignment.TopStart)
 						.padding(top = topPadding)
 						.heightIn(max = expectedColumnHeight),
 				) {
-					Container(Modifier.weight(1.0f))
-					Container(Modifier.weight(1.0f))
+					Container(Modifier.fillWith('A').weight(1.0f), width = 1)
+					Container(Modifier.fillWith('B').weight(1.0f), width = 1)
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val columnNode = rootNode.children[0]
-
-			val firstChildContainerNode = columnNode.children[0]
-			val secondChildContainerNode = columnNode.children[1]
-
-			assertThat(columnNode.height - topPadding).isEqualTo(expectedColumnHeight)
-			assertThat(firstChildContainerNode.height).isEqualTo((expectedColumnHeight - topPadding) / 2)
-			assertThat(secondChildContainerNode.height)
-				.isEqualTo(topPadding + firstChildContainerNode.height)
-			assertThat(columnNode.height - topPadding)
-				.isEqualTo(firstChildContainerNode.height + secondChildContainerNode.height)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|.
+				|A
+				|A
+				|A
+				|A
+				|A
+				|B
+				|B
+				|B
+				|B
+				|B
+				|B
+				""".trimMargin(),
+			)
 		}
 	}
 	// endregion
 
 	// region Cross axis alignment tests in Row
 	@Test fun testRow_withStretchCrossAxisAlignment() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
 
 			setContent {
 				Row(modifier = Modifier.height(size * 2)) {
-					Container(modifier = Modifier.fillMaxHeight(), width = size, height = size)
-					Container(modifier = Modifier.fillMaxHeight(), width = size * 2, height = size * 2)
+					Container(modifier = Modifier.fillWith('A').fillMaxHeight(), width = size, height = size)
+					Container(modifier = Modifier.fillWith('B').fillMaxHeight(), width = size * 2, height = size * 2)
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rootHeight = rootNode.height
-
-			val firstChildContainerNode = rootNode.children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[1]
-
-			assertThat(firstChildContainerNode.size).isEqualTo(IntSize(size, rootHeight))
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(size * 2, rootHeight))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(size, 0))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AABBBB
+				|AABBBB
+				|AABBBB
+				|AABBBB
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_withGravityModifier_andGravityParameter() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val rowHeight = 6
 
 			setContent {
-				Row(Modifier.fillMaxHeight(), verticalAlignment = Alignment.CenterVertically) {
-					Container(modifier = Modifier.align(Alignment.Top), width = size, height = size)
-					Container(width = size, height = size)
-					Container(modifier = Modifier.align(Alignment.Bottom), width = size, height = size)
+				Container(height = rowHeight) {
+					Row(Modifier.fillWith('.').fillMaxHeight(), verticalAlignment = Alignment.CenterVertically) {
+						Container(modifier = Modifier.fillWith('A').align(Alignment.Top), width = size, height = size)
+						Container(modifier = Modifier.fillWith('B'), width = size, height = size)
+						Container(modifier = Modifier.fillWith('C').align(Alignment.Bottom), width = size, height = size)
+					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rootHeight = rootNode.height
-
-			val firstChildContainerNode = rootNode.children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[1]
-			val thirdChildContainerNode = rootNode.children[0].children[2]
-
-			assertThat(firstChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(secondChildContainerNode.position).isEqualTo(
-				IntOffset(
-					size,
-					(rootHeight - size) / 2,
-				),
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA....
+				|AA....
+				|..BB..
+				|..BB..
+				|....CC
+				|....CC
+				""".trimMargin(),
 			)
-			assertThat(thirdChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(size * 2, rootHeight - size))
 		}
 	}
 
 	@Test fun testRow_withGravityModifier() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val rowHeight = 6
 
 			setContent {
-				Row(Modifier.fillMaxHeight()) {
-					Container(modifier = Modifier.align(Alignment.Top), width = size, height = size)
-					Container(
-						modifier = Modifier.align(Alignment.CenterVertically),
-						width = size,
-						height = size,
-					)
-					Container(modifier = Modifier.align(Alignment.Bottom), width = size, height = size)
+				Container(height = rowHeight) {
+					Row(Modifier.fillWith('.').fillMaxHeight()) {
+						Container(modifier = Modifier.fillWith('A').align(Alignment.Top), width = size, height = size)
+						Container(
+							modifier = Modifier.fillWith('B').align(Alignment.CenterVertically),
+							width = size,
+							height = size,
+						)
+						Container(modifier = Modifier.fillWith('C').align(Alignment.Bottom), width = size, height = size)
+					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rootHeight = rootNode.height
-
-			val firstChildContainerNode = rootNode.children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[1]
-			val thirdChildContainerNode = rootNode.children[0].children[2]
-
-			assertThat(firstChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(secondChildContainerNode.position).isEqualTo(
-				IntOffset(
-					size,
-					(rootHeight - size) / 2,
-				),
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA....
+				|AA....
+				|..BB..
+				|..BB..
+				|....CC
+				|....CC
+				""".trimMargin(),
 			)
-			assertThat(thirdChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(size * 2, rootHeight - size))
 		}
 	}
 	// endregion
 
 	// region Cross axis alignment tests in Column
 	@Test fun testColumn_withStretchCrossAxisAlignment() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
 
 			setContent {
 				Column(modifier = Modifier.width(size * 2)) {
-					Container(modifier = Modifier.fillMaxWidth(), width = size, height = size)
-					Container(modifier = Modifier.fillMaxWidth(), width = size * 2, height = size * 2)
+					Container(modifier = Modifier.fillWith('A').fillMaxWidth(), width = size, height = size)
+					Container(modifier = Modifier.fillWith('B').fillMaxWidth(), width = size * 2, height = size * 2)
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rootWidth = rootNode.width
-
-			val firstChildContainerNode = rootNode.children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[1]
-
-			assertThat(firstChildContainerNode.size).isEqualTo(IntSize(rootWidth, size))
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(rootWidth, size * 2))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(0, size))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AAAA
+				|AAAA
+				|BBBB
+				|BBBB
+				|BBBB
+				|BBBB
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_withGravityModifier() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val columnWidth = 6
 
 			setContent {
-				Column(Modifier.fillMaxWidth()) {
-					Container(modifier = Modifier.align(Alignment.Start), width = size, height = size)
-					Container(
-						modifier = Modifier.align(Alignment.CenterHorizontally),
-						width = size,
-						height = size,
-					)
-					Container(modifier = Modifier.align(Alignment.End), width = size, height = size)
+				Container(width = columnWidth) {
+					Column(Modifier.fillWith('.').fillMaxWidth()) {
+						Container(modifier = Modifier.fillWith('A').align(Alignment.Start), width = size, height = size)
+						Container(
+							modifier = Modifier.fillWith('B').align(Alignment.CenterHorizontally),
+							width = size,
+							height = size,
+						)
+						Container(modifier = Modifier.fillWith('C').align(Alignment.End), width = size, height = size)
+					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rootWidth = rootNode.width
-
-			val firstChildContainerNode = rootNode.children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[1]
-			val thirdChildContainerNode = rootNode.children[0].children[2]
-
-			assertThat(firstChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(secondChildContainerNode.position).isEqualTo(
-				IntOffset(
-					(rootWidth - size) / 2,
-					size,
-				),
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA....
+				|AA....
+				|..BB..
+				|..BB..
+				|....CC
+				|....CC
+				""".trimMargin(),
 			)
-			assertThat(thirdChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(rootWidth - size, size * 2))
 		}
 	}
 
 	@Test fun testColumn_withGravityModifier_andGravityParameter() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val columnWidth = 6
 
 			setContent {
-				Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-					Container(modifier = Modifier.align(Alignment.Start), width = size, height = size)
-					Container(width = size, height = size)
-					Container(modifier = Modifier.align(Alignment.End), width = size, height = size)
+				Container(width = columnWidth) {
+					Column(Modifier.fillWith('.').fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+						Container(modifier = Modifier.fillWith('A').align(Alignment.Start), width = size, height = size)
+						Container(modifier = Modifier.fillWith('B'), width = size, height = size)
+						Container(modifier = Modifier.fillWith('C').align(Alignment.End), width = size, height = size)
+					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rootWidth = rootNode.width
-
-			val firstChildContainerNode = rootNode.children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[1]
-			val thirdChildContainerNode = rootNode.children[0].children[2]
-
-			assertThat(firstChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset((rootWidth - size) / 2, size))
-			assertThat(thirdChildContainerNode.size).isEqualTo(IntSize(size, size))
-			assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(rootWidth - size, size * 2))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA....
+				|AA....
+				|..BB..
+				|..BB..
+				|....CC
+				|....CC
+				""".trimMargin(),
+			)
 		}
 	}
 	// endregion
 
 	// region Size tests in Row
 	@Test fun testRow_expandedWidth_withExpandedModifier() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val rowWidth = 10
 
 			setContent {
-				Center {
-					Row(Modifier.fillMaxWidth()) {
-						Spacer(Modifier.size(width = size, height = size))
-						Spacer(Modifier.size(width = (size * 2), height = (size * 2)))
+				Container(width = rowWidth) {
+					Center {
+						Row(Modifier.fillWith('.').fillMaxWidth()) {
+							Spacer(Modifier.fillWith('A').size(width = size, height = size))
+							Spacer(Modifier.fillWith('B').size(width = (size * 2), height = (size * 2)))
+						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rowNode = rootNode.children[0]
-
-			assertThat(rootNode.width).isEqualTo(rowNode.width)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AABBBB....
+				|AABBBB....
+				|..BBBB....
+				|..BBBB....
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_wrappedWidth_withNoWeightChildren() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val rowWidth = 10
 
 			setContent {
-				Center {
-					Row {
-						Spacer(Modifier.size(width = size, height = size))
-						Spacer(Modifier.size(width = (size * 2), height = (size * 2)))
+				Container(width = rowWidth) {
+					Center {
+						Row(Modifier.fillWith('.')) {
+							Spacer(Modifier.fillWith('A').size(width = size, height = size))
+							Spacer(Modifier.fillWith('B').size(width = (size * 2), height = (size * 2)))
+						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rowNode = rootNode.children[0]
-
-			assertThat(rowNode.width).isEqualTo(size * 3)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|  AABBBB
+				|  AABBBB
+				|  ..BBBB
+				|  ..BBBB
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_expandedWidth_withWeightChildren() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val rowWidth = 10
 
 			setContent {
-				Center {
-					Row {
-						Container(modifier = Modifier.weight(1.0f), width = size, height = size)
-						Container(width = size * 2, height = size * 2)
+				Container(width = rowWidth) {
+					Center {
+						Row(Modifier.fillWith('.')) {
+							Container(modifier = Modifier.fillWith('A').weight(1.0f), width = size, height = size)
+							Container(modifier = Modifier.fillWith('B'), width = size * 2, height = size * 2)
+						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rowNode = rootNode.children[0]
-
-			assertThat(rowNode.width).isEqualTo(rootNode.width)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AAAAAABBBB
+				|AAAAAABBBB
+				|......BBBB
+				|......BBBB
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_withMaxCrossAxisSize() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val rowHeight = 6
 
 			setContent {
-				Center {
-					Row(Modifier.fillMaxHeight()) {
-						Spacer(Modifier.size(width = size, height = size))
-						Spacer(Modifier.size(width = (size * 2), height = (size * 2)))
+				Container(height = rowHeight) {
+					Center {
+						Row(Modifier.fillWith('.').fillMaxHeight()) {
+							Spacer(Modifier.fillWith('A').size(width = size, height = size))
+							Spacer(Modifier.fillWith('B').size(width = (size * 2), height = (size * 2)))
+						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rowNode = rootNode.children[0]
-
-			assertThat(rowNode.height).isEqualTo(rootNode.height)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AABBBB
+				|AABBBB
+				|..BBBB
+				|..BBBB
+				|......
+				|......
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_withMinCrossAxisSize() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val rowHeight = 6
 
 			setContent {
-				Center {
-					Row {
-						Spacer(Modifier.size(width = size, height = size))
-						Spacer(Modifier.size(width = (size * 2), height = (size * 2)))
+				Container(height = rowHeight) {
+					Center {
+						Row(Modifier.fillWith('.')) {
+							Spacer(Modifier.fillWith('A').size(width = size, height = size))
+							Spacer(Modifier.fillWith('B').size(width = (size * 2), height = (size * 2)))
+						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rowNode = rootNode.children[0]
-
-			assertThat(rowNode.height).isEqualTo(size * 2)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|
+				|AABBBB
+				|AABBBB
+				|..BBBB
+				|..BBBB
+				|
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_withExpandedModifier_respectsMaxWidthConstraint() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
-			val rowWidth = 250
+		runMosaicTest {
+			val size = 2
+			val rowWidth = 10
 
 			setContent {
 				Center {
 					ConstrainedBox(constraints = Constraints(maxWidth = rowWidth)) {
-						Row(Modifier.fillMaxWidth()) {
-							Spacer(Modifier.size(width = size, height = size))
-							Spacer(Modifier.size(width = size * 2, height = size * 2))
+						Row(Modifier.fillWith('.').fillMaxWidth()) {
+							Spacer(Modifier.fillWith('A').size(width = size, height = size))
+							Spacer(Modifier.fillWith('B').size(width = size * 2, height = size * 2))
 						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rowNode = rootNode.children[0].children[0]
-
-			assertThat(rowNode.width).isEqualTo(rootNode.width)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AABBBB....
+				|AABBBB....
+				|..BBBB....
+				|..BBBB....
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_withChildrenWithWeight_respectsMaxWidthConstraint() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
-			val rowWidth = 250
+		runMosaicTest {
+			val size = 2
+			val rowWidth = 10
 
 			setContent {
 				Center {
 					ConstrainedBox(constraints = Constraints(maxWidth = rowWidth)) {
-						Row {
-							Container(modifier = Modifier.weight(1.0f), width = size, height = size)
-							Container(width = size * 2, height = size * 2)
+						Row(Modifier.fillWith('.')) {
+							Container(modifier = Modifier.fillWith('A').weight(1.0f), width = size, height = size)
+							Container(modifier = Modifier.fillWith('B'), width = size * 2, height = size * 2)
 						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rowNode = rootNode.children[0].children[0]
-
-			assertThat(rowNode.width).isEqualTo(min(rootNode.width, rowWidth))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AAAAAABBBB
+				|AAAAAABBBB
+				|......BBBB
+				|......BBBB
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_withNoWeightChildren_respectsMinWidthConstraint() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
-			val rowWidth = 250
+		runMosaicTest {
+			val size = 2
+			val rowWidth = 10
 
 			setContent {
 				Center {
 					ConstrainedBox(constraints = Constraints(minWidth = rowWidth)) {
-						Row {
-							Spacer(Modifier.size(width = size, height = size))
-							Spacer(Modifier.size(width = size * 2, height = size * 2))
+						Row(Modifier.fillWith('.')) {
+							Spacer(Modifier.fillWith('A').size(width = size, height = size))
+							Spacer(Modifier.fillWith('B').size(width = size * 2, height = size * 2))
 						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rowNode = rootNode.children[0].children[0]
-
-			assertThat(rowNode.width).isEqualTo(rowWidth)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AABBBB....
+				|AABBBB....
+				|..BBBB....
+				|..BBBB....
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_withMaxCrossAxisSize_respectsMaxHeightConstraint() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
-			val rowHeight = 250
+		runMosaicTest {
+			val size = 2
+			val rowHeight = 10
 
 			setContent {
 				Center {
 					ConstrainedBox(constraints = Constraints(maxHeight = rowHeight)) {
-						Row(Modifier.fillMaxHeight()) {
-							Spacer(Modifier.size(width = size, height = size))
-							Spacer(Modifier.size(width = size * 2, height = size * 2))
+						Row(Modifier.fillWith('.').fillMaxHeight()) {
+							Spacer(Modifier.fillWith('A').size(width = size, height = size))
+							Spacer(Modifier.fillWith('B').size(width = size * 2, height = size * 2))
 						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rowNode = rootNode.children[0].children[0]
-
-			assertThat(rowNode.height).isEqualTo(min(rootNode.height, rowHeight))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AABBBB
+				|AABBBB
+				|..BBBB
+				|..BBBB
+				|......
+				|......
+				|......
+				|......
+				|......
+				|......
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_withMinCrossAxisSize_respectsMinHeightConstraint() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
-			val rowHeight = 150
+		runMosaicTest {
+			val size = 2
+			val rowHeight = 6
 
 			setContent {
 				Center {
 					ConstrainedBox(constraints = Constraints(minHeight = rowHeight)) {
-						Row {
-							Spacer(Modifier.size(width = size, height = size))
-							Spacer(Modifier.size(width = size * 2, height = size * 2))
+						Row(Modifier.fillWith('.')) {
+							Spacer(Modifier.fillWith('A').size(width = size, height = size))
+							Spacer(Modifier.fillWith('B').size(width = size * 2, height = size * 2))
 						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rowNode = rootNode.children[0].children[0]
-
-			assertThat(rowNode.height).isEqualTo(rowHeight)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AABBBB
+				|AABBBB
+				|..BBBB
+				|..BBBB
+				|......
+				|......
+				""".trimMargin(),
+			)
 		}
 	}
 
@@ -921,970 +951,1177 @@ class RowColumnTest {
 	}
 
 	@Test fun testRow_doesNotExpand_whenWeightChildrenDoNotFill() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 10
+		runMosaicTest {
+			val size = 2
 
 			setContent {
-				Row(Modifier.sizeIn(maxWidth = 100, maxHeight = 100)) {
-					Box(Modifier.weight(1.0f, false).size(size))
+				Row(Modifier.fillWith('.').sizeIn(maxWidth = 20, maxHeight = 20)) {
+					Box(Modifier.fillWith('A').weight(1.0f, false).size(size))
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			assertThat(rootNode.width).isEqualTo(size)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA
+				|AA
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_includesSpacing_withWeightChildren() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val rowWidth = 40
-			val space = 8
+		runMosaicTest {
+			val rowWidth = 10
+			val space = 2
 
 			setContent {
 				Row(
-					modifier = Modifier.widthIn(max = rowWidth),
+					modifier = Modifier.fillWith('.').widthIn(max = rowWidth),
 					horizontalArrangement = Arrangement.spacedBy(space),
 				) {
-					Box(Modifier.weight(1.0f))
-					Box(Modifier.weight(1.0f))
+					Box(Modifier.fillWith('A').weight(1.0f).height(1))
+					Box(Modifier.fillWith('B').weight(1.0f).height(1))
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val firstChildBoxNode = rootNode.children[0].children[0]
-			val secondChildBoxNode = rootNode.children[0].children[1]
-
-			assertThat(firstChildBoxNode.width).isEqualTo((rowWidth - space) / 2)
-			assertThat(firstChildBoxNode.x).isEqualTo(0)
-			assertThat(secondChildBoxNode.width).isEqualTo((rowWidth - space) / 2)
-			assertThat(secondChildBoxNode.x).isEqualTo((rowWidth - space) / 2 + space)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AAAA..BBBB
+				""".trimMargin(),
+			)
 		}
 	}
 	// endregion
 
 	// region Size tests in Column
 	@Test fun testColumn_expandedHeight_withExpandedModifier() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val columnHeight = 10
 
 			setContent {
-				Center {
-					Column(Modifier.fillMaxHeight()) {
-						Spacer(Modifier.size(width = size, height = size))
-						Spacer(Modifier.size(width = (size * 2), height = (size * 2)))
+				Container(height = columnHeight) {
+					Center {
+						Column(Modifier.fillWith('.').fillMaxHeight()) {
+							Spacer(Modifier.fillWith('A').size(width = size, height = size))
+							Spacer(Modifier.fillWith('B').size(width = (size * 2), height = (size * 2)))
+						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val columnNode = rootNode.children[0]
-
-			assertThat(columnNode.height).isEqualTo(rootNode.height)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA..
+				|AA..
+				|BBBB
+				|BBBB
+				|BBBB
+				|BBBB
+				|....
+				|....
+				|....
+				|....
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_wrappedHeight_withNoChildrenWithWeight() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val columnHeight = 10
 
 			setContent {
-				Center {
-					Column {
-						Spacer(Modifier.size(width = size, height = size))
-						Spacer(Modifier.size(width = (size * 2), height = (size * 2)))
+				Container(height = columnHeight) {
+					Center {
+						Column(Modifier.fillWith('.')) {
+							Spacer(Modifier.fillWith('A').size(width = size, height = size))
+							Spacer(Modifier.fillWith('B').size(width = (size * 2), height = (size * 2)))
+						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val columnNode = rootNode.children[0]
-
-			assertThat(columnNode.height).isEqualTo(size * 3)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|
+				|
+				|AA..
+				|AA..
+				|BBBB
+				|BBBB
+				|BBBB
+				|BBBB
+				|
+				|
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_expandedHeight_withWeightChildren() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val columnHeight = 10
 
 			setContent {
-				Center {
-					Column {
-						Container(modifier = Modifier.weight(1.0f), width = size, height = size)
-						Container(width = size * 2, height = size * 2)
+				Container(height = columnHeight) {
+					Center {
+						Column(Modifier.fillWith('.')) {
+							Container(modifier = Modifier.fillWith('A').weight(1.0f), width = size, height = size)
+							Container(modifier = Modifier.fillWith('B'), width = size * 2, height = size * 2)
+						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val columnNode = rootNode.children[0]
-
-			assertThat(columnNode.height).isEqualTo(rootNode.height)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA..
+				|AA..
+				|AA..
+				|AA..
+				|AA..
+				|AA..
+				|BBBB
+				|BBBB
+				|BBBB
+				|BBBB
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_withMaxCrossAxisSize() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val columnWidth = 6
 
 			setContent {
-				Center {
-					Column(Modifier.fillMaxWidth()) {
-						Spacer(Modifier.size(width = size, height = size))
-						Spacer(Modifier.size(width = (size * 2), height = (size * 2)))
+				Container(width = columnWidth) {
+					Center {
+						Column(Modifier.fillWith('.').fillMaxWidth()) {
+							Spacer(Modifier.fillWith('A').size(width = size, height = size))
+							Spacer(Modifier.fillWith('B').size(width = (size * 2), height = (size * 2)))
+						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val columnNode = rootNode.children[0]
-
-			assertThat(columnNode.width).isEqualTo(rootNode.width)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA....
+				|AA....
+				|BBBB..
+				|BBBB..
+				|BBBB..
+				|BBBB..
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_withMinCrossAxisSize() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val columnWidth = 6
 
 			setContent {
-				Center {
-					Column {
-						Spacer(Modifier.size(width = size, height = size))
-						Spacer(Modifier.size(width = (size * 2), height = (size * 2)))
+				Container(width = columnWidth) {
+					Center {
+						Column(Modifier.fillWith('.')) {
+							Spacer(Modifier.fillWith('A').size(width = size, height = size))
+							Spacer(Modifier.fillWith('B').size(width = (size * 2), height = (size * 2)))
+						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val columnNode = rootNode.children[0]
-
-			assertThat(columnNode.width).isEqualTo(size * 2)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				| AA..
+				| AA..
+				| BBBB
+				| BBBB
+				| BBBB
+				| BBBB
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_withExpandedModifier_respectsMaxHeightConstraint() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
-			val columnHeight = 250
+		runMosaicTest {
+			val size = 2
+			val columnHeight = 10
 
 			setContent {
 				Center {
 					ConstrainedBox(constraints = Constraints(maxHeight = columnHeight)) {
-						Column(Modifier.fillMaxHeight()) {
-							Spacer(Modifier.size(width = size, height = size))
-							Spacer(Modifier.size(width = size * 2, height = size * 2))
+						Column(Modifier.fillWith('.').fillMaxHeight()) {
+							Spacer(Modifier.fillWith('A').size(width = size, height = size))
+							Spacer(Modifier.fillWith('B').size(width = size * 2, height = size * 2))
 						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val columnNode = rootNode.children[0]
-
-			assertThat(columnNode.height).isEqualTo(min(rootNode.height, columnHeight))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA..
+				|AA..
+				|BBBB
+				|BBBB
+				|BBBB
+				|BBBB
+				|....
+				|....
+				|....
+				|....
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_withWeightChildren_respectsMaxHeightConstraint() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
-			val columnHeight = 250
+		runMosaicTest {
+			val size = 2
+			val columnHeight = 10
 
 			setContent {
 				Center {
 					ConstrainedBox(constraints = Constraints(maxHeight = columnHeight)) {
-						Column {
-							Container(modifier = Modifier.weight(1.0f), width = size, height = size)
-							Container(width = size * 2, height = size * 2)
+						Column(Modifier.fillWith('.')) {
+							Container(modifier = Modifier.fillWith('A').weight(1.0f), width = size, height = size)
+							Container(modifier = Modifier.fillWith('B'), width = size * 2, height = size * 2)
 						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val columnNode = rootNode.children[0].children[0]
-
-			assertThat(columnNode.height).isEqualTo(min(rootNode.height, columnHeight))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA..
+				|AA..
+				|AA..
+				|AA..
+				|AA..
+				|AA..
+				|BBBB
+				|BBBB
+				|BBBB
+				|BBBB
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_withChildren_respectsMinHeightConstraint() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
-			val columnHeight = 250
+		runMosaicTest {
+			val size = 2
+			val columnHeight = 10
 
 			setContent {
 				Center {
 					ConstrainedBox(constraints = Constraints(minHeight = columnHeight)) {
-						Column {
-							Spacer(Modifier.size(width = size, height = size))
-							Spacer(Modifier.size(width = size * 2, height = size * 2))
+						Column(Modifier.fillWith('.')) {
+							Spacer(Modifier.fillWith('A').size(width = size, height = size))
+							Spacer(Modifier.fillWith('B').size(width = size * 2, height = size * 2))
 						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val columnNode = rootNode.children[0].children[0]
-
-			assertThat(columnNode.height).isEqualTo(columnHeight)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA..
+				|AA..
+				|BBBB
+				|BBBB
+				|BBBB
+				|BBBB
+				|....
+				|....
+				|....
+				|....
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_withMaxCrossAxisSize_respectsMaxWidthConstraint() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
-			val columnWidth = 250
+		runMosaicTest {
+			val size = 2
+			val columnWidth = 10
 
 			setContent {
 				Center {
 					ConstrainedBox(constraints = Constraints(maxWidth = columnWidth)) {
-						Column(Modifier.fillMaxWidth()) {
-							Spacer(Modifier.size(width = size, height = size))
-							Spacer(Modifier.size(width = size * 2, height = size * 2))
+						Column(Modifier.fillWith('.').fillMaxWidth()) {
+							Spacer(Modifier.fillWith('A').size(width = size, height = size))
+							Spacer(Modifier.fillWith('B').size(width = size * 2, height = size * 2))
 						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val columnNode = rootNode.children[0].children[0]
-
-			assertThat(columnNode.width).isEqualTo(min(rootNode.width, columnWidth))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA........
+				|AA........
+				|BBBB......
+				|BBBB......
+				|BBBB......
+				|BBBB......
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_withMinCrossAxisSize_respectsMinWidthConstraint() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
-			val columnWidth = 150
+		runMosaicTest {
+			val size = 2
+			val columnWidth = 6
 
 			setContent {
 				Center {
 					ConstrainedBox(constraints = Constraints(minWidth = columnWidth)) {
-						Column {
-							Spacer(Modifier.size(width = size, height = size))
-							Spacer(Modifier.size(width = size * 2, height = size * 2))
+						Column(Modifier.fillWith('.')) {
+							Spacer(Modifier.fillWith('A').size(width = size, height = size))
+							Spacer(Modifier.fillWith('B').size(width = size * 2, height = size * 2))
 						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val columnNode = rootNode.children[0].children[0]
-
-			assertThat(columnNode.width).isEqualTo(columnWidth)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA....
+				|AA....
+				|BBBB..
+				|BBBB..
+				|BBBB..
+				|BBBB..
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_doesNotExpand_whenWeightChildrenDoNotFill() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 10
+		runMosaicTest {
+			val size = 2
 
 			setContent {
-				Column(Modifier.sizeIn(maxWidth = 100, maxHeight = 100)) {
-					Box(Modifier.weight(1.0f, false).size(size))
+				Column(Modifier.fillWith('.').sizeIn(maxWidth = 20, maxHeight = 20)) {
+					Box(Modifier.fillWith('A').weight(1.0f, false).size(size))
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			assertThat(rootNode.height).isEqualTo(size)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA
+				|AA
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_includesSpacing_withWeightChildren() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val columnHeight = 40
-			val space = 8
+		runMosaicTest {
+			val columnHeight = 10
+			val space = 2
 
 			setContent {
 				Column(
-					modifier = Modifier.height(columnHeight),
+					modifier = Modifier.fillWith('.').height(columnHeight),
 					verticalArrangement = Arrangement.spacedBy(space),
 				) {
-					Box(Modifier.weight(1.0f))
-					Box(Modifier.weight(1.0f))
+					Box(Modifier.fillWith('A').weight(1.0f).width(1))
+					Box(Modifier.fillWith('B').weight(1.0f).width(1))
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val firstChildBoxNode = rootNode.children[0].children[0]
-			val secondChildBoxNode = rootNode.children[0].children[1]
-
-			assertThat(firstChildBoxNode.height).isEqualTo((columnHeight - space) / 2)
-			assertThat(firstChildBoxNode.y).isEqualTo(0)
-			assertThat(secondChildBoxNode.height).isEqualTo((columnHeight - space) / 2)
-			assertThat(secondChildBoxNode.y).isEqualTo((columnHeight - space) / 2 + space)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|A
+				|A
+				|A
+				|A
+				|.
+				|.
+				|B
+				|B
+				|B
+				|B
+				""".trimMargin(),
+			)
 		}
 	}
 	// endregion
 
 	// region Main axis alignment tests in Row
 	@Test fun testRow_withStartArrangement() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val rowWidth = 18
 
 			setContent {
-				Center {
-					Row(Modifier.fillMaxWidth()) {
-						Container(width = size, height = size)
-						Container(width = size, height = size)
-						Container(width = size, height = size)
+				Container(width = rowWidth) {
+					Center {
+						Row(Modifier.fillWith('.').fillMaxWidth()) {
+							Container(modifier = Modifier.fillWith('A'), width = size, height = size)
+							Container(modifier = Modifier.fillWith('B'), width = size, height = size)
+							Container(modifier = Modifier.fillWith('C'), width = size, height = size)
+						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val firstChildContainerNode = rootNode.children[0].children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[0].children[1]
-			val thirdChildContainerNode = rootNode.children[0].children[0].children[2]
-
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(size, 0))
-			assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(size * 2, 0))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AABBCC............
+				|AABBCC............
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_withEndArrangement() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val rowWidth = 18
 
 			setContent {
-				Center {
-					Row(
-						modifier = Modifier.fillMaxWidth(),
-						horizontalArrangement = Arrangement.End,
-					) {
-						Container(width = size, height = size)
-						Container(width = size, height = size)
-						Container(width = size, height = size)
+				Container(width = rowWidth) {
+					Center {
+						Row(
+							modifier = Modifier.fillWith('.').fillMaxWidth(),
+							horizontalArrangement = Arrangement.End,
+						) {
+							Container(modifier = Modifier.fillWith('A'), width = size, height = size)
+							Container(modifier = Modifier.fillWith('B'), width = size, height = size)
+							Container(modifier = Modifier.fillWith('C'), width = size, height = size)
+						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val firstChildContainerNode = rootNode.children[0].children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[0].children[1]
-			val thirdChildContainerNode = rootNode.children[0].children[0].children[2]
-
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset(rootNode.width - size * 3, 0))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(rootNode.width - size * 2, 0))
-			assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(rootNode.width - size, 0))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|............AABBCC
+				|............AABBCC
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_withCenterArrangement() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val rowWidth = 18
 
 			setContent {
-				Center {
-					Row(
-						modifier = Modifier.fillMaxWidth(),
-						horizontalArrangement = Arrangement.Center,
-					) {
-						Container(width = size, height = size)
-						Container(width = size, height = size)
-						Container(width = size, height = size)
+				Container(width = rowWidth) {
+					Center {
+						Row(
+							modifier = Modifier.fillWith('.').fillMaxWidth(),
+							horizontalArrangement = Arrangement.Center,
+						) {
+							Container(modifier = Modifier.fillWith('A'), width = size, height = size)
+							Container(modifier = Modifier.fillWith('B'), width = size, height = size)
+							Container(modifier = Modifier.fillWith('C'), width = size, height = size)
+						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val extraSpace = rootNode.width - size * 3
-
-			val firstChildContainerNode = rootNode.children[0].children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[0].children[1]
-			val thirdChildContainerNode = rootNode.children[0].children[0].children[2]
-
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset(extraSpace / 2, 0))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset((extraSpace / 2) + size, 0))
-			assertThat(thirdChildContainerNode.position).isEqualTo(
-				IntOffset(
-					(extraSpace / 2) + size * 2,
-					0,
-				),
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|......AABBCC......
+				|......AABBCC......
+				""".trimMargin(),
 			)
 		}
 	}
 
 	@Test fun testRow_withSpaceEvenlyArrangement() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val rowWidth = 18
 
 			setContent {
-				Center {
-					Row(
-						modifier = Modifier.fillMaxWidth(),
-						horizontalArrangement = Arrangement.SpaceEvenly,
-					) {
-						Container(width = size, height = size)
-						Container(width = size, height = size)
-						Container(width = size, height = size)
+				Container(width = rowWidth) {
+					Center {
+						Row(
+							modifier = Modifier.fillWith('.').fillMaxWidth(),
+							horizontalArrangement = Arrangement.SpaceEvenly,
+						) {
+							Container(modifier = Modifier.fillWith('A'), width = size, height = size)
+							Container(modifier = Modifier.fillWith('B'), width = size, height = size)
+							Container(modifier = Modifier.fillWith('C'), width = size, height = size)
+						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val gap = (rootNode.width - size * 3) / 4
-
-			val firstChildContainerNode = rootNode.children[0].children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[0].children[1]
-			val thirdChildContainerNode = rootNode.children[0].children[0].children[2]
-
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset(gap, 0))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(size + gap * 2, 0))
-			assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(size * 2 + gap * 3, 0))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|...AA...BB...CC...
+				|...AA...BB...CC...
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_withSpaceBetweenArrangement_singleItem() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val rowWidth = 18
 
 			setContent {
-				Center {
-					Row(
-						modifier = Modifier.fillMaxWidth(),
-						horizontalArrangement = Arrangement.SpaceBetween,
-					) {
-						Container(width = size, height = size)
+				Container(width = rowWidth) {
+					Center {
+						Row(
+							modifier = Modifier.fillWith('.').fillMaxWidth(),
+							horizontalArrangement = Arrangement.SpaceBetween,
+						) {
+							Container(modifier = Modifier.fillWith('A'), width = size, height = size)
+						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val childContainerNode = rootNode.children[0].children[0]
-
-			assertThat(childContainerNode.position).isEqualTo(IntOffset.Zero)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA................
+				|AA................
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_withSpaceBetweenArrangement_multipleItems() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val rowWidth = 18
 
 			setContent {
-				Center {
-					Row(
-						modifier = Modifier.fillMaxWidth(),
-						horizontalArrangement = Arrangement.SpaceBetween,
-					) {
-						Container(width = size, height = size)
-						Container(width = size, height = size)
-						Container(width = size, height = size)
+				Container(width = rowWidth) {
+					Center {
+						Row(
+							modifier = Modifier.fillWith('.').fillMaxWidth(),
+							horizontalArrangement = Arrangement.SpaceBetween,
+						) {
+							Container(modifier = Modifier.fillWith('A'), width = size, height = size)
+							Container(modifier = Modifier.fillWith('B'), width = size, height = size)
+							Container(modifier = Modifier.fillWith('C'), width = size, height = size)
+						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val gap = (rootNode.width - size * 3) / 2
-
-			val firstChildContainerNode = rootNode.children[0].children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[0].children[1]
-			val thirdChildContainerNode = rootNode.children[0].children[0].children[2]
-
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(gap + size, 0))
-			assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(gap * 2 + size * 2, 0))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA......BB......CC
+				|AA......BB......CC
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_withSpaceAroundArrangement() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val rowWidth = 18
 
 			setContent {
-				Center {
-					Row(
-						modifier = Modifier.fillMaxWidth(),
-						horizontalArrangement = Arrangement.SpaceAround,
-					) {
-						Container(width = size, height = size)
-						Container(width = size, height = size)
-						Container(width = size, height = size)
+				Container(width = rowWidth) {
+					Center {
+						Row(
+							modifier = Modifier.fillWith('.').fillMaxWidth(),
+							horizontalArrangement = Arrangement.SpaceAround,
+						) {
+							Container(modifier = Modifier.fillWith('A'), width = size, height = size)
+							Container(modifier = Modifier.fillWith('B'), width = size, height = size)
+							Container(modifier = Modifier.fillWith('C'), width = size, height = size)
+						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val gap = (rootNode.width - size * 3) / 3
-
-			val firstChildContainerNode = rootNode.children[0].children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[0].children[1]
-			val thirdChildContainerNode = rootNode.children[0].children[0].children[2]
-
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset(gap / 2, 0))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset((gap * 3 / 2) + size, 0))
-			assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset((gap * 5 / 2) + size * 2, 0))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|..AA....BB....CC..
+				|..AA....BB....CC..
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_withSpacedByArrangement() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val space = 10
-			val size = 20
+		runMosaicTest {
+			val space = 1
+			val size = 2
 
 			setContent {
 				Column {
-					Row(horizontalArrangement = Arrangement.spacedBy(space)) {
-						Box(Modifier.requiredSize(size))
-						Box(Modifier.requiredSize(size))
+					Row(modifier = Modifier.fillWith('.'), horizontalArrangement = Arrangement.spacedBy(space)) {
+						Box(Modifier.fillWith('A').requiredSize(size))
+						Box(Modifier.fillWith('B').requiredSize(size))
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val firstChildBoxNode = rootNode.children[0].children[0].children[0]
-			val secondChildBoxNode = rootNode.children[0].children[0].children[1]
-
-			assertThat(firstChildBoxNode.x).isEqualTo(0)
-			assertThat(secondChildBoxNode.x).isEqualTo(size + space)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA.BB
+				|AA.BB
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_withSpacedByAlignedArrangement() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val space = 10
-			val size = 20
-			val rowSize = 50
+		runMosaicTest {
+			val space = 1
+			val size = 2
+			val rowSize = 7
 
 			setContent {
 				Column {
 					Row(
-						modifier = Modifier.requiredSize(rowSize),
+						modifier = Modifier.fillWith('.').requiredSize(rowSize),
 						horizontalArrangement = Arrangement.spacedBy(space, Alignment.End),
 					) {
-						Box(Modifier.requiredSize(size))
-						Box(Modifier.requiredSize(size))
+						Box(Modifier.fillWith('A').requiredSize(size))
+						Box(Modifier.fillWith('B').requiredSize(size))
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rowNode = rootNode.children[0]
-
-			val firstChildBoxNode = rowNode.children[0].children[0]
-			val secondChildBoxNode = rowNode.children[0].children[1]
-
-			assertThat(rowNode.width).isEqualTo(rowSize)
-			assertThat(firstChildBoxNode.x).isEqualTo(rowSize - space - size * 2)
-			assertThat(secondChildBoxNode.x).isEqualTo(rowSize - size)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|..AA.BB
+				|..AA.BB
+				|.......
+				|.......
+				|.......
+				|.......
+				|.......
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_withSpacedByArrangement_insufficientSpace() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val space = 15
-			val size = 20
-			val rowSize = 50
+		runMosaicTest {
+			val space = 3
+			val size = 4
+			val rowSize = 10
 
 			setContent {
 				Column {
 					Row(
-						modifier = Modifier.requiredSize(rowSize),
+						modifier = Modifier.fillWith('.').requiredSize(rowSize),
 						horizontalArrangement = Arrangement.spacedBy(space),
 					) {
-						Box(Modifier.size(size))
-						Box(Modifier.size(size))
-						Box(Modifier.size(size))
+						Box(Modifier.fillWith('A').size(size))
+						Box(Modifier.fillWith('B').size(size))
+						Box(Modifier.fillWith('C').size(size))
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rowNode = rootNode.children[0].children[0]
-
-			val firstChildBoxNode = rowNode.children[0]
-			val secondChildBoxNode = rowNode.children[1]
-			val thirdChildBoxNode = rowNode.children[2]
-
-			assertThat(rowNode.width).isEqualTo(rowSize)
-			assertThat(firstChildBoxNode.width).isEqualTo(size)
-			assertThat(firstChildBoxNode.x).isEqualTo(0)
-			assertThat(secondChildBoxNode.width).isEqualTo(rowSize - space - size)
-			assertThat(secondChildBoxNode.x).isEqualTo(size + space)
-			assertThat(thirdChildBoxNode.width).isEqualTo(0)
-			assertThat(thirdChildBoxNode.x).isEqualTo(rowSize)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AAAA...BBB
+				|AAAA...BBB
+				|AAAA...BBB
+				|AAAA...BBB
+				|..........
+				|..........
+				|..........
+				|..........
+				|..........
+				|..........
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_withAlignedArrangement() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 20
-			val rowSize = 50
+		runMosaicTest {
+			val size = 2
+			val rowSize = 5
 
 			setContent {
 				Column {
 					Row(
-						modifier = Modifier.requiredSize(rowSize),
+						modifier = Modifier.fillWith('.').requiredSize(rowSize),
 						horizontalArrangement = Arrangement.aligned(Alignment.End),
 					) {
-						Box(Modifier.size(size))
-						Box(Modifier.size(size))
+						Box(Modifier.fillWith('A').size(size))
+						Box(Modifier.fillWith('B').size(size))
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rowNode = rootNode.children[0]
-
-			val firstChildBoxNode = rowNode.children[0].children[0]
-			val secondChildBoxNode = rowNode.children[0].children[1]
-
-			assertThat(rowNode.width).isEqualTo(rowSize)
-			assertThat(firstChildBoxNode.width).isEqualTo(size)
-			assertThat(firstChildBoxNode.x).isEqualTo(rowSize - size * 2)
-			assertThat(secondChildBoxNode.width).isEqualTo(size)
-			assertThat(secondChildBoxNode.x).isEqualTo(rowSize - size)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|.AABB
+				|.AABB
+				|.....
+				|.....
+				|.....
+				""".trimMargin(),
+			)
 		}
 	}
 	// endregion
 
 	// region Main axis alignment tests in Column
 	@Test fun testColumn_withTopArrangement() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val columnHeight = 18
 
 			setContent {
-				Center {
-					Column(Modifier.fillMaxHeight()) {
-						Container(width = size, height = size)
-						Container(width = size, height = size)
-						Container(width = size, height = size)
+				Container(height = columnHeight) {
+					Center {
+						Column(Modifier.fillWith('.').fillMaxHeight()) {
+							Container(modifier = Modifier.fillWith('A'), width = size, height = size)
+							Container(modifier = Modifier.fillWith('B'), width = size, height = size)
+							Container(modifier = Modifier.fillWith('C'), width = size, height = size)
+						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val firstChildContainerNode = rootNode.children[0].children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[0].children[1]
-			val thirdChildContainerNode = rootNode.children[0].children[0].children[2]
-
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(0, size))
-			assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(0, size * 2))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA
+				|AA
+				|BB
+				|BB
+				|CC
+				|CC
+				|..
+				|..
+				|..
+				|..
+				|..
+				|..
+				|..
+				|..
+				|..
+				|..
+				|..
+				|..
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_withBottomArrangement() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val columnHeight = 18
 
 			setContent {
-				Center {
-					Column(
-						modifier = Modifier.fillMaxHeight(),
-						verticalArrangement = Arrangement.Bottom,
-					) {
-						Container(width = size, height = size)
-						Container(width = size, height = size)
-						Container(width = size, height = size)
+				Container(height = columnHeight) {
+					Center {
+						Column(
+							modifier = Modifier.fillWith('.').fillMaxHeight(),
+							verticalArrangement = Arrangement.Bottom,
+						) {
+							Container(modifier = Modifier.fillWith('A'), width = size, height = size)
+							Container(modifier = Modifier.fillWith('B'), width = size, height = size)
+							Container(modifier = Modifier.fillWith('C'), width = size, height = size)
+						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rootHeight = rootNode.height
-
-			val firstChildContainerNode = rootNode.children[0].children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[0].children[1]
-			val thirdChildContainerNode = rootNode.children[0].children[0].children[2]
-
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset(0, rootHeight - size * 3))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(0, rootHeight - size * 2))
-			assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(0, rootHeight - size))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|..
+				|..
+				|..
+				|..
+				|..
+				|..
+				|..
+				|..
+				|..
+				|..
+				|..
+				|..
+				|AA
+				|AA
+				|BB
+				|BB
+				|CC
+				|CC
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_withCenterArrangement() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val columnHeight = 18
 
 			setContent {
-				Center {
-					Column(
-						modifier = Modifier.fillMaxHeight(),
-						verticalArrangement = Arrangement.Center,
-					) {
-						Container(width = size, height = size)
-						Container(width = size, height = size)
-						Container(width = size, height = size)
+				Container(height = columnHeight) {
+					Center {
+						Column(
+							modifier = Modifier.fillWith('.').fillMaxHeight(),
+							verticalArrangement = Arrangement.Center,
+						) {
+							Container(modifier = Modifier.fillWith('A'), width = size, height = size)
+							Container(modifier = Modifier.fillWith('B'), width = size, height = size)
+							Container(modifier = Modifier.fillWith('C'), width = size, height = size)
+						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val extraSpace = rootNode.height - size * 3
-
-			val firstChildContainerNode = rootNode.children[0].children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[0].children[1]
-			val thirdChildContainerNode = rootNode.children[0].children[0].children[2]
-
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset(0, extraSpace / 2))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(0, (extraSpace / 2) + size))
-			assertThat(thirdChildContainerNode.position).isEqualTo(
-				IntOffset(
-					0,
-					(extraSpace / 2) + size * 2,
-				),
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|..
+				|..
+				|..
+				|..
+				|..
+				|..
+				|AA
+				|AA
+				|BB
+				|BB
+				|CC
+				|CC
+				|..
+				|..
+				|..
+				|..
+				|..
+				|..
+				""".trimMargin(),
 			)
 		}
 	}
 
 	@Test fun testColumn_withSpaceEvenlyArrangement() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val columnHeight = 18
 
 			setContent {
-				Center {
-					Column(
-						modifier = Modifier.fillMaxHeight(),
-						verticalArrangement = Arrangement.SpaceEvenly,
-					) {
-						Container(width = size, height = size)
-						Container(width = size, height = size)
-						Container(width = size, height = size)
+				Container(height = columnHeight) {
+					Center {
+						Column(
+							modifier = Modifier.fillWith('.').fillMaxHeight(),
+							verticalArrangement = Arrangement.SpaceEvenly,
+						) {
+							Container(modifier = Modifier.fillWith('A'), width = size, height = size)
+							Container(modifier = Modifier.fillWith('B'), width = size, height = size)
+							Container(modifier = Modifier.fillWith('C'), width = size, height = size)
+						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val gap = (rootNode.height - size * 3) / 4
-
-			val firstChildContainerNode = rootNode.children[0].children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[0].children[1]
-			val thirdChildContainerNode = rootNode.children[0].children[0].children[2]
-
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset(0, gap))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(0, size + gap * 2))
-			assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(0, size * 2 + gap * 3))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|..
+				|..
+				|..
+				|AA
+				|AA
+				|..
+				|..
+				|..
+				|BB
+				|BB
+				|..
+				|..
+				|..
+				|CC
+				|CC
+				|..
+				|..
+				|..
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_withSpaceBetweenArrangement() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val columnHeight = 18
 
 			setContent {
-				Center {
-					Column(
-						modifier = Modifier.fillMaxHeight(),
-						verticalArrangement = Arrangement.SpaceBetween,
-					) {
-						Container(width = size, height = size)
-						Container(width = size, height = size)
-						Container(width = size, height = size)
+				Container(height = columnHeight) {
+					Center {
+						Column(
+							modifier = Modifier.fillWith('.').fillMaxHeight(),
+							verticalArrangement = Arrangement.SpaceBetween,
+						) {
+							Container(modifier = Modifier.fillWith('A'), width = size, height = size)
+							Container(modifier = Modifier.fillWith('B'), width = size, height = size)
+							Container(modifier = Modifier.fillWith('C'), width = size, height = size)
+						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val gap = (rootNode.height - size * 3) / 2
-
-			val firstChildContainerNode = rootNode.children[0].children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[0].children[1]
-			val thirdChildContainerNode = rootNode.children[0].children[0].children[2]
-
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(0, size + gap))
-			assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(0, size * 2 + gap * 2))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA
+				|AA
+				|..
+				|..
+				|..
+				|..
+				|..
+				|..
+				|BB
+				|BB
+				|..
+				|..
+				|..
+				|..
+				|..
+				|..
+				|CC
+				|CC
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_withSpaceAroundArrangement() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
+		runMosaicTest {
+			val size = 2
+			val columnHeight = 18
 
 			setContent {
-				Center {
-					Column(
-						modifier = Modifier.fillMaxHeight(),
-						verticalArrangement = Arrangement.SpaceAround,
-					) {
-						Container(width = size, height = size)
-						Container(width = size, height = size)
-						Container(width = size, height = size)
+				Container(height = columnHeight) {
+					Center {
+						Column(
+							modifier = Modifier.fillWith('.').fillMaxHeight(),
+							verticalArrangement = Arrangement.SpaceAround,
+						) {
+							Container(modifier = Modifier.fillWith('A'), width = size, height = size)
+							Container(modifier = Modifier.fillWith('B'), width = size, height = size)
+							Container(modifier = Modifier.fillWith('C'), width = size, height = size)
+						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val gap = (rootNode.height - size * 3) / 3
-
-			val firstChildContainerNode = rootNode.children[0].children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[0].children[1]
-			val thirdChildContainerNode = rootNode.children[0].children[0].children[2]
-
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset(0, gap / 2))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(0, size + (gap * 3 / 2)))
-			assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(0, size * 2 + (gap * 5 / 2)))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|..
+				|..
+				|AA
+				|AA
+				|..
+				|..
+				|..
+				|..
+				|BB
+				|BB
+				|..
+				|..
+				|..
+				|..
+				|CC
+				|CC
+				|..
+				|..
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_withSpacedByArrangement() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val space = 10
-			val size = 20
+		runMosaicTest {
+			val space = 1
+			val size = 2
 
 			setContent {
 				Row {
-					Column(verticalArrangement = Arrangement.spacedBy(space)) {
-						Box(Modifier.requiredSize(size))
-						Box(Modifier.requiredSize(size))
+					Column(modifier = Modifier.fillWith('.'), verticalArrangement = Arrangement.spacedBy(space)) {
+						Box(Modifier.fillWith('A').requiredSize(size))
+						Box(Modifier.fillWith('B').requiredSize(size))
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val columnNode = rootNode.children[0]
-
-			val firstChildBoxNode = columnNode.children[0].children[0]
-			val secondChildBoxNode = columnNode.children[0].children[1]
-
-			assertThat(columnNode.height).isEqualTo(size * 2 + space)
-			assertThat(firstChildBoxNode.x).isEqualTo(0)
-			assertThat(secondChildBoxNode.y).isEqualTo(size + space)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA
+				|AA
+				|..
+				|BB
+				|BB
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_withSpacedByAlignedArrangement() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val space = 10
-			val size = 20
-			val columnSize = 50
+		runMosaicTest {
+			val space = 1
+			val size = 2
+			val columnSize = 7
 
 			setContent {
 				Row {
 					Column(
-						modifier = Modifier.requiredSize(columnSize),
+						modifier = Modifier.fillWith('.').requiredSize(columnSize),
 						verticalArrangement = Arrangement.spacedBy(space, Alignment.Bottom),
 					) {
-						Box(Modifier.requiredSize(size))
-						Box(Modifier.requiredSize(size))
+						Box(Modifier.fillWith('A').requiredSize(size))
+						Box(Modifier.fillWith('B').requiredSize(size))
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val columnNode = rootNode.children[0]
-
-			val firstChildBoxNode = columnNode.children[0].children[0]
-			val secondChildBoxNode = columnNode.children[0].children[1]
-
-			assertThat(columnNode.height).isEqualTo(columnSize)
-			assertThat(firstChildBoxNode.y).isEqualTo(columnSize - space - size * 2)
-			assertThat(secondChildBoxNode.y).isEqualTo(columnSize - size)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|.......
+				|.......
+				|AA.....
+				|AA.....
+				|.......
+				|BB.....
+				|BB.....
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_withSpacedByArrangement_insufficientSpace() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val space = 15
-			val size = 20
-			val columnSize = 50
+		runMosaicTest {
+			val space = 3
+			val size = 4
+			val columnSize = 10
 
 			setContent {
 				Row {
 					Column(
-						modifier = Modifier.requiredSize(columnSize),
+						modifier = Modifier.fillWith('.').requiredSize(columnSize),
 						verticalArrangement = Arrangement.spacedBy(space),
 					) {
-						Box(Modifier.size(size))
-						Box(Modifier.size(size))
-						Box(Modifier.size(size))
+						Box(Modifier.fillWith('A').size(size))
+						Box(Modifier.fillWith('B').size(size))
+						Box(Modifier.fillWith('C').size(size))
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val columnNode = rootNode.children[0].children[0]
-
-			val firstChildBoxNode = columnNode.children[0]
-			val secondChildBoxNode = columnNode.children[1]
-			val thirdChildBoxNode = columnNode.children[2]
-
-			assertThat(columnNode.height).isEqualTo(columnSize)
-			assertThat(firstChildBoxNode.height).isEqualTo(size)
-			assertThat(firstChildBoxNode.y).isEqualTo(0)
-			assertThat(secondChildBoxNode.height).isEqualTo(columnSize - space - size)
-			assertThat(secondChildBoxNode.y).isEqualTo(size + space)
-			assertThat(thirdChildBoxNode.height).isEqualTo(0)
-			assertThat(thirdChildBoxNode.y).isEqualTo(columnSize)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AAAA......
+				|AAAA......
+				|AAAA......
+				|AAAA......
+				|..........
+				|..........
+				|..........
+				|BBBB......
+				|BBBB......
+				|BBBB......
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_withAlignedArrangement() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 20
-			val columnSize = 50
+		runMosaicTest {
+			val size = 2
+			val columnSize = 5
 
 			setContent {
 				Row {
 					Column(
-						modifier = Modifier.requiredSize(columnSize),
+						modifier = Modifier.fillWith('.').requiredSize(columnSize),
 						verticalArrangement = Arrangement.aligned(Alignment.Bottom),
 					) {
-						Box(Modifier.requiredSize(size))
-						Box(Modifier.requiredSize(size))
+						Box(Modifier.fillWith('A').requiredSize(size))
+						Box(Modifier.fillWith('B').requiredSize(size))
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val columnNode = rootNode.children[0]
-
-			val firstChildBoxNode = columnNode.children[0].children[0]
-			val secondChildBoxNode = columnNode.children[0].children[1]
-
-			assertThat(columnNode.height).isEqualTo(columnSize)
-			assertThat(firstChildBoxNode.y).isEqualTo(columnSize - size * 2)
-			assertThat(secondChildBoxNode.y).isEqualTo(columnSize - size)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|.....
+				|AA...
+				|AA...
+				|BB...
+				|BB...
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_doesNotUseMinConstraintsOnChildren() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
-			val childSize = 30
+		runMosaicTest {
+			val size = 5
+			val childSize = 3
 
 			setContent {
 				Center {
 					ConstrainedBox(constraints = Constraints.fixed(size, size)) {
-						Row {
-							Spacer(Modifier.size(width = childSize, height = childSize))
+						Row(Modifier.fillWith('.')) {
+							Spacer(Modifier.fillWith('A').size(width = childSize, height = childSize))
 						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val spacerNode = rootNode.children[0].children[0].children[0].children[0]
-
-			assertThat(spacerNode.size).isEqualTo(IntSize(childSize, childSize))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AAA..
+				|AAA..
+				|AAA..
+				|.....
+				|.....
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testColumn_doesNotUseMinConstraintsOnChildren() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 50
-			val childSize = 30
+		runMosaicTest {
+			val size = 5
+			val childSize = 3
 
 			setContent {
 				Center {
 					ConstrainedBox(constraints = Constraints.fixed(size, size)) {
-						Column {
-							Spacer(Modifier.size(width = childSize, height = childSize))
+						Column(Modifier.fillWith('.')) {
+							Spacer(Modifier.fillWith('A').size(width = childSize, height = childSize))
 						}
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val spacerNode = rootNode.children[0].children[0].children[0].children[0]
-
-			assertThat(spacerNode.size).isEqualTo(IntSize(childSize, childSize))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AAA..
+				|AAA..
+				|AAA..
+				|.....
+				|.....
+				""".trimMargin(),
+			)
 		}
 	}
 	// endregion
@@ -2400,195 +2637,192 @@ class RowColumnTest {
 
 	// region Modifiers specific tests
 	@Test fun testRowColumnModifiersChain_leftMostWins() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val columnHeight = 24
+		runMosaicTest {
+			val columnHeight = 6
 
 			setContent {
 				Box {
 					Column(Modifier.height(columnHeight)) {
-						Container(Modifier.weight(2.0f).weight(1.0f))
-						Container(Modifier.weight(1.0f))
+						Container(Modifier.fillWith('A').weight(2.0f).weight(1.0f), width = 1)
+						Container(Modifier.fillWith('B').weight(1.0f), width = 1)
 					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val firstChildContainerNode = rootNode.children[0].children[0].children[0]
-
-			assertThat(firstChildContainerNode.height).isEqualTo(columnHeight * 2 / 3)
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|A
+				|A
+				|A
+				|A
+				|B
+				|B
+				""".trimMargin(),
+			)
 		}
 	}
 	// endregion
 
 	// region AbsoluteArrangement tests
 	@Test fun testRow_absoluteArrangementLeft() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 100
+		runMosaicTest {
+			val size = 2
+			val rowWidth = 18
 
 			setContent {
-				Row(
-					modifier = Modifier.fillMaxWidth(),
-					horizontalArrangement = Arrangement.Absolute.Left,
-				) {
-					Container(width = size, height = size)
-					Container(width = size, height = size)
-					Container(width = size, height = size)
+				Container(width = rowWidth) {
+					Row(
+						modifier = Modifier.fillWith('.').fillMaxWidth(),
+						horizontalArrangement = Arrangement.Absolute.Left,
+					) {
+						Container(modifier = Modifier.fillWith('A'), width = size, height = size)
+						Container(modifier = Modifier.fillWith('B'), width = size, height = size)
+						Container(modifier = Modifier.fillWith('C'), width = size, height = size)
+					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val firstChildContainerNode = rootNode.children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[1]
-			val thirdChildContainerNode = rootNode.children[0].children[2]
-
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(size, 0))
-			assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(size * 2, 0))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AABBCC............
+				|AABBCC............
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_absoluteArrangementRight() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 100
+		runMosaicTest {
+			val size = 2
+			val rowWidth = 18
 
 			setContent {
-				Row(
-					modifier = Modifier.fillMaxWidth(),
-					horizontalArrangement = Arrangement.Absolute.Right,
-				) {
-					Container(width = size, height = size)
-					Container(width = size, height = size)
-					Container(width = size, height = size)
+				Container(width = rowWidth) {
+					Row(
+						modifier = Modifier.fillWith('.').fillMaxWidth(),
+						horizontalArrangement = Arrangement.Absolute.Right,
+					) {
+						Container(modifier = Modifier.fillWith('A'), width = size, height = size)
+						Container(modifier = Modifier.fillWith('B'), width = size, height = size)
+						Container(modifier = Modifier.fillWith('C'), width = size, height = size)
+					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val rootWidth = rootNode.width
-
-			val firstChildContainerNode = rootNode.children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[1]
-			val thirdChildContainerNode = rootNode.children[0].children[2]
-
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset(rootWidth - size * 3, 0))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(rootWidth - size * 2, 0))
-			assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(rootWidth - size, 0))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|............AABBCC
+				|............AABBCC
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_absoluteArrangementCenter() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 100
+		runMosaicTest {
+			val size = 2
+			val rowWidth = 18
 
 			setContent {
-				Row(
-					modifier = Modifier.fillMaxWidth(),
-					horizontalArrangement = Arrangement.Absolute.Center,
-				) {
-					Container(width = size, height = size)
-					Container(width = size, height = size)
-					Container(width = size, height = size)
+				Container(width = rowWidth) {
+					Row(
+						modifier = Modifier.fillWith('.').fillMaxWidth(),
+						horizontalArrangement = Arrangement.Absolute.Center,
+					) {
+						Container(modifier = Modifier.fillWith('A'), width = size, height = size)
+						Container(modifier = Modifier.fillWith('B'), width = size, height = size)
+						Container(modifier = Modifier.fillWith('C'), width = size, height = size)
+					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val extraSpace = rootNode.width - size * 3
-
-			val firstChildContainerNode = rootNode.children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[1]
-			val thirdChildContainerNode = rootNode.children[0].children[2]
-
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset(extraSpace / 2, 0))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset((extraSpace / 2) + size, 0))
-			assertThat(thirdChildContainerNode.position).isEqualTo(
-				IntOffset(
-					(extraSpace / 2) + size * 2,
-					0,
-				),
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|......AABBCC......
+				|......AABBCC......
+				""".trimMargin(),
 			)
 		}
 	}
 
 	@Test fun testRow_absoluteArrangementSpaceEvenly() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 100
+		runMosaicTest {
+			val size = 2
+			val rowWidth = 18
 
 			setContent {
-				Row(
-					modifier = Modifier.fillMaxWidth(),
-					horizontalArrangement = Arrangement.Absolute.SpaceEvenly,
-				) {
-					Container(width = size, height = size)
-					Container(width = size, height = size)
-					Container(width = size, height = size)
+				Container(width = rowWidth) {
+					Row(
+						modifier = Modifier.fillWith('.').fillMaxWidth(),
+						horizontalArrangement = Arrangement.Absolute.SpaceEvenly,
+					) {
+						Container(modifier = Modifier.fillWith('A'), width = size, height = size)
+						Container(modifier = Modifier.fillWith('B'), width = size, height = size)
+						Container(modifier = Modifier.fillWith('C'), width = size, height = size)
+					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val gap = (rootNode.width - size * 3) / 4
-
-			val firstChildContainerNode = rootNode.children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[1]
-			val thirdChildContainerNode = rootNode.children[0].children[2]
-
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset(gap, 0))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(size + gap * 2, 0))
-			assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(size * 2 + gap * 3, 0))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|...AA...BB...CC...
+				|...AA...BB...CC...
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_absoluteArrangementSpaceBetween() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 100
+		runMosaicTest {
+			val size = 2
+			val rowWidth = 18
 
 			setContent {
-				Row(
-					modifier = Modifier.fillMaxWidth(),
-					horizontalArrangement = Arrangement.Absolute.SpaceBetween,
-				) {
-					Container(width = size, height = size)
-					Container(width = size, height = size)
-					Container(width = size, height = size)
+				Container(width = rowWidth) {
+					Row(
+						modifier = Modifier.fillWith('.').fillMaxWidth(),
+						horizontalArrangement = Arrangement.Absolute.SpaceBetween,
+					) {
+						Container(modifier = Modifier.fillWith('A'), width = size, height = size)
+						Container(modifier = Modifier.fillWith('B'), width = size, height = size)
+						Container(modifier = Modifier.fillWith('C'), width = size, height = size)
+					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val gap = (rootNode.width - size * 3) / 2
-
-			val firstChildContainerNode = rootNode.children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[1]
-			val thirdChildContainerNode = rootNode.children[0].children[2]
-
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset.Zero)
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset(gap + size, 0))
-			assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset(gap * 2 + size * 2, 0))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|AA......BB......CC
+				|AA......BB......CC
+				""".trimMargin(),
+			)
 		}
 	}
 
 	@Test fun testRow_absoluteArrangementSpaceAround() = runTest {
-		runMosaicTest(NodeSnapshots) {
-			val size = 100
+		runMosaicTest {
+			val size = 2
+			val rowWidth = 18
 
 			setContent {
-				Row(
-					modifier = Modifier.fillMaxWidth(),
-					horizontalArrangement = Arrangement.Absolute.SpaceAround,
-				) {
-					Container(width = size, height = size)
-					Container(width = size, height = size)
-					Container(width = size, height = size)
+				Container(width = rowWidth) {
+					Row(
+						modifier = Modifier.fillWith('.').fillMaxWidth(),
+						horizontalArrangement = Arrangement.Absolute.SpaceAround,
+					) {
+						Container(modifier = Modifier.fillWith('A'), width = size, height = size)
+						Container(modifier = Modifier.fillWith('B'), width = size, height = size)
+						Container(modifier = Modifier.fillWith('C'), width = size, height = size)
+					}
 				}
 			}
 
-			val rootNode = awaitSnapshot()
-			val gap = (rootNode.width - size * 3) / 3
-
-			val firstChildContainerNode = rootNode.children[0].children[0]
-			val secondChildContainerNode = rootNode.children[0].children[1]
-			val thirdChildContainerNode = rootNode.children[0].children[2]
-
-			assertThat(firstChildContainerNode.position).isEqualTo(IntOffset(gap / 2, 0))
-			assertThat(secondChildContainerNode.position).isEqualTo(IntOffset((gap * 3 / 2) + size, 0))
-			assertThat(thirdChildContainerNode.position).isEqualTo(IntOffset((gap * 5 / 2) + size * 2, 0))
+			assertThat(awaitSnapshot()).isEqualTo(
+				"""
+				|..AA....BB....CC..
+				|..AA....BB....CC..
+				""".trimMargin(),
+			)
 		}
 	}
 	// endregion

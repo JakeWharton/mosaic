@@ -2,7 +2,6 @@ package com.jakewharton.mosaic.layout
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import com.jakewharton.mosaic.TestChar
 import com.jakewharton.mosaic.TestFiller
 import com.jakewharton.mosaic.assertFailure
 import com.jakewharton.mosaic.modifier.Modifier
@@ -22,7 +21,7 @@ class OffsetTest {
 			}
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|   $TestChar
+				|   X
 				|
 				|
 				|
@@ -74,7 +73,7 @@ class OffsetTest {
 				|
 				|
 				|
-				|$TestChar
+				|X
 				|
 				""".trimMargin(),
 			)
@@ -122,7 +121,7 @@ class OffsetTest {
 				|
 				|
 				|
-				|   $TestChar
+				|   X
 				|
 				""".trimMargin(),
 			)
@@ -171,7 +170,7 @@ class OffsetTest {
 			}
 			assertThat(awaitSnapshot()).isEqualTo(
 				"""
-				|   $TestChar
+				|   X
 				|
 				|
 				|
@@ -223,7 +222,7 @@ class OffsetTest {
 				|
 				|
 				|
-				|$TestChar
+				|X
 				|
 				""".trimMargin(),
 			)
@@ -271,7 +270,7 @@ class OffsetTest {
 				|
 				|
 				|
-				|   $TestChar
+				|   X
 				|
 				""".trimMargin(),
 			)
