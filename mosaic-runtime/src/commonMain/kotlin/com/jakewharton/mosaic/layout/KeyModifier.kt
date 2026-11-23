@@ -24,10 +24,11 @@ public interface KeyModifier : Modifier.Element {
 
 @[Immutable Poko]
 public class KeyEvent(
-	public val key: String,
+	public val key: String?,
 	public val alt: Boolean = false,
 	public val ctrl: Boolean = false,
 	public val shift: Boolean = false,
+	public val codepoint: Int,
 )
 
 /**
