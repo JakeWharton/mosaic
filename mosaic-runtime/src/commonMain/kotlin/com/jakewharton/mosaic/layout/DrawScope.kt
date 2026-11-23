@@ -25,6 +25,7 @@ import com.jakewharton.mosaic.isSpecifiedCodePoint
 import com.jakewharton.mosaic.isUnspecifiedCodePoint
 import com.jakewharton.mosaic.text.AnnotatedString
 import com.jakewharton.mosaic.text.SpanStyle
+import com.jakewharton.mosaic.text.charWidth
 import com.jakewharton.mosaic.text.getLocalRawSpanStyles
 import com.jakewharton.mosaic.ui.Color
 import com.jakewharton.mosaic.ui.TextStyle
@@ -220,8 +221,12 @@ internal open class TextCanvasDrawScope(
 		topLeft: IntOffset,
 		size: IntSize,
 	) {
-		for (y in topLeft.y until topLeft.y + size.height) {
-			for (x in topLeft.x until topLeft.x + size.width) {
+		val xStart = topLeft.x.coerceAtLeast(0)
+		val xEnd = (topLeft.x + size.width).coerceAtMost(width)
+		val yStart = topLeft.y.coerceAtLeast(0)
+		val yEnd = (topLeft.y + size.height).coerceAtMost(height)
+		for (y in yStart until yEnd) {
+			for (x in xStart until xEnd) {
 				drawTextPixel(x, y, codePoint, foreground, background, textStyle)
 			}
 		}
@@ -269,7 +274,10 @@ internal open class TextCanvasDrawScope(
 		var pixelIndex = 0
 		var characterColumn = column
 		while (pixelIndex < text.length) {
-			val character = canvas[row, characterColumn++]
+			val cp = text.codePointAt(pixelIndex)
+			val w = charWidth(cp)
+
+			val character = canvas[row, characterColumn]
 
 			val pixelEnd = if (text[pixelIndex].isHighSurrogate()) {
 				pixelIndex + 2
@@ -277,11 +285,22 @@ internal open class TextCanvasDrawScope(
 				pixelIndex + 1
 			}
 
-			character.updateTextPixel(text.codePointAt(pixelIndex), foreground, background, textStyle, underlineStyle, underlineColor)
+			character.updateTextPixel(cp, foreground, background, textStyle, underlineStyle, underlineColor)
 			spanStylesProvider?.invoke(pixelIndex, pixelEnd)?.forEach {
 				character.updateTextPixel(UnspecifiedCodePoint, it.color, it.background, it.textStyle, it.underlineStyle, it.underlineColor)
 			}
 
+			// Mark continuation cells for wide characters (e.g. CJK, fullwidth)
+			if (w > 1) {
+				for (offset in 1 until w) {
+					val continuationCol = characterColumn + offset
+					if (continuationCol < width) {
+						canvas[row, continuationCol].isWideContinuation = true
+					}
+				}
+			}
+
+			characterColumn += w
 			pixelIndex = pixelEnd
 		}
 	}
@@ -309,6 +328,7 @@ internal open class TextCanvasDrawScope(
 	) {
 		if (codePoint.isSpecifiedCodePoint) {
 			this.codePoint = codePoint
+			isWideContinuation = false
 		}
 		if (foreground.isSpecifiedColor) {
 			this.foreground = foreground
