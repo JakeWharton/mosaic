@@ -40,8 +40,9 @@ internal class TextSurface(
 	operator fun get(row: Int, column: Int): TextPixel {
 		val x = translationX + column
 		val y = row + translationY
-		check(x in 0 until width)
-		check(y in 0 until height)
+		if (x !in 0 until width || y !in 0 until height) {
+			return TextPixel(SpaceCharCodePoint)
+		}
 		return cells[y * width + x]
 	}
 
